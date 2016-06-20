@@ -1,5 +1,5 @@
 //@ {
-//@ "targets":[{"name":"dependencygraph.hpp","type":"include"}
+//@ "targets":[{"name":"dependencygraph.hpp","type":"include"}]
 //@ }
 
 #ifndef MAIKE_DEPENDENCYGRAPH_H
@@ -14,13 +14,15 @@ namespace Maike
 	class DependencyGraph
 		{
 		public:
+			virtual ~DependencyGraph()=default;
 			virtual DependencyGraph& targetRegister(std::unique_ptr<Target>&& target)=0;
 			virtual DependencyGraph& targetsPatch()=0;
 
 			class TargetProcessor
 				{
 				public:
-					virtual void visit(DependencyGraph& graph,Target& target)=0;
+					virtual ~TargetProcessor()=default;
+					virtual void operator()(DependencyGraph& graph,Target& target)=0;
 				};
 
 			virtual void targetsProcess(TargetProcessor&& visitor)=0;

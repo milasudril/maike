@@ -13,7 +13,7 @@ namespace Maike
 		{
 		public:
 			virtual void targetsLoad(const char* name_src,const char* in_dir
-				,Spider& spider)=0;
+				,Spider& spider,DependencyGraph& graph)=0;
 		};
 	}
 

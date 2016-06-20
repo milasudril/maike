@@ -41,7 +41,12 @@
 		</Linker>
 		<Unit filename="dependency.cpp" />
 		<Unit filename="dependency.hpp" />
+		<Unit filename="invoker.hpp" />
+		<Unit filename="maike.cpp" />
+		<Unit filename="spider.hpp" />
 		<Unit filename="target.hpp" />
+		<Unit filename="targetloader.hpp" />
+		<Unit filename="twins.hpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

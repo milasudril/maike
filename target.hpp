@@ -22,7 +22,8 @@ namespace Maike
 			virtual bool compile(Twins<const Target* const*> targets_rel
 				,Invoker& invoker) const noexcept=0;
 			virtual void dependencyAdd(Dependency&& dep)=0;
-			virtual Twins<const Dependency*> dependenciesGet() const noexcept=0;
+			virtual Twins<const Dependency*> dependencies() const noexcept=0;
+			virtual Twins<Dependency*> dependencies() noexcept=0;
 			virtual size_t idGet() const noexcept=0;
 			virtual const char* nameGet() const noexcept=0;
 			virtual const char* nameFullGet() const noexcept=0;
