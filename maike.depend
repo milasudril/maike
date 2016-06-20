@@ -1,0 +1,15 @@
+# depslib dependency file v1.0
+1466422832 source:/home/torbjorr/Dokument/maike/dependency.cpp
+	"dependency.hpp"
+
+1466420410 /home/torbjorr/Dokument/maike/dependency.hpp
+	"target.hpp"
+	<string>
+
+1466427113 /home/torbjorr/Dokument/maike/target.hpp
+	"twins.hpp"
+	<cstddef>
+
+1466426293 /home/torbjorr/Dokument/maike/twins.hpp
+	<utility>
+
