@@ -31,6 +31,13 @@ namespace Maike
 					m_name.c_str() : r_target->nameGet();
 				}
 
+			Dependency& targetSet(Target& target) noexcept
+				{
+				r_target=&target;
+				target.childCountIncrement();
+				return *this;
+				}
+
 			Target* target() noexcept
 				{return r_target;}
 
