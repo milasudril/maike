@@ -15,12 +15,12 @@ namespace Maike
 	class DependencyGraphDefault : public DependencyGraph
 		{
 		public:
-			virtual DependencyGraphDefault& targetRegister(std::unique_ptr<Target>&& target);
-			virtual DependencyGraphDefault& targetsPatch();
-			virtual void targetsProcess(TargetProcessor&& visitor);
-			virtual Target* targetFind(const char* name);
-
-		protected:
+			DependencyGraphDefault& targetRegister(std::unique_ptr<Target>&& target);
+			DependencyGraphDefault& targetsPatch();
+			DependencyGraphDefault& targetsProcess(TargetProcessor&& visitor);
+			Target* targetFind(const char* name);
+			size_t targetCounterGet() const noexcept
+				{return m_targets.size();}
 
 		private:
 			typedef std::string KeyType;

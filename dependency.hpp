@@ -16,7 +16,8 @@ namespace Maike
 		public:
 			enum class Relation:unsigned int
 				{
-				 INTERNAL
+				 LEAF
+				,INTERNAL
 				,IMPLEMENTATION
 				,EXTERNAL
 				};
@@ -34,7 +35,7 @@ namespace Maike
 			Dependency& targetSet(Target& target) noexcept
 				{
 				r_target=&target;
-				target.childCountIncrement();
+				target.childCounterIncrement();
 				return *this;
 				}
 

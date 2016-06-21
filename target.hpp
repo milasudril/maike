@@ -17,8 +17,8 @@ namespace Maike
 		{
 		public:
 			virtual ~Target()=default;
-			virtual Target& childCountIncrement() noexcept=0;
-			virtual size_t childCountGet() const noexcept=0;
+			virtual Target& childCounterIncrement() noexcept=0;
+			virtual size_t childCounterGet() const noexcept=0;
 			virtual bool compile(Twins<const Target* const*> targets_rel
 				,Invoker& invoker) const noexcept=0;
 			virtual void dependencyAdd(Dependency&& dep)=0;

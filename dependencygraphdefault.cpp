@@ -65,7 +65,7 @@ Target* DependencyGraphDefault::targetFind(const char* name)
 	return t->second.get();
 	}
 
-void DependencyGraphDefault::targetsProcess(TargetProcessor&& proc)
+DependencyGraphDefault& DependencyGraphDefault::targetsProcess(TargetProcessor&& proc)
 	{
 	auto i=m_targets.begin();
 	auto i_end=m_targets.end();
@@ -74,4 +74,5 @@ void DependencyGraphDefault::targetsProcess(TargetProcessor&& proc)
 		proc(*this,*(i->second));
 		++i;
 		}
+	return *this;
 	}

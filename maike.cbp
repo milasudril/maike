@@ -30,7 +30,6 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wfloat-equal" />
-			<Add option="-Weffc++" />
 			<Add option="-Wzero-as-null-pointer-constant" />
 			<Add option="-Wall" />
 			<Add option="-std=c++11" />
@@ -41,6 +40,9 @@
 		</Linker>
 		<Unit filename="dependency.cpp" />
 		<Unit filename="dependency.hpp" />
+		<Unit filename="dependencygraph.hpp" />
+		<Unit filename="dependencygraphdefault.cpp" />
+		<Unit filename="dependencygraphdefault.hpp" />
 		<Unit filename="invoker.hpp" />
 		<Unit filename="maike.cpp" />
 		<Unit filename="spider.hpp" />
