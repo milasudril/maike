@@ -1,30 +1,16 @@
 //@ {
-//@ "targets":[{"name":"maike","type":"application"}]
+//@ "targets":[{"name":"maike.o","type":"object"}]
 //@ }
 
-#include "dependencygraphdefault.hpp"
+#include "maike.hpp"
 #include "target.hpp"
 #include "dependency.hpp"
 #include <vector>
 #include <stack>
 
-class LeafCollector:public Maike::DependencyGraph::TargetProcessor
-	{
-	public:
-		LeafCollector(std::vector<Maike::Target*>& leafs):r_leafs(leafs)
-			{}
+using namespace Maike;
 
-		void operator()(Maike::DependencyGraph& graph,Maike::Target& target_current)
-			{
-			if(target_current.childCounterGet()==0)
-				{r_leafs.push_back(&target_current);}
-			}
-
-	private:
-		std::vector<Maike::Target*>& r_leafs;
-	};
-
-void toposort(Maike::Target& target_first
+static void toposort(Maike::Target& target_first
 	,std::vector<Maike::Dependency>& dependency_list,size_t targets_count)
 	{
 	std::vector<int> visited(targets_count,0);
@@ -88,18 +74,17 @@ void toposort(Maike::Target& target_first
 
 	}
 
-void build(Maike::Target& target,Maike::Invoker& invoker,size_t targets_count)
+void Maike::buildBranch(Target& target,Invoker& invoker,size_t targets_count)
 	{
-	std::vector<Maike::Dependency> dependency_list;
+	std::vector<Dependency> dependency_list;
 	toposort(target,dependency_list,targets_count);
 
 	auto deps_begin=dependency_list.data();
-	Maike::Twins<Maike::Dependency*> deps
-		(deps_begin,deps_begin + dependency_list.size());
+	Twins<Dependency*> deps(deps_begin,deps_begin + dependency_list.size());
 
 	while(deps.first!=deps.second)
 		{
-		Maike::Twins<const Maike::Dependency*> deps_rel(deps_begin,deps.first);
+		Twins<const Dependency*> deps_rel(deps_begin,deps.first);
 		auto target=deps.first->target();
 		if(target!=nullptr)
 			{
@@ -110,26 +95,12 @@ void build(Maike::Target& target,Maike::Invoker& invoker,size_t targets_count)
 		}
 	}
 
-void buildAll(Maike::Twins<Maike::Target*> leafs,Maike::Invoker& invoker
-	,size_t targets_count)
+void Maike::buildAll(Twins<Target*> leafs,Invoker& invoker,size_t targets_count)
 	{
 	while(leafs.first!=leafs.second)
 		{
-		build(*leafs.first,invoker,targets_count);
+		buildBranch(*leafs.first,invoker,targets_count);
 		++(leafs.first);
 		}
 	}
 
-
-
-
-int main(int argc,char** args)
-	{
-	Maike::DependencyGraphDefault graph;
-
-	std::vector<Maike::Target*> leafs;
-	graph.targetsPatch().targetsProcess(LeafCollector(leafs));
-//	buildAll(leafs,exec_invoker,graph.targetCounterGet());
-
-	return 0;
-	}
