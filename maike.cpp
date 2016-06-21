@@ -47,6 +47,7 @@ void toposort(Maike::Target& target_first
 		auto target=node_current.target;
 		if(node_current.done)
 			{
+			visited[target->idGet()]=2;
 			targets.push_back({node_current.target,node_current.rel});
 			continue;
 			}
