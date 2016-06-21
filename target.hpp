@@ -19,7 +19,7 @@ namespace Maike
 			virtual ~Target()=default;
 			virtual Target& childCounterIncrement() noexcept=0;
 			virtual size_t childCounterGet() const noexcept=0;
-			virtual bool compile(Twins<const Target* const*> targets_rel
+			virtual bool compile(Twins<const Dependency*> dependency_list
 				,Invoker& invoker) const noexcept=0;
 			virtual void dependencyAdd(Dependency&& dep)=0;
 			virtual Twins<const Dependency*> dependencies() const noexcept=0;
@@ -29,7 +29,7 @@ namespace Maike
 			virtual const char* nameFullGet() const noexcept=0;
 			virtual const char* sourceNameGet() const noexcept=0;
 			virtual const char* sourceNameFullGet() const noexcept=0;
-			virtual bool upToDate(Twins<const Target* const*> targets_rel
+			virtual bool upToDate(Twins<const Dependency*> dependency_list
 				,Invoker& invoker) const noexcept=0;
 		};
 	}

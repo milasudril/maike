@@ -1,22 +1,24 @@
 # depslib dependency file v1.0
-1466422832 source:/home/torbjorr/Dokument/maike/dependency.cpp
+1466513995 source:/home/torbjorr/Dokument/maike/dependency.cpp
 	"dependency.hpp"
 
-1466506657 /home/torbjorr/Dokument/maike/dependency.hpp
+1466515068 /home/torbjorr/Dokument/maike/dependency.hpp
 	"target.hpp"
 	<string>
 
-1466445506 /home/torbjorr/Dokument/maike/target.hpp
+1466515341 /home/torbjorr/Dokument/maike/target.hpp
 	"twins.hpp"
 	<cstddef>
 
 1466426293 /home/torbjorr/Dokument/maike/twins.hpp
 	<utility>
 
-1466445534 source:/home/torbjorr/Dokument/maike/maike.cpp
+1466515220 source:/home/torbjorr/Dokument/maike/maike.cpp
 	"dependencygraphdefault.hpp"
 	"target.hpp"
+	"dependency.hpp"
 	<vector>
+	<stack>
 
 1466494632 source:/home/torbjorr/Dokument/maike/dependencygraphdefault.cpp
 	"dependencygraphdefault.hpp"

@@ -22,9 +22,17 @@ namespace Maike
 				,EXTERNAL
 				};
 
+			Dependency();
+
+			explicit Dependency(Target& target):Dependency()
+				{r_target=&target;}
+
 			explicit Dependency(const char* name,Relation relation);
+
 			Dependency(const Dependency&)=default;
             Dependency& operator=(const Dependency&)=default;
+            Dependency(Dependency&&)=default;
+            Dependency& operator=(Dependency&&)=default;
 
 			const char* nameGet() const noexcept
 				{

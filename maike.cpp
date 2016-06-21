@@ -25,51 +25,64 @@ class LeafCollector:public Maike::DependencyGraph::TargetProcessor
 	};
 
 void toposort(Maike::Target& target_first
-	,std::vector<std::pair<Maike::Target*, Maike::Dependency::Relation> >& targets
+	,std::vector<Maike::Dependency>& dependency_list
 	,size_t n_targets)
 	{
 	std::vector<int> visited(n_targets,0);
 	struct Node
 		{
-		Maike::Target* target;
-		Maike::Dependency::Relation rel;
+		Maike::Dependency* dependency;
 		bool done;
 		};
 
 	std::stack< Node > nodes;
 
-	nodes.push({&target_first,Maike::Dependency::Relation::LEAF,0});
+	Maike::Dependency dep_first(target_first);
+	nodes.push({&dep_first,0});
 
 	while(!nodes.empty())
 		{
 		auto node_current=nodes.top();
 		nodes.pop();
-		auto target=node_current.target;
+		auto dep=node_current.dependency;
 		if(node_current.done)
 			{
-			visited[target->idGet()]=2;
-			targets.push_back({node_current.target,node_current.rel});
+			if(dep->target()!=nullptr)
+				{visited[dep->target()->idGet()]=2;}
+			dependency_list.push_back(*dep);
 			continue;
 			}
-		nodes.push({target,node_current.rel,1});
-		visited[target->idGet()]=1;
-		auto deps=target->dependencies();
+
+	//	Node is a "child", more work to do.
+		nodes.push({dep,1}); //	After all child nodes have been processed, this node is done
+		auto target_current=dep->target();
+		visited[target_current->idGet()]=1;
+		auto deps=target_current->dependencies();
 		while(deps.first!=deps.second)
 			{
 			auto target_next=deps.first->target();
+		//	Empty target
 			if(target_next==nullptr)
 				{
-				throw __FILE__;
-			//TODO throw ErrorMessage("#0;: Undefined reference to #1;."
-				//	,{target_current.nameSourceGet(),pos->nameGet()});
+			//	Only external references are allowed to have an empty target
+				if(deps.first->relationGet()!=Maike::Dependency::Relation::EXTERNAL)
+					{
+					throw __FILE__;
+				//TODO throw ErrorMessage("#0;: Undefined reference to #1;."
+					//	,{target_current.nameSourceGet(),deps.first->nameGet()});
+					}
+			//	Push the node and continue. Since there are no children, mark
+			//	this node as done.
+				nodes.push({deps.first,1});
 				}
-			if(visited[target_next->idGet()])
+			else //Non-empty target
+			if(visited[target_next->idGet()]==1)
 				{
 				throw __FILE__;
 			//TODO throw ErrorMessage("A cyclic dependency between #0; and #1; was detected."
 				//	,{target_current.nameGet(),target_next->nameGet()});
 				}
-			nodes.push({deps.first->target(),deps.first->relationGet(),0});
+			nodes.push({deps.first,0});
 			++(deps.first);
 			}
 		}
@@ -88,8 +101,8 @@ int main(int argc,char** args)
 	auto leafs_end=leafs_begin + leafs.size();
 	while(leafs_begin!=leafs_end)
 		{
-		std::vector<std::pair<Maike::Target*, Maike::Dependency::Relation> > targets;
-		toposort(*leafs[0],targets,graph.targetCounterGet());
+		std::vector<Maike::Dependency> dependency_list;
+		toposort(*leafs[0],dependency_list,graph.targetCounterGet());
 		++leafs_end;
 		}
 
