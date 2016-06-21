@@ -92,11 +92,22 @@ void build(Maike::Target& target,Maike::Invoker& invoker,size_t targets_count)
 	{
 	std::vector<Maike::Dependency> dependency_list;
 	toposort(target,dependency_list,targets_count);
-	Maike::Twins<const Maike::Dependency*> deps;
-	deps.first=dependency_list.data();
-	deps.second=deps.first + dependency_list.size();
-	if(!target.upToDate(deps,invoker))
-		{target.compile(deps,invoker);}
+
+	auto deps_begin=dependency_list.data();
+	Maike::Twins<Maike::Dependency*> deps
+		(deps_begin,deps_begin + dependency_list.size());
+
+	while(deps.first!=deps.second)
+		{
+		Maike::Twins<const Maike::Dependency*> deps_rel(deps_begin,deps.first);
+		auto target=deps.first->target();
+		if(target!=nullptr)
+			{
+			if(!target->upToDate(deps_rel,invoker))
+				{target->compile(deps_rel,invoker);}
+			}
+		++deps.first;
+		}
 	}
 
 void buildAll(Maike::Twins<Maike::Target*> leafs,Maike::Invoker& invoker
