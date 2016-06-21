@@ -20,7 +20,7 @@ namespace Maike
 			virtual Target& childCounterIncrement() noexcept=0;
 			virtual size_t childCounterGet() const noexcept=0;
 			virtual bool compile(Twins<const Dependency*> dependency_list
-				,Invoker& invoker) const noexcept=0;
+				,Invoker& invoker) noexcept=0;
 			virtual void dependencyAdd(Dependency&& dep)=0;
 			virtual Twins<const Dependency*> dependencies() const noexcept=0;
 			virtual Twins<Dependency*> dependencies() noexcept=0;

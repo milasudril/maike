@@ -25,10 +25,9 @@ class LeafCollector:public Maike::DependencyGraph::TargetProcessor
 	};
 
 void toposort(Maike::Target& target_first
-	,std::vector<Maike::Dependency>& dependency_list
-	,size_t n_targets)
+	,std::vector<Maike::Dependency>& dependency_list,size_t targets_count)
 	{
-	std::vector<int> visited(n_targets,0);
+	std::vector<int> visited(targets_count,0);
 	struct Node
 		{
 		Maike::Dependency* dependency;
@@ -89,6 +88,29 @@ void toposort(Maike::Target& target_first
 
 	}
 
+void build(Maike::Target& target,Maike::Invoker& invoker,size_t targets_count)
+	{
+	std::vector<Maike::Dependency> dependency_list;
+	toposort(target,dependency_list,targets_count);
+	Maike::Twins<const Maike::Dependency*> deps;
+	deps.first=dependency_list.data();
+	deps.second=deps.first + dependency_list.size();
+	if(!target.upToDate(deps,invoker))
+		{target.compile(deps,invoker);}
+	}
+
+void buildAll(Maike::Twins<Maike::Target*> leafs,Maike::Invoker& invoker
+	,size_t targets_count)
+	{
+	while(leafs.first!=leafs.second)
+		{
+		build(*leafs.first,invoker,targets_count);
+		++(leafs.first);
+		}
+	}
+
+
+
 
 int main(int argc,char** args)
 	{
@@ -96,15 +118,7 @@ int main(int argc,char** args)
 
 	std::vector<Maike::Target*> leafs;
 	graph.targetsPatch().targetsProcess(LeafCollector(leafs));
-
-	auto leafs_begin=leafs.data();
-	auto leafs_end=leafs_begin + leafs.size();
-	while(leafs_begin!=leafs_end)
-		{
-		std::vector<Maike::Dependency> dependency_list;
-		toposort(*leafs[0],dependency_list,graph.targetCounterGet());
-		++leafs_end;
-		}
+//	buildAll(leafs,exec_invoker,graph.targetCounterGet());
 
 	return 0;
 	}

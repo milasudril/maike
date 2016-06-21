@@ -13,7 +13,7 @@ namespace Maike
 	class Invoker
 		{
 		public:
-			virtual void invoke(const char* command,Twins<const char* const*> args)=0;
+			virtual void operator()(const char* command,Twins<const char* const*> args)=0;
 		};
 	}
 
