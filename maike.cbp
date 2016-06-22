@@ -37,14 +37,22 @@
 		</Compiler>
 		<Linker>
 			<Add library="jansson" />
+			<Add library="pthread" />
 		</Linker>
+		<Unit filename="datasink.hpp" />
 		<Unit filename="dependency.cpp" />
 		<Unit filename="dependency.hpp" />
 		<Unit filename="dependencygraph.hpp" />
 		<Unit filename="dependencygraphdefault.cpp" />
 		<Unit filename="dependencygraphdefault.hpp" />
 		<Unit filename="invoker.hpp" />
+		<Unit filename="invokerreal-linuxgnu.cpp" />
+		<Unit filename="invokerreal.hpp" />
+		<Unit filename="maike-main.cpp" />
 		<Unit filename="maike.cpp" />
+		<Unit filename="maike.hpp" />
+		<Unit filename="sinksstd.hpp" />
+		<Unit filename="sinkstd.cpp" />
 		<Unit filename="spider.hpp" />
 		<Unit filename="target.hpp" />
 		<Unit filename="targetloader.hpp" />

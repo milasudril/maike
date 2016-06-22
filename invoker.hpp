@@ -5,15 +5,20 @@
 #ifndef MAIKE_INVOKER_H
 #define MAIKE_INVOKER_H
 
+#include "twins.hpp"
+
 namespace Maike
 	{
-	template<class T>
-	struct Twins;
+	class DataSink;
 
 	class Invoker
 		{
 		public:
-			virtual void operator()(const char* command,Twins<const char* const*> args)=0;
+			virtual int run(const char* command,Twins<const char* const*> args
+				,DataSink& standard_output,DataSink& standard_error)=0;
+			virtual bool newer(const char* file_a,const char* file_b)=0;
+			virtual void mkdir(const char* name)=0;
+			virtual void copy(const char* source,const char* dest)=0;
 		};
 	}
 
