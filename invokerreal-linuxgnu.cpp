@@ -1,15 +1,17 @@
-//@	{
-//@	"when":[ [["greater(linux,v2.6.33)","gnu"]]
-//@		,{
-//@		 "targets":[
-//@			{
-//@			 "name":"invokerreal.o","type":"object"
-//@			,"dependencies":[{"ref":"pthread","rel":"external"}]
-//@			}]
-//@		}]
-//@	}
+//@	[
+//@		[
+//@		"and(not(less_than(linux,version('2.6.33'))),gnu)"
+//@			,{
+//@		 	"targets":[
+//@				{
+//@			 	 "name":"invokerreal.o","type":"object"
+//@				,"dependencies":[{"ref":"pthread","rel":"external"}]
+//@				}]
+//@			}
+//@		]
+//@	]
 
- #define _LARGEFILE64_SOURCE
+#define _LARGEFILE64_SOURCE
 
 #include "invokerreal.hpp"
 #include "datasink.hpp"

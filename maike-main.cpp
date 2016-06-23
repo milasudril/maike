@@ -1,6 +1,8 @@
-//@ {
-//@ "targets":[{"name":"maike","type":"application"}]
-//@ }
+//@	[
+//@		["windows"
+//@			,{"targets":[{"name":"maike.exe","type":"application"}]}]
+//@		,{"targets":[{"name":"maike","type":"application"}]}
+//@ ]
 
 #include "dependencygraphdefault.hpp"
 #include "target.hpp"
