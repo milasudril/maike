@@ -7,12 +7,12 @@
 #define MAIKE_DEPENDENCYGRAPHDEFAULT_H
 
 #include "dependencygraph.hpp"
+#include "stringkey.hpp"
 #include <map>
-#include <string>
 
 namespace Maike
 	{
-	class DependencyGraphDefault : public DependencyGraph
+	class DependencyGraphDefault:public DependencyGraph
 		{
 		public:
 			DependencyGraphDefault& targetRegister(std::unique_ptr<Target>&& target);
@@ -23,7 +23,7 @@ namespace Maike
 				{return m_targets.size();}
 
 		private:
-			typedef std::string KeyType;
+			typedef Stringkey KeyType;
 			std::map< KeyType,std::unique_ptr<Target> > m_targets;
 		};
 	}

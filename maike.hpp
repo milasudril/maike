@@ -16,7 +16,7 @@ namespace Maike
 
 	void buildBranch(Target& target,Invoker& invoker,size_t targets_count);
 
-	void buildAll(Twins<Target*> leafs,Invoker& invoker,size_t targets_count);
+	void buildAll(Twins<Target* const*> leafs,Invoker& invoker,size_t targets_count);
 	}
 
 #endif

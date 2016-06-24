@@ -14,9 +14,8 @@ namespace Maike
 	class Spider
 		{
 		public:
-			virtual Spider& scan(const char* directory)=0;
-			virtual Spider& filenameScan(const char* filename)=0;
-			virtual Spider& targetRegister(std::unique_ptr<Target>&& target)=0;
+			virtual Spider& scanFile(const char* filename)=0;
+			virtual Spider& run()=0;
 			virtual const char* targetPrefixGet() const noexcept=0;
 			virtual const char* sourcePrefixGet() const noexcept=0;
 		};

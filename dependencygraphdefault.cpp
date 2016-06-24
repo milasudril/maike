@@ -34,7 +34,6 @@ DependencyGraphDefault& DependencyGraphDefault::targetsPatch()
 			auto dep=deps.first;
 			if(dep->relationGet()!=Dependency::Relation::EXTERNAL)
 				{
-			//TODO: Use hash lookup
 				auto t=m_targets.find(KeyType(dep->nameGet()));
 				if(t==i_end)
 					{
@@ -56,7 +55,6 @@ DependencyGraphDefault& DependencyGraphDefault::targetsPatch()
 
 Target* DependencyGraphDefault::targetFind(const char* name)
 	{
-//TODO: Use hash lookup
 	auto t=m_targets.find(KeyType(name));
 	if(t==m_targets.end())
 		{

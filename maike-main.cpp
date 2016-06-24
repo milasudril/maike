@@ -6,6 +6,10 @@
 
 #include "dependencygraphdefault.hpp"
 #include "target.hpp"
+#include "spiderdefault.hpp"
+#include "stringkey.hpp"
+#include "invokerreal.hpp"
+#include "maike.hpp"
 #include <vector>
 
 class LeafCollector:public Maike::DependencyGraph::TargetProcessor
@@ -31,10 +35,16 @@ class LeafCollector:public Maike::DependencyGraph::TargetProcessor
 int main(int argc,char** args)
 	{
 	Maike::DependencyGraphDefault graph;
-
+	std::map<Maike::Stringkey,const Maike::TargetLoader*> loaders;
+	Maike::SpiderDefault spider(loaders,graph);
+	spider.scanFile(".").run();
 	std::vector<Maike::Target*> leafs;
 	graph.targetsPatch().targetsProcess(LeafCollector(leafs));
-//	buildAll(leafs,exec_invoker,graph.targetCounterGet());
+
+	Maike::InvokerReal exec_invoker;
+	Maike::Twins<Maike::Target* const*> leafs_range
+		{leafs.data(),leafs.data() + leafs.size()};
+	Maike::buildAll(leafs_range,exec_invoker,graph.targetCounterGet());
 
 	return 0;
 	}

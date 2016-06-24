@@ -11,7 +11,7 @@ namespace Maike
     class DirectoryLister
         {
         public:
-            DirectoryLister(const char* dirname);
+            explicit DirectoryLister(const char* dirname);
             ~DirectoryLister();
             const char* read();
 

@@ -95,11 +95,11 @@ void Maike::buildBranch(Target& target,Invoker& invoker,size_t targets_count)
 		}
 	}
 
-void Maike::buildAll(Twins<Target*> leafs,Invoker& invoker,size_t targets_count)
+void Maike::buildAll(Twins<Target* const*> leafs,Invoker& invoker,size_t targets_count)
 	{
 	while(leafs.first!=leafs.second)
 		{
-		buildBranch(*leafs.first,invoker,targets_count);
+		buildBranch(**leafs.first,invoker,targets_count);
 		++(leafs.first);
 		}
 	}
