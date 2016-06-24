@@ -273,8 +273,8 @@ int InvokerReal::run(const char* command,Twins<const char* const*> args
 		if(execvp(command,const_cast<char* const*>(args_out.data()))==-1)
 			{
 			int status=errno;
-			write(exec_error.writeEndGet(),&status,sizeof(status));
-			_exit(errno);
+			auto res=write(exec_error.writeEndGet(),&status,sizeof(status));
+			_exit(static_cast<int>(res));
 			}
 		}
 
@@ -351,6 +351,17 @@ namespace
 	class FileDescriptor
 		{
 		public:
+			FileDescriptor(const char* file,int flags,int mode)
+				{
+				m_fd=open(file,flags,mode);
+				if(m_fd==-1)
+					{
+					throw __FILE__;
+				//TODO throw ErrorMessage("It was not possible to open the file #0;. #1;"
+					//	,{strerror(errno)});
+					}
+				}
+
 			FileDescriptor(const char* file,int flags)
 				{
 				m_fd=open(file,flags);
@@ -376,7 +387,7 @@ namespace
 void InvokerReal::copy(const char* source,const char* dest)
 	{
 	FileDescriptor source_fd(source,O_RDONLY);
-	FileDescriptor dest_fd(dest,O_CREAT|O_WRONLY);
+	FileDescriptor dest_fd(dest,O_CREAT|O_WRONLY,S_IRUSR|S_IWUSR);
 
 	struct stat source_stat;
 	if(fstat(source_fd.get(),&source_stat)==-1)

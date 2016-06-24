@@ -8,6 +8,7 @@
 namespace Maike
 	{
 	class Spider;
+	class DependencyGraph;
 
 	class TargetLoader
 		{

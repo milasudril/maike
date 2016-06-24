@@ -33,20 +33,20 @@
 1466495138 /home/torbjorr/Dokument/maike/dependencygraph.hpp
 	<memory>
 
-1466767153 source:/home/torbjorr/Dokument/maike/maike-main.cpp
+1466771402 source:/home/torbjorr/Dokument/maike/maike-main.cpp
 	"dependencygraphdefault.hpp"
 	"target.hpp"
 	"spiderdefault.hpp"
 	"stringkey.hpp"
 	"invokerreal.hpp"
 	"maike.hpp"
-	<vector>
+	"targetdirectoryloader.hpp"
 
 1466767168 /home/torbjorr/Dokument/maike/maike.hpp
 	"twins.hpp"
 	<cstddef>
 
-1466675609 source:/home/torbjorr/Dokument/maike/invokerreal-linuxgnu.cpp
+1466769319 source:/home/torbjorr/Dokument/maike/invokerreal-linuxgnu.cpp
 	"invokerreal.hpp"
 	"datasink.hpp"
 	<unistd.h>
@@ -90,9 +90,12 @@
 
 1466699128 /home/torbjorr/Dokument/maike/directorylister.hpp
 
-1466758499 source:/home/torbjorr/Dokument/maike/spiderdefault.cpp
+1466767371 source:/home/torbjorr/Dokument/maike/spiderdefault.cpp
 	"spiderdefault.hpp"
 	"directorylister.hpp"
+	"fileinfo.hpp"
+	"targetloader.hpp"
+	<cstdio>
 
 1466767343 /home/torbjorr/Dokument/maike/spiderdefault.hpp
 	"spider.hpp"
@@ -112,6 +115,21 @@
 	"fileinfo.hpp"
 	<sys/stat.h>
 
-1466761942 /home/torbjorr/Dokument/maike/fileinfo.hpp
+1466769526 /home/torbjorr/Dokument/maike/fileinfo.hpp
 	<cstdint>
+
+1466770057 /home/torbjorr/Dokument/maike/targetloader.hpp
+
+1466770088 /home/torbjorr/Dokument/maike/targetdirectoryloader.hpp
+	"targetloader.hpp"
+	"stringkey.hpp"
+	<set>
+
+1466771676 source:/home/torbjorr/Dokument/maike/targetdirectoryloader.cpp
+	"targetdirectoryloader.hpp"
+	"directorylister.hpp"
+	"fileinfo.hpp"
+	"spider.hpp"
+	<string>
+	<cstdio>
 

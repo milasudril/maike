@@ -10,7 +10,7 @@
 
 namespace Maike
 	{
-	class alignas(32) FileInfo
+	class FileInfo
 		{
 		public:
             enum class Type:uint32_t{FILE,DIRECTORY,OTHER};
@@ -41,7 +41,6 @@ namespace Maike
 			double m_time_accessed;
 			uint64_t m_size;
 			Type m_type;
-			uint32_t m_padding;
 		};
 	};
 

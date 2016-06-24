@@ -10,41 +10,45 @@
 #include "stringkey.hpp"
 #include "invokerreal.hpp"
 #include "maike.hpp"
-#include <vector>
+#include "targetdirectoryloader.hpp"
 
-class LeafCollector:public Maike::DependencyGraph::TargetProcessor
+class TargetBuilder:public Maike::DependencyGraph::TargetProcessor
 	{
 	public:
-		LeafCollector(std::vector<Maike::Target*>& leafs):r_leafs(leafs)
+		explicit TargetBuilder(Maike::Invoker&& invoker):r_invoker(invoker)
 			{}
 
 		void operator()(Maike::DependencyGraph& graph,Maike::Target& target_current)
 			{
 			if(target_current.childCounterGet()==0)
-				{r_leafs.push_back(&target_current);}
+				{Maike::buildBranch(target_current,r_invoker,graph.targetCounterGet());}
 			}
 
 	private:
-		std::vector<Maike::Target*>& r_leafs;
+		Maike::Invoker& r_invoker;
 	};
-
-
-
-
 
 int main(int argc,char** args)
 	{
-	Maike::DependencyGraphDefault graph;
-	std::map<Maike::Stringkey,const Maike::TargetLoader*> loaders;
-	Maike::SpiderDefault spider(loaders,graph);
-	spider.scanFile(".").run();
-	std::vector<Maike::Target*> leafs;
-	graph.targetsPatch().targetsProcess(LeafCollector(leafs));
+	try
+		{
+	//	Setup stuff
+		std::map<Maike::Stringkey,const Maike::TargetLoader*> loaders;
 
-	Maike::InvokerReal exec_invoker;
-	Maike::Twins<Maike::Target* const*> leafs_range
-		{leafs.data(),leafs.data() + leafs.size()};
-	Maike::buildAll(leafs_range,exec_invoker,graph.targetCounterGet());
+		Maike::TargetDirectoryLoader dirloader;
+		loaders[Maike::Stringkey(".")]=&dirloader;
 
+	//	Collect targtes
+		Maike::DependencyGraphDefault targets;
+		Maike::SpiderDefault spider(loaders,targets);
+		spider.scanFile(".").run();
+
+	//	Build all targets
+		targets.targetsPatch().targetsProcess(TargetBuilder{Maike::InvokerReal()});
+		}
+	catch(const char* msg)
+		{
+		printf("Error: %s",msg);
+		}
 	return 0;
 	}
