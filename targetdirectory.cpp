@@ -8,12 +8,11 @@ using namespace Maike;
 void TargetDirectory::compile(Twins<const Dependency*> dependency_list
 	,Invoker& invoker)
 	{
-//TODO invoker.mkdir(nameFullGet());
+	invoker.mkdir(nameGet());
 	}
 
 bool TargetDirectory::upToDate(Twins<const Dependency*> dependency_list
 	,Invoker& invoker) const
 	{
-	return 0;
-//TODO return invoker.exists(nameFullGet());
+	return invoker.exists(nameGet());
 	}

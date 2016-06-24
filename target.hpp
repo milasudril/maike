@@ -26,9 +26,7 @@ namespace Maike
 			virtual Twins<Dependency*> dependencies() noexcept=0;
 			virtual size_t idGet() const noexcept=0;
 			virtual const char* nameGet() const noexcept=0;
-			virtual const char* nameFullGet() const noexcept=0;
 			virtual const char* sourceNameGet() const noexcept=0;
-			virtual const char* sourceNameFullGet() const noexcept=0;
 			virtual bool upToDate(Twins<const Dependency*> dependency_list
 				,Invoker& invoker) const=0;
 		};

@@ -14,8 +14,7 @@ namespace Maike
 	class InvokerReal:public Invoker
 		{
 		public:
-			InvokerReal():r_echo_stream(&SinkStd::standard_error)
-				{}
+			InvokerReal();
 
 			InvokerReal& echoStreamSet(DataSink& sink) noexcept
 				{
@@ -25,9 +24,10 @@ namespace Maike
 
 			int run(const char* command,Twins<const char* const*> args
 				,DataSink& standard_output,DataSink& standard_error);
-			bool newer(const char* file_a,const char* file_b);
+			bool newer(const char* file_a,const char* file_b) const;
 			void mkdir(const char* name);
 			void copy(const char* source,const char* dest);
+			bool exists(const char* file) const;
 
 		private:
 			DataSink* r_echo_stream;

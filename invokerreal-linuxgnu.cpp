@@ -312,7 +312,7 @@ int InvokerReal::run(const char* command,Twins<const char* const*> args
 	}
 
 
-bool InvokerReal::newer(const char* file_a,const char* file_b)
+bool InvokerReal::newer(const char* file_a,const char* file_b) const
 	{
 	struct stat stat_a;
 	struct stat stat_b;
@@ -345,6 +345,15 @@ void InvokerReal::mkdir(const char* name)
 		//	,{strerror(errno)});
 		}
 	}
+
+
+bool InvokerReal::exists(const char* file) const
+	{
+	if(access(file,F_OK)==-1)
+		{return 0;}
+	return 1;
+	}
+
 
 namespace
 	{
@@ -412,3 +421,6 @@ void InvokerReal::copy(const char* source,const char* dest)
 		size-=res;
 		}
 	}
+
+InvokerReal::InvokerReal():r_echo_stream(&SinkStd::standard_error)
+	{}

@@ -8,7 +8,7 @@
 		<Build>
 			<Target title="Debug">
 				<Option output="bin/Debug/maike" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="../maike" />
+				<Option working_dir="/home/torbjorr/Dokument/maike" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -18,9 +18,22 @@
 			</Target>
 			<Target title="Release">
 				<Option output="bin/Release/maike" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="../maike" />
+				<Option working_dir="/home/torbjorr/Dokument/maike" />
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="Release-lib">
+				<Option output="bin/Release/maike" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/Release/" />
+				<Option type="2" />
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
@@ -41,28 +54,69 @@
 			<Add library="jansson" />
 			<Add library="pthread" />
 		</Linker>
-		<Unit filename="datasink.hpp" />
+		<Unit filename="datasink.hpp">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="dependency.cpp" />
-		<Unit filename="dependency.hpp" />
-		<Unit filename="dependencygraph.hpp" />
+		<Unit filename="dependency.hpp">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="dependencygraph.hpp">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="dependencygraphdefault.cpp" />
-		<Unit filename="dependencygraphdefault.hpp" />
+		<Unit filename="dependencygraphdefault.hpp">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="directorylister-linuxgnu.cpp" />
-		<Unit filename="directorylister.hpp" />
-		<Unit filename="invoker.hpp" />
+		<Unit filename="directorylister.hpp">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="fileinfo-linuxgnu.cpp" />
+		<Unit filename="fileinfo.hpp">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="invoker.hpp">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="invokerreal-linuxgnu.cpp" />
-		<Unit filename="invokerreal.hpp" />
+		<Unit filename="invokerreal.hpp">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="maike-main.cpp" />
 		<Unit filename="maike.cpp" />
-		<Unit filename="maike.hpp" />
-		<Unit filename="sinksstd.hpp" />
+		<Unit filename="maike.hpp">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="sinksstd.hpp">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="sinkstd.cpp" />
-		<Unit filename="spider.hpp" />
+		<Unit filename="spider.hpp">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="spiderdefault.cpp" />
-		<Unit filename="spiderdefault.hpp" />
-		<Unit filename="target.hpp" />
-		<Unit filename="targetloader.hpp" />
-		<Unit filename="twins.hpp" />
+		<Unit filename="spiderdefault.hpp">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="stringkey.hpp" />
+		<Unit filename="target.hpp">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="targetbase.cpp" />
+		<Unit filename="targetbase.hpp" />
+		<Unit filename="targetdirectory.cpp" />
+		<Unit filename="targetdirectory.hpp" />
+		<Unit filename="targetdirectoryloader.cpp" />
+		<Unit filename="targetdirectoryloader.hpp">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="targetloader.hpp">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="twins.hpp">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Extensions>
 			<code_completion />
 			<envvars />
