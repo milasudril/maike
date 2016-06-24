@@ -18,10 +18,10 @@ SpiderDefault::SpiderDefault(const std::map<Stringkey,const TargetLoader*>& load
 
 
 
-SpiderDefault& SpiderDefault::scanFile(const char* filename)
+SpiderDefault& SpiderDefault::scanFile(const char* filename,const char* in_dir)
 	{
 	if(m_files_visited.find(VisitedKey(filename))==m_files_visited.end())
-		{m_files_to_scan.push(filename);}
+		{m_files_to_scan.push({filename,in_dir});}
 	return *this;
 	}
 
@@ -60,13 +60,13 @@ SpiderDefault& SpiderDefault::run()
 	{
 	while(!m_files_to_scan.empty())
 		{
-		auto filename=std::move(m_files_to_scan.top());
+		auto p=std::move(m_files_to_scan.top());
 		m_files_to_scan.pop();
 
-		auto loader=targetLoaderGet(targetLoaderKeyGet(filename),r_loaders);
+		auto loader=targetLoaderGet(targetLoaderKeyGet(p.first),r_loaders);
 		if(loader!=nullptr)
-			{loader->targetsLoad(filename.c_str(),*this,r_targets);}
-		m_files_visited.insert(VisitedKey(filename.c_str()));
+			{loader->targetsLoad(p.first.c_str(),p.second.c_str(),*this,r_targets);}
+		m_files_visited.insert(VisitedKey(p.first.c_str()));
 		}
 
 	return *this;

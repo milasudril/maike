@@ -13,7 +13,7 @@ namespace Maike
 	class TargetLoader
 		{
 		public:
-			virtual void targetsLoad(const char* name_src
+			virtual void targetsLoad(const char* name_src,const char* in_dir
 				,Spider& spider,DependencyGraph& graph) const=0;
 		};
 	}

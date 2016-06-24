@@ -16,7 +16,8 @@ namespace Maike
 		{
 		public:
 			TargetDirectoryLoader();
-			void targetsLoad(const char* name_src,Spider& spider,DependencyGraph& graph) const;
+			void targetsLoad(const char* name_src,const char* in_dir
+				,Spider& spider,DependencyGraph& graph) const;
 
 		private:
 			std::set<Stringkey> m_ignore;

@@ -8,6 +8,7 @@
 
 #include "spider.hpp"
 #include "stringkey.hpp"
+#include "twins.hpp"
 #include <stack>
 #include <set>
 #include <map>
@@ -27,7 +28,7 @@ namespace Maike
 			SpiderDefault(const std::map<Stringkey,const TargetLoader*>& loaders
 				,DependencyGraph& targets);
 
-			SpiderDefault& scanFile(const char* filename);
+			SpiderDefault& scanFile(const char* filename,const char* in_dir);
 			SpiderDefault& run();
 			const char* targetPrefixGet() const noexcept;
 			const char* sourcePrefixGet() const noexcept;
@@ -37,7 +38,7 @@ namespace Maike
 			DependencyGraph& r_targets;
 
 			typedef Stringkey VisitedKey;
-			std::stack<std::string> m_files_to_scan;
+			std::stack< Twins<std::string> > m_files_to_scan;
 			std::set<VisitedKey> m_files_visited;
 		};
 	}

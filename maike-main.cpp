@@ -41,7 +41,7 @@ int main(int argc,char** args)
 	//	Collect targtes
 		Maike::DependencyGraphDefault targets;
 		Maike::SpiderDefault spider(loaders,targets);
-		spider.scanFile(".").run();
+		spider.scanFile(".","").run();
 
 	//	Build all targets
 		targets.targetsPatch().targetsProcess(TargetBuilder{Maike::InvokerReal()});
