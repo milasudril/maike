@@ -12,14 +12,19 @@
 
 namespace Maike
 	{
+	class TargetDirectoryCompiler;
 	class TargetDirectoryLoader:public TargetLoader
 		{
 		public:
-			TargetDirectoryLoader();
+			TargetDirectoryLoader(TargetDirectoryCompiler&& compiler)=delete;
+
+			explicit TargetDirectoryLoader(const TargetDirectoryCompiler& compiler);
+
 			void targetsLoad(const char* name_src,const char* in_dir
 				,Spider& spider,DependencyGraph& graph) const;
 
 		private:
+			const TargetDirectoryCompiler& r_compiler;
 			std::set<Stringkey> m_ignore;
 			bool m_recursive;
 		};

@@ -1,18 +1,18 @@
 //@	{"targets":[{"name":"targetdirectory.o","type":"object"}]}
 
 #include "targetdirectory.hpp"
-#include "invoker.hpp"
+#include "targetdirectorycompiler.hpp"
 
 using namespace Maike;
 
 void TargetDirectory::compile(Twins<const Dependency*> dependency_list
 	,Invoker& invoker)
 	{
-	invoker.mkdir(nameGet());
+	r_compiler.compile(*this,invoker);
 	}
 
 bool TargetDirectory::upToDate(Twins<const Dependency*> dependency_list
 	,Invoker& invoker) const
 	{
-	return invoker.exists(nameGet());
+	return r_compiler.upToDate(*this,invoker);
 	}

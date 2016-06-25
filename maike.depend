@@ -33,7 +33,7 @@
 1466495138 /home/torbjorr/Dokument/maike/dependencygraph.hpp
 	<memory>
 
-1466790279 source:/home/torbjorr/Dokument/maike/maike-main.cpp
+1466847054 source:/home/torbjorr/Dokument/maike/maike-main.cpp
 	"dependencygraphdefault.hpp"
 	"target.hpp"
 	"spiderdefault.hpp"
@@ -41,6 +41,7 @@
 	"invokerreal.hpp"
 	"maike.hpp"
 	"targetdirectoryloader.hpp"
+	"targetdirectorycompiler.hpp"
 
 1466767168 /home/torbjorr/Dokument/maike/maike.hpp
 	"twins.hpp"
@@ -121,12 +122,12 @@
 
 1466773716 /home/torbjorr/Dokument/maike/targetloader.hpp
 
-1466773732 /home/torbjorr/Dokument/maike/targetdirectoryloader.hpp
+1466847087 /home/torbjorr/Dokument/maike/targetdirectoryloader.hpp
 	"targetloader.hpp"
 	"stringkey.hpp"
 	<set>
 
-1466777842 source:/home/torbjorr/Dokument/maike/targetdirectoryloader.cpp
+1466844330 source:/home/torbjorr/Dokument/maike/targetdirectoryloader.cpp
 	"targetdirectoryloader.hpp"
 	"directorylister.hpp"
 	"fileinfo.hpp"
@@ -136,7 +137,7 @@
 	<string>
 	<cstdio>
 
-1466779824 source:/home/torbjorr/Dokument/maike/targetbase.cpp
+1466845592 source:/home/torbjorr/Dokument/maike/targetbase.cpp
 	"targetbase.hpp"
 
 1466788786 /home/torbjorr/Dokument/maike/targetbase.hpp
@@ -145,10 +146,33 @@
 	<vector>
 	<string>
 
-1466779621 /home/torbjorr/Dokument/maike/targetdirectory.hpp
+1466841950 /home/torbjorr/Dokument/maike/targetdirectory.hpp
 	"targetbase.hpp"
 
-1466788846 source:/home/torbjorr/Dokument/maike/targetdirectory.cpp
+1466845001 source:/home/torbjorr/Dokument/maike/targetdirectory.cpp
 	"targetdirectory.hpp"
+	"directorycompiler.hpp"
+
+1466845032 /home/torbjorr/Dokument/maike/directorycompiler.hpp
+	"compiler.hpp"
+	<string>
+
+1466842383 /home/torbjorr/Dokument/maike/compiler.hpp
+
+1466845723 source:/home/torbjorr/Dokument/maike/directorycompiler.cpp
+	"directorycompiler.hpp"
+	"target.hpp"
 	"invoker.hpp"
+
+1466846962 source:/home/torbjorr/Dokument/maike/targetdirectorycompiler.cpp
+	"targetdirectorycompiler.hpp"
+	"target.hpp"
+	"invoker.hpp"
+	<cstring>
+
+1466847036 /home/torbjorr/Dokument/maike/targetdirectorycompiler.hpp
+	"targetcompiler.hpp"
+	<string>
+
+1466847041 /home/torbjorr/Dokument/maike/targetcompiler.hpp
 

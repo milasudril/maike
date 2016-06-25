@@ -14,7 +14,8 @@
 
 using namespace Maike;
 
-TargetDirectoryLoader::TargetDirectoryLoader():m_recursive(1)
+TargetDirectoryLoader::TargetDirectoryLoader(const TargetDirectoryCompiler& compiler):
+	r_compiler(compiler),m_recursive(1)
 	{
 	m_ignore.insert(Stringkey("."));
 	m_ignore.insert(Stringkey(".."));
@@ -24,7 +25,7 @@ void TargetDirectoryLoader::targetsLoad(const char* name_src
 	,const char* in_dir,Spider& spider
 	,DependencyGraph& graph) const
 	{
-	auto target=new TargetDirectory(name_src,in_dir,graph.targetCounterGet());
+	auto target=new TargetDirectory(name_src,in_dir,graph.targetCounterGet(),r_compiler);
 	graph.targetRegister(std::unique_ptr<Target>(target));
 	DirectoryLister dirlister(name_src);
 	const char* entry=dirlister.read();

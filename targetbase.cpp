@@ -7,7 +7,7 @@
 using namespace Maike;
 
 TargetBase::TargetBase(const char* name,const char* name_src,const char* in_dir,size_t id):
-	m_id(id),m_name(name),m_source_name(name_src)
+	m_child_counter(0),m_id(id),m_name(name),m_source_name(name_src)
 	{
 	if(*in_dir!='\0')
 		{dependencyAdd(Dependency(in_dir,Dependency::Relation::INTERNAL));}
