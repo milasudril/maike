@@ -12,6 +12,8 @@
 //@	]
 
 #include "directorylister.hpp"
+#include "errormessage.hpp"
+#include "variant.hpp"
 #include <cstdint>
 #include <fcntl.h>
 #include <unistd.h>
@@ -65,8 +67,7 @@ class DirectoryLister::Impl
 				n_read=syscall(SYS_getdents64,fd,r_pos_current,SIZE_BUFFER);
 				if(n_read==-1)
 					{
-					throw __FILE__;
-				//TODO throw ErrorMessage("I/O error",{});
+					throw ErrorMessage("I/O error",{});
 					}
 				if(n_read==0)
 					{return nullptr;}

@@ -5,6 +5,8 @@
 #include "maike.hpp"
 #include "target.hpp"
 #include "dependency.hpp"
+#include "errormessage.hpp"
+#include "variant.hpp"
 #include <vector>
 #include <stack>
 
@@ -52,9 +54,8 @@ static void toposort(Maike::Target& target_first
 			//	Only external references are allowed to have an empty target
 				if(deps.first->relationGet()!=Maike::Dependency::Relation::EXTERNAL)
 					{
-					throw __FILE__;
-				//TODO throw ErrorMessage("#0;: Undefined reference to #1;."
-					//	,{target_current.nameSourceGet(),deps.first->nameGet()});
+					throw ErrorMessage("#0;: Undefined reference to #1;."
+						,{target_current->sourceNameGet(),deps.first->nameGet()});
 					}
 			//	Push the node and continue. Since there are no children, mark
 			//	this node as done.
@@ -63,9 +64,8 @@ static void toposort(Maike::Target& target_first
 			else //Non-empty target
 			if(visited[target_next->idGet()]==1)
 				{
-				throw __FILE__;
-			//TODO throw ErrorMessage("A cyclic dependency between #0; and #1; was detected."
-				//	,{target_current.nameGet(),target_next->nameGet()});
+				throw ErrorMessage("A cyclic dependency between #0; and #1; was detected."
+					,{target_current->nameGet(),target_next->nameGet()});
 				}
 			nodes.push({deps.first,0});
 			++(deps.first);

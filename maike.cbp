@@ -76,6 +76,9 @@
 		<Unit filename="directorylister.hpp">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
+		<Unit filename="errormessage.hpp" />
+		<Unit filename="exceptionhandler.cpp" />
+		<Unit filename="exceptionhandler.hpp" />
 		<Unit filename="fileinfo-linuxgnu.cpp" />
 		<Unit filename="fileinfo.hpp">
 			<Option target="&lt;{~None~}&gt;" />

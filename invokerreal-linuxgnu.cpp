@@ -15,6 +15,8 @@
 
 #include "invokerreal.hpp"
 #include "datasinkstd.hpp"
+#include "errormessage.hpp"
+#include "variant.hpp"
 
 #include <unistd.h>
 #include <fcntl.h>
@@ -165,8 +167,7 @@ static size_t fdRead(int fd,void* buffer,size_t count)
 			{return n_read;}
 		if(n==-1)
 			{
-			throw __FILE__;
-		//TODO throw ErrorMessage("I/O error",{});
+			throw ErrorMessage("I/O error",{});
 			}
 		pos+=n;
 		n_read+=n;

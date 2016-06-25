@@ -12,6 +12,7 @@
 #include "maike.hpp"
 #include "targetdirectoryloader.hpp"
 #include "targetdirectorycompiler.hpp"
+#include "errormessage.hpp"
 
 class TargetBuilder:public Maike::DependencyGraph::TargetProcessor
 	{
@@ -51,9 +52,11 @@ int main(int argc,char** args)
 	//	Build all targets
 		targets.targetsPatch().targetsProcess(TargetBuilder{Maike::InvokerReal()});
 		}
-	catch(const char* msg)
+	catch(const Maike::ErrorMessage& msg)
 		{
-		printf("Error: %s",msg);
+		printf("Error: %s",msg.messageGet());
 		}
+	catch(const char* msg)
+		{printf("Error: %s",msg);}
 	return 0;
 	}

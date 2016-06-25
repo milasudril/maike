@@ -13,17 +13,21 @@
 1466517615 /home/torbjorr/Dokument/maike/twins.hpp
 	<utility>
 
-1466767202 source:/home/torbjorr/Dokument/maike/maike.cpp
+1466878052 source:/home/torbjorr/Dokument/maike/maike.cpp
 	"maike.hpp"
 	"target.hpp"
 	"dependency.hpp"
+	"errormessage.hpp"
+	"variant.hpp"
 	<vector>
 	<stack>
 
-1466779871 source:/home/torbjorr/Dokument/maike/dependencygraphdefault.cpp
+1466877883 source:/home/torbjorr/Dokument/maike/dependencygraphdefault.cpp
 	"dependencygraphdefault.hpp"
 	"target.hpp"
 	"dependency.hpp"
+	"errormessage.hpp"
+	"variant.hpp"
 
 1466758151 /home/torbjorr/Dokument/maike/dependencygraphdefault.hpp
 	"dependencygraph.hpp"
@@ -33,7 +37,7 @@
 1466495138 /home/torbjorr/Dokument/maike/dependencygraph.hpp
 	<memory>
 
-1466858212 source:/home/torbjorr/Dokument/maike/maike-main.cpp
+1466878168 source:/home/torbjorr/Dokument/maike/maike-main.cpp
 	"dependencygraphdefault.hpp"
 	"target.hpp"
 	"spiderdefault.hpp"
@@ -42,14 +46,17 @@
 	"maike.hpp"
 	"targetdirectoryloader.hpp"
 	"targetdirectorycompiler.hpp"
+	"errormessage.hpp"
 
 1466767168 /home/torbjorr/Dokument/maike/maike.hpp
 	"twins.hpp"
 	<cstddef>
 
-1466858740 source:/home/torbjorr/Dokument/maike/invokerreal-linuxgnu.cpp
+1466878012 source:/home/torbjorr/Dokument/maike/invokerreal-linuxgnu.cpp
 	"invokerreal.hpp"
 	"datasinkstd.hpp"
+	"errormessage.hpp"
+	"variant.hpp"
 	<unistd.h>
 	<fcntl.h>
 	<sys/wait.h>
@@ -79,8 +86,10 @@
 1466590645 source:/home/torbjorr/Dokument/maike/sinkstd.cpp
 	"datasink.hpp"
 
-1466687438 source:/home/torbjorr/Dokument/maike/directorylister-linuxgnu.cpp
+1466877923 source:/home/torbjorr/Dokument/maike/directorylister-linuxgnu.cpp
 	"directorylister.hpp"
+	"errormessage.hpp"
+	"variant.hpp"
 	<cstdint>
 	<fcntl.h>
 	<unistd.h>
@@ -189,5 +198,31 @@
 
 1466866267 /home/torbjorr/Dokument/maike/exceptionhandler.hpp
 
-1466866085 /home/torbjorr/Dokument/maike/errormessage.hpp
+1466876132 /home/torbjorr/Dokument/maike/errormessage.hpp
+	<initializer_list>
+	<cstddef>
+
+1466876038 source:/home/torbjorr/Dokument/maike/errormessage.cpp
+	"errormessage.hpp"
+	"stringformat.hpp"
+
+1466877690 /home/torbjorr/Dokument/maike/stringformat.hpp
+	"variant.hpp"
+	"twins.hpp"
+	<initializer_list>
+	<cstddef>
+
+1466876242 /home/torbjorr/Dokument/maike/variant.hpp
+	<limits>
+	<cstdint>
+	<cstddef>
+	<cassert>
+	<utility>
+
+1466877648 source:/home/torbjorr/Dokument/maike/stringformat.cpp
+	"stringformat.hpp"
+	"variant.hpp"
+	"twins.hpp"
+	<algorithm>
+	<cstring>
 
