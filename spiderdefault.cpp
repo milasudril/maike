@@ -7,8 +7,6 @@
 #include "fileinfo.hpp"
 #include "targetloader.hpp"
 
-#include <cstdio>
-
 using namespace Maike;
 
 SpiderDefault::SpiderDefault(const std::map<Stringkey,const TargetLoader*>& loaders
@@ -65,7 +63,10 @@ SpiderDefault& SpiderDefault::run()
 
 		auto loader=targetLoaderGet(targetLoaderKeyGet(p.first),r_loaders);
 		if(loader!=nullptr)
-			{loader->targetsLoad(p.first.c_str(),p.second.c_str(),*this,r_targets);}
+			{
+			auto in_dir=p.second.c_str();
+			loader->targetsLoad(p.first.c_str(),in_dir,*this,r_targets);
+			}
 		m_files_visited.insert(VisitedKey(p.first.c_str()));
 		}
 
