@@ -14,7 +14,7 @@
 #define _LARGEFILE64_SOURCE
 
 #include "invokerreal.hpp"
-#include "datasink.hpp"
+#include "datasinkstd.hpp"
 
 #include <unistd.h>
 #include <fcntl.h>
@@ -225,14 +225,14 @@ static std::string escape(const char* str)
 		ret+=*str;
 		++str;
 		}
-	return std::move(str);
+	return std::move(ret);
 	}
 
 
 static std::string commandLineAsJSON(const char* command
 	,Twins<const char* const*> args)
 	{
-	std::string cmd_json("{\"command\":\"");
+	std::string cmd_json("{\"method\":\"run\",{\"command\":\"");
 	cmd_json+=escape(command)+"\"args\":[";
 	while(args.first!=args.second)
 		{
@@ -241,7 +241,7 @@ static std::string commandLineAsJSON(const char* command
 		if(args.first!=args.second)
 			{cmd_json+=',';}
 		}
-	cmd_json+="]}";
+	cmd_json+="]}}\n,";
 	return std::move(cmd_json);
 	}
 
@@ -338,6 +338,11 @@ bool InvokerReal::newer(const char* file_a,const char* file_b) const
 
 void InvokerReal::mkdir(const char* name)
 	{
+	std::string message("{\"method\":\"mkdir\",{\"name\":\"");
+	message+=escape(name);
+	message+="\"}}\n,";
+	r_echo_stream->write(message.c_str(),message.size());
+
 	if( ::mkdir(name, S_IRWXU )==-1 )
 		{
 		throw __FILE__;
@@ -398,6 +403,14 @@ void InvokerReal::copy(const char* source,const char* dest)
 	FileDescriptor source_fd(source,O_RDONLY);
 	FileDescriptor dest_fd(dest,O_CREAT|O_WRONLY,S_IRUSR|S_IWUSR);
 
+	std::string message("{\"method\":\"copy\",{\"source\":\"");
+	message+=escape(source);
+	message+="\",\"dest\":\"";
+	message+=escape(dest);
+	message+="\"}}\n,";
+	r_echo_stream->write(message.c_str(),message.size());
+
+
 	struct stat source_stat;
 	if(fstat(source_fd.get(),&source_stat)==-1)
 		{
@@ -422,5 +435,5 @@ void InvokerReal::copy(const char* source,const char* dest)
 		}
 	}
 
-InvokerReal::InvokerReal():r_echo_stream(&SinkStd::standard_error)
+InvokerReal::InvokerReal():r_echo_stream(&DataSinkStd::standard_error)
 	{}

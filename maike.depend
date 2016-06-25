@@ -33,7 +33,7 @@
 1466495138 /home/torbjorr/Dokument/maike/dependencygraph.hpp
 	<memory>
 
-1466847054 source:/home/torbjorr/Dokument/maike/maike-main.cpp
+1466858212 source:/home/torbjorr/Dokument/maike/maike-main.cpp
 	"dependencygraphdefault.hpp"
 	"target.hpp"
 	"spiderdefault.hpp"
@@ -47,9 +47,9 @@
 	"twins.hpp"
 	<cstddef>
 
-1466790365 source:/home/torbjorr/Dokument/maike/invokerreal-linuxgnu.cpp
+1466858359 source:/home/torbjorr/Dokument/maike/invokerreal-linuxgnu.cpp
 	"invokerreal.hpp"
-	"datasink.hpp"
+	"datasinkstd.hpp"
 	<unistd.h>
 	<fcntl.h>
 	<sys/wait.h>
@@ -63,9 +63,8 @@
 	<exception>
 	<tuple>
 
-1466790350 /home/torbjorr/Dokument/maike/invokerreal.hpp
+1466856720 /home/torbjorr/Dokument/maike/invokerreal.hpp
 	"invoker.hpp"
-	"sinksstd.hpp"
 
 1466789165 /home/torbjorr/Dokument/maike/invoker.hpp
 	"twins.hpp"
@@ -73,8 +72,9 @@
 1466586979 /home/torbjorr/Dokument/maike/datasink.hpp
 	<cstddef>
 
-1466588878 /home/torbjorr/Dokument/maike/sinksstd.hpp
-	<cstddef>
+1466855883 /home/torbjorr/Dokument/maike/sinksstd.hpp
+	"datasink.hpp"
+	<cstdint>
 
 1466590645 source:/home/torbjorr/Dokument/maike/sinkstd.cpp
 	"datasink.hpp"
@@ -175,4 +175,12 @@
 	<string>
 
 1466847041 /home/torbjorr/Dokument/maike/targetcompiler.hpp
+
+1466857192 source:/home/torbjorr/Dokument/maike/datasinkstd-posix.cpp
+	"datasinkstd.hpp"
+	<unistd.h>
+
+1466856679 /home/torbjorr/Dokument/maike/datasinkstd.hpp
+	"datasink.hpp"
+	<cstdint>
 

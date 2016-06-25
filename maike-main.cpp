@@ -21,8 +21,6 @@ class TargetBuilder:public Maike::DependencyGraph::TargetProcessor
 
 		void operator()(Maike::DependencyGraph& graph,Maike::Target& target_current)
 			{
-			printf("Processing %s [%zu]\n",target_current.nameGet()
-				,target_current.childCounterGet());
 			if(target_current.childCounterGet()==0)
 				{Maike::buildBranch(target_current,r_invoker,graph.targetCounterGet());}
 			}
@@ -41,7 +39,8 @@ int main(int argc,char** args)
 		Maike::TargetDirectoryCompiler dircompiler;
 		dircompiler.directoryTargetsSet("__targets");
 		Maike::TargetDirectoryLoader dirloader(dircompiler);
-		dirloader.pathRefuse(Maike::Stringkey(".git"));
+		dirloader.pathRefuse(Maike::Stringkey(".git"))
+			.pathRefuse(Maike::Stringkey("__targets"));
 		loaders[Maike::Stringkey(".")]=&dirloader;
 
 	//	Collect targtes

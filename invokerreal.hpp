@@ -7,10 +7,11 @@
 #define MAIKE_INVOKERREAL_H
 
 #include "invoker.hpp"
-#include "sinksstd.hpp"
 
 namespace Maike
 	{
+	class DataSink;
+
 	class InvokerReal:public Invoker
 		{
 		public:
