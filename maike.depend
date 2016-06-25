@@ -91,12 +91,11 @@
 
 1466699128 /home/torbjorr/Dokument/maike/directorylister.hpp
 
-1466773751 source:/home/torbjorr/Dokument/maike/spiderdefault.cpp
+1466860865 source:/home/torbjorr/Dokument/maike/spiderdefault.cpp
 	"spiderdefault.hpp"
 	"directorylister.hpp"
 	"fileinfo.hpp"
 	"targetloader.hpp"
-	<cstdio>
 
 1466773609 /home/torbjorr/Dokument/maike/spiderdefault.hpp
 	"spider.hpp"
@@ -127,7 +126,7 @@
 	"stringkey.hpp"
 	<set>
 
-1466847632 source:/home/torbjorr/Dokument/maike/targetdirectoryloader.cpp
+1466860859 source:/home/torbjorr/Dokument/maike/targetdirectoryloader.cpp
 	"targetdirectoryloader.hpp"
 	"directorylister.hpp"
 	"fileinfo.hpp"
@@ -135,7 +134,7 @@
 	"targetdirectory.hpp"
 	"dependencygraph.hpp"
 	<string>
-	<cstdio>
+	<cstring>
 
 1466845592 source:/home/torbjorr/Dokument/maike/targetbase.cpp
 	"targetbase.hpp"
@@ -183,4 +182,12 @@
 1466856679 /home/torbjorr/Dokument/maike/datasinkstd.hpp
 	"datasink.hpp"
 	<cstdint>
+
+1466866254 source:/home/torbjorr/Dokument/maike/exceptionhandler.cpp
+	"exceptionhandler.hpp"
+	"errormessage.hpp"
+
+1466866267 /home/torbjorr/Dokument/maike/exceptionhandler.hpp
+
+1466866085 /home/torbjorr/Dokument/maike/errormessage.hpp
 

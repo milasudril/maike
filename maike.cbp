@@ -57,6 +57,10 @@
 		<Unit filename="datasink.hpp">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
+		<Unit filename="datasinkstd-posix.cpp" />
+		<Unit filename="datasinkstd.hpp">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="dependency.cpp" />
 		<Unit filename="dependency.hpp">
 			<Option target="&lt;{~None~}&gt;" />
@@ -88,10 +92,6 @@
 		<Unit filename="maike.hpp">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
-		<Unit filename="sinksstd.hpp">
-			<Option target="&lt;{~None~}&gt;" />
-		</Unit>
-		<Unit filename="sinkstd.cpp" />
 		<Unit filename="spider.hpp">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
@@ -105,8 +105,11 @@
 		</Unit>
 		<Unit filename="targetbase.cpp" />
 		<Unit filename="targetbase.hpp" />
+		<Unit filename="targetcompiler.hpp" />
 		<Unit filename="targetdirectory.cpp" />
 		<Unit filename="targetdirectory.hpp" />
+		<Unit filename="targetdirectorycompiler.cpp" />
+		<Unit filename="targetdirectorycompiler.hpp" />
 		<Unit filename="targetdirectoryloader.cpp" />
 		<Unit filename="targetdirectoryloader.hpp">
 			<Option target="&lt;{~None~}&gt;" />
