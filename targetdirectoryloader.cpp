@@ -45,3 +45,15 @@ void TargetDirectoryLoader::targetsLoad(const char* name_src
 		entry=dirlister.read();
 		}
 	}
+
+TargetDirectoryLoader& TargetDirectoryLoader::pathRefuse(const Stringkey& key)
+	{
+	m_ignore.insert(key);
+	return *this;
+	}
+
+TargetDirectoryLoader& TargetDirectoryLoader::pathAllow(const Stringkey& key)
+	{
+	m_ignore.erase(key);
+	return *this;
+	}

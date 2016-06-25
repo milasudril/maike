@@ -23,6 +23,9 @@ namespace Maike
 			void targetsLoad(const char* name_src,const char* in_dir
 				,Spider& spider,DependencyGraph& graph) const;
 
+			TargetDirectoryLoader& pathRefuse(const Stringkey& key);
+			TargetDirectoryLoader& pathAllow(const Stringkey& key);
+
 		private:
 			const TargetDirectoryCompiler& r_compiler;
 			std::set<Stringkey> m_ignore;

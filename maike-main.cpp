@@ -41,6 +41,7 @@ int main(int argc,char** args)
 		Maike::TargetDirectoryCompiler dircompiler;
 		dircompiler.directoryTargetsSet("__targets");
 		Maike::TargetDirectoryLoader dirloader(dircompiler);
+		dirloader.pathRefuse(Maike::Stringkey(".git"));
 		loaders[Maike::Stringkey(".")]=&dirloader;
 
 	//	Collect targtes
