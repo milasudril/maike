@@ -15,7 +15,7 @@ namespace Maike
 	class ErrorMessage
 		{
 		public:
-			ErrorMessage(const char* format_string
+			explicit ErrorMessage(const char* format_string
 				,const std::initializer_list<Variant>& args) noexcept;
 
 			static constexpr size_t length()

@@ -76,6 +76,7 @@
 		<Unit filename="directorylister.hpp">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
+		<Unit filename="errormessage.cpp" />
 		<Unit filename="errormessage.hpp" />
 		<Unit filename="exceptionhandler.cpp" />
 		<Unit filename="exceptionhandler.hpp" />
@@ -102,6 +103,8 @@
 		<Unit filename="spiderdefault.hpp">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
+		<Unit filename="stringformat.cpp" />
+		<Unit filename="stringformat.hpp" />
 		<Unit filename="stringkey.hpp" />
 		<Unit filename="target.hpp">
 			<Option target="&lt;{~None~}&gt;" />
@@ -123,6 +126,7 @@
 		<Unit filename="twins.hpp">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
+		<Unit filename="variant.hpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

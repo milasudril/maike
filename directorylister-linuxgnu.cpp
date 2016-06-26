@@ -14,6 +14,8 @@
 #include "directorylister.hpp"
 #include "errormessage.hpp"
 #include "variant.hpp"
+#include "exceptionhandler.hpp"
+#include "strerror.hpp"
 #include <cstdint>
 #include <fcntl.h>
 #include <unistd.h>
@@ -47,9 +49,8 @@ class DirectoryLister::Impl
 			fd=open(dirname,O_DIRECTORY|O_RDONLY);
 			if(fd==-1)
 				{
-				throw __FILE__;
-			//TODO throw ErrorMessage("It was not possible to open the directory #0;"
-				//    ,{strerror(errno)});
+				exceptionRaise(ErrorMessage("It was not possible to open the directory #0;"
+				    ,{static_cast<const char*>( strerror(errno) )}));
 				}
 			n_read=0;
 			r_pos_current=m_buffer.get();
@@ -67,7 +68,7 @@ class DirectoryLister::Impl
 				n_read=syscall(SYS_getdents64,fd,r_pos_current,SIZE_BUFFER);
 				if(n_read==-1)
 					{
-					throw ErrorMessage("I/O error",{});
+					exceptionRaise( ErrorMessage("I/O error",{}) );
 					}
 				if(n_read==0)
 					{return nullptr;}

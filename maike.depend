@@ -13,21 +13,23 @@
 1466517615 /home/torbjorr/Dokument/maike/twins.hpp
 	<utility>
 
-1466878052 source:/home/torbjorr/Dokument/maike/maike.cpp
+1466923119 source:/home/torbjorr/Dokument/maike/maike.cpp
 	"maike.hpp"
 	"target.hpp"
 	"dependency.hpp"
 	"errormessage.hpp"
 	"variant.hpp"
+	"exceptionhandler.hpp"
 	<vector>
 	<stack>
 
-1466877883 source:/home/torbjorr/Dokument/maike/dependencygraphdefault.cpp
+1466922709 source:/home/torbjorr/Dokument/maike/dependencygraphdefault.cpp
 	"dependencygraphdefault.hpp"
 	"target.hpp"
 	"dependency.hpp"
 	"errormessage.hpp"
 	"variant.hpp"
+	"exceptionhandler.hpp"
 
 1466758151 /home/torbjorr/Dokument/maike/dependencygraphdefault.hpp
 	"dependencygraph.hpp"
@@ -52,11 +54,12 @@
 	"twins.hpp"
 	<cstddef>
 
-1466878012 source:/home/torbjorr/Dokument/maike/invokerreal-linuxgnu.cpp
+1466923160 source:/home/torbjorr/Dokument/maike/invokerreal-linuxgnu.cpp
 	"invokerreal.hpp"
 	"datasinkstd.hpp"
 	"errormessage.hpp"
 	"variant.hpp"
+	"exceptionhandler.hpp"
 	<unistd.h>
 	<fcntl.h>
 	<sys/wait.h>
@@ -86,10 +89,12 @@
 1466590645 source:/home/torbjorr/Dokument/maike/sinkstd.cpp
 	"datasink.hpp"
 
-1466877923 source:/home/torbjorr/Dokument/maike/directorylister-linuxgnu.cpp
+1466924212 source:/home/torbjorr/Dokument/maike/directorylister-linuxgnu.cpp
 	"directorylister.hpp"
 	"errormessage.hpp"
 	"variant.hpp"
+	"exceptionhandler.hpp"
+	"strerror.hpp"
 	<cstdint>
 	<fcntl.h>
 	<unistd.h>
@@ -121,8 +126,13 @@
 1466757713 /home/torbjorr/Dokument/maike/stringkey.hpp
 	<cstdint>
 
-1466761930 source:/home/torbjorr/Dokument/maike/fileinfo-linuxgnu.cpp
+1466924304 source:/home/torbjorr/Dokument/maike/fileinfo-linuxgnu.cpp
 	"fileinfo.hpp"
+	"variant.hpp"
+	"errormessage.hpp"
+	"strerror.hpp"
+	"exceptionhandler.hpp"
+	<errno.h>
 	<sys/stat.h>
 
 1466769526 /home/torbjorr/Dokument/maike/fileinfo.hpp
@@ -198,7 +208,7 @@
 
 1466866267 /home/torbjorr/Dokument/maike/exceptionhandler.hpp
 
-1466876132 /home/torbjorr/Dokument/maike/errormessage.hpp
+1466922675 /home/torbjorr/Dokument/maike/errormessage.hpp
 	<initializer_list>
 	<cstddef>
 
@@ -225,4 +235,11 @@
 	"twins.hpp"
 	<algorithm>
 	<cstring>
+
+1466924017 source:/home/torbjorr/Dokument/maike/strerror-linuxgnu.cpp
+	"strerror.hpp"
+	<cstring>
+
+1466924013 /home/torbjorr/Dokument/maike/strerror.hpp
+	<cstddef>
 

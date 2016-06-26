@@ -6,9 +6,14 @@
 //@	]
 
 #define _LARGEFILE64_SOURCE
-#define FILE_OFFSET_BITS 64ř
+#define FILE_OFFSET_BITS 64
 
 #include "fileinfo.hpp"
+#include "variant.hpp"
+#include "errormessage.hpp"
+#include "strerror.hpp"
+#include "exceptionhandler.hpp"
+#include <errno.h>
 #include <sys/stat.h>
 
 using namespace Maike;
@@ -18,9 +23,8 @@ FileInfo::FileInfo(const char* filename)
 	struct stat info;
     if(stat(filename,&info)==-1)
 		{
-	//TODO throw ErrorMessage("It was not possible to retrieve information about #0;. #1;"
-		//	,{strerror(errno)});
-		throw __FILE__;
+		exceptionRaise(ErrorMessage("It was not possible to retrieve information about #0;. #1;"
+			,{static_cast<const char*>(strerror(errno))}));
 		}
 
 	m_time_modified=static_cast<double>(info.st_mtim.tv_sec)

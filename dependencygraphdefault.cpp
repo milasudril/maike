@@ -7,6 +7,7 @@
 #include "dependency.hpp"
 #include "errormessage.hpp"
 #include "variant.hpp"
+#include "exceptionhandler.hpp"
 
 using namespace Maike;
 
@@ -16,8 +17,8 @@ DependencyGraphDefault& DependencyGraphDefault::targetRegister(std::unique_ptr<T
 	auto i=m_targets.find(KeyType(name));
 	if( i!=m_targets.end() )
 		{
-		throw ErrorMessage("#0;: Target #1; has already been defined in #2;"
-			,{target->sourceNameGet(),name,i->second->sourceNameGet()});
+		exceptionRaise( ErrorMessage("#0;: Target #1; has already been defined in #2;"
+			,{target->sourceNameGet(),name,i->second->sourceNameGet()}));
 		}
 	m_targets.emplace(KeyType(name),std::move(target));
 	return *this;
@@ -40,8 +41,8 @@ DependencyGraphDefault& DependencyGraphDefault::targetsPatch()
 					{
 				//TODO: Here, we should look in our repository before throwing
 				// an exception
-					throw ErrorMessage("#0; Dependency #1; is not satisfied"
-						,{i->second->sourceNameGet(),dep->nameGet()});
+					exceptionRaise(ErrorMessage("#0; Dependency #1; is not satisfied"
+						,{i->second->sourceNameGet(),dep->nameGet()}));
 					}
 				dep->targetSet(*(t->second));
 				}

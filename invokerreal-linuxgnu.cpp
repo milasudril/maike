@@ -17,6 +17,8 @@
 #include "datasinkstd.hpp"
 #include "errormessage.hpp"
 #include "variant.hpp"
+#include "exceptionhandler.hpp"
+#include "strerror.hpp"
 
 #include <unistd.h>
 #include <fcntl.h>
@@ -46,9 +48,8 @@ namespace
 				{
 				if(pipe(m_fd)==-1)
 					{
-					throw __FILE__;
-				//TODO throw ErrorMessage("It was not possible to create an IPC pipe. #0;"
-					//	,{strerror(errno)});
+					exceptionRaise(ErrorMessage("It was not possible to create an IPC pipe. #0;"
+						,{static_cast<const char*>(strerror(errno))}));
 					}
 				}
 
@@ -102,9 +103,8 @@ namespace
 				m_pid=fork();
 				if(m_pid==-1)
 					{
-					throw __FILE__;
-				//TODO throw ErrorMessage("It was not possible to create a child process. #0;"
-					//	,{strerror(errno)});
+					exceptionRaise(ErrorMessage("It was not possible to create a child process. #0;"
+						,{static_cast<const char*>(strerror(errno))}));
 					}
 				}
 
@@ -140,9 +140,8 @@ namespace
 				auto res=pthread_create(&m_handle,nullptr,start_routine,arg);
 				if(res!=0)
 					{
-					throw __FILE__;
-				//TODO throw ErrorMessage("It was not possible to start a new thread. #0;"
-					//	{strerror(res)});
+					exceptionRaise(ErrorMessage("It was not possible to start a new thread. #0;"
+						,{static_cast<const char*>(strerror(res))}));
 					}
 				}
 			~Thread()
@@ -167,7 +166,7 @@ static size_t fdRead(int fd,void* buffer,size_t count)
 			{return n_read;}
 		if(n==-1)
 			{
-			throw ErrorMessage("I/O error",{});
+			exceptionRaise( ErrorMessage("I/O error",{}) );
 			}
 		pos+=n;
 		n_read+=n;
@@ -287,9 +286,8 @@ int InvokerReal::run(const char* command,Twins<const char* const*> args
 //	Check if execvp failed.
 	if(::read(exec_error.readEndGet(),&status,sizeof(status))==sizeof(status))
 		{
-		throw __FILE__;
-	//TODO throw ErrorMessage("It was not possible to start #0;. #0;1"
-		//	,{command,strerror(status)});
+		exceptionRaise(ErrorMessage("It was not possible to start #0;. #0;1"
+			,{command,static_cast<const char*>(strerror(status))}));
 		}
 
 	exceptions[0]=nullptr;
@@ -323,9 +321,8 @@ bool InvokerReal::newer(const char* file_a,const char* file_b) const
 
 	if(res_a==-1 && res_b==-1)
 		{
-		throw __FILE__;
-	//TODO throw ErrorMessage("None of the files #0;, and #1; are accessible. #2;"
-		//	,{strerror(errno)});
+		exceptionRaise(ErrorMessage("None of the files #0;, and #1; are accessible. #2;"
+			,{static_cast<const char*>(strerror(errno))}));
 		}
 
 	if(res_a==-1)
@@ -346,9 +343,8 @@ void InvokerReal::mkdir(const char* name)
 
 	if( ::mkdir(name, S_IRWXU )==-1 )
 		{
-		throw __FILE__;
-	//TODO throw ErrorMessage("It was not possible to create a directory with name #0;. #0;"
-		//	,{strerror(errno)});
+		exceptionRaise(ErrorMessage("It was not possible to create a directory with name #0;. #0;"
+			,{static_cast<const char*>(strerror(errno))}));
 		}
 	}
 
@@ -371,9 +367,8 @@ namespace
 				m_fd=open(file,flags,mode);
 				if(m_fd==-1)
 					{
-					throw __FILE__;
-				//TODO throw ErrorMessage("It was not possible to open the file #0;. #1;"
-					//	,{strerror(errno)});
+					exceptionRaise(ErrorMessage("It was not possible to open the file #0;. #1;"
+						,{static_cast<const char*>(strerror(errno))}));
 					}
 				}
 
@@ -382,9 +377,8 @@ namespace
 				m_fd=open(file,flags);
 				if(m_fd==-1)
 					{
-					throw __FILE__;
-				//TODO throw ErrorMessage("It was not possible to open the file #0;. #1;"
-					//	,{strerror(errno)});
+					exceptionRaise(ErrorMessage("It was not possible to open the file #0;. #1;"
+						,{static_cast<const char*>(strerror(errno))}));
 					}
 				}
 
@@ -416,8 +410,7 @@ void InvokerReal::copy(const char* source,const char* dest)
 	if(fstat(source_fd.get(),&source_stat)==-1)
 		{
 		unlink(dest);
-		throw __FILE__;
-	//TODO throw ErrorMessage("stat error: #0;",{strerror(errno)});
+		exceptionRaise(ErrorMessage("stat error: #0;",{static_cast<const char*>(strerror(errno))}));
 		}
 
 	auto size=source_stat.st_size;
@@ -427,9 +420,8 @@ void InvokerReal::copy(const char* source,const char* dest)
 		if(res==-1)
 			{
 			unlink(dest);
-			throw __FILE__;
-		//TODO throw ErrorMessage("It was not possible to copy #0; to #1;"
-		//		,{strerror(errno)});
+			exceptionRaise(ErrorMessage("It was not possible to copy #0; to #1;"
+				,{static_cast<const char*>(strerror(errno))}));
 			}
 
 		size-=res;
