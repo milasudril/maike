@@ -54,6 +54,8 @@
 			<Add library="jansson" />
 			<Add library="pthread" />
 		</Linker>
+		<Unit filename="command.cpp" />
+		<Unit filename="command.hpp" />
 		<Unit filename="datasink.hpp">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
@@ -103,6 +105,8 @@
 		<Unit filename="spiderdefault.hpp">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
+		<Unit filename="strerror-posix.cpp" />
+		<Unit filename="strerror.hpp" />
 		<Unit filename="stringformat.cpp" />
 		<Unit filename="stringformat.hpp" />
 		<Unit filename="stringkey.hpp" />
@@ -111,11 +115,11 @@
 		</Unit>
 		<Unit filename="targetbase.cpp" />
 		<Unit filename="targetbase.hpp" />
-		<Unit filename="targetcompiler.hpp" />
+		<Unit filename="targetcxxcompiler.cpp" />
+		<Unit filename="targetcxxcompiler.hpp" />
+		<Unit filename="targetcxxoptions.hpp" />
 		<Unit filename="targetdirectory.cpp" />
 		<Unit filename="targetdirectory.hpp" />
-		<Unit filename="targetdirectorycompiler.cpp" />
-		<Unit filename="targetdirectorycompiler.hpp" />
 		<Unit filename="targetdirectoryloader.cpp" />
 		<Unit filename="targetdirectoryloader.hpp">
 			<Option target="&lt;{~None~}&gt;" />

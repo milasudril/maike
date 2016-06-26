@@ -1,18 +1,33 @@
 //@	{"targets":[{"name":"targetdirectory.o","type":"object"}]}
 
 #include "targetdirectory.hpp"
-#include "targetdirectorycompiler.hpp"
+#include "invoker.hpp"
+#include <cstring>
 
 using namespace Maike;
 
 void TargetDirectory::compile(Twins<const Dependency*> dependency_list
-	,Invoker& invoker)
+	,Invoker& invoker,const char* target_dir)
 	{
-	r_compiler.compile(*this,invoker);
+	std::string fullpath=target_dir;
+	auto name=nameGet();
+	if(strcmp(name,"."))
+		{
+		fullpath+='/';
+		fullpath+=name;
+		}
+	invoker.mkdir(fullpath.c_str());
 	}
 
 bool TargetDirectory::upToDate(Twins<const Dependency*> dependency_list
-	,Invoker& invoker) const
+	,Invoker& invoker,const char* target_dir) const
 	{
-	return r_compiler.upToDate(*this,invoker);
+	std::string fullpath=target_dir;
+	auto name=nameGet();
+	if(strcmp(name,"."))
+		{
+		fullpath+='/';
+		fullpath+=name;
+		}
+	return invoker.exists(fullpath.c_str());
 	}

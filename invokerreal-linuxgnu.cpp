@@ -286,7 +286,7 @@ int InvokerReal::run(const char* command,Twins<const char* const*> args
 //	Check if execvp failed.
 	if(::read(exec_error.readEndGet(),&status,sizeof(status))==sizeof(status))
 		{
-		exceptionRaise(ErrorMessage("It was not possible to start #0;. #0;1"
+		exceptionRaise(ErrorMessage("It was not possible to start #0;. #1;"
 			,{command,static_cast<const char*>(strerror(status))}));
 		}
 
@@ -317,12 +317,19 @@ bool InvokerReal::newer(const char* file_a,const char* file_b) const
 	struct stat stat_b;
 
 	auto res_a=stat(file_a, &stat_a);
+	auto errno_a=errno;
 	auto res_b=stat(file_b, &stat_b);
+	auto errno_b=errno;
 
 	if(res_a==-1 && res_b==-1)
 		{
-		exceptionRaise(ErrorMessage("None of the files #0;, and #1; are accessible. #2;"
-			,{static_cast<const char*>(strerror(errno))}));
+		exceptionRaise(ErrorMessage("None of the files #0;, and #1; are accessible. #0;: #2;. #1;: #3;."
+			,{
+			 file_a
+			,file_b
+			,static_cast<const char*>(strerror(errno_a))
+			,static_cast<const char*>(strerror(errno_b))
+			}));
 		}
 
 	if(res_a==-1)
@@ -343,8 +350,8 @@ void InvokerReal::mkdir(const char* name)
 
 	if( ::mkdir(name, S_IRWXU )==-1 )
 		{
-		exceptionRaise(ErrorMessage("It was not possible to create a directory with name #0;. #0;"
-			,{static_cast<const char*>(strerror(errno))}));
+		exceptionRaise(ErrorMessage("It was not possible to create a directory with name #0;. #1;"
+			,{name,static_cast<const char*>(strerror(errno))}));
 		}
 	}
 

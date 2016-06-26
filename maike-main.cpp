@@ -11,23 +11,29 @@
 #include "invokerreal.hpp"
 #include "maike.hpp"
 #include "targetdirectoryloader.hpp"
-#include "targetdirectorycompiler.hpp"
 #include "errormessage.hpp"
+
+#include <unistd.h>
 
 class TargetBuilder:public Maike::DependencyGraph::TargetProcessor
 	{
 	public:
-		explicit TargetBuilder(Maike::Invoker&& invoker):r_invoker(invoker)
+		explicit TargetBuilder(Maike::Invoker&& invoker,const char* target_dir):
+			r_invoker(invoker),m_target_dir(target_dir)
 			{}
 
 		void operator()(Maike::DependencyGraph& graph,Maike::Target& target_current)
 			{
 			if(target_current.childCounterGet()==0)
-				{Maike::buildBranch(target_current,r_invoker,graph.targetCounterGet());}
+				{
+				Maike::buildBranch(target_current,r_invoker
+					,m_target_dir.c_str(),graph.targetCounterGet());
+				}
 			}
 
 	private:
 		Maike::Invoker& r_invoker;
+		std::string m_target_dir;
 	};
 
 int main(int argc,char** args)
@@ -37,9 +43,7 @@ int main(int argc,char** args)
 	//	Setup stuff
 		std::map<Maike::Stringkey,const Maike::TargetLoader*> loaders;
 
-		Maike::TargetDirectoryCompiler dircompiler;
-		dircompiler.directoryTargetsSet("__targets");
-		Maike::TargetDirectoryLoader dirloader(dircompiler);
+		Maike::TargetDirectoryLoader dirloader;
 		dirloader.pathRefuse(Maike::Stringkey(".git"))
 			.pathRefuse(Maike::Stringkey("__targets"));
 		loaders[Maike::Stringkey(".")]=&dirloader;
@@ -50,7 +54,7 @@ int main(int argc,char** args)
 		spider.scanFile(".","").run();
 
 	//	Build all targets
-		targets.targetsPatch().targetsProcess(TargetBuilder{Maike::InvokerReal()});
+		targets.targetsPatch().targetsProcess(TargetBuilder{Maike::InvokerReal(),"__targets"});
 		}
 	catch(const Maike::ErrorMessage& msg)
 		{

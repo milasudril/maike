@@ -8,12 +8,5 @@
 
 using namespace Maike;
 
-TargetCxxCompiler& TargetCxxCompiler::directoryTargetsSet(const char* dirname)
-	{
-	m_dir_targets=dirname;
-	return *this;
-	}
-
-#endif
 
 

@@ -14,9 +14,8 @@ namespace Maike
 	class Target;
 	class Invoker;
 
-	void buildBranch(Target& target,Invoker& invoker,size_t targets_count);
-
-	void buildAll(Twins<Target* const*> leafs,Invoker& invoker,size_t targets_count);
+	void buildBranch(Target& target,Invoker& invoker,const char* target_dir
+		,size_t targets_count);
 	}
 
 #endif
