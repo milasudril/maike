@@ -1,4 +1,6 @@
-//@	{"targets":[{"name":"strerror.o","type":"object"}]
+//@	[["posix",
+//@		{"targets":[{"name":"strerror.o","type":"object"}]}
+//@	]]
 
 #include "strerror.hpp"
 
