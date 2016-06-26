@@ -10,7 +10,7 @@
 	"twins.hpp"
 	<cstddef>
 
-1466517615 /home/torbjorr/Dokument/maike/twins.hpp
+1466925197 /home/torbjorr/Dokument/maike/twins.hpp
 	<utility>
 
 1466923119 source:/home/torbjorr/Dokument/maike/maike.cpp
@@ -31,12 +31,12 @@
 	"variant.hpp"
 	"exceptionhandler.hpp"
 
-1466758151 /home/torbjorr/Dokument/maike/dependencygraphdefault.hpp
+1466925120 /home/torbjorr/Dokument/maike/dependencygraphdefault.hpp
 	"dependencygraph.hpp"
 	"stringkey.hpp"
 	<map>
 
-1466495138 /home/torbjorr/Dokument/maike/dependencygraph.hpp
+1466925109 /home/torbjorr/Dokument/maike/dependencygraph.hpp
 	<memory>
 
 1466878168 source:/home/torbjorr/Dokument/maike/maike-main.cpp
@@ -54,12 +54,13 @@
 	"twins.hpp"
 	<cstddef>
 
-1466923160 source:/home/torbjorr/Dokument/maike/invokerreal-linuxgnu.cpp
+1466925044 source:/home/torbjorr/Dokument/maike/invokerreal-linuxgnu.cpp
 	"invokerreal.hpp"
 	"datasinkstd.hpp"
 	"errormessage.hpp"
 	"variant.hpp"
 	"exceptionhandler.hpp"
+	"strerror.hpp"
 	<unistd.h>
 	<fcntl.h>
 	<sys/wait.h>
@@ -73,13 +74,13 @@
 	<exception>
 	<tuple>
 
-1466856720 /home/torbjorr/Dokument/maike/invokerreal.hpp
+1466925152 /home/torbjorr/Dokument/maike/invokerreal.hpp
 	"invoker.hpp"
 
-1466789165 /home/torbjorr/Dokument/maike/invoker.hpp
+1466925147 /home/torbjorr/Dokument/maike/invoker.hpp
 	"twins.hpp"
 
-1466586979 /home/torbjorr/Dokument/maike/datasink.hpp
+1466925095 /home/torbjorr/Dokument/maike/datasink.hpp
 	<cstddef>
 
 1466855883 /home/torbjorr/Dokument/maike/sinksstd.hpp
@@ -103,7 +104,7 @@
 	<dirent.h>
 	<memory>
 
-1466699128 /home/torbjorr/Dokument/maike/directorylister.hpp
+1466925125 /home/torbjorr/Dokument/maike/directorylister.hpp
 
 1466860865 source:/home/torbjorr/Dokument/maike/spiderdefault.cpp
 	"spiderdefault.hpp"
@@ -111,7 +112,7 @@
 	"fileinfo.hpp"
 	"targetloader.hpp"
 
-1466773609 /home/torbjorr/Dokument/maike/spiderdefault.hpp
+1466925161 /home/torbjorr/Dokument/maike/spiderdefault.hpp
 	"spider.hpp"
 	"stringkey.hpp"
 	"twins.hpp"
@@ -123,7 +124,7 @@
 1466773337 /home/torbjorr/Dokument/maike/spider.hpp
 	<memory>
 
-1466757713 /home/torbjorr/Dokument/maike/stringkey.hpp
+1466925177 /home/torbjorr/Dokument/maike/stringkey.hpp
 	<cstdint>
 
 1466924304 source:/home/torbjorr/Dokument/maike/fileinfo-linuxgnu.cpp
@@ -135,7 +136,7 @@
 	<errno.h>
 	<sys/stat.h>
 
-1466769526 /home/torbjorr/Dokument/maike/fileinfo.hpp
+1466925138 /home/torbjorr/Dokument/maike/fileinfo.hpp
 	<cstdint>
 
 1466773716 /home/torbjorr/Dokument/maike/targetloader.hpp
@@ -198,7 +199,7 @@
 	"datasinkstd.hpp"
 	<unistd.h>
 
-1466856679 /home/torbjorr/Dokument/maike/datasinkstd.hpp
+1466925100 /home/torbjorr/Dokument/maike/datasinkstd.hpp
 	"datasink.hpp"
 	<cstdint>
 
@@ -206,7 +207,7 @@
 	"exceptionhandler.hpp"
 	"errormessage.hpp"
 
-1466866267 /home/torbjorr/Dokument/maike/exceptionhandler.hpp
+1466925133 /home/torbjorr/Dokument/maike/exceptionhandler.hpp
 
 1466922675 /home/torbjorr/Dokument/maike/errormessage.hpp
 	<initializer_list>
@@ -242,4 +243,8 @@
 
 1466924013 /home/torbjorr/Dokument/maike/strerror.hpp
 	<cstddef>
+
+1466925445 source:/home/torbjorr/Dokument/maike/strerror-posix.cpp
+	"strerror.hpp"
+	<cstring>
 
