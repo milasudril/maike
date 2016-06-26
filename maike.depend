@@ -248,3 +248,16 @@
 	"strerror.hpp"
 	<cstring>
 
+1466933874 source:/home/torbjorr/Dokument/maike/command.cpp
+	"command.hpp"
+	"variant.hpp"
+	"invoker.hpp"
+	"stringkey.hpp"
+	"exceptionhandler.hpp"
+	"errormessage.hpp"
+
+1466933861 /home/torbjorr/Dokument/maike/command.hpp
+	<vector>
+	<string>
+	<map>
+
