@@ -3,8 +3,8 @@
 //@ "dependencies_extra":[{"ref":"dependencygraphdefault.o","rel":"implementation"}]
 //@ }
 
-#ifndef MAIKE_DEPENDENCYGRAPHDEFAULT_H
-#define MAIKE_DEPENDENCYGRAPHDEFAULT_H
+#ifndef MAIKE_DEPENDENCYGRAPHDEFAULT_HPP
+#define MAIKE_DEPENDENCYGRAPHDEFAULT_HPP
 
 #include "dependencygraph.hpp"
 #include "stringkey.hpp"
@@ -28,4 +28,4 @@ namespace Maike
 		};
 	}
 
-#endif // MAIKE_DEPENDENCYGRAPHDEFAULT_H
+#endif

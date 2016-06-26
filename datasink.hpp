@@ -2,8 +2,8 @@
 //@ "targets":[ {"name":"datasink.hpp","type":"include"} ]
 //@ }
 
-#ifndef MAIKE_DATASINK_H
-#define MAIKE_DATASINK_H
+#ifndef MAIKE_DATASINK_HPP
+#define MAIKE_DATASINK_HPP
 
 #include <cstddef>
 

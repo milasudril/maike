@@ -3,8 +3,8 @@
 //@	"dependencies_extra":[{"ref":"exceptionhandler.o","rel":"implementation"}]
 //@	}
 
-#ifndef MAIKE_EXCEPTIONHANDLER_H
-#define MAIKE_EXCEPTIONHANDLER_H
+#ifndef MAIKE_EXCEPTIONHANDLER_HPP
+#define MAIKE_EXCEPTIONHANDLER_HPP
 
 namespace Maike
 	{

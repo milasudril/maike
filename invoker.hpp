@@ -2,8 +2,8 @@
 //@ "targets":[ {"name":"invoker.hpp","type":"include"} ]
 //@ }
 
-#ifndef MAIKE_INVOKER_H
-#define MAIKE_INVOKER_H
+#ifndef MAIKE_INVOKER_HPP
+#define MAIKE_INVOKER_HPP
 
 #include "twins.hpp"
 

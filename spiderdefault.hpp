@@ -3,8 +3,8 @@
 //@	"dependencies_extra":[{"ref":"spiderdefault.o","rel":"implementation"}]
 //@	}
 
-#ifndef MAIKE_SPIDERDEFAULT_H
-#define MAIKE_SPIDERDEFAULT_H
+#ifndef MAIKE_SPIDERDEFAULT_HPP
+#define MAIKE_SPIDERDEFAULT_HPP
 
 #include "spider.hpp"
 #include "stringkey.hpp"

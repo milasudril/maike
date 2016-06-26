@@ -3,8 +3,8 @@
 //@"dependencies_extra":[{"ref":"directorylister.o",rel:"implementation"}]
 //@}
 
-#ifndef MAIKE_DIRECTORYLISTER_H
-#define MAIKE_DIRECTORYLISTER_H
+#ifndef MAIKE_DIRECTORYLISTER_HPP
+#define MAIKE_DIRECTORYLISTER_HPP
 
 namespace Maike
     {

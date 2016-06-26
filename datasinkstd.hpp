@@ -3,8 +3,8 @@
 //@	"dependencies_extra":[{"ref":"datasinkstd.o","type":"implementation"}]
 //@ }
 
-#ifndef MAIKE_DATASINKSTD_H
-#define MAIKE_DATASINKSTD_H
+#ifndef MAIKE_DATASINKSTD_HPP
+#define MAIKE_DATASINKSTD_HPP
 
 #include "datasink.hpp"
 #include <cstdint>

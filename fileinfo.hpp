@@ -3,8 +3,8 @@
 //@	"dependencies_extra":[{"ref":"fileinfo.o","rel","implementation"}]
 //@	}
 
-#ifndef MAIKE_FILEINFO_H
-#define MAIKE_FILEINFO_H
+#ifndef MAIKE_FILEINFO_HPP
+#define MAIKE_FILEINFO_HPP
 
 #include <cstdint>
 

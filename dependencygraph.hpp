@@ -2,8 +2,8 @@
 //@ "targets":[{"name":"dependencygraph.hpp","type":"include"}]
 //@ }
 
-#ifndef MAIKE_DEPENDENCYGRAPH_H
-#define MAIKE_DEPENDENCYGRAPH_H
+#ifndef MAIKE_DEPENDENCYGRAPH_HPP
+#define MAIKE_DEPENDENCYGRAPH_HPP
 
 #include <memory>
 

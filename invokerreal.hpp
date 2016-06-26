@@ -3,8 +3,8 @@
 //@ "dependencies_extra":[{"name":"invokerreal.o","rel":"implementation"}]
 //@ }
 
-#ifndef MAIKE_INVOKERREAL_H
-#define MAIKE_INVOKERREAL_H
+#ifndef MAIKE_INVOKERREAL_HPP
+#define MAIKE_INVOKERREAL_HPP
 
 #include "invoker.hpp"
 

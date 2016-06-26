@@ -2,8 +2,8 @@
 //@ "targets":[{"name":"twins.hpp","type":"include"}]
 //@ }
 
-#ifndef MAIKE_TWINS_H
-#define MAIKE_TWINS_H
+#ifndef MAIKE_TWINS_HPP
+#define MAIKE_TWINS_HPP
 
 #include <utility>
 

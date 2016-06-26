@@ -2,8 +2,8 @@
 //@"targets":[{"name":"strinkey.hpp","type":"include"}]
 //@}
 
-#ifndef MAIKE_STRINGKEY_H
-#define MAIKE_STRINGKEY_H
+#ifndef MAIKE_STRINGKEY_HPP
+#define MAIKE_STRINGKEY_HPP
 
 #include <cstdint>
 
