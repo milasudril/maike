@@ -195,8 +195,12 @@
 
 1466847041 /home/torbjorr/Dokument/maike/targetcompiler.hpp
 
-1466857192 source:/home/torbjorr/Dokument/maike/datasinkstd-posix.cpp
+1466935579 source:/home/torbjorr/Dokument/maike/datasinkstd-posix.cpp
 	"datasinkstd.hpp"
+	"exceptionhandler.hpp"
+	"errormessage.hpp"
+	"variant.hpp"
+	<errno.h>
 	<unistd.h>
 
 1466925100 /home/torbjorr/Dokument/maike/datasinkstd.hpp

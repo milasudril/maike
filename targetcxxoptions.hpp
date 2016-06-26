@@ -3,6 +3,11 @@
 #ifndef MAIKE_TARGETCXXOPTIONS_HPP
 #define MAIKE_TARGETCXXOPTIONS_HPP
 
+
+#include "command.hpp"
+#include <vector>
+#include <string>
+
 namespace Maike
 	{
 	class TargetCxxOptions
