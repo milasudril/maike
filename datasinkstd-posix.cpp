@@ -6,6 +6,10 @@
 //@	]
 
 #include "datasinkstd.hpp"
+#include "exceptionhandler.hpp"
+#include "errormessage.hpp"
+#include "variant.hpp"
+#include <errno.h>
 #include <unistd.h>
 
 namespace Maike
@@ -26,7 +30,18 @@ namespace Maike
 
 	void DataSinkStdHandle::write(const void* buffer,size_t n)
 		{
-		black_magic(::write(static_cast<int>(r_handle),buffer,n) );
+		auto bytes=reinterpret_cast<const uint8_t*>(buffer);
+		while(n)
+			{
+			auto res=::write(static_cast<int>(r_handle),bytes,n);
+			if(res==-1)
+				{
+				if(errno!=EINTR)
+					{exceptionRaise(ErrorMessage("I/O error",{}));}
+				}
+			n-=res;
+			bytes+=n;
+			}
 		}
 
 	DataSinkStdHandle::~DataSinkStdHandle()
