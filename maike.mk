@@ -62,7 +62,7 @@ AS       := /usr/bin/as
 CodeLiteDir:=/usr/share/codelite
 Objects0=$(IntermediateDirectory)/directorylister-linuxgnu.cpp$(ObjectSuffix) $(IntermediateDirectory)/dependencygraphdefault.cpp$(ObjectSuffix) $(IntermediateDirectory)/errormessage.cpp$(ObjectSuffix) $(IntermediateDirectory)/datasinkstd-posix.cpp$(ObjectSuffix) $(IntermediateDirectory)/variant.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetdirectoryloader.cpp$(ObjectSuffix) $(IntermediateDirectory)/strerror-posix.cpp$(ObjectSuffix) $(IntermediateDirectory)/maike.cpp$(ObjectSuffix) $(IntermediateDirectory)/fileinfo-linuxgnu.cpp$(ObjectSuffix) $(IntermediateDirectory)/invokerreal-linuxgnu.cpp$(ObjectSuffix) \
 	$(IntermediateDirectory)/spiderdefault.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxxcompiler.cpp$(ObjectSuffix) $(IntermediateDirectory)/maike-main.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetdirectory.cpp$(ObjectSuffix) $(IntermediateDirectory)/command.cpp$(ObjectSuffix) $(IntermediateDirectory)/exceptionhandler.cpp$(ObjectSuffix) $(IntermediateDirectory)/dependency.cpp$(ObjectSuffix) $(IntermediateDirectory)/stringformat.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetbase.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxxloader.cpp$(ObjectSuffix) \
-	$(IntermediateDirectory)/targetcxxtokenizer.cpp$(ObjectSuffix) $(IntermediateDirectory)/filein-posix.cpp$(ObjectSuffix) 
+	$(IntermediateDirectory)/targetcxxtokenizer.cpp$(ObjectSuffix) $(IntermediateDirectory)/filein-posix.cpp$(ObjectSuffix) $(IntermediateDirectory)/resourceobject.cpp$(ObjectSuffix) 
 
 
 
@@ -268,6 +268,14 @@ $(IntermediateDirectory)/filein-posix.cpp$(DependSuffix): filein-posix.cpp
 
 $(IntermediateDirectory)/filein-posix.cpp$(PreprocessSuffix): filein-posix.cpp
 	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/filein-posix.cpp$(PreprocessSuffix) "filein-posix.cpp"
+
+$(IntermediateDirectory)/resourceobject.cpp$(ObjectSuffix): resourceobject.cpp $(IntermediateDirectory)/resourceobject.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/torbjorr/Dokument/maike/resourceobject.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/resourceobject.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/resourceobject.cpp$(DependSuffix): resourceobject.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/resourceobject.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/resourceobject.cpp$(DependSuffix) -MM "resourceobject.cpp"
+
+$(IntermediateDirectory)/resourceobject.cpp$(PreprocessSuffix): resourceobject.cpp
+	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/resourceobject.cpp$(PreprocessSuffix) "resourceobject.cpp"
 
 
 -include $(IntermediateDirectory)/*$(DependSuffix)

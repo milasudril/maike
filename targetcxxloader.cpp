@@ -4,6 +4,7 @@
 #include "filein.hpp"
 #include "targetcxxpptokenizer.hpp"
 #include "spider.hpp"
+#include "resourceobject.hpp"
 #include <cstdio>
 
 using namespace Maike;
@@ -168,10 +169,8 @@ void TargetCxxLoader::targetsLoad(const char* name_src,const char* in_dir
 	name_full+=name_src;
 
 	FileIn source(name_full.c_str());
-	TagFilter filter(source);
-	ReadBuffer filter_reader(filter);
-	while(!filter_reader.eof())
-		{putchar(filter_reader.byteRead());}
+	ResourceObject rc{TagFilter(source)};
+
 
 
 	includesGet(name_src,in_dir,spider,graph);

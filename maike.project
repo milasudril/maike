@@ -76,6 +76,8 @@
     <File Name="targetcxxtokenizer.cpp"/>
     <File Name="filein.hpp"/>
     <File Name="filein-posix.cpp"/>
+    <File Name="resourceobject.hpp"/>
+    <File Name="resourceobject.cpp"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>
