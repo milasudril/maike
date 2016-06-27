@@ -19,10 +19,10 @@ namespace Maike
 		{
 		public:
 			void compile(const char* source,const char* dest
-				,const TargetCxxOptions& options) const;
+				,Invoker& invoker,const TargetCxxOptions& options) const;
 
 			void link(const Twins<const char* const>& files
-				,const char* dest
+				,const char* dest,Invoker& invoker
 				,const TargetCxxOptions& options) const;
 
 		private:

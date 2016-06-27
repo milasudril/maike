@@ -98,6 +98,7 @@
 		<Unit filename="maike.hpp">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
+		<Unit filename="maikeconfig.json" />
 		<Unit filename="spider.hpp">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>

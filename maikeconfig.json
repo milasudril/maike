@@ -1,0 +1,21 @@
+{
+"cxxcompiler":
+	{
+	 "includedir":[]
+	,"libdir":[]
+	,"includedir_format":"-I\"$value\""
+	,"libdir_format":"-L\"$value\""
+	,"libext_format":"-l\"$value\""
+	,"libint_format":"-l:\"$value\""
+	,"objcompile":
+		{
+		 "name":"g++"
+		,"args":["-c","-g","-fpic","-std=c++11","-Wall","-Woverflow","-Wconversion","-Werror","$includedir","-o","$target","$source"]
+		}
+	,"appcompile":
+		{
+		 "name":"g++"
+		,"args":["-g","-fpic","-std=c++11","-Wall","-Woverflow","-Wconversion","-Werror","$includedir","$libdir","-o","$target","$source","$dependencies"]
+		}
+	}
+}
