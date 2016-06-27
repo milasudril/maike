@@ -1,6 +1,6 @@
-//@ {
-//@ "targets":[{"name":"dependency.o","type":"object"}]
-//@ }
+//@	{
+//@	"targets":[{"name":"dependency.o","type":"object"}]
+//@	}
 
 #include "dependency.hpp"
 

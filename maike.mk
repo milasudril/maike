@@ -61,8 +61,8 @@ AS       := /usr/bin/as
 ##
 CodeLiteDir:=/usr/share/codelite
 Objects0=$(IntermediateDirectory)/directorylister-linuxgnu.cpp$(ObjectSuffix) $(IntermediateDirectory)/dependencygraphdefault.cpp$(ObjectSuffix) $(IntermediateDirectory)/errormessage.cpp$(ObjectSuffix) $(IntermediateDirectory)/datasinkstd-posix.cpp$(ObjectSuffix) $(IntermediateDirectory)/variant.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetdirectoryloader.cpp$(ObjectSuffix) $(IntermediateDirectory)/strerror-posix.cpp$(ObjectSuffix) $(IntermediateDirectory)/maike.cpp$(ObjectSuffix) $(IntermediateDirectory)/fileinfo-linuxgnu.cpp$(ObjectSuffix) $(IntermediateDirectory)/invokerreal-linuxgnu.cpp$(ObjectSuffix) \
-	$(IntermediateDirectory)/spiderdefault.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxxcompiler.cpp$(ObjectSuffix) $(IntermediateDirectory)/maike-main.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetdirectory.cpp$(ObjectSuffix) $(IntermediateDirectory)/command.cpp$(ObjectSuffix) $(IntermediateDirectory)/exceptionhandler.cpp$(ObjectSuffix) $(IntermediateDirectory)/dependency.cpp$(ObjectSuffix) $(IntermediateDirectory)/target.cpp$(ObjectSuffix) $(IntermediateDirectory)/stringformat.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetbase.cpp$(ObjectSuffix) \
-	$(IntermediateDirectory)/targetcxxloader.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxxtokenizer.cpp$(ObjectSuffix) $(IntermediateDirectory)/filein-posix.cpp$(ObjectSuffix) 
+	$(IntermediateDirectory)/spiderdefault.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxxcompiler.cpp$(ObjectSuffix) $(IntermediateDirectory)/maike-main.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetdirectory.cpp$(ObjectSuffix) $(IntermediateDirectory)/command.cpp$(ObjectSuffix) $(IntermediateDirectory)/exceptionhandler.cpp$(ObjectSuffix) $(IntermediateDirectory)/dependency.cpp$(ObjectSuffix) $(IntermediateDirectory)/stringformat.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetbase.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxxloader.cpp$(ObjectSuffix) \
+	$(IntermediateDirectory)/targetcxxtokenizer.cpp$(ObjectSuffix) $(IntermediateDirectory)/filein-posix.cpp$(ObjectSuffix) 
 
 
 
@@ -228,14 +228,6 @@ $(IntermediateDirectory)/dependency.cpp$(DependSuffix): dependency.cpp
 
 $(IntermediateDirectory)/dependency.cpp$(PreprocessSuffix): dependency.cpp
 	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/dependency.cpp$(PreprocessSuffix) "dependency.cpp"
-
-$(IntermediateDirectory)/target.cpp$(ObjectSuffix): target.cpp $(IntermediateDirectory)/target.cpp$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/torbjorr/Dokument/maike/target.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/target.cpp$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/target.cpp$(DependSuffix): target.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/target.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/target.cpp$(DependSuffix) -MM "target.cpp"
-
-$(IntermediateDirectory)/target.cpp$(PreprocessSuffix): target.cpp
-	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/target.cpp$(PreprocessSuffix) "target.cpp"
 
 $(IntermediateDirectory)/stringformat.cpp$(ObjectSuffix): stringformat.cpp $(IntermediateDirectory)/stringformat.cpp$(DependSuffix)
 	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/torbjorr/Dokument/maike/stringformat.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/stringformat.cpp$(ObjectSuffix) $(IncludePath)

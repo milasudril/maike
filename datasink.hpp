@@ -1,6 +1,6 @@
-//@ {
-//@ "targets":[ {"name":"datasink.hpp","type":"include"} ]
-//@ }
+//@	{
+//@	"targets":[ {"name":"datasink.hpp","type":"include"} ]
+//@	}
 
 #ifndef MAIKE_DATASINK_HPP
 #define MAIKE_DATASINK_HPP

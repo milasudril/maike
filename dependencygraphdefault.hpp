@@ -1,7 +1,7 @@
-//@ {
-//@ "targets":[{"name":"dependencygraphdefault.hpp","type":"include"}]
-//@ "dependencies_extra":[{"ref":"dependencygraphdefault.o","rel":"implementation"}]
-//@ }
+//@	{
+//@	 "targets":[{"name":"dependencygraphdefault.hpp","type":"include"}]
+//@	,"dependencies_extra":[{"ref":"dependencygraphdefault.o","rel":"implementation"}]
+//@	}
 
 #ifndef MAIKE_DEPENDENCYGRAPHDEFAULT_HPP
 #define MAIKE_DEPENDENCYGRAPHDEFAULT_HPP

@@ -1,6 +1,6 @@
-//@ {
-//@ "targets":[ {"name":"invoker.hpp","type":"include"} ]
-//@ }
+//@	{
+//@	"targets":[ {"name":"invoker.hpp","type":"include"} ]
+//@	}
 
 #ifndef MAIKE_INVOKER_HPP
 #define MAIKE_INVOKER_HPP

@@ -1,6 +1,6 @@
-//@ {
-//@ "targets":[{"name":"dependencygraph.hpp","type":"include"}]
-//@ }
+//@	{
+//@	"targets":[{"name":"dependencygraph.hpp","type":"include"}]
+//@	}
 
 #ifndef MAIKE_DEPENDENCYGRAPH_HPP
 #define MAIKE_DEPENDENCYGRAPH_HPP

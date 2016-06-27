@@ -1,6 +1,6 @@
-//@{
-//@"targets":[{"name":"spider.hpp","type":"include"}]
-//@}
+//@	{
+//@	"targets":[{"name":"spider.hpp","type":"include"}]
+//@	}
 
 #ifndef MAIKE_SPIDER_HPP
 #define MAIKE_SPIDER_HPP

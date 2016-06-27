@@ -1,6 +1,6 @@
 //@	{
 //@	"targets":[{"name":"targetcxxloader.hpp","type":"include"}]
-//@ "dependencies_extra:[{"ref":targetcxxloader.o","rel":"implementation"}]
+//@	"dependencies_extra:[{"ref":targetcxxloader.o","rel":"implementation"}]
 //@	}
 
 #ifndef MAIKE_TARGETCXXLOADER_HPP

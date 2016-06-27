@@ -1,6 +1,6 @@
-//@{
-//@"targets":[{"name":"strinkey.hpp","type":"include"}]
-//@}
+//@	{
+//@	"targets":[{"name":"strinkey.hpp","type":"include"}]
+//@	}
 
 #ifndef MAIKE_STRINGKEY_HPP
 #define MAIKE_STRINGKEY_HPP

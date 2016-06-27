@@ -58,7 +58,6 @@
     <File Name="targetcxxcompiler.hpp"/>
     <File Name="datasinkstd.hpp"/>
     <File Name="directorylister.hpp"/>
-    <File Name="target.cpp"/>
     <File Name="stringformat.cpp"/>
     <File Name="stringkey.hpp"/>
     <File Name="exceptionhandler.hpp"/>

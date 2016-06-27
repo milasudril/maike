@@ -1,6 +1,6 @@
-//@ {
-//@ "targets":[{"name":"maike.o","type":"object"}]
-//@ }
+//@	{
+//@	"targets":[{"name":"maike.o","type":"object"}]
+//@	}
 
 #include "maike.hpp"
 #include "target.hpp"

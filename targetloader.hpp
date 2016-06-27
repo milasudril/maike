@@ -1,6 +1,6 @@
-//@ {
-//@ "targets":[{"name":"targetloader.hpp","type":"include"}]
-//@ }
+//@	{
+//@	"targets":[{"name":"targetloader.hpp","type":"include"}]
+//@	}
 
 #ifndef MAIKE_TARGETLOADER_HPP
 #define MAIKE_TARGETLOADER_HPP
