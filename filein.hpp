@@ -1,6 +1,6 @@
 //@	{
-//@	,"targets":[{"name":"filein.hpp","type":"include}]
-//@	dependencies_extra[{"ref":"filein.o","rel":"implementation"}]
+//@	 "targets":[{"name":"filein.hpp","type":"include"}]
+//@	,"dependencies_extra":[{"ref":"filein.o","rel":"implementation"}]
 //@	}
 
 #ifndef MAIKE_FILEIN_H

@@ -1,6 +1,6 @@
 //@	{
-//@	"targets":[{"name":"targetdirectoryloader.hpp","type":"include"}]
-//@	"dependencies_extra":[{"ref":targetdirectoryloader.o","rel":"implementation}]
+//@	 "targets":[{"name":"targetdirectoryloader.hpp","type":"include"}]
+//@	,"dependencies_extra":[{"ref":"targetdirectoryloader.o","rel":"implementation"}]
 //@	}
 
 #ifndef MAIKE_TARGETDIRECTORYLOADER_HPP

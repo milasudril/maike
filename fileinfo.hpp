@@ -1,6 +1,6 @@
 //@	{
-//@	"targets":[{"name":"fileinfo.hpp","type":"include"}]
-//@	"dependencies_extra":[{"ref":"fileinfo.o","rel","implementation"}]
+//@	 "targets":[{"name":"fileinfo.hpp","type":"include"}]
+//@	,"dependencies_extra":[{"ref":"fileinfo.o","rel":"implementation"}]
 //@	}
 
 #ifndef MAIKE_FILEINFO_HPP

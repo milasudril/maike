@@ -1,6 +1,6 @@
 //@	{
-//@	"targets":[{"name":"errormessage.hpp","type":"include"}]}
-//@	"dependencies_extra":[{"ref":"errormessage.o","rel":"implementation"}]}
+//@	 "targets":[{"name":"errormessage.hpp","type":"include"}]
+//@	,"dependencies_extra":[{"ref":"errormessage.o","rel":"implementation"}]
 //@	}
 
 #ifndef MAIKE_ERRORMESSAGE_HPP

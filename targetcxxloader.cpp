@@ -147,7 +147,7 @@ static void includesGet(const char* name_src,const char* in_dir
 					//TODO Implement this
 						break;
 					case TargetCxxPPTokenizer::Token::Type::STRING:
-						printf("    Got %s\n",tok_in.value.c_str());
+					//TODO Add file as dependency
 						spider.scanFile(tok_in.value.c_str(),in_dir);
 						break;
 					default:
@@ -162,8 +162,6 @@ static void includesGet(const char* name_src,const char* in_dir
 void TargetCxxLoader::targetsLoad(const char* name_src,const char* in_dir
 	,Spider& spider,DependencyGraph& graph) const
 	{
-	printf("Loading targets from %s/%s\n",in_dir,name_src);
-
 	std::string name_full(in_dir);
 	name_full+='/';
 	name_full+=name_src;

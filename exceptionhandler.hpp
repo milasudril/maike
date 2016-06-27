@@ -1,6 +1,6 @@
 //@	{
-//@	"targets":[{"name":"exceptionhandler.hpp","type":"include"}]}
-//@	"dependencies_extra":[{"ref":"exceptionhandler.o","rel":"implementation"}]
+//@	 "targets":[{"name":"exceptionhandler.hpp","type":"include"}]
+//@	,"dependencies_extra":[{"ref":"exceptionhandler.o","rel":"implementation"}]
 //@	}
 
 #ifndef MAIKE_EXCEPTIONHANDLER_HPP

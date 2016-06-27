@@ -1,6 +1,6 @@
 //@	{
-//@	 "targets":[{"name","resourceobject.hpp","type":"include"}]
-//@	,"dependencies_extra":[{"ref":resourceobject.o","rel":"implementation"}]
+//@	 "targets":[{"name":"resourceobject.hpp","type":"include"}]
+//@	,"dependencies_extra":[{"ref":"resourceobject.o","rel":"implementation"}]
 //@	}
 
 #ifndef MAIKE_RESOURCEOBJECT_H

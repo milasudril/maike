@@ -1,6 +1,4 @@
-//@	{
-//@	"targets":[{"name":"exceptionhandler.o","type":"object"}]}
-//@	}
+//@	{"targets":[{"name":"exceptionhandler.o","type":"object"}]}
 
 #include "exceptionhandler.hpp"
 #include "errormessage.hpp"

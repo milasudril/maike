@@ -1,5 +1,5 @@
 //@	{
-//@	"targets":[{"name":dependencygraphdefault.o","type":"include"}]
+//@	"targets":[{"name":"dependencygraphdefault.o","type":"include"}]
 //@	}
 
 #include "dependencygraphdefault.hpp"

@@ -27,7 +27,6 @@
     <File Name="dependencygraphdefault.cpp"/>
     <File Name="errormessage.cpp"/>
     <File Name="datasinkstd-posix.cpp"/>
-    <File Name="variant.cpp"/>
     <File Name="twins.hpp"/>
     <File Name="targetdirectory.hpp"/>
     <File Name="dependencygraph.hpp"/>

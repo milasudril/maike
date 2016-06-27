@@ -1,6 +1,6 @@
 //@	{
-//@	"targets":[{"name":"spiderdefault.hpp","type":"include"}]
-//@	"dependencies_extra":[{"ref":"spiderdefault.o","rel":"implementation"}]
+//@	 "targets":[{"name":"spiderdefault.hpp","type":"include"}]
+//@	,"dependencies_extra":[{"ref":"spiderdefault.o","rel":"implementation"}]
 //@	}
 
 #ifndef MAIKE_SPIDERDEFAULT_HPP
