@@ -5,3 +5,6 @@
 *.a
 *.lib
 bin/*
+Debug/*
+Release/*
+.codelite/*
