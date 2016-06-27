@@ -1,5 +1,5 @@
 //@	{
-//@	 "target":[{"name":"targetcxxpptokenizer.hpp","type":"include"}]
+//@	 "targets":[{"name":"targetcxxpptokenizer.hpp","type":"include"}]
 //@	,"dependencies_extra":[{"ref":"targetcxxpptokenizer.o","rel":"implementation"}]
 //@	}
 

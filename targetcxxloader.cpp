@@ -168,8 +168,15 @@ void TargetCxxLoader::targetsLoad(const char* name_src,const char* in_dir
 
 	FileIn source(name_full.c_str());
 	ResourceObject rc{TagFilter(source)};
-
-
+	if(rc.objectExists("targets"))
+		{
+		printf("%s: Number of targets is %zu\n",name_full.c_str()
+			,rc.objectGet("targets").objectCountGet());
+		}
+	else
+		{
+		printf("%s: No unconditional targets\n",name_full.c_str());
+		}
 
 	includesGet(name_src,in_dir,spider,graph);
 	}

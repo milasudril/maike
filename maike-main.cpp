@@ -14,6 +14,7 @@
 #include "targetcxxloader.hpp"
 #include "errormessage.hpp"
 #include "dependency.hpp"
+#include "sysvars.hpp"
 
 
 #include "variant.hpp"
@@ -81,6 +82,7 @@ int main(int argc,char** args)
 	try
 		{
 	//	Setup stuff
+		Maike::sysvarsLoad();
 		std::map<Maike::Stringkey,const Maike::TargetLoader*> loaders;
 
 		Maike::TargetDirectoryLoader dirloader;
@@ -94,7 +96,7 @@ int main(int argc,char** args)
 		loaders[Maike::Stringkey(".hpp")]=&cxxloader;
 		loaders[Maike::Stringkey(".cpp")]=&cxxloader;
 
-
+#if 0
 	//	Collect targtes
 		Maike::DependencyGraphDefault targets;
 		Maike::SpiderDefault spider(loaders,targets);
@@ -103,6 +105,7 @@ int main(int argc,char** args)
 	//	Build all targets
 		targets.targetsPatch().targetsProcess(DepGraphExporter("dependencies.dot"));
 		//	.targetsProcess(TargetBuilder{Maike::InvokerReal(),"__targets"});
+#endif
 		}
 	catch(const Maike::ErrorMessage& msg)
 		{

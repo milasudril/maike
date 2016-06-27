@@ -2,8 +2,8 @@
 //@		[
 //@		"and(not(less_than(linux,version('2.6.33'))),gnu)"
 //@			,{
-//@		 	"targets":[
-//@				{
+//@		 	"targets":
+//@				[{
 //@			 	 "name":"invokerreal.o","type":"object"
 //@				,"dependencies":[{"ref":"pthread","rel":"external"}]
 //@				}]
