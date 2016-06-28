@@ -38,8 +38,12 @@ set ( CXX_SRCS
     targetbase.cpp
     targetcxxloader.cpp
     targetcxxtokenizer.cpp
-    filein-posix.cpp
     resourceobject.cpp
+    filein-linux.cpp
+    sysvars-linux.cpp
+    versionnumber.cpp
+    expressionevaluatordefault.cpp
+    targetcxx.cpp
 )
 
 set_source_files_properties(

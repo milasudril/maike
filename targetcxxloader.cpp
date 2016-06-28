@@ -5,6 +5,7 @@
 #include "targetcxxpptokenizer.hpp"
 #include "spider.hpp"
 #include "resourceobject.hpp"
+#include "targetcxx.hpp"
 #include <cstdio>
 
 using namespace Maike;
@@ -154,13 +155,14 @@ static void includesGet(const char* name_src,const char* in_dir
 					//CHECK Is this a legal case?
 						break;
 					}
+				mode=Mode::NORMAL;
 				break;
 			}
 		}
 	}
 
 void TargetCxxLoader::targetsLoad(const char* name_src,const char* in_dir
-	,Spider& spider,DependencyGraph& graph) const
+	,Spider& spider,DependencyGraph& graph,const ExpressionEvaluator& evaluator) const
 	{
 	std::string name_full(in_dir);
 	name_full+='/';
@@ -168,10 +170,31 @@ void TargetCxxLoader::targetsLoad(const char* name_src,const char* in_dir
 
 	FileIn source(name_full.c_str());
 	ResourceObject rc{TagFilter(source)};
+
 	if(rc.objectExists("targets"))
 		{
-		printf("%s: Number of targets is %zu\n",name_full.c_str()
-			,rc.objectGet("targets").objectCountGet());
+		auto targets=rc.objectGet("targets");
+		auto N=targets.objectCountGet();
+		for(decltype(N) k=0;k<N;++k)
+			{
+			auto obj=targets.objectGet(k);
+			auto name=static_cast<const char*>(obj.objectGet("name"));
+			auto type=static_cast<const char*>(obj.objectGet("type"));
+			printf("name: %s  type:%s \n",name,type);
+
+			if(obj.objectExists("dependencies"))
+				{
+				auto deps=obj.objectGet("dependencies");
+				auto M=deps.objectCountGet();
+				for(decltype(M) l=0;l<M;++l)
+					{
+					auto dep=deps.objectGet(l);
+					auto ref=static_cast<const char*>(dep.objectGet("ref"));
+					auto rel=static_cast<const char*>(dep.objectGet("rel"));
+					printf(" -> %s [%s]\n",ref,rel);
+					}
+				}
+			}
 		}
 	else
 		{

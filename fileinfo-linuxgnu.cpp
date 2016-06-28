@@ -23,8 +23,8 @@ FileInfo::FileInfo(const char* filename)
 	struct stat info;
     if(stat(filename,&info)==-1)
 		{
-		exceptionRaise(ErrorMessage("It was not possible to retrieve information about #0;. #1;"
-			,{static_cast<const char*>(strerror(errno))}));
+		exceptionRaise(ErrorMessage("It was not possible to retrieve information about \"#0;\". #1;"
+			,{filename,static_cast<const char*>(strerror(errno))}));
 		}
 
 	m_time_modified=static_cast<double>(info.st_mtim.tv_sec)

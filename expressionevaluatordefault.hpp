@@ -1,6 +1,6 @@
 //@	{
-//@	"targets":[{"name":"expressionevaluatordefault.hpp","type":"include"}]}
-//@	,"dependencies_extra":[{"ref":"expressionevaluatordefault.hpp","rel":"implementation"}]
+//@	 "targets":[{"name":"expressionevaluatordefault.hpp","type":"include"}]
+//@	,"dependencies_extra":[{"ref":"expressionevaluatordefault.o","rel":"implementation"}]
 //@	}
 
 #ifndef MAIKE_EXPRESSIONEVALUATORDEFAULT_HPP

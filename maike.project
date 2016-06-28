@@ -93,6 +93,8 @@
     <File Name="expressionevaluatordefault.hpp"/>
     <File Name="expressionevaluatordefault.cpp"/>
     <File Name="expressionevaluator.hpp"/>
+    <File Name="targetcxx.hpp"/>
+    <File Name="targetcxx.cpp"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>

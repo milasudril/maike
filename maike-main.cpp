@@ -82,15 +82,9 @@ int main(int argc,char** args)
 	{
 	try
 		{
-		Maike::ExpressionEvaluatorDefault expr;
-		expr.sysvarsLoad();
-
-		printf("%016lx\n",static_cast<int64_t>( expr.evaluate("and(not(gnu),not(less_than(linux,version('2.6'))))")) );
-
-#if 0
 	//	Setup stuff
-		std::map<Maike::Stringkey,int64_t> session_vars;
-		Maike::sysvarsLoad(session_vars);
+		Maike::ExpressionEvaluatorDefault evaluator;
+		evaluator.sysvarsLoad();
 
 		std::map<Maike::Stringkey,const Maike::TargetLoader*> loaders;
 
@@ -107,13 +101,13 @@ int main(int argc,char** args)
 
 	//	Collect targtes
 		Maike::DependencyGraphDefault targets;
-		Maike::SpiderDefault spider(loaders,targets);
+		Maike::SpiderDefault spider(loaders,evaluator,targets);
 		spider.scanFile(".","").run();
 
 	//	Build all targets
 		targets.targetsPatch().targetsProcess(DepGraphExporter("dependencies.dot"));
 		//	.targetsProcess(TargetBuilder{Maike::InvokerReal(),"__targets"});
-#endif
+
 		}
 	catch(const Maike::ErrorMessage& msg)
 		{

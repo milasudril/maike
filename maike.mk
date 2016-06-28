@@ -62,7 +62,7 @@ AS       := /usr/bin/as
 CodeLiteDir:=/usr/share/codelite
 Objects0=$(IntermediateDirectory)/directorylister-linuxgnu.cpp$(ObjectSuffix) $(IntermediateDirectory)/dependencygraphdefault.cpp$(ObjectSuffix) $(IntermediateDirectory)/errormessage.cpp$(ObjectSuffix) $(IntermediateDirectory)/datasinkstd-posix.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetdirectoryloader.cpp$(ObjectSuffix) $(IntermediateDirectory)/strerror-posix.cpp$(ObjectSuffix) $(IntermediateDirectory)/maike.cpp$(ObjectSuffix) $(IntermediateDirectory)/fileinfo-linuxgnu.cpp$(ObjectSuffix) $(IntermediateDirectory)/invokerreal-linuxgnu.cpp$(ObjectSuffix) $(IntermediateDirectory)/spiderdefault.cpp$(ObjectSuffix) \
 	$(IntermediateDirectory)/targetcxxcompiler.cpp$(ObjectSuffix) $(IntermediateDirectory)/maike-main.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetdirectory.cpp$(ObjectSuffix) $(IntermediateDirectory)/command.cpp$(ObjectSuffix) $(IntermediateDirectory)/exceptionhandler.cpp$(ObjectSuffix) $(IntermediateDirectory)/dependency.cpp$(ObjectSuffix) $(IntermediateDirectory)/stringformat.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetbase.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxxloader.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxxtokenizer.cpp$(ObjectSuffix) \
-	$(IntermediateDirectory)/resourceobject.cpp$(ObjectSuffix) $(IntermediateDirectory)/filein-linux.cpp$(ObjectSuffix) $(IntermediateDirectory)/sysvars-linux.cpp$(ObjectSuffix) $(IntermediateDirectory)/versionnumber.cpp$(ObjectSuffix) $(IntermediateDirectory)/expressionevaluatordefault.cpp$(ObjectSuffix) 
+	$(IntermediateDirectory)/resourceobject.cpp$(ObjectSuffix) $(IntermediateDirectory)/filein-linux.cpp$(ObjectSuffix) $(IntermediateDirectory)/sysvars-linux.cpp$(ObjectSuffix) $(IntermediateDirectory)/versionnumber.cpp$(ObjectSuffix) $(IntermediateDirectory)/expressionevaluatordefault.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxx.cpp$(ObjectSuffix) 
 
 
 
@@ -292,6 +292,14 @@ $(IntermediateDirectory)/expressionevaluatordefault.cpp$(DependSuffix): expressi
 
 $(IntermediateDirectory)/expressionevaluatordefault.cpp$(PreprocessSuffix): expressionevaluatordefault.cpp
 	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/expressionevaluatordefault.cpp$(PreprocessSuffix) "expressionevaluatordefault.cpp"
+
+$(IntermediateDirectory)/targetcxx.cpp$(ObjectSuffix): targetcxx.cpp $(IntermediateDirectory)/targetcxx.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/torbjorr/Dokument/maike/targetcxx.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/targetcxx.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/targetcxx.cpp$(DependSuffix): targetcxx.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/targetcxx.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/targetcxx.cpp$(DependSuffix) -MM "targetcxx.cpp"
+
+$(IntermediateDirectory)/targetcxx.cpp$(PreprocessSuffix): targetcxx.cpp
+	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/targetcxx.cpp$(PreprocessSuffix) "targetcxx.cpp"
 
 
 -include $(IntermediateDirectory)/*$(DependSuffix)

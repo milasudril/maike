@@ -22,7 +22,8 @@ TargetDirectoryLoader::TargetDirectoryLoader():m_recursive(1)
 
 void TargetDirectoryLoader::targetsLoad(const char* name_src
 	,const char* in_dir,Spider& spider
-	,DependencyGraph& graph) const
+	,DependencyGraph& graph
+	,const ExpressionEvaluator& evaluator) const
 	{
 	auto target=new TargetDirectory(name_src,in_dir,graph.targetCounterGet());
 	graph.targetRegister(std::unique_ptr<Target>(target));

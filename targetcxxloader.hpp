@@ -14,7 +14,8 @@ namespace Maike
 		{
 		public:
 			void targetsLoad(const char* name_src,const char* in_dir
-				,Spider& spider,DependencyGraph& graph) const;
+				,Spider& spider,DependencyGraph& graph
+				,const ExpressionEvaluator& evaluator) const;
 		};
 	}
 

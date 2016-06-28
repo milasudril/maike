@@ -1,5 +1,9 @@
 //@	{
-//@	"targets":[{"name":"resourceobject.o","type":"object"}]
+//@	"targets":
+//@		[{
+//@		 "name":"resourceobject.o","type":"object"
+//@		,"dependencies":[{"ref":"jansson","rel":"external"}]
+//@		}]
 //@	}
 
 #include "resourceobject.hpp"
