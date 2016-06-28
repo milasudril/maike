@@ -1,6 +1,6 @@
 //@	{
 //@	 "targets":[ {"name":"maike.hpp","type":"include"} ]
-//@	,"dependencies_extra":[{"name":"maike.o","rel":"implementation"}]
+//@	,"dependencies_extra":[{"ref":"maike.o","rel":"implementation"}]
 //@	}
 
 #ifndef MAIKE_MAIKE_HPP

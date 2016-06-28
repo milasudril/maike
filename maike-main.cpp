@@ -105,7 +105,7 @@ int main(int argc,char** args)
 		spider.scanFile(".","").run();
 
 	//	Build all targets
-		targets.targetsPatch().targetsProcess(DepGraphExporter("dependencies.dot"));
+		targets.targetsProcess(DepGraphExporter("dependencies.dot"));
 		//	.targetsProcess(TargetBuilder{Maike::InvokerReal(),"__targets"});
 
 		}

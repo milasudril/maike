@@ -6,6 +6,7 @@
 #include "spider.hpp"
 #include "resourceobject.hpp"
 #include "targetcxx.hpp"
+#include "dependencygraph.hpp"
 #include <cstdio>
 
 using namespace Maike;
@@ -115,7 +116,7 @@ size_t TagFilter::read(void* buffer,size_t length)
 
 
 static void includesGet(const char* name_src,const char* in_dir
-	,Spider& spider,DependencyGraph& graph)
+	,Spider& spider,DependencyGraph& graph,TargetCxx& target)
 	{
 	std::string name_full(in_dir);
 	name_full+='/';
@@ -148,8 +149,31 @@ static void includesGet(const char* name_src,const char* in_dir
 					//TODO Implement this
 						break;
 					case TargetCxxPPTokenizer::Token::Type::STRING:
-					//TODO Add file as dependency
+						{
+						std::string name_dep_full(in_dir);
+						name_dep_full+='/';
+						name_dep_full+=tok_in.value;
+						target.dependencyAdd(Dependency(name_dep_full.c_str()
+							,Dependency::Relation::INTERNAL));
 						spider.scanFile(tok_in.value.c_str(),in_dir);
+						FileIn file(name_dep_full.c_str());
+						ResourceObject obj{TagFilter(file)};
+						if(obj.objectExists("dependencies_extra"))
+							{
+							auto deps=obj.objectGet("dependencies_extra");
+							auto N=deps.objectCountGet();
+							for(decltype(N) k=0;k<N;++k)
+								{
+								auto dep=deps.objectGet(k);
+								auto ref=static_cast<const char*>( dep.objectGet("ref") );
+								std::string ref_full(in_dir);
+								ref_full+='/';
+								ref_full+=ref;
+								if(ref_full!=target.nameGet())
+									{target.dependencyAdd(Dependency(deps.objectGet(k),in_dir));}
+								}
+							}
+						}
 						break;
 					default:
 					//CHECK Is this a legal case?
@@ -177,29 +201,16 @@ void TargetCxxLoader::targetsLoad(const char* name_src,const char* in_dir
 		auto N=targets.objectCountGet();
 		for(decltype(N) k=0;k<N;++k)
 			{
-			auto obj=targets.objectGet(k);
-			auto name=static_cast<const char*>(obj.objectGet("name"));
-			auto type=static_cast<const char*>(obj.objectGet("type"));
-			printf("name: %s  type:%s \n",name,type);
-
-			if(obj.objectExists("dependencies"))
+			std::unique_ptr<TargetCxx> target
 				{
-				auto deps=obj.objectGet("dependencies");
-				auto M=deps.objectCountGet();
-				for(decltype(M) l=0;l<M;++l)
-					{
-					auto dep=deps.objectGet(l);
-					auto ref=static_cast<const char*>(dep.objectGet("ref"));
-					auto rel=static_cast<const char*>(dep.objectGet("rel"));
-					printf(" -> %s [%s]\n",ref,rel);
-					}
-				}
+				new TargetCxx(targets.objectGet(k),name_src,in_dir,graph.targetCounterGet())
+				};
+			includesGet(name_src,in_dir,spider,graph,*target);
+			graph.targetRegister(std::move(target));
 			}
 		}
-	else
+/*	else
 		{
 		printf("%s: No unconditional targets\n",name_full.c_str());
-		}
-
-	includesGet(name_src,in_dir,spider,graph);
+		}*/
 	}

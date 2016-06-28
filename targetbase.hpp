@@ -1,6 +1,6 @@
 //@	{
 //@	 "targets":[ {"name":"targetbase.hpp","type":"include"} ]
-//@	,"dependencies_extra":[{"name":"targetbase.o","rel":"implementation"}]
+//@	,"dependencies_extra":[{"ref":"targetbase.o","rel":"implementation"}]
 //@	}
 
 #ifndef MAIKE_TARGETBASE_HPP
@@ -15,11 +15,15 @@ namespace Maike
 	{
 	class Dependency;
 	class Invoker;
+	class ResourceObject;
 
 	class TargetBase:public Target
 		{
 		public:
 			explicit TargetBase(const char* name,const char* name_src,const char* in_dir,size_t id);
+
+			explicit TargetBase(const ResourceObject& obj,const char* name_src
+				,const char* in_dir,size_t id);
 
 			TargetBase& childCounterIncrement() noexcept
 				{

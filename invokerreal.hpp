@@ -1,6 +1,6 @@
 //@	{
 //@	 "targets":[ {"name":"invokerreal.hpp","type":"include"} ]
-//@	,"dependencies_extra":[{"name":"invokerreal.o","rel":"implementation"}]
+//@	,"dependencies_extra":[{"ref":"invokerreal.o","rel":"implementation"}]
 //@	}
 
 #ifndef MAIKE_INVOKERREAL_HPP

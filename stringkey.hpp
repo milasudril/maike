@@ -1,5 +1,5 @@
 //@	{
-//@	"targets":[{"name":"strinkey.hpp","type":"include"}]
+//@	"targets":[{"name":"stringkey.hpp","type":"include"}]
 //@	}
 
 #ifndef MAIKE_STRINGKEY_HPP

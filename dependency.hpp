@@ -11,6 +11,8 @@
 
 namespace Maike
 	{
+	class ResourceObject;
+
 	class Dependency
 		{
 		public:
@@ -28,6 +30,10 @@ namespace Maike
 				{r_target=&target;}
 
 			explicit Dependency(const char* name,Relation relation);
+
+			explicit Dependency(const ResourceObject& obj);
+
+			explicit Dependency(const ResourceObject& obj,const char* in_dir);
 
 			Dependency(const Dependency&)=default;
             Dependency& operator=(const Dependency&)=default;
