@@ -15,6 +15,7 @@
 #include "errormessage.hpp"
 #include "dependency.hpp"
 #include "sysvars.hpp"
+#include "expressionevaluatordefault.hpp"
 
 
 #include "variant.hpp"
@@ -81,8 +82,16 @@ int main(int argc,char** args)
 	{
 	try
 		{
+		Maike::ExpressionEvaluatorDefault expr;
+		expr.sysvarsLoad();
+
+		printf("%016lx\n",static_cast<int64_t>( expr.evaluate("and(not(gnu),not(less_than(linux,version('2.6'))))")) );
+
+#if 0
 	//	Setup stuff
-		Maike::sysvarsLoad();
+		std::map<Maike::Stringkey,int64_t> session_vars;
+		Maike::sysvarsLoad(session_vars);
+
 		std::map<Maike::Stringkey,const Maike::TargetLoader*> loaders;
 
 		Maike::TargetDirectoryLoader dirloader;
@@ -96,7 +105,6 @@ int main(int argc,char** args)
 		loaders[Maike::Stringkey(".hpp")]=&cxxloader;
 		loaders[Maike::Stringkey(".cpp")]=&cxxloader;
 
-#if 0
 	//	Collect targtes
 		Maike::DependencyGraphDefault targets;
 		Maike::SpiderDefault spider(loaders,targets);

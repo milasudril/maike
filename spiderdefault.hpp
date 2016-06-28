@@ -30,8 +30,6 @@ namespace Maike
 
 			SpiderDefault& scanFile(const char* filename,const char* in_dir);
 			SpiderDefault& run();
-			const char* targetPrefixGet() const noexcept;
-			const char* sourcePrefixGet() const noexcept;
 
 		private:
 			const std::map<Stringkey,const TargetLoader*>& r_loaders;

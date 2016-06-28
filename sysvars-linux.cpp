@@ -6,33 +6,29 @@
 //@	]
 
 #include "sysvars.hpp"
+#include "versionnumber.hpp"
 #include <sys/utsname.h>
 #include <cstring>
 #include <cstdint>
 #include <cstdlib>
 #include <cstdio>
 
-void Maike::sysvarsLoad()
+#ifdef __unix__
+#include <unistd.h>
+#endif
+
+void Maike::sysvarsLoad(std::map<Stringkey, int64_t>& variables)
 	{
 	utsname sysname;
 	uname(&sysname);
+	variables[Stringkey("linux")]=version(sysname.release);
+#if __ANDROID__
+	variables[Stringkey("android")]=__ANDROID_API__;
+#elif __gnu_linux__
+	variables[Stringkey("gnu")]=1;
+#endif
 
-	union
-		{
-		uint16_t parts[4];
-		uint64_t number;
-		} version;
-	version.number=0;
-	auto k=0;
-	char* pos;
-	auto ptr=strtok_r(sysname.release,".",&pos);
-	while(ptr!=NULL && k!=4)
-		{
-		version.parts[k]=__builtin_bswap16( static_cast<uint16_t>(atoi(ptr)));
-		ptr=strtok_r(NULL,".",&pos);
-		++k;
-		}
-	version.number=__builtin_bswap64(version.number);
-
-	printf("%016lx\n",version.number);
+#ifdef __unix__
+	variables[Stringkey("posix")]=_POSIX_VERSION;
+#endif
 	}

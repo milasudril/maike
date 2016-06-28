@@ -72,9 +72,3 @@ SpiderDefault& SpiderDefault::run()
 
 	return *this;
 	}
-
-const char* SpiderDefault::targetPrefixGet() const noexcept
-	{return nullptr;}
-
-const char* SpiderDefault::sourcePrefixGet() const noexcept
-	{return nullptr;}

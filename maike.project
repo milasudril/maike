@@ -88,6 +88,11 @@
     <File Name="sysvars.hpp"/>
     <File Name="filein-linux.cpp"/>
     <File Name="sysvars-linux.cpp"/>
+    <File Name="versionnumber.hpp"/>
+    <File Name="versionnumber.cpp"/>
+    <File Name="expressionevaluatordefault.hpp"/>
+    <File Name="expressionevaluatordefault.cpp"/>
+    <File Name="expressionevaluator.hpp"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>

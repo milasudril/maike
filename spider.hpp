@@ -16,8 +16,6 @@ namespace Maike
 		public:
 			virtual Spider& scanFile(const char* filename,const char* in_dir)=0;
 			virtual Spider& run()=0;
-			virtual const char* targetPrefixGet() const noexcept=0;
-			virtual const char* sourcePrefixGet() const noexcept=0;
 		};
 	}
 
