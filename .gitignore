@@ -4,6 +4,7 @@
 *.exe
 *.a
 *.lib
+*.pdf
 bin/*
 Debug/*
 Release/*

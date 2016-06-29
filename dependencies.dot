@@ -3,6 +3,14 @@ digraph DependencyGraph
 	"./versionnumber.hpp"->".";
 	"./targetcxx.o"->".";
 	"./targetcxx.o"->"./targetcxx.hpp";
+	"./targetcxx.o"->"./resourceobject.hpp";
+	"./targetcxx.o"->"./resourceobject.o";
+	"./targetcxx.o"->"./stringkey.hpp";
+	"./targetcxx.o"->"./errormessage.hpp";
+	"./targetcxx.o"->"./errormessage.o";
+	"./targetcxx.o"->"./variant.hpp";
+	"./targetcxx.o"->"./exceptionhandler.hpp";
+	"./targetcxx.o"->"./exceptionhandler.o";
 	"./datasinkstd.hpp"->".";
 	"./datasinkstd.hpp"->"./datasink.hpp";
 	"./exceptionhandler.hpp"->".";
