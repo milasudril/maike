@@ -1,0 +1,16 @@
+digraph DependencyGraph
+	{
+	"./bar.o"->".";
+	"./bar.o"->"./bar.hpp";
+	"./foo.o"->".";
+	"./foo.o"->"./foo.hpp";
+	"./foo.hpp"->".";
+	"./foo.hpp"->"./bar.hpp";
+	"./foo.hpp"->"./bar.o";
+	"./root.o"->".";
+	"./root.o"->"./foo.hpp";
+	"./root.o"->"./foo.o";
+	"./root.o"->"./bar.hpp";
+	"./root.o"->"./bar.o";
+	"./bar.hpp"->".";
+	}

@@ -102,7 +102,7 @@ int main(int argc,char** args)
 	//	Collect targtes
 		Maike::DependencyGraphDefault targets;
 		Maike::SpiderDefault spider(loaders,evaluator,targets);
-		spider.scanFile(".","").run();
+		spider.scanFile("test",".").run();
 
 	//	Build all targets
 		targets.targetsProcess(DepGraphExporter("dependencies.dot"));

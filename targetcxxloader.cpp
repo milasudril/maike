@@ -122,7 +122,7 @@ static void includesGet(const char* name_src,const char* in_dir
 	name_full+='/';
 	name_full+=name_src;
 
-	FileIn file_reader(name_full.c_str());
+	FileIn file_reader(name_src);
 	TargetCxxPPTokenizer cpptok(file_reader);
 	TargetCxxPPTokenizer::Token tok_in;
 	enum class Mode:uint8_t{NORMAL,INCLUDE};
@@ -155,7 +155,7 @@ static void includesGet(const char* name_src,const char* in_dir
 						name_dep_full+=tok_in.value;
 						target.dependencyAdd(Dependency(name_dep_full.c_str()
 							,Dependency::Relation::INTERNAL));
-						spider.scanFile(tok_in.value.c_str(),in_dir);
+						spider.scanFile(name_dep_full.c_str(),in_dir);
 						FileIn file(name_dep_full.c_str());
 						ResourceObject obj{TagFilter(file)};
 						if(obj.objectExists("dependencies_extra"))
@@ -192,7 +192,7 @@ void TargetCxxLoader::targetsLoad(const char* name_src,const char* in_dir
 	name_full+='/';
 	name_full+=name_src;
 
-	FileIn source(name_full.c_str());
+	FileIn source(name_src);
 	ResourceObject rc{TagFilter(source)};
 
 	if(rc.objectExists("targets"))
