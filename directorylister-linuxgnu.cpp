@@ -4,7 +4,7 @@
 //@			,{
 //@		 	"targets":[
 //@				{
-//@			 	 "name":"invokerreal.o","type":"object"
+//@			 	 "name":"directorylister.o","type":"object"
 //@				,"dependencies":[{"ref":"pthread","rel":"external"}]
 //@				}]
 //@			}

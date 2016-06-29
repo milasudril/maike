@@ -1,7 +1,7 @@
 //@	[
 //@		[
 //@		"linux"
-//@			,{"targets":[{"name":"filein.o","type":"object"}]}
+//@			,{"targets":[{"name":"sysvars.o","type":"object"}]}
 //@		]
 //@	]
 
@@ -11,7 +11,6 @@
 #include <cstring>
 #include <cstdint>
 #include <cstdlib>
-#include <cstdio>
 
 #ifdef __unix__
 #include <unistd.h>
@@ -21,7 +20,8 @@ void Maike::sysvarsLoad(std::map<Stringkey, int64_t>& variables)
 	{
 	utsname sysname;
 	uname(&sysname);
-	variables[Stringkey("linux")]=version(sysname.release);
+	auto ver=version(sysname.release);
+	variables[Stringkey("linux")]=ver;
 #if __ANDROID__
 	variables[Stringkey("android")]=__ANDROID_API__;
 #elif __gnu_linux__

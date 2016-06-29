@@ -34,11 +34,8 @@ void TargetDirectoryLoader::targetsLoad(const char* name_src
 		if(m_ignore.find(Stringkey(entry))==m_ignore.end())
 			{
 			std::string path_tot;
-			if(strcmp(name_src,"."))
-				{
-				path_tot+=name_src;
-				path_tot+='/';
-				}
+			path_tot+=name_src;
+			path_tot+='/';
 			path_tot+=entry;
 			auto entry_type=FileInfo(path_tot.c_str()).typeGet();
 			if((entry_type==FileInfo::Type::DIRECTORY && m_recursive)

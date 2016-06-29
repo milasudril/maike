@@ -1,6 +1,6 @@
 //@	{
 //@	 "targets":[ {"name":"datasinkstd.hpp","type":"include"} ]
-//@	,"dependencies_extra":[{"ref":"datasinkstd.o","type":"implementation"}]
+//@	,"dependencies_extra":[{"ref":"datasinkstd.o","rel":"implementation"}]
 //@	}
 
 #ifndef MAIKE_DATASINKSTD_HPP

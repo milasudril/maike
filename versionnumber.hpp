@@ -1,6 +1,6 @@
 //@	{
 //@	 "targets":[{"name":"versionnumber.hpp","type":"include"}]
-//@	,"dependencies_extra":[{"ref":"versionnumber.hpp","rel":"implementation"}]
+//@	,"dependencies_extra":[{"ref":"versionnumber.o","rel":"implementation"}]
 //@	}
 
 #ifndef MAIKE_VERSIONNUMBER_H

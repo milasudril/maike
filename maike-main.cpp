@@ -92,7 +92,8 @@ int main(int argc,char** args)
 		dirloader.pathRefuse(Maike::Stringkey(".git"))
 			.pathRefuse(Maike::Stringkey(".codelite"))
 			.pathRefuse(Maike::Stringkey(".clang"))
-			.pathRefuse(Maike::Stringkey("__targets"));
+			.pathRefuse(Maike::Stringkey("__targets"))
+			.pathRefuse(Maike::Stringkey("test"));
 		loaders[Maike::Stringkey(".")]=&dirloader;
 
 		Maike::TargetCxxLoader cxxloader;
@@ -102,10 +103,10 @@ int main(int argc,char** args)
 	//	Collect targtes
 		Maike::DependencyGraphDefault targets;
 		Maike::SpiderDefault spider(loaders,evaluator,targets);
-		spider.scanFile("test",".").run();
+		spider.scanFile(".","").run();
 
 	//	Build all targets
-		targets.targetsProcess(DepGraphExporter("dependencies.dot"));
+		targets.targetsPatch().targetsProcess(DepGraphExporter("dependencies.dot"));
 		//	.targetsProcess(TargetBuilder{Maike::InvokerReal(),"__targets"});
 
 		}

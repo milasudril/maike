@@ -79,7 +79,6 @@ namespace
 				}
 			return x;
 			}
-
 		return static_cast<int64_t>( atoll(value) );
 		}
 
@@ -398,13 +397,21 @@ Variant ExpressionEvaluatorDefault::evaluate(const char* expression) const
 						tok_current.first.clear();
 						break;
 					case ',':
-						{
-						ret=argCreate(tok_current.first.c_str(),tok_current.second
-							,strings,*this);
-						cmd_current.args.push_back(ret);
-						tok_current.first.clear();
-						tok_current.second=0;
-						}
+					case '\0':
+						if(tok_current.first.size()!=0)
+							{
+							ret=argCreate(tok_current.first.c_str(),tok_current.second
+								,strings,*this);
+							cmd_current.args.push_back(ret);
+							tok_current.first.clear();
+							tok_current.second=0;
+							}
+						if(ch_in=='\0')
+							{
+							if(!cmdstack.empty())
+								{exceptionRaise(ErrorMessage("Expression error: Missing ')'.",{}));}
+							return ret;
+							}
 						break;
 					case ')':
 						if(cmdstack.empty())
@@ -432,10 +439,6 @@ Variant ExpressionEvaluatorDefault::evaluate(const char* expression) const
 						state_old=state;
 						state=State::ESCAPE;
 						break;
-					case '\0':
-						if(!cmdstack.empty())
-							{exceptionRaise(ErrorMessage("Expression error: Missing ')'.",{}));}
-						return ret;
 					default:
 						if(!(ch_in>='\0' && ch_in<=' '))
 							{tok_current.first+=ch_in;}

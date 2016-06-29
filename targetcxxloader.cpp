@@ -7,6 +7,9 @@
 #include "resourceobject.hpp"
 #include "targetcxx.hpp"
 #include "dependencygraph.hpp"
+#include "errormessage.hpp"
+#include "expressionevaluator.hpp"
+#include "exceptionhandler.hpp"
 #include <cstdio>
 
 using namespace Maike;
@@ -160,6 +163,9 @@ static void includesGet(const char* name_src,const char* in_dir
 						ResourceObject obj{TagFilter(file)};
 						if(obj.objectExists("dependencies_extra"))
 							{
+						//	Add dependency to the current target. This connects
+						//	The the include file with the corresponding
+						//	implementation file.
 							auto deps=obj.objectGet("dependencies_extra");
 							auto N=deps.objectCountGet();
 							for(decltype(N) k=0;k<N;++k)
@@ -185,6 +191,21 @@ static void includesGet(const char* name_src,const char* in_dir
 		}
 	}
 
+static void targetsLoad(const ResourceObject& targets,const char* name_src
+	,const char* in_dir,Spider& spider,DependencyGraph& graph)
+	{
+	auto N=targets.objectCountGet();
+	for(decltype(N) k=0;k<N;++k)
+		{
+		std::unique_ptr<TargetCxx> target
+			{
+			new TargetCxx(targets.objectGet(k),name_src,in_dir,graph.targetCounterGet())
+			};
+		includesGet(name_src,in_dir,spider,graph,*target);
+		graph.targetRegister(std::move(target));
+		}
+	}
+
 void TargetCxxLoader::targetsLoad(const char* name_src,const char* in_dir
 	,Spider& spider,DependencyGraph& graph,const ExpressionEvaluator& evaluator) const
 	{
@@ -196,21 +217,32 @@ void TargetCxxLoader::targetsLoad(const char* name_src,const char* in_dir
 	ResourceObject rc{TagFilter(source)};
 
 	if(rc.objectExists("targets"))
+		{::targetsLoad(rc.objectGet("targets"),name_src,in_dir,spider,graph);}
+	else
 		{
-		auto targets=rc.objectGet("targets");
-		auto N=targets.objectCountGet();
-		for(decltype(N) k=0;k<N;++k)
+		auto N_cases=rc.objectCountGet();
+		for(decltype(N_cases) k=0;k<N_cases;++k)
 			{
-			std::unique_ptr<TargetCxx> target
+			auto case_obj=rc.objectGet(k);
+			if(case_obj.typeGet()==ResourceObject::Type::ARRAY)
 				{
-				new TargetCxx(targets.objectGet(k),name_src,in_dir,graph.targetCounterGet())
-				};
-			includesGet(name_src,in_dir,spider,graph,*target);
-			graph.targetRegister(std::move(target));
+				if(case_obj.objectCountGet()!=2)
+					{exceptionRaise(ErrorMessage("A condition must have only a condition and a target definition.",{}));}
+
+				auto expression=static_cast<const char*>( case_obj.objectGet(static_cast<size_t>(0)) );
+				if(static_cast<int64_t>( evaluator.evaluate(expression) ))
+					{
+					::targetsLoad(case_obj.objectGet(1).objectGet("targets")
+						,name_src,in_dir,spider,graph);
+					break;
+					}
+				}
+			else
+			if(case_obj.objectExists("targets"))
+				{
+				::targetsLoad(case_obj.objectGet("targets"),name_src,in_dir,spider,graph);
+				break;
+				}
 			}
 		}
-/*	else
-		{
-		printf("%s: No unconditional targets\n",name_full.c_str());
-		}*/
 	}

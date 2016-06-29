@@ -1,5 +1,5 @@
 //@	{
-//@	"targets":[{"name":"spiderdafault.o","type":"object"}]
+//@	"targets":[{"name":"spiderdefault.o","type":"object"}]
 //@	}
 
 #include "spiderdefault.hpp"
