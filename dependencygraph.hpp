@@ -5,17 +5,17 @@
 #ifndef MAIKE_DEPENDENCYGRAPH_HPP
 #define MAIKE_DEPENDENCYGRAPH_HPP
 
-#include <memory>
+#include <cstddef>
 
 namespace Maike
 	{
+	struct TargetHandle;
 	class Target;
 
 	class DependencyGraph
 		{
 		public:
-			virtual ~DependencyGraph()=default;
-			virtual DependencyGraph& targetRegister(std::unique_ptr<Target>&& target)=0;
+			virtual DependencyGraph& targetRegister(TargetHandle&& target)=0;
 			virtual DependencyGraph& targetsPatch()=0;
 			virtual size_t targetCounterGet() const noexcept=0;
 
@@ -28,6 +28,9 @@ namespace Maike
 
 			virtual DependencyGraph& targetsProcess(TargetProcessor&& proc)=0;
 			virtual Target* targetFind(const char* name)=0;
+
+		protected:
+			~DependencyGraph()=default;
 		};
 	}
 

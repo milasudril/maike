@@ -12,7 +12,10 @@ namespace Maike
 	class DataSink
 		{
 		public:
-			virtual void write(const void* buffer,size_t n){}
+			virtual void write(const void* buffer,size_t n)=0;
+
+		protected:
+			~DataSink()=default;
 		};
 	};
 

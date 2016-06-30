@@ -1,21 +1,49 @@
 {
-"cxxcompiler":
+"spider":
+	{
+	"start_directory":"."
+	}
+
+"directoryloader":
+	{
+	 "path_skip":[".git",".codelite",".clang","test","Debug","Release","test"
+			,"__targets"]
+	,"recursive":1
+	}
+
+"targetbuilder":
+	{
+	"target_directory":"__targets"
+	}
+
+"cxxoptions":
 	{
 	 "includedir":[]
 	,"libdir":[]
-	,"includedir_format":"-I\"$value\""
-	,"libdir_format":"-L\"$value\""
-	,"libext_format":"-l\"$value\""
-	,"libint_format":"-l:\"$value\""
+	,"cxxversion_min":201103
+	,"stdprefix":"-std="
+	,"platform_suffix":"x86_64-linux-gnu"
+	,"includedir_format":"-I\"^\""
+	,"libdir_format":"-L\"^\""
+	,"libext_format":"-l\"^\""
+	,"libint_format":"-l:\"^\""
 	,"objcompile":
 		{
 		 "name":"g++"
-		,"args":["-c","-g","-fpic","-std=c++11","-Wall","-Woverflow","-Wconversion","-Werror","$includedir","-o","$target","$source"]
+		,"args":["-c","-g","-fpic","$cxxversion","-Wall","-Woverflow"
+			,"-Wconversion","-Werror","$includedir","-o","$target","$source"]
 		}
 	,"appcompile":
 		{
 		 "name":"g++"
-		,"args":["-g","-fpic","-std=c++11","-Wall","-Woverflow","-Wconversion","-Werror","$includedir","$libdir","-o","$target","$source","$dependencies"]
+		,"args":["-g","-fpic","$cxxversion","-Wall","-Woverflow","-Wconversion"
+			,"-Werror","$includedir","$libdir","-o","$target","$source"
+			,"$dependencies"]
+		}
+	,"versionquery":
+		{
+		 "name":"g++"
+		,"args":["-E","-dM","-x","c++","/dev/null"]
 		}
 	}
 }

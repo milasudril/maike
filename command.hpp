@@ -16,16 +16,29 @@ namespace Maike
 	class Variant;
 	class DataSink;
 	class Stringkey;
+	class ResourceObject;
 
 	class Command
 		{
 		public:
+			void execute(Invoker&& invoker,DataSink&& standard_output
+				,DataSink&& standard_error) const
+				{execute(std::move(invoker),std::move(standard_output),std::move(standard_error));}
+
+			void execute(Invoker&& invoker,DataSink&& standard_output
+				,DataSink&& standard_error
+				,const std::map<Stringkey,std::string>& substitutes) const
+				{execute(std::move(invoker),std::move(standard_output),std::move(standard_error),std::move(substitutes));}
+
 			void execute(Invoker& invoker,DataSink& standard_output
-				,DataSink& standard_error);
+				,DataSink& standard_error) const;
 
 			void execute(Invoker& invoker,DataSink& standard_output
 				,DataSink& standard_error
-				,const std::map<Stringkey,std::string>& substitutes);
+				,const std::map<Stringkey,std::string>& substitutes) const;
+
+			Command();
+			Command(const ResourceObject& cmd);
 
 			Command& nameSet(const char* name);
 			Command& argumentAppend(const char* arg);

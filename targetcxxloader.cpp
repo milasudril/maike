@@ -197,12 +197,9 @@ static void targetsLoad(const ResourceObject& targets,const char* name_src
 	auto N=targets.objectCountGet();
 	for(decltype(N) k=0;k<N;++k)
 		{
-		std::unique_ptr<TargetCxx> target
-			{
-			new TargetCxx(targets.objectGet(k),name_src,in_dir,graph.targetCounterGet())
-			};
+		auto target=TargetCxx::create(targets.objectGet(k),name_src,in_dir,graph.targetCounterGet());
 		includesGet(name_src,in_dir,spider,graph,*target);
-		graph.targetRegister(std::move(target));
+		graph.targetRegister(target);
 		}
 	}
 

@@ -11,6 +11,8 @@ namespace Maike
 		{
 		public:
 			virtual Variant evaluate(const char* expression) const=0;
+		protected:
+			~ExpressionEvaluator()=default;
 		};
 	}
 

@@ -6,12 +6,13 @@
 #ifndef MAIKE_SYSVARS_HPP
 #define MAIKE_SYSVARS_HPP
 
-#include "stringkey.hpp"
 #include <map>
 
 namespace Maike
 	{
-	void sysvarsLoad(std::map<Stringkey,int64_t>& variables);
+	class Stringkey;
+	class Variant;
+	void sysvarsLoad(std::map<Stringkey,Variant>& variables);
 	}
 
 #endif

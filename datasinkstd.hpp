@@ -22,10 +22,16 @@ namespace Maike
 			intptr_t r_handle;
 		};
 
+	class DataSinkNull:public DataSink
+		{
+		public:
+			void write(const void* buffer,size_t n){}
+		};
+
 
 	namespace DataSinkStd
 		{
-		extern DataSink null;
+		extern DataSinkNull null;
 
 		extern DataSinkStdHandle standard_error;
 		extern DataSinkStdHandle standard_output;

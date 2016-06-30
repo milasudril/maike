@@ -7,6 +7,7 @@
 
 #include "twins.hpp"
 #include <cstddef>
+#include <memory>
 
 namespace Maike
 	{
@@ -16,7 +17,6 @@ namespace Maike
 	class Target
 		{
 		public:
-			virtual ~Target()=default;
 			virtual Target& childCounterIncrement() noexcept=0;
 			virtual size_t childCounterGet() const noexcept=0;
 			virtual void compile(Twins<const Dependency*> dependency_list
@@ -29,6 +29,21 @@ namespace Maike
 			virtual const char* sourceNameGet() const noexcept=0;
 			virtual bool upToDate(Twins<const Dependency*> dependency_list
 				,Invoker& invoker,const char* target_dir) const=0;
+
+		protected:
+			~Target()=default;
+		private:
+			friend struct TargetHandle;
+			virtual void destroy() noexcept=0;
+			static void destroy(Target* target) noexcept
+				{target->destroy();}
+		};
+
+	struct TargetHandle:public std::unique_ptr<Target,void (*)(Target*)>
+		{
+		TargetHandle(Target* target):
+			std::unique_ptr<Target,void(*)(Target*)>(target,Target::destroy)
+			{}
 		};
 	}
 

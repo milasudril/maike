@@ -34,7 +34,7 @@ ExpressionEvaluatorDefault& ExpressionEvaluatorDefault::sysvarsLoad()
 	return *this;
 	}
 
-int64_t ExpressionEvaluatorDefault::variableGet(const Stringkey& variable) const noexcept
+Variant ExpressionEvaluatorDefault::variableGet(const Stringkey& variable) const noexcept
 	{
 	auto i=m_variables.find(variable);
 	if(i==m_variables.end())

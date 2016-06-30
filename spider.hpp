@@ -16,6 +16,8 @@ namespace Maike
 		public:
 			virtual Spider& scanFile(const char* filename,const char* in_dir)=0;
 			virtual Spider& run()=0;
+		protected:
+			~Spider()=default;
 		};
 	}
 

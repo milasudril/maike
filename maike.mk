@@ -13,7 +13,7 @@ CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=Torbjörn Rathsman
-Date                   :=29/06/16
+Date                   :=30/06/16
 CodeLitePath           :="/home/torbjorr/.codelite"
 LinkerName             :=/usr/bin/g++
 SharedObjectLinkerName :=/usr/bin/g++ -shared -fPIC
@@ -61,8 +61,8 @@ AS       := /usr/bin/as
 ##
 CodeLiteDir:=/usr/share/codelite
 Objects0=$(IntermediateDirectory)/directorylister-linuxgnu.cpp$(ObjectSuffix) $(IntermediateDirectory)/dependencygraphdefault.cpp$(ObjectSuffix) $(IntermediateDirectory)/errormessage.cpp$(ObjectSuffix) $(IntermediateDirectory)/datasinkstd-posix.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetdirectoryloader.cpp$(ObjectSuffix) $(IntermediateDirectory)/strerror-posix.cpp$(ObjectSuffix) $(IntermediateDirectory)/maike.cpp$(ObjectSuffix) $(IntermediateDirectory)/fileinfo-linuxgnu.cpp$(ObjectSuffix) $(IntermediateDirectory)/invokerreal-linuxgnu.cpp$(ObjectSuffix) $(IntermediateDirectory)/spiderdefault.cpp$(ObjectSuffix) \
-	$(IntermediateDirectory)/targetcxxcompiler.cpp$(ObjectSuffix) $(IntermediateDirectory)/maike-main.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetdirectory.cpp$(ObjectSuffix) $(IntermediateDirectory)/command.cpp$(ObjectSuffix) $(IntermediateDirectory)/exceptionhandler.cpp$(ObjectSuffix) $(IntermediateDirectory)/dependency.cpp$(ObjectSuffix) $(IntermediateDirectory)/stringformat.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetbase.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxxloader.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxxtokenizer.cpp$(ObjectSuffix) \
-	$(IntermediateDirectory)/resourceobject.cpp$(ObjectSuffix) $(IntermediateDirectory)/filein-linux.cpp$(ObjectSuffix) $(IntermediateDirectory)/sysvars-linux.cpp$(ObjectSuffix) $(IntermediateDirectory)/versionnumber.cpp$(ObjectSuffix) $(IntermediateDirectory)/expressionevaluatordefault.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxx.cpp$(ObjectSuffix) 
+	$(IntermediateDirectory)/targetcxxcompiler.cpp$(ObjectSuffix) $(IntermediateDirectory)/maike-main.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetdirectory.cpp$(ObjectSuffix) $(IntermediateDirectory)/command.cpp$(ObjectSuffix) $(IntermediateDirectory)/exceptionhandler.cpp$(ObjectSuffix) $(IntermediateDirectory)/dependency.cpp$(ObjectSuffix) $(IntermediateDirectory)/stringformat.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetbase.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxxloader.cpp$(ObjectSuffix) $(IntermediateDirectory)/filein-linux.cpp$(ObjectSuffix) \
+	$(IntermediateDirectory)/sysvars-linux.cpp$(ObjectSuffix) $(IntermediateDirectory)/versionnumber.cpp$(ObjectSuffix) $(IntermediateDirectory)/expressionevaluatordefault.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxx.cpp$(ObjectSuffix) $(IntermediateDirectory)/resourceobject.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxxoptions.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxxpptokenizer.cpp$(ObjectSuffix) 
 
 
 
@@ -245,22 +245,6 @@ $(IntermediateDirectory)/targetcxxloader.cpp$(DependSuffix): targetcxxloader.cpp
 $(IntermediateDirectory)/targetcxxloader.cpp$(PreprocessSuffix): targetcxxloader.cpp
 	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/targetcxxloader.cpp$(PreprocessSuffix) "targetcxxloader.cpp"
 
-$(IntermediateDirectory)/targetcxxtokenizer.cpp$(ObjectSuffix): targetcxxtokenizer.cpp $(IntermediateDirectory)/targetcxxtokenizer.cpp$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/torbjorr/Dokument/maike/targetcxxtokenizer.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/targetcxxtokenizer.cpp$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/targetcxxtokenizer.cpp$(DependSuffix): targetcxxtokenizer.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/targetcxxtokenizer.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/targetcxxtokenizer.cpp$(DependSuffix) -MM "targetcxxtokenizer.cpp"
-
-$(IntermediateDirectory)/targetcxxtokenizer.cpp$(PreprocessSuffix): targetcxxtokenizer.cpp
-	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/targetcxxtokenizer.cpp$(PreprocessSuffix) "targetcxxtokenizer.cpp"
-
-$(IntermediateDirectory)/resourceobject.cpp$(ObjectSuffix): resourceobject.cpp $(IntermediateDirectory)/resourceobject.cpp$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/torbjorr/Dokument/maike/resourceobject.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/resourceobject.cpp$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/resourceobject.cpp$(DependSuffix): resourceobject.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/resourceobject.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/resourceobject.cpp$(DependSuffix) -MM "resourceobject.cpp"
-
-$(IntermediateDirectory)/resourceobject.cpp$(PreprocessSuffix): resourceobject.cpp
-	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/resourceobject.cpp$(PreprocessSuffix) "resourceobject.cpp"
-
 $(IntermediateDirectory)/filein-linux.cpp$(ObjectSuffix): filein-linux.cpp $(IntermediateDirectory)/filein-linux.cpp$(DependSuffix)
 	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/torbjorr/Dokument/maike/filein-linux.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/filein-linux.cpp$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/filein-linux.cpp$(DependSuffix): filein-linux.cpp
@@ -300,6 +284,30 @@ $(IntermediateDirectory)/targetcxx.cpp$(DependSuffix): targetcxx.cpp
 
 $(IntermediateDirectory)/targetcxx.cpp$(PreprocessSuffix): targetcxx.cpp
 	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/targetcxx.cpp$(PreprocessSuffix) "targetcxx.cpp"
+
+$(IntermediateDirectory)/resourceobject.cpp$(ObjectSuffix): resourceobject.cpp $(IntermediateDirectory)/resourceobject.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/torbjorr/Dokument/maike/resourceobject.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/resourceobject.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/resourceobject.cpp$(DependSuffix): resourceobject.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/resourceobject.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/resourceobject.cpp$(DependSuffix) -MM "resourceobject.cpp"
+
+$(IntermediateDirectory)/resourceobject.cpp$(PreprocessSuffix): resourceobject.cpp
+	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/resourceobject.cpp$(PreprocessSuffix) "resourceobject.cpp"
+
+$(IntermediateDirectory)/targetcxxoptions.cpp$(ObjectSuffix): targetcxxoptions.cpp $(IntermediateDirectory)/targetcxxoptions.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/torbjorr/Dokument/maike/targetcxxoptions.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/targetcxxoptions.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/targetcxxoptions.cpp$(DependSuffix): targetcxxoptions.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/targetcxxoptions.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/targetcxxoptions.cpp$(DependSuffix) -MM "targetcxxoptions.cpp"
+
+$(IntermediateDirectory)/targetcxxoptions.cpp$(PreprocessSuffix): targetcxxoptions.cpp
+	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/targetcxxoptions.cpp$(PreprocessSuffix) "targetcxxoptions.cpp"
+
+$(IntermediateDirectory)/targetcxxpptokenizer.cpp$(ObjectSuffix): targetcxxpptokenizer.cpp $(IntermediateDirectory)/targetcxxpptokenizer.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/torbjorr/Dokument/maike/targetcxxpptokenizer.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/targetcxxpptokenizer.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/targetcxxpptokenizer.cpp$(DependSuffix): targetcxxpptokenizer.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/targetcxxpptokenizer.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/targetcxxpptokenizer.cpp$(DependSuffix) -MM "targetcxxpptokenizer.cpp"
+
+$(IntermediateDirectory)/targetcxxpptokenizer.cpp$(PreprocessSuffix): targetcxxpptokenizer.cpp
+	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/targetcxxpptokenizer.cpp$(PreprocessSuffix) "targetcxxpptokenizer.cpp"
 
 
 -include $(IntermediateDirectory)/*$(DependSuffix)

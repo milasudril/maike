@@ -15,7 +15,7 @@ namespace Maike
 	class DependencyGraphDefault:public DependencyGraph
 		{
 		public:
-			DependencyGraphDefault& targetRegister(std::unique_ptr<Target>&& target);
+			DependencyGraphDefault& targetRegister(TargetHandle&& target);
 			DependencyGraphDefault& targetsPatch();
 			DependencyGraphDefault& targetsProcess(TargetProcessor&& visitor);
 			Target* targetFind(const char* name);
@@ -24,7 +24,7 @@ namespace Maike
 
 		private:
 			typedef Stringkey KeyType;
-			std::map< KeyType,std::unique_ptr<Target> > m_targets;
+			std::map< KeyType,TargetHandle > m_targets;
 		};
 	}
 

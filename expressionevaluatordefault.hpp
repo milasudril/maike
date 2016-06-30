@@ -12,7 +12,8 @@
 namespace Maike
 	{
 	class Stringkey;
-	class ResourceObject;
+	class Variant;
+	class ResourceObjectDefault;
 
 	class ExpressionEvaluatorDefault:public ExpressionEvaluator
 		{
@@ -22,13 +23,13 @@ namespace Maike
 			ExpressionEvaluatorDefault& variablesClear() noexcept;
 			ExpressionEvaluatorDefault& sysvarsLoad();
 			ExpressionEvaluatorDefault& envvarsLoad();
-			ExpressionEvaluatorDefault& cfgvarsLoad(const ResourceObject& vars);
+			ExpressionEvaluatorDefault& cfgvarsLoad(const ResourceObjectDefault& vars);
 
-			int64_t variableGet(const Stringkey& variable) const noexcept;
+			Variant variableGet(const Stringkey& variable) const noexcept;
 			Variant evaluate(const char* expression) const;
 
 		private:
-			std::map<Stringkey,int64_t> m_variables;
+			std::map<Stringkey,Variant> m_variables;
 		};
 	}
 #endif

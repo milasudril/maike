@@ -18,15 +18,26 @@ namespace Maike
 	class TargetCxxCompiler
 		{
 		public:
-			void compile(const char* source,const char* dest
-				,Invoker& invoker,const TargetCxxOptions& options) const;
+			TargetCxxCompiler(const ResourceObject& options);
 
-			void link(const Twins<const char* const>& files
+			void compileObject(const char* source,const char* dest
+				,Invoker& invoker,const TargetCxxOptions& options_extra) const;
+
+			void compileApplication(const Twins<const char* const>& files
 				,const char* dest,Invoker& invoker
-				,const TargetCxxOptions& options) const;
+				,const TargetCxxOptions& options_extra) const;
+
+			void compileDll(const Twins<const char* const>& files
+				,const char* dest,Invoker& invoker
+				,const TargetCxxOptions& options_extra) const;
+
+			void compileLibrary(const Twins<const char* const>& files
+				,const char* dest,Invoker& invoker
+				,const TargetCxxOptions& options_extra) const;
 
 		private:
 			TargetCxxOptions m_options;
+			long long int m_cxxversion_default;
 		};
 	}
 

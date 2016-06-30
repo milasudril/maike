@@ -11,7 +11,7 @@
 
 using namespace Maike;
 
-DependencyGraphDefault& DependencyGraphDefault::targetRegister(std::unique_ptr<Target>&& target)
+DependencyGraphDefault& DependencyGraphDefault::targetRegister(TargetHandle&& target)
 	{
 	auto name=target->nameGet();
 	auto i=m_targets.find(KeyType(name));

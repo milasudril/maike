@@ -16,16 +16,13 @@ namespace Maike
 	{
 	namespace DataSinkStd
 		{
-		DataSink null;
+		DataSinkNull null;
 
 		DataSinkStdHandle standard_error(STDERR_FILENO);
 		DataSinkStdHandle standard_output(STDOUT_FILENO);
 		}
 
 	DataSinkStdHandle::DataSinkStdHandle(intptr_t handle):r_handle(handle)
-		{}
-
-	inline void black_magic(ssize_t x)
 		{}
 
 	void DataSinkStdHandle::write(const void* buffer,size_t n)
@@ -36,11 +33,14 @@ namespace Maike
 			auto res=::write(static_cast<int>(r_handle),bytes,n);
 			if(res==-1)
 				{
-				if(errno!=EINTR)
+				if(errno!=EINTR && errno!=EAGAIN)
 					{exceptionRaise(ErrorMessage("I/O error",{}));}
 				}
-			n-=res;
-			bytes+=n;
+			else
+				{
+				n-=res;
+				bytes+=n;
+				}
 			}
 		}
 

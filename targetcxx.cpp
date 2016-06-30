@@ -45,3 +45,14 @@ bool TargetCxx::upToDate(Twins<const Dependency*> dependency_list
 	{
 	return 0;
 	}
+
+TargetCxx* TargetCxx::create(const ResourceObject& obj,const char* name_src
+	,const char* in_dir,size_t id)
+	{
+	return new TargetCxx(obj,name_src,in_dir,id);
+	}
+
+void TargetCxx::destroy() noexcept
+	{
+	delete this;
+	}

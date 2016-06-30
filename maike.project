@@ -81,10 +81,7 @@
     <File Name="targetcxxpptokenizer.hpp"/>
     <File Name="readbuffer.hpp"/>
     <File Name="datasource.hpp"/>
-    <File Name="targetcxxtokenizer.cpp"/>
     <File Name="filein.hpp"/>
-    <File Name="resourceobject.hpp"/>
-    <File Name="resourceobject.cpp"/>
     <File Name="sysvars.hpp"/>
     <File Name="filein-linux.cpp"/>
     <File Name="sysvars-linux.cpp"/>
@@ -95,6 +92,10 @@
     <File Name="expressionevaluator.hpp"/>
     <File Name="targetcxx.hpp"/>
     <File Name="targetcxx.cpp"/>
+    <File Name="resourceobject.hpp"/>
+    <File Name="resourceobject.cpp"/>
+    <File Name="targetcxxoptions.cpp"/>
+    <File Name="targetcxxpptokenizer.cpp"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>

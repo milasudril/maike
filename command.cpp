@@ -6,8 +6,22 @@
 #include "stringkey.hpp"
 #include "exceptionhandler.hpp"
 #include "errormessage.hpp"
+#include "resourceobject.hpp"
 
 using namespace Maike;
+
+Command::Command(){}
+
+Command::Command(const ResourceObject& cmd)
+	{
+	m_name=std::string( static_cast<const char*>( cmd.objectGet("name") ) );
+	auto args=cmd.objectGet("args");
+	auto N_args=args.objectCountGet();
+	for(decltype(N_args) k=0;k<N_args;++k)
+		{
+		m_args.push_back(std::string(static_cast<const char*>(args.objectGet(k))));
+		}
+	}
 
 static std::vector<const char*> cstr(Twins<const std::string*> strings)
 	{
@@ -20,7 +34,7 @@ static std::vector<const char*> cstr(Twins<const std::string*> strings)
 	return std::move(ret);
 	}
 
-void Command::execute(Invoker& invoker,DataSink& standard_output,DataSink& standard_error)
+void Command::execute(Invoker& invoker,DataSink& standard_output,DataSink& standard_error) const
 	{
 	auto args=cstr({m_args.data(),m_args.data() + m_args.size()});
 	invoker.run(m_name.c_str()
@@ -82,7 +96,7 @@ static std::string varsSubstitute(const char* str
 	}
 
 void Command::execute(Invoker& invoker,DataSink& standard_output,DataSink& standard_error
-	,const std::map<Stringkey,std::string>& substitutes)
+	,const std::map<Stringkey,std::string>& substitutes) const
 	{
 	std::vector<std::string> args_temp;
 	auto ptr_args=m_args.data();

@@ -12,19 +12,24 @@ namespace Maike
 	{
 	class TargetDirectoryCompiler;
 
-	class TargetDirectory:public TargetBase
+	class TargetDirectory final:public TargetBase
 		{
 		public:
-
-			explicit TargetDirectory(const char* name,const char* in_dir
-				,size_t id):TargetBase(name,name,in_dir,id)
-				{}
+			static TargetDirectory* create(const char* name,const char* in_dir
+				,size_t id);
 
 			void compile(Twins<const Dependency*> dependency_list
 				,Invoker& invoker,const char* target_dir);
 
 			bool upToDate(Twins<const Dependency*> dependency_list
 				,Invoker& invoker,const char* target_dir) const;
+
+			void destroy() noexcept;
+
+		private:
+			explicit TargetDirectory(const char* name,const char* in_dir
+				,size_t id):TargetBase(name,name,in_dir,id)
+				{}
 		};
 	}
 

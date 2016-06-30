@@ -20,6 +20,9 @@ namespace Maike
 			virtual void mkdir(const char* name)=0;
 			virtual void copy(const char* source,const char* dest)=0;
 			virtual bool exists(const char* file) const=0;
+
+		protected:
+			~Invoker()=default;
 		};
 	}
 

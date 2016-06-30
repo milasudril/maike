@@ -31,3 +31,10 @@ bool TargetDirectory::upToDate(Twins<const Dependency*> dependency_list
 		}
 	return invoker.exists(fullpath.c_str());
 	}
+
+void TargetDirectory::destroy() noexcept
+	{delete this;}
+
+TargetDirectory* TargetDirectory::create(const char* name,const char* in_dir
+	,size_t id)
+	{return new TargetDirectory(name,in_dir,id);}

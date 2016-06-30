@@ -25,8 +25,8 @@ void TargetDirectoryLoader::targetsLoad(const char* name_src
 	,DependencyGraph& graph
 	,const ExpressionEvaluator& evaluator) const
 	{
-	auto target=new TargetDirectory(name_src,in_dir,graph.targetCounterGet());
-	graph.targetRegister(std::unique_ptr<Target>(target));
+	auto target=TargetDirectory::create(name_src,in_dir,graph.targetCounterGet());
+	graph.targetRegister(target);
 	DirectoryLister dirlister(name_src);
 	const char* entry=dirlister.read();
 	while(entry!=nullptr)
