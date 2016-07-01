@@ -12,9 +12,12 @@
 #include "maike.hpp"
 #include "targetdirectoryloader.hpp"
 #include "targetcxxloader.hpp"
+#include "targetcxxcompiler.hpp"
 #include "errormessage.hpp"
 #include "dependency.hpp"
 #include "sysvars.hpp"
+#include "resourceobject.hpp"
+#include "filein.hpp"
 #include "expressionevaluatordefault.hpp"
 
 
@@ -78,11 +81,19 @@ class DepGraphExporter:public Maike::DependencyGraph::TargetProcessor
 		FILE* m_dotfile;
 	};
 
+static Maike::ResourceObject configLoad(const char* filename)
+	{
+	Maike::FileIn source(filename);
+	return Maike::ResourceObject(source);
+	}
+
 int main(int argc,char** args)
 	{
 	try
 		{
 	//	Setup stuff
+		auto config=configLoad("maikeconfig.json");
+
 		Maike::ExpressionEvaluatorDefault evaluator;
 		evaluator.sysvarsLoad();
 
@@ -96,7 +107,8 @@ int main(int argc,char** args)
 			.pathRefuse(Maike::Stringkey("test"));
 		loaders[Maike::Stringkey(".")]=&dirloader;
 
-		Maike::TargetCxxLoader cxxloader;
+		Maike::TargetCxxCompiler cxxcompiler(config.objectGet("cxxoptions"));
+		Maike::TargetCxxLoader cxxloader(cxxcompiler);
 		loaders[Maike::Stringkey(".hpp")]=&cxxloader;
 		loaders[Maike::Stringkey(".cpp")]=&cxxloader;
 

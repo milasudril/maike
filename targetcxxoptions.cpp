@@ -2,8 +2,13 @@
 
 #include "targetcxxoptions.hpp"
 #include "resourceobject.hpp"
-#include "invokerreal.hpp"
-#include "datasink.hpp"
+#include "pipe.hpp"
+#include "exceptionhandler.hpp"
+#include "errormessage.hpp"
+#include "variant.hpp"
+
+#include "readbuffer.hpp"
+#include <cstdio>
 
 using namespace Maike;
 
@@ -43,7 +48,7 @@ TargetCxxOptions::TargetCxxOptions(const ResourceObject& cxxoptions):
 		{m_stdprefix=std::string( static_cast<const char*>(cxxoptions.objectGet("stdprefix")) );}
 
 	if(cxxoptions.objectExists("platform_suffix"))
-		{m_stdprefix=std::string( static_cast<const char*>(cxxoptions.objectGet("m_platform_suffix")) );}
+		{m_platform_suffix=std::string( static_cast<const char*>(cxxoptions.objectGet("platform_suffix")) );}
 
 	if(cxxoptions.objectExists("libext_format"))
 		{m_libext_format=std::string(static_cast<const char*>(cxxoptions.objectGet("libext_format")));}
@@ -67,26 +72,33 @@ TargetCxxOptions::TargetCxxOptions(const ResourceObject& cxxoptions):
 		{m_versionquery=Command(cxxoptions.objectGet("versionquery"));}
 	}
 
-namespace
-	{
-	class CxxDefines:public DataSink
-		{
-		public:
-			CxxDefines(long long int& ret):r_ret(ret)
-				{}
-
-			void write(const void* buffer,size_t N)
-				{
-				}
-
-		private:
-			long long int& r_ret;
-		};
-	};
 
 long long int TargetCxxOptions::cxxversionDefaultGet() const
 	{
 	long long int ret=0;
-//	m_versionquery.execute(InvokerReal(),CxxDefines(ret),DataSink());
+
+	const char* args[]={"-dM","-E","-x","c++","/dev/null"};
+	Pipe versionget("g++",{args,args+5},Pipe::REDIRECT_STDERR|Pipe::REDIRECT_STDOUT);
+	ReadBuffer rb(versionget.stderr());
+
+	putchar('>');
+	while(!rb.eof())
+		{
+		auto ch_in=rb.byteRead();
+		if(ch_in=='\n')
+			{
+			putchar('\n');
+			putchar('>');
+			}
+		else
+			{putchar(ch_in);}
+		}
+	auto status=versionget.exitStatusGet();
+	if(status!=0)
+		{
+		exceptionRaise(ErrorMessage("It was not possible to determine the "
+			"default C++ version. The compiler returned status code #0;",{status}));
+		}
+
 	return ret;
 	}

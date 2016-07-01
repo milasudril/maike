@@ -16,7 +16,7 @@ namespace Maike
 		public:
 			DataSinkStdHandle(intptr_t x);
 			~DataSinkStdHandle();
-			void write(const void* buffer,size_t n);
+			size_t write(const void* buffer,size_t n);
 
 		private:
 			intptr_t r_handle;
@@ -25,7 +25,8 @@ namespace Maike
 	class DataSinkNull:public DataSink
 		{
 		public:
-			void write(const void* buffer,size_t n){}
+			size_t write(const void* buffer,size_t n)
+				{return 0;}
 		};
 
 

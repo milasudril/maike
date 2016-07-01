@@ -13,7 +13,7 @@ CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=Torbjörn Rathsman
-Date                   :=30/06/16
+Date                   :=01/07/16
 CodeLitePath           :="/home/torbjorr/.codelite"
 LinkerName             :=/usr/bin/g++
 SharedObjectLinkerName :=/usr/bin/g++ -shared -fPIC
@@ -62,7 +62,7 @@ AS       := /usr/bin/as
 CodeLiteDir:=/usr/share/codelite
 Objects0=$(IntermediateDirectory)/directorylister-linuxgnu.cpp$(ObjectSuffix) $(IntermediateDirectory)/dependencygraphdefault.cpp$(ObjectSuffix) $(IntermediateDirectory)/errormessage.cpp$(ObjectSuffix) $(IntermediateDirectory)/datasinkstd-posix.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetdirectoryloader.cpp$(ObjectSuffix) $(IntermediateDirectory)/strerror-posix.cpp$(ObjectSuffix) $(IntermediateDirectory)/maike.cpp$(ObjectSuffix) $(IntermediateDirectory)/fileinfo-linuxgnu.cpp$(ObjectSuffix) $(IntermediateDirectory)/invokerreal-linuxgnu.cpp$(ObjectSuffix) $(IntermediateDirectory)/spiderdefault.cpp$(ObjectSuffix) \
 	$(IntermediateDirectory)/targetcxxcompiler.cpp$(ObjectSuffix) $(IntermediateDirectory)/maike-main.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetdirectory.cpp$(ObjectSuffix) $(IntermediateDirectory)/command.cpp$(ObjectSuffix) $(IntermediateDirectory)/exceptionhandler.cpp$(ObjectSuffix) $(IntermediateDirectory)/dependency.cpp$(ObjectSuffix) $(IntermediateDirectory)/stringformat.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetbase.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxxloader.cpp$(ObjectSuffix) $(IntermediateDirectory)/filein-linux.cpp$(ObjectSuffix) \
-	$(IntermediateDirectory)/sysvars-linux.cpp$(ObjectSuffix) $(IntermediateDirectory)/versionnumber.cpp$(ObjectSuffix) $(IntermediateDirectory)/expressionevaluatordefault.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxx.cpp$(ObjectSuffix) $(IntermediateDirectory)/resourceobject.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxxoptions.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxxpptokenizer.cpp$(ObjectSuffix) 
+	$(IntermediateDirectory)/sysvars-linux.cpp$(ObjectSuffix) $(IntermediateDirectory)/versionnumber.cpp$(ObjectSuffix) $(IntermediateDirectory)/expressionevaluatordefault.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxx.cpp$(ObjectSuffix) $(IntermediateDirectory)/resourceobject.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxxoptions.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxxpptokenizer.cpp$(ObjectSuffix) $(IntermediateDirectory)/pipe-posix.cpp$(ObjectSuffix) 
 
 
 
@@ -308,6 +308,14 @@ $(IntermediateDirectory)/targetcxxpptokenizer.cpp$(DependSuffix): targetcxxpptok
 
 $(IntermediateDirectory)/targetcxxpptokenizer.cpp$(PreprocessSuffix): targetcxxpptokenizer.cpp
 	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/targetcxxpptokenizer.cpp$(PreprocessSuffix) "targetcxxpptokenizer.cpp"
+
+$(IntermediateDirectory)/pipe-posix.cpp$(ObjectSuffix): pipe-posix.cpp $(IntermediateDirectory)/pipe-posix.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/torbjorr/Dokument/maike/pipe-posix.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/pipe-posix.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/pipe-posix.cpp$(DependSuffix): pipe-posix.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/pipe-posix.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/pipe-posix.cpp$(DependSuffix) -MM "pipe-posix.cpp"
+
+$(IntermediateDirectory)/pipe-posix.cpp$(PreprocessSuffix): pipe-posix.cpp
+	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/pipe-posix.cpp$(PreprocessSuffix) "pipe-posix.cpp"
 
 
 -include $(IntermediateDirectory)/*$(DependSuffix)

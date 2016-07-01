@@ -203,6 +203,10 @@ static void targetsLoad(const ResourceObject& targets,const char* name_src
 		}
 	}
 
+
+TargetCxxLoader::TargetCxxLoader(const TargetCxxCompiler& compiler):r_compiler(compiler)
+	{}
+
 void TargetCxxLoader::targetsLoad(const char* name_src,const char* in_dir
 	,Spider& spider,DependencyGraph& graph,const ExpressionEvaluator& evaluator) const
 	{

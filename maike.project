@@ -96,6 +96,8 @@
     <File Name="resourceobject.cpp"/>
     <File Name="targetcxxoptions.cpp"/>
     <File Name="targetcxxpptokenizer.cpp"/>
+    <File Name="pipe.hpp"/>
+    <File Name="pipe-posix.cpp"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>

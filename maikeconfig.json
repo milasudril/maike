@@ -4,19 +4,19 @@
 	"start_directory":"."
 	}
 
-"directoryloader":
+,"directoryloader":
 	{
-	 "path_skip":[".git",".codelite",".clang","test","Debug","Release","test"
-			,"__targets"]
+	 "paths_skip":[".git",".codelite",".clang","test","Debug","Release","test"
+		,"__targets"]
 	,"recursive":1
 	}
 
-"targetbuilder":
+,"targetbuilder":
 	{
 	"target_directory":"__targets"
 	}
 
-"cxxoptions":
+,"cxxoptions":
 	{
 	 "includedir":[]
 	,"libdir":[]

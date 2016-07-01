@@ -42,8 +42,12 @@ size_t FileIn::read(void* buffer,size_t count)
 		auto n=::read(static_cast<int>(m_handle),pos,count-n_read);
 		if(n==0)
 			{return n_read;}
-		if(n==-1 && errno!=EINTR)
-			{exceptionRaise(ErrorMessage("I/O error",{}));}
+		if(n==-1)
+			{
+			if(!( errno==EINTR || errno==EAGAIN || errno==EWOULDBLOCK))
+				{exceptionRaise( ErrorMessage("I/O error",{}) );}
+			n=0;
+			}
 		pos+=n;
 		n_read+=n;
 		}

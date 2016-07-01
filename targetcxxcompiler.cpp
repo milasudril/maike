@@ -12,5 +12,5 @@ using namespace Maike;
 TargetCxxCompiler::TargetCxxCompiler(const ResourceObject& options):
 	m_options(options)
 	{
-//	InvokerReal().run(m_options.)
+	m_cxxversion_default=m_options.cxxversionDefaultGet();
 	}
