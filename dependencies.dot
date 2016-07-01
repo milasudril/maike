@@ -20,6 +20,7 @@ digraph DependencyGraph
 	"./exceptionhandler.hpp"->".";
 	"./readbuffer.hpp"->".";
 	"./readbuffer.hpp"->"./datasource.hpp";
+	"./thread.hpp"->".";
 	"./stringformat.o"->".";
 	"./stringformat.o"->"./stringformat.hpp";
 	"./stringformat.o"->"./variant.hpp";
@@ -66,6 +67,8 @@ digraph DependencyGraph
 	"./resourceobject.o"->"./variant.hpp";
 	"./resourceobject.o"->"./exceptionhandler.hpp";
 	"./resourceobject.o"->"./exceptionhandler.o";
+	"./thread.o"->".";
+	"./thread.o"->"./thread.hpp";
 	"./targetcxxpptokenizer.o"->".";
 	"./targetcxxpptokenizer.o"->"./targetcxxpptokenizer.hpp";
 	"./pipe.o"->".";
@@ -120,6 +123,10 @@ digraph DependencyGraph
 	"./targetcxxoptions.o"->"./errormessage.o";
 	"./targetcxxoptions.o"->"./variant.hpp";
 	"./targetcxxoptions.o"->"./readbuffer.hpp";
+	"./targetcxxoptions.o"->"./thread.hpp";
+	"./targetcxxoptions.o"->"./thread.o";
+	"./targetcxxoptions.o"->"./targetcxxpptokenizer.hpp";
+	"./targetcxxoptions.o"->"./targetcxxpptokenizer.o";
 	"./maike"->".";
 	"./maike"->"./dependencygraphdefault.hpp";
 	"./maike"->"./dependencygraphdefault.o";

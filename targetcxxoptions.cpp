@@ -8,6 +8,8 @@
 #include "variant.hpp"
 
 #include "readbuffer.hpp"
+#include "thread.hpp"
+#include "targetcxxpptokenizer.hpp"
 #include <cstdio>
 
 using namespace Maike;
@@ -73,26 +75,77 @@ TargetCxxOptions::TargetCxxOptions(const ResourceObject& cxxoptions):
 	}
 
 
+namespace
+	{
+	class ReadCallback
+		{
+		public:
+			explicit ReadCallback(DataSource& src):r_src(src)
+				{}
+
+			void operator()()
+				{
+				try
+					{
+					ReadBuffer rb(r_src);
+					while(!rb.eof())
+						{
+						auto ch_in=rb.byteRead();
+						putchar(ch_in);
+						}
+					}
+				catch(const ErrorMessage& message)
+					{fprintf(stderr,"Error: %s\n",message.messageGet());}
+				}
+		private:
+			DataSource& r_src;
+		};
+	}
+
 long long int TargetCxxOptions::cxxversionDefaultGet() const
 	{
 	long long int ret=0;
 
 	const char* args[]={"-dM","-E","-x","c++","/dev/null"};
-	Pipe versionget("g++",{args,args+5},Pipe::REDIRECT_STDERR|Pipe::REDIRECT_STDOUT);
-	ReadBuffer rb(versionget.stderr());
+	Pipe versionget("./a.out",{args,args},Pipe::REDIRECT_STDOUT);
+//	ReadCallback rc(versionget.stderr());
+//	Thread<ReadCallback> stderr_reader(rc);
 
-	putchar('>');
-	while(!rb.eof())
+//	char temp[4096];
+//	versionget.stdout().read(temp,4096);
+
+/*	TargetCxxPPTokenizer cxxtok(versionget.stdout());
+	TargetCxxPPTokenizer::Token tok;
+	enum class Mode:unsigned int{NORMAL,DEFINE,DONE};
+	auto state=Mode::NORMAL;
+	while(cxxtok.read(tok))
 		{
-		auto ch_in=rb.byteRead();
-		if(ch_in=='\n')
+		switch(state)
 			{
-			putchar('\n');
-			putchar('>');
+			case Mode::NORMAL:
+				switch(tok.type)
+					{
+					case TargetCxxPPTokenizer::Token::Type::DIRECTIVE:
+						if(tok.value=="define")
+							{state=Mode::DEFINE;}
+						break;
+					default:
+						break;
+					}
+				break;
+			case Mode::DEFINE:
+				if(tok.value=="__cplusplus")
+					{state=Mode::DONE;}
+				else
+					{state=Mode::NORMAL;}
+				break;
+
+			case Mode::DONE:
+				break;
 			}
-		else
-			{putchar(ch_in);}
-		}
+		}*/
+
+	printf("Waiting for child process to exit\n");
 	auto status=versionget.exitStatusGet();
 	if(status!=0)
 		{

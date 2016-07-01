@@ -98,6 +98,8 @@
     <File Name="targetcxxpptokenizer.cpp"/>
     <File Name="pipe.hpp"/>
     <File Name="pipe-posix.cpp"/>
+    <File Name="thread.hpp"/>
+    <File Name="thread-posix.cpp"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>

@@ -54,6 +54,8 @@ namespace Maike
 					void init(intptr_t handle) noexcept
 						{m_handle=handle;}
 
+					void close() noexcept;
+
 				private:
 					friend class Pipe;
 					intptr_t m_handle;
@@ -68,6 +70,8 @@ namespace Maike
 
 					void init(intptr_t handle) noexcept
 						{m_handle=handle;}
+
+					void close() noexcept;
 
 				private:
 					intptr_t m_handle;

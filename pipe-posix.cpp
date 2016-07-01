@@ -16,6 +16,8 @@
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <fcntl.h>
+#include <time.h>
+#include <cstdlib>
 
 #include <vector>
 
@@ -45,24 +47,42 @@ namespace
 				for(int k=0;k<1;++k)
 					{
 					if(m_fd[k]!=-1)
-						{close(m_fd[1]);}
+						{close(m_fd[k]);}
 					}
 				}
 
 			int readEndRelease() noexcept
 				{
 				close(m_fd[1]);
+				m_fd[1]=-1;
+
 				auto ret=m_fd[0];
 				m_fd[0]=-1;
 				return ret;
 				}
 
+			int readEndGet() noexcept
+				{
+				close(m_fd[1]);
+				m_fd[1]=-1;
+				return m_fd[0];
+				}
+
 			int writeEndRelease() noexcept
 				{
 				close(m_fd[0]);
+				m_fd[0]=-1;
+
 				auto ret=m_fd[1];
 				m_fd[1]=-1;
 				return ret;
+				}
+
+			int writeEndGet() noexcept
+				{
+				close(m_fd[0]);
+				m_fd[0]=-1;
+				return m_fd[1];
 				}
 
 		private:
@@ -111,6 +131,8 @@ namespace
 				return WEXITSTATUS(m_status);
 				}
 
+
+
 		private:
 			pid_t m_pid;
 			int m_status;
@@ -150,14 +172,12 @@ Pipe::Pipe(const char* command,Twins<const char* const*> args
 	exec_error.init();
 
 	auto args_out=commandLineBuild(command,args);
-
 	ChildProcess child;
-
 	if(child.pidGet()==0)
 		{
 	//	In child process
-		auto exec_error_write=exec_error.writeEndRelease();
-		fcntl(exec_error.writeEndRelease(),FD_CLOEXEC);
+		auto exec_error_write_end=exec_error.writeEndRelease();
+		fcntl(exec_error_write_end,F_SETFD,FD_CLOEXEC);
 
 		if(redirection_mask&REDIRECT_STDIN)
 			{dup2(stdin_pipe.readEndRelease(),STDIN_FILENO);}
@@ -171,14 +191,14 @@ Pipe::Pipe(const char* command,Twins<const char* const*> args
 		if(execvp(command,const_cast<char* const*>(args_out.data()))==-1)
 			{
 			int status=errno;
-			auto res=write(exec_error_write,&status,sizeof(status));
+			auto res=write(exec_error_write_end,&status,sizeof(status));
 			_exit(static_cast<int>(res));
 			}
 		}
 
-	int status=0;
 //	Check if execvp failed.
-	if(::read(exec_error.readEndRelease(),&status,sizeof(status))==sizeof(status))
+	int status=0;
+	if(::read(exec_error.readEndGet(),&status,sizeof(status))==sizeof(status))
 		{
 		exceptionRaise(ErrorMessage("It was not possible to start #0;. #1;"
 			,{command,static_cast<const char*>(strerror(status))}));
@@ -203,6 +223,9 @@ Pipe::~Pipe()
 
 int Pipe::exitStatusGet() noexcept
 	{
+	m_stdin.close();
+	m_stdout.close();
+//	m_stderr.close();
 	if(m_pid!=0)
 		{
 		waitpid(static_cast<int>(m_pid),&m_status,0);
@@ -217,8 +240,16 @@ Pipe::Reader::Reader():m_handle(-1){}
 
 Pipe::Reader::~Reader()
 	{
+	close();
+	}
+
+void Pipe::Reader::close() noexcept
+	{
 	if(m_handle!=-1)
-		{close(static_cast<int>(m_handle));}
+		{
+		::close(static_cast<int>(m_handle));
+		m_handle=-1;
+		}
 	}
 
 size_t Pipe::Reader::read(void* buffer, size_t count)
@@ -251,9 +282,15 @@ Pipe::Writer::Writer():m_handle(-1)
 	{}
 
 Pipe::Writer::~Writer()
+	{close();}
+
+void Pipe::Writer::close() noexcept
 	{
 	if(m_handle!=-1)
-		{close(static_cast<int>(m_handle));}
+		{
+		::close(static_cast<int>(m_handle));
+		m_handle=-1;
+		}
 	}
 
 size_t Pipe::Writer::write(const void* buffer, size_t count)
