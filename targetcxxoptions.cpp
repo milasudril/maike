@@ -27,10 +27,14 @@ static std::vector< std::string > stringArrayGet(const ResourceObject& array)
 	return std::move(ret);
 	}
 
-TargetCxxOptions::TargetCxxOptions(const ResourceObject& cxxoptions):
+TargetCxxOptions::TargetCxxOptions(const ResourceObject& cxxoptions
+	,const ParameterSet& params_global):
 	m_includedir_format("-I\"^\""),m_libdir_format("-L\"^\""),m_cxxversion_min(0)
 	,m_stdprefix("-std=")
 	{
+	r_paramset.push_back(&m_paramset);
+	r_paramset.push_back(&params_global);
+
 	if(cxxoptions.objectExists("includedir"))
 		{m_includedir=stringArrayGet( cxxoptions.objectGet("includedir") );}
 
@@ -147,8 +151,8 @@ long long int TargetCxxOptions::cxxversionDefaultGet() const
 	{
 	long long int ret=0;
 
-	const char* args[]={"-dM","-E","-x","c++","/dev/null"};
-	Pipe versionget("g++",{args,args + 5}, Pipe::REDIRECT_STDOUT|Pipe::REDIRECT_STDERR);
+	auto versionget=m_versionquery.execute(Pipe::REDIRECT_STDOUT|Pipe::REDIRECT_STDERR
+		,{nullptr,nullptr});
 	ret=::cxxversionDefaultGet(versionget);
 
 	auto status=versionget.exitStatusGet();

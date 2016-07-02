@@ -62,7 +62,8 @@ AS       := /usr/bin/as
 CodeLiteDir:=/usr/share/codelite
 Objects0=$(IntermediateDirectory)/directorylister-linuxgnu.cpp$(ObjectSuffix) $(IntermediateDirectory)/dependencygraphdefault.cpp$(ObjectSuffix) $(IntermediateDirectory)/errormessage.cpp$(ObjectSuffix) $(IntermediateDirectory)/datasinkstd-posix.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetdirectoryloader.cpp$(ObjectSuffix) $(IntermediateDirectory)/strerror-posix.cpp$(ObjectSuffix) $(IntermediateDirectory)/maike.cpp$(ObjectSuffix) $(IntermediateDirectory)/fileinfo-linuxgnu.cpp$(ObjectSuffix) $(IntermediateDirectory)/spiderdefault.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxxcompiler.cpp$(ObjectSuffix) \
 	$(IntermediateDirectory)/maike-main.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetdirectory.cpp$(ObjectSuffix) $(IntermediateDirectory)/command.cpp$(ObjectSuffix) $(IntermediateDirectory)/exceptionhandler.cpp$(ObjectSuffix) $(IntermediateDirectory)/dependency.cpp$(ObjectSuffix) $(IntermediateDirectory)/stringformat.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetbase.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxxloader.cpp$(ObjectSuffix) $(IntermediateDirectory)/filein-linux.cpp$(ObjectSuffix) $(IntermediateDirectory)/sysvars-linux.cpp$(ObjectSuffix) \
-	$(IntermediateDirectory)/versionnumber.cpp$(ObjectSuffix) $(IntermediateDirectory)/expressionevaluatordefault.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxx.cpp$(ObjectSuffix) $(IntermediateDirectory)/resourceobject.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxxoptions.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxxpptokenizer.cpp$(ObjectSuffix) $(IntermediateDirectory)/pipe-posix.cpp$(ObjectSuffix) $(IntermediateDirectory)/thread-posix.cpp$(ObjectSuffix) $(IntermediateDirectory)/fileutils-linuxgnu.cpp$(ObjectSuffix) 
+	$(IntermediateDirectory)/versionnumber.cpp$(ObjectSuffix) $(IntermediateDirectory)/expressionevaluatordefault.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxx.cpp$(ObjectSuffix) $(IntermediateDirectory)/resourceobject.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxxoptions.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxxpptokenizer.cpp$(ObjectSuffix) $(IntermediateDirectory)/pipe-posix.cpp$(ObjectSuffix) $(IntermediateDirectory)/thread-posix.cpp$(ObjectSuffix) $(IntermediateDirectory)/fileutils-linuxgnu.cpp$(ObjectSuffix) $(IntermediateDirectory)/parametersetdefault.cpp$(ObjectSuffix) \
+	
 
 
 
@@ -324,6 +325,14 @@ $(IntermediateDirectory)/fileutils-linuxgnu.cpp$(DependSuffix): fileutils-linuxg
 
 $(IntermediateDirectory)/fileutils-linuxgnu.cpp$(PreprocessSuffix): fileutils-linuxgnu.cpp
 	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/fileutils-linuxgnu.cpp$(PreprocessSuffix) "fileutils-linuxgnu.cpp"
+
+$(IntermediateDirectory)/parametersetdefault.cpp$(ObjectSuffix): parametersetdefault.cpp $(IntermediateDirectory)/parametersetdefault.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/torbjorr/Dokument/maike/parametersetdefault.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/parametersetdefault.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/parametersetdefault.cpp$(DependSuffix): parametersetdefault.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/parametersetdefault.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/parametersetdefault.cpp$(DependSuffix) -MM "parametersetdefault.cpp"
+
+$(IntermediateDirectory)/parametersetdefault.cpp$(PreprocessSuffix): parametersetdefault.cpp
+	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/parametersetdefault.cpp$(PreprocessSuffix) "parametersetdefault.cpp"
 
 
 -include $(IntermediateDirectory)/*$(DependSuffix)

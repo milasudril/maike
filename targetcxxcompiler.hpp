@@ -18,7 +18,8 @@ namespace Maike
 	class TargetCxxCompiler
 		{
 		public:
-			TargetCxxCompiler(const ResourceObject& options);
+			TargetCxxCompiler(const ResourceObject& options
+				,const ParameterSet& params_global);
 
 			void compileObject(const char* source,const char* dest
 				,const TargetCxxOptions& options_extra) const;

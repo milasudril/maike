@@ -99,6 +99,9 @@
     <File Name="thread-posix.cpp"/>
     <File Name="fileutils-linuxgnu.cpp"/>
     <File Name="fileutils.hpp"/>
+    <File Name="parameterset.hpp"/>
+    <File Name="parametersetdefault.hpp"/>
+    <File Name="parametersetdefault.cpp"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>

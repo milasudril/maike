@@ -7,16 +7,16 @@
 #define MAIKE_COMMAND_HPP
 
 #include "pipe.hpp"
+#include "twins.hpp"
 #include <vector>
 #include <string>
-#include <map>
 
 namespace Maike
 	{
 	class Variant;
-	class DataSink;
 	class Stringkey;
 	class ResourceObject;
+	class ParameterSet;
 
 	class Command
 		{
@@ -24,7 +24,7 @@ namespace Maike
 			Pipe execute(unsigned int redirection) const;
 
 			Pipe execute(unsigned int redirection
-				,const std::map<Stringkey,std::string>& substitutes) const;
+				,Twins<const ParameterSet* const*> substitutes) const;
 
 			Command();
 			Command(const ResourceObject& cmd);

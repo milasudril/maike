@@ -146,11 +146,14 @@ static std::vector<const char*> commandLineBuild(const char* command
 	{
 	std::vector<const char*> args_out;
 	args_out.push_back(command);
+	fprintf(stderr,"Pipe: %s",command);
 	while(args.first!=args.second)
 		{
+		fprintf(stderr," %s",*args.first);
 		args_out.push_back(*args.first);
 		++args.first;
 		}
+	fprintf(stderr,"\n");
 	args_out.push_back(nullptr);
 	return std::move(args_out);
 	}
@@ -174,6 +177,7 @@ Pipe::Pipe(const char* command,Twins<const char* const*> args
 	exec_error.init();
 
 	auto args_out=commandLineBuild(command,args);
+
 	ChildProcess child;
 	if(child.pidGet()==0)
 		{

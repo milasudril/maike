@@ -1,0 +1,38 @@
+#include "parametersetdefault.hpp"
+#include "stringkey.hpp"
+
+using namespace Maike;
+
+Maike::ParameterSetDefault::ParameterSetDefault()
+	{}
+
+Maike::ParameterSetDefault::~ParameterSetDefault()
+	{}
+
+void ParameterSetDefault::parameterGet(const Stringkey& key,ParameterProcessor&& proc) const
+	{
+	auto i=m_values.find(key);
+	if(i!=m_values.end())
+		{
+		auto& v=i->second;
+		auto str=v.data();
+		auto str_end=str + v.size();
+		while(str!=str_end)
+			{
+			proc(str->c_str());
+			++str;
+			}
+		}
+	}
+
+ParameterSetDefault& ParameterSetDefault::parameterSet(const Stringkey& key
+	,Twins<const char* const*> strings)
+	{
+	auto& v=m_values[key];
+	while(strings.first!=strings.second)
+		{
+		v.push_back(std::string(*strings.first));
+		++strings.first;
+		}
+	return *this;
+	}

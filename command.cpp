@@ -7,6 +7,7 @@
 #include "errormessage.hpp"
 #include "resourceobject.hpp"
 #include "pipe.hpp"
+#include "parameterset.hpp"
 
 using namespace Maike;
 
@@ -41,14 +42,48 @@ Pipe Command::execute(unsigned int redirection) const
 	}
 
 
-static std::string varsSubstitute(const char* str
-	,const std::map<Stringkey,std::string>& substitutes)
+
+namespace
 	{
-	std::string ret;
-	std::string var;
+	class ParamExtractor:public ParameterSet::ParameterProcessor
+		{
+		public:
+			ParamExtractor(std::vector<std::string>& result):r_result(result)
+				{}
+
+			void operator()(const char* value)
+				{
+				r_result.push_back(std::string(value));
+				}
+		private:
+			std::vector<std::string>& r_result;
+		};
+	}
+
+static void substitutesAppend(const Stringkey& key
+	,Twins<const ParameterSet* const*> substitutes
+	,std::vector<std::string>& result)
+	{
+	auto n_0=result.size();
+	while(substitutes.first!=substitutes.second)
+		{
+		(*substitutes.first)->parameterGet(key,ParamExtractor(result));
+		auto n=result.size();
+		if(n_0!=n) //Parameter found
+			{return;}
+		n_0=n;
+		++substitutes.first;
+		}
+	}
+
+
+static void varsSubstitute(const char* str
+	,Twins<const ParameterSet* const*> substitutes
+	,std::vector<std::string>& result)
+	{
+	std::string temp;
 	enum class State:unsigned int{NORMAL,VARIABLE,ESCAPE};
 	auto state=State::NORMAL;
-
 	while(true)
 		{
 		auto ch_in=*str;
@@ -57,37 +92,55 @@ static std::string varsSubstitute(const char* str
 			case State::NORMAL:
 				switch(ch_in)
 					{
-					case '$':
+					case '{':
+					//FIXME: How to treat fixed content together with array argument
+						result.push_back(temp);
+						temp.clear();
 						state=State::VARIABLE;
 						break;
+
 					case '\\':
 						state=State::ESCAPE;
 						break;
+
 					case '\0':
-						return ret;
+						result.push_back(temp);
+						return;
+
 					default:
-						ret+=ch_in;
+						temp+=ch_in;
 					}
+				break;
 
 			case State::VARIABLE:
-				if(ch_in>='\0' && ch_in<=' ')
+				switch(ch_in)
 					{
-					auto i=substitutes.find(Stringkey(var.c_str()));
-					if(i==substitutes.end())
-						{exceptionRaise(ErrorMessage("Error executing command: The variable #0; is not defined.",{var.c_str()}));}
-					ret+=i->second;
-					if(ch_in=='\0')
-						{return ret;}
-					state=State::NORMAL;
-					var.clear();
+					case '}':
+					//FIXME: How to treat fixed content together with array argument
+						state=State::NORMAL;
+						substitutesAppend(Stringkey(temp.c_str()),substitutes,result);
+						temp.clear();
+						break;
+
+					case '\0':
+						exceptionRaise(ErrorMessage("Expansion error: Unterminated variable.",{}));
+						break;
+
+					default:
+						temp+=ch_in;
 					}
-				else
-					{var+=ch_in;}
 				break;
 
 			case State::ESCAPE:
-				ret+=ch_in;
-				state=State::NORMAL;
+				switch(ch_in)
+					{
+					case '\0':
+						exceptionRaise(ErrorMessage("Expansion error: Lonely escape character.",{}));
+						break;
+					default:
+						temp+=ch_in;
+						state=State::NORMAL;
+					}
 				break;
 			}
 		++str;
@@ -95,7 +148,7 @@ static std::string varsSubstitute(const char* str
 	}
 
 Pipe Command::execute(unsigned int redirection
-	,const std::map<Stringkey,std::string>& substitutes) const
+	,Twins<const ParameterSet* const*> substitutes) const
 	{
 	std::vector<std::string> args_temp;
 	auto ptr_args=m_args.data();
@@ -103,7 +156,7 @@ Pipe Command::execute(unsigned int redirection
 
 	while(ptr_args!=ptr_end)
 		{
-		args_temp.push_back(varsSubstitute(ptr_args->c_str(),substitutes));
+		varsSubstitute(ptr_args->c_str(),substitutes,args_temp);
 		++ptr_args;
 		}
 

@@ -30,20 +30,20 @@
 	,"objcompile":
 		{
 		 "name":"g++"
-		,"args":["-c","-g","-fpic","$cxxversion","-Wall","-Woverflow"
-			,"-Wconversion","-Werror","$includedir","-o","$target","$source"]
+		,"args":["-c","-g","-fpic","{cxxversion}","-Wall","-Woverflow"
+			,"-Wconversion","-Werror","{includedir}","-o","{target}","{source}"]
 		}
 	,"appcompile":
 		{
 		 "name":"g++"
-		,"args":["-g","-fpic","$cxxversion","-Wall","-Woverflow","-Wconversion"
-			,"-Werror","$includedir","$libdir","-o","$target","$source"
-			,"$dependencies"]
+		,"args":["-g","-fpic","{cxxversion}","-Wall","-Woverflow","-Wconversion"
+			,"-Werror","{includedir}","{libdir}","-o","{target}","{source}"
+			,"{dependencies}"]
 		}
 	,"versionquery":
 		{
 		 "name":"g++"
-		,"args":["-E","-dM","-x","c++","/dev/null"]
+		,"args":["-E","-dM","-x","c++","{nullfile}"]
 		}
 	}
 }

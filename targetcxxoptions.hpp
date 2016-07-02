@@ -8,6 +8,7 @@
 
 
 #include "command.hpp"
+#include "parametersetdefault.hpp"
 #include <vector>
 #include <string>
 
@@ -19,11 +20,19 @@ namespace Maike
 		{
 		public:
 			TargetCxxOptions();
-			TargetCxxOptions(const ResourceObject& cxxoptions);
+
+			TargetCxxOptions(const ResourceObject& options
+				,const ParameterSet& paramset_global);
+
+			TargetCxxOptions(const ResourceObject& cxxoptions
+				,ParameterSet&& paramset)=delete;
 
 			long long int cxxversionDefaultGet() const;
 
 		private:
+			std::vector<const ParameterSet*> r_paramset;
+			ParameterSetDefault m_paramset;
+
 			std::vector< std::string > m_includedir;
 			std::vector< std::string > m_libdir;
 			std::string m_platform_suffix;
@@ -41,6 +50,8 @@ namespace Maike
 			Command m_libcompile;
 			Command m_objcompile;
 			Command m_versionquery;
+
+
 		};
 	}
 

@@ -8,8 +8,9 @@
 
 using namespace Maike;
 
-TargetCxxCompiler::TargetCxxCompiler(const ResourceObject& options):
-	m_options(options)
+TargetCxxCompiler::TargetCxxCompiler(const ResourceObject& options
+	,const ParameterSet& params_global):
+	m_options(options,params_global)
 	{
 	m_cxxversion_default=m_options.cxxversionDefaultGet();
 	}
