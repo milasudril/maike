@@ -75,8 +75,7 @@ static void toposort(Maike::Target& target_first
 
 	}
 
-void Maike::buildBranch(Target& target,Invoker& invoker,const char* target_dir
-	,size_t targets_count)
+void Maike::buildBranch(Target& target,const char* target_dir,size_t targets_count)
 	{
 	std::vector<Dependency> dependency_list;
 	toposort(target,dependency_list,targets_count);
@@ -90,8 +89,8 @@ void Maike::buildBranch(Target& target,Invoker& invoker,const char* target_dir
 		auto target=deps.first->target();
 		if(target!=nullptr)
 			{
-			if(!target->upToDate(deps_rel,invoker,target_dir))
-				{target->compile(deps_rel,invoker,target_dir);}
+			if(!target->upToDate(deps_rel,target_dir))
+				{target->compile(deps_rel,target_dir);}
 			}
 		++deps.first;
 		}

@@ -14,7 +14,6 @@
 namespace Maike
 	{
 	class Dependency;
-	class Invoker;
 	class ResourceObject;
 
 	class TargetBase:public Target

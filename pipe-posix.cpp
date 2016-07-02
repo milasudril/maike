@@ -317,3 +317,21 @@ size_t Pipe::Writer::write(const void* buffer, size_t count)
 		}
 	return n;
 	}
+
+Pipe::Pipe(Pipe&& pipe) noexcept:m_stdin(pipe.m_stdin),m_stdout(pipe.m_stdout)
+,m_stderr(pipe.m_stderr),m_status(pipe.m_status)
+	{
+	pipe.m_stdin.init(-1);
+	pipe.m_stdout.init(-1);
+	pipe.m_stderr.init(-1);
+	pipe.m_pid=0;
+	}
+
+Pipe& Pipe::operator=(Pipe&& pipe) noexcept
+	{
+	std::swap(pipe.m_stdin,m_stdin);
+	std::swap(pipe.m_stdout,m_stdout);
+	std::swap(pipe.m_stderr,m_stderr);
+	std::swap(pipe.m_pid,m_pid);
+	return *this;
+	}

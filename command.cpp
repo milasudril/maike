@@ -2,11 +2,11 @@
 
 #include "command.hpp"
 #include "variant.hpp"
-#include "invoker.hpp"
 #include "stringkey.hpp"
 #include "exceptionhandler.hpp"
 #include "errormessage.hpp"
 #include "resourceobject.hpp"
+#include "pipe.hpp"
 
 using namespace Maike;
 
@@ -34,11 +34,10 @@ static std::vector<const char*> cstr(Twins<const std::string*> strings)
 	return std::move(ret);
 	}
 
-void Command::execute(Invoker& invoker,DataSink& standard_output,DataSink& standard_error) const
+Pipe Command::execute(unsigned int redirection) const
 	{
 	auto args=cstr({m_args.data(),m_args.data() + m_args.size()});
-	invoker.run(m_name.c_str()
-		,{args.data(),args.data() + args.size()},standard_output,standard_error);
+	return Pipe(m_name.c_str(),{args.data(),args.data() + args.size()},redirection);
 	}
 
 
@@ -95,7 +94,7 @@ static std::string varsSubstitute(const char* str
 		}
 	}
 
-void Command::execute(Invoker& invoker,DataSink& standard_output,DataSink& standard_error
+Pipe Command::execute(unsigned int redirection
 	,const std::map<Stringkey,std::string>& substitutes) const
 	{
 	std::vector<std::string> args_temp;
@@ -109,8 +108,7 @@ void Command::execute(Invoker& invoker,DataSink& standard_output,DataSink& stand
 		}
 
 	auto args=cstr({args_temp.data(),args_temp.data() + m_args.size()});
-	invoker.run(m_name.c_str()
-		,{args.data(),args.data() + args.size()},standard_output,standard_error);
+	return Pipe(m_name.c_str(),{args.data(),args.data() + args.size()},redirection);
 	}
 
 Command& Command::nameSet(const char* name)

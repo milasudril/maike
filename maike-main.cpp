@@ -8,7 +8,7 @@
 #include "target.hpp"
 #include "spiderdefault.hpp"
 #include "stringkey.hpp"
-#include "invokerreal.hpp"
+#include "fileutils.hpp"
 #include "maike.hpp"
 #include "targetdirectoryloader.hpp"
 #include "targetcxxloader.hpp"
@@ -28,21 +28,18 @@
 class TargetBuilder:public Maike::DependencyGraph::TargetProcessor
 	{
 	public:
-		explicit TargetBuilder(Maike::Invoker&& invoker,const char* target_dir):
-			r_invoker(invoker),m_target_dir(target_dir)
+		explicit TargetBuilder(const char* target_dir):m_target_dir(target_dir)
 			{}
 
 		void operator()(Maike::DependencyGraph& graph,Maike::Target& target_current)
 			{
 			if(target_current.childCounterGet()==0)
 				{
-				Maike::buildBranch(target_current,r_invoker
-					,m_target_dir.c_str(),graph.targetCounterGet());
+				Maike::buildBranch(target_current,m_target_dir.c_str(),graph.targetCounterGet());
 				}
 			}
 
 	private:
-		Maike::Invoker& r_invoker;
 		std::string m_target_dir;
 	};
 

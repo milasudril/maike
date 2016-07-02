@@ -41,16 +41,13 @@
     <File Name="dependencygraph.hpp"/>
     <File Name="targetdirectoryloader.cpp"/>
     <File Name="targetloader.hpp"/>
-    <File Name="invoker.hpp"/>
     <File Name="datasink.hpp"/>
     <File Name="fileinfo.hpp"/>
     <File Name="strerror-posix.cpp"/>
     <File Name="maike.cpp"/>
-    <File Name="invokerreal.hpp"/>
     <File Name="maike.hpp"/>
     <File Name="command.hpp"/>
     <File Name="fileinfo-linuxgnu.cpp"/>
-    <File Name="invokerreal-linuxgnu.cpp"/>
     <File Name="spiderdefault.cpp"/>
     <File Name="targetcxxcompiler.cpp"/>
     <File Name="targetcxxoptions.hpp"/>
@@ -100,6 +97,8 @@
     <File Name="pipe-posix.cpp"/>
     <File Name="thread.hpp"/>
     <File Name="thread-posix.cpp"/>
+    <File Name="fileutils-linuxgnu.cpp"/>
+    <File Name="fileutils.hpp"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>

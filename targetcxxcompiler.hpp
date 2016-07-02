@@ -21,19 +21,16 @@ namespace Maike
 			TargetCxxCompiler(const ResourceObject& options);
 
 			void compileObject(const char* source,const char* dest
-				,Invoker& invoker,const TargetCxxOptions& options_extra) const;
+				,const TargetCxxOptions& options_extra) const;
 
 			void compileApplication(const Twins<const char* const>& files
-				,const char* dest,Invoker& invoker
-				,const TargetCxxOptions& options_extra) const;
+				,const char* dest,const TargetCxxOptions& options_extra) const;
 
 			void compileDll(const Twins<const char* const>& files
-				,const char* dest,Invoker& invoker
-				,const TargetCxxOptions& options_extra) const;
+				,const char* dest,const TargetCxxOptions& options_extra) const;
 
 			void compileLibrary(const Twins<const char* const>& files
-				,const char* dest,Invoker& invoker
-				,const TargetCxxOptions& options_extra) const;
+				,const char* dest,const TargetCxxOptions& options_extra) const;
 
 		private:
 			TargetCxxOptions m_options;

@@ -23,8 +23,8 @@ namespace Maike
 			Pipe(const Pipe& rhs)=delete;
 			Pipe& operator=(const Pipe& rhs)=delete;
 
-			Pipe(Pipe&& reader) noexcept;
-			Pipe& operator=(Pipe&& reader) noexcept;
+			Pipe(Pipe&& pipe) noexcept;
+			Pipe& operator=(Pipe&& pipe) noexcept;
 
 			Pipe(const char* command,Twins<const char* const*> args
 				,unsigned int redirection_mask);

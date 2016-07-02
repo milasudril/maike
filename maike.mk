@@ -60,9 +60,9 @@ AS       := /usr/bin/as
 ## User defined environment variables
 ##
 CodeLiteDir:=/usr/share/codelite
-Objects0=$(IntermediateDirectory)/directorylister-linuxgnu.cpp$(ObjectSuffix) $(IntermediateDirectory)/dependencygraphdefault.cpp$(ObjectSuffix) $(IntermediateDirectory)/errormessage.cpp$(ObjectSuffix) $(IntermediateDirectory)/datasinkstd-posix.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetdirectoryloader.cpp$(ObjectSuffix) $(IntermediateDirectory)/strerror-posix.cpp$(ObjectSuffix) $(IntermediateDirectory)/maike.cpp$(ObjectSuffix) $(IntermediateDirectory)/fileinfo-linuxgnu.cpp$(ObjectSuffix) $(IntermediateDirectory)/invokerreal-linuxgnu.cpp$(ObjectSuffix) $(IntermediateDirectory)/spiderdefault.cpp$(ObjectSuffix) \
-	$(IntermediateDirectory)/targetcxxcompiler.cpp$(ObjectSuffix) $(IntermediateDirectory)/maike-main.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetdirectory.cpp$(ObjectSuffix) $(IntermediateDirectory)/command.cpp$(ObjectSuffix) $(IntermediateDirectory)/exceptionhandler.cpp$(ObjectSuffix) $(IntermediateDirectory)/dependency.cpp$(ObjectSuffix) $(IntermediateDirectory)/stringformat.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetbase.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxxloader.cpp$(ObjectSuffix) $(IntermediateDirectory)/filein-linux.cpp$(ObjectSuffix) \
-	$(IntermediateDirectory)/sysvars-linux.cpp$(ObjectSuffix) $(IntermediateDirectory)/versionnumber.cpp$(ObjectSuffix) $(IntermediateDirectory)/expressionevaluatordefault.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxx.cpp$(ObjectSuffix) $(IntermediateDirectory)/resourceobject.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxxoptions.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxxpptokenizer.cpp$(ObjectSuffix) $(IntermediateDirectory)/pipe-posix.cpp$(ObjectSuffix) $(IntermediateDirectory)/thread-posix.cpp$(ObjectSuffix) 
+Objects0=$(IntermediateDirectory)/directorylister-linuxgnu.cpp$(ObjectSuffix) $(IntermediateDirectory)/dependencygraphdefault.cpp$(ObjectSuffix) $(IntermediateDirectory)/errormessage.cpp$(ObjectSuffix) $(IntermediateDirectory)/datasinkstd-posix.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetdirectoryloader.cpp$(ObjectSuffix) $(IntermediateDirectory)/strerror-posix.cpp$(ObjectSuffix) $(IntermediateDirectory)/maike.cpp$(ObjectSuffix) $(IntermediateDirectory)/fileinfo-linuxgnu.cpp$(ObjectSuffix) $(IntermediateDirectory)/spiderdefault.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxxcompiler.cpp$(ObjectSuffix) \
+	$(IntermediateDirectory)/maike-main.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetdirectory.cpp$(ObjectSuffix) $(IntermediateDirectory)/command.cpp$(ObjectSuffix) $(IntermediateDirectory)/exceptionhandler.cpp$(ObjectSuffix) $(IntermediateDirectory)/dependency.cpp$(ObjectSuffix) $(IntermediateDirectory)/stringformat.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetbase.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxxloader.cpp$(ObjectSuffix) $(IntermediateDirectory)/filein-linux.cpp$(ObjectSuffix) $(IntermediateDirectory)/sysvars-linux.cpp$(ObjectSuffix) \
+	$(IntermediateDirectory)/versionnumber.cpp$(ObjectSuffix) $(IntermediateDirectory)/expressionevaluatordefault.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxx.cpp$(ObjectSuffix) $(IntermediateDirectory)/resourceobject.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxxoptions.cpp$(ObjectSuffix) $(IntermediateDirectory)/targetcxxpptokenizer.cpp$(ObjectSuffix) $(IntermediateDirectory)/pipe-posix.cpp$(ObjectSuffix) $(IntermediateDirectory)/thread-posix.cpp$(ObjectSuffix) $(IntermediateDirectory)/fileutils-linuxgnu.cpp$(ObjectSuffix) 
 
 
 
@@ -156,14 +156,6 @@ $(IntermediateDirectory)/fileinfo-linuxgnu.cpp$(DependSuffix): fileinfo-linuxgnu
 
 $(IntermediateDirectory)/fileinfo-linuxgnu.cpp$(PreprocessSuffix): fileinfo-linuxgnu.cpp
 	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/fileinfo-linuxgnu.cpp$(PreprocessSuffix) "fileinfo-linuxgnu.cpp"
-
-$(IntermediateDirectory)/invokerreal-linuxgnu.cpp$(ObjectSuffix): invokerreal-linuxgnu.cpp $(IntermediateDirectory)/invokerreal-linuxgnu.cpp$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/torbjorr/Dokument/maike/invokerreal-linuxgnu.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/invokerreal-linuxgnu.cpp$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/invokerreal-linuxgnu.cpp$(DependSuffix): invokerreal-linuxgnu.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/invokerreal-linuxgnu.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/invokerreal-linuxgnu.cpp$(DependSuffix) -MM "invokerreal-linuxgnu.cpp"
-
-$(IntermediateDirectory)/invokerreal-linuxgnu.cpp$(PreprocessSuffix): invokerreal-linuxgnu.cpp
-	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/invokerreal-linuxgnu.cpp$(PreprocessSuffix) "invokerreal-linuxgnu.cpp"
 
 $(IntermediateDirectory)/spiderdefault.cpp$(ObjectSuffix): spiderdefault.cpp $(IntermediateDirectory)/spiderdefault.cpp$(DependSuffix)
 	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/torbjorr/Dokument/maike/spiderdefault.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/spiderdefault.cpp$(ObjectSuffix) $(IncludePath)
@@ -324,6 +316,14 @@ $(IntermediateDirectory)/thread-posix.cpp$(DependSuffix): thread-posix.cpp
 
 $(IntermediateDirectory)/thread-posix.cpp$(PreprocessSuffix): thread-posix.cpp
 	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/thread-posix.cpp$(PreprocessSuffix) "thread-posix.cpp"
+
+$(IntermediateDirectory)/fileutils-linuxgnu.cpp$(ObjectSuffix): fileutils-linuxgnu.cpp $(IntermediateDirectory)/fileutils-linuxgnu.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/torbjorr/Dokument/maike/fileutils-linuxgnu.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/fileutils-linuxgnu.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/fileutils-linuxgnu.cpp$(DependSuffix): fileutils-linuxgnu.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/fileutils-linuxgnu.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/fileutils-linuxgnu.cpp$(DependSuffix) -MM "fileutils-linuxgnu.cpp"
+
+$(IntermediateDirectory)/fileutils-linuxgnu.cpp$(PreprocessSuffix): fileutils-linuxgnu.cpp
+	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/fileutils-linuxgnu.cpp$(PreprocessSuffix) "fileutils-linuxgnu.cpp"
 
 
 -include $(IntermediateDirectory)/*$(DependSuffix)

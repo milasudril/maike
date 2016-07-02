@@ -36,12 +36,12 @@ TargetCxx::TargetCxx(const ResourceObject& obj,const char* name_src
 	}
 
 void TargetCxx::compile(Twins<const Dependency*> dependency_list
-	,Invoker& invoker,const char* target_dir)
+	,const char* target_dir)
 	{
 	}
 
 bool TargetCxx::upToDate(Twins<const Dependency*> dependency_list
-	,Invoker& invoker,const char* target_dir) const
+	,const char* target_dir) const
 	{
 	return 0;
 	}

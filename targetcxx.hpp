@@ -20,10 +20,10 @@ namespace Maike
 				,const char* in_dir,size_t id);
 
 			void compile(Twins<const Dependency*> dependency_list
-				,Invoker& invoker,const char* target_dir);
+				,const char* target_dir);
 
 			bool upToDate(Twins<const Dependency*> dependency_list
-				,Invoker& invoker,const char* target_dir) const;
+				,const char* target_dir) const;
 
 			void destroy() noexcept;
 
