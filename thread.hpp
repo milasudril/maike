@@ -21,6 +21,7 @@ namespace Maike
 			~ThreadBase();
 
 			void start();
+			void synchronize();
 
 		private:
 			intptr_t m_handle;
@@ -36,9 +37,13 @@ namespace Maike
 			explicit Thread(Runner&& runner):m_runner(std::move(runner))
 				{start();}
 
+			~Thread()
+				{synchronize();}
+
 		private:
 			void run()
 				{m_runner();}
+
 			Runner m_runner;
 		};
 	}

@@ -33,14 +33,14 @@ namespace Maike
 
 			int exitStatusGet() noexcept;
 
-			DataSource& stdout() noexcept
-				{return m_stdout;}
+			DataSourceHandle stdoutCapture() noexcept
+				{return &m_stdout;}
 
-			DataSource& stderr() noexcept
-				{return m_stderr;}
+			DataSourceHandle stderrCapture() noexcept
+				{return &m_stderr;}
 
-			DataSink& stdin() noexcept
-				{return m_stdin;}
+			DataSinkHandle stdinCapture() noexcept
+				{return &m_stdin;}
 
 		private:
 			class Reader:public DataSource
@@ -48,6 +48,11 @@ namespace Maike
 				public:
 					Reader();
 					~Reader();
+					void* operator new(size_t)=delete;
+					void* operator new[](size_t)=delete;
+					void operator delete(void *)=delete;
+					void operator delete[](void*)=delete;
+
 					size_t read(void* buffer, size_t n);
 					const char* nameGet() const noexcept;
 
@@ -57,8 +62,9 @@ namespace Maike
 					void close() noexcept;
 
 				private:
-					friend class Pipe;
 					intptr_t m_handle;
+					void destroy() noexcept
+						{close();}
 				};
 
 			class Writer:public DataSink
@@ -66,6 +72,11 @@ namespace Maike
 				public:
 					Writer();
 					~Writer();
+					void* operator new(size_t)=delete;
+					void* operator new[](size_t)=delete;
+					void operator delete(void *)=delete;
+					void operator delete[](void*)=delete;
+
 					size_t write(const void* buffer, size_t n);
 
 					void init(intptr_t handle) noexcept
@@ -75,6 +86,8 @@ namespace Maike
 
 				private:
 					intptr_t m_handle;
+					void destroy() noexcept
+						{close();}
 				};
 
 			Writer m_stdin;

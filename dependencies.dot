@@ -67,6 +67,7 @@ digraph DependencyGraph
 	"./resourceobject.o"->"./variant.hpp";
 	"./resourceobject.o"->"./exceptionhandler.hpp";
 	"./resourceobject.o"->"./exceptionhandler.o";
+	"./thread.o"->"pthread";
 	"./thread.o"->".";
 	"./thread.o"->"./thread.hpp";
 	"./targetcxxpptokenizer.o"->".";

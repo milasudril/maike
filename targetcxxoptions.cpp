@@ -80,14 +80,14 @@ namespace
 	class ReadCallback
 		{
 		public:
-			explicit ReadCallback(DataSource& src):r_src(src)
+			explicit ReadCallback(DataSource* src):r_src(src)
 				{}
 
 			void operator()()
 				{
 				try
 					{
-					ReadBuffer rb(r_src);
+					ReadBuffer rb(*r_src);
 					while(!rb.eof())
 						{
 						auto ch_in=rb.byteRead();
@@ -97,24 +97,19 @@ namespace
 				catch(const ErrorMessage& message)
 					{fprintf(stderr,"Error: %s\n",message.messageGet());}
 				}
+
 		private:
-			DataSource& r_src;
+			DataSource* r_src;
 		};
 	}
 
-long long int TargetCxxOptions::cxxversionDefaultGet() const
+static long long int cxxversionDefaultGet(Pipe& versionget)
 	{
-	long long int ret=0;
+	auto standard_error=versionget.stderrCapture();
+	Thread<ReadCallback> stderr_reader(ReadCallback{standard_error.get()});
 
-	const char* args[]={"-dM","-E","-x","c++","/dev/null"};
-	Pipe versionget("./a.out",{args,args},Pipe::REDIRECT_STDOUT);
-//	ReadCallback rc(versionget.stderr());
-//	Thread<ReadCallback> stderr_reader(rc);
-
-//	char temp[4096];
-//	versionget.stdout().read(temp,4096);
-
-/*	TargetCxxPPTokenizer cxxtok(versionget.stdout());
+	auto standard_output=versionget.stdoutCapture();
+	TargetCxxPPTokenizer cxxtok(*standard_output.get());
 	TargetCxxPPTokenizer::Token tok;
 	enum class Mode:unsigned int{NORMAL,DEFINE,DONE};
 	auto state=Mode::NORMAL;
@@ -141,11 +136,21 @@ long long int TargetCxxOptions::cxxversionDefaultGet() const
 				break;
 
 			case Mode::DONE:
-				break;
+				return atoll(tok.value.c_str());
 			}
-		}*/
+		}
+	return 0;
+	}
 
-	printf("Waiting for child process to exit\n");
+
+long long int TargetCxxOptions::cxxversionDefaultGet() const
+	{
+	long long int ret=0;
+
+	const char* args[]={"-dM","-E","-x","c++","/dev/null"};
+	Pipe versionget("g++",{args,args + 5}, Pipe::REDIRECT_STDOUT|Pipe::REDIRECT_STDERR);
+	ret=::cxxversionDefaultGet(versionget);
+
 	auto status=versionget.exitStatusGet();
 	if(status!=0)
 		{

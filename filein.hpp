@@ -11,7 +11,7 @@
 
 namespace Maike
 	{
-	class FileIn:public DataSource
+	class FileIn final:public DataSource
 		{
 		public:
 			explicit FileIn(const char* filename);
@@ -25,6 +25,8 @@ namespace Maike
 		private:
 			std::string m_name;
 			intptr_t m_handle;
+			void destroy()
+				{delete this;}
 		};
 	}
 

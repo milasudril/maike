@@ -16,7 +16,7 @@ using namespace Maike;
 
 namespace
 	{
-	class TagFilter:public DataSource
+	class TagFilter final:public DataSource
 		{
 		public:
 			TagFilter(DataSource& source):m_reader(source)
@@ -35,6 +35,9 @@ namespace
 			ReadBuffer m_reader;
 			enum class State:int{NEWLINE,COMMENT_0,JUNK,COMMENT_1,DATA};
 			State m_state;
+
+			void destroy()
+				{delete this;}
 		};
 	}
 

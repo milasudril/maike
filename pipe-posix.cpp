@@ -21,6 +21,8 @@
 
 #include <vector>
 
+#include <cstdio>
+
 using namespace Maike;
 
 namespace
@@ -225,7 +227,7 @@ int Pipe::exitStatusGet() noexcept
 	{
 	m_stdin.close();
 	m_stdout.close();
-//	m_stderr.close();
+	m_stderr.close();
 	if(m_pid!=0)
 		{
 		waitpid(static_cast<int>(m_pid),&m_status,0);

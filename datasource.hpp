@@ -6,6 +6,7 @@
 #define MAIKE_DATASOURCE_HPP
 
 #include <cstddef>
+#include <memory>
 
 namespace Maike
 	{
@@ -17,6 +18,20 @@ namespace Maike
 
 		protected:
 			~DataSource()=default;
+		private:
+			friend class DataSourceHandle;
+
+			virtual void destroy()=0;
+
+			static void destroy(DataSource* self) noexcept
+				{self->destroy();}
+		};
+
+	struct DataSourceHandle:public std::unique_ptr<DataSource,void(*)(DataSource*)>
+		{
+		DataSourceHandle(DataSource* source):
+			std::unique_ptr<DataSource,void(*)(DataSource*)>(source,DataSource::destroy)
+			{}
 		};
 	};
 

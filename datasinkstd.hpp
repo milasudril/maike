@@ -19,6 +19,7 @@ namespace Maike
 			size_t write(const void* buffer,size_t n);
 
 		private:
+			void destroy(){}
 			intptr_t r_handle;
 		};
 
@@ -27,6 +28,9 @@ namespace Maike
 		public:
 			size_t write(const void* buffer,size_t n)
 				{return 0;}
+
+		private:
+			void destroy(){}
 		};
 
 

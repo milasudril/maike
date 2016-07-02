@@ -6,6 +6,7 @@
 #define MAIKE_DATASINK_HPP
 
 #include <cstddef>
+#include <memory>
 
 namespace Maike
 	{
@@ -16,6 +17,20 @@ namespace Maike
 
 		protected:
 			~DataSink()=default;
+
+		private:
+			friend class DataSinkHandle;
+
+			virtual void destroy()=0;
+			static void destroy(DataSink* self) noexcept
+				{self->destroy();}
+		};
+
+	struct DataSinkHandle:public std::unique_ptr<DataSink,void(*)(DataSink*)>
+		{
+		DataSinkHandle(DataSink* sink):
+			std::unique_ptr<DataSink,void(*)(DataSink*)>(sink,DataSink::destroy)
+			{}
 		};
 	};
 
