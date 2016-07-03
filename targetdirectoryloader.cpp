@@ -8,16 +8,39 @@
 #include "spider.hpp"
 #include "targetdirectory.hpp"
 #include "dependencygraph.hpp"
+#include "resourceobject.hpp"
 #include <string>
 #include <cstring>
 
 
 using namespace Maike;
 
-TargetDirectoryLoader::TargetDirectoryLoader():m_recursive(1)
+TargetDirectoryLoader::TargetDirectoryLoader(const ResourceObject& dirloader):
+	m_recursive(1)
 	{
-	m_ignore.insert(Stringkey(".")); //Remove references to this
-	m_ignore.insert(Stringkey(".."));//and parent directory
+	if(dirloader.objectExists("recursive"))
+		{
+		m_recursive=static_cast<long long int>(dirloader.objectGet("recursive") );
+		}
+
+	if(m_recursive)
+		{
+	//	IRP (Infinite Recursion Prevention)
+		pathReject(Stringkey(".")); //Remove references to this
+		pathReject(Stringkey(".."));//and parent directory
+
+	//	Load rejected paths
+		if(dirloader.objectExists("paths_reject"))
+			{
+			auto paths_reject=dirloader.objectGet("paths_reject");
+			auto N=paths_reject.objectCountGet();
+			for(decltype(N) k=0;k<N;++k)
+				{
+				auto path=static_cast<const char*>(paths_reject.objectGet(k));
+				pathReject(Stringkey(path));
+				}
+			}
+		}
 	}
 
 void TargetDirectoryLoader::targetsLoad(const char* name_src
@@ -47,13 +70,13 @@ void TargetDirectoryLoader::targetsLoad(const char* name_src
 		}
 	}
 
-TargetDirectoryLoader& TargetDirectoryLoader::pathRefuse(const Stringkey& key)
+TargetDirectoryLoader& TargetDirectoryLoader::pathReject(const Stringkey& key)
 	{
 	m_ignore.insert(key);
 	return *this;
 	}
 
-TargetDirectoryLoader& TargetDirectoryLoader::pathAllow(const Stringkey& key)
+TargetDirectoryLoader& TargetDirectoryLoader::pathAccept(const Stringkey& key)
 	{
 	m_ignore.erase(key);
 	return *this;

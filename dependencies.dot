@@ -1,5 +1,6 @@
 digraph DependencyGraph
 	{
+	"./mapreplace.hpp"->".";
 	"./versionnumber.hpp"->".";
 	"./targetcxx.o"->".";
 	"./targetcxx.o"->"./targetcxx.hpp";
@@ -11,12 +12,25 @@ digraph DependencyGraph
 	"./targetcxx.o"->"./variant.hpp";
 	"./targetcxx.o"->"./exceptionhandler.hpp";
 	"./targetcxx.o"->"./exceptionhandler.o";
+	"./systemtargetinfo.o"->".";
+	"./systemtargetinfo.o"->"./systemtargetinfo.hpp";
+	"./systemtargetinfo.o"->"./resourceobject.hpp";
+	"./systemtargetinfo.o"->"./resourceobject.o";
+	"./systemtargetinfo.o"->"./sysvars.hpp";
+	"./systemtargetinfo.o"->"./sysvars.o";
+	"./systemtargetinfo.o"->"./stringkey.hpp";
+	"./systemtargetinfo.o"->"./variant.hpp";
+	"./systemtargetinfo.o"->"./stringformat.hpp";
+	"./systemtargetinfo.o"->"./stringformat.o";
+	"./systemtargetinfo.o"->"./mapreplace.hpp";
 	"./datasinkstd.hpp"->".";
 	"./datasinkstd.hpp"->"./datasink.hpp";
 	"./pipe.hpp"->".";
 	"./pipe.hpp"->"./datasource.hpp";
 	"./pipe.hpp"->"./datasink.hpp";
 	"./pipe.hpp"->"./twins.hpp";
+	"./systemtargetinfo.hpp"->".";
+	"./systemtargetinfo.hpp"->"./parameterset.hpp";
 	"./exceptionhandler.hpp"->".";
 	"./readbuffer.hpp"->".";
 	"./readbuffer.hpp"->"./datasource.hpp";
@@ -40,9 +54,15 @@ digraph DependencyGraph
 	"./targetcxxoptions.hpp"->".";
 	"./targetcxxoptions.hpp"->"./command.hpp";
 	"./targetcxxoptions.hpp"->"./command.o";
+	"./targetcxxoptions.hpp"->"./parametersetdefault.hpp";
+	"./targetcxxoptions.hpp"->"./parametersetdefault.o";
+	"./parametersetdefault.o"->".";
+	"./parametersetdefault.o"->"./parametersetdefault.hpp";
+	"./parametersetdefault.o"->"./stringkey.hpp";
 	"./command.hpp"->".";
 	"./command.hpp"->"./pipe.hpp";
 	"./command.hpp"->"./pipe.o";
+	"./command.hpp"->"./twins.hpp";
 	"./directorylister.o"->"pthread";
 	"./directorylister.o"->".";
 	"./directorylister.o"->"./directorylister.hpp";
@@ -92,6 +112,8 @@ digraph DependencyGraph
 	"./targetdirectoryloader.hpp"->".";
 	"./targetdirectoryloader.hpp"->"./targetloader.hpp";
 	"./targetdirectoryloader.hpp"->"./stringkey.hpp";
+	"./parametersetdefault.hpp"->".";
+	"./parametersetdefault.hpp"->"./parameterset.hpp";
 	"./target.hpp"->".";
 	"./target.hpp"->"./twins.hpp";
 	"./targetloader.hpp"->".";
@@ -105,6 +127,8 @@ digraph DependencyGraph
 	"./targetcxxcompiler.o"->"./dependency.o";
 	"./targetcxxcompiler.o"->"./fileutils.hpp";
 	"./targetcxxcompiler.o"->"./fileutils.o";
+	"./parameterset.hpp"->".";
+	"./parameterset.hpp"->"./twins.hpp";
 	"./targetbase.o"->".";
 	"./targetbase.o"->"./targetbase.hpp";
 	"./targetbase.o"->"./resourceobject.hpp";
@@ -139,6 +163,8 @@ digraph DependencyGraph
 	"./maike"->"./maike.o";
 	"./maike"->"./targetdirectoryloader.hpp";
 	"./maike"->"./targetdirectoryloader.o";
+	"./maike"->"./targetcxxoptions.hpp";
+	"./maike"->"./targetcxxoptions.o";
 	"./maike"->"./targetcxxloader.hpp";
 	"./maike"->"./targetcxxloader.o";
 	"./maike"->"./targetcxxcompiler.hpp";
@@ -155,10 +181,10 @@ digraph DependencyGraph
 	"./maike"->"./filein.o";
 	"./maike"->"./expressionevaluatordefault.hpp";
 	"./maike"->"./expressionevaluatordefault.o";
+	"./maike"->"./systemtargetinfo.hpp";
 	"./maike"->"./variant.hpp";
 	"./maike"->"./strerror.hpp";
 	"./maike"->"./strerror.o";
-	"./Debug"->".";
 	"./fileinfo.hpp"->".";
 	"./targetcxxpptokenizer.hpp"->".";
 	"./targetcxxpptokenizer.hpp"->"./readbuffer.hpp";
@@ -200,9 +226,8 @@ digraph DependencyGraph
 	"./maike.o"->"./exceptionhandler.o";
 	"./expressionevaluatordefault.o"->".";
 	"./expressionevaluatordefault.o"->"./expressionevaluatordefault.hpp";
+	"./expressionevaluatordefault.o"->"./systemtargetinfo.hpp";
 	"./expressionevaluatordefault.o"->"./stringkey.hpp";
-	"./expressionevaluatordefault.o"->"./sysvars.hpp";
-	"./expressionevaluatordefault.o"->"./sysvars.o";
 	"./expressionevaluatordefault.o"->"./variant.hpp";
 	"./expressionevaluatordefault.o"->"./errormessage.hpp";
 	"./expressionevaluatordefault.o"->"./errormessage.o";
@@ -229,7 +254,6 @@ digraph DependencyGraph
 	"./datasinkstd.o"->"./errormessage.hpp";
 	"./datasinkstd.o"->"./errormessage.o";
 	"./datasinkstd.o"->"./variant.hpp";
-	"./Release"->".";
 	"./twins.hpp"->".";
 	"./variant.hpp"->".";
 	"./sysvars.o"->".";
@@ -238,6 +262,7 @@ digraph DependencyGraph
 	"./sysvars.o"->"./versionnumber.o";
 	"./sysvars.o"->"./stringkey.hpp";
 	"./sysvars.o"->"./variant.hpp";
+	"./sysvars.o"->"./mapreplace.hpp";
 	"./targetcxxcompiler.hpp"->".";
 	"./targetcxxcompiler.hpp"->"./targetcxxoptions.hpp";
 	"./targetcxxcompiler.hpp"->"./targetcxxoptions.o";
@@ -270,6 +295,8 @@ digraph DependencyGraph
 	"./targetdirectoryloader.o"->"./targetdirectory.hpp";
 	"./targetdirectoryloader.o"->"./targetdirectory.o";
 	"./targetdirectoryloader.o"->"./dependencygraph.hpp";
+	"./targetdirectoryloader.o"->"./resourceobject.hpp";
+	"./targetdirectoryloader.o"->"./resourceobject.o";
 	"./errormessage.o"->".";
 	"./errormessage.o"->"./errormessage.hpp";
 	"./errormessage.o"->"./stringformat.hpp";
@@ -286,6 +313,7 @@ digraph DependencyGraph
 	"./command.o"->"./resourceobject.o";
 	"./command.o"->"./pipe.hpp";
 	"./command.o"->"./pipe.o";
+	"./command.o"->"./parameterset.hpp";
 	"./spiderdefault.o"->".";
 	"./spiderdefault.o"->"./spiderdefault.hpp";
 	"./spiderdefault.o"->"./directorylister.hpp";

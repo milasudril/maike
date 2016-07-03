@@ -1,4 +1,7 @@
-//@	{"targets":[{"name":parametersetdefault.hpp","type":"include"}]}
+//@	{
+//@	 "targets":[{"name":"parametersetdefault.hpp","type":"include"}]
+//@	,"dependencies_extra":[{"ref":"parametersetdefault.o","rel":"implementation"}]
+//@	}
 
 #ifndef MAIKE_PARAMETERSETDEFAULT_HPP
 #define MAIKE_PARAMETERSETDEFAULT_HPP
@@ -17,8 +20,6 @@ namespace Maike
 			ParameterSetDefault();
 			~ParameterSetDefault();
 
-			ParameterSetDefault& parameterSet(const Stringkey& key
-				,Twins<const char* const*> strings);
 			void parameterGet(const Stringkey& key,ParameterProcessor&& proc) const;
 
 		private:

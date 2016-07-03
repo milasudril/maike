@@ -14,10 +14,6 @@
 
 using namespace Maike;
 
-TargetCxxOptions::TargetCxxOptions():m_cxxversion_min(0)
-	{}
-
-
 static std::vector< std::string > stringArrayGet(const ResourceObject& array)
 	{
 	std::vector<std::string> ret;
@@ -76,6 +72,8 @@ TargetCxxOptions::TargetCxxOptions(const ResourceObject& cxxoptions
 
 	if(cxxoptions.objectExists("versionquery"))
 		{m_versionquery=Command(cxxoptions.objectGet("versionquery"));}
+
+	m_cxxversion_default=cxxversionDefaultGet();
 	}
 
 
@@ -152,7 +150,7 @@ long long int TargetCxxOptions::cxxversionDefaultGet() const
 	long long int ret=0;
 
 	auto versionget=m_versionquery.execute(Pipe::REDIRECT_STDOUT|Pipe::REDIRECT_STDERR
-		,{nullptr,nullptr});
+		,{r_paramset.data(),r_paramset.data() + r_paramset.size()});
 	ret=::cxxversionDefaultGet(versionget);
 
 	auto status=versionget.exitStatusGet();

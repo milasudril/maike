@@ -21,12 +21,12 @@ static size_t loadCallback(void* buffer, size_t length, void* eventhandler)
 	return reinterpret_cast<DataSource*>(eventhandler)->read(buffer,length);
 	}
 
-ResourceObject::Iterator::Iterator(ResourceObject& object):r_object(object)
+ResourceObject::Iterator::Iterator(const ResourceObject& object):r_object(object)
 	{
 	m_handle=json_object_iter(static_cast<json_t*>(object.m_handle));
 	}
 
-std::pair<const char*,ResourceObject> ResourceObject::Iterator::get() noexcept
+std::pair<const char*,ResourceObject> ResourceObject::Iterator::get() const noexcept
 	{
 	auto key=json_object_iter_key(m_handle);
 	ResourceObject value{json_object_iter_value(m_handle),key};
@@ -52,8 +52,12 @@ ResourceObject::ResourceObject(DataSource& readhandler)
 	m_handle=json_load_callback(loadCallback,&readhandler,0,&status);
 	if(m_handle==nullptr)
 		{
-		exceptionRaise(ErrorMessage("Could not load JSON data. #0;:#1;: #2;."
-			,{readhandler.nameGet(),status.line,status.text}));
+		if(status.position!=0)
+			{
+			exceptionRaise(ErrorMessage("#0;:#1;: #2;."
+				,{readhandler.nameGet(),status.line,status.text}));
+			}
+		m_handle=json_object();
 		}
 	}
 

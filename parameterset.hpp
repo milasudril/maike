@@ -1,4 +1,4 @@
-//@	{"targets":[{"name":parameterset.hpp","type":"include"}]}
+//@	{"targets":[{"name":"parameterset.hpp","type":"include"}]}
 
 #ifndef MAIKE_PARAMETERSET_HPP
 #define MAIKE_PARAMETERSET_HPP
@@ -20,12 +20,9 @@ namespace Maike
 			virtual void parameterGet(const Stringkey& key
 				,ParameterProcessor&& proc) const=0;
 
-			virtual ParameterSet& parameterSet(const Stringkey& key
-				,Twins<const char* const*> strings)=0;
-
 		protected:
 			~ParameterSet()=default;
 		};
 	}
 
-#endif // MAIKE_PARAMETERSET_HPP
+#endif

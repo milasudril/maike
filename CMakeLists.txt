@@ -26,7 +26,6 @@ set ( CXX_SRCS
     strerror-posix.cpp
     maike.cpp
     fileinfo-linuxgnu.cpp
-    invokerreal-linuxgnu.cpp
     spiderdefault.cpp
     targetcxxcompiler.cpp
     maike-main.cpp
@@ -37,13 +36,19 @@ set ( CXX_SRCS
     stringformat.cpp
     targetbase.cpp
     targetcxxloader.cpp
-    targetcxxtokenizer.cpp
-    resourceobject.cpp
     filein-linux.cpp
     sysvars-linux.cpp
     versionnumber.cpp
     expressionevaluatordefault.cpp
     targetcxx.cpp
+    resourceobject.cpp
+    targetcxxoptions.cpp
+    targetcxxpptokenizer.cpp
+    pipe-posix.cpp
+    thread-posix.cpp
+    fileutils-linuxgnu.cpp
+    parametersetdefault.cpp
+    systemtargetinfo.cpp
 )
 
 set_source_files_properties(

@@ -12,18 +12,18 @@
 
 namespace Maike
 	{
-	class TargetDirectoryCompiler;
+	class ResourceObject;
 	class TargetDirectoryLoader:public TargetLoader
 		{
 		public:
-			TargetDirectoryLoader();
+			TargetDirectoryLoader(const ResourceObject& directoryloader);
 
 			void targetsLoad(const char* name_src,const char* in_dir
 				,Spider& spider,DependencyGraph& graph
 				,const ExpressionEvaluator& evaluator) const;
 
-			TargetDirectoryLoader& pathRefuse(const Stringkey& key);
-			TargetDirectoryLoader& pathAllow(const Stringkey& key);
+			TargetDirectoryLoader& pathReject(const Stringkey& key);
+			TargetDirectoryLoader& pathAccept(const Stringkey& key);
 
 		private:
 			std::set<Stringkey> m_ignore;

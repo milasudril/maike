@@ -10,21 +10,21 @@
 
 namespace Maike
 	{
-	class TargetCxxCompiler;
+	class TargetCxxOptions;
 
 	class TargetCxxLoader:public TargetLoader
 		{
 		public:
-			TargetCxxLoader(TargetCxxCompiler&& compiler)=delete;
+			TargetCxxLoader(TargetCxxOptions&& options)=delete;
 
-			TargetCxxLoader(const TargetCxxCompiler& compiler);
+			TargetCxxLoader(const TargetCxxOptions& options);
 
 			void targetsLoad(const char* name_src,const char* in_dir
 				,Spider& spider,DependencyGraph& graph
 				,const ExpressionEvaluator& evaluator) const;
 
 		private:
-			const TargetCxxCompiler& r_compiler;
+			const TargetCxxOptions& r_options;
 		};
 	}
 

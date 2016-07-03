@@ -1,3 +1,5 @@
+//@	{"targets":[{"name":"parametersetdefault.o","type":"include"}]}
+
 #include "parametersetdefault.hpp"
 #include "stringkey.hpp"
 
@@ -23,16 +25,4 @@ void ParameterSetDefault::parameterGet(const Stringkey& key,ParameterProcessor&&
 			++str;
 			}
 		}
-	}
-
-ParameterSetDefault& ParameterSetDefault::parameterSet(const Stringkey& key
-	,Twins<const char* const*> strings)
-	{
-	auto& v=m_values[key];
-	while(strings.first!=strings.second)
-		{
-		v.push_back(std::string(*strings.first));
-		++strings.first;
-		}
-	return *this;
 	}

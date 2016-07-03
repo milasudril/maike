@@ -1,24 +1,25 @@
 {
-"spider":
+"targetconfig":
+	{
+	"target_directory":"__targets"
+	}
+
+,"spider":
 	{
 	"start_directory":"."
 	}
 
 ,"directoryloader":
 	{
-	 "paths_skip":[".git",".codelite",".clang","test","Debug","Release","test"
+	 "paths_reject":[".git",".codelite",".clang","test","Debug","Release","test"
 		,"__targets"]
 	,"recursive":1
-	}
-
-,"targetbuilder":
-	{
-	"target_directory":"__targets"
 	}
 
 ,"cxxoptions":
 	{
 	 "includedir":[]
+	,"includedir_noscan":[]
 	,"libdir":[]
 	,"cxxversion_min":201103
 	,"stdprefix":"-std="

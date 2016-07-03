@@ -102,6 +102,9 @@
     <File Name="parameterset.hpp"/>
     <File Name="parametersetdefault.hpp"/>
     <File Name="parametersetdefault.cpp"/>
+    <File Name="systemtargetinfo.hpp"/>
+    <File Name="systemtargetinfo.cpp"/>
+    <File Name="mapreplace.hpp"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>

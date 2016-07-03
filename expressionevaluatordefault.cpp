@@ -1,8 +1,8 @@
 //@	{"targets":[{"name":"expressionevaluatordefault.o","type":"object"}]}
 
 #include "expressionevaluatordefault.hpp"
+#include "systemtargetinfo.hpp"
 #include "stringkey.hpp"
-#include "sysvars.hpp"
 #include "variant.hpp"
 #include "errormessage.hpp"
 #include "exceptionhandler.hpp"
@@ -16,31 +16,16 @@
 
 using namespace Maike;
 
-ExpressionEvaluatorDefault::ExpressionEvaluatorDefault()
+ExpressionEvaluatorDefault::ExpressionEvaluatorDefault(const SystemTargetInfo& targetinfo):
+	r_targetinfo(targetinfo)
 	{}
 
 ExpressionEvaluatorDefault::~ExpressionEvaluatorDefault()
 	{}
 
-ExpressionEvaluatorDefault& ExpressionEvaluatorDefault::variablesClear() noexcept
-	{
-	m_variables.clear();
-	return *this;
-	}
-
-ExpressionEvaluatorDefault& ExpressionEvaluatorDefault::sysvarsLoad()
-	{
-	Maike::sysvarsLoad(m_variables);
-	return *this;
-	}
-
 Variant ExpressionEvaluatorDefault::variableGet(const Stringkey& variable) const noexcept
 	{
-	auto i=m_variables.find(variable);
-	if(i==m_variables.end())
-		{return 0;}
-
-	return i->second;
+	return r_targetinfo.variableGet(variable);
 	}
 
 

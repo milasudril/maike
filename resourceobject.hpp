@@ -29,13 +29,14 @@ namespace Maike
 
 
 
-					Iterator(ResourceObject& object);
+					Iterator(const ResourceObject& object);
+					Iterator(ResourceObject&& object)=delete;
 					void next() noexcept;
-					std::pair<const char*,ResourceObject> get() noexcept;
+					std::pair<const char*,ResourceObject> get() const noexcept;
 					bool endAt() noexcept;
 
 				private:
-					ResourceObject& r_object;
+					const ResourceObject& r_object;
 					void* m_handle;
 
 				};
@@ -67,7 +68,7 @@ namespace Maike
 			bool objectExists(const char* name) const noexcept;
 			size_t objectCountGet() const noexcept;
 			ResourceObject objectGet(size_t index) const;
-			Iterator objectIteratorGet() noexcept
+			Iterator objectIteratorGet() const noexcept
 				{
 				Iterator i(*this);
 				return std::move(i);

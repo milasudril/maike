@@ -94,8 +94,11 @@ static void varsSubstitute(const char* str
 					{
 					case '{':
 					//FIXME: How to treat fixed content together with array argument
-						result.push_back(temp);
-						temp.clear();
+						if(temp.size()!=0)
+							{
+							result.push_back(temp);
+							temp.clear();
+							}
 						state=State::VARIABLE;
 						break;
 

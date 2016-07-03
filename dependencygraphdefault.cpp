@@ -41,7 +41,7 @@ DependencyGraphDefault& DependencyGraphDefault::targetsPatch()
 					{
 				//TODO: Here, we should look in our repository before throwing
 				// an exception
-					exceptionRaise(ErrorMessage("#0; Dependency #1; is not satisfied"
+					exceptionRaise(ErrorMessage("#0;: Dependency #1; is not satisfied"
 						,{i->second->sourceNameGet(),dep->nameGet()}));
 					}
 				dep->targetSet(*(t->second));

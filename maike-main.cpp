@@ -11,15 +11,18 @@
 #include "fileutils.hpp"
 #include "maike.hpp"
 #include "targetdirectoryloader.hpp"
+
+#include "targetcxxoptions.hpp"
 #include "targetcxxloader.hpp"
 #include "targetcxxcompiler.hpp"
+
 #include "errormessage.hpp"
 #include "dependency.hpp"
 #include "sysvars.hpp"
 #include "resourceobject.hpp"
 #include "filein.hpp"
 #include "expressionevaluatordefault.hpp"
-
+#include "systemtargetinfo.hpp"
 
 #include "variant.hpp"
 #include "strerror.hpp"
@@ -88,33 +91,32 @@ int main(int argc,char** args)
 	{
 	try
 		{
-	//	Setup stuff
-		auto config=configLoad("maikeconfig.json");
+	//	1 Setup stuff
+		auto maikeconfig=configLoad("maikeconfig.json");
+	//	1.2 Target system information
+		Maike::SystemTargetInfo targetinfo(maikeconfig.objectGet("targetconfig"));
+		Maike::ExpressionEvaluatorDefault evaluator(targetinfo);
 
-		Maike::ExpressionEvaluatorDefault evaluator;
-		evaluator.sysvarsLoad();
-
+	//	1.3	Setup Loaders and compilers
 		std::map<Maike::Stringkey,const Maike::TargetLoader*> loaders;
 
-		Maike::TargetDirectoryLoader dirloader;
-		dirloader.pathRefuse(Maike::Stringkey(".git"))
-			.pathRefuse(Maike::Stringkey(".codelite"))
-			.pathRefuse(Maike::Stringkey(".clang"))
-			.pathRefuse(Maike::Stringkey("__targets"))
-			.pathRefuse(Maike::Stringkey("test"));
+	//	1.3.1 Directory loader (responsible for scanning directories)
+		Maike::TargetDirectoryLoader dirloader(maikeconfig.objectGet("directoryloader"));
 		loaders[Maike::Stringkey(".")]=&dirloader;
 
-		Maike::TargetCxxCompiler cxxcompiler(config.objectGet("cxxoptions"));
-		Maike::TargetCxxLoader cxxloader(cxxcompiler);
+	//	1.3.2 C++ loader and compiler
+		Maike::TargetCxxOptions cxxoptions(maikeconfig.objectGet("cxxoptions"),targetinfo);
+		Maike::TargetCxxCompiler cxxcompiler(cxxoptions);
+		Maike::TargetCxxLoader cxxloader(cxxoptions);
 		loaders[Maike::Stringkey(".hpp")]=&cxxloader;
 		loaders[Maike::Stringkey(".cpp")]=&cxxloader;
 
-	//	Collect targtes
+	//	2. Collect targtes
 		Maike::DependencyGraphDefault targets;
 		Maike::SpiderDefault spider(loaders,evaluator,targets);
 		spider.scanFile(".","").run();
 
-	//	Build all targets
+	//	3. Build all targets
 		targets.targetsPatch().targetsProcess(DepGraphExporter("dependencies.dot"));
 		//	.targetsProcess(TargetBuilder{Maike::InvokerReal(),"__targets"});
 

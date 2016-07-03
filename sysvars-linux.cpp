@@ -9,6 +9,7 @@
 #include "versionnumber.hpp"
 #include "stringkey.hpp"
 #include "variant.hpp"
+#include "mapreplace.hpp"
 #include <sys/utsname.h>
 #include <cstring>
 #include <cstdint>
@@ -23,16 +24,17 @@ void Maike::sysvarsLoad(std::map<Stringkey, Variant>& variables)
 	utsname sysname;
 	uname(&sysname);
 	auto ver=version(sysname.release);
-	variables.insert({Stringkey("linux"), ver});
+	replace(variables,{Stringkey("linux"), ver});
+
 #if __ANDROID__
-	variables.insert({Stringkey("android"),__ANDROID_API__});
+	replace(variables,{Stringkey("android"),__ANDROID_API__});
 #elif __gnu_linux__
-	variables.insert({Stringkey("gnu"),1});
+	replace(variables,{Stringkey("gnu"),1});
 #endif
 
 #ifdef __unix__
-	variables.insert({Stringkey("posix"),_POSIX_VERSION});
+	replace(variables,{Stringkey("posix"),_POSIX_VERSION});
 #endif
 
-	variables.insert({Stringkey("nullfile"),"/dev/null"});
+	replace(variables,{Stringkey("nullfile"),"/dev/null"});
 	}

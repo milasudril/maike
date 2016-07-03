@@ -13,23 +13,20 @@ namespace Maike
 	{
 	class Stringkey;
 	class Variant;
-	class ResourceObjectDefault;
+	class SystemTargetInfo;
 
 	class ExpressionEvaluatorDefault:public ExpressionEvaluator
 		{
 		public:
-			ExpressionEvaluatorDefault();
+			ExpressionEvaluatorDefault(SystemTargetInfo&& targetinfo)=delete;
+			ExpressionEvaluatorDefault(const SystemTargetInfo& targetinfo);
 			~ExpressionEvaluatorDefault();
-			ExpressionEvaluatorDefault& variablesClear() noexcept;
-			ExpressionEvaluatorDefault& sysvarsLoad();
-			ExpressionEvaluatorDefault& envvarsLoad();
-			ExpressionEvaluatorDefault& cfgvarsLoad(const ResourceObjectDefault& vars);
 
 			Variant variableGet(const Stringkey& variable) const noexcept;
 			Variant evaluate(const char* expression) const;
 
 		private:
-			std::map<Stringkey,Variant> m_variables;
+			const SystemTargetInfo& r_targetinfo;
 		};
 	}
 #endif

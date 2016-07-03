@@ -19,15 +19,11 @@ namespace Maike
 	class TargetCxxOptions
 		{
 		public:
-			TargetCxxOptions();
+			TargetCxxOptions(const ResourceObject& options
+				,ParameterSet&& paramset_global)=delete;
 
 			TargetCxxOptions(const ResourceObject& options
 				,const ParameterSet& paramset_global);
-
-			TargetCxxOptions(const ResourceObject& cxxoptions
-				,ParameterSet&& paramset)=delete;
-
-			long long int cxxversionDefaultGet() const;
 
 		private:
 			std::vector<const ParameterSet*> r_paramset;
@@ -43,6 +39,7 @@ namespace Maike
 			std::string m_libint_format;
 
 			long long int m_cxxversion_min;
+			long long int m_cxxversion_default;
 			std::string m_stdprefix;
 
 			Command m_appcompile;
@@ -51,7 +48,7 @@ namespace Maike
 			Command m_objcompile;
 			Command m_versionquery;
 
-
+			long long int cxxversionDefaultGet() const;
 		};
 	}
 

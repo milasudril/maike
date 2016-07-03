@@ -18,8 +18,9 @@ namespace Maike
 	class TargetCxxCompiler
 		{
 		public:
-			TargetCxxCompiler(const ResourceObject& options
-				,const ParameterSet& params_global);
+			TargetCxxCompiler(const TargetCxxOptions& options);
+
+			TargetCxxCompiler(ResourceObject&& options)=delete;
 
 			void compileObject(const char* source,const char* dest
 				,const TargetCxxOptions& options_extra) const;
@@ -34,7 +35,7 @@ namespace Maike
 				,const char* dest,const TargetCxxOptions& options_extra) const;
 
 		private:
-			TargetCxxOptions m_options;
+			const TargetCxxOptions& r_options;
 			long long int m_cxxversion_default;
 		};
 	}
