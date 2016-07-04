@@ -6,37 +6,43 @@
 #ifndef MAIKE_TARGETCXXCOMPILER_HPP
 #define MAIKE_TARGETCXXCOMPILER_HPP
 
-#include "targetcxxoptions.hpp"
 #include "twins.hpp"
 #include <string>
+#include <vector>
 
 namespace Maike
 	{
 	class Dependency;
 	class Target;
+	class TargetCxxOptions;
+	class ParameterSet;
 
 	class TargetCxxCompiler
 		{
 		public:
-			TargetCxxCompiler(const TargetCxxOptions& options);
+			TargetCxxCompiler(const TargetCxxOptions& options,const ParameterSet& sysvars);
 
-			TargetCxxCompiler(ResourceObject&& options)=delete;
+			TargetCxxCompiler(const TargetCxxOptions& options,ParameterSet&& params)=delete;
 
 			void compileObject(const char* source,const char* dest
 				,const TargetCxxOptions& options_extra) const;
 
-			void compileApplication(const Twins<const char* const>& files
+			void compileApplication(Twins<const char* const*> files
 				,const char* dest,const TargetCxxOptions& options_extra) const;
 
-			void compileDll(const Twins<const char* const>& files
+			void compileDll(Twins<const char* const*> files
 				,const char* dest,const TargetCxxOptions& options_extra) const;
 
-			void compileLibrary(const Twins<const char* const>& files
+			void compileLibrary(Twins<const char* const*> files
 				,const char* dest,const TargetCxxOptions& options_extra) const;
+
+			const TargetCxxOptions& optionsGet() const noexcept
+				{return r_options;}
 
 		private:
 			const TargetCxxOptions& r_options;
-			long long int m_cxxversion_default;
+			std::vector<const ParameterSet*> r_paramset;
+			long int m_cxxversion_default;
 		};
 	}
 

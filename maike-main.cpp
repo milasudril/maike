@@ -8,8 +8,8 @@
 #include "target.hpp"
 #include "spiderdefault.hpp"
 #include "stringkey.hpp"
-#include "fileutils.hpp"
 #include "maike.hpp"
+
 #include "targetdirectoryloader.hpp"
 
 #include "targetcxxoptions.hpp"
@@ -18,7 +18,6 @@
 
 #include "errormessage.hpp"
 #include "dependency.hpp"
-#include "sysvars.hpp"
 #include "resourceobject.hpp"
 #include "filein.hpp"
 #include "expressionevaluatordefault.hpp"
@@ -66,7 +65,10 @@ class DepGraphExporter:public Maike::DependencyGraph::TargetProcessor
 			auto deps=target_current.dependencies();
 			while(deps.first!=deps.second)
 				{
-				fprintf(m_dotfile,"\t\"%s\"->\"%s\";\n",name,deps.first->nameGet());
+				const char* colorstring=deps.first->relationGet()==Maike::Dependency::Relation::IMPLEMENTATION?
+					"red":"blue";
+				fprintf(m_dotfile,"\t\"%s\"->\"%s\"[color=\"%s\"];\n",name
+					,deps.first->nameGet(),colorstring);
 				++deps.first;
 				}
 			}
@@ -105,9 +107,9 @@ int main(int argc,char** args)
 		loaders[Maike::Stringkey(".")]=&dirloader;
 
 	//	1.3.2 C++ loader and compiler
-		Maike::TargetCxxOptions cxxoptions(maikeconfig.objectGet("cxxoptions"),targetinfo);
-		Maike::TargetCxxCompiler cxxcompiler(cxxoptions);
-		Maike::TargetCxxLoader cxxloader(cxxoptions);
+		Maike::TargetCxxOptions cxxoptions(maikeconfig.objectGet("cxxoptions"));
+		Maike::TargetCxxCompiler cxxcompiler(cxxoptions,targetinfo);
+		Maike::TargetCxxLoader cxxloader(cxxcompiler);
 		loaders[Maike::Stringkey(".hpp")]=&cxxloader;
 		loaders[Maike::Stringkey(".cpp")]=&cxxloader;
 
@@ -117,18 +119,18 @@ int main(int argc,char** args)
 		spider.scanFile(".","").run();
 
 	//	3. Build all targets
-		targets.targetsPatch().targetsProcess(DepGraphExporter("dependencies.dot"));
-		//	.targetsProcess(TargetBuilder{Maike::InvokerReal(),"__targets"});
+		targets.targetsPatch().targetsProcess(DepGraphExporter("dependencies.dot"))
+			.targetsProcess(TargetBuilder{"__targets"});
 
 		}
 	catch(const Maike::ErrorMessage& msg)
 		{
-		printf("Error: %s",msg.messageGet());
+		fprintf(stderr,"Error: %s",msg.messageGet());
 		return -1;
 		}
 	catch(const char* msg)
 		{
-		printf("Error: %s",msg);
+		fprintf(stderr,"Error: %s",msg);
 		return -1;
 		}
 	return 0;

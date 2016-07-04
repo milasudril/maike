@@ -41,8 +41,6 @@ Pipe Command::execute(unsigned int redirection) const
 	return Pipe(m_name.c_str(),{args.data(),args.data() + args.size()},redirection);
 	}
 
-
-
 namespace
 	{
 	class ParamExtractor:public ParameterSet::ParameterProcessor
@@ -50,11 +48,8 @@ namespace
 		public:
 			ParamExtractor(std::vector<std::string>& result):r_result(result)
 				{}
-
 			void operator()(const char* value)
-				{
-				r_result.push_back(std::string(value));
-				}
+				{r_result.push_back(std::string(value));}
 		private:
 			std::vector<std::string>& r_result;
 		};
@@ -67,15 +62,15 @@ static void substitutesAppend(const Stringkey& key
 	auto n_0=result.size();
 	while(substitutes.first!=substitutes.second)
 		{
-		(*substitutes.first)->parameterGet(key,ParamExtractor(result));
+		--substitutes.second;
+		(*substitutes.second)->parameterGet(key,ParamExtractor(result));
 		auto n=result.size();
 		if(n_0!=n) //Parameter found
 			{return;}
 		n_0=n;
-		++substitutes.first;
+
 		}
 	}
-
 
 static void varsSubstitute(const char* str
 	,Twins<const ParameterSet* const*> substitutes
@@ -107,7 +102,8 @@ static void varsSubstitute(const char* str
 						break;
 
 					case '\0':
-						result.push_back(temp);
+						if(temp.size()!=0)
+							{result.push_back(temp);}
 						return;
 
 					default:
@@ -163,7 +159,7 @@ Pipe Command::execute(unsigned int redirection
 		++ptr_args;
 		}
 
-	auto args=cstr({args_temp.data(),args_temp.data() + m_args.size()});
+	auto args=cstr({args_temp.data(),args_temp.data() + args_temp.size()});
 	return Pipe(m_name.c_str(),{args.data(),args.data() + args.size()},redirection);
 	}
 

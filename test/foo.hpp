@@ -4,3 +4,4 @@
 //@	}
 
 #include "bar.hpp"
+#include "bar2.hpp"

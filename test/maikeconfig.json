@@ -38,7 +38,8 @@
 		{
 		 "name":"g++"
 		,"args":["-g","-fpic","{cxxversion}","-Wall","-Woverflow","-Wconversion"
-			,"-Werror","{includedir}","{libdir}","-o","{target}","{dependencies}"]
+			,"-Werror","{includedir}","{libdir}","-o","{target}","{source}"
+			,"{dependencies}"]
 		}
 	,"versionquery":
 		{

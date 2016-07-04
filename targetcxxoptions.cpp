@@ -2,15 +2,6 @@
 
 #include "targetcxxoptions.hpp"
 #include "resourceobject.hpp"
-#include "pipe.hpp"
-#include "exceptionhandler.hpp"
-#include "errormessage.hpp"
-#include "variant.hpp"
-
-#include "readbuffer.hpp"
-#include "thread.hpp"
-#include "targetcxxpptokenizer.hpp"
-#include <cstdio>
 
 using namespace Maike;
 
@@ -23,14 +14,12 @@ static std::vector< std::string > stringArrayGet(const ResourceObject& array)
 	return std::move(ret);
 	}
 
-TargetCxxOptions::TargetCxxOptions(const ResourceObject& cxxoptions
-	,const ParameterSet& params_global):
+TargetCxxOptions::TargetCxxOptions():m_fields_valid(0){}
+
+TargetCxxOptions::TargetCxxOptions(const ResourceObject& cxxoptions):
 	m_includedir_format("-I\"^\""),m_libdir_format("-L\"^\""),m_cxxversion_min(0)
 	,m_stdprefix("-std=")
 	{
-	r_paramset.push_back(&m_paramset);
-	r_paramset.push_back(&params_global);
-
 	if(cxxoptions.objectExists("includedir"))
 		{m_includedir=stringArrayGet( cxxoptions.objectGet("includedir") );}
 
@@ -72,93 +61,4 @@ TargetCxxOptions::TargetCxxOptions(const ResourceObject& cxxoptions
 
 	if(cxxoptions.objectExists("versionquery"))
 		{m_versionquery=Command(cxxoptions.objectGet("versionquery"));}
-
-	m_cxxversion_default=cxxversionDefaultGet();
-	}
-
-
-namespace
-	{
-	class ReadCallback
-		{
-		public:
-			explicit ReadCallback(DataSource* src):r_src(src)
-				{}
-
-			void operator()()
-				{
-				try
-					{
-					ReadBuffer rb(*r_src);
-					while(!rb.eof())
-						{
-						auto ch_in=rb.byteRead();
-						putchar(ch_in);
-						}
-					}
-				catch(const ErrorMessage& message)
-					{fprintf(stderr,"Error: %s\n",message.messageGet());}
-				}
-
-		private:
-			DataSource* r_src;
-		};
-	}
-
-static long long int cxxversionDefaultGet(Pipe& versionget)
-	{
-	auto standard_error=versionget.stderrCapture();
-	Thread<ReadCallback> stderr_reader(ReadCallback{standard_error.get()});
-
-	auto standard_output=versionget.stdoutCapture();
-	TargetCxxPPTokenizer cxxtok(*standard_output.get());
-	TargetCxxPPTokenizer::Token tok;
-	enum class Mode:unsigned int{NORMAL,DEFINE,DONE};
-	auto state=Mode::NORMAL;
-	while(cxxtok.read(tok))
-		{
-		switch(state)
-			{
-			case Mode::NORMAL:
-				switch(tok.type)
-					{
-					case TargetCxxPPTokenizer::Token::Type::DIRECTIVE:
-						if(tok.value=="define")
-							{state=Mode::DEFINE;}
-						break;
-					default:
-						break;
-					}
-				break;
-			case Mode::DEFINE:
-				if(tok.value=="__cplusplus")
-					{state=Mode::DONE;}
-				else
-					{state=Mode::NORMAL;}
-				break;
-
-			case Mode::DONE:
-				return atoll(tok.value.c_str());
-			}
-		}
-	return 0;
-	}
-
-
-long long int TargetCxxOptions::cxxversionDefaultGet() const
-	{
-	long long int ret=0;
-
-	auto versionget=m_versionquery.execute(Pipe::REDIRECT_STDOUT|Pipe::REDIRECT_STDERR
-		,{r_paramset.data(),r_paramset.data() + r_paramset.size()});
-	ret=::cxxversionDefaultGet(versionget);
-
-	auto status=versionget.exitStatusGet();
-	if(status!=0)
-		{
-		exceptionRaise(ErrorMessage("It was not possible to determine the "
-			"default C++ version. The compiler returned status code #0;",{status}));
-		}
-
-	return ret;
 	}

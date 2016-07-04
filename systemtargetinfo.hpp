@@ -1,6 +1,6 @@
 //@	{
 //@	 "targets":[{"name":"systemtargetinfo.hpp","type":"include"}]
-//@	,"dependencies":[{"ref":"systemtargetinfo.o","rel":"implementation"}]
+//@	,"dependencies_extra":[{"ref":"systemtargetinfo.o","rel":"implementation"}]
 //@	}
 
 #ifndef MAIKE_SYSTEMTARGETINFO_HPP

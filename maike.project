@@ -101,10 +101,12 @@
     <File Name="fileutils.hpp"/>
     <File Name="parameterset.hpp"/>
     <File Name="parametersetdefault.hpp"/>
-    <File Name="parametersetdefault.cpp"/>
     <File Name="systemtargetinfo.hpp"/>
     <File Name="systemtargetinfo.cpp"/>
     <File Name="mapreplace.hpp"/>
+    <File Name="mapfixed.hpp"/>
+    <File Name="parametersetmapfixed.hpp"/>
+    <File Name="parametersetdefault.cpp"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>
@@ -158,7 +160,7 @@
       </Completion>
     </Configuration>
     <Configuration Name="Release" CompilerType="GCC" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-O2;-std=c++11;-Wall;-Woverflow;-Wconversion;-Werror" C_Options="-O2;-Wall" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
+      <Compiler Options="-g;-O2;-std=c++11;-Wall;-Woverflow;-Wconversion;-Werror" C_Options="-O2;-Wall" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <IncludePath Value="."/>
         <Preprocessor Value="NDEBUG"/>
       </Compiler>

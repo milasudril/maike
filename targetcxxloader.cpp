@@ -194,20 +194,22 @@ static void includesGet(const char* name_src,const char* in_dir
 		}
 	}
 
-static void targetsLoad(const ResourceObject& targets,const char* name_src
+static void targetsLoad(const ResourceObject& targets
+	,const TargetCxxCompiler& compiler,const char* name_src
 	,const char* in_dir,Spider& spider,DependencyGraph& graph)
 	{
 	auto N=targets.objectCountGet();
 	for(decltype(N) k=0;k<N;++k)
 		{
-		auto target=TargetCxx::create(targets.objectGet(k),name_src,in_dir,graph.targetCounterGet());
+		auto target=TargetCxx::create(targets.objectGet(k),compiler,name_src
+			,in_dir,graph.targetCounterGet());
 		includesGet(name_src,in_dir,spider,graph,*target);
 		graph.targetRegister(target);
 		}
 	}
 
 
-TargetCxxLoader::TargetCxxLoader(const TargetCxxOptions& options):r_options(options)
+TargetCxxLoader::TargetCxxLoader(const TargetCxxCompiler& compiler):r_compiler(compiler)
 	{}
 
 void TargetCxxLoader::targetsLoad(const char* name_src,const char* in_dir
@@ -221,7 +223,7 @@ void TargetCxxLoader::targetsLoad(const char* name_src,const char* in_dir
 	ResourceObject rc{TagFilter(source)};
 
 	if(rc.objectExists("targets"))
-		{::targetsLoad(rc.objectGet("targets"),name_src,in_dir,spider,graph);}
+		{::targetsLoad(rc.objectGet("targets"),r_compiler,name_src,in_dir,spider,graph);}
 	else
 		{
 		auto N_cases=rc.objectCountGet();
@@ -237,14 +239,15 @@ void TargetCxxLoader::targetsLoad(const char* name_src,const char* in_dir
 				if(static_cast<int64_t>( evaluator.evaluate(expression) ))
 					{
 					::targetsLoad(case_obj.objectGet(1).objectGet("targets")
-						,name_src,in_dir,spider,graph);
+						,r_compiler,name_src,in_dir,spider,graph);
 					break;
 					}
 				}
 			else
 			if(case_obj.objectExists("targets"))
 				{
-				::targetsLoad(case_obj.objectGet("targets"),name_src,in_dir,spider,graph);
+				::targetsLoad(case_obj.objectGet("targets"),r_compiler,name_src
+					,in_dir,spider,graph);
 				break;
 				}
 			}

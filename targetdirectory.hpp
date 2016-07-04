@@ -19,9 +19,11 @@ namespace Maike
 				,size_t id);
 
 			void compile(Twins<const Dependency*> dependency_list
+				,Twins<const Dependency*> dependency_list_full
 				,const char* target_dir);
 
 			bool upToDate(Twins<const Dependency*> dependency_list
+				,Twins<const Dependency*> dependency_list_full
 				,const char* target_dir) const;
 
 			void destroy() noexcept;
