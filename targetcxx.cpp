@@ -104,8 +104,6 @@ void TargetCxx::compile(Twins<const Dependency*> dependency_list
 				,name_full.c_str()
 				,m_options_extra);
 			}
-		/*	applicationCompile(r_compiler,sourceNameGet(),name_full.c_str()
-				,dependency_list_full,target_dir);*/
 			break;
 		case Type::INCLUDE:
 			break;

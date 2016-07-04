@@ -1,4 +1,4 @@
-//@	{"targets":[{"name":"parametersetdefault.o","type":"include"}]}
+//@	{"targets":[{"name":"parametersetdefault.o","type":"object"}]}
 
 #include "parametersetdefault.hpp"
 #include "stringkey.hpp"

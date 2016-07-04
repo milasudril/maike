@@ -15,6 +15,7 @@
 
 using namespace Maike;
 
+#if 0
 static void toposort(Target& target_first
 	,std::vector<Maike::Dependency>& dependency_list,size_t targets_count
 	,bool full)
@@ -98,6 +99,49 @@ static void toposort(Target& target_first
 			++(deps.first);
 			}
 		}
+	}
+#endif
+
+static void toposort(const Maike::Dependency& dependency_first
+	,std::vector<Maike::Dependency>& dependency_list
+	,bool full
+	,std::vector<int>& visited)
+	{
+	auto& target_first=*dependency_first.target();
+	auto id_first=target_first.idGet();
+	visited[id_first]=1;
+
+	auto deps=target_first.dependencies();
+	while(deps.first!=deps.second)
+		{
+		auto target_next=deps.first->target();
+		if(target_next!=nullptr)
+			{
+			auto id=target_next->idGet();
+			if(visited[id]==1)
+				{
+				exceptionRaise(ErrorMessage("A cyclic dependency between #0; and #1; was detected."
+					,{target_first.nameGet(),target_next->nameGet()}));
+				}
+
+			if(visited[id]==0 && (full
+				|| deps.first->relationGet()!=Dependency::Relation::IMPLEMENTATION))
+				{toposort(*deps.first,dependency_list,full,visited);}
+			}
+		++(deps.first);
+		}
+	visited[id_first]=2;
+	dependency_list.push_back(dependency_first);
+	printf("%s toposort2: %s %u\n",full?"full":"",target_first.nameGet()
+		,static_cast<unsigned int>(dependency_first.relationGet()));
+	}
+
+static void toposort(Target& target_first
+	,std::vector<Maike::Dependency>& dependency_list,size_t targets_count
+	,bool full)
+	{
+	std::vector<int> visited(targets_count,0);
+	toposort(Dependency(target_first),dependency_list,full,visited);
 	}
 
 void Maike::buildBranch(Target& target,const char* target_dir,size_t targets_count)

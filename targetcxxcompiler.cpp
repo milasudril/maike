@@ -213,8 +213,7 @@ void TargetCxxCompiler::compileApplication(Twins<const char* const*> files
 	ReadBuffer rb(*stream.get());
 	while(!rb.eof())
 		{
-		rb.byteRead();
-	//	fputc(ch_in,stderr);
+		fputc(rb.byteRead(),stderr);
 		}
 	auto res=compiler.exitStatusGet();
 	if(res!=0)
