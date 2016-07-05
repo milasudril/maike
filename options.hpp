@@ -19,6 +19,7 @@ namespace Maike
 		public:
 			struct Option
 				{
+				const char* key;
 				const char* description;
 				size_t argcount;
 				std::vector<std::string> value;
