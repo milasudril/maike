@@ -79,21 +79,6 @@ static std::vector<TargetCxxCompiler::FileInfo> depstringCreate(
 	return std::move(ret);
 	}
 
-/*
-static std::vector<const char*> cstr_rev(Twins<const std::string*> strings)
-	{
-	std::vector<const char*> ret;
-	while(strings.first!=strings.second)
-		{
-		--strings.second;
-		ret.push_back(strings.second->c_str());
-
-		}
-	return ret;
-	}
-*/
-
-
 void TargetCxx::compile(Twins<const Dependency*> dependency_list
 	,Twins<const Dependency*> dependency_list_full
 	,const char* target_dir)
@@ -143,7 +128,8 @@ static bool objectUpToDate(Twins<const Dependency*> dependency_list
 
 static bool applicationUpToDate(Twins<const Dependency*> dependency_list
 	,Twins<const Dependency*> dependency_list_full
-	,const char* target_name_full)
+	,const char* target_name_full
+	,const char* target_dir)
 	{
 	while(dependency_list.first!=dependency_list.second)
 		{
@@ -163,7 +149,10 @@ static bool applicationUpToDate(Twins<const Dependency*> dependency_list
 			{
 			if(target_rel->typeGet()!=TargetCxx::Type::INCLUDE)
 				{
-				if(FileUtils::newer(target_rel->nameGet(),target_name_full))
+				std::string target_rel_name_full(target_dir);
+				target_rel_name_full+='/';
+				target_rel_name_full+=target_rel->nameGet();
+				if(FileUtils::newer(target_rel_name_full.c_str(),target_name_full))
 					{return 0;}
 				}
 			}
@@ -193,7 +182,8 @@ bool TargetCxx::upToDate(Twins<const Dependency*> dependency_list
 
 		case Type::APPLICATION:
 			return applicationUpToDate(dependency_list,dependency_list_full
-				,name_full.c_str());
+				,name_full.c_str()
+				,target_dir);
 		default:
 			break;
 		}

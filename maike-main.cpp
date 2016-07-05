@@ -125,12 +125,12 @@ int main(int argc,char** args)
 		}
 	catch(const Maike::ErrorMessage& msg)
 		{
-		fprintf(stderr,"Error: %s",msg.messageGet());
+		fprintf(stderr,"%s",msg.messageGet());
 		return -1;
 		}
 	catch(const char* msg)
 		{
-		fprintf(stderr,"Error: %s",msg);
+		fprintf(stderr,"%s",msg);
 		return -1;
 		}
 	return 0;

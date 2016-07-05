@@ -9,3 +9,4 @@ bin/*
 Debug/*
 Release/*
 .codelite/*
+__targets/*

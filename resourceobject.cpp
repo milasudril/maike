@@ -54,7 +54,7 @@ ResourceObject::ResourceObject(DataSource& readhandler)
 		{
 		if(status.position!=0)
 			{
-			exceptionRaise(ErrorMessage("#0;:#1;: #2;."
+			exceptionRaise(ErrorMessage("#0;:#1;: error: #2;."
 				,{readhandler.nameGet(),status.line,status.text}));
 			}
 		m_handle=json_object();
