@@ -178,22 +178,63 @@ void TargetCxxCompiler::compileObject(const char* source,const char* dest
 		}
 	}
 
-void TargetCxxCompiler::compileApplication(Twins<const char* const*> files
+
+
+static std::string placeholderSubstitute(const char* string_template
+	,const char* substitute)
+	{
+	std::string ret;
+	while(true)
+		{
+		auto ch_in=*string_template;
+		switch(ch_in)
+			{
+			case '^':
+				ret+=substitute;
+				break;
+			case '\0':
+				return std::move(ret);
+			default:
+				ret+=ch_in;
+			}
+		++string_template;
+		}
+	}
+
+static std::string makeDepitemString(const TargetCxxCompiler::FileInfo& fileinfo
+	,const TargetCxxOptions& options)
+	{
+	switch(fileinfo.usage)
+		{
+		case TargetCxxCompiler::FileUsage::NORMAL:
+			return std::string(fileinfo.filename);
+		case TargetCxxCompiler::FileUsage::LIB_INTERNAL:
+			return placeholderSubstitute(options.libintFormatGet(),fileinfo.filename);
+		case TargetCxxCompiler::FileUsage::LIB_EXTERNAL:
+			return placeholderSubstitute(options.libextFormatGet(),fileinfo.filename);
+		}
+	return std::string(fileinfo.filename);
+	}
+
+void TargetCxxCompiler::compileApplication(Twins<const FileInfo*> files
 	,const char* dest,const TargetCxxOptions& options_extra) const
 	{
-	const char* source=files.first[0];
+	const char* source=files.first[0].filename;
 
 	CompilerParameters cxxparams;
 	cxxparams.get<Stringkey("target")>().push_back(dest);
-	auto& deps=cxxparams.get<Stringkey("dependencies")>();
-	while(files.first!=files.second)
-		{
-		deps.push_back(std::string(*files.first));
-		++files.first;
-		}
 
 	auto options_result=r_options;
 //TODO merge with options_extra
+	{
+	auto& deps=cxxparams.get<Stringkey("dependencies")>();
+	while(files.first!=files.second)
+		{
+		deps.push_back(makeDepitemString(*files.first,options_result));
+		++files.first;
+		}
+//TODO Fix libdir
+	}
 
 	auto cxxversion_min=options_result.cxxversionMinGet();
 	if(cxxversion_min >  m_cxxversion_default)
@@ -202,9 +243,8 @@ void TargetCxxCompiler::compileApplication(Twins<const char* const*> files
 			.push_back(cxxVersionString(options_result.stdprefixGet(),cxxversion_min));
 		}
 
-//TODO Fix includedir
-//TODO Fix libdir
 
+//TODO Fix includedir
 	std::vector<const ParameterSet*> params(r_paramset);
 	params.push_back(&cxxparams);
 	auto compiler=r_options.appcompileGet().execute(Pipe::REDIRECT_STDERR

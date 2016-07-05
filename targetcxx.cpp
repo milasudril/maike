@@ -8,6 +8,7 @@
 #include "exceptionhandler.hpp"
 #include "targetcxxcompiler.hpp"
 #include "fileutils.hpp"
+#include <algorithm>
 
 using namespace Maike;
 
@@ -43,15 +44,24 @@ TargetCxx::TargetCxx(const ResourceObject& obj,const TargetCxxCompiler& compiler
 		}
 	}
 
-static std::vector<std::string> depstringCreate(const char* target_dir
+
+
+static std::vector<TargetCxxCompiler::FileInfo> depstringCreate(
+	 std::vector<std::string>& strings_temp
+	,const char* target_dir
 	,Twins<const Dependency*> dependency_list_full)
 	{
-	std::vector<std::string> ret;
+	std::vector<TargetCxxCompiler::FileInfo> ret;
 	while(dependency_list_full.first!=dependency_list_full.second)
 		{
 		auto target_rel=dynamic_cast<const TargetCxx*>(dependency_list_full.first->target());
 		if(target_rel==nullptr)
 			{
+			if(dependency_list_full.first->relationGet()==Dependency::Relation::EXTERNAL)
+				{
+				auto t=dependency_list_full.first->target();
+				ret.push_back({t->nameGet(),TargetCxxCompiler::FileUsage::LIB_EXTERNAL});
+				}
 			}
 		else
 			{
@@ -60,15 +70,16 @@ static std::vector<std::string> depstringCreate(const char* target_dir
 				std::string name_full(target_dir);
 				name_full+='/';
 				name_full+=target_rel->nameGet();
-			//	printf("%s\n",target_rel->nameGet());
-				ret.push_back(std::move(name_full));
+				strings_temp.push_back(std::move(name_full));
+				ret.push_back({strings_temp.back().c_str(),TargetCxxCompiler::FileUsage::NORMAL});
 				}
 			}
 		++dependency_list_full.first;
 		}
-	return ret;
+	return std::move(ret);
 	}
 
+/*
 static std::vector<const char*> cstr_rev(Twins<const std::string*> strings)
 	{
 	std::vector<const char*> ret;
@@ -80,6 +91,7 @@ static std::vector<const char*> cstr_rev(Twins<const std::string*> strings)
 		}
 	return ret;
 	}
+*/
 
 
 void TargetCxx::compile(Twins<const Dependency*> dependency_list
@@ -97,15 +109,14 @@ void TargetCxx::compile(Twins<const Dependency*> dependency_list
 			break;
 		case Type::APPLICATION:
 			{
-			auto depstring=depstringCreate(target_dir,dependency_list_full);
-			depstring.push_back(sourceNameGet());
+			std::vector<std::string> strings_temp;
+			auto depfiles=depstringCreate(strings_temp,target_dir,dependency_list_full);
+			depfiles.push_back({sourceNameGet(),TargetCxxCompiler::FileUsage::NORMAL});
 
-			auto deps_cstr=cstr_rev({depstring.data(),depstring.data() + depstring.size()});
-			fprintf(stderr,"Number of files: %zu\n",depstring.size());
-			r_compiler.compileApplication(
-				{deps_cstr.data(),deps_cstr.data() + deps_cstr.size()}
-				,name_full.c_str()
-				,m_options_extra);
+			auto deps_begin=depfiles.data();
+			auto deps_end=deps_begin + depfiles.size();
+			std::reverse(deps_begin,deps_end);
+			r_compiler.compileApplication({deps_begin,deps_end},name_full.c_str(),m_options_extra);
 			}
 			break;
 		case Type::INCLUDE:

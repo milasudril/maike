@@ -47,6 +47,9 @@ namespace Maike
 			const char* libextFormatGet() const noexcept
 				{return m_libext_format.c_str();}
 
+			const char* libintFormatGet() const noexcept
+				{return m_libext_format.c_str();}
+
 		private:
 			uint64_t m_fields_valid;
 			ParameterSetDefault m_params;

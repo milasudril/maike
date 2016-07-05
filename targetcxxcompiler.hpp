@@ -27,7 +27,13 @@ namespace Maike
 			void compileObject(const char* source,const char* dest
 				,const TargetCxxOptions& options_extra) const;
 
-			void compileApplication(Twins<const char* const*> files
+			enum class FileUsage:unsigned int{NORMAL,LIB_INTERNAL,LIB_EXTERNAL};
+			struct FileInfo
+				{
+				const char* filename;
+				FileUsage usage;
+				};
+			void compileApplication(Twins<const FileInfo*> files
 				,const char* dest,const TargetCxxOptions& options_extra) const;
 
 			void compileDll(Twins<const char* const*> files

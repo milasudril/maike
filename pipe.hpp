@@ -9,6 +9,7 @@
 #include "datasource.hpp"
 #include "datasink.hpp"
 #include "twins.hpp"
+#include "handle.hpp"
 #include <cstdint>
 
 namespace Maike
@@ -33,14 +34,14 @@ namespace Maike
 
 			int exitStatusGet() noexcept;
 
-			DataSourceHandle stdoutCapture() noexcept
-				{return &m_stdout;}
+			Handle<DataSource> stdoutCapture() noexcept
+				{return Handle<DataSource>( &m_stdout );}
 
-			DataSourceHandle stderrCapture() noexcept
-				{return &m_stderr;}
+			Handle<DataSource> stderrCapture() noexcept
+				{return Handle<DataSource>( &m_stderr );}
 
-			DataSinkHandle stdinCapture() noexcept
-				{return &m_stdin;}
+			Handle<DataSink> stdinCapture() noexcept
+				{return Handle<DataSink>( &m_stdin );}
 
 		private:
 			class Reader:public DataSource

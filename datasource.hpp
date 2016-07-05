@@ -13,6 +13,9 @@ namespace Maike
 	class DataSource
 		{
 		public:
+			typedef DataSource Base;
+			static void destroy(DataSource* self) noexcept
+				{self->destroy();}
 			virtual size_t read(void* buffer,size_t n)=0;
 			virtual const char* nameGet() const noexcept=0;
 
@@ -22,16 +25,6 @@ namespace Maike
 			friend class DataSourceHandle;
 
 			virtual void destroy()=0;
-
-			static void destroy(DataSource* self) noexcept
-				{self->destroy();}
-		};
-
-	struct DataSourceHandle:public std::unique_ptr<DataSource,void(*)(DataSource*)>
-		{
-		DataSourceHandle(DataSource* source):
-			std::unique_ptr<DataSource,void(*)(DataSource*)>(source,DataSource::destroy)
-			{}
 		};
 	};
 

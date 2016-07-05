@@ -13,24 +13,19 @@ namespace Maike
 	class DataSink
 		{
 		public:
+			typedef DataSink Base;
+
+			static void destroy(DataSink* self) noexcept
+				{self->destroy();}
+
 			virtual size_t write(const void* buffer,size_t n)=0;
 
 		protected:
 			~DataSink()=default;
 
 		private:
-			friend class DataSinkHandle;
 
 			virtual void destroy()=0;
-			static void destroy(DataSink* self) noexcept
-				{self->destroy();}
-		};
-
-	struct DataSinkHandle:public std::unique_ptr<DataSink,void(*)(DataSink*)>
-		{
-		DataSinkHandle(DataSink* sink):
-			std::unique_ptr<DataSink,void(*)(DataSink*)>(sink,DataSink::destroy)
-			{}
 		};
 	};
 

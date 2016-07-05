@@ -34,6 +34,7 @@ digraph DependencyGraph
 	"./pipe.hpp"->"./datasource.hpp"[color="blue"];
 	"./pipe.hpp"->"./datasink.hpp"[color="blue"];
 	"./pipe.hpp"->"./twins.hpp"[color="blue"];
+	"./pipe.hpp"->"./handle.hpp"[color="blue"];
 	"./systemtargetinfo.hpp"->"."[color="blue"];
 	"./systemtargetinfo.hpp"->"./parameterset.hpp"[color="blue"];
 	"./exceptionhandler.hpp"->"."[color="blue"];
@@ -114,6 +115,7 @@ digraph DependencyGraph
 	"./dependencygraphdefault.hpp"->"."[color="blue"];
 	"./dependencygraphdefault.hpp"->"./dependencygraph.hpp"[color="blue"];
 	"./dependencygraphdefault.hpp"->"./stringkey.hpp"[color="blue"];
+	"./dependencygraphdefault.hpp"->"./handle.hpp"[color="blue"];
 	"./maike.hpp"->"."[color="blue"];
 	"./stringkey.hpp"->"."[color="blue"];
 	"./targetdirectoryloader.hpp"->"."[color="blue"];
@@ -158,6 +160,7 @@ digraph DependencyGraph
 	"./targetcxxoptions.o"->"./resourceobject.hpp"[color="blue"];
 	"./targetcxxoptions.o"->"./resourceobject.o"[color="red"];
 	"./fileutils.hpp"->"."[color="blue"];
+	"./handle.hpp"->"."[color="blue"];
 	"./maike"->"."[color="blue"];
 	"./maike"->"./dependencygraphdefault.hpp"[color="blue"];
 	"./maike"->"./dependencygraphdefault.o"[color="red"];
@@ -232,6 +235,9 @@ digraph DependencyGraph
 	"./maike.o"->"./exceptionhandler.hpp"[color="blue"];
 	"./maike.o"->"./exceptionhandler.o"[color="red"];
 	"./maike.o"->"./stringkey.hpp"[color="blue"];
+	"./targetplaceholder.hpp"->"."[color="blue"];
+	"./targetplaceholder.hpp"->"./targetbase.hpp"[color="blue"];
+	"./targetplaceholder.hpp"->"./targetbase.o"[color="red"];
 	"./expressionevaluatordefault.o"->"."[color="blue"];
 	"./expressionevaluatordefault.o"->"./expressionevaluatordefault.hpp"[color="blue"];
 	"./expressionevaluatordefault.o"->"./systemtargetinfo.hpp"[color="blue"];
@@ -304,6 +310,7 @@ digraph DependencyGraph
 	"./targetdirectoryloader.o"->"./dependencygraph.hpp"[color="blue"];
 	"./targetdirectoryloader.o"->"./resourceobject.hpp"[color="blue"];
 	"./targetdirectoryloader.o"->"./resourceobject.o"[color="red"];
+	"./targetdirectoryloader.o"->"./handle.hpp"[color="blue"];
 	"./errormessage.o"->"."[color="blue"];
 	"./errormessage.o"->"./errormessage.hpp"[color="blue"];
 	"./errormessage.o"->"./stringformat.hpp"[color="blue"];
@@ -334,7 +341,6 @@ digraph DependencyGraph
 	"./strerror.hpp"->"."[color="blue"];
 	"./dependencygraphdefault.o"->"."[color="blue"];
 	"./dependencygraphdefault.o"->"./dependencygraphdefault.hpp"[color="blue"];
-	"./dependencygraphdefault.o"->"./target.hpp"[color="blue"];
 	"./dependencygraphdefault.o"->"./dependency.hpp"[color="blue"];
 	"./dependencygraphdefault.o"->"./dependency.o"[color="red"];
 	"./dependencygraphdefault.o"->"./errormessage.hpp"[color="blue"];
@@ -342,6 +348,7 @@ digraph DependencyGraph
 	"./dependencygraphdefault.o"->"./variant.hpp"[color="blue"];
 	"./dependencygraphdefault.o"->"./exceptionhandler.hpp"[color="blue"];
 	"./dependencygraphdefault.o"->"./exceptionhandler.o"[color="red"];
+	"./dependencygraphdefault.o"->"./targetplaceholder.hpp"[color="blue"];
 	"./dependency.hpp"->"."[color="blue"];
 	"./dependency.hpp"->"./target.hpp"[color="blue"];
 	"./resourceobject.hpp"->"."[color="blue"];
@@ -362,4 +369,5 @@ digraph DependencyGraph
 	"./targetcxxloader.o"->"./expressionevaluator.hpp"[color="blue"];
 	"./targetcxxloader.o"->"./exceptionhandler.hpp"[color="blue"];
 	"./targetcxxloader.o"->"./exceptionhandler.o"[color="red"];
+	"./targetcxxloader.o"->"./handle.hpp"[color="blue"];
 	}

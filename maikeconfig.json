@@ -24,10 +24,10 @@
 	,"cxxversion_min":201103
 	,"stdprefix":"-std="
 	,"platform_suffix":"x86_64-linux-gnu"
-	,"includedir_format":"-I\"^\""
-	,"libdir_format":"-L\"^\""
-	,"libext_format":"-l\"^\""
-	,"libint_format":"-l:\"^\""
+	,"includedir_format":"-I^"
+	,"libdir_format":"-L^"
+	,"libext_format":"-l^"
+	,"libint_format":"-l:^"
 	,"objcompile":
 		{
 		 "name":"g++"

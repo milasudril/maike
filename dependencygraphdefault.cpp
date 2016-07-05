@@ -1,13 +1,11 @@
 //@	{"targets":[{"name":"dependencygraphdefault.o","type":"object"}]}
 
 #include "dependencygraphdefault.hpp"
-#include "target.hpp"
 #include "dependency.hpp"
 #include "errormessage.hpp"
 #include "variant.hpp"
 #include "exceptionhandler.hpp"
 #include "targetplaceholder.hpp"
-#include "handle.hpp"
 
 using namespace Maike;
 
