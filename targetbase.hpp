@@ -21,6 +21,8 @@ namespace Maike
 		public:
 			explicit TargetBase(const char* name,const char* name_src,const char* in_dir,size_t id);
 
+			explicit TargetBase(const char* name,const char* name_src,size_t id);
+
 			explicit TargetBase(const ResourceObject& obj,const char* name_src
 				,const char* in_dir,size_t id);
 

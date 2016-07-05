@@ -9,6 +9,7 @@
 #include "targetdirectory.hpp"
 #include "dependencygraph.hpp"
 #include "resourceobject.hpp"
+#include "handle.hpp"
 #include <string>
 #include <cstring>
 
@@ -48,7 +49,8 @@ void TargetDirectoryLoader::targetsLoad(const char* name_src
 	,DependencyGraph& graph
 	,const ExpressionEvaluator& evaluator) const
 	{
-	auto target=TargetDirectory::create(name_src,in_dir,graph.targetCounterGet());
+	Handle<TargetDirectory> target(
+		TargetDirectory::create(name_src,in_dir,graph.targetCounterGet()));
 	graph.targetRegister(target);
 	DirectoryLister dirlister(name_src);
 	const char* entry=dirlister.read();

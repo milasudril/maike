@@ -8,6 +8,7 @@
 
 #include "dependencygraph.hpp"
 #include "stringkey.hpp"
+#include "handle.hpp"
 #include <map>
 
 namespace Maike
@@ -15,7 +16,7 @@ namespace Maike
 	class DependencyGraphDefault:public DependencyGraph
 		{
 		public:
-			DependencyGraphDefault& targetRegister(TargetHandle&& target);
+			DependencyGraphDefault& targetRegister(Handle<Target>&& target);
 			DependencyGraphDefault& targetsPatch();
 			DependencyGraphDefault& targetsProcess(TargetProcessor&& visitor);
 			Target* targetFind(const Stringkey& key);
@@ -23,7 +24,7 @@ namespace Maike
 				{return m_targets.size();}
 
 		private:
-			std::map< Stringkey,TargetHandle > m_targets;
+			std::map< Stringkey,Handle<Target> > m_targets;
 		};
 	}
 

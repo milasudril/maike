@@ -13,9 +13,16 @@ namespace Maike
 	{
 	class Dependency;
 
+	template<class T>
+	class Handle;
+
 	class Target
 		{
 		public:
+			typedef Target Base;
+			static void destroy(Target* target) noexcept
+				{target->destroy();}
+
 			virtual Target& childCounterIncrement() noexcept=0;
 			virtual size_t childCounterGet() const noexcept=0;
 			virtual void compile(Twins<const Dependency*> dependency_list
@@ -34,17 +41,7 @@ namespace Maike
 		protected:
 			~Target()=default;
 		private:
-			friend struct TargetHandle;
 			virtual void destroy() noexcept=0;
-			static void destroy(Target* target) noexcept
-				{target->destroy();}
-		};
-
-	struct TargetHandle:public std::unique_ptr<Target,void (*)(Target*)>
-		{
-		TargetHandle(Target* target):
-			std::unique_ptr<Target,void(*)(Target*)>(target,Target::destroy)
-			{}
 		};
 	}
 

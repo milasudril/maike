@@ -108,6 +108,7 @@
     <File Name="parametersetmapfixed.hpp"/>
     <File Name="parametersetdefault.cpp"/>
     <File Name="targetplaceholder.hpp"/>
+    <File Name="handle.hpp"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>

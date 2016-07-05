@@ -7,38 +7,42 @@
 #include "variant.hpp"
 #include "exceptionhandler.hpp"
 #include "targetplaceholder.hpp"
+#include "handle.hpp"
 
 using namespace Maike;
 
-DependencyGraphDefault& DependencyGraphDefault::targetRegister(TargetHandle&& target)
+DependencyGraphDefault& DependencyGraphDefault::targetRegister(Handle<Target>&& target)
 	{
 	auto name=target->nameGet();
-	auto i=m_targets.find(Stringkey(name));
+	auto key=Stringkey(name);
+	auto i=m_targets.find(key);
+
 	if( i!=m_targets.end() )
 		{
 		exceptionRaise( ErrorMessage("#0;: Target #1; has already been defined in #2;"
 			,{target->sourceNameGet(),name,i->second->sourceNameGet()}));
 		}
-	m_targets.emplace(Stringkey(name),std::move(target));
+	m_targets.emplace(key,std::move(target));
 	return *this;
 	}
 
-static Target& dependencyResolve(DependencyGraphDefault& targets
+static Target& dependencyResolve(std::map< Stringkey,Handle<Target> >& targets
 	,const char* from
-	,Dependency& dependency)
+	,const Dependency& dependency)
 	{
 	auto name=dependency.nameGet();
-	auto target=targets.targetFind(Stringkey(name));
-	if(target!=nullptr) //Is the target represented in the graph?
-		{return *target;}
+	auto key=Stringkey(name);
+	auto i=targets.find(key);
+	if(i!=targets.end()) //Is the target represented in the graph?
+		{return *(i->second);}
 
 //	It is not. Is this an external relation?
 	if(dependency.relationGet()==Dependency::Relation::EXTERNAL)
 		{
 	//	Create a placeholder for an external target
-		auto target=new TargetPlaceholder(name,name,"/",targets.targetCounterGet());
-		targets.targetRegister(target);
-		return *target;
+		Handle<TargetPlaceholder> target(
+			TargetPlaceholder::create(name,name,targets.size()));
+		return *(targets.emplace(key,std::move(target)).first)->second;
 		}
 
 //	It is not an external relation. Conclude that the dependency is not satisfied
@@ -56,7 +60,7 @@ DependencyGraphDefault& DependencyGraphDefault::targetsPatch()
 		while(deps.first!=deps.second)
 			{
 			deps.first->targetSet(
-				dependencyResolve(*this,i->second->nameGet(),*deps.first));
+				dependencyResolve(m_targets,i->second->nameGet(),*deps.first));
 			++(deps.first);
 			}
 		++i;

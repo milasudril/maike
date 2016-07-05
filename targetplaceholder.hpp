@@ -7,15 +7,12 @@
 
 namespace Maike
 	{
-	class TargetPlaceholder final : public Maike::TargetBase
+	class TargetPlaceholder final:public Maike::TargetBase
 		{
 		public:
-			TargetPlaceholder(const char* name,const char* name_src
-				,const char* in_dir,size_t id):
-				TargetBase(name,name_src,in_dir,id)
-				{}
-
-
+			static TargetPlaceholder* create(const char* name,const char* name_src
+				,size_t id)
+				{return new TargetPlaceholder(name,name_src,id);}
 
 			virtual void destroy() noexcept
 				{delete this;}
@@ -31,6 +28,10 @@ namespace Maike
 				{}
 
 		private:
+			TargetPlaceholder(const char* name,const char* name_src,size_t id):
+				TargetBase(name,name_src,"",id)
+				{}
+
 			~TargetPlaceholder()=default;
 		};
 	}

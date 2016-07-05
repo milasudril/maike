@@ -9,13 +9,15 @@
 
 namespace Maike
 	{
-	struct TargetHandle;
+	template<class T>
+	class Handle;
+
 	class Target;
 
 	class DependencyGraph
 		{
 		public:
-			virtual DependencyGraph& targetRegister(TargetHandle&& target)=0;
+			virtual DependencyGraph& targetRegister(Handle<Target>&& target)=0;
 			virtual DependencyGraph& targetsPatch()=0;
 			virtual size_t targetCounterGet() const noexcept=0;
 

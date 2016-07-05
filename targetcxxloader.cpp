@@ -10,6 +10,7 @@
 #include "errormessage.hpp"
 #include "expressionevaluator.hpp"
 #include "exceptionhandler.hpp"
+#include "handle.hpp"
 #include <cstdio>
 
 using namespace Maike;
@@ -201,8 +202,8 @@ static void targetsLoad(const ResourceObject& targets
 	auto N=targets.objectCountGet();
 	for(decltype(N) k=0;k<N;++k)
 		{
-		auto target=TargetCxx::create(targets.objectGet(k),compiler,name_src
-			,in_dir,graph.targetCounterGet());
+		Handle<TargetCxx> target(TargetCxx::create(targets.objectGet(k),compiler,name_src
+				,in_dir,graph.targetCounterGet()));
 		includesGet(name_src,in_dir,spider,graph,*target);
 		graph.targetRegister(target);
 		}
