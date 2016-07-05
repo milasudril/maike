@@ -11,7 +11,6 @@
 #include "stringkey.hpp"
 #include <vector>
 #include <stack>
-#include <set>
 
 using namespace Maike;
 
@@ -105,8 +104,7 @@ static void toposort(Target& target_first
 static void toposort(const Maike::Dependency& dependency_first
 	,std::vector<Maike::Dependency>& dependency_list
 	,bool full
-	,std::vector<int>& visited
-	,std::set<Stringkey>& visited_external)
+	,std::vector<int>& visited)
 	{
 	auto& target_first=*dependency_first.target();
 	auto id_first=target_first.idGet();
@@ -116,39 +114,20 @@ static void toposort(const Maike::Dependency& dependency_first
 	while(deps.first!=deps.second)
 		{
 		auto target_next=deps.first->target();
-		if(target_next==nullptr)
+		auto id=target_next->idGet();
+		if(visited[id]==1)
 			{
-			if(deps.first->relationGet()!=Dependency::Relation::EXTERNAL)
-				{
-				exceptionRaise(ErrorMessage("#0;: Undefined reference to #1;."
-					,{target_first.sourceNameGet(),deps.first->nameGet()}));
-				}
-			if(visited_external.insert(Stringkey(deps.first->nameGet())).second)
-				{
-				dependency_list.push_back(*deps.first);
-				printf("%s toposort2: %s %u\n",full?"full":"",deps.first->nameGet()
-					,static_cast<unsigned int>(deps.first->relationGet()));
-				}
+			exceptionRaise(ErrorMessage("A cyclic dependency between #0; and #1; was detected."
+				,{target_first.nameGet(),target_next->nameGet()}));
 			}
-		else
-			{
-			auto id=target_next->idGet();
-			if(visited[id]==1)
-				{
-				exceptionRaise(ErrorMessage("A cyclic dependency between #0; and #1; was detected."
-					,{target_first.nameGet(),target_next->nameGet()}));
-				}
 
-			if(visited[id]==0 && (full
-				|| deps.first->relationGet()!=Dependency::Relation::IMPLEMENTATION))
-				{toposort(*deps.first,dependency_list,full,visited,visited_external);}
-			}
+		if(visited[id]==0 && (full
+			|| deps.first->relationGet()!=Dependency::Relation::IMPLEMENTATION))
+			{toposort(*deps.first,dependency_list,full,visited);}
 		++(deps.first);
 		}
 	visited[id_first]=2;
 	dependency_list.push_back(dependency_first);
-	printf("%s toposort2: %s %u\n",full?"full":"",target_first.nameGet()
-		,static_cast<unsigned int>(dependency_first.relationGet()));
 	}
 
 static void toposort(Target& target_first
@@ -156,8 +135,7 @@ static void toposort(Target& target_first
 	,bool full)
 	{
 	std::vector<int> visited(targets_count,0);
-	std::set<Stringkey> visited_external;
-	toposort(Dependency(target_first),dependency_list,full,visited,visited_external);
+	toposort(Dependency(target_first),dependency_list,full,visited);
 	}
 
 void Maike::buildBranch(Target& target,const char* target_dir,size_t targets_count)
