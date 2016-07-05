@@ -41,6 +41,10 @@ digraph DependencyGraph
 	"./readbuffer.hpp"->"."[color="blue"];
 	"./readbuffer.hpp"->"./datasource.hpp"[color="blue"];
 	"./thread.hpp"->"."[color="blue"];
+	"./options.hpp"->"."[color="blue"];
+	"./options.hpp"->"./twins.hpp"[color="blue"];
+	"./options.hpp"->"./mapfixed.hpp"[color="blue"];
+	"./options.hpp"->"./stringkey.hpp"[color="blue"];
 	"./fileutils.o"->"."[color="blue"];
 	"./fileutils.o"->"./fileutils.hpp"[color="blue"];
 	"./fileutils.o"->"./errormessage.hpp"[color="blue"];
@@ -190,6 +194,8 @@ digraph DependencyGraph
 	"./maike"->"./expressionevaluatordefault.o"[color="red"];
 	"./maike"->"./systemtargetinfo.hpp"[color="blue"];
 	"./maike"->"./systemtargetinfo.o"[color="red"];
+	"./maike"->"./options.hpp"[color="blue"];
+	"./maike"->"./options.o"[color="red"];
 	"./maike"->"./variant.hpp"[color="blue"];
 	"./maike"->"./strerror.hpp"[color="blue"];
 	"./maike"->"./strerror.o"[color="red"];
@@ -298,6 +304,8 @@ digraph DependencyGraph
 	"./filein.o"->"./strerror.o"[color="red"];
 	"./expressionevaluatordefault.hpp"->"."[color="blue"];
 	"./expressionevaluatordefault.hpp"->"./expressionevaluator.hpp"[color="blue"];
+	"./options.o"->"."[color="blue"];
+	"./options.o"->"./options.hpp"[color="blue"];
 	"./targetdirectoryloader.o"->"."[color="blue"];
 	"./targetdirectoryloader.o"->"./targetdirectoryloader.hpp"[color="blue"];
 	"./targetdirectoryloader.o"->"./directorylister.hpp"[color="blue"];

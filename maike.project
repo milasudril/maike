@@ -110,6 +110,8 @@
     <File Name="targetplaceholder.hpp"/>
     <File Name="handle.hpp"/>
     <File Name="README.md"/>
+    <File Name="options.hpp"/>
+    <File Name="options.cpp"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>

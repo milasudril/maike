@@ -22,6 +22,7 @@
 #include "filein.hpp"
 #include "expressionevaluatordefault.hpp"
 #include "systemtargetinfo.hpp"
+#include "options.hpp"
 
 #include "variant.hpp"
 #include "strerror.hpp"
@@ -93,6 +94,10 @@ int main(int argc,char** args)
 	{
 	try
 		{
+		Maike::Options opts{Maike::Twins<const char* const*>(args,args+argc)};
+		opts.optionsPrint();
+
+
 	//	1 Setup stuff
 		auto maikeconfig=configLoad("maikeconfig.json");
 	//	1.2 Target system information

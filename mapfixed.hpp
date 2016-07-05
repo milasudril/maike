@@ -73,6 +73,12 @@ namespace Maike
 					bool operator!=(const Iterator& b) const noexcept
 						{return !(b.position==position);}
 
+					Iterator& operator++() noexcept
+						{
+						++position;
+						return *this;
+						}
+
 				private:
 					explicit Iterator(size_t x):position(x){}
 					size_t position;
@@ -135,8 +141,11 @@ namespace Maike
 					:end();
 				}
 
+			static constexpr Iterator begin()
+				{return Iterator{0};}
+
 			static constexpr Iterator end()
-				{return Iterator{static_cast<size_t>(-1)};}
+				{return Iterator{sizeof...(args)};}
 
 			template<Key key>
 			static constexpr size_t find() noexcept
