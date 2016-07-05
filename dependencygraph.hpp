@@ -27,7 +27,6 @@ namespace Maike
 				};
 
 			virtual DependencyGraph& targetsProcess(TargetProcessor&& proc)=0;
-			virtual Target* targetFind(const char* name)=0;
 
 		protected:
 			~DependencyGraph()=default;

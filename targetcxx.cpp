@@ -50,7 +50,10 @@ static std::vector<std::string> depstringCreate(const char* target_dir
 	while(dependency_list_full.first!=dependency_list_full.second)
 		{
 		auto target_rel=dynamic_cast<const TargetCxx*>(dependency_list_full.first->target());
-		if(target_rel!=nullptr)
+		if(target_rel==nullptr)
+			{
+			}
+		else
 			{
 			if(target_rel->typeGet()!=TargetCxx::Type::INCLUDE)
 				{

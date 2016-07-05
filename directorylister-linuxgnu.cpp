@@ -2,11 +2,7 @@
 //@		[
 //@		"and(not(less_than(linux,version('2.4'))),gnu)"
 //@			,{
-//@		 	"targets":[
-//@				{
-//@			 	 "name":"directorylister.o","type":"object"
-//@				,"dependencies":[{"ref":"pthread","rel":"external"}]
-//@				}]
+//@		 	"targets":[{"name":"directorylister.o","type":"object"}]
 //@			}
 //@		]
 //@	]

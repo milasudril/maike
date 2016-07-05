@@ -2,11 +2,7 @@
 //@		[
 //@		"and(not(less_than(linux,version('2.6.33'))),gnu)"
 //@			,{
-//@		 	"targets":
-//@				[{
-//@			 	 "name":"fileutils.o","type":"object"
-//@				,"dependencies":[{"ref":"pthread","rel":"external"}]
-//@				}]
+//@		 	"targets":[{"name":"fileutils.o","type":"object"}]
 //@			}
 //@		]
 //@	]
@@ -21,8 +17,6 @@
 
 #include <unistd.h>
 #include <fcntl.h>
-#include <sys/wait.h>
-#include <pthread.h>
 #include <errno.h>
 #include <sys/stat.h>
 #include <sys/types.h>

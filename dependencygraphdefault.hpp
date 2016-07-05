@@ -18,13 +18,12 @@ namespace Maike
 			DependencyGraphDefault& targetRegister(TargetHandle&& target);
 			DependencyGraphDefault& targetsPatch();
 			DependencyGraphDefault& targetsProcess(TargetProcessor&& visitor);
-			Target* targetFind(const char* name);
+			Target* targetFind(const Stringkey& key);
 			size_t targetCounterGet() const noexcept
 				{return m_targets.size();}
 
 		private:
-			typedef Stringkey KeyType;
-			std::map< KeyType,TargetHandle > m_targets;
+			std::map< Stringkey,TargetHandle > m_targets;
 		};
 	}
 

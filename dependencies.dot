@@ -40,7 +40,6 @@ digraph DependencyGraph
 	"./readbuffer.hpp"->"."[color="blue"];
 	"./readbuffer.hpp"->"./datasource.hpp"[color="blue"];
 	"./thread.hpp"->"."[color="blue"];
-	"./fileutils.o"->"pthread"[color="blue"];
 	"./fileutils.o"->"."[color="blue"];
 	"./fileutils.o"->"./fileutils.hpp"[color="blue"];
 	"./fileutils.o"->"./errormessage.hpp"[color="blue"];
@@ -72,7 +71,6 @@ digraph DependencyGraph
 	"./command.hpp"->"./pipe.hpp"[color="blue"];
 	"./command.hpp"->"./pipe.o"[color="red"];
 	"./command.hpp"->"./twins.hpp"[color="blue"];
-	"./directorylister.o"->"pthread"[color="blue"];
 	"./directorylister.o"->"."[color="blue"];
 	"./directorylister.o"->"./directorylister.hpp"[color="blue"];
 	"./directorylister.o"->"./errormessage.hpp"[color="blue"];
