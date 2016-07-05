@@ -21,7 +21,8 @@ namespace Maike
 				{
 				const char* key;
 				const char* description;
-				size_t argcount;
+				unsigned int argcount;
+				unsigned int group;
 				std::vector<std::string> value;
 				};
 

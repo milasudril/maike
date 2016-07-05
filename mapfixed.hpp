@@ -151,6 +151,12 @@ namespace Maike
 			static constexpr size_t find() noexcept
 				{return Find<key>::value;}
 
+			const Value* values() const noexcept
+				{return m_values;}
+
+			Value* values() noexcept
+				{return m_values;}
+
 		private:
 			static constexpr c_array<Key,sizeof...(args)> keys{c_sel_sort(c_array<Key,sizeof...(args)>( Key(args)... ))};
 			Value m_values[sizeof...(args)];
