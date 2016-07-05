@@ -47,8 +47,8 @@ set ( CXX_SRCS
     pipe-posix.cpp
     thread-posix.cpp
     fileutils-linuxgnu.cpp
-    parametersetdefault.cpp
     systemtargetinfo.cpp
+    parametersetdefault.cpp
 )
 
 set_source_files_properties(
