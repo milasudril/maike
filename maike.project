@@ -109,6 +109,7 @@
     <File Name="parametersetdefault.cpp"/>
     <File Name="targetplaceholder.hpp"/>
     <File Name="handle.hpp"/>
+    <File Name="README.md"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>
