@@ -23,7 +23,7 @@ namespace Maike
 				const char* description;
 				unsigned int argcount;
 				unsigned int group;
-				std::vector<std::string> value;
+				std::vector<std::string> values;
 				};
 
 			typedef MapFixed<Stringkey::HashValue,Option
