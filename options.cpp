@@ -99,9 +99,7 @@ static void optionLoad(Options::OptionMap& options
 						{
 						auto i=options.find(Stringkey(buffer.c_str()));
 						if(i==options.end())
-							{
-							exceptionRaise(ErrorMessage("Command line error: Unknown option #0;.",{buffer.c_str()}));
-							}
+							{exceptionRaise(ErrorMessage("Command line error: Unknown option #0;.",{buffer.c_str()}));}
 						option_current=&options[i];
 						if(option_current->argcount==0)
 							{exceptionRaise(ErrorMessage("Command line error: Option #0; does not take any arguments.",{buffer.c_str()}));}
@@ -116,10 +114,10 @@ static void optionLoad(Options::OptionMap& options
 						{
 						auto i=options.find(Stringkey(buffer.c_str()));
 						if(i==options.end())
-							{
-							exceptionRaise(ErrorMessage("Command line error: Unknown option #0;.",{buffer.c_str()}));
-							}
+							{exceptionRaise(ErrorMessage("Command line error: Unknown option #0;.",{buffer.c_str()}));}
 						option_current=&options[i];
+						if(option_current->argcount>1)
+							{exceptionRaise(ErrorMessage("Command line error: Option #0; requires at least 1 value.",{buffer.c_str()}));}
 						val_current=&strings[static_cast<size_t>(i)];
 						option_current->values=val_current;
 						return;
@@ -153,14 +151,15 @@ static void optionLoad(Options::OptionMap& options
 				state=State::VALUE;
 				break;
 			}
-		++ch_in;
+		++arg;
 		}
 	}
 
 Options::Options(Twins<const char* const*> args)
 	{
 	optionsFill(m_options);
-
+	if(args.first!=args.second)
+		{++args.first;}
 	while(args.first!=args.second)
 		{
 		optionLoad(m_options,m_data,*args.first);
