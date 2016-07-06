@@ -149,6 +149,8 @@ static void optionLoad(Options::OptionMap& options
 							{exceptionRaise(ErrorMessage("Command line error: Option #0; only takes 1 value.",{option_current->key}));}
 						val_current->push_back(buffer);
 						return;
+					default:
+						buffer+=ch_in;
 					}
 				break;
 
