@@ -19,7 +19,7 @@ using namespace Maike;
 FileIn::FileIn(const char* filename):m_name(filename)
 	{
 	static_assert(sizeof(m_handle)>=sizeof(int),"Handle is too small");
-	m_handle=open(filename,O_RDONLY,S_IRUSR|S_IWUSR);
+	m_handle=open(filename,O_RDONLY);
 	if(m_handle==-1)
 		{
 		exceptionRaise(ErrorMessage("It was not possible to open the file #0;. #1;"

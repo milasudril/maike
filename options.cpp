@@ -4,12 +4,13 @@
 #include "errormessage.hpp"
 #include "exceptionhandler.hpp"
 #include "variant.hpp"
+#include "writebuffer.hpp"
 #include <cstring>
 
 using namespace Maike;
 
 #define MAKE_OPTION(option_map,group,key,description,argcount) \
-	option_map.get<Stringkey(key)>()={key,description,argcount,group}
+	option_map.get<Stringkey(key)>()={key,description,nullptr,argcount,group}
 
 static void optionsFill(Options::OptionMap& options)
 	{
@@ -136,10 +137,16 @@ static void optionLoad(Options::OptionMap& options
 						state=State::VALUE_ESCAPE;
 						break;
 					case ',':
+						if(option_current->argcount<2 &&
+							val_current->size()==option_current->argcount)
+							{exceptionRaise(ErrorMessage("Command line error: Option #0; only takes 1 value.",{option_current->key}));}
 						val_current->push_back(buffer);
 						buffer.clear();
 						break;
 					case '\0':
+						if(option_current->argcount<2 &&
+							val_current->size()==option_current->argcount)
+							{exceptionRaise(ErrorMessage("Command line error: Option #0; only takes 1 value.",{option_current->key}));}
 						val_current->push_back(buffer);
 						return;
 					}
@@ -176,8 +183,9 @@ static bool optionCompare(const Options::Option& a,const Options::Option& b)
 	return 0;
 	}
 
-void Options::optionsPrint() const
+void Options::printHelp(DataSink& sink) const
 	{
+	WriteBuffer wb(sink);
 	static constexpr size_t N_values=m_options.size();
 
 	Option options_sorted[N_values];
@@ -189,10 +197,9 @@ void Options::optionsPrint() const
 	auto i_end=options_sorted + N_values;
 	while(i!=i_end)
 		{
-		printf("--%s%s\n    %s\n\n",i->key
-			,i->argcount>0?
-				((i->argcount>1)?"=string,...":"[=string]"):""
-			,i->description);
+		wb.write("--").write(i->key)
+			.write(i->argcount>0?((i->argcount>1)?"=string,...":"[=string]"):"")
+			.write("\n    ").write(i->description).write("\n\n");
 		++i;
 		}
 	}

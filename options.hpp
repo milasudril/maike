@@ -14,6 +14,7 @@
 
 namespace Maike
 	{
+	class DataSink;
 	class Options
 		{
 		public:
@@ -21,9 +22,9 @@ namespace Maike
 				{
 				const char* key;
 				const char* description;
+				const std::vector<std::string>* values;
 				unsigned int argcount;
 				unsigned int group;
-				const std::vector<std::string>* values;
 				};
 
 			typedef MapFixed<Stringkey::HashValue,Option
@@ -42,12 +43,20 @@ namespace Maike
 
 			Options(Twins<const char* const*> args);
 
-			void optionsPrint() const;
+			void printHelp(DataSink&& sink) const
+				{printHelp(std::move(sink));}
+
+			void printHelp(DataSink& sink) const;
+
+			template<Stringkey::HashValue key>
+			const std::vector<std::string>* get() const noexcept
+				{return m_options.get<key>().values;}
 
 		private:
 			OptionMap m_options;
+
 			std::vector<std::string> m_data[OptionMap::size()];
 		};
 	}
 
-#endif // MAIKE_OPTIONS_HPP
+#endif

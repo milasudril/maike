@@ -80,7 +80,6 @@
     <File Name="datasource.hpp"/>
     <File Name="filein.hpp"/>
     <File Name="sysvars.hpp"/>
-    <File Name="filein-linux.cpp"/>
     <File Name="sysvars-linux.cpp"/>
     <File Name="versionnumber.hpp"/>
     <File Name="versionnumber.cpp"/>
@@ -112,6 +111,12 @@
     <File Name="README.md"/>
     <File Name="options.hpp"/>
     <File Name="options.cpp"/>
+    <File Name="maike-main-2.cpp"/>
+    <File Name="writebuffer.hpp"/>
+    <File Name="fileout.hpp"/>
+    <File Name="fileout-posix.cpp"/>
+    <File Name="filein-posix.cpp"/>
+    <File Name="writebuffer.cpp"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>
