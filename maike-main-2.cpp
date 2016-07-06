@@ -12,6 +12,17 @@
 
 using namespace Maike;
 
+static int  helpPrint(const Maike::Options& opts,const std::vector<std::string>& help)
+	{
+	if(help.size()==0)
+		{
+		opts.printHelp(DataSinkStd::standard_output);
+		return 0;
+		}
+	opts.printHelp(FileOut{help.begin()->c_str()});
+	return 0;
+	}
+
 int main(int argc,char** argv)
 	{
 	try
@@ -20,15 +31,7 @@ int main(int argc,char** argv)
 			{
 			auto x=opts.get<Stringkey("help")>();
 			if(x!=nullptr)
-				{
-				if(x->size()==0)
-					{
-					opts.printHelp(DataSinkStd::standard_output);
-					return 0;
-					}
-				opts.printHelp(FileOut{x->begin()->c_str()});
-				return 0;
-				}
+				{return helpPrint(opts,*x);}
 			}
 
 		}
