@@ -306,6 +306,11 @@ digraph DependencyGraph
 	"./expressionevaluatordefault.hpp"->"./expressionevaluator.hpp"[color="blue"];
 	"./options.o"->"."[color="blue"];
 	"./options.o"->"./options.hpp"[color="blue"];
+	"./options.o"->"./errormessage.hpp"[color="blue"];
+	"./options.o"->"./errormessage.o"[color="red"];
+	"./options.o"->"./exceptionhandler.hpp"[color="blue"];
+	"./options.o"->"./exceptionhandler.o"[color="red"];
+	"./options.o"->"./variant.hpp"[color="blue"];
 	"./targetdirectoryloader.o"->"."[color="blue"];
 	"./targetdirectoryloader.o"->"./targetdirectoryloader.hpp"[color="blue"];
 	"./targetdirectoryloader.o"->"./directorylister.hpp"[color="blue"];

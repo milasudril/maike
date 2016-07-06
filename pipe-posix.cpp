@@ -253,6 +253,11 @@ void Pipe::Reader::close() noexcept
 	{
 	if(m_handle!=-1)
 		{
+			{
+		//	Drain the pipe to avoid SIGPIPE in child process
+			char buffer[4096];
+			while(read(buffer,4096)==4096);
+			}
 		::close(static_cast<int>(m_handle));
 		m_handle=-1;
 		}

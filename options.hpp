@@ -23,7 +23,7 @@ namespace Maike
 				const char* description;
 				unsigned int argcount;
 				unsigned int group;
-				std::vector<std::string> values;
+				const std::vector<std::string>* values;
 				};
 
 			typedef MapFixed<Stringkey::HashValue,Option
@@ -31,6 +31,7 @@ namespace Maike
 				,Stringkey("version")
 				,Stringkey("configfiles")
 				,Stringkey("no-stdconfig")
+				,Stringkey("no-sysvars")
 				,Stringkey("targets")
 				,Stringkey("list-leaf-targets")
 				,Stringkey("list-external-targets")
@@ -45,6 +46,7 @@ namespace Maike
 
 		private:
 			OptionMap m_options;
+			std::vector<std::string> m_data[OptionMap::size()];
 		};
 	}
 

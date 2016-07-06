@@ -79,6 +79,9 @@ namespace Maike
 						return *this;
 						}
 
+					explicit operator size_t() const noexcept
+						{return position;}
+
 				private:
 					explicit Iterator(size_t x):position(x){}
 					size_t position;
