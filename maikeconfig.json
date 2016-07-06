@@ -46,4 +46,13 @@
 		,"args":["-E","-dM","-x","c++","{nullfile}"]
 		}
 	}
+
+,"pythonoptions":
+	{
+	"command":
+		{
+		"name":"python3"
+		,"args":["--","{script}","{args}"]
+		}
+	}
 }

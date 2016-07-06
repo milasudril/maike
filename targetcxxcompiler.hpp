@@ -20,7 +20,7 @@ namespace Maike
 	class TargetCxxCompiler
 		{
 		public:
-			TargetCxxCompiler(const TargetCxxOptions& options,const ParameterSet& sysvars);
+			explicit TargetCxxCompiler(const TargetCxxOptions& options,const ParameterSet& sysvars);
 
 			TargetCxxCompiler(const TargetCxxOptions& options,ParameterSet&& params)=delete;
 
@@ -36,10 +36,10 @@ namespace Maike
 			void compileApplication(Twins<const FileInfo*> files
 				,const char* dest,const TargetCxxOptions& options_extra) const;
 
-			void compileDll(Twins<const char* const*> files
+			void compileDll(Twins<const FileInfo*> files
 				,const char* dest,const TargetCxxOptions& options_extra) const;
 
-			void compileLibrary(Twins<const char* const*> files
+			void compileLibrary(Twins<const FileInfo*> files
 				,const char* dest,const TargetCxxOptions& options_extra) const;
 
 			const TargetCxxOptions& optionsGet() const noexcept

@@ -117,6 +117,12 @@
     <File Name="fileout-posix.cpp"/>
     <File Name="filein-posix.cpp"/>
     <File Name="writebuffer.cpp"/>
+    <File Name="targetpython.cpp"/>
+    <File Name="targetpython.hpp"/>
+    <File Name="targetpythoninterpreter.cpp"/>
+    <File Name="targetpythoninterpreter.hpp"/>
+    <File Name="targetpythonloader.hpp"/>
+    <File Name="targetpythonloader.cpp"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>

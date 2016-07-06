@@ -16,6 +16,9 @@
 #include "targetcxxloader.hpp"
 #include "targetcxxcompiler.hpp"
 
+#include "targetpythoninterpreter.hpp"
+#include "targetpythonloader.hpp"
+
 #include "errormessage.hpp"
 #include "dependency.hpp"
 #include "resourceobject.hpp"
@@ -113,6 +116,11 @@ int main(int argc,char** args)
 		Maike::TargetCxxLoader cxxloader(cxxcompiler);
 		loaders[Maike::Stringkey(".hpp")]=&cxxloader;
 		loaders[Maike::Stringkey(".cpp")]=&cxxloader;
+
+	//	1.3.3 Python loader and interpreter
+		Maike::TargetPythonInterpreter pythoninterpreter(maikeconfig.objectGet("pythonoptions"));
+		Maike::TargetPythonLoader pythonloader(pythoninterpreter);
+		loaders[Maike::Stringkey(".py")]=&pythonloader;
 
 	//	2. Collect targtes
 		Maike::DependencyGraphDefault targets;

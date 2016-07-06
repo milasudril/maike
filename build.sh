@@ -1,4 +1,4 @@
-g++ -E -dM -x c++ /dev/null
+mkdir -p __targets
 g++ -c -g -fpic -std=c++11 -Wall -Woverflow -Wconversion -Werror -o __targets/./stringformat.o ./stringformat.cpp
 g++ -c -g -fpic -std=c++11 -Wall -Woverflow -Wconversion -Werror -o __targets/./errormessage.o ./errormessage.cpp
 g++ -c -g -fpic -std=c++11 -Wall -Woverflow -Wconversion -Werror -o __targets/./exceptionhandler.o ./exceptionhandler.cpp
