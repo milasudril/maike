@@ -44,9 +44,10 @@ namespace Maike
 			Options(Twins<const char* const*> args);
 
 			void printHelp(DataSink&& sink) const
-				{printHelp(std::move(sink));}
+				{printHelpImpl(sink);}
 
-			void printHelp(DataSink& sink) const;
+			void printHelp(DataSink& sink) const
+				{printHelpImpl(sink);}
 
 			template<Stringkey::HashValue key>
 			const std::vector<std::string>* get() const noexcept
@@ -54,6 +55,7 @@ namespace Maike
 
 		private:
 			OptionMap m_options;
+			void printHelpImpl(DataSink& sink) const;
 
 			std::vector<std::string> m_data[OptionMap::size()];
 		};

@@ -185,7 +185,7 @@ static bool optionCompare(const Options::Option& a,const Options::Option& b)
 	return 0;
 	}
 
-void Options::printHelp(DataSink& sink) const
+void Options::printHelpImpl(DataSink& sink) const
 	{
 	WriteBuffer wb(sink);
 	static constexpr size_t N_values=m_options.size();
