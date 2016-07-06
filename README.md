@@ -6,7 +6,7 @@ Maike uses embedded JSON data to control the compilation process. The best guide
 
 ## Compiling Maike
 
-Before compiling maike, make sure that appropriate `libjansson` development files are available on the system. If Maike is not available, use the makefile. The file `maike.mk` contains some variables that may need to be modified. If Maike is available, just run your installed version of Maike from the source directory.
+Before compiling maike, make sure that appropriate `libjansson` development files are available on the system. If Maike is not available, run the script `build.sh`. If Maike is available, just run your installed version of Maike from the source directory.
 
 
 ## TODO:s
