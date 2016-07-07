@@ -56,7 +56,17 @@ bool FileUtils::newer(const char* file_a,const char* file_b)
 	if(res_b==-1)
 		{return 1;}
 
-	return stat_a.st_mtime > stat_b.st_mtime;
+#if 0
+	if(stat_a.st_mtime > stat_b.st_mtime)
+		{
+		fprintf(stderr,"%s %d   %s %d\n",file_a
+			,S_ISDIR(stat_a.st_mode)
+			,file_b
+			,S_ISDIR(stat_b.st_mode));
+		}
+#endif
+
+	return (stat_a.st_mtime > stat_b.st_mtime) && !S_ISDIR(stat_a.st_mode);
 	}
 
 void FileUtils::mkdir(const char* name)
@@ -72,7 +82,12 @@ void FileUtils::mkdir(const char* name)
 bool FileUtils::exists(const char* file)
 	{
 	if(access(file,F_OK)==-1)
-		{return 0;}
+		{
+#if 0
+		fprintf(stderr,"%s does not exist\n",file);
+#endif
+		return 0;
+		}
 	return 1;
 	}
 

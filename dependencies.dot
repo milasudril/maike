@@ -60,6 +60,14 @@ digraph DependencyGraph
 	"./fileutils.o"->"./exceptionhandler.o"[color="red"];
 	"./fileutils.o"->"./strerror.hpp"[color="blue"];
 	"./fileutils.o"->"./strerror.o"[color="red"];
+	"./target_factorydefault.hpp"->"."[color="blue"];
+	"./target_factorydefault.hpp"->"./target_factory.hpp"[color="blue"];
+	"./target_factorydefault.hpp"->"./targetcxxcompiler.hpp"[color="blue"];
+	"./target_factorydefault.hpp"->"./targetcxxcompiler.o"[color="red"];
+	"./target_factorydefault.hpp"->"./targetcxxoptions.hpp"[color="blue"];
+	"./target_factorydefault.hpp"->"./targetcxxoptions.o"[color="red"];
+	"./target_factorydefault.hpp"->"./targetpythoninterpreter.hpp"[color="blue"];
+	"./target_factorydefault.hpp"->"./targetpythoninterpreter.o"[color="red"];
 	"./stringformat.o"->"."[color="blue"];
 	"./stringformat.o"->"./stringformat.hpp"[color="blue"];
 	"./stringformat.o"->"./variant.hpp"[color="blue"];
@@ -77,6 +85,10 @@ digraph DependencyGraph
 	"./parametersetmapfixed.hpp"->"./parameterset.hpp"[color="blue"];
 	"./parametersetmapfixed.hpp"->"./stringkey.hpp"[color="blue"];
 	"./parametersetmapfixed.hpp"->"./mapfixed.hpp"[color="blue"];
+	"./target_factorydefault.o"->"."[color="blue"];
+	"./target_factorydefault.o"->"./target_factorydefault.hpp"[color="blue"];
+	"./target_factorydefault.o"->"./resourceobject.hpp"[color="blue"];
+	"./target_factorydefault.o"->"./resourceobject.o"[color="red"];
 	"./parametersetdefault.o"->"."[color="blue"];
 	"./parametersetdefault.o"->"./parametersetdefault.hpp"[color="blue"];
 	"./parametersetdefault.o"->"./stringkey.hpp"[color="blue"];
@@ -118,6 +130,8 @@ digraph DependencyGraph
 	"./resourceobject.o"->"./variant.hpp"[color="blue"];
 	"./resourceobject.o"->"./exceptionhandler.hpp"[color="blue"];
 	"./resourceobject.o"->"./exceptionhandler.o"[color="red"];
+	"./target_factory.hpp"->"."[color="blue"];
+	"./target_factory.hpp"->"./handle.hpp"[color="blue"];
 	"./thread.o"->"pthread"[color="blue"];
 	"./thread.o"->"."[color="blue"];
 	"./thread.o"->"./thread.hpp"[color="blue"];
