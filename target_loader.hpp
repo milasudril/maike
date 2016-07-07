@@ -1,9 +1,9 @@
 //@	{
-//@	"targets":[{"name":"targetloader.hpp","type":"include"}]
+//@	"targets":[{"name":"target_loader.hpp","type":"include"}]
 //@	}
 
-#ifndef MAIKE_TARGETLOADER_HPP
-#define MAIKE_TARGETLOADER_HPP
+#ifndef MAIKE_TARGET_LOADER_HPP
+#define MAIKE_TARGET_LOADER_HPP
 
 namespace Maike
 	{
@@ -12,7 +12,7 @@ namespace Maike
 	class ExpressionEvaluator;
 	class Target_FactoryDelegator;
 
-	class TargetLoader
+	class Target_Loader
 		{
 		public:
 			virtual void targetsLoad(const char* name_src,const char* in_dir
@@ -24,7 +24,7 @@ namespace Maike
 				,Target_FactoryDelegator& factory) const=0;
 
 		protected:
-			~TargetLoader()=default;
+			~Target_Loader()=default;
 		};
 	}
 

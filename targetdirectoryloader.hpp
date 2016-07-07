@@ -6,14 +6,14 @@
 #ifndef MAIKE_TARGETDIRECTORYLOADER_HPP
 #define MAIKE_TARGETDIRECTORYLOADER_HPP
 
-#include "targetloader.hpp"
+#include "target_loader.hpp"
 #include "stringkey.hpp"
 #include <set>
 
 namespace Maike
 	{
 	class ResourceObject;
-	class TargetDirectoryLoader:public TargetLoader
+	class TargetDirectoryLoader:public Target_Loader
 		{
 		public:
 			TargetDirectoryLoader(const ResourceObject& directoryloader);

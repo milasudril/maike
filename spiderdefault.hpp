@@ -17,23 +17,23 @@
 namespace Maike
 	{
 	class DependencyGraph;
-	class TargetLoader;
+	class Target_Loader;
 	class ExpressionEvaluator;
 
 	class SpiderDefault:public Spider
 		{
 		public:
-			SpiderDefault(std::map<Stringkey,const TargetLoader*>&&
+			SpiderDefault(std::map<Stringkey,const Target_Loader*>&&
 				,ExpressionEvaluator&&,DependencyGraph&)=delete;
 
-			SpiderDefault(std::map<Stringkey,const TargetLoader*>&&
+			SpiderDefault(std::map<Stringkey,const Target_Loader*>&&
 				,const ExpressionEvaluator&,DependencyGraph&)=delete;
 
-			SpiderDefault(const std::map<Stringkey,const TargetLoader*>&
+			SpiderDefault(const std::map<Stringkey,const Target_Loader*>&
 				,ExpressionEvaluator&&,DependencyGraph&)=delete;
 
 			explicit
-			SpiderDefault(const std::map<Stringkey,const TargetLoader*>& loaders
+			SpiderDefault(const std::map<Stringkey,const Target_Loader*>& loaders
 				,const ExpressionEvaluator& evaluator
 				,DependencyGraph& targets);
 
@@ -41,7 +41,7 @@ namespace Maike
 			SpiderDefault& run();
 
 		private:
-			const std::map<Stringkey,const TargetLoader*>& r_loaders;
+			const std::map<Stringkey,const Target_Loader*>& r_loaders;
 			const ExpressionEvaluator& r_evaluator;
 			DependencyGraph& r_targets;
 

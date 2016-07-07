@@ -6,13 +6,13 @@
 #ifndef MAIKE_TARGETCXXLOADER_HPP
 #define MAIKE_TARGETCXXLOADER_HPP
 
-#include "targetloader.hpp"
+#include "target_loader.hpp"
 
 namespace Maike
 	{
 	class TargetCxxCompiler;
 
-	class TargetCxxLoader:public TargetLoader
+	class TargetCxxLoader:public Target_Loader
 		{
 		public:
 			TargetCxxLoader(TargetCxxCompiler&& compiler)=delete;

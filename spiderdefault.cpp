@@ -5,11 +5,11 @@
 #include "spiderdefault.hpp"
 #include "directorylister.hpp"
 #include "fileinfo.hpp"
-#include "targetloader.hpp"
+#include "target_loader.hpp"
 
 using namespace Maike;
 
-SpiderDefault::SpiderDefault(const std::map<Stringkey,const TargetLoader*>& loaders
+SpiderDefault::SpiderDefault(const std::map<Stringkey,const Target_Loader*>& loaders
 	,const ExpressionEvaluator& evaluator
 	,DependencyGraph& targets):r_loaders(loaders),r_evaluator(evaluator),r_targets(targets)
 	{
@@ -29,8 +29,8 @@ SpiderDefault& SpiderDefault::scanFile(const char* filename,const char* in_dir)
 
 
 
-static const TargetLoader* targetLoaderGet(const Stringkey& key
-	,const std::map<Stringkey,const TargetLoader*>& loaders)
+static const Target_Loader* targetLoaderGet(const Stringkey& key
+	,const std::map<Stringkey,const Target_Loader*>& loaders)
 	{
 	auto i=loaders.find(key);
 	if(i==loaders.end())

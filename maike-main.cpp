@@ -104,7 +104,7 @@ int main(int argc,char** args)
 		Maike::ExpressionEvaluatorDefault evaluator(targetinfo);
 
 	//	1.3	Setup Loaders and compilers
-		std::map<Maike::Stringkey,const Maike::TargetLoader*> loaders;
+		std::map<Maike::Stringkey,const Maike::Target_Loader*> loaders;
 
 	//	1.3.1 Directory loader (responsible for scanning directories)
 		Maike::TargetDirectoryLoader dirloader(maikeconfig.objectGet("directoryloader"));

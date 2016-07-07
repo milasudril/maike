@@ -6,12 +6,12 @@
 #ifndef TARGETPYTHONLOADER_HPP
 #define TARGETPYTHONLOADER_HPP
 
-#include "targetloader.hpp"
+#include "target_loader.hpp"
 
 namespace Maike
 	{
 	class TargetPythonInterpreter;
-	class TargetPythonLoader:public TargetLoader
+	class TargetPythonLoader:public Target_Loader
 		{
 		public:
 			explicit TargetPythonLoader(const TargetPythonInterpreter& intpret);

@@ -118,6 +118,7 @@ digraph DependencyGraph
 	"./fileout.o"->"./variant.hpp"[color="blue"];
 	"./fileout.o"->"./strerror.hpp"[color="blue"];
 	"./fileout.o"->"./strerror.o"[color="red"];
+	"./target_loader.hpp"->"."[color="blue"];
 	"./writebuffer.o"->"."[color="blue"];
 	"./writebuffer.o"->"./writebuffer.hpp"[color="blue"];
 	"./targetpythonfactory.hpp"->"."[color="blue"];
@@ -165,7 +166,7 @@ digraph DependencyGraph
 	"./maike.hpp"->"."[color="blue"];
 	"./stringkey.hpp"->"."[color="blue"];
 	"./targetdirectoryloader.hpp"->"."[color="blue"];
-	"./targetdirectoryloader.hpp"->"./targetloader.hpp"[color="blue"];
+	"./targetdirectoryloader.hpp"->"./target_loader.hpp"[color="blue"];
 	"./targetdirectoryloader.hpp"->"./stringkey.hpp"[color="blue"];
 	"./parametersetdefault.hpp"->"."[color="blue"];
 	"./parametersetdefault.hpp"->"./parameterset.hpp"[color="blue"];
@@ -180,7 +181,6 @@ digraph DependencyGraph
 	"./maike2"->"./fileout.o"[color="red"];
 	"./target.hpp"->"."[color="blue"];
 	"./target.hpp"->"./twins.hpp"[color="blue"];
-	"./targetloader.hpp"->"."[color="blue"];
 	"./targetdirectory.o"->"."[color="blue"];
 	"./targetdirectory.o"->"./targetdirectory.hpp"[color="blue"];
 	"./targetdirectory.o"->"./fileutils.hpp"[color="blue"];
@@ -221,7 +221,7 @@ digraph DependencyGraph
 	"./targetcxxcompiler.o"->"./exceptionhandler.o"[color="red"];
 	"./targetcxxcompiler.o"->"./parametersetmapfixed.hpp"[color="blue"];
 	"./targetpythonloader.hpp"->"."[color="blue"];
-	"./targetpythonloader.hpp"->"./targetloader.hpp"[color="blue"];
+	"./targetpythonloader.hpp"->"./target_loader.hpp"[color="blue"];
 	"./parameterset.hpp"->"."[color="blue"];
 	"./parameterset.hpp"->"./twins.hpp"[color="blue"];
 	"./targetbase.o"->"."[color="blue"];
@@ -301,7 +301,7 @@ digraph DependencyGraph
 	"./targetcxx.hpp"->"./targetcxxoptions.hpp"[color="blue"];
 	"./targetcxx.hpp"->"./targetcxxoptions.o"[color="red"];
 	"./targetcxxloader.hpp"->"."[color="blue"];
-	"./targetcxxloader.hpp"->"./targetloader.hpp"[color="blue"];
+	"./targetcxxloader.hpp"->"./target_loader.hpp"[color="blue"];
 	"./stringformat.hpp"->"."[color="blue"];
 	"./stringformat.hpp"->"./variant.hpp"[color="blue"];
 	"./stringformat.hpp"->"./twins.hpp"[color="blue"];
@@ -445,7 +445,7 @@ digraph DependencyGraph
 	"./spiderdefault.o"->"./directorylister.o"[color="red"];
 	"./spiderdefault.o"->"./fileinfo.hpp"[color="blue"];
 	"./spiderdefault.o"->"./fileinfo.o"[color="red"];
-	"./spiderdefault.o"->"./targetloader.hpp"[color="blue"];
+	"./spiderdefault.o"->"./target_loader.hpp"[color="blue"];
 	"./targetdirectory.hpp"->"."[color="blue"];
 	"./targetdirectory.hpp"->"./targetbase.hpp"[color="blue"];
 	"./targetdirectory.hpp"->"./targetbase.o"[color="red"];
