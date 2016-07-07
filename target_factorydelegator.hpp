@@ -26,13 +26,15 @@ namespace Maike
 				};
 
 			virtual void targetsCreate(const ResourceObject& obj,const char* name_src
-				,const char* in_dir,size_t id,Callback&& cb)=0;
+				,const char* in_dir,Callback&& cb)=0;
 
 			virtual void targetsCreate(const ResourceObject& obj,const char* in_dir
-				,size_t id,Callback&& cb)=0;
+				,Callback&& cb)=0;
 
 			virtual Target_FactoryDelegator& factoryRegister(const Stringkey& filename_ext
 				,const Target_Factory& factory)=0;
+
+			virtual size_t idNext() noexcept=0;
 		};
 	}
 

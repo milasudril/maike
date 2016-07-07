@@ -8,6 +8,9 @@
 #include "errormessage.hpp"
 #include "variant.hpp"
 #include "expressionevaluator.hpp"
+#include "target_factorydelegator.hpp"
+#include "dependencygraph.hpp"
+#include "target.hpp"
 
 using namespace Maike;
 
@@ -109,6 +112,46 @@ size_t TagFilter::read(void* buffer,size_t length)
 		}
 	m_state=state;
 	return n_read;
+	}
+
+
+
+namespace
+	{
+	class TargetCreateCallback:public Target_FactoryDelegator::Callback
+		{
+		public:
+			explicit TargetCreateCallback(const char* name_src,const char* in_dir
+				,Spider& spider,DependencyGraph& graph):
+				r_name_src(name_src),r_in_dir(in_dir),r_spider(spider),r_graph(graph)
+				{}
+
+			void operator()(const Target_FactoryDelegator& delegator
+				,Handle<Target>&& target)
+				{
+				r_graph.targetRegister(std::move(target));
+				}
+
+		private:
+			const char* r_name_src;
+			const char* r_in_dir;
+			Spider& r_spider;
+			DependencyGraph& r_graph;
+		};
+	}
+
+
+void TargetPythonLoader::targetsLoad(const char* name_src,const char* in_dir
+	,Spider& spider,DependencyGraph& graph,Target_FactoryDelegator& factory) const
+	{
+	std::string name_full(in_dir);
+	name_full+='/';
+	name_full+=name_src;
+
+	FileIn source(name_src);
+	ResourceObject rc{TagFilter(source)};
+	factory.targetsCreate(rc,name_src,in_dir
+		,TargetCreateCallback(name_src,in_dir,spider,graph));
 	}
 
 

@@ -36,8 +36,7 @@ Handle<Target> Target_FactoryDelegatorDefault::targetCreate(const ResourceObject
 		exceptionRaise(ErrorMessage("#0;: #1; is not associated with any target factory"
 			,{name_src,suffix}));
 		}
-	++m_id_current;
-	return i->second->targetCreate(obj,name_src,in_dir,m_id_current - 1);
+	return i->second->targetCreate(obj,name_src,in_dir,idNext());
 	}
 
 Handle<Target> Target_FactoryDelegatorDefault::targetCreate(const ResourceObject& obj
@@ -58,9 +57,10 @@ static void targetsCreate(const ResourceObject& targets,const char* name_src
 	for(decltype(N) k=0;k<N;++k)
 		{
 		auto target=targets.objectGet(k);
-		auto src=name_src==nullptr?static_cast<const char*>(target.objectGet("source_name")):
-			name_src;
-		cb(delegator,delegator.targetCreate(targets.objectGet(k),src,in_dir));
+		if(target.objectExists("source_name" ) || name_src==nullptr)
+			{cb(delegator,delegator.targetCreate(target,in_dir));}
+		else
+			{cb(delegator,delegator.targetCreate(target,name_src,in_dir));}
 		}
 	}
 

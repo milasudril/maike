@@ -33,6 +33,13 @@ namespace Maike
 			void targetsCreate(const ResourceObject& obj,const char* in_dir
 				,Callback&& cb);
 
+			size_t idNext() noexcept
+				{
+				auto ret=m_id_current;
+				++m_id_current;
+				return ret;
+				}
+
 		private:
 			void targetsCreateImpl(const ResourceObject& obj,const char* name_src
 				,const char* in_dir,Callback& cb);

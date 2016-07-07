@@ -24,6 +24,10 @@ namespace Maike
 
 			TargetCxxCompiler(const TargetCxxOptions& options,ParameterSet&& params)=delete;
 
+			TargetCxxCompiler(TargetCxxOptions&& options,ParameterSet&& params)=delete;
+
+			TargetCxxCompiler(const TargetCxxOptions&& options,const ParameterSet& params)=delete;
+
 			void compileObject(const char* source,const char* dest
 				,const TargetCxxOptions& options_extra) const;
 

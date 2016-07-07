@@ -1,0 +1,19 @@
+digraph "G"
+	{
+	TargetPythonLoader -> Target_FactoryDelegator
+	TargetPythonLoader -> Target_Loader
+	TargetPythonFactory -> TargetPython
+	TargetPythonFactory -> TargetPythonInterpreter
+	TargetPythonFactory -> Target_Factory
+
+
+	TargetCxxLoader -> Target_FactoryDelegator
+	TargetCxxLoader -> Target_Loader
+	TargetCxxLoader -> TargetCxxOptions
+	TargetCxxFactory ->TargetCxx
+	TargetCxxFactory -> TargetCxxCompiler
+	TargetCxxFactory -> Target_Factory
+	TargetCxxCompiler->TargetCxxOptions
+
+	Target_FactoryDelegatorDefault->Target_FactoryDelegator
+	}

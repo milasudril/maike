@@ -11,6 +11,8 @@
 #include "expressionevaluator.hpp"
 #include "exceptionhandler.hpp"
 #include "handle.hpp"
+#include "target_factorydelegator.hpp"
+
 #include <cstdio>
 
 using namespace Maike;
@@ -123,7 +125,7 @@ size_t TagFilter::read(void* buffer,size_t length)
 
 
 static void includesGet(const char* name_src,const char* in_dir
-	,Spider& spider,DependencyGraph& graph,TargetCxx& target)
+	,Spider& spider,DependencyGraph& graph,Target& target)
 	{
 	std::string name_full(in_dir);
 	name_full+='/';
@@ -212,6 +214,47 @@ static void targetsLoad(const ResourceObject& targets
 
 TargetCxxLoader::TargetCxxLoader(const TargetCxxCompiler& compiler):r_compiler(compiler)
 	{}
+
+
+
+namespace
+	{
+	class TargetCreateCallback:public Target_FactoryDelegator::Callback
+		{
+		public:
+			explicit TargetCreateCallback(const char* name_src,const char* in_dir
+				,Spider& spider,DependencyGraph& graph):
+				r_name_src(name_src),r_in_dir(in_dir),r_spider(spider),r_graph(graph)
+				{}
+
+			void operator()(const Target_FactoryDelegator& delegator
+				,Handle<Target>&& target)
+				{
+				includesGet(r_name_src,r_in_dir,r_spider,r_graph,*target.get());
+				r_graph.targetRegister(std::move(target));
+				}
+
+		private:
+			const char* r_name_src;
+			const char* r_in_dir;
+			Spider& r_spider;
+			DependencyGraph& r_graph;
+		};
+	}
+
+void TargetCxxLoader::targetsLoad(const char* name_src,const char* in_dir
+	,Spider& spider,DependencyGraph& graph,Target_FactoryDelegator& factory) const
+	{
+	std::string name_full(in_dir);
+	name_full+='/';
+	name_full+=name_src;
+
+	FileIn source(name_src);
+	ResourceObject rc{TagFilter(source)};
+
+	factory.targetsCreate(rc,name_src,in_dir
+		,TargetCreateCallback(name_src,in_dir,spider,graph));
+	}
 
 void TargetCxxLoader::targetsLoad(const char* name_src,const char* in_dir
 	,Spider& spider,DependencyGraph& graph,const ExpressionEvaluator& evaluator) const
