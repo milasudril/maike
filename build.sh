@@ -1,4 +1,5 @@
 mkdir -p __targets
+g++ -E -dM -x c++ /dev/null
 g++ -c -g -fpic -std=c++11 -Wall -Woverflow -Wconversion -Werror -o __targets/./stringformat.o ./stringformat.cpp
 g++ -c -g -fpic -std=c++11 -Wall -Woverflow -Wconversion -Werror -o __targets/./errormessage.o ./errormessage.cpp
 g++ -c -g -fpic -std=c++11 -Wall -Woverflow -Wconversion -Werror -o __targets/./exceptionhandler.o ./exceptionhandler.cpp
@@ -29,8 +30,16 @@ g++ -c -g -fpic -std=c++11 -Wall -Woverflow -Wconversion -Werror -o __targets/./
 g++ -c -g -fpic -std=c++11 -Wall -Woverflow -Wconversion -Werror -o __targets/./targetcxxcompiler.o ./targetcxxcompiler.cpp
 g++ -c -g -fpic -std=c++11 -Wall -Woverflow -Wconversion -Werror -o __targets/./targetcxx.o ./targetcxx.cpp
 g++ -c -g -fpic -std=c++11 -Wall -Woverflow -Wconversion -Werror -o __targets/./targetcxxloader.o ./targetcxxloader.cpp
+g++ -c -g -fpic -std=c++11 -Wall -Woverflow -Wconversion -Werror -o __targets/./targetcxxfactory.o ./targetcxxfactory.cpp
+g++ -c -g -fpic -std=c++11 -Wall -Woverflow -Wconversion -Werror -o __targets/./targetpythoninterpreter.o ./targetpythoninterpreter.cpp
+g++ -c -g -fpic -std=c++11 -Wall -Woverflow -Wconversion -Werror -o __targets/./targetpythonloader.o ./targetpythonloader.cpp
+g++ -c -g -fpic -std=c++11 -Wall -Woverflow -Wconversion -Werror -o __targets/./targetpython.o ./targetpython.cpp
+g++ -c -g -fpic -std=c++11 -Wall -Woverflow -Wconversion -Werror -o __targets/./targetpythonfactory.o ./targetpythonfactory.cpp
+g++ -c -g -fpic -std=c++11 -Wall -Woverflow -Wconversion -Werror -o __targets/./target_factorydelegatordefault.o ./target_factorydelegatordefault.cpp
 g++ -c -g -fpic -std=c++11 -Wall -Woverflow -Wconversion -Werror -o __targets/./versionnumber.o ./versionnumber.cpp
 g++ -c -g -fpic -std=c++11 -Wall -Woverflow -Wconversion -Werror -o __targets/./sysvars.o ./sysvars-linux.cpp
 g++ -c -g -fpic -std=c++11 -Wall -Woverflow -Wconversion -Werror -o __targets/./systemtargetinfo.o ./systemtargetinfo.cpp
 g++ -c -g -fpic -std=c++11 -Wall -Woverflow -Wconversion -Werror -o __targets/./expressionevaluatordefault.o ./expressionevaluatordefault.cpp
-g++ -g -fpic -std=c++11 -Wall -Woverflow -Wconversion -Werror -o __targets/./maike ./maike-main.cpp __targets/./options.o __targets/./writebuffer.o __targets/./expressionevaluatordefault.o __targets/./systemtargetinfo.o __targets/./sysvars.o __targets/./versionnumber.o __targets/./targetcxxloader.o __targets/./targetcxx.o __targets/./targetcxxcompiler.o __targets/./thread.o -lpthread __targets/./targetcxxpptokenizer.o __targets/./filein.o __targets/./targetcxxoptions.o __targets/./parametersetdefault.o __targets/./command.o __targets/./pipe.o __targets/./targetdirectoryloader.o __targets/./targetdirectory.o __targets/./fileutils.o __targets/./maike.o __targets/./spiderdefault.o __targets/./fileinfo.o __targets/./directorylister.o __targets/./strerror.o __targets/./dependencygraphdefault.o __targets/./targetbase.o __targets/./dependency.o __targets/./resourceobject.o __targets/./exceptionhandler.o __targets/./errormessage.o __targets/./stringformat.o -ljansson
+g++ -g -fpic -std=c++11 -Wall -Woverflow -Wconversion -Werror -o __targets/./maike ./maike-main.cpp __targets/./options.o __targets/./writebuffer.o __targets/./expressionevaluatordefault.o __targets/./systemtargetinfo.o __targets/./sysvars.o __targets/./versionnumber.o __targets/./target_factorydelegatordefault.o __targets/./targetpythonfactory.o __targets/./targetpython.o __targets/./targetpythonloader.o __targets/./targetpythoninterpreter.o __targets/./targetcxxfactory.o __targets/./targetcxxloader.o __targets/./targetcxx.o __targets/./targetcxxcompiler.o __targets/./thread.o -lpthread __targets/./targetcxxpptokenizer.o __targets/./filein.o __targets/./targetcxxoptions.o __targets/./parametersetdefault.o __targets/./command.o __targets/./pipe.o __targets/./targetdirectoryloader.o __targets/./targetdirectory.o __targets/./fileutils.o __targets/./maike.o __targets/./spiderdefault.o __targets/./fileinfo.o __targets/./directorylister.o __targets/./strerror.o __targets/./dependencygraphdefault.o __targets/./targetbase.o __targets/./dependency.o __targets/./resourceobject.o __targets/./exceptionhandler.o __targets/./errormessage.o __targets/./stringformat.o -ljansson
+python3 -- ./maikeinfo.py __targets
+g++ -c -g -fpic -std=c++11 -Wall -Woverflow -Wconversion -Werror -o __targets/./maikeinfo.o __targets/maikeinfo.cpp

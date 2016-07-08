@@ -8,6 +8,7 @@
 #include "options.hpp"
 #include "datasinkstd.hpp"
 #include "fileout.hpp"
+#include "maike.hpp"
 #include <cstdio>
 
 using namespace Maike;
@@ -23,6 +24,17 @@ static int  helpPrint(const Maike::Options& opts,const std::vector<std::string>&
 	return 0;
 	}
 
+static int versionPrint(const std::vector<std::string>& version)
+	{
+	if(version.size()==0)
+		{
+		versionPrint(DataSinkStd::standard_output);
+		return 0;
+		}
+	versionPrint(FileOut{version.begin()->c_str()});
+	return 0;
+	}
+
 int main(int argc,char** argv)
 	{
 	try
@@ -32,6 +44,12 @@ int main(int argc,char** argv)
 			auto x=opts.get<Stringkey("help")>();
 			if(x!=nullptr)
 				{return helpPrint(opts,*x);}
+			}
+
+			{
+			auto x=opts.get<Stringkey("version")>();
+			if(x!=nullptr)
+				{return versionPrint(*x);}
 			}
 
 		}

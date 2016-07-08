@@ -108,6 +108,8 @@ digraph DependencyGraph
 	"./target_factorydelegatordefault.o"->"./target_factory.hpp"[color="blue"];
 	"./target_factorydelegatordefault.o"->"./target.hpp"[color="blue"];
 	"./target_factorydelegatordefault.o"->"./expressionevaluator.hpp"[color="blue"];
+	"./target_factorydelegatordefault.o"->"./dependency.hpp"[color="blue"];
+	"./target_factorydelegatordefault.o"->"./dependency.o"[color="red"];
 	"./dependencygraph.hpp"->"."[color="blue"];
 	"./fileout.o"->"."[color="blue"];
 	"./fileout.o"->"./fileout.hpp"[color="blue"];
@@ -179,6 +181,8 @@ digraph DependencyGraph
 	"./maike2"->"./datasinkstd.o"[color="red"];
 	"./maike2"->"./fileout.hpp"[color="blue"];
 	"./maike2"->"./fileout.o"[color="red"];
+	"./maike2"->"./maike.hpp"[color="blue"];
+	"./maike2"->"./maike.o"[color="red"];
 	"./target.hpp"->"."[color="blue"];
 	"./target.hpp"->"./twins.hpp"[color="blue"];
 	"./targetdirectory.o"->"."[color="blue"];
@@ -251,10 +255,16 @@ digraph DependencyGraph
 	"./maike"->"./targetcxxloader.o"[color="red"];
 	"./maike"->"./targetcxxcompiler.hpp"[color="blue"];
 	"./maike"->"./targetcxxcompiler.o"[color="red"];
+	"./maike"->"./targetcxxfactory.hpp"[color="blue"];
+	"./maike"->"./targetcxxfactory.o"[color="red"];
 	"./maike"->"./targetpythoninterpreter.hpp"[color="blue"];
 	"./maike"->"./targetpythoninterpreter.o"[color="red"];
 	"./maike"->"./targetpythonloader.hpp"[color="blue"];
 	"./maike"->"./targetpythonloader.o"[color="red"];
+	"./maike"->"./targetpythonfactory.hpp"[color="blue"];
+	"./maike"->"./targetpythonfactory.o"[color="red"];
+	"./maike"->"./target_factorydelegatordefault.hpp"[color="blue"];
+	"./maike"->"./target_factorydelegatordefault.o"[color="red"];
 	"./maike"->"./errormessage.hpp"[color="blue"];
 	"./maike"->"./errormessage.o"[color="red"];
 	"./maike"->"./dependency.hpp"[color="blue"];
@@ -272,6 +282,7 @@ digraph DependencyGraph
 	"./maike"->"./variant.hpp"[color="blue"];
 	"./maike"->"./strerror.hpp"[color="blue"];
 	"./maike"->"./strerror.o"[color="red"];
+	"./maikeinfo.cpp"->"."[color="blue"];
 	"./fileinfo.hpp"->"."[color="blue"];
 	"./target_factorydelegatordefault.hpp"->"."[color="blue"];
 	"./target_factorydelegatordefault.hpp"->"./target_factorydelegator.hpp"[color="blue"];
@@ -320,6 +331,10 @@ digraph DependencyGraph
 	"./maike.o"->"./exceptionhandler.hpp"[color="blue"];
 	"./maike.o"->"./exceptionhandler.o"[color="red"];
 	"./maike.o"->"./stringkey.hpp"[color="blue"];
+	"./maike.o"->"./writebuffer.hpp"[color="blue"];
+	"./maike.o"->"./writebuffer.o"[color="red"];
+	"./maike.o"->"./maikeinfo.hpp"[color="blue"];
+	"./maike.o"->"./maikeinfo.o"[color="red"];
 	"./targetplaceholder.hpp"->"."[color="blue"];
 	"./targetplaceholder.hpp"->"./targetbase.hpp"[color="blue"];
 	"./targetplaceholder.hpp"->"./targetbase.o"[color="red"];
@@ -370,6 +385,9 @@ digraph DependencyGraph
 	"./sysvars.o"->"./mapreplace.hpp"[color="blue"];
 	"./targetcxxcompiler.hpp"->"."[color="blue"];
 	"./targetcxxcompiler.hpp"->"./twins.hpp"[color="blue"];
+	"./maikeinfo.o"->"./maikeinfo.hpp"[color="blue"];
+	"./maikeinfo.o"->"."[color="blue"];
+	"./maikeinfo.o"->"./maikeinfo.cpp"[color="blue"];
 	"./strerror.o"->"."[color="blue"];
 	"./strerror.o"->"./strerror.hpp"[color="blue"];
 	"./targetbase.hpp"->"."[color="blue"];
@@ -391,6 +409,7 @@ digraph DependencyGraph
 	"./targetpython.hpp"->"."[color="blue"];
 	"./targetpython.hpp"->"./targetbase.hpp"[color="blue"];
 	"./targetpython.hpp"->"./targetbase.o"[color="red"];
+	"./maikeinfo.hpp"->"."[color="blue"];
 	"./targetpython.o"->"."[color="blue"];
 	"./targetpython.o"->"./targetpython.hpp"[color="blue"];
 	"./targetpython.o"->"./resourceobject.hpp"[color="blue"];
