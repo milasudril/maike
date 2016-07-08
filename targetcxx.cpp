@@ -54,25 +54,31 @@ static std::vector<TargetCxxCompiler::FileInfo> depstringCreate(
 	std::vector<TargetCxxCompiler::FileInfo> ret;
 	while(dependency_list_full.first!=dependency_list_full.second)
 		{
-		auto target_rel=dynamic_cast<const TargetCxx*>(dependency_list_full.first->target());
-		if(target_rel==nullptr)
+		switch(dependency_list_full.first->relationGet())
 			{
-			if(dependency_list_full.first->relationGet()==Dependency::Relation::EXTERNAL)
+			case Dependency::Relation::EXTERNAL:
 				{
 				auto t=dependency_list_full.first->target();
 				ret.push_back({t->nameGet(),TargetCxxCompiler::FileUsage::LIB_EXTERNAL});
 				}
-			}
-		else
-			{
-			if(target_rel->typeGet()!=TargetCxx::Type::INCLUDE)
+				break;
+
+			case Dependency::Relation::IMPLEMENTATION:
 				{
-				std::string name_full(target_dir);
-				name_full+='/';
-				name_full+=target_rel->nameGet();
-				strings_temp.push_back(std::move(name_full));
-				ret.push_back({strings_temp.back().c_str(),TargetCxxCompiler::FileUsage::NORMAL});
+				auto target_rel=dynamic_cast<const TargetCxx*>(dependency_list_full.first->target());
+				if(target_rel && target_rel->typeGet()!=TargetCxx::Type::INCLUDE)
+					{
+					std::string name_full(target_dir);
+					name_full+='/';
+					name_full+=target_rel->nameGet();
+					strings_temp.push_back(std::move(name_full));
+					ret.push_back({strings_temp.back().c_str(),TargetCxxCompiler::FileUsage::NORMAL});
+					}
 				}
+				break;
+
+			default:
+				break;
 			}
 		++dependency_list_full.first;
 		}

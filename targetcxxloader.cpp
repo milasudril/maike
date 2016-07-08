@@ -197,26 +197,6 @@ static void includesGet(const char* name_src,const char* in_dir
 		}
 	}
 
-static void targetsLoad(const ResourceObject& targets
-	,const TargetCxxCompiler& compiler,const char* name_src
-	,const char* in_dir,Spider& spider,DependencyGraph& graph)
-	{
-	auto N=targets.objectCountGet();
-	for(decltype(N) k=0;k<N;++k)
-		{
-		Handle<TargetCxx> target(TargetCxx::create(targets.objectGet(k),compiler,name_src
-				,in_dir,graph.targetCounterGet()));
-		includesGet(name_src,in_dir,spider,graph,*target);
-		graph.targetRegister(target);
-		}
-	}
-
-
-TargetCxxLoader::TargetCxxLoader(const TargetCxxCompiler& compiler):r_compiler(compiler)
-	{}
-
-
-
 namespace
 	{
 	class TargetCreateCallback:public Target_FactoryDelegator::Callback
@@ -254,46 +234,4 @@ void TargetCxxLoader::targetsLoad(const char* name_src,const char* in_dir
 
 	factory.targetsCreate(rc,name_src,in_dir
 		,TargetCreateCallback(name_src,in_dir,spider,graph));
-	}
-
-void TargetCxxLoader::targetsLoad(const char* name_src,const char* in_dir
-	,Spider& spider,DependencyGraph& graph,const ExpressionEvaluator& evaluator) const
-	{
-	std::string name_full(in_dir);
-	name_full+='/';
-	name_full+=name_src;
-
-	FileIn source(name_src);
-	ResourceObject rc{TagFilter(source)};
-
-	if(rc.objectExists("targets"))
-		{::targetsLoad(rc.objectGet("targets"),r_compiler,name_src,in_dir,spider,graph);}
-	else
-		{
-		auto N_cases=rc.objectCountGet();
-		for(decltype(N_cases) k=0;k<N_cases;++k)
-			{
-			auto case_obj=rc.objectGet(k);
-			if(case_obj.typeGet()==ResourceObject::Type::ARRAY)
-				{
-				if(case_obj.objectCountGet()!=2)
-					{exceptionRaise(ErrorMessage("A condition must have only a condition and a target definition.",{}));}
-
-				auto expression=static_cast<const char*>( case_obj.objectGet(static_cast<size_t>(0)) );
-				if(static_cast<int64_t>( evaluator.evaluate(expression) ))
-					{
-					::targetsLoad(case_obj.objectGet(1).objectGet("targets")
-						,r_compiler,name_src,in_dir,spider,graph);
-					break;
-					}
-				}
-			else
-			if(case_obj.objectExists("targets"))
-				{
-				::targetsLoad(case_obj.objectGet("targets"),r_compiler,name_src
-					,in_dir,spider,graph);
-				break;
-				}
-			}
-		}
 	}

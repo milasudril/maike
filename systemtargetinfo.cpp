@@ -13,7 +13,11 @@ using namespace Maike;
 SystemTargetInfo::SystemTargetInfo(const ResourceObject& config)
 	{
 	sysvarsLoad(m_sysvars);
-
+		{
+		Stringkey key("target_directory");
+		auto i=replace(m_strings,{key,std::string("__targets")});
+		replace(m_sysvars,{key,i->second.c_str()});
+		}
 	auto i=config.objectIteratorGet();
 	while(!i.endAt())
 		{

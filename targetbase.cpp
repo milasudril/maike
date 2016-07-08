@@ -4,6 +4,7 @@
 
 #include "targetbase.hpp"
 #include "resourceobject.hpp"
+#include <cstring>
 
 using namespace Maike;
 

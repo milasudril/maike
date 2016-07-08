@@ -10,8 +10,8 @@
 using namespace Maike;
 
 SpiderDefault::SpiderDefault(const std::map<Stringkey,const Target_Loader*>& loaders
-	,const ExpressionEvaluator& evaluator
-	,DependencyGraph& targets):r_loaders(loaders),r_evaluator(evaluator),r_targets(targets)
+	,Target_FactoryDelegator& target_creator,DependencyGraph& targets):
+	r_loaders(loaders),r_target_creator(target_creator),r_targets(targets)
 	{
 	}
 
@@ -69,7 +69,7 @@ SpiderDefault& SpiderDefault::run()
 		if(loader!=nullptr)
 			{
 			auto in_dir=p.second.c_str();
-			loader->targetsLoad(filename,in_dir,*this,r_targets,r_evaluator);
+			loader->targetsLoad(filename,in_dir,*this,r_targets,r_target_creator);
 			}
 		}
 

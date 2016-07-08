@@ -41,7 +41,7 @@ bool FileUtils::newer(const char* file_a,const char* file_b)
 
 	if(res_a==-1 && res_b==-1)
 		{
-		exceptionRaise(ErrorMessage("None of the files #0;, and #1; are accessible. #0;: #2;. #1;: #3;."
+		exceptionRaise(ErrorMessage("Error: None of the files #0;, and #1; are accessible.\n#0;: #2;.\n#1;: #3;."
 			,{
 			 file_a
 			,file_b
@@ -55,16 +55,6 @@ bool FileUtils::newer(const char* file_a,const char* file_b)
 
 	if(res_b==-1)
 		{return 1;}
-
-#if 0
-	if(stat_a.st_mtime > stat_b.st_mtime)
-		{
-		fprintf(stderr,"%s %d   %s %d\n",file_a
-			,S_ISDIR(stat_a.st_mode)
-			,file_b
-			,S_ISDIR(stat_b.st_mode));
-		}
-#endif
 
 	return (stat_a.st_mtime > stat_b.st_mtime) && !S_ISDIR(stat_a.st_mode);
 	}
@@ -82,12 +72,7 @@ void FileUtils::mkdir(const char* name)
 bool FileUtils::exists(const char* file)
 	{
 	if(access(file,F_OK)==-1)
-		{
-#if 0
-		fprintf(stderr,"%s does not exist\n",file);
-#endif
-		return 0;
-		}
+		{return 0;}
 	return 1;
 	}
 

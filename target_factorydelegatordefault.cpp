@@ -9,13 +9,16 @@
 #include "target_factory.hpp"
 #include "target.hpp"
 #include "expressionevaluator.hpp"
+#include "dependency.hpp"
 
 #include <cstring>
 
+#include <cstdio>
+
 using namespace Maike;
 
-Target_FactoryDelegatorDefault::Target_FactoryDelegatorDefault(const ExpressionEvaluator& eval)
-	:r_eval(eval),m_id_current(0)
+Target_FactoryDelegatorDefault::Target_FactoryDelegatorDefault(const char* target_dir,const ExpressionEvaluator& eval)
+	:r_eval(eval),m_target_dir(target_dir),m_id_current(0)
 	{
 	}
 
@@ -39,11 +42,38 @@ Handle<Target> Target_FactoryDelegatorDefault::targetCreate(const ResourceObject
 	return i->second->targetCreate(obj,name_src,in_dir,idNext());
 	}
 
+
+static bool sourceGeneratedIs(const ResourceObject& obj)
+	{
+	if(obj.objectExists("source_generated"))
+		{
+		return static_cast<long long int>(obj.objectGet("source_generated"));
+		}
+	return 0;
+	}
+
 Handle<Target> Target_FactoryDelegatorDefault::targetCreate(const ResourceObject& obj
 	,const char* in_dir)
 	{
-	return targetCreate(obj,static_cast<const char*>(obj.objectGet("source_name"))
-		,in_dir);
+	std::string source_name;
+	auto source_generated=sourceGeneratedIs(obj);
+	auto source_name_raw=static_cast<const char*>(obj.objectGet("source_name"));
+
+	if(source_generated)
+		{
+		source_name+=m_target_dir;
+		source_name+='/';
+		}
+
+	source_name+=source_name_raw;
+	auto ret=targetCreate(obj,source_name.c_str(),in_dir);
+	if(source_generated)
+		{
+		std::string depname("./");
+		depname+=source_name_raw;
+		ret->dependencyAdd(Dependency(depname.c_str(),Dependency::Relation::INTERNAL));
+		}
+	return ret;
 	}
 
 

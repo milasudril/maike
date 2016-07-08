@@ -15,9 +15,12 @@
 #include "targetcxxoptions.hpp"
 #include "targetcxxloader.hpp"
 #include "targetcxxcompiler.hpp"
+#include "targetcxxfactory.hpp"
 
 #include "targetpythoninterpreter.hpp"
 #include "targetpythonloader.hpp"
+#include "targetpythonfactory.hpp"
+#include "target_factorydelegatordefault.hpp"
 
 #include "errormessage.hpp"
 #include "dependency.hpp"
@@ -105,26 +108,35 @@ int main(int argc,char** args)
 
 	//	1.3	Setup Loaders and compilers
 		std::map<Maike::Stringkey,const Maike::Target_Loader*> loaders;
+		Maike::Target_FactoryDelegatorDefault delegator(
+			static_cast<const char*>(targetinfo.variableGet(Maike::Stringkey("target_directory"))),evaluator);
 
 	//	1.3.1 Directory loader (responsible for scanning directories)
 		Maike::TargetDirectoryLoader dirloader(maikeconfig.objectGet("directoryloader"));
 		loaders[Maike::Stringkey(".")]=&dirloader;
 
+
 	//	1.3.2 C++ loader and compiler
 		Maike::TargetCxxOptions cxxoptions(maikeconfig.objectGet("cxxoptions"));
 		Maike::TargetCxxCompiler cxxcompiler(cxxoptions,targetinfo);
-		Maike::TargetCxxLoader cxxloader(cxxcompiler);
+		Maike::TargetCxxLoader cxxloader;
 		loaders[Maike::Stringkey(".hpp")]=&cxxloader;
 		loaders[Maike::Stringkey(".cpp")]=&cxxloader;
+		Maike::TargetCxxFactory cxxfactory(cxxcompiler);
+		delegator.factoryRegister(Maike::Stringkey(".cpp"),cxxfactory)
+			.factoryRegister(Maike::Stringkey(".hpp"),cxxfactory);
 
 	//	1.3.3 Python loader and interpreter
 		Maike::TargetPythonInterpreter pythoninterpreter(maikeconfig.objectGet("pythonoptions"));
 		Maike::TargetPythonLoader pythonloader(pythoninterpreter);
 		loaders[Maike::Stringkey(".py")]=&pythonloader;
+		Maike::TargetPythonFactory pythonfactory(pythoninterpreter);
+		delegator.factoryRegister(Maike::Stringkey(".py"),pythonfactory);
+
 
 	//	2. Collect targtes
 		Maike::DependencyGraphDefault targets;
-		Maike::SpiderDefault spider(loaders,evaluator,targets);
+		Maike::SpiderDefault spider(loaders,delegator,targets);
 		spider.scanFile(".","").run();
 
 	//	3. Build all targets

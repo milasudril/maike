@@ -45,34 +45,6 @@ TargetDirectoryLoader::TargetDirectoryLoader(const ResourceObject& dirloader):
 		}
 	}
 
-void TargetDirectoryLoader::targetsLoad(const char* name_src
-	,const char* in_dir,Spider& spider
-	,DependencyGraph& graph
-	,const ExpressionEvaluator& evaluator) const
-	{
-	Handle<TargetDirectory> target(
-		TargetDirectory::create(name_src,in_dir,graph.targetCounterGet()));
-	graph.targetRegister(target);
-	DirectoryLister dirlister(name_src);
-	const char* entry=dirlister.read();
-	while(entry!=nullptr)
-		{
-		if(m_ignore.find(Stringkey(entry))==m_ignore.end())
-			{
-			std::string path_tot;
-			path_tot+=name_src;
-			path_tot+='/';
-			path_tot+=entry;
-			auto entry_type=FileInfo(path_tot.c_str()).typeGet();
-			if((entry_type==FileInfo::Type::DIRECTORY && m_recursive)
-				|| entry_type==FileInfo::Type::FILE)
-				{spider.scanFile(path_tot.c_str(),name_src);}
-			}
-
-		entry=dirlister.read();
-		}
-	}
-
 void TargetDirectoryLoader::targetsLoad(const char* name_src,const char* in_dir
 	,Spider& spider,DependencyGraph& graph,Target_FactoryDelegator& factory) const
 	{

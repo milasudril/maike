@@ -18,10 +18,6 @@ namespace Maike
 
 			TargetPythonLoader(TargetPythonInterpreter&& intpret)=delete;
 
-			virtual void targetsLoad(const char* name_src,const char* in_dir
-				,Spider& spider,DependencyGraph& graph
-				,const ExpressionEvaluator& evaluator) const;
-
 			void targetsLoad(const char* name_src,const char* in_dir
 				,Spider& spider,DependencyGraph& graph
 				,Target_FactoryDelegator& factory) const;

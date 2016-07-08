@@ -8,6 +8,7 @@
 
 #include "target_factorydelegator.hpp"
 #include <map>
+#include <string>
 
 namespace Maike
 	{
@@ -15,7 +16,8 @@ namespace Maike
 	class Target_FactoryDelegatorDefault:public Target_FactoryDelegator
 		{
 		public:
-			explicit Target_FactoryDelegatorDefault(const ExpressionEvaluator& eval);
+			explicit Target_FactoryDelegatorDefault(const char* target_dir
+				,const ExpressionEvaluator& eval);
 
 			Target_FactoryDelegatorDefault(ExpressionEvaluator&& eval)=delete;
 
@@ -46,6 +48,7 @@ namespace Maike
 
 			const ExpressionEvaluator& r_eval;
 			std::map<Stringkey,const Target_Factory*> m_r_factories;
+			std::string m_target_dir;
 			size_t m_id_current;
 		};
 	}
