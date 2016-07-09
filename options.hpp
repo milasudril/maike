@@ -39,7 +39,9 @@ namespace Maike
 				,Stringkey("list-all-targets")
 				,Stringkey("dump-graph")
 				,Stringkey("dump-target-usecount")
-				,Stringkey("dump-timestat")> OptionMap;
+				,Stringkey("dump-timestat")
+				,Stringkey("dump-systemtarget-info")
+				> OptionMap;
 
 			Options(Twins<const char* const*> args);
 

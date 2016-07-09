@@ -51,6 +51,9 @@ static void optionsFill(Options::OptionMap& options)
 
 	MAKE_OPTION(options,4,"dump-timestat","Prints the time it takes to perform various "
 		"tasks. As defualt, the data is written to `stdout`.",1);
+
+	MAKE_OPTION(options,2,"dump-systemtarget-info","Prints availible information "
+		"about the target system. As defualt, the data is written to `stdout`",1);
 	}
 
 static void optionLoad(Options::OptionMap& options

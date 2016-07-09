@@ -12,7 +12,7 @@ using namespace Maike;
 
 SystemTargetInfo::SystemTargetInfo(const ResourceObject& config)
 	{
-	sysvarsLoad(m_sysvars,m_strings);
+	sysvarsLoad(m_sysvars,m_strings,m_varnames);
 		{
 		Stringkey key("target_directory");
 		auto i=replace(m_strings,{key,std::string("__targets")});
@@ -23,6 +23,7 @@ SystemTargetInfo::SystemTargetInfo(const ResourceObject& config)
 		{
 		auto p=i.get();
 		auto key=Stringkey(p.first);
+		m_varnames[key]=std::string(p.first);
 		switch(p.second.typeGet())
 			{
 			case ResourceObject::Type::ARRAY:

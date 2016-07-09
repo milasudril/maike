@@ -14,7 +14,8 @@ namespace Maike
 	class Stringkey;
 	class Variant;
 	void sysvarsLoad(std::map<Stringkey,Variant>& variables
-		,std::map<Stringkey,std::string>& strings);
+		,std::map<Stringkey,std::string>& strings
+		,std::map<Stringkey,std::string>& varnames);
 	}
 
 #endif

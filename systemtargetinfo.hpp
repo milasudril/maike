@@ -30,6 +30,7 @@ namespace Maike
 		private:
 			std::map<Stringkey,Variant> m_sysvars;
 			std::map<Stringkey,std::string> m_strings;
+			std::map<Stringkey,std::string> m_varnames;
 		};
 	}
 

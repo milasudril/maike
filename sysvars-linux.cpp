@@ -88,22 +88,12 @@ static void cpuinfoLoad(std::map<Stringkey,std::string>& info)
 			}
 		}
 	}
-/*
-static void setIfFound(const Stringkey& key,std::map<Stringkey,std::string>& features
-	,std::map<Stringkey,Variant>& variables
-	,std::map<Stringkey,std::string>& strings)
-	{
-	}
 
-static void setIfFound(const Stringkey& key,std::map<Stringkey,std::string>& features
-	,std::map<Stringkey,Variant>& variables)
-	{
-	}
-*/
 
 
 static void flagsLoad(const std::map<Stringkey,std::string>& cpuinfo
-	,std::map<Stringkey,Variant>& variables)
+	,std::map<Stringkey,Variant>& variables
+	,std::map<Stringkey,std::string>& varnames)
 	{
 	auto x=cpuinfo.end();
 #if __x86_64 || __x86_64__ || __amd64 || __amd64__ || _M_X64 || _M_AMD64 \
@@ -125,10 +115,12 @@ static void flagsLoad(const std::map<Stringkey,std::string>& cpuinfo
 				{
 				case ' ':
 					replace(variables,{Stringkey(buffer.c_str()),1});
+					varnames[Stringkey(buffer.c_str())]=buffer;
 					buffer=std::string("cpufeature_");
 					break;
 				case '\0':
 					replace(variables,{Stringkey(buffer.c_str()),1});
+					varnames[Stringkey(buffer.c_str())]=buffer;
 					return;
 				default:
 					buffer+=ch_in;
@@ -140,13 +132,14 @@ static void flagsLoad(const std::map<Stringkey,std::string>& cpuinfo
 	}
 
 static void cpuinfoSet(const std::map<Stringkey,std::string>& cpuinfo
-	,std::map<Stringkey,Variant>& variables)
+	,std::map<Stringkey,Variant>& variables
+	,std::map<Stringkey,std::string>& varnames)
 	{
-	const Twins<Stringkey> keymap[]=
+	const std::pair<const char*,Stringkey> keymap[]=
 		{
-			 {Stringkey("cpu_cache_size"),Stringkey("cache size")}
-			,{Stringkey("cpu_cache_flushsize"),Stringkey("clflush size")}
-			,{Stringkey("cpu_cache_alignmnet"),Stringkey("cache_alignment")}
+			 {"cpu_cache_size",Stringkey("cache size")}
+			,{"cpu_cache_flushsize",Stringkey("clflush size")}
+			,{"cpu_cache_alignment",Stringkey("cache_alignment")}
 		};
 
 	auto N_keys=sizeof(keymap)/sizeof(Twins<Stringkey>);
@@ -157,7 +150,8 @@ static void cpuinfoSet(const std::map<Stringkey,std::string>& cpuinfo
 		auto i=cpuinfo.find(find);
 		if(i!=cpuinfo.end())
 			{
-			replace(variables,{keymap[N_keys].first,atol(i->second.c_str())});
+			replace(variables,{Stringkey(keymap[N_keys].first),atol(i->second.c_str())});
+			varnames[Stringkey(keymap[N_keys].first)]=std::string(keymap[N_keys].first);
 			}
 		}
 	}
@@ -165,11 +159,12 @@ static void cpuinfoSet(const std::map<Stringkey,std::string>& cpuinfo
 
 static void cpuinfoSet(const std::map<Stringkey,std::string>& cpuinfo
 	,std::map<Stringkey,Variant>& variables
-	,std::map<Stringkey,std::string>& strings)
+	,std::map<Stringkey,std::string>& strings
+	,std::map<Stringkey,std::string>& varnames)
 	{
-	const Twins<Stringkey> keymap[]=
+	const std::pair<const char*,Stringkey> keymap[]=
 		{
-			 {Stringkey("cpu_vendor"),Stringkey("vendor_id")}
+			 {"cpu_vendor",Stringkey("vendor_id")}
 		};
 
 	auto N_keys=sizeof(keymap)/sizeof(Twins<Stringkey>);
@@ -180,28 +175,34 @@ static void cpuinfoSet(const std::map<Stringkey,std::string>& cpuinfo
 		auto i=cpuinfo.find(find);
 		if(i!=cpuinfo.end())
 			{
-			auto k=replace(strings,{keymap[N_keys].first,i->second});
-			replace(variables,{keymap[N_keys].first,k->second.c_str()});
+			auto k=replace(strings,{Stringkey(keymap[N_keys].first),i->second});
+			replace(variables,{Stringkey(keymap[N_keys].first),k->second.c_str()});
+			varnames[Stringkey(keymap[N_keys].first)]=std::string(keymap[N_keys].first);
 			}
 		}
 	}
 
 void Maike::sysvarsLoad(std::map<Stringkey, Variant>& variables
-	,std::map<Stringkey,std::string>& strings)
+	,std::map<Stringkey,std::string>& strings
+	,std::map<Stringkey,std::string>& varnames)
 	{
 	utsname sysname;
 	uname(&sysname);
 	auto ver=version(sysname.release);
 	replace(variables,{Stringkey("linux"), ver});
+	varnames[Stringkey("linux")]=std::string("linux");
 
 #if __ANDROID__
 	replace(variables,{Stringkey("android"),__ANDROID_API__});
+	varnames[Stringkey("android")]=std::string("android");
 #elif __gnu_linux__
 	replace(variables,{Stringkey("gnu"),1});
+	varnames[Stringkey("gnu")]=std::string("gnu");
 #endif
 
 #ifdef __unix__
 	replace(variables,{Stringkey("posix"),_POSIX_VERSION});
+	varnames[Stringkey("posix")]=std::string("posix");
 #endif
 
 	replace(variables,{Stringkey("nullfile"),"/dev/null"});
@@ -210,15 +211,21 @@ void Maike::sysvarsLoad(std::map<Stringkey, Variant>& variables
 	cpuinfoLoad(cpuinfo);
 #if __x86_64 || __x86_64__ || __amd64 || __amd64__ || _M_X64 || _M_AMD64
 	replace(variables,{Stringkey("wordsize"),64});
+	varnames[Stringkey("wordsize")]=std::string("wordsize");
 	replace(variables,{Stringkey("x86_64"),1});
+	varnames[Stringkey("x86_64")]=std::string("x86_64");
 	replace(variables,{Stringkey("architecture"),"x86_64"});
+	varnames[Stringkey("architecture")]=std::string("architecture");
 #elif __i386__ || i386 || __i386 || __IA32__ || _M_IX86 || __X86__ || _X86_ \
 	|| __386 || __INTEL__
 	replace(variables,{Stringkey("wordsize"),32});
-	replace(variables,{Stringkey("i386"),32});
+	varnames[Stringkey("wordsize")]=std::string("wordsize");
+	replace(variables,{Stringkey("i386"),1});
+	varnames[Stringkey("i386")]=std::string("i386");
 	replace(variables,{Stringkey("architecture"),"i386"});
+	varnames[Stringkey("architecture")]=std::string("architecture");
 #endif
-	flagsLoad(cpuinfo,variables);
-	cpuinfoSet(cpuinfo,variables,strings);
-	cpuinfoSet(cpuinfo,variables);
+	flagsLoad(cpuinfo,variables,varnames);
+	cpuinfoSet(cpuinfo,variables,strings,varnames);
+	cpuinfoSet(cpuinfo,variables,varnames);
 	}
