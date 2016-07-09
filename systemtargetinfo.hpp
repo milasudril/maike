@@ -15,6 +15,7 @@ namespace Maike
 	{
 	class ResourceObject;
 	class Variant;
+	class DataSink;
 
 	class SystemTargetInfo:public ParameterSet
 		{
@@ -26,6 +27,8 @@ namespace Maike
 				,ParameterProcessor&& proc) const;
 
 			Variant variableGet(const Stringkey& key) const noexcept;
+
+			void dataDump(DataSink& sink) const;
 
 		private:
 			std::map<Stringkey,Variant> m_sysvars;

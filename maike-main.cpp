@@ -32,6 +32,7 @@
 
 #include "variant.hpp"
 #include "strerror.hpp"
+#include "datasinkstd.hpp"
 #include <cstdio>
 
 class TargetBuilder:public Maike::DependencyGraph::TargetProcessor
@@ -102,8 +103,11 @@ int main(int argc,char** args)
 		{
 	//	1 Setup stuff
 		auto maikeconfig=configLoad("maikeconfig.json");
+
 	//	1.2 Target system information
 		Maike::SystemTargetInfo targetinfo(maikeconfig.objectGet("targetconfig"));
+		targetinfo.dataDump(Maike::DataSinkStd::standard_output);
+
 		Maike::ExpressionEvaluatorDefault evaluator(targetinfo);
 
 	//	1.3	Setup Loaders and compilers

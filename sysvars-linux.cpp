@@ -191,6 +191,11 @@ void Maike::sysvarsLoad(std::map<Stringkey, Variant>& variables
 	auto ver=version(sysname.release);
 	replace(variables,{Stringkey("linux"), ver});
 	varnames[Stringkey("linux")]=std::string("linux");
+		{
+		auto i=replace(strings,{Stringkey("linux_string"),sysname.release});
+		replace(variables,{Stringkey("linux_string"),i->second.c_str()});
+		varnames[Stringkey("linux_string")]=std::string("linux_string");
+		}
 
 #if __ANDROID__
 	replace(variables,{Stringkey("android"),__ANDROID_API__});
@@ -206,6 +211,7 @@ void Maike::sysvarsLoad(std::map<Stringkey, Variant>& variables
 #endif
 
 	replace(variables,{Stringkey("nullfile"),"/dev/null"});
+	varnames[Stringkey("nullfile")]=std::string("nullfile");
 
 	std::map<Stringkey,std::string> cpuinfo;
 	cpuinfoLoad(cpuinfo);

@@ -27,6 +27,10 @@ digraph DependencyGraph
 	"./systemtargetinfo.o"->"./stringformat.hpp"[color="blue"];
 	"./systemtargetinfo.o"->"./stringformat.o"[color="red"];
 	"./systemtargetinfo.o"->"./mapreplace.hpp"[color="blue"];
+	"./systemtargetinfo.o"->"./writebuffer.hpp"[color="blue"];
+	"./systemtargetinfo.o"->"./writebuffer.o"[color="red"];
+	"./systemtargetinfo.o"->"./stringformat.hpp"[color="blue"];
+	"./systemtargetinfo.o"->"./stringformat.o"[color="red"];
 	"./datasinkstd.hpp"->"."[color="blue"];
 	"./datasinkstd.hpp"->"./datasink.hpp"[color="blue"];
 	"./mapfixed.hpp"->"."[color="blue"];
@@ -282,6 +286,8 @@ digraph DependencyGraph
 	"./maike"->"./variant.hpp"[color="blue"];
 	"./maike"->"./strerror.hpp"[color="blue"];
 	"./maike"->"./strerror.o"[color="red"];
+	"./maike"->"./datasinkstd.hpp"[color="blue"];
+	"./maike"->"./datasinkstd.o"[color="red"];
 	"./maikeinfo.cpp"->"."[color="blue"];
 	"./fileinfo.hpp"->"."[color="blue"];
 	"./target_factorydelegatordefault.hpp"->"."[color="blue"];

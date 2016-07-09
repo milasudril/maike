@@ -7,6 +7,8 @@
 #include "variant.hpp"
 #include "stringformat.hpp"
 #include "mapreplace.hpp"
+#include "writebuffer.hpp"
+#include "stringformat.hpp"
 
 using namespace Maike;
 
@@ -78,4 +80,38 @@ Variant SystemTargetInfo::variableGet(const Stringkey& key) const noexcept
 	if(i==m_sysvars.end())
 		{return static_cast<int64_t>(0);}
 	return i->second;
+	}
+
+void SystemTargetInfo::dataDump(DataSink& sink) const
+	{
+	WriteBuffer wb(sink);
+	wb.write('{');
+	auto i=m_sysvars.begin();
+	while(i!=m_sysvars.end())
+		{
+		wb.write('"').write(m_varnames.find(i->first)->second.c_str())
+			.write('"').write(':');
+
+		auto val=i->second;
+		switch(val.typeGet())
+			{
+			case Variant::STRING:
+				wb.write('"').write(static_cast<const char*>(val)).write('"');
+				break;
+			case Variant::BOOL:
+			case Variant::USER_OBJECT:
+				break;
+			default:
+				{
+				char buffer[256];
+				format(Twins<char*>{buffer,buffer+256},"#0;",{val});
+				wb.write(buffer);
+				}
+			}
+		wb.write('\n');
+		++i;
+		if(i!=m_sysvars.end())
+			{wb.write(',');}
+		}
+	wb.write('}');
 	}
