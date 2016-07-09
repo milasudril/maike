@@ -386,6 +386,7 @@ digraph DependencyGraph
 	"./sysvars.o"->"./filein.hpp"[color="blue"];
 	"./sysvars.o"->"./filein.o"[color="red"];
 	"./sysvars.o"->"./readbuffer.hpp"[color="blue"];
+	"./sysvars.o"->"./twins.hpp"[color="blue"];
 	"./targetcxxcompiler.hpp"->"."[color="blue"];
 	"./targetcxxcompiler.hpp"->"./twins.hpp"[color="blue"];
 	"./maikeinfo.o"->"./maikeinfo.hpp"[color="blue"];
