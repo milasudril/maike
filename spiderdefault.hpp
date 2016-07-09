@@ -23,20 +23,18 @@ namespace Maike
 	class SpiderDefault:public Spider
 		{
 		public:
-			SpiderDefault(std::map<Stringkey,const Target_Loader*>&& loaders
-				,Target_FactoryDelegator& target_creator
-				,DependencyGraph& targets)=delete;
-
 			explicit
-			SpiderDefault(const std::map<Stringkey,const Target_Loader*>& loaders
-				,Target_FactoryDelegator& deleg
+			SpiderDefault(Target_FactoryDelegator& deleg
 				,DependencyGraph& targets);
 
 			SpiderDefault& scanFile(const char* filename,const char* in_dir);
 			SpiderDefault& run();
 
+			SpiderDefault& loaderRegister(const Stringkey& filename_ext
+				,const Target_Loader& loader);
+
 		private:
-			const std::map<Stringkey,const Target_Loader*>& r_loaders;
+			std::map<Stringkey,const Target_Loader*> m_r_loaders;
 			Target_FactoryDelegator& r_target_creator;
 			DependencyGraph& r_targets;
 

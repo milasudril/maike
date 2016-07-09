@@ -9,9 +9,8 @@
 
 using namespace Maike;
 
-SpiderDefault::SpiderDefault(const std::map<Stringkey,const Target_Loader*>& loaders
-	,Target_FactoryDelegator& target_creator,DependencyGraph& targets):
-	r_loaders(loaders),r_target_creator(target_creator),r_targets(targets)
+SpiderDefault::SpiderDefault(Target_FactoryDelegator& target_creator,DependencyGraph& targets):
+	r_target_creator(target_creator),r_targets(targets)
 	{
 	}
 
@@ -27,8 +26,12 @@ SpiderDefault& SpiderDefault::scanFile(const char* filename,const char* in_dir)
 	return *this;
 	}
 
-
-
+SpiderDefault& SpiderDefault::loaderRegister(const Stringkey& filename_ext
+	,const Target_Loader& loader)
+	{
+	m_r_loaders[filename_ext]=&loader;
+	return *this;
+	}
 static const Target_Loader* targetLoaderGet(const Stringkey& key
 	,const std::map<Stringkey,const Target_Loader*>& loaders)
 	{
@@ -65,7 +68,7 @@ SpiderDefault& SpiderDefault::run()
 		auto p=std::move(m_files_to_scan.top());
 		m_files_to_scan.pop();
 		auto filename=p.first.c_str();
-		auto loader=targetLoaderGet(targetLoaderKeyGet(p.first),r_loaders);
+		auto loader=targetLoaderGet(targetLoaderKeyGet(p.first),m_r_loaders);
 		if(loader!=nullptr)
 			{
 			auto in_dir=p.second.c_str();

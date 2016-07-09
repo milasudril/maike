@@ -32,6 +32,26 @@ void Maike::versionPrint(DataSink&& sink)
 void Maike::versionPrint(DataSink& sink)
 	{::versionPrintImpl(sink);}
 
+#if TARGETS_LOAD_DONE //To get syntax highlight
+void targetsLoad(DependencyGraph& graph,Twins<const Target_Hook*> hooks)
+	{
+	Maike::ExpressionEvaluatorDefault evaluator(targetinfo);
+	Target_FactoryDelegatorDefault delegator(
+		static_cast<const char*>(targetinfo.variableGet(Maike::Stringkey("target_directory"))),evaluator);
+
+	SpiderDefault spider(delegator,graph);
+
+	while(hooks.first!=hooks.second)
+		{
+		delegator.factoryRegister(hooks.first->filename_ext,hooks.first->factory);
+		spider.loaderRegister(hooks.first->filename_ext,hooks.first->loader);
+		++hooks.first;
+		}
+
+	spider.scanFile(".","").run();
+	}
+
+#endif
 
 static void toposort(const Maike::Dependency& dependency_first
 	,std::vector<Maike::Dependency>& dependency_list

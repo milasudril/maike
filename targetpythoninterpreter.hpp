@@ -14,11 +14,17 @@ namespace Maike
 	class TargetPythonInterpreter
 		{
 		public:
-			TargetPythonInterpreter(const ResourceObject& pythonoptions);
+			explicit TargetPythonInterpreter(const ResourceObject& pythonoptions
+				,const ParameterSet& sysvars);
+
+			TargetPythonInterpreter(const ResourceObject& pythonoptions
+				,ParameterSet&& sysvars)=delete;
+
 			void run(const char* script,Twins<const char* const*> args) const;
 
 		private:
 			Command m_interpreter;
+			const ParameterSet& r_sysvars;
 		};
 	}
 

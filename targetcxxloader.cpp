@@ -5,15 +5,11 @@
 #include "targetcxxpptokenizer.hpp"
 #include "spider.hpp"
 #include "resourceobject.hpp"
-#include "targetcxx.hpp"
-#include "dependencygraph.hpp"
-#include "errormessage.hpp"
-#include "expressionevaluator.hpp"
-#include "exceptionhandler.hpp"
 #include "handle.hpp"
 #include "target_factorydelegator.hpp"
-
-#include <cstdio>
+#include "target.hpp"
+#include "dependency.hpp"
+#include "dependencygraph.hpp"
 
 using namespace Maike;
 
@@ -43,6 +39,10 @@ namespace
 				{delete this;}
 		};
 	}
+
+TargetCxxLoader::TargetCxxLoader(const TargetCxxOptions& options):
+	r_options(options)
+	{}
 
 size_t TagFilter::read(void* buffer,size_t length)
 	{

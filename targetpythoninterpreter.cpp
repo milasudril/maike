@@ -8,8 +8,9 @@
 
 using namespace Maike;
 
-TargetPythonInterpreter::TargetPythonInterpreter(const ResourceObject& obj)
-	:m_interpreter(obj.objectGet("command"))
+TargetPythonInterpreter::TargetPythonInterpreter(const ResourceObject& obj
+	,const ParameterSet& sysvars)
+	:m_interpreter(obj.objectGet("command")),r_sysvars(sysvars)
 	{
 	}
 
@@ -23,8 +24,8 @@ void TargetPythonInterpreter::run(const char* script,Twins<const char* const*> a
 		++args.first;
 		}
 
-	ParameterSet* paramset_tot[]={&params};
-	auto pipe=m_interpreter.execute(Pipe::REDIRECT_STDERR,{paramset_tot,paramset_tot + 1});
+	const ParameterSet* paramset_tot[]={&r_sysvars,&params};
+	auto pipe=m_interpreter.execute(Pipe::REDIRECT_STDERR,{paramset_tot,paramset_tot + 2});
 
 	auto standard_error=pipe.stderrCapture();
 	ReadBuffer rb(*standard_error.get());

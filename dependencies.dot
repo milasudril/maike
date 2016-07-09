@@ -501,14 +501,10 @@ digraph DependencyGraph
 	"./targetcxxloader.o"->"./spider.hpp"[color="blue"];
 	"./targetcxxloader.o"->"./resourceobject.hpp"[color="blue"];
 	"./targetcxxloader.o"->"./resourceobject.o"[color="red"];
-	"./targetcxxloader.o"->"./targetcxx.hpp"[color="blue"];
-	"./targetcxxloader.o"->"./targetcxx.o"[color="red"];
-	"./targetcxxloader.o"->"./dependencygraph.hpp"[color="blue"];
-	"./targetcxxloader.o"->"./errormessage.hpp"[color="blue"];
-	"./targetcxxloader.o"->"./errormessage.o"[color="red"];
-	"./targetcxxloader.o"->"./expressionevaluator.hpp"[color="blue"];
-	"./targetcxxloader.o"->"./exceptionhandler.hpp"[color="blue"];
-	"./targetcxxloader.o"->"./exceptionhandler.o"[color="red"];
 	"./targetcxxloader.o"->"./handle.hpp"[color="blue"];
 	"./targetcxxloader.o"->"./target_factorydelegator.hpp"[color="blue"];
+	"./targetcxxloader.o"->"./target.hpp"[color="blue"];
+	"./targetcxxloader.o"->"./dependency.hpp"[color="blue"];
+	"./targetcxxloader.o"->"./dependency.o"[color="red"];
+	"./targetcxxloader.o"->"./dependencygraph.hpp"[color="blue"];
 	}

@@ -9,13 +9,18 @@
 
 namespace Maike
 	{
-	class Target;
+	class Target_Loader;
+	class Stringkey;
 
 	class Spider
 		{
 		public:
 			virtual Spider& scanFile(const char* filename,const char* in_dir)=0;
 			virtual Spider& run()=0;
+
+			virtual Spider& loaderRegister(const Stringkey& filename_ext
+				,const Target_Loader& loader)=0;
+
 		protected:
 			~Spider()=default;
 		};

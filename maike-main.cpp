@@ -104,44 +104,42 @@ int main(int argc,char** args)
 	//	1 Setup stuff
 		auto maikeconfig=configLoad("maikeconfig.json");
 
-	//	1.2 Target system information
+	//	1.1 Load Target system information
 		Maike::SystemTargetInfo targetinfo(maikeconfig.objectGet("targetconfig"));
-		targetinfo.dataDump(Maike::DataSinkStd::standard_output);
+	//	targetinfo.dataDump(Maike::DataSinkStd::standard_output);
 
-		Maike::ExpressionEvaluatorDefault evaluator(targetinfo);
 
-	//	1.3	Setup Loaders and compilers
-		std::map<Maike::Stringkey,const Maike::Target_Loader*> loaders;
-		Maike::Target_FactoryDelegatorDefault delegator(
-			static_cast<const char*>(targetinfo.variableGet(Maike::Stringkey("target_directory"))),evaluator);
-
-	//	1.3.1 Directory loader (responsible for scanning directories)
+	//	1.2 Directory loader (responsible for scanning directories)
 		Maike::TargetDirectoryLoader dirloader(maikeconfig.objectGet("directoryloader"));
-		loaders[Maike::Stringkey(".")]=&dirloader;
 
-
-	//	1.3.2 C++ loader and compiler
+	//	1.3 C++ loader and compiler
 		Maike::TargetCxxOptions cxxoptions(maikeconfig.objectGet("cxxoptions"));
 		Maike::TargetCxxCompiler cxxcompiler(cxxoptions,targetinfo);
-		Maike::TargetCxxLoader cxxloader;
-		loaders[Maike::Stringkey(".hpp")]=&cxxloader;
-		loaders[Maike::Stringkey(".cpp")]=&cxxloader;
+		Maike::TargetCxxLoader cxxloader(cxxoptions);
 		Maike::TargetCxxFactory cxxfactory(cxxcompiler);
-		delegator.factoryRegister(Maike::Stringkey(".cpp"),cxxfactory)
-			.factoryRegister(Maike::Stringkey(".hpp"),cxxfactory);
 
-	//	1.3.3 Python loader and interpreter
-		Maike::TargetPythonInterpreter pythoninterpreter(maikeconfig.objectGet("pythonoptions"));
+	//	1.4 Python loader and interpreter
+		Maike::TargetPythonInterpreter pythoninterpreter(maikeconfig.objectGet("pythonoptions"),targetinfo);
 		Maike::TargetPythonLoader pythonloader(pythoninterpreter);
-		loaders[Maike::Stringkey(".py")]=&pythonloader;
 		Maike::TargetPythonFactory pythonfactory(pythoninterpreter);
-		delegator.factoryRegister(Maike::Stringkey(".py"),pythonfactory);
 
 
 	//	2. Collect targtes
+		Maike::ExpressionEvaluatorDefault evaluator(targetinfo);
+
+		Maike::Target_FactoryDelegatorDefault delegator(
+			static_cast<const char*>(targetinfo.variableGet(Maike::Stringkey("target_directory"))),evaluator);
+		delegator.factoryRegister(Maike::Stringkey(".py"),pythonfactory)
+			.factoryRegister(Maike::Stringkey(".cpp"),cxxfactory)
+			.factoryRegister(Maike::Stringkey(".hpp"),cxxfactory);
+
 		Maike::DependencyGraphDefault targets;
-		Maike::SpiderDefault spider(loaders,delegator,targets);
-		spider.scanFile(".","").run();
+		Maike::SpiderDefault spider(delegator,targets);
+		spider.loaderRegister(Maike::Stringkey(".cpp"),cxxloader)
+			.loaderRegister(Maike::Stringkey(".hpp"),cxxloader)
+			.loaderRegister(Maike::Stringkey(".py"),pythonloader)
+			.loaderRegister(Maike::Stringkey("."),dirloader)
+			.scanFile(".","").run();
 
 	//	3. Build all targets
 		targets.targetsPatch().targetsProcess(DepGraphExporter("dependencies.dot"))
