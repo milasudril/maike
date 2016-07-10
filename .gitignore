@@ -5,8 +5,9 @@
 *.a
 *.lib
 *.pdf
-bin/*
-Debug/*
-Release/*
-.codelite/*
-__targets/*
+bin
+Debug
+Release
+.codelite
+__targets
+./maike

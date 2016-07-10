@@ -56,17 +56,18 @@ void targetsLoad(DependencyGraph& graph,Twins<const Target_Hook*> hooks)
 static void toposort(const Maike::Dependency& dependency_first
 	,std::vector<Maike::Dependency>& dependency_list
 	,bool full
-	,std::vector<int>& visited)
+	,std::vector<uint8_t>& visited
+	,size_t id_min)
 	{
 	auto& target_first=*dependency_first.target();
-	auto id_first=target_first.idGet();
+	auto id_first=target_first.idGet() - id_min;
 	visited[id_first]=1;
 
 	auto deps=target_first.dependencies();
 	while(deps.first!=deps.second)
 		{
 		auto target_next=deps.first->target();
-		auto id=target_next->idGet();
+		auto id=target_next->idGet() - id_min;
 		if(visited[id]==1)
 			{
 			exceptionRaise(ErrorMessage("A cyclic dependency between #0; and #1; was detected."
@@ -75,7 +76,7 @@ static void toposort(const Maike::Dependency& dependency_first
 
 		if(visited[id]==0 && (full
 			|| deps.first->relationGet()!=Dependency::Relation::IMPLEMENTATION))
-			{toposort(*deps.first,dependency_list,full,visited);}
+			{toposort(*deps.first,dependency_list,full,visited,id_min);}
 		++(deps.first);
 		}
 	visited[id_first]=2;
@@ -83,17 +84,18 @@ static void toposort(const Maike::Dependency& dependency_first
 	}
 
 static void toposort(Target& target_first
-	,std::vector<Maike::Dependency>& dependency_list,size_t targets_count
+	,std::vector<Maike::Dependency>& dependency_list,const Twins<size_t>& id_range
 	,bool full)
 	{
-	std::vector<int> visited(targets_count,0);
-	toposort(Dependency(target_first),dependency_list,full,visited);
+	std::vector<uint8_t> visited((id_range.second-id_range.first) + 1,0);
+	toposort(Dependency(target_first),dependency_list,full,visited,id_range.first);
 	}
 
-void Maike::buildBranch(Target& target,const char* target_dir,size_t targets_count)
+void Maike::buildBranch(Target& target,const char* target_dir
+	,const Twins<size_t>& id_range)
 	{
 	std::vector<Dependency> dependency_list_full;
-	toposort(target,dependency_list_full,targets_count,1);
+	toposort(target,dependency_list_full,id_range,1);
 
 	auto deps_begin=dependency_list_full.data();
 	Twins<Dependency*> deps(deps_begin,deps_begin + dependency_list_full.size());
@@ -105,7 +107,7 @@ void Maike::buildBranch(Target& target,const char* target_dir,size_t targets_cou
 		if(target!=nullptr)
 			{
 			std::vector<Dependency> dependency_list;
-			toposort(*target,dependency_list,targets_count,0);
+			toposort(*target,dependency_list,id_range,0);
 			Twins<const Dependency*> deps_rel(dependency_list.data()
 				,dependency_list.data() + dependency_list.size());
 

@@ -7,6 +7,7 @@
 #define MAIKE_TARGET_FACTORYDELEGATORDEFAULT_HPP
 
 #include "target_factorydelegator.hpp"
+#include "idgenerator.hpp"
 #include <map>
 #include <string>
 
@@ -17,7 +18,8 @@ namespace Maike
 		{
 		public:
 			explicit Target_FactoryDelegatorDefault(const char* target_dir
-				,const ExpressionEvaluator& eval);
+				,const ExpressionEvaluator& eval
+				,IdGenerator<size_t>& id_gen);
 
 			Target_FactoryDelegatorDefault(ExpressionEvaluator&& eval)=delete;
 
@@ -35,18 +37,15 @@ namespace Maike
 			void targetsCreate(const ResourceObject& obj,const char* in_dir
 				,Callback&& cb);
 
-			size_t idNext() noexcept
-				{
-				auto ret=m_id_current;
-				++m_id_current;
-				return ret;
-				}
+			size_t idGet() noexcept
+				{return r_id_gen.idGet();}
 
 		private:
 			void targetsCreateImpl(const ResourceObject& obj,const char* name_src
 				,const char* in_dir,Callback& cb);
 
 			const ExpressionEvaluator& r_eval;
+			IdGenerator<size_t>& r_id_gen;
 			std::map<Stringkey,const Target_Factory*> m_r_factories;
 			std::string m_target_dir;
 			size_t m_id_current;

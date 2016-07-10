@@ -26,7 +26,8 @@ DependencyGraphDefault& DependencyGraphDefault::targetRegister(Handle<Target>&& 
 
 static Target& dependencyResolve(std::map< Stringkey,Handle<Target> >& targets
 	,const char* from
-	,const Dependency& dependency)
+	,const Dependency& dependency
+	,IdGenerator<size_t>& id_gen)
 	{
 	auto name=dependency.nameGet();
 	auto key=Stringkey(name);
@@ -39,7 +40,7 @@ static Target& dependencyResolve(std::map< Stringkey,Handle<Target> >& targets
 		{
 	//	Create a placeholder for an external target
 		Handle<TargetPlaceholder> target(
-			TargetPlaceholder::create(name,name,targets.size()));
+			TargetPlaceholder::create(name,name,id_gen.idGet()));
 		return *(targets.emplace(key,std::move(target)).first)->second;
 		}
 
@@ -50,19 +51,26 @@ static Target& dependencyResolve(std::map< Stringkey,Handle<Target> >& targets
 
 DependencyGraphDefault& DependencyGraphDefault::targetsPatch()
 	{
+	m_id_range={0,0};
+	Twins<size_t> id_range{0,0};
 	auto i=m_targets.begin();
 	auto i_end=m_targets.end();
 	while(i!=i_end)
 		{
-		auto deps=i->second->dependencies();
+		auto t1=i->second.get();
+		id_range.first=std::min(id_range.first,t1->idGet());
+		id_range.second=std::max(id_range.second,t1->idGet());
+		auto deps=t1->dependencies();
 		while(deps.first!=deps.second)
 			{
-			deps.first->targetSet(
-				dependencyResolve(m_targets,i->second->nameGet(),*deps.first));
+			auto& t2=dependencyResolve(m_targets,t1->nameGet(),*deps.first
+				,r_id_gen);
+			deps.first->targetSet(t2);
 			++(deps.first);
 			}
 		++i;
 		}
+	m_id_range=id_range;
 	return *this;
 	}
 

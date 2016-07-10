@@ -14,12 +14,15 @@ namespace Maike
 
 	class Target;
 
+	template<class T>
+	class Twins;
+
 	class DependencyGraph
 		{
 		public:
 			virtual DependencyGraph& targetRegister(Handle<Target>&& target)=0;
 			virtual DependencyGraph& targetsPatch()=0;
-			virtual size_t targetCounterGet() const noexcept=0;
+			virtual const Twins<size_t>& idRangeGet() const noexcept=0;
 
 			class TargetProcessor
 				{

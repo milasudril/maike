@@ -45,7 +45,7 @@ class TargetBuilder:public Maike::DependencyGraph::TargetProcessor
 			{
 			if(target_current.childCounterGet()==0)
 				{
-				Maike::buildBranch(target_current,m_target_dir.c_str(),graph.targetCounterGet());
+				Maike::buildBranch(target_current,m_target_dir.c_str(),graph.idRangeGet());
 				}
 			}
 
@@ -127,13 +127,16 @@ int main(int argc,char** args)
 	//	2. Collect targtes
 		Maike::ExpressionEvaluatorDefault evaluator(targetinfo);
 
+		Maike::IdGenerator<size_t> id_gen;
 		Maike::Target_FactoryDelegatorDefault delegator(
-			static_cast<const char*>(targetinfo.variableGet(Maike::Stringkey("target_directory"))),evaluator);
+			 static_cast<const char*>(targetinfo.variableGet(Maike::Stringkey("target_directory")))
+			,evaluator
+			,id_gen);
 		delegator.factoryRegister(Maike::Stringkey(".py"),pythonfactory)
 			.factoryRegister(Maike::Stringkey(".cpp"),cxxfactory)
 			.factoryRegister(Maike::Stringkey(".hpp"),cxxfactory);
 
-		Maike::DependencyGraphDefault targets;
+		Maike::DependencyGraphDefault targets(id_gen);
 		Maike::SpiderDefault spider(delegator,targets);
 		spider.loaderRegister(Maike::Stringkey(".cpp"),cxxloader)
 			.loaderRegister(Maike::Stringkey(".hpp"),cxxloader)

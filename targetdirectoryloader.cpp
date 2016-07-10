@@ -49,7 +49,7 @@ void TargetDirectoryLoader::targetsLoad(const char* name_src,const char* in_dir
 	,Spider& spider,DependencyGraph& graph,Target_FactoryDelegator& factory) const
 	{
 	Handle<TargetDirectory> target(
-		TargetDirectory::create(name_src,in_dir,factory.idNext()));
+		TargetDirectory::create(name_src,in_dir,factory.idGet()));
 	graph.targetRegister(target);
 	DirectoryLister dirlister(name_src);
 	const char* entry=dirlister.read();

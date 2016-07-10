@@ -34,7 +34,7 @@ namespace Maike
 			virtual Target_FactoryDelegator& factoryRegister(const Stringkey& filename_ext
 				,const Target_Factory& factory)=0;
 
-			virtual size_t idNext() noexcept=0;
+			virtual size_t idGet() noexcept=0;
 		};
 	}
 

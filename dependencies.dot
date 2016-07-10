@@ -169,7 +169,10 @@ digraph DependencyGraph
 	"./dependencygraphdefault.hpp"->"./dependencygraph.hpp"[color="blue"];
 	"./dependencygraphdefault.hpp"->"./stringkey.hpp"[color="blue"];
 	"./dependencygraphdefault.hpp"->"./handle.hpp"[color="blue"];
+	"./dependencygraphdefault.hpp"->"./twins.hpp"[color="blue"];
+	"./dependencygraphdefault.hpp"->"./idgenerator.hpp"[color="blue"];
 	"./maike.hpp"->"."[color="blue"];
+	"./idgenerator.hpp"->"."[color="blue"];
 	"./stringkey.hpp"->"."[color="blue"];
 	"./targetdirectoryloader.hpp"->"."[color="blue"];
 	"./targetdirectoryloader.hpp"->"./target_loader.hpp"[color="blue"];
@@ -292,6 +295,7 @@ digraph DependencyGraph
 	"./fileinfo.hpp"->"."[color="blue"];
 	"./target_factorydelegatordefault.hpp"->"."[color="blue"];
 	"./target_factorydelegatordefault.hpp"->"./target_factorydelegator.hpp"[color="blue"];
+	"./target_factorydelegatordefault.hpp"->"./idgenerator.hpp"[color="blue"];
 	"./targetcxxpptokenizer.hpp"->"."[color="blue"];
 	"./targetcxxpptokenizer.hpp"->"./readbuffer.hpp"[color="blue"];
 	"./filein.hpp"->"."[color="blue"];

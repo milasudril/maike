@@ -17,8 +17,9 @@
 
 using namespace Maike;
 
-Target_FactoryDelegatorDefault::Target_FactoryDelegatorDefault(const char* target_dir,const ExpressionEvaluator& eval)
-	:r_eval(eval),m_target_dir(target_dir),m_id_current(0)
+Target_FactoryDelegatorDefault::Target_FactoryDelegatorDefault(const char* target_dir
+	,const ExpressionEvaluator& eval,IdGenerator<size_t>& id_gen)
+	:r_eval(eval),r_id_gen(id_gen),m_target_dir(target_dir)
 	{
 	}
 
@@ -39,7 +40,7 @@ Handle<Target> Target_FactoryDelegatorDefault::targetCreate(const ResourceObject
 		exceptionRaise(ErrorMessage("#0;: #1; is not associated with any target factory"
 			,{name_src,suffix}));
 		}
-	return i->second->targetCreate(obj,name_src,in_dir,idNext());
+	return i->second->targetCreate(obj,name_src,in_dir,idGet());
 	}
 
 
