@@ -110,6 +110,18 @@ void TargetCxx::compile(Twins<const Dependency*> dependency_list
 			r_compiler.compileApplication({deps_begin,deps_end},name_full.c_str(),m_options_extra);
 			}
 			break;
+		case Type::LIB_DYNAMIC:
+			{
+			std::vector<std::string> strings_temp;
+			auto depfiles=depstringCreate(strings_temp,target_dir,dependency_list_full);
+			depfiles.push_back({sourceNameGet(),TargetCxxCompiler::FileUsage::NORMAL});
+
+			auto deps_begin=depfiles.data();
+			auto deps_end=deps_begin + depfiles.size();
+			std::reverse(deps_begin,deps_end);
+			r_compiler.compileDll({deps_begin,deps_end},name_full.c_str(),m_options_extra);
+			}
+			break;
 		case Type::INCLUDE:
 			break;
 		default:
@@ -186,6 +198,7 @@ bool TargetCxx::upToDate(Twins<const Dependency*> dependency_list
 		case Type::INCLUDE:
 			return 1;
 
+		case Type::LIB_DYNAMIC:
 		case Type::APPLICATION:
 			return applicationUpToDate(dependency_list,dependency_list_full
 				,name_full.c_str()

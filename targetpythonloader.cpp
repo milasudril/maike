@@ -14,8 +14,7 @@
 
 using namespace Maike;
 
-TargetPythonLoader::TargetPythonLoader(const TargetPythonInterpreter& intpret)
-	:r_intpret(intpret)
+TargetPythonLoader::TargetPythonLoader()
 	{}
 
 

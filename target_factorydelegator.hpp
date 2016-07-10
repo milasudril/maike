@@ -35,6 +35,9 @@ namespace Maike
 				,const Target_Factory& factory)=0;
 
 			virtual size_t idGet() noexcept=0;
+
+		protected:
+			~Target_FactoryDelegator()=default;
 		};
 	}
 

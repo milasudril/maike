@@ -181,6 +181,7 @@ static void includesGet(const char* name_src,const char* in_dir
 								std::string ref_full(in_dir);
 								ref_full+='/';
 								ref_full+=ref;
+							//TODO What if there was more than one target in the file we came from...
 								if(ref_full!=target.nameGet())
 									{target.dependencyAdd(Dependency(deps.objectGet(k),in_dir));}
 								}

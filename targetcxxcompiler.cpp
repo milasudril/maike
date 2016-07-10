@@ -262,3 +262,50 @@ void TargetCxxCompiler::compileApplication(Twins<const FileInfo*> files
 			"The compiler returned status code #2;",{source,dest,res}));
 		}
 	}
+
+void TargetCxxCompiler::compileDll(Twins<const FileInfo*> files
+	,const char* dest,const TargetCxxOptions& options_extra) const
+	{
+	const char* source=files.first[0].filename;
+
+	CompilerParameters cxxparams;
+	cxxparams.get<Stringkey("target")>().push_back(dest);
+
+	auto options_result=r_options;
+//TODO merge with options_extra
+	{
+	auto& deps=cxxparams.get<Stringkey("dependencies")>();
+	while(files.first!=files.second)
+		{
+		deps.push_back(makeDepitemString(*files.first,options_result));
+		++files.first;
+		}
+//TODO Fix libdir
+	}
+
+	auto cxxversion_min=options_result.cxxversionMinGet();
+	if(cxxversion_min >  m_cxxversion_default)
+		{
+		cxxparams.get<Stringkey("cxxversion")>()
+			.push_back(cxxVersionString(options_result.stdprefixGet(),cxxversion_min));
+		}
+
+
+//TODO Fix includedir
+	std::vector<const ParameterSet*> params(r_paramset);
+	params.push_back(&cxxparams);
+	auto compiler=r_options.dllcompileGet().execute(Pipe::REDIRECT_STDERR
+		,{params.data(),params.data() + params.size()});
+	auto stream=compiler.stderrCapture();
+	ReadBuffer rb(*stream.get());
+	while(!rb.eof())
+		{
+		fputc(rb.byteRead(),stderr);
+		}
+	auto res=compiler.exitStatusGet();
+	if(res!=0)
+		{
+		exceptionRaise(ErrorMessage("#0;: It was not possible to generate #1;. "
+			"The compiler returned status code #2;",{source,dest,res}));
+		}
+	}

@@ -12,14 +12,9 @@
 
 #include "targetdirectoryloader.hpp"
 
-#include "targetcxxoptions.hpp"
-#include "targetcxxloader.hpp"
-#include "targetcxxcompiler.hpp"
-#include "targetcxxfactory.hpp"
+#include "targetcxxhook.hpp"
+#include "targetpythonhook.hpp"
 
-#include "targetpythoninterpreter.hpp"
-#include "targetpythonloader.hpp"
-#include "targetpythonfactory.hpp"
 #include "target_factorydelegatordefault.hpp"
 
 #include "errormessage.hpp"
@@ -34,6 +29,7 @@
 #include "strerror.hpp"
 #include "datasinkstd.hpp"
 #include <cstdio>
+#include <cstring>
 
 class TargetBuilder:public Maike::DependencyGraph::TargetProcessor
 	{
@@ -70,14 +66,20 @@ class DepGraphExporter:public Maike::DependencyGraph::TargetProcessor
 		void operator()(Maike::DependencyGraph& graph,Maike::Target& target_current)
 			{
 			auto name=target_current.nameGet();
-			auto deps=target_current.dependencies();
-			while(deps.first!=deps.second)
+			if(strcmp(name,".")!=0)
 				{
-				const char* colorstring=deps.first->relationGet()==Maike::Dependency::Relation::IMPLEMENTATION?
-					"red":"blue";
-				fprintf(m_dotfile,"\t\"%s\"->\"%s\"[color=\"%s\"];\n",name
-					,deps.first->nameGet(),colorstring);
-				++deps.first;
+				auto deps=target_current.dependencies();
+				while(deps.first!=deps.second)
+					{
+					if(strcmp(deps.first->nameGet(),".")!=0)
+						{
+						const char* colorstring=deps.first->relationGet()==Maike::Dependency::Relation::IMPLEMENTATION?
+							"red":"blue";
+						fprintf(m_dotfile,"\t\"%s\"->\"%s\"[color=\"%s\"];\n",name
+							,deps.first->nameGet(),colorstring);
+						}
+					++deps.first;
+					}
 				}
 			}
 
@@ -113,15 +115,19 @@ int main(int argc,char** args)
 		Maike::TargetDirectoryLoader dirloader(maikeconfig.objectGet("directoryloader"));
 
 	//	1.3 C++ loader and compiler
-		Maike::TargetCxxOptions cxxoptions(maikeconfig.objectGet("cxxoptions"));
-		Maike::TargetCxxCompiler cxxcompiler(cxxoptions,targetinfo);
-		Maike::TargetCxxLoader cxxloader(cxxoptions);
-		Maike::TargetCxxFactory cxxfactory(cxxcompiler);
+		Maike::Handle<Maike::TargetCxxHook> cxxhook(
+			Maike::TargetCxxHook::create(maikeconfig.objectGet("cxxoptions")
+				,targetinfo));
+		auto& cxxfactory=cxxhook->factoryGet();
+		auto& cxxloader=cxxhook->loaderGet();
+
 
 	//	1.4 Python loader and interpreter
-		Maike::TargetPythonInterpreter pythoninterpreter(maikeconfig.objectGet("pythonoptions"),targetinfo);
-		Maike::TargetPythonLoader pythonloader(pythoninterpreter);
-		Maike::TargetPythonFactory pythonfactory(pythoninterpreter);
+		Maike::Handle<Maike::TargetPythonHook> pythonhook(
+			Maike::TargetPythonHook::create(maikeconfig.objectGet("pythonoptions")
+				,targetinfo));
+		auto& pythonfactory=pythonhook->factoryGet();
+		auto& pythonloader=pythonhook->loaderGet();
 
 
 	//	2. Collect targtes

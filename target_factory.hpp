@@ -14,6 +14,8 @@ namespace Maike
 		public:
 			virtual Handle<Target> targetCreate(const ResourceObject& obj
 				,const char* name_src,const char* in_dir,size_t id) const=0;
+		protected:
+			~Target_Factory()=default;
 		};
 	}
 
