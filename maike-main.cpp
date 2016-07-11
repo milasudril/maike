@@ -1,7 +1,7 @@
 //@	[
 //@		["windows"
 //@			,{"targets":[{"name":"maike.exe","type":"application"}]}]
-//@		,{"targets":[{"name":"maike","type":"application"}]}
+//@		,["1",{"targets":[{"name":"maike","type":"application"}]}]
 //@	]
 
 #include "dependencygraphdefault.hpp"
@@ -37,12 +37,13 @@ class TargetBuilder:public Maike::DependencyGraph::TargetProcessor
 		explicit TargetBuilder(const char* target_dir):m_target_dir(target_dir)
 			{}
 
-		void operator()(Maike::DependencyGraph& graph,Maike::Target& target_current)
+		int operator()(Maike::DependencyGraph& graph,Maike::Target& target_current)
 			{
 			if(target_current.childCounterGet()==0)
 				{
 				Maike::buildBranch(target_current,m_target_dir.c_str(),graph.idRangeGet());
 				}
+			return 0;
 			}
 
 	private:
@@ -63,7 +64,7 @@ class DepGraphExporter:public Maike::DependencyGraph::TargetProcessor
 			fprintf(m_dotfile,"digraph DependencyGraph\n\t{\n");
 			}
 
-		void operator()(Maike::DependencyGraph& graph,Maike::Target& target_current)
+		int operator()(Maike::DependencyGraph& graph,Maike::Target& target_current)
 			{
 			auto name=target_current.nameGet();
 			if(strcmp(name,".")!=0)
@@ -81,6 +82,7 @@ class DepGraphExporter:public Maike::DependencyGraph::TargetProcessor
 					++deps.first;
 					}
 				}
+			return 0;
 			}
 
 		~DepGraphExporter()

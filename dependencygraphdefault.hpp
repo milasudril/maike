@@ -19,7 +19,7 @@ namespace Maike
 		{
 		public:
 			explicit DependencyGraphDefault(IdGenerator<size_t>& id_gen):
-				r_id_gen(id_gen)
+				r_id_gen(id_gen),m_patch_needed(0)
 				{}
 
 			DependencyGraphDefault& targetRegister(Handle<Target>&& target);
@@ -30,10 +30,16 @@ namespace Maike
 			const Twins<size_t>& idRangeGet() const noexcept
 				{return m_id_range;}
 
+
+			DependencyGraphDefault& targetsRemove(TargetProcessor&& condition);
+
+			DependencyGraphDefault& clear() noexcept;
+
 		private:
 			IdGenerator<size_t>& r_id_gen;
 			std::map< Stringkey,Handle<Target> > m_targets;
 			Twins<size_t> m_id_range;
+			bool m_patch_needed;
 		};
 	}
 

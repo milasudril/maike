@@ -3,7 +3,7 @@
 #ifndef MAIKE_IDGENERATOR_HPP
 #define MAIKE_IDGENERATOR_HPP
 
-#include <stack>
+#include <vector>
 
 namespace Maike
 	{
@@ -20,16 +20,26 @@ namespace Maike
 					++m_id_next;
 					return m_id_next;
 					}
-				auto ret=std::move(m_freelist.top());
-				m_freelist.pop();
+				auto ret=std::move(m_freelist.back());
+				m_freelist.pop_back();
 				return ret;
 				}
 
-			void idRelease(const IdType& id)
-				{m_freelist.push(id);}
+			IdGenerator& idRelease(const IdType& id)
+				{
+				m_freelist.push_back(id);
+				return *this;
+				}
+
+			IdGenerator& reset() noexcept
+				{
+				m_freelist.clear();
+				m_id_next=0;
+				return *this;
+				}
 
 		private:
-			std::stack<IdType> m_freelist;
+			std::vector<IdType> m_freelist;
 			IdType m_id_next;
 		};
 	}

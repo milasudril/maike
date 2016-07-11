@@ -34,6 +34,7 @@ namespace Maike
 			virtual size_t idGet() const noexcept=0;
 			virtual const char* nameGet() const noexcept=0;
 			virtual const char* sourceNameGet() const noexcept=0;
+			virtual const char* inDirGet() const noexcept=0;
 			virtual bool upToDate(Twins<const Dependency*> dependency_list
 				,Twins<const Dependency*> dependency_list_full
 				,const char* target_dir) const=0;

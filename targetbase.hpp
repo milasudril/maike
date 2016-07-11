@@ -21,8 +21,6 @@ namespace Maike
 		public:
 			explicit TargetBase(const char* name,const char* name_src,const char* in_dir,size_t id);
 
-			explicit TargetBase(const char* name,const char* name_src,size_t id);
-
 			explicit TargetBase(const ResourceObject& obj,const char* name_src
 				,const char* in_dir,size_t id);
 
@@ -59,12 +57,16 @@ namespace Maike
 			const char* sourceNameGet() const noexcept
 				{return m_source_name.c_str();}
 
+			const char* inDirGet() const noexcept
+				{return m_in_dir.c_str();}
+
 
 		private:
 			size_t m_child_counter;
 			size_t m_id;
 			std::string m_name;
 			std::string m_source_name;
+			std::string m_in_dir;
 			std::vector<Dependency> m_dependencies;
 		};
 	}

@@ -17,6 +17,8 @@ namespace Maike
 	template<class T>
 	class Twins;
 
+	class Stringkey;
+
 	class DependencyGraph
 		{
 		public:
@@ -28,10 +30,16 @@ namespace Maike
 				{
 				public:
 					virtual ~TargetProcessor()=default;
-					virtual void operator()(DependencyGraph& graph,Target& target)=0;
+					virtual int operator()(DependencyGraph& graph,Target& target)=0;
 				};
 
 			virtual DependencyGraph& targetsProcess(TargetProcessor&& proc)=0;
+
+			virtual DependencyGraph& targetsRemove(TargetProcessor&& condition)=0;
+
+			virtual Target* targetFind(const Stringkey& key)=0;
+
+			virtual DependencyGraph& clear() noexcept=0;
 
 		protected:
 			~DependencyGraph()=default;

@@ -21,6 +21,7 @@ DependencyGraphDefault& DependencyGraphDefault::targetRegister(Handle<Target>&& 
 			,{target->sourceNameGet(),name,i->second->sourceNameGet()}));
 		}
 	m_targets.emplace(key,std::move(target));
+	m_patch_needed=1;
 	return *this;
 	}
 
@@ -71,6 +72,7 @@ DependencyGraphDefault& DependencyGraphDefault::targetsPatch()
 		++i;
 		}
 	m_id_range=id_range;
+	m_patch_needed=0;
 	return *this;
 	}
 
@@ -86,6 +88,8 @@ Target* DependencyGraphDefault::targetFind(const Stringkey& name)
 
 DependencyGraphDefault& DependencyGraphDefault::targetsProcess(TargetProcessor&& proc)
 	{
+	if(m_patch_needed)
+		{targetsPatch();}
 	auto i=m_targets.begin();
 	auto i_end=m_targets.end();
 	while(i!=i_end)
@@ -93,5 +97,32 @@ DependencyGraphDefault& DependencyGraphDefault::targetsProcess(TargetProcessor&&
 		proc(*this,*(i->second));
 		++i;
 		}
+	return *this;
+	}
+
+DependencyGraphDefault& DependencyGraphDefault::targetsRemove(TargetProcessor&& condition)
+	{
+	if(m_patch_needed)
+		{targetsPatch();}
+	auto i=m_targets.begin();
+	auto i_end=m_targets.end();
+	while(i!=i_end)
+		{
+		if(condition(*this,*(i->second))==0)
+			{
+			r_id_gen.idRelease(i->second->idGet());
+			m_targets.erase(i);
+			}
+		++i;
+		}
+	m_patch_needed=1;
+	return *this;
+	}
+
+DependencyGraphDefault& DependencyGraphDefault::clear() noexcept
+	{
+	m_targets.clear();
+	r_id_gen.reset();
+	m_patch_needed=0;
 	return *this;
 	}

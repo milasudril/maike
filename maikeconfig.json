@@ -4,14 +4,26 @@
 	"target_directory":"__targets"
 	}
 
-,"spider":
+,"targetinfo":
 	{
-	"start_directory":"."
+	"target_directory":"__targets"
+	}
+
+,"session":
+	{
+	"source_files":["."]
 	}
 
 ,"directoryloader":
 	{
-	 "paths_reject":[".git",".codelite",".clang","test","Debug","Release","test"
+	 "paths_reject":[".git",".codelite",".clang","test","Debug","Release"
+		,"__targets"]
+	,"recursive":1
+	}
+
+,"directoryoptions":
+	{
+	 "paths_reject":[".git",".codelite",".clang","test","Debug","Release"
 		,"__targets"]
 	,"recursive":1
 	}
