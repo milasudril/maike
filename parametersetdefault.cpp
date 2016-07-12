@@ -26,3 +26,8 @@ void ParameterSetDefault::parameterGet(const Stringkey& key,ParameterProcessor&&
 			}
 		}
 	}
+
+void ParameterSetDefault::clear() noexcept
+	{
+	m_values.clear();
+	}

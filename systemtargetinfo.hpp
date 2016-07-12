@@ -20,7 +20,7 @@ namespace Maike
 	class SystemTargetInfo:public ParameterSet
 		{
 		public:
-			SystemTargetInfo(const ResourceObject& sysvars);
+			SystemTargetInfo(const ResourceObject& targetinfo);
 			~SystemTargetInfo();
 
 			void parameterGet(const Stringkey& key
@@ -29,6 +29,12 @@ namespace Maike
 			Variant variableGet(const Stringkey& key) const noexcept;
 
 			void dataDump(DataSink& sink) const;
+
+			void clear();
+
+			SystemTargetInfo& configAppend(const ResourceObject& targetinfo);
+
+			void loadFromSystem();
 
 		private:
 			std::map<Stringkey,Variant> m_sysvars;

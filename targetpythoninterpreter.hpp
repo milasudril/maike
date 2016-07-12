@@ -22,6 +22,10 @@ namespace Maike
 
 			void run(const char* script,Twins<const char* const*> args) const;
 
+			void configClear();
+
+			TargetPythonInterpreter& configAppend(const ResourceObject& pythonoptions);
+
 		private:
 			Command m_interpreter;
 			const ParameterSet& r_sysvars;

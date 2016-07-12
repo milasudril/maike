@@ -21,6 +21,7 @@ namespace Maike
 			~ParameterSetDefault();
 
 			void parameterGet(const Stringkey& key,ParameterProcessor&& proc) const;
+			void clear() noexcept;
 
 		private:
 			std::map< Stringkey, std::vector<std::string> > m_values;

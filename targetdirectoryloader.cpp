@@ -17,32 +17,10 @@
 
 using namespace Maike;
 
-TargetDirectoryLoader::TargetDirectoryLoader(const ResourceObject& dirloader):
-	m_recursive(1)
+TargetDirectoryLoader::TargetDirectoryLoader(const ResourceObject& directoryloader)
 	{
-	if(dirloader.objectExists("recursive"))
-		{
-		m_recursive=static_cast<long long int>(dirloader.objectGet("recursive") );
-		}
-
-	if(m_recursive)
-		{
-	//	IRP (Infinite Recursion Prevention)
-		pathReject(Stringkey(".")); //Remove references to this
-		pathReject(Stringkey(".."));//and parent directory
-
-	//	Load rejected paths
-		if(dirloader.objectExists("paths_reject"))
-			{
-			auto paths_reject=dirloader.objectGet("paths_reject");
-			auto N=paths_reject.objectCountGet();
-			for(decltype(N) k=0;k<N;++k)
-				{
-				auto path=static_cast<const char*>(paths_reject.objectGet(k));
-				pathReject(Stringkey(path));
-				}
-			}
-		}
+	configClear();
+	configAppend(directoryloader);
 	}
 
 void TargetDirectoryLoader::targetsLoad(const char* name_src,const char* in_dir
@@ -80,5 +58,36 @@ TargetDirectoryLoader& TargetDirectoryLoader::pathReject(const Stringkey& key)
 TargetDirectoryLoader& TargetDirectoryLoader::pathAccept(const Stringkey& key)
 	{
 	m_ignore.erase(key);
+	return *this;
+	}
+
+void TargetDirectoryLoader::configClear()
+	{
+	m_ignore.clear();
+	m_recursive=1;
+//	IRP (Infinite Recursion Prevention)
+	pathReject(Stringkey(".")); //Remove references to this
+	pathReject(Stringkey(".."));//and parent directory
+	}
+
+TargetDirectoryLoader& TargetDirectoryLoader::configAppend(const ResourceObject& directoryoptions)
+	{
+	if(directoryoptions.objectExists("recursive"))
+		{
+		m_recursive=static_cast<long long int>(directoryoptions.objectGet("recursive") );
+		}
+
+
+	if(directoryoptions.objectExists("paths_reject"))
+		{
+		auto paths_reject=directoryoptions.objectGet("paths_reject");
+		auto N=paths_reject.objectCountGet();
+		for(decltype(N) k=0;k<N;++k)
+			{
+			auto path=static_cast<const char*>(paths_reject.objectGet(k));
+			pathReject(Stringkey(path));
+			}
+		}
+
 	return *this;
 	}

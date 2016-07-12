@@ -25,7 +25,7 @@ namespace Maike
 		{
 		public:
 			Session(const ResourceObject& maikeconfig);
-			Session& configClear() noexcept;
+			Session& configClear();
 			Session& configAppend(const ResourceObject& maikeconfig);
 			Session& sourceFileAppend(const char* filename);
 			void configDumpJSON(DataSink& sink) const;

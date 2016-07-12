@@ -220,6 +220,11 @@ digraph DependencyGraph
 	"./targetcxxoptions.o"->"./targetcxxoptions.hpp"[color="blue"];
 	"./targetcxxoptions.o"->"./resourceobject.hpp"[color="blue"];
 	"./targetcxxoptions.o"->"./resourceobject.o"[color="red"];
+	"./targetcxxoptions.o"->"./exceptionhandler.hpp"[color="blue"];
+	"./targetcxxoptions.o"->"./exceptionhandler.o"[color="red"];
+	"./targetcxxoptions.o"->"./errormessage.hpp"[color="blue"];
+	"./targetcxxoptions.o"->"./errormessage.o"[color="red"];
+	"./targetcxxoptions.o"->"./variant.hpp"[color="blue"];
 	"./targetcxxhook.o"->"./targetcxxhook.hpp"[color="blue"];
 	"./maike"->"./dependencygraphdefault.hpp"[color="blue"];
 	"./maike"->"./dependencygraphdefault.o"[color="red"];

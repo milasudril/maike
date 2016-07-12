@@ -25,6 +25,10 @@ namespace Maike
 			TargetDirectoryLoader& pathReject(const Stringkey& key);
 			TargetDirectoryLoader& pathAccept(const Stringkey& key);
 
+			void configClear();
+
+			TargetDirectoryLoader& configAppend(const ResourceObject& directoryoptions);
+
 		private:
 			std::set<Stringkey> m_ignore;
 			bool m_recursive;

@@ -50,15 +50,18 @@ namespace Maike
 			const char* libintFormatGet() const noexcept
 				{return m_libext_format.c_str();}
 
+			void clear();
+
+			TargetCxxOptions& configAppend(const ResourceObject& cxxoptions);
+
+
 		private:
-			uint64_t m_fields_valid;
 			ParameterSetDefault m_params;
 
 			std::vector< std::string > m_includedir;
 			std::vector< std::string > m_libdir;
 
 			std::string m_platform_suffix;
-			static constexpr uint64_t PLATFORMSUFFIX_VALID=0x1;
 
 			std::string m_includedir_format;
 			std::string m_libdir_format;
@@ -66,10 +69,9 @@ namespace Maike
 			std::string m_libint_format;
 
 			long long int m_cxxversion_min;
-			static constexpr uint64_t CXXVERSIONMIN_VALID=0x2;
+			long long int m_cxxversion_max;
 
 			std::string m_stdprefix;
-			static constexpr uint64_t STDPREFIX_VALID=0x8;
 
 			Command m_appcompile;
 			Command m_dllcompile;

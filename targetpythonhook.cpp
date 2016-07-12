@@ -16,3 +16,15 @@ TargetPythonHook* TargetPythonHook::create(const ResourceObject& pythonoptions
 
 void TargetPythonHook::destroy() noexcept
 	{delete this;}
+
+void TargetPythonHook::configClear()
+	{
+	m_intpret.configClear();
+	}
+
+
+TargetPythonHook& TargetPythonHook::configAppend(const ResourceObject& pythonoptions)
+	{
+	m_intpret.configAppend(pythonoptions);
+	return *this;
+	}

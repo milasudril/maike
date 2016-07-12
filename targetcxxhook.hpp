@@ -28,6 +28,10 @@ namespace Maike
 			const TargetCxxLoader& loaderGet() const noexcept
 				{return m_loader;}
 
+			void configClear();
+
+			TargetCxxHook& configAppend(const ResourceObject& cxxoptions);
+
 		private:
 			TargetCxxOptions m_options;
 			TargetCxxCompiler m_compiler;

@@ -31,6 +31,7 @@ namespace Maike
 
 			Command& nameSet(const char* name);
 			Command& argumentAppend(const char* arg);
+			Command& argumentsClear() noexcept;
 
 
 		private:

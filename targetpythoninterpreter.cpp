@@ -34,3 +34,16 @@ void TargetPythonInterpreter::run(const char* script,Twins<const char* const*> a
 		fputc(rb.byteRead(),stderr);
 		}
 	}
+
+void TargetPythonInterpreter::configClear()
+	{
+	m_interpreter.nameSet("python3").argumentsClear().argumentAppend("--")
+		.argumentAppend("{script}").argumentAppend("{args}");
+	}
+
+TargetPythonInterpreter& TargetPythonInterpreter::configAppend(const ResourceObject& pythonoptions)
+	{
+	if(pythonoptions.objectExists("command"))
+		{m_interpreter=Command(pythonoptions.objectGet("command"));}
+	return *this;
+	}

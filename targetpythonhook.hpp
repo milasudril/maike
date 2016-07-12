@@ -27,6 +27,10 @@ namespace Maike
 			const TargetPythonLoader& loaderGet() const noexcept
 				{return m_loader;}
 
+			void configClear();
+
+			TargetPythonHook& configAppend(const ResourceObject& pythonoptions);
+
 		private:
 			TargetPythonInterpreter m_intpret;
 			TargetPythonLoader m_loader;

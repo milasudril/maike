@@ -33,6 +33,48 @@ Session::Session(const ResourceObject& maikeconfig):
 		}
 	}
 
+Session& Session::configClear()
+	{
+	m_targetinfo.clear();
+	m_source_files.clear();
+	m_dirloader.configClear();
+	m_cxxhook->configClear();
+	m_pythonhook->configClear();
+	m_graph_dirty=1;
+	return *this;
+	}
+
+Session& Session::configAppend(const ResourceObject& maikeconfig)
+	{
+	if(maikeconfig.objectExists("session"))
+		{
+		auto session=maikeconfig.objectGet("session");
+		if(session.objectExists("source_files"))
+			{
+			auto source_files=session.objectGet("source_files");
+			auto N_sources=source_files.objectCountGet();
+			for(decltype(N_sources) k=0;k<N_sources;++k)
+				{
+				sourceFileAppend(static_cast<const char*>(source_files.objectGet(k)));
+				}
+			}
+		}
+
+	if(maikeconfig.objectExists("targetinfo"))
+		{m_targetinfo.configAppend(maikeconfig.objectGet("targetinfo"));}
+
+	if(maikeconfig.objectExists("directoryoptions"))
+		{m_dirloader.configAppend(maikeconfig.objectGet("directoryoptions"));}
+
+	if(maikeconfig.objectExists("cxxoptions"))
+		{m_cxxhook->configAppend(maikeconfig.objectGet("cxxoptions"));}
+
+	if(maikeconfig.objectExists("pythonoptions"))
+		{m_pythonhook->configAppend(maikeconfig.objectGet("pythonoptions"));}
+
+	return *this;
+	}
+
 Session& Session::sourceFileAppend(const char* filename)
 	{
 	m_source_files.push_back(std::string(filename));

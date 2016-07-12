@@ -174,3 +174,9 @@ Command& Command::argumentAppend(const char* arg)
 	m_args.push_back(arg);
 	return *this;
 	}
+
+Command& Command::argumentsClear() noexcept
+	{
+	m_args.clear();
+	return *this;
+	}

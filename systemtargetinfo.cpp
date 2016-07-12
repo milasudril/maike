@@ -12,15 +12,35 @@
 
 using namespace Maike;
 
-SystemTargetInfo::SystemTargetInfo(const ResourceObject& config)
+SystemTargetInfo::SystemTargetInfo(const ResourceObject& targetinfo)
 	{
-	sysvarsLoad(m_sysvars,m_strings,m_varnames);
+	loadFromSystem();
+	configAppend(targetinfo);
+	}
+
+SystemTargetInfo::~SystemTargetInfo()
+	{
+	}
+
+void SystemTargetInfo::clear()
+	{
+	m_sysvars.clear();
+	m_strings.clear();
 		{
 		Stringkey key("target_directory");
-		auto i=replace(m_strings,{key,std::string("__targets")});
-		replace(m_sysvars,{key,i->second.c_str()});
+		replace(m_sysvars,{key,"__targets"});
 		}
-	auto i=config.objectIteratorGet();
+	}
+
+void SystemTargetInfo::loadFromSystem()
+	{
+	clear();
+	sysvarsLoad(m_sysvars,m_strings,m_varnames);
+	}
+
+SystemTargetInfo& SystemTargetInfo::configAppend(const ResourceObject& targetinfo)
+	{
+	auto i=targetinfo.objectIteratorGet();
 	while(!i.endAt())
 		{
 		auto p=i.get();
@@ -50,11 +70,9 @@ SystemTargetInfo::SystemTargetInfo(const ResourceObject& config)
 			}
 		i.next();
 		}
+	return *this;
 	}
 
-SystemTargetInfo::~SystemTargetInfo()
-	{
-	}
 
 void SystemTargetInfo::parameterGet(const Stringkey& key
 	,ParameterProcessor&& proc) const
