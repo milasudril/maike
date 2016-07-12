@@ -8,9 +8,8 @@
 
 using namespace Maike;
 
-TargetPythonInterpreter::TargetPythonInterpreter(const ResourceObject& obj
-	,const ParameterSet& sysvars)
-	:m_interpreter(obj.objectGet("command")),r_sysvars(sysvars)
+TargetPythonInterpreter::TargetPythonInterpreter(const ParameterSet& sysvars)
+	:r_sysvars(sysvars)
 	{
 	}
 
@@ -46,4 +45,11 @@ TargetPythonInterpreter& TargetPythonInterpreter::configAppend(const ResourceObj
 	if(pythonoptions.objectExists("command"))
 		{m_interpreter=Command(pythonoptions.objectGet("command"));}
 	return *this;
+	}
+
+void TargetPythonInterpreter::configDump(ResourceObject& pythonoptions) const
+	{
+	ResourceObject command(ResourceObject::Type::OBJECT);
+	m_interpreter.configDump(command);
+	pythonoptions.objectSet("command",std::move(command));
 	}

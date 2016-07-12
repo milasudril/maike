@@ -15,9 +15,5 @@
 
 using namespace Maike;
 
-extern "C"
-	{
-	Target_Hook* Maike_Target_Hook_create(const ResourceObject& pythonoptions
-		,const ParameterSet& params)
-		{return TargetPythonHook::create(pythonoptions,params);}
-	}
+Target_Hook* Maike_Target_Hook_create(const ParameterSet& params)
+	{return TargetPythonHook::create(params);}

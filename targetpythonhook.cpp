@@ -4,15 +4,13 @@
 
 using namespace Maike;
 
-TargetPythonHook::TargetPythonHook(const ResourceObject& pythonoptions
-	,const ParameterSet& params):
-	m_intpret(pythonoptions,params),m_factory(m_intpret)
+TargetPythonHook::TargetPythonHook(const ParameterSet& params):
+	m_intpret(params),m_factory(m_intpret)
 	{
 	}
 
-TargetPythonHook* TargetPythonHook::create(const ResourceObject& pythonoptions
-	,const ParameterSet& params)
-	{return new TargetPythonHook(pythonoptions,params);}
+TargetPythonHook* TargetPythonHook::create(const ParameterSet& params)
+	{return new TargetPythonHook(params);}
 
 void TargetPythonHook::destroy() noexcept
 	{delete this;}
@@ -27,4 +25,9 @@ TargetPythonHook& TargetPythonHook::configAppend(const ResourceObject& pythonopt
 	{
 	m_intpret.configAppend(pythonoptions);
 	return *this;
+	}
+
+void TargetPythonHook::configDump(ResourceObject& pythonoptions) const
+	{
+	m_intpret.configDump(pythonoptions);
 	}

@@ -33,6 +33,8 @@ namespace Maike
 			Command& argumentAppend(const char* arg);
 			Command& argumentsClear() noexcept;
 
+			void configDump(ResourceObject& cmd) const;
+
 
 		private:
 			std::string m_name;

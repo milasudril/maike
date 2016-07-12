@@ -24,11 +24,12 @@ namespace Maike
 	class Session
 		{
 		public:
-			Session(const ResourceObject& maikeconfig);
+			Session();
+
 			Session& configClear();
 			Session& configAppend(const ResourceObject& maikeconfig);
 			Session& sourceFileAppend(const char* filename);
-			void configDumpJSON(DataSink& sink) const;
+			void configDump(ResourceObject& maikeconfig) const;
 
 			Session& scanFile(const char* filename);
 			Session& dependenciesClear() noexcept;

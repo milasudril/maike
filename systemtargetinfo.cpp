@@ -7,15 +7,13 @@
 #include "variant.hpp"
 #include "stringformat.hpp"
 #include "mapreplace.hpp"
-#include "writebuffer.hpp"
 #include "stringformat.hpp"
 
 using namespace Maike;
 
-SystemTargetInfo::SystemTargetInfo(const ResourceObject& targetinfo)
+SystemTargetInfo::SystemTargetInfo()
 	{
 	loadFromSystem();
-	configAppend(targetinfo);
 	}
 
 SystemTargetInfo::~SystemTargetInfo()
@@ -29,6 +27,7 @@ void SystemTargetInfo::clear()
 		{
 		Stringkey key("target_directory");
 		replace(m_sysvars,{key,"__targets"});
+		m_varnames[key]=std::string("target_directory");
 		}
 	}
 
@@ -100,36 +99,31 @@ Variant SystemTargetInfo::variableGet(const Stringkey& key) const noexcept
 	return i->second;
 	}
 
-void SystemTargetInfo::dataDump(DataSink& sink) const
+void SystemTargetInfo::configDump(ResourceObject& targetinfo) const
 	{
-	WriteBuffer wb(sink);
-	wb.write('{');
 	auto i=m_sysvars.begin();
 	while(i!=m_sysvars.end())
 		{
-		wb.write('"').write(m_varnames.find(i->first)->second.c_str())
-			.write('"').write(':');
-
+		auto key=m_varnames.find(i->first)->second.c_str();
 		auto val=i->second;
 		switch(val.typeGet())
 			{
 			case Variant::STRING:
-				wb.write('"').write(static_cast<const char*>(val)).write('"');
+				targetinfo.objectSet(key,ResourceObject(static_cast<const char*>(val)));
 				break;
-			case Variant::BOOL:
-			case Variant::USER_OBJECT:
+			case Variant::FLOAT:
+				targetinfo.objectSet(key,ResourceObject(static_cast<float>(val)));
+				break;
+			case Variant::DOUBLE:
+				targetinfo.objectSet(key,ResourceObject(static_cast<double>(val)));
+				break;
+			case Variant::INT:
+				targetinfo.objectSet(key
+					,ResourceObject(static_cast<long long int>(static_cast<int64_t>(val))));
 				break;
 			default:
-				{
-				char buffer[256];
-				format(Twins<char*>{buffer,buffer+256},"#0;",{val});
-				wb.write(buffer);
-				}
+				break;
 			}
-		wb.write('\n');
 		++i;
-		if(i!=m_sysvars.end())
-			{wb.write(',');}
 		}
-	wb.write('}');
 	}

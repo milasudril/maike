@@ -23,8 +23,6 @@ static void optionsFill(Options::OptionMap& options)
 
 	MAKE_OPTION(options,2,"configfiles","Load the listed configuration files",2);
 
-	MAKE_OPTION(options,2,"no-stdconfig","Do not load any default configuration files",0);
-
 	MAKE_OPTION(options,2,"no-sysvars","Do not load any default system variable. "
 		"This is useful when using a cross-compiler.",0);
 
@@ -52,8 +50,8 @@ static void optionsFill(Options::OptionMap& options)
 	MAKE_OPTION(options,4,"dump-timestat","Prints the time it takes to perform various "
 		"tasks. As defualt, the data is written to `stdout`.",1);
 
-	MAKE_OPTION(options,2,"dump-systemtarget-info","Prints availible information "
-		"about the target system. As defualt, the data is written to `stdout`",1);
+	MAKE_OPTION(options,2,"configdump","Prints the current configuration. As "
+		"defualt, the data is written to `stdout`",1);
 	}
 
 static void optionLoad(Options::OptionMap& options

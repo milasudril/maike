@@ -41,6 +41,9 @@ namespace Maike
 			long long int cxxversionMinGet() const noexcept
 				{return m_cxxversion_min;}
 
+			long long int cxxversionMaxGet() const noexcept
+				{return m_cxxversion_max;}
+
 			const char* stdprefixGet() const noexcept
 				{return m_stdprefix.c_str();}
 
@@ -53,6 +56,8 @@ namespace Maike
 			void clear();
 
 			TargetCxxOptions& configAppend(const ResourceObject& cxxoptions);
+
+			void configDump(ResourceObject& cxxoptions) const;
 
 
 		private:

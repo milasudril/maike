@@ -14,8 +14,9 @@ namespace Maike
 	class TargetPythonInterpreter
 		{
 		public:
-			explicit TargetPythonInterpreter(const ResourceObject& pythonoptions
-				,const ParameterSet& sysvars);
+			explicit TargetPythonInterpreter(const ParameterSet& sysvars);
+
+			explicit TargetPythonInterpreter(ParameterSet&& sysvars)=delete;
 
 			TargetPythonInterpreter(const ResourceObject& pythonoptions
 				,ParameterSet&& sysvars)=delete;
@@ -25,6 +26,8 @@ namespace Maike
 			void configClear();
 
 			TargetPythonInterpreter& configAppend(const ResourceObject& pythonoptions);
+
+			void configDump(ResourceObject& pythonoptions) const;
 
 		private:
 			Command m_interpreter;

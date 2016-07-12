@@ -18,8 +18,9 @@ namespace Maike
 	class TargetCxxHook final:public Target_Hook
 		{
 		public:
-			static TargetCxxHook* create(const ResourceObject& cxxoptions
-				,const ParameterSet& params);
+			static TargetCxxHook* create(const ParameterSet& params);
+
+			static TargetCxxHook* create(ParameterSet&& params)=delete;
 
 
 			const TargetCxxFactory& factoryGet() const noexcept
@@ -31,6 +32,7 @@ namespace Maike
 			void configClear();
 
 			TargetCxxHook& configAppend(const ResourceObject& cxxoptions);
+			void configDump(ResourceObject& cxxoptions) const;
 
 		private:
 			TargetCxxOptions m_options;
@@ -38,11 +40,7 @@ namespace Maike
 			TargetCxxLoader m_loader;
 			TargetCxxFactory m_factory;
 
-			explicit TargetCxxHook(const ResourceObject& cxxoptions
-				,const ParameterSet& params);
-
-			explicit TargetCxxHook(const ResourceObject& cxxoptions
-				,ParameterSet&& params)=delete;
+			explicit TargetCxxHook(const ParameterSet& params);
 
 			void destroy() noexcept;
 		};

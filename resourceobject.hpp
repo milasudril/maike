@@ -12,6 +12,7 @@
 namespace Maike
 	{
 	class DataSource;
+	class DataSink;
 
 	class ResourceObject
 		{
@@ -49,6 +50,13 @@ namespace Maike
 
 			explicit ResourceObject(DataSource& reader);
 
+			explicit ResourceObject(long long int x);
+			explicit ResourceObject(const char* str);
+			explicit ResourceObject(double x);
+
+			enum class Type:unsigned int{OBJECT,ARRAY,STRING,INTEGER,FLOAT};
+			explicit ResourceObject(Type type);
+
 			~ResourceObject();
 
 			ResourceObject(ResourceObject&& tree) noexcept:m_handle(tree.m_handle)
@@ -59,8 +67,6 @@ namespace Maike
 				std::swap(tree.m_handle,m_handle);
 				return *this;
 				}
-
-			enum class Type:unsigned int{OBJECT,ARRAY,STRING,INTEGER,FLOAT};
 
 			Type typeGet() const noexcept;
 
@@ -82,9 +88,22 @@ namespace Maike
 			explicit operator long long int() const;
 			explicit operator double() const;
 
+			ResourceObject& objectAppend(ResourceObject&& object);
+			ResourceObject& objectAppend(const ResourceObject& object)=delete;
+			ResourceObject& objectSet(const char* key,ResourceObject&& object);
+			ResourceObject& objectSet(const ResourceObject& object)=delete;
+
+			void write(DataSink&& sink) const
+				{writeImpl(sink);}
+
+			void write(DataSink& sink) const
+				{writeImpl(sink);}
+
 		private:
 			ResourceObject(void* handle,const char* name);
 			void* m_handle;
+
+			void writeImpl(DataSink& sink) const;
 		};
 	};
 

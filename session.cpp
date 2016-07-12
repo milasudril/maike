@@ -7,30 +7,15 @@
 
 using namespace Maike;
 
-Session::Session(const ResourceObject& maikeconfig):
-	 m_targetinfo(maikeconfig.objectGet("targetinfo"))
-	,m_dirloader(maikeconfig.objectGet("directoryoptions"))
-	,m_cxxhook(TargetCxxHook::create(maikeconfig.objectGet("cxxoptions"),m_targetinfo))
-	,m_pythonhook(TargetPythonHook::create(maikeconfig.objectGet("pythonoptions"),m_targetinfo))
+Session::Session():
+	 m_cxxhook(TargetCxxHook::create(m_targetinfo))
+	,m_pythonhook(TargetPythonHook::create(m_targetinfo))
 	,m_evaluator(m_targetinfo)
 	,m_delegator(static_cast<const char*>(m_targetinfo.variableGet(Stringkey("target_directory")))
 		,m_evaluator,m_id_gen)
 	,m_graph(m_id_gen)
 	,m_spider(m_delegator,m_graph)
 	{
-	if(maikeconfig.objectExists("session"))
-		{
-		auto session=maikeconfig.objectGet("session");
-		if(session.objectExists("source_files"))
-			{
-			auto source_files=session.objectGet("source_files");
-			auto N_sources=source_files.objectCountGet();
-			for(decltype(N_sources) k=0;k<N_sources;++k)
-				{
-				sourceFileAppend(static_cast<const char*>(source_files.objectGet(k)));
-				}
-			}
-		}
 	}
 
 Session& Session::configClear()
@@ -73,6 +58,49 @@ Session& Session::configAppend(const ResourceObject& maikeconfig)
 		{m_pythonhook->configAppend(maikeconfig.objectGet("pythonoptions"));}
 
 	return *this;
+	}
+
+void Session::configDump(ResourceObject& maikeconfig) const
+	{
+		{
+		ResourceObject session(ResourceObject::Type::OBJECT);
+			{
+			ResourceObject source_files(ResourceObject::Type::ARRAY);
+			auto ptr=m_source_files.data();
+			auto ptr_end=ptr+m_source_files.size();
+			while(ptr!=ptr_end)
+				{
+				source_files.objectAppend(ResourceObject(ptr->c_str()));
+				++ptr;
+				}
+			session.objectSet("source_files",std::move(source_files));
+			}
+		maikeconfig.objectSet("session",std::move(session));
+		}
+
+		{
+		ResourceObject targetinfo(ResourceObject::Type::OBJECT);
+		m_targetinfo.configDump(targetinfo);
+		maikeconfig.objectSet("targetinfo",std::move(targetinfo));
+		}
+
+		{
+		ResourceObject directoryoptions(ResourceObject::Type::OBJECT);
+		m_dirloader.configDump(directoryoptions);
+		maikeconfig.objectSet("directoryoptions",std::move(directoryoptions));
+		}
+
+		{
+		ResourceObject pythonoptions(ResourceObject::Type::OBJECT);
+		m_pythonhook->configDump(pythonoptions);
+		maikeconfig.objectSet("pythonoptions",std::move(pythonoptions));
+		}
+
+		{
+		ResourceObject cxxoptions(ResourceObject::Type::OBJECT);
+		m_cxxhook->configDump(cxxoptions);
+		maikeconfig.objectSet("cxxoptions",std::move(cxxoptions));
+		}
 	}
 
 Session& Session::sourceFileAppend(const char* filename)
@@ -143,3 +171,5 @@ Session& Session::dependenciesReload()
 	m_spider.run();
 	return *this;
 	}
+
+

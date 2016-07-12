@@ -1,7 +1,7 @@
 //@	[
 //@		["windows"
 //@			,{"targets":[{"name":"maike.exe","type":"application"}]}]
-//@		,["1",{"targets":[{"name":"maike","type":"application"}]}]
+//@		,["0",{"targets":[{"name":"maike","type":"application"}]}]
 //@	]
 
 #include "dependencygraphdefault.hpp"

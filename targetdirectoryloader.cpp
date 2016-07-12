@@ -17,10 +17,9 @@
 
 using namespace Maike;
 
-TargetDirectoryLoader::TargetDirectoryLoader(const ResourceObject& directoryloader)
+TargetDirectoryLoader::TargetDirectoryLoader()
 	{
 	configClear();
-	configAppend(directoryloader);
 	}
 
 void TargetDirectoryLoader::targetsLoad(const char* name_src,const char* in_dir
@@ -90,4 +89,10 @@ TargetDirectoryLoader& TargetDirectoryLoader::configAppend(const ResourceObject&
 		}
 
 	return *this;
+	}
+
+
+void TargetDirectoryLoader::configDump(ResourceObject& directoryoptions) const
+	{
+	directoryoptions.objectSet("recursive",ResourceObject(static_cast<long long int>(m_recursive)));
 	}

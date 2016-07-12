@@ -17,8 +17,9 @@ namespace Maike
 	class TargetPythonHook final:public Target_Hook
 		{
 		public:
-			static TargetPythonHook* create(const ResourceObject& pythonoptions
-				,const ParameterSet& params);
+			static TargetPythonHook* create(const ParameterSet& params);
+
+			static TargetPythonHook* create(ParameterSet&& params)=delete;
 
 
 			const TargetPythonFactory& factoryGet() const noexcept
@@ -31,16 +32,14 @@ namespace Maike
 
 			TargetPythonHook& configAppend(const ResourceObject& pythonoptions);
 
+			void configDump(ResourceObject& pythonoptions) const;
+
 		private:
 			TargetPythonInterpreter m_intpret;
 			TargetPythonLoader m_loader;
 			TargetPythonFactory m_factory;
 
-			explicit TargetPythonHook(const ResourceObject& pythonoptions
-				,const ParameterSet& params);
-
-			explicit TargetPythonHook(const ResourceObject& pythonoptions
-				,ParameterSet&& params)=delete;
+			explicit TargetPythonHook(const ParameterSet& params);
 
 			void destroy() noexcept;
 		};

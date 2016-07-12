@@ -16,7 +16,7 @@ namespace Maike
 	class TargetDirectoryLoader:public Target_Loader
 		{
 		public:
-			TargetDirectoryLoader(const ResourceObject& directoryloader);
+			TargetDirectoryLoader();
 
 			void targetsLoad(const char* name_src,const char* in_dir
 				,Spider& spider,DependencyGraph& graph
@@ -28,6 +28,7 @@ namespace Maike
 			void configClear();
 
 			TargetDirectoryLoader& configAppend(const ResourceObject& directoryoptions);
+			void configDump(ResourceObject& directoryoptions) const;
 
 		private:
 			std::set<Stringkey> m_ignore;

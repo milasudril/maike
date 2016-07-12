@@ -31,7 +31,6 @@ namespace Maike
 				,Stringkey("help")
 				,Stringkey("version")
 				,Stringkey("configfiles")
-				,Stringkey("no-stdconfig")
 				,Stringkey("no-sysvars")
 				,Stringkey("targets")
 				,Stringkey("list-leaf-targets")
@@ -40,7 +39,7 @@ namespace Maike
 				,Stringkey("dump-graph")
 				,Stringkey("dump-target-usecount")
 				,Stringkey("dump-timestat")
-				,Stringkey("dump-systemtarget-info")
+				,Stringkey("configdump")
 				> OptionMap;
 
 			Options(Twins<const char* const*> args);

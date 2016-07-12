@@ -15,9 +15,5 @@
 
 using namespace Maike;
 
-extern "C"
-	{
-	Target_Hook* Maike_Target_Hook_create(const ResourceObject& cxxoptions
-		,const ParameterSet& params)
-		{return TargetCxxHook::create(cxxoptions,params);}
-	}
+Target_Hook* Maike_Target_Hook_create(const ParameterSet& params)
+	{return TargetCxxHook::create(params);}

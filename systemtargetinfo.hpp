@@ -15,12 +15,11 @@ namespace Maike
 	{
 	class ResourceObject;
 	class Variant;
-	class DataSink;
 
 	class SystemTargetInfo:public ParameterSet
 		{
 		public:
-			SystemTargetInfo(const ResourceObject& targetinfo);
+			SystemTargetInfo();
 			~SystemTargetInfo();
 
 			void parameterGet(const Stringkey& key
@@ -28,11 +27,10 @@ namespace Maike
 
 			Variant variableGet(const Stringkey& key) const noexcept;
 
-			void dataDump(DataSink& sink) const;
-
 			void clear();
 
 			SystemTargetInfo& configAppend(const ResourceObject& targetinfo);
+			void configDump(ResourceObject& targetinfo) const;
 
 			void loadFromSystem();
 

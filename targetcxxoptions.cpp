@@ -15,6 +15,17 @@ static void stringArrayBuild(const ResourceObject& array,std::vector< std::strin
 		{ret.push_back(std::string(static_cast<const char*>(array.objectGet(k))));}
 	}
 
+static void stringArrayGet(ResourceObject& ret, const std::vector< std::string >& array)
+	{
+	auto ptr=array.data();
+	auto ptr_end=ptr + array.size();
+	while(ptr!=ptr_end)
+		{
+		ret.objectAppend(ResourceObject(ptr->c_str()));
+		++ptr;
+		}
+	}
+
 TargetCxxOptions::TargetCxxOptions()
 	{
 	clear();
@@ -127,4 +138,57 @@ void TargetCxxOptions::clear()
 	m_versionquery.nameSet("g++").argumentsClear().argumentAppend("-E")
 		.argumentAppend("-dM").argumentAppend("-x").argumentAppend("c++")
 		.argumentAppend("{nullfile}");
+	}
+
+void TargetCxxOptions::configDump(ResourceObject& cxxoptions) const
+	{
+		{
+		ResourceObject objcompile(ResourceObject::Type::OBJECT);
+		m_objcompile.configDump(objcompile);
+		cxxoptions.objectSet("objcompile",std::move(objcompile));
+		}
+
+		{
+		ResourceObject appcompile(ResourceObject::Type::OBJECT);
+		m_appcompile.configDump(appcompile);
+		cxxoptions.objectSet("appcompile",std::move(appcompile));
+		}
+
+		{
+		ResourceObject dllcompile(ResourceObject::Type::OBJECT);
+		m_dllcompile.configDump(dllcompile);
+		cxxoptions.objectSet("dllcompile",std::move(dllcompile));
+		}
+
+		{
+		ResourceObject libcompile(ResourceObject::Type::OBJECT);
+		m_libcompile.configDump(libcompile);
+		cxxoptions.objectSet("libcompile",std::move(libcompile));
+		}
+
+		{
+		ResourceObject versionquery(ResourceObject::Type::OBJECT);
+		m_versionquery.configDump(versionquery);
+		cxxoptions.objectSet("versionquery",std::move(versionquery));
+		}
+
+	cxxoptions.objectSet("libdir_format",ResourceObject(m_libdir_format.c_str()))
+		.objectSet("includedir_format",ResourceObject(m_includedir_format.c_str()))
+		.objectSet("libext_format",ResourceObject(m_libext_format.c_str()))
+		.objectSet("libint_format",ResourceObject(m_libint_format.c_str()))
+		.objectSet("stdprefix",ResourceObject(m_stdprefix.c_str()))
+		.objectSet("cxxversion_max",ResourceObject(m_cxxversion_max))
+		.objectSet("cxxversion_min",ResourceObject(m_cxxversion_min));
+
+		{
+		ResourceObject includedir(ResourceObject::Type::ARRAY);
+		stringArrayGet(includedir,m_includedir);
+		cxxoptions.objectSet("includedir",std::move(includedir));
+		}
+
+		{
+		ResourceObject libdir(ResourceObject::Type::ARRAY);
+		stringArrayGet(libdir,m_libdir);
+		cxxoptions.objectSet("libdir",std::move(libdir));
+		}
 	}

@@ -11,14 +11,22 @@
 #include "datasource.hpp"
 #include "variant.hpp"
 #include "exceptionhandler.hpp"
+#include "datasink.hpp"
 
 #include <jansson.h>
 
 using namespace Maike;
 
-static size_t loadCallback(void* buffer, size_t length, void* eventhandler)
+static size_t loadCallback(void* buffer, size_t length,void* eventhandler)
 	{
 	return reinterpret_cast<DataSource*>(eventhandler)->read(buffer,length);
+	}
+
+static int storeCallback(const char* buffer,size_t size,void* eventhandler)
+	{
+	if(reinterpret_cast<DataSink*>(eventhandler)->write(buffer,size)==size)
+		{return 0;}
+	return -1;
 	}
 
 ResourceObject::Iterator::Iterator(const ResourceObject& object):r_object(object)
@@ -61,6 +69,46 @@ ResourceObject::ResourceObject(DataSource& readhandler)
 		}
 	}
 
+ResourceObject::ResourceObject(long long int x)
+	{
+	m_handle=json_integer(x);
+	if(m_handle==nullptr)
+		{exceptionRaise(ErrorMessage("Failed to store #0;",{static_cast<int64_t>(x)}));}
+	}
+
+ResourceObject::ResourceObject(double x)
+	{
+	m_handle=json_real(x);
+	if(m_handle==nullptr)
+		{exceptionRaise(ErrorMessage("Failed to store #0;",{x}));}
+	}
+
+ResourceObject::ResourceObject(const char* str)
+	{
+	m_handle=json_string(str);
+	if(m_handle==nullptr)
+		{exceptionRaise(ErrorMessage("Failed to store #0;",{str}));}
+	}
+
+ResourceObject::ResourceObject(Type type)
+	{
+	switch(type)
+		{
+		case Type::ARRAY:
+			m_handle=json_array();
+			break;
+		case Type::OBJECT:
+			m_handle=json_object();
+			break;
+		default:
+			m_handle=nullptr;
+		}
+	if(m_handle==nullptr)
+		{exceptionRaise(ErrorMessage("Failed to create a JSON object",{}));}
+	}
+
+
+
 ResourceObject::ResourceObject(void* handle,const char* name)
 	{
 	m_handle=handle;
@@ -69,8 +117,11 @@ ResourceObject::ResourceObject(void* handle,const char* name)
 
 ResourceObject::~ResourceObject()
 	{
-	json_decref(static_cast<json_t*>(m_handle));
+	if(m_handle!=nullptr)
+		{json_decref(static_cast<json_t*>(m_handle));}
 	}
+
+
 
 ResourceObject::Type ResourceObject::typeGet() const noexcept
 	{
@@ -177,4 +228,28 @@ ResourceObject::operator double() const
 		default:
 			exceptionRaise(ErrorMessage("Current resource object is not an integer.",{}));
 		}
+	}
+
+ResourceObject& ResourceObject::objectAppend(ResourceObject&& object)
+	{
+	if(json_array_append_new(static_cast<json_t*>(m_handle)
+		,static_cast<json_t*>(object.m_handle))==-1)
+		{exceptionRaise(ErrorMessage("It was not possible to append another object to a JSON array",{}));}
+	object.m_handle=nullptr;
+	return *this;
+	}
+
+ResourceObject& ResourceObject::objectSet(const char* key,ResourceObject&& object)
+	{
+	if(json_object_set_new(static_cast<json_t*>(m_handle),key
+		,static_cast<json_t*>(object.m_handle))==-1)
+		{exceptionRaise(ErrorMessage("It was not possible to append an new object with key #0;",{key}));}
+	object.m_handle=nullptr;
+	return *this;
+	}
+
+void ResourceObject::writeImpl(DataSink& sink) const
+	{
+	json_dump_callback(static_cast<const json_t*>(m_handle),storeCallback,&sink
+		,JSON_COMPACT|JSON_INDENT(4)|JSON_SORT_KEYS);
 	}
