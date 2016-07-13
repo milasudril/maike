@@ -1,7 +1,7 @@
 //@	[
 //@		["windows"
-//@			,{"targets":[{"name":"maike2.exe","type":"application"}]}]
-//@		,["1",{"targets":[{"name":"maike2","type":"application"}]}]
+//@			,{"targets":[{"name":"maike.exe","type":"application"}]}]
+//@		,["1",{"targets":[{"name":"maike","type":"application"}]}]
 //@	]
 
 #include "errormessage.hpp"
