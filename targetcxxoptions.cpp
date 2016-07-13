@@ -54,7 +54,7 @@ TargetCxxOptions& TargetCxxOptions::configAppend(const ResourceObject& cxxoption
 
 	if(cxxoptions.objectExists("cxxversion_max"))
 		{
-		m_cxxversion_min=std::min( m_cxxversion_max
+		m_cxxversion_max=std::min( m_cxxversion_max
 			,static_cast<long long int>( cxxoptions.objectGet("cxxversion_max") ) );
 		}
 
