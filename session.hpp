@@ -35,12 +35,10 @@ namespace Maike
 			Session& dependenciesClear() noexcept;
 			Session& dependenciesReload();
 
-			Session& targetCompile(const char* name);
-			Session& targetsCompile();
-
-			void graphDumpDOT(DataSink& sink) const;
-			void graphDumpJSON(DataSink& sink) const;
-			void targetsDumpCSV(DataSink& sink) const;
+			void targetsProcess(DependencyGraph::TargetProcessor&& proc);
+			void targetsProcess(DependencyGraph::TargetProcessorConst&& proc) const;
+			const Target& target(const char* name) const;
+			Target& target(const char* name);
 
 		private:
 			SystemTargetInfo m_targetinfo;

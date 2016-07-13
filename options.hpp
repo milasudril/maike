@@ -31,15 +31,15 @@ namespace Maike
 				,Stringkey("help")
 				,Stringkey("version")
 				,Stringkey("configfiles")
+				,Stringkey("configdump")
 				,Stringkey("no-sysvars")
 				,Stringkey("targets")
 				,Stringkey("list-leaf-targets")
 				,Stringkey("list-external-targets")
 				,Stringkey("list-all-targets")
-				,Stringkey("dump-graph")
-				,Stringkey("dump-target-usecount")
-				,Stringkey("dump-timestat")
-				,Stringkey("configdump")
+				,Stringkey("dump-graph-json")
+				,Stringkey("dump-graph-dot")
+				,Stringkey("dump-targets-csv")
 				> OptionMap;
 
 			Options(Twins<const char* const*> args);

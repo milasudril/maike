@@ -8,32 +8,32 @@
 #include "options.hpp"
 #include "datasinkstd.hpp"
 #include "fileout.hpp"
-#include "filein.hpp"
 #include "resourceobject.hpp"
 #include "session.hpp"
+#include "maike.hpp"
 #include <cstdio>
 
 using namespace Maike;
 
-static int  helpPrint(const Maike::Options& opts,const std::vector<std::string>& help)
+static int helpPrint(const Maike::Options& opts,const std::vector<std::string>& filename)
 	{
-	if(help.size()==0)
+	if(filename.size()==0)
 		{
 		opts.printHelp(DataSinkStd::standard_output);
 		return 0;
 		}
-	opts.printHelp(FileOut{help.begin()->c_str()});
+	opts.printHelp(FileOut{filename.begin()->c_str()});
 	return 0;
 	}
 
-static int versionPrint(const std::vector<std::string>& version)
+static int versionPrint(const std::vector<std::string>& filename)
 	{
-	if(version.size()==0)
+	if(filename.size()==0)
 		{
-	//	versionPrint(DataSinkStd::standard_output);
+		versionPrint(DataSinkStd::standard_output);
 		return 0;
 		}
-//	versionPrint(FileOut{version.begin()->c_str()});
+	versionPrint(filename.begin()->c_str());
 	return 0;
 	}
 
@@ -43,25 +43,54 @@ static void configfilesLoad(Session& maike,const std::vector<std::string>& files
 	auto ptr_end=ptr+files.size();
 	while(ptr!=ptr_end)
 		{
-		ResourceObject rc{FileIn(ptr->c_str())};
-		maike.configAppend(rc);
+		configLoad(maike,ptr->c_str());
 		++ptr;
 		}
 	}
 
-static int configDump(const Maike::Session& maike,const std::vector<std::string>& configdump)
+static int configDump(const Maike::Session& maike,const std::vector<std::string>& filename)
 	{
-	ResourceObject obj(ResourceObject::Type::OBJECT);
-	maike.configDump(obj);
-	if(configdump.size()==0)
+	if(filename.size()==0)
 		{
-		obj.write(DataSinkStd::standard_output);
+		configDump(maike,DataSinkStd::standard_output);
 		return 0;
 		}
-	obj.write(FileOut{configdump.begin()->c_str()});
+	configDump(maike,filename.begin()->c_str());
 	return 0;
 	}
 
+static int targetsListAll(const Maike::Session& maike,const std::vector<std::string>& filename)
+	{
+	if(filename.size()==0)
+		{
+		targetsListAll(maike,DataSinkStd::standard_output);
+		return 0;
+		}
+	targetsListAll(maike,filename.begin()->c_str());
+	return 0;
+	}
+
+static int targetsListLeaf(const Maike::Session& maike,const std::vector<std::string>& filename)
+	{
+	if(filename.size()==0)
+		{
+		targetsListLeaf(maike,DataSinkStd::standard_output);
+		return 0;
+		}
+	targetsListLeaf(maike,filename.begin()->c_str());
+	return 0;
+	}
+
+static int targetsListExternal(const Maike::Session& maike,const std::vector<std::string>& filename)
+	{
+	if(filename.size()==0)
+		{
+		targetsListExternal(maike,DataSinkStd::standard_output);
+		return 0;
+		}
+	targetsListExternal(maike,filename.begin()->c_str());
+	return 0;
+	}
 
 int main(int argc,char** argv)
 	{
@@ -96,11 +125,29 @@ int main(int argc,char** argv)
 				{return configDump(maike,*x);}
 			}
 
-		/*	{
-			auto x=opts.get<Stringkey("targets")>();
-			if(x==nullptr)
-				{maike.targetsBuild();}
-			}*/
+			{
+			auto x=opts.get<Stringkey("list-all-targets")>();
+			if(x!=nullptr)
+				{return targetsListAll(maike,*x);}
+			}
+
+			{
+			auto x=opts.get<Stringkey("list-leaf-targets")>();
+			if(x!=nullptr)
+				{return targetsListLeaf(maike,*x);}
+			}
+
+			{
+			auto x=opts.get<Stringkey("list-leaf-targets")>();
+			if(x!=nullptr)
+				{return targetsListLeaf(maike,*x);}
+			}
+
+			{
+			auto x=opts.get<Stringkey("list-external-targets")>();
+			if(x!=nullptr)
+				{return targetsListExternal(maike,*x);}
+			}
 		}
 	catch(const ErrorMessage& message)
 		{

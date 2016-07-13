@@ -3,14 +3,20 @@
 //@	}
 
 #include "maike.hpp"
-#include "target.hpp"
+#include "maikeinfo.hpp"
+#include "targetplaceholder.hpp"
 #include "dependency.hpp"
+#include "session.hpp"
+#include "stringkey.hpp"
+
+#include "filein.hpp"
+#include "fileout.hpp"
+#include "writebuffer.hpp"
+#include "resourceobject.hpp"
+
 #include "errormessage.hpp"
 #include "variant.hpp"
 #include "exceptionhandler.hpp"
-#include "stringkey.hpp"
-#include "writebuffer.hpp"
-#include "maikeinfo.hpp"
 
 #include <vector>
 #include <stack>
@@ -18,19 +24,153 @@
 using namespace Maike;
 
 
-static void versionPrintImpl(DataSink& sink)
+void Maike::versionPrint(DataSink& sink)
 	{
 	WriteBuffer wb(sink);
 	wb.write("Maike version ").write(Info::VERSION)
 		.write("\nThis Maike was compiled on ").write(Info::TIMESTAMP).write('\n');
 	}
 
+void Maike::versionPrint(const char* filename)
+	{
+	FileOut dest(filename);
+	versionPrint(dest);
+	}
 
-void Maike::versionPrint(DataSink&& sink)
-	{::versionPrintImpl(sink);}
 
-void Maike::versionPrint(DataSink& sink)
-	{::versionPrintImpl(sink);}
+
+void Maike::configDump(const Session& maike,DataSink& sink)
+	{
+	ResourceObject obj(ResourceObject::Type::OBJECT);
+	maike.configDump(obj);
+	obj.write(sink);
+	}
+
+void Maike::configDump(const Session& maike,const char* filename)
+	{
+	FileOut dest(filename);
+	configDump(maike,dest);
+	}
+
+
+
+void Maike::configLoad(Session& maike,DataSource& source)
+	{
+	ResourceObject obj(source);
+	maike.configAppend(obj);
+	}
+
+void Maike::configLoad(Session& maike,const char* filename)
+	{
+	FileIn source(filename);
+	configLoad(maike,source);
+	}
+
+
+
+namespace
+	{
+	class TargetsListAll:public DependencyGraph::TargetProcessorConst
+		{
+		public:
+			TargetsListAll(WriteBuffer& wb):r_wb(wb)
+				{}
+
+			int operator()(const DependencyGraph& graph,const Target& target)
+				{
+				r_wb.write(" * ").write(target.nameGet()).write("\n");
+				return 0;
+				}
+		private:
+			WriteBuffer& r_wb;
+		};
+	}
+
+void Maike::targetsListAll(const Session& session,DataSink& sink)
+	{
+	WriteBuffer wb(sink);
+	wb.write("All targets\n")
+		.write("===========\n");
+	session.targetsProcess(TargetsListAll(wb));
+	}
+
+void Maike::targetsListAll(const Session& session,const char* filename)
+	{
+	FileOut dest(filename);
+	targetsListAll(session,dest);
+	}
+
+
+
+namespace
+	{
+	class TargetsListLeaf:public DependencyGraph::TargetProcessorConst
+		{
+		public:
+			TargetsListLeaf(WriteBuffer& wb):r_wb(wb)
+				{}
+
+			int operator()(const DependencyGraph& graph,const Target& target)
+				{
+				if(target.childCounterGet()==0)
+					{r_wb.write(" * ").write(target.nameGet()).write("\n");}
+				return 0;
+				}
+		private:
+			WriteBuffer& r_wb;
+		};
+	}
+
+void Maike::targetsListLeaf(const Session& session,DataSink& sink)
+	{
+	WriteBuffer wb(sink);
+	wb.write("Leaf targets\n")
+		.write("============\n");
+	session.targetsProcess(TargetsListLeaf(wb));
+	}
+
+void Maike::targetsListLeaf(const Session& session,const char* filename)
+	{
+	FileOut dest(filename);
+	targetsListLeaf(session,dest);
+	}
+
+
+
+namespace
+	{
+	class TargetsListExternal:public DependencyGraph::TargetProcessorConst
+		{
+		public:
+			TargetsListExternal(WriteBuffer& wb):r_wb(wb)
+				{}
+
+			int operator()(const DependencyGraph& graph,const Target& target)
+				{
+				if(dynamic_cast<const TargetPlaceholder*>(&target))
+					{r_wb.write(" * ").write(target.nameGet()).write("\n");}
+				return 0;
+				}
+		private:
+			WriteBuffer& r_wb;
+		};
+	}
+
+void Maike::targetsListExternal(const Session& session,DataSink& sink)
+	{
+	WriteBuffer wb(sink);
+	wb.write("External dependencies\n")
+		.write("=====================\n");
+	session.targetsProcess(TargetsListExternal(wb));
+	}
+
+void Maike::targetsListExternal(const Session& session,const char* filename)
+	{
+	FileOut dest(filename);
+	targetsListExternal(session,dest);
+	}
+
+
 
 #if TARGETS_LOAD_DONE //To get syntax highlight
 void targetsLoad(DependencyGraph& graph,Twins<const Target_Hook*> hooks)

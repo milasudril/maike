@@ -24,14 +24,14 @@ namespace Maike
 
 			DependencyGraphDefault& targetRegister(Handle<Target>&& target);
 			DependencyGraphDefault& targetsPatch();
-			DependencyGraphDefault& targetsProcess(TargetProcessor&& visitor);
+			void targetsProcess(TargetProcessorConst&& proc) const;
+			DependencyGraphDefault& targetsProcess(TargetProcessor&& proc);
+			DependencyGraphDefault& targetsRemove(TargetProcessor&& condition);
 			Target* targetFind(const Stringkey& key);
+			const Target* targetFind(const Stringkey& key) const;
 
 			const Twins<size_t>& idRangeGet() const noexcept
 				{return m_id_range;}
-
-
-			DependencyGraphDefault& targetsRemove(TargetProcessor&& condition);
 
 			DependencyGraphDefault& clear() noexcept;
 

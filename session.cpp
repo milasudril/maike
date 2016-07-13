@@ -3,6 +3,9 @@
 #include "session.hpp"
 #include "resourceobject.hpp"
 #include "targetdirectory.hpp"
+#include "exceptionhandler.hpp"
+#include "errormessage.hpp"
+#include "variant.hpp"
 #include <cstring>
 
 using namespace Maike;
@@ -16,6 +19,16 @@ Session::Session():
 	,m_graph(m_id_gen)
 	,m_spider(m_delegator,m_graph)
 	{
+	m_delegator.factoryRegister(Stringkey(".cpp"),m_cxxhook->factoryGet())
+		.factoryRegister(Stringkey(".hpp"),m_cxxhook->factoryGet())
+		.factoryRegister(Stringkey(".h"),m_cxxhook->factoryGet())
+		.factoryRegister(Stringkey(".py"),m_pythonhook->factoryGet());
+
+	m_spider.loaderRegister(Stringkey("."),m_dirloader)
+		.loaderRegister(Stringkey(".cpp"),m_cxxhook->loaderGet())
+		.loaderRegister(Stringkey(".hpp"),m_cxxhook->loaderGet())
+		.loaderRegister(Stringkey(".h"),m_cxxhook->loaderGet())
+		.loaderRegister(Stringkey(".py"),m_pythonhook->loaderGet());
 	}
 
 Session& Session::configClear()
@@ -57,6 +70,7 @@ Session& Session::configAppend(const ResourceObject& maikeconfig)
 	if(maikeconfig.objectExists("pythonoptions"))
 		{m_pythonhook->configAppend(maikeconfig.objectGet("pythonoptions"));}
 
+	m_graph_dirty=1;
 	return *this;
 	}
 
@@ -148,6 +162,7 @@ Session& Session::scanFile(const char* filename)
 		}
 	m_graph.targetsRemove(BySourceName(filename));
 	m_spider.scanFile(filename,"").run();
+	m_graph_dirty=0;
 	return *this;
 	}
 
@@ -169,7 +184,38 @@ Session& Session::dependenciesReload()
 		++i;
 		}
 	m_spider.run();
+	m_graph_dirty=0;
 	return *this;
 	}
 
+void Session::targetsProcess(DependencyGraph::TargetProcessor&& proc)
+	{
+	if(m_graph_dirty)
+		{dependenciesReload();}
 
+	m_graph.targetsProcess(std::move(proc));
+	}
+
+void Session::targetsProcess(DependencyGraph::TargetProcessorConst&& proc) const
+	{
+	if(m_graph_dirty)
+		{const_cast<Session*>(this)->dependenciesReload();}
+
+	m_graph.targetsProcess(std::move(proc));
+	}
+
+const Target& Session::target(const char* name) const
+	{
+	auto ret=m_graph.targetFind(Stringkey(name));
+	if(ret==nullptr)
+		{exceptionRaise(ErrorMessage("Target #0; has not been loaded.",{name}));}
+	return *ret;
+	}
+
+Target& Session::target(const char* name)
+	{
+	auto ret=m_graph.targetFind(Stringkey(name));
+	if(ret==nullptr)
+		{exceptionRaise(ErrorMessage("Target #0; has not been loaded.",{name}));}
+	return *ret;
+	}

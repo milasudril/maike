@@ -11,12 +11,29 @@
 namespace Maike
 	{
 	class Target;
+	class Session;
 	class DataSink;
-	template<class T>
-	class Twins;
+	class DataSource;
 
-	void versionPrint(DataSink&& sink);
+	template<class T> class Twins;
+
 	void versionPrint(DataSink& sink);
+	void versionPrint(const char* filename);
+
+	void configDump(const Session& maike,DataSink& sink);
+	void configDump(const Session& maike,const char* filename);
+
+	void configLoad(Session& maike,DataSource& source);
+	void configLoad(Session& maike,const char* filename);
+
+	void targetsListAll(const Session& session,DataSink& sink);
+	void targetsListAll(const Session& session,const char* filename);
+
+	void targetsListLeaf(const Session& session,DataSink& sink);
+	void targetsListLeaf(const Session& session,const char*filename);
+
+	void targetsListExternal(const Session& session,DataSink& sink);
+	void targetsListExternal(const Session& session,const char* filename);
 
 	void buildBranch(Target& target,const char* target_dir,const Twins<size_t>& id_range);
 	}

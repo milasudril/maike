@@ -86,6 +86,16 @@ Target* DependencyGraphDefault::targetFind(const Stringkey& name)
 	return t->second.get();
 	}
 
+const Target* DependencyGraphDefault::targetFind(const Stringkey& name) const
+	{
+	auto t=m_targets.find(name);
+	if(t==m_targets.end())
+		{
+		return nullptr;
+		}
+	return t->second.get();
+	}
+
 DependencyGraphDefault& DependencyGraphDefault::targetsProcess(TargetProcessor&& proc)
 	{
 	if(m_patch_needed)
@@ -98,6 +108,19 @@ DependencyGraphDefault& DependencyGraphDefault::targetsProcess(TargetProcessor&&
 		++i;
 		}
 	return *this;
+	}
+
+void DependencyGraphDefault::targetsProcess(TargetProcessorConst&& proc) const
+	{
+	if(m_patch_needed)
+		{const_cast<DependencyGraphDefault*>(this)->targetsPatch();}
+	auto i=m_targets.begin();
+	auto i_end=m_targets.end();
+	while(i!=i_end)
+		{
+		proc(*this,*(i->second));
+		++i;
+		}
 	}
 
 DependencyGraphDefault& DependencyGraphDefault::targetsRemove(TargetProcessor&& condition)
