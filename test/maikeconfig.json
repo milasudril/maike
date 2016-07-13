@@ -4,14 +4,26 @@
 	"target_directory":"__targets"
 	}
 
-,"spider":
+,"targetinfo":
 	{
-	"start_directory":"."
+	"target_directory":"__targets"
+	}
+
+,"session":
+	{
+	"source_files":["."]
 	}
 
 ,"directoryloader":
 	{
-	 "paths_reject":[".git",".codelite",".clang","test","Debug","Release","test"
+	 "paths_reject":[".git",".codelite",".clang","test","Debug","Release"
+		,"__targets"]
+	,"recursive":1
+	}
+
+,"directoryoptions":
+	{
+	 "paths_reject":[".git",".codelite",".clang","test","Debug","Release"
 		,"__targets"]
 	,"recursive":1
 	}
@@ -23,11 +35,10 @@
 	,"libdir":[]
 	,"cxxversion_min":201103
 	,"stdprefix":"-std="
-	,"platform_suffix":"x86_64-linux-gnu"
-	,"includedir_format":"-I\"^\""
-	,"libdir_format":"-L\"^\""
-	,"libext_format":"-l\"^\""
-	,"libint_format":"-l:\"^\""
+	,"includedir_format":"-I^"
+	,"libdir_format":"-L^"
+	,"libext_format":"-l^"
+	,"libint_format":"-l:^"
 	,"objcompile":
 		{
 		 "name":"g++"
@@ -38,13 +49,27 @@
 		{
 		 "name":"g++"
 		,"args":["-g","-fpic","{cxxversion}","-Wall","-Woverflow","-Wconversion"
-			,"-Werror","{includedir}","{libdir}","-o","{target}","{source}"
-			,"{dependencies}"]
+			,"-Werror","{includedir}","{libdir}","-o","{target}","{dependencies}"]
+		}
+	,"dllcompile":
+		{
+		 "name":"g++"
+		,"args":["-g","-fpic","{cxxversion}","-Wall","-Woverflow","-Wconversion"
+			,"-Werror","{includedir}","{libdir}","-shared","-o","{target}","{dependencies}"]
 		}
 	,"versionquery":
 		{
 		 "name":"g++"
 		,"args":["-E","-dM","-x","c++","{nullfile}"]
+		}
+	}
+
+,"pythonoptions":
+	{
+	"command":
+		{
+		"name":"python3"
+		,"args":["--","{script}","{args}"]
 		}
 	}
 }

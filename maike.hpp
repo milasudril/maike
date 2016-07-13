@@ -35,7 +35,8 @@ namespace Maike
 	void targetsListExternal(const Session& session,DataSink& sink);
 	void targetsListExternal(const Session& session,const char* filename);
 
-	void buildBranch(Target& target,const char* target_dir,const Twins<size_t>& id_range);
+	void targetCompile(Session& session,const char* target_name);
+	void targetsCompile(Session& session);
 	}
 
 #endif

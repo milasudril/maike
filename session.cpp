@@ -29,6 +29,7 @@ Session::Session():
 		.loaderRegister(Stringkey(".hpp"),m_cxxhook->loaderGet())
 		.loaderRegister(Stringkey(".h"),m_cxxhook->loaderGet())
 		.loaderRegister(Stringkey(".py"),m_pythonhook->loaderGet());
+	sourceFileAppend(".");
 	}
 
 Session& Session::configClear()
@@ -206,6 +207,8 @@ void Session::targetsProcess(DependencyGraph::TargetProcessorConst&& proc) const
 
 const Target& Session::target(const char* name) const
 	{
+	if(m_graph_dirty)
+		{const_cast<Session*>(this)->dependenciesReload();}
 	auto ret=m_graph.targetFind(Stringkey(name));
 	if(ret==nullptr)
 		{exceptionRaise(ErrorMessage("Target #0; has not been loaded.",{name}));}
@@ -214,8 +217,22 @@ const Target& Session::target(const char* name) const
 
 Target& Session::target(const char* name)
 	{
+	if(m_graph_dirty)
+		{dependenciesReload();}
 	auto ret=m_graph.targetFind(Stringkey(name));
 	if(ret==nullptr)
 		{exceptionRaise(ErrorMessage("Target #0; has not been loaded.",{name}));}
 	return *ret;
+	}
+
+const char* Session::targetDirectoryGet() const noexcept
+	{
+	return static_cast<const char*>(m_targetinfo.variableGet(Stringkey("target_directory")));
+	}
+
+const Twins<size_t>& Session::targetIdRangeGet() const noexcept
+	{
+	if(m_graph_dirty)
+		{const_cast<Session*>(this)->dependenciesReload();}
+	return m_graph.idRangeGet();
 	}

@@ -1,23 +1,16 @@
 digraph DependencyGraph
 	{
 	"./bar.o"->"png"[color="blue"];
-	"./bar.o"->"."[color="blue"];
 	"./bar.o"->"./bar.hpp"[color="blue"];
-	"./foo.o"->"."[color="blue"];
 	"./foo.o"->"./foo.hpp"[color="blue"];
-	"./root"->"."[color="blue"];
 	"./root"->"./foo.hpp"[color="blue"];
 	"./root"->"./foo.o"[color="red"];
 	"./root"->"./bar.hpp"[color="blue"];
 	"./root"->"./bar.o"[color="red"];
-	"./foo.hpp"->"."[color="blue"];
 	"./foo.hpp"->"./bar.hpp"[color="blue"];
 	"./foo.hpp"->"./bar.o"[color="red"];
 	"./foo.hpp"->"./bar2.hpp"[color="blue"];
 	"./foo.hpp"->"./bar2.o"[color="red"];
-	"./bar2.hpp"->"."[color="blue"];
-	"./bar.hpp"->"."[color="blue"];
 	"./bar2.o"->"png"[color="blue"];
-	"./bar2.o"->"."[color="blue"];
 	"./bar2.o"->"./bar2.hpp"[color="blue"];
 	}

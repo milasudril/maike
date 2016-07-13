@@ -11,6 +11,7 @@ using namespace Maike;
 TargetPythonInterpreter::TargetPythonInterpreter(const ParameterSet& sysvars)
 	:r_sysvars(sysvars)
 	{
+	configClear();
 	}
 
 void TargetPythonInterpreter::run(const char* script,Twins<const char* const*> args) const

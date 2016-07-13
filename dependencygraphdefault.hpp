@@ -30,8 +30,7 @@ namespace Maike
 			Target* targetFind(const Stringkey& key);
 			const Target* targetFind(const Stringkey& key) const;
 
-			const Twins<size_t>& idRangeGet() const noexcept
-				{return m_id_range;}
+			const Twins<size_t>& idRangeGet() const noexcept;
 
 			DependencyGraphDefault& clear() noexcept;
 

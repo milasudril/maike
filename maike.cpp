@@ -172,27 +172,6 @@ void Maike::targetsListExternal(const Session& session,const char* filename)
 
 
 
-#if TARGETS_LOAD_DONE //To get syntax highlight
-void targetsLoad(DependencyGraph& graph,Twins<const Target_Hook*> hooks)
-	{
-	Maike::ExpressionEvaluatorDefault evaluator(targetinfo);
-	Target_FactoryDelegatorDefault delegator(
-		static_cast<const char*>(targetinfo.variableGet(Maike::Stringkey("target_directory"))),evaluator);
-
-	SpiderDefault spider(delegator,graph);
-
-	while(hooks.first!=hooks.second)
-		{
-		delegator.factoryRegister(hooks.first->filename_ext,hooks.first->factory);
-		spider.loaderRegister(hooks.first->filename_ext,hooks.first->loader);
-		++hooks.first;
-		}
-
-	spider.scanFile(".","").run();
-	}
-
-#endif
-
 static void toposort(const Maike::Dependency& dependency_first
 	,std::vector<Maike::Dependency>& dependency_list
 	,bool full
@@ -210,8 +189,8 @@ static void toposort(const Maike::Dependency& dependency_first
 		auto id=target_next->idGet() - id_min;
 		if(visited[id]==1)
 			{
-			exceptionRaise(ErrorMessage("A cyclic dependency between #0; and #1; was detected."
-				,{target_first.nameGet(),target_next->nameGet()}));
+			exceptionRaise(ErrorMessage("A cyclic dependency between #0;[#2;] and #1;[#3;] was detected."
+				,{target_first.nameGet(),target_next->nameGet(),target_first.idGet(),target_next->idGet()}));
 			}
 
 		if(visited[id]==0 && (full
@@ -231,7 +210,7 @@ static void toposort(Target& target_first
 	toposort(Dependency(target_first),dependency_list,full,visited,id_range.first);
 	}
 
-void Maike::buildBranch(Target& target,const char* target_dir
+static void buildBranch(Target& target,const char* target_dir
 	,const Twins<size_t>& id_range)
 	{
 	std::vector<Dependency> dependency_list_full;
@@ -256,4 +235,39 @@ void Maike::buildBranch(Target& target,const char* target_dir
 			}
 		++deps.first;
 		}
+	}
+
+void Maike::targetCompile(Session& session,const char* target_name)
+	{
+	auto& target=session.target(target_name);
+	auto target_dir=session.targetDirectoryGet();
+	auto& id_range=session.targetIdRangeGet();
+	buildBranch(target,target_dir,id_range);
+	}
+
+namespace
+	{
+	class TargetsCompileLeaf:public DependencyGraph::TargetProcessor
+		{
+		public:
+			TargetsCompileLeaf(const Session& session):
+				r_target_dir(session.targetDirectoryGet())
+				,id_range(session.targetIdRangeGet())
+				{}
+
+			int operator()(DependencyGraph& graph,Target& target)
+				{
+				if(target.childCounterGet()==0)
+					{buildBranch(target,r_target_dir,id_range);}
+				return 0;
+				}
+		private:
+			const char* r_target_dir;
+			Twins<size_t> id_range;
+		};
+	}
+
+void Maike::targetsCompile(Session& session)
+	{
+	session.targetsProcess(TargetsCompileLeaf(session));
 	}
