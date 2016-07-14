@@ -230,7 +230,7 @@ const char* Session::targetDirectoryGet() const noexcept
 	return static_cast<const char*>(m_targetinfo.variableGet(Stringkey("target_directory")));
 	}
 
-const Twins<size_t>& Session::targetIdRangeGet() const noexcept
+const Twins<size_t>& Session::targetIdRangeGet() const
 	{
 	if(m_graph_dirty)
 		{const_cast<Session*>(this)->dependenciesReload();}

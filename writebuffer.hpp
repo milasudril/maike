@@ -7,11 +7,12 @@
 #define MAIKE_WRITEBUFFER_HPP
 
 #include "datasink.hpp"
+#include "textwriter.hpp"
 #include <cstdint>
 
 namespace Maike
 	{
-	class WriteBuffer
+	class WriteBuffer:public TextWriter
 		{
 		public:
 			WriteBuffer(const WriteBuffer&)=delete;

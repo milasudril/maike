@@ -27,10 +27,27 @@ FileOut::FileOut(const char* filename)
 		}
 	}
 
+FileOut::FileOut(FileOut&& file):m_handle(file.m_handle)
+	{
+	file.m_handle=-1;
+	}
+
+FileOut& FileOut::operator=(FileOut&& file)
+	{
+	std::swap(m_handle,file.m_handle);
+	return *this;
+	}
+
+FileOut::FileOut():m_handle(STDOUT_FILENO)
+	{}
+
 FileOut::~FileOut()
 	{
-	fsync(static_cast<int>(m_handle));
-	close(static_cast<int>(m_handle));
+	if(m_handle!=STDOUT_FILENO)
+		{
+		fsync(static_cast<int>(m_handle));
+		close(static_cast<int>(m_handle));
+		}
 	}
 
 size_t FileOut::write(const void* buffer,size_t count)

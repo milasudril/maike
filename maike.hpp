@@ -7,36 +7,37 @@
 #define MAIKE_MAIKE_HPP
 
 #include <cstddef>
+#include <cstdint>
 
 namespace Maike
 	{
 	class Target;
 	class Session;
+	class TextWriter;
 	class DataSink;
 	class DataSource;
+	class GraphEdgeWriter;
 
 	template<class T> class Twins;
 
-	void versionPrint(DataSink& sink);
-	void versionPrint(const char* filename);
+	void versionPrint(TextWriter& writer);
 
 	void configDump(const Session& maike,DataSink& sink);
-	void configDump(const Session& maike,const char* filename);
 
 	void configLoad(Session& maike,DataSource& source);
-	void configLoad(Session& maike,const char* filename);
 
-	void targetsListAll(const Session& session,DataSink& sink);
-	void targetsListAll(const Session& session,const char* filename);
+	void targetsListAll(const Session& maike,TextWriter& writer);
 
-	void targetsListLeaf(const Session& session,DataSink& sink);
-	void targetsListLeaf(const Session& session,const char*filename);
+	void targetsListLeaf(const Session& maike,TextWriter& writer);
 
-	void targetsListExternal(const Session& session,DataSink& sink);
-	void targetsListExternal(const Session& session,const char* filename);
+	void targetsListExternal(const Session& maike,TextWriter& writer);
 
-	void targetCompile(Session& session,const char* target_name);
-	void targetsCompile(Session& session);
+	void targetCompile(Session& maike,const char* target_name);
+	void targetsCompile(Session& maike);
+
+	void graphDump(const Session& maike,GraphEdgeWriter& writer);
+	void graphDump(const Session& maike,GraphEdgeWriter& writer
+		,const char* target_start,uint8_t* targets_visited,size_t id_min);
 	}
 
 #endif

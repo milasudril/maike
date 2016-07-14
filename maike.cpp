@@ -9,10 +9,9 @@
 #include "session.hpp"
 #include "stringkey.hpp"
 
-#include "filein.hpp"
-#include "fileout.hpp"
 #include "writebuffer.hpp"
 #include "resourceobject.hpp"
+#include "graphedgewriter.hpp"
 
 #include "errormessage.hpp"
 #include "variant.hpp"
@@ -20,21 +19,15 @@
 
 #include <vector>
 #include <stack>
+#include <cstring>
 
 using namespace Maike;
 
 
-void Maike::versionPrint(DataSink& sink)
+void Maike::versionPrint(TextWriter& writer)
 	{
-	WriteBuffer wb(sink);
-	wb.write("Maike version ").write(Info::VERSION)
-		.write("\nThis Maike was compiled on ").write(Info::TIMESTAMP).write('\n');
-	}
-
-void Maike::versionPrint(const char* filename)
-	{
-	FileOut dest(filename);
-	versionPrint(dest);
+	writer.write("Maike version ").write(Info::VERSION)
+		.write("\nThis Maike was compiled on ").write(Info::TIMESTAMP).write("\n");
 	}
 
 
@@ -46,24 +39,12 @@ void Maike::configDump(const Session& maike,DataSink& sink)
 	obj.write(sink);
 	}
 
-void Maike::configDump(const Session& maike,const char* filename)
-	{
-	FileOut dest(filename);
-	configDump(maike,dest);
-	}
-
 
 
 void Maike::configLoad(Session& maike,DataSource& source)
 	{
 	ResourceObject obj(source);
 	maike.configAppend(obj);
-	}
-
-void Maike::configLoad(Session& maike,const char* filename)
-	{
-	FileIn source(filename);
-	configLoad(maike,source);
 	}
 
 
@@ -73,31 +54,24 @@ namespace
 	class TargetsListAll:public DependencyGraph::TargetProcessorConst
 		{
 		public:
-			TargetsListAll(WriteBuffer& wb):r_wb(wb)
+			TargetsListAll(TextWriter& writer):r_writer(writer)
 				{}
 
 			int operator()(const DependencyGraph& graph,const Target& target)
 				{
-				r_wb.write(" * ").write(target.nameGet()).write("\n");
+				r_writer.write(" * ").write(target.nameGet()).write("\n");
 				return 0;
 				}
 		private:
-			WriteBuffer& r_wb;
+			TextWriter& r_writer;
 		};
 	}
 
-void Maike::targetsListAll(const Session& session,DataSink& sink)
+void Maike::targetsListAll(const Session& maike,TextWriter& writer)
 	{
-	WriteBuffer wb(sink);
-	wb.write("All targets\n")
+	writer.write("All targets\n")
 		.write("===========\n");
-	session.targetsProcess(TargetsListAll(wb));
-	}
-
-void Maike::targetsListAll(const Session& session,const char* filename)
-	{
-	FileOut dest(filename);
-	targetsListAll(session,dest);
+	maike.targetsProcess(TargetsListAll(writer));
 	}
 
 
@@ -107,32 +81,25 @@ namespace
 	class TargetsListLeaf:public DependencyGraph::TargetProcessorConst
 		{
 		public:
-			TargetsListLeaf(WriteBuffer& wb):r_wb(wb)
+			TargetsListLeaf(TextWriter& writer):r_writer(writer)
 				{}
 
 			int operator()(const DependencyGraph& graph,const Target& target)
 				{
 				if(target.childCounterGet()==0)
-					{r_wb.write(" * ").write(target.nameGet()).write("\n");}
+					{r_writer.write(" * ").write(target.nameGet()).write("\n");}
 				return 0;
 				}
 		private:
-			WriteBuffer& r_wb;
+			TextWriter& r_writer;
 		};
 	}
 
-void Maike::targetsListLeaf(const Session& session,DataSink& sink)
+void Maike::targetsListLeaf(const Session& maike,TextWriter& writer)
 	{
-	WriteBuffer wb(sink);
-	wb.write("Leaf targets\n")
+	writer.write("Leaf targets\n")
 		.write("============\n");
-	session.targetsProcess(TargetsListLeaf(wb));
-	}
-
-void Maike::targetsListLeaf(const Session& session,const char* filename)
-	{
-	FileOut dest(filename);
-	targetsListLeaf(session,dest);
+	maike.targetsProcess(TargetsListLeaf(writer));
 	}
 
 
@@ -142,32 +109,25 @@ namespace
 	class TargetsListExternal:public DependencyGraph::TargetProcessorConst
 		{
 		public:
-			TargetsListExternal(WriteBuffer& wb):r_wb(wb)
+			TargetsListExternal(TextWriter& writer):r_writer(writer)
 				{}
 
 			int operator()(const DependencyGraph& graph,const Target& target)
 				{
 				if(dynamic_cast<const TargetPlaceholder*>(&target))
-					{r_wb.write(" * ").write(target.nameGet()).write("\n");}
+					{r_writer.write(" * ").write(target.nameGet()).write("\n");}
 				return 0;
 				}
 		private:
-			WriteBuffer& r_wb;
+			TextWriter& r_writer;
 		};
 	}
 
-void Maike::targetsListExternal(const Session& session,DataSink& sink)
+void Maike::targetsListExternal(const Session& maike,TextWriter& writer)
 	{
-	WriteBuffer wb(sink);
-	wb.write("External dependencies\n")
+	writer.write("External dependencies\n")
 		.write("=====================\n");
-	session.targetsProcess(TargetsListExternal(wb));
-	}
-
-void Maike::targetsListExternal(const Session& session,const char* filename)
-	{
-	FileOut dest(filename);
-	targetsListExternal(session,dest);
+	maike.targetsProcess(TargetsListExternal(writer));
 	}
 
 
@@ -237,11 +197,11 @@ static void buildBranch(Target& target,const char* target_dir
 		}
 	}
 
-void Maike::targetCompile(Session& session,const char* target_name)
+void Maike::targetCompile(Session& maike,const char* target_name)
 	{
-	auto& target=session.target(target_name);
-	auto target_dir=session.targetDirectoryGet();
-	auto& id_range=session.targetIdRangeGet();
+	auto& target=maike.target(target_name);
+	auto target_dir=maike.targetDirectoryGet();
+	auto& id_range=maike.targetIdRangeGet();
 	buildBranch(target,target_dir,id_range);
 	}
 
@@ -250,9 +210,9 @@ namespace
 	class TargetsCompileLeaf:public DependencyGraph::TargetProcessor
 		{
 		public:
-			TargetsCompileLeaf(const Session& session):
-				r_target_dir(session.targetDirectoryGet())
-				,id_range(session.targetIdRangeGet())
+			TargetsCompileLeaf(const Session& maike):
+				r_target_dir(maike.targetDirectoryGet())
+				,id_range(maike.targetIdRangeGet())
 				{}
 
 			int operator()(DependencyGraph& graph,Target& target)
@@ -267,7 +227,78 @@ namespace
 		};
 	}
 
-void Maike::targetsCompile(Session& session)
+void Maike::targetsCompile(Session& maike)
 	{
-	session.targetsProcess(TargetsCompileLeaf(session));
+	maike.targetsProcess(TargetsCompileLeaf(maike));
+	}
+
+
+
+namespace
+	{
+	class GraphEdgesWrite:public DependencyGraph::TargetProcessorConst
+		{
+		public:
+			GraphEdgesWrite(GraphEdgeWriter& writer):r_writer(writer)
+				{}
+
+			int operator()(const DependencyGraph& graph,const Target& target)
+				{
+				auto name_target=target.nameGet();
+				if(strcmp(name_target,".")!=0)
+					{
+					auto dep=target.dependencies();
+					while(dep.first!=dep.second)
+						{
+						auto name_dep=dep.first->nameGet();
+						if(strcmp(name_dep,".")!=0)
+							{
+							r_writer.edgeWrite(name_target,dep.first->nameGet()
+								,dep.first->relationGet()==Dependency::Relation::IMPLEMENTATION
+									?"red":"blue");
+							}
+						++dep.first;
+						}
+					}
+				return 0;
+				}
+		private:
+			GraphEdgeWriter& r_writer;
+		};
+	}
+
+void Maike::graphDump(const Session& maike,GraphEdgeWriter& writer)
+	{
+	maike.targetsProcess(GraphEdgesWrite(writer));
+	}
+
+void Maike::graphDump(const Session& maike,GraphEdgeWriter& writer
+	,const char* target_start,uint8_t* targets_visited,size_t id_min)
+	{
+	std::stack<const Target*> nodes;
+	nodes.push(&maike.target(target_start));
+	while(!nodes.empty())
+		{
+		auto node_current=nodes.top();
+		nodes.pop();
+		auto id=node_current->idGet()-id_min;
+		if(targets_visited[id]==0)
+			{
+			auto name_target=node_current->nameGet();
+			auto dep=node_current->dependencies();
+			while(dep.first!=dep.second)
+				{
+				auto name_dep=dep.first->nameGet();
+				if(strcmp(name_dep,".")!=0)
+					{
+					writer.edgeWrite(name_target,name_dep
+						,dep.first->relationGet()==Dependency::Relation::IMPLEMENTATION
+							?"red":"blue");
+					nodes.push(dep.first->target());
+					}
+				++dep.first;
+				}
+			targets_visited[id]=1;
+			}
+		}
 	}

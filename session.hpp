@@ -40,7 +40,7 @@ namespace Maike
 			const Target& target(const char* name) const;
 			Target& target(const char* name);
 			const char* targetDirectoryGet() const noexcept;
-			const Twins<size_t>& targetIdRangeGet() const noexcept;
+			const Twins<size_t>& targetIdRangeGet() const;
 
 		private:
 			SystemTargetInfo m_targetinfo;

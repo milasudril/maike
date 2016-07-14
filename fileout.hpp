@@ -12,7 +12,12 @@ namespace Maike
 	class FileOut final:public DataSink
 		{
 		public:
+			FileOut& operator=(const FileOut&)=delete;
+			FileOut(const FileOut& )=delete;
+			FileOut(FileOut&& file);
+			FileOut& operator=(FileOut&& file);
 			explicit FileOut(const char* filename);
+			FileOut();
 			~FileOut();
 
 			size_t write(const void* buffer,size_t count);
