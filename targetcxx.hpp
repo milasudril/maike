@@ -41,6 +41,8 @@ namespace Maike
 			Type typeGet() const noexcept
 				{return m_type;}
 
+			void dumpDetails(ResourceObject& target) const;
+
 		private:
 			TargetCxx(const ResourceObject& obj
 				,const TargetCxxCompiler& compiler

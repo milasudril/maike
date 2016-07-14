@@ -17,6 +17,7 @@ namespace Maike
 	class DataSink;
 	class DataSource;
 	class GraphEdgeWriter;
+	class ResourceObject;
 
 	template<class T> class Twins;
 
@@ -34,6 +35,10 @@ namespace Maike
 
 	void targetCompile(Session& maike,const char* target_name);
 	void targetsCompile(Session& maike);
+
+	void targetDump(const Session& maike,ResourceObject& target
+		,const char* target_name);
+	void targetsDump(const Session& maike,ResourceObject& target);
 
 	void graphDump(const Session& maike,GraphEdgeWriter& writer);
 	void graphDump(const Session& maike,GraphEdgeWriter& writer

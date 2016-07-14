@@ -135,6 +135,30 @@ static int graphDumpDOT(Maike::Session& maike
 	return 0;
 	}
 
+static int targetsDump(Maike::Session& maike
+	,const std::vector<std::string>* targets
+	,const std::vector<std::string>& filename)
+	{
+	ResourceObject db(ResourceObject::Type::ARRAY);
+	if(targets==nullptr)
+		{targetsDump(maike,db);}
+	else
+		{
+		auto ptr=targets->data();
+		auto ptr_end=ptr+targets->size();
+		while(ptr!=ptr_end)
+			{
+			targetDump(maike,db,ptr->c_str());
+			++ptr;
+			}
+		}
+
+	auto file=fileGet(filename);
+	db.write(file);
+
+	return 0;
+	}
+
 int main(int argc,char** argv)
 	{
 	try
@@ -178,6 +202,11 @@ int main(int argc,char** argv)
 		x=opts.get<Stringkey("dump-graph-dot")>();
 		if(x!=nullptr)
 			{return graphDumpDOT(maike,opts.get<Stringkey("targets")>(),*x);}
+
+		x=opts.get<Stringkey("dump-database")>();
+		if(x!=nullptr)
+			{return targetsDump(maike,opts.get<Stringkey("targets")>(),*x);}
+
 		targetsCompile(maike,opts.get<Stringkey("targets")>());
 		}
 	catch(const ErrorMessage& message)

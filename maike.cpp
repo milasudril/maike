@@ -302,3 +302,38 @@ void Maike::graphDump(const Session& maike,GraphEdgeWriter& writer
 			}
 		}
 	}
+
+void Maike::targetDump(const Session& maike,ResourceObject& db
+	,const char* target_name)
+	{
+	ResourceObject target_obj(ResourceObject::Type::OBJECT);
+	maike.target(target_name).dump(target_obj);
+	db.objectAppend(std::move(target_obj));
+	}
+
+
+
+namespace
+	{
+	class TargetDumpJSON:public DependencyGraph::TargetProcessorConst
+		{
+		public:
+			TargetDumpJSON(ResourceObject& db):r_db(db)
+				{}
+
+			int operator()(const DependencyGraph& graph,const Target& target)
+				{
+				ResourceObject target_obj(ResourceObject::Type::OBJECT);
+				target.dump(target_obj);
+				r_db.objectAppend(std::move(target_obj));
+				return 0;
+				}
+		private:
+			ResourceObject& r_db;
+		};
+	}
+
+void Maike::targetsDump(const Session& maike,ResourceObject& db)
+	{
+	maike.targetsProcess(TargetDumpJSON(db));
+	}

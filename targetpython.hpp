@@ -39,6 +39,8 @@ namespace Maike
 
 			void destroy() noexcept;
 
+			void dumpDetails(ResourceObject& target) const;
+
 		private:
 			const TargetPythonInterpreter& r_intpret;
 

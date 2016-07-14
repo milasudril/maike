@@ -21,6 +21,19 @@ TargetPython::TargetPython(const ResourceObject& obj
 		}
 	}
 
+void TargetPython::dumpDetails(ResourceObject& target) const
+	{
+	ResourceObject args(ResourceObject::Type::ARRAY);
+	auto i=m_args.data();
+	auto i_end=i+m_args.size();
+	while(i!=i_end)
+		{
+		args.objectAppend(ResourceObject(i->c_str()));
+		++i;
+		}
+	target.objectSet("args",std::move(args));
+	}
+
 void TargetPython::compile(Twins<const Dependency*> dependency_list
 	,Twins<const Dependency*> dependency_list_full
 	,const char* target_dir)

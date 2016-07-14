@@ -37,7 +37,7 @@ namespace Maike
 				,Stringkey("list-leaf-targets")
 				,Stringkey("list-external-targets")
 				,Stringkey("list-all-targets")
-				,Stringkey("dump-graph-json")
+				,Stringkey("dump-database")
 				,Stringkey("dump-graph-dot")
 				,Stringkey("dump-targets-csv")
 				> OptionMap;

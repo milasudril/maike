@@ -12,6 +12,7 @@
 namespace Maike
 	{
 	class Dependency;
+	class ResourceObject;
 
 	template<class T>
 	class Handle;
@@ -38,6 +39,7 @@ namespace Maike
 			virtual bool upToDate(Twins<const Dependency*> dependency_list
 				,Twins<const Dependency*> dependency_list_full
 				,const char* target_dir) const=0;
+			virtual void dump(ResourceObject& target) const=0;
 
 		protected:
 			~Target()=default;

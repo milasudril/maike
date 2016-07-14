@@ -60,8 +60,13 @@ namespace Maike
 			const char* inDirGet() const noexcept
 				{return m_in_dir.c_str();}
 
+			void dump(ResourceObject& target) const;
+
 
 		private:
+			virtual void dumpDetails(ResourceObject& target) const
+				{}
+
 			size_t m_child_counter;
 			size_t m_id;
 			std::string m_name;

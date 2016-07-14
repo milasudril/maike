@@ -62,6 +62,7 @@ namespace Maike
 			Relation relationGet() const noexcept
 				{return m_rel;}
 
+			void dump(ResourceObject& dependency) const;
 
 
 		private:

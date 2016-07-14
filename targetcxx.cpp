@@ -12,36 +12,64 @@
 
 using namespace Maike;
 
+static TargetCxx::Type type(const char* name_src,const char* type)
+	{
+	auto key=Stringkey(type);
+	if(key==Stringkey("object"))
+		{return TargetCxx::Type::OBJECT;}
+
+	if(key==Stringkey("include"))
+		{return TargetCxx::Type::INCLUDE;}
+
+	if(key==Stringkey("application"))
+		{return TargetCxx::Type::APPLICATION;}
+
+	if(key==Stringkey("lib_dynamic"))
+		{return TargetCxx::Type::LIB_DYNAMIC;}
+
+	if(key==Stringkey("lib_static"))
+		{return TargetCxx::Type::LIB_STATIC;}
+
+	exceptionRaise(ErrorMessage("#0;: Unknown target type #1;."	,{name_src,type}));
+	}
+
+static const char* type(TargetCxx::Type type)
+	{
+	switch(type)
+		{
+		case TargetCxx::Type::OBJECT:
+			return "object";
+		case TargetCxx::Type::INCLUDE:
+			return "include";
+		case TargetCxx::Type::APPLICATION:
+			return "application";
+		case TargetCxx::Type::LIB_DYNAMIC:
+			return "lib_dynamic";
+		case TargetCxx::Type::LIB_STATIC:
+			return "lib_static";
+		}
+	return nullptr;
+	}
+
 TargetCxx::TargetCxx(const ResourceObject& obj,const TargetCxxCompiler& compiler
 	,const char* name_src,const char* in_dir,size_t id):TargetBase(obj,name_src,in_dir,id)
 	,r_compiler(compiler)
 	{
-	auto type_string=static_cast<const char*>( obj.objectGet("type") );
-	auto key=Stringkey(type_string);
-	if(key==Stringkey("object"))
-		{m_type=Type::OBJECT;}
-	else
-	if(key==Stringkey("include"))
-		{m_type=Type::INCLUDE;}
-	else
-	if(key==Stringkey("application"))
-		{m_type=Type::APPLICATION;}
-	else
-	if(key==Stringkey("lib_dynamic"))
-		{m_type=Type::LIB_DYNAMIC;}
-	else
-	if(key==Stringkey("lib_static"))
-		{m_type=Type::LIB_STATIC;}
-	else
-		{
-		exceptionRaise(ErrorMessage("#0;: Unknown target type #1;."
-			,{name_src,type_string}));
-		}
+	m_type=type(name_src,static_cast<const char*>( obj.objectGet("type") ));
 
 	if(obj.objectExists("cxxoptions"))
 		{
 		m_options_extra=TargetCxxOptions(obj.objectGet("cxxoptions"));
 		}
+	}
+
+void TargetCxx::dumpDetails(ResourceObject& target) const
+	{
+	target.objectSet("type",ResourceObject(type(typeGet())));
+
+	ResourceObject cxxoptions(ResourceObject::Type::OBJECT);
+	m_options_extra.configDump(cxxoptions);
+	target.objectSet("cxxoptions",std::move(cxxoptions));
 	}
 
 
@@ -221,3 +249,4 @@ void TargetCxx::destroy() noexcept
 	{
 	delete this;
 	}
+
