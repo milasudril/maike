@@ -48,11 +48,12 @@ static void optionsFill(Options::OptionMap& options)
 	MAKE_OPTION(options,3,"dump-graph-dot","Dump the dependnecy graph to a DOT "
 		"file and exit. As default, the data is written to `stdout`.",1);
 
-	MAKE_OPTION(options,3,"dump-database","Dump the internal database to a JSON "
+	MAKE_OPTION(options,3,"dump-database-json","Dump the internal database to a JSON "
 		"file and exit. As default, the data is written to `stdout`.",1);
 
-	MAKE_OPTION(options,3,"dump-targets-csv","Dumps information about the selected "
-		"targets to a CSV file. As defualt, the data is written to `stdout`.",1);
+	MAKE_OPTION(options,3,"dump-targets-tsv","Dumps information about the selected "
+		"targets to a TSV (Tab Separated Values) file. As defualt, the data is "
+		"written to `stdout`.",1);
 
 	}
 

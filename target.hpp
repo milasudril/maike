@@ -40,6 +40,8 @@ namespace Maike
 				,Twins<const Dependency*> dependency_list_full
 				,const char* target_dir) const=0;
 			virtual void dump(ResourceObject& target) const=0;
+			virtual size_t lineCountGet() const noexcept=0;
+			virtual double compilationTimeGet() const noexcept=0;
 
 		protected:
 			~Target()=default;

@@ -18,7 +18,7 @@ namespace Maike
 			static TargetDirectory* create(const char* name,const char* in_dir
 				,size_t id);
 
-			void compile(Twins<const Dependency*> dependency_list
+			void compileImpl(Twins<const Dependency*> dependency_list
 				,Twins<const Dependency*> dependency_list_full
 				,const char* target_dir);
 

@@ -113,7 +113,7 @@ static std::vector<TargetCxxCompiler::FileInfo> depstringCreate(
 	return std::move(ret);
 	}
 
-void TargetCxx::compile(Twins<const Dependency*> dependency_list
+void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 	,Twins<const Dependency*> dependency_list_full
 	,const char* target_dir)
 	{

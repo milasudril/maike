@@ -35,6 +35,12 @@ namespace Maike
 
 			WriteBuffer& write(const char* str);
 
+			WriteBuffer& write(long long int x);
+
+			WriteBuffer& write(size_t x);
+
+			WriteBuffer& write(double x);
+
 			WriteBuffer& flush()
 				{
 				n_written_tot+=r_sink.write(m_buffer,r_write_pos - m_buffer);

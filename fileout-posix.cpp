@@ -19,7 +19,7 @@ using namespace Maike;
 FileOut::FileOut(const char* filename)
 	{
 	static_assert(sizeof(m_handle)>=sizeof(int),"Handle is too small");
-	m_handle=open(filename,O_WRONLY|O_CREAT,S_IRUSR|S_IWUSR);
+	m_handle=open(filename,O_WRONLY|O_CREAT|O_TRUNC,S_IRUSR|S_IWUSR);
 	if(m_handle==-1)
 		{
 		exceptionRaise(ErrorMessage("It was not possible to create the file #0;. #1;"

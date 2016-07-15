@@ -34,7 +34,7 @@ void TargetPython::dumpDetails(ResourceObject& target) const
 	target.objectSet("args",std::move(args));
 	}
 
-void TargetPython::compile(Twins<const Dependency*> dependency_list
+void TargetPython::compileImpl(Twins<const Dependency*> dependency_list
 	,Twins<const Dependency*> dependency_list_full
 	,const char* target_dir)
 	{

@@ -150,7 +150,7 @@ DependencyGraphDefault& DependencyGraphDefault::clear() noexcept
 	return *this;
 	}
 
-const Twins<size_t>& DependencyGraphDefault::idRangeGet() const noexcept
+const Twins<size_t>& DependencyGraphDefault::idRangeGet() const
 	{
 	if(m_patch_needed)
 		{const_cast<DependencyGraphDefault*>(this)->targetsPatch();}

@@ -37,9 +37,9 @@ namespace Maike
 				,Stringkey("list-leaf-targets")
 				,Stringkey("list-external-targets")
 				,Stringkey("list-all-targets")
-				,Stringkey("dump-database")
+				,Stringkey("dump-database-json")
 				,Stringkey("dump-graph-dot")
-				,Stringkey("dump-targets-csv")
+				,Stringkey("dump-targets-tsv")
 				> OptionMap;
 
 			Options(Twins<const char* const*> args);

@@ -41,6 +41,11 @@ namespace Maike
 		,const char* target_name);
 	void targetsDump(const Session& maike,ResourceObject& target);
 
+	void targetsDumpTSVHeader(TextWriter& writer);
+	void targetDumpTSV(const Session& maike,TextWriter& writer
+		,const char* target_name);
+	void targetsDumpTSV(const Session& maike,TextWriter& writer);
+
 	void graphDump(const Session& maike,GraphEdgeWriter& writer);
 	void graphDump(const Session& maike,GraphEdgeWriter& writer
 		,const char* target_start,uint8_t* targets_visited,size_t id_min);

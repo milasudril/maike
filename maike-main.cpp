@@ -136,7 +136,7 @@ static int graphDumpDOT(Maike::Session& maike
 	return 0;
 	}
 
-static int targetsDump(Maike::Session& maike
+static int databaseDumpJSON(Maike::Session& maike
 	,const std::vector<std::string>* targets
 	,const std::vector<std::string>& filename)
 	{
@@ -157,6 +157,28 @@ static int targetsDump(Maike::Session& maike
 	auto file=fileGet(filename);
 	db.write(file);
 
+	return 0;
+	}
+
+static int targetsDumpTSV(Maike::Session& maike
+	,const std::vector<std::string>* targets
+	,const std::vector<std::string>& filename)
+	{
+	auto file=fileGet(filename);
+	WriteBuffer wb(file);
+	targetsDumpTSVHeader(wb);
+	if(targets==nullptr)
+		{targetsDumpTSV(maike,wb);}
+	else
+		{
+		auto ptr=targets->data();
+		auto ptr_end=ptr+targets->size();
+		while(ptr!=ptr_end)
+			{
+			targetDumpTSV(maike,wb,ptr->c_str());
+			++ptr;
+			}
+		}
 	return 0;
 	}
 
@@ -204,11 +226,15 @@ int main(int argc,char** argv)
 		if(x!=nullptr)
 			{return graphDumpDOT(maike,opts.get<Stringkey("targets")>(),*x);}
 
-		x=opts.get<Stringkey("dump-database")>();
+		x=opts.get<Stringkey("dump-database-json")>();
 		if(x!=nullptr)
-			{return targetsDump(maike,opts.get<Stringkey("targets")>(),*x);}
+			{return databaseDumpJSON(maike,opts.get<Stringkey("targets")>(),*x);}
 
 		targetsCompile(maike,opts.get<Stringkey("targets")>());
+
+		x=opts.get<Stringkey("dump-targets-tsv")>();
+		if(x!=nullptr)
+			{return targetsDumpTSV(maike,opts.get<Stringkey("targets")>(),*x);}
 		}
 	catch(const ErrorMessage& message)
 		{

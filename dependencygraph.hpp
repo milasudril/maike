@@ -24,7 +24,7 @@ namespace Maike
 		public:
 			virtual DependencyGraph& targetRegister(Handle<Target>&& target)=0;
 			virtual DependencyGraph& targetsPatch()=0;
-			virtual const Twins<size_t>& idRangeGet() const noexcept=0;
+			virtual const Twins<size_t>& idRangeGet() const=0;
 
 			class TargetProcessor
 				{

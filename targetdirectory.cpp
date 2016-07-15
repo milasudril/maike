@@ -6,7 +6,7 @@
 
 using namespace Maike;
 
-void TargetDirectory::compile(Twins<const Dependency*> dependency_list
+void TargetDirectory::compileImpl(Twins<const Dependency*> dependency_list
 	,Twins<const Dependency*> dependency_list_full
 	,const char* target_dir)
 	{

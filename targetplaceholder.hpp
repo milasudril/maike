@@ -22,7 +22,7 @@ namespace Maike
 				,const char* target_dir) const
 				{return 1;}
 
-			void compile(Twins<const Dependency*> dependency_list
+			void compileImpl(Twins<const Dependency*> dependency_list
 				,Twins<const Dependency*> dependency_list_full
 				,const char* target_dir)
 				{}

@@ -4,12 +4,15 @@
 
 #include "targetbase.hpp"
 #include "resourceobject.hpp"
+#include "timedscope.hpp"
 #include <cstring>
+#include <limits>
 
 using namespace Maike;
 
 TargetBase::TargetBase(const ResourceObject& obj,const char* name_src,const char* in_dir,size_t id):
 	m_child_counter(0),m_id(id),m_source_name(name_src),m_in_dir(in_dir)
+	,m_compilation_time(std::numeric_limits<double>::quiet_NaN()),m_loc(0)
 	{
 	m_name=in_dir;
 	m_name+='/';
@@ -30,6 +33,7 @@ TargetBase::TargetBase(const ResourceObject& obj,const char* name_src,const char
 
 TargetBase::TargetBase(const char* name,const char* name_src,const char* in_dir,size_t id):
 	m_child_counter(0),m_id(id),m_name(name),m_source_name(name_src),m_in_dir(in_dir)
+	,m_compilation_time(std::numeric_limits<double>::quiet_NaN()),m_loc(0)
 	{
 	if(*in_dir!='\0')
 		{dependencyAdd(Dependency(in_dir,Dependency::Relation::INTERNAL));}
@@ -57,4 +61,12 @@ TargetBase& TargetBase::dependencyAdd(Dependency&& dep)
 	{
 	m_dependencies.push_back(std::move(dep));
 	return *this;
+	}
+
+void TargetBase::compile(Twins<const Dependency*> dependency_list
+	,Twins<const Dependency*> dependency_list_full
+	,const char* target_dir)
+	{
+	TimedScope scope(m_compilation_time);
+	compileImpl(dependency_list,dependency_list_full,target_dir);
 	}

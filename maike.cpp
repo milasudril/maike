@@ -342,3 +342,56 @@ void Maike::targetsDump(const Session& maike,ResourceObject& db)
 	{
 	maike.targetsProcess(TargetDumpJSON(db));
 	}
+
+
+
+void Maike::targetsDumpTSVHeader(TextWriter& writer)
+	{
+	writer.write("name\t")
+		.write("source_name\t")
+		.write("child_count\t")
+		.write("dependency_count\t")
+		.write("compilation_time\t")
+		.write("lines_of_code\n");
+	}
+
+
+static void targetDumpTSV(const Target& target,TextWriter& writer)
+	{
+	auto deps=target.dependencies();
+	writer.write(target.nameGet()).write("\t")
+		.write(target.sourceNameGet()).write("\t")
+		.write(target.childCounterGet()).write("\t")
+		.write(static_cast<size_t>(deps.second-deps.first)).write("\t")
+		.write(target.compilationTimeGet()).write("\t")
+		.write(target.lineCountGet()).write("\n");
+	}
+
+namespace
+	{
+	class TargetDumpTSV:public DependencyGraph::TargetProcessorConst
+		{
+		public:
+			TargetDumpTSV(TextWriter& writer):r_writer(writer)
+				{}
+
+			int operator()(const DependencyGraph& graph,const Target& target)
+				{
+				::targetDumpTSV(target,r_writer);
+				return 0;
+				}
+		private:
+			TextWriter& r_writer;
+		};
+	}
+
+void Maike::targetsDumpTSV(const Session& maike,TextWriter& writer)
+	{
+	maike.targetsProcess(TargetDumpTSV(writer));
+	}
+
+void Maike::targetDumpTSV(const Session& maike,TextWriter& writer,const char* target_name)
+	{
+	::targetDumpTSV(maike.target(target_name),writer);
+	}
+

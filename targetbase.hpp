@@ -62,8 +62,22 @@ namespace Maike
 
 			void dump(ResourceObject& target) const;
 
+			void compile(Twins<const Dependency*> dependency_list
+				,Twins<const Dependency*> dependency_list_full
+				,const char* target_dir);
+
+			double compilationTimeGet() const noexcept
+				{return m_compilation_time;}
+
+			size_t lineCountGet() const noexcept
+				{return m_loc;}
+
 
 		private:
+			virtual void compileImpl(Twins<const Dependency*> dependency_list
+				,Twins<const Dependency*> dependency_list_full
+				,const char* target_dir)=0;
+
 			virtual void dumpDetails(ResourceObject& target) const
 				{}
 
@@ -73,6 +87,8 @@ namespace Maike
 			std::string m_source_name;
 			std::string m_in_dir;
 			std::vector<Dependency> m_dependencies;
+			double m_compilation_time;
+			size_t m_loc;
 		};
 	}
 

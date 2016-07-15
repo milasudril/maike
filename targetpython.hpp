@@ -33,7 +33,7 @@ namespace Maike
 				return 0;
 				}
 
-			void compile(Twins<const Dependency*> dependency_list
+			void compileImpl(Twins<const Dependency*> dependency_list
 				,Twins<const Dependency*> dependency_list_full
 				,const char* target_dir);
 
