@@ -11,7 +11,6 @@
 
 namespace Maike
 	{
-	class Target;
 	class Session;
 	class TextWriter;
 	class DataSink;
@@ -25,7 +24,9 @@ namespace Maike
 
 	void configDump(const Session& maike,DataSink& sink);
 
-	void configLoad(Session& maike,DataSource& source);
+	void configAppendDefault(Session& maike);
+
+	void configAppendDefault(Session& maike,DataSource& source);
 
 	void targetsListAll(const Session& maike,TextWriter& writer);
 

@@ -41,10 +41,15 @@ void Maike::configDump(const Session& maike,DataSink& sink)
 
 
 
-void Maike::configLoad(Session& maike,DataSource& source)
+void Maike::configAppendDefault(Session& maike,DataSource& source)
 	{
 	ResourceObject obj(source);
 	maike.configAppend(obj);
+	}
+
+void Maike::configAppendDefault(Session& maike)
+	{
+	maike.configAppendDefault();
 	}
 
 

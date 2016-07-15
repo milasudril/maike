@@ -1,19 +1,31 @@
-//@	{"targets":[{"name":"expressionevaluator.hpp","type":"include"}]}
+//@	{
+//@	 "targets":[{"name":"expressionevaluator.hpp","type":"include"}]
+//@	,"dependencies_extra":[{"ref":"expressionevaluator.o","rel":"implementation"}]
+//@	}
 
-#ifndef EXPRESSIONEVALUATOR_HPP
-#define EXPRESSIONEVALUATOR_HPP
+#ifndef MAIKE_EXPRESSIONEVALUATOR_HPP
+#define MAIKE_EXPRESSIONEVALUATOR_HPP
 
-#include "variant.hpp"
+#include <map>
 
 namespace Maike
 	{
+	class Stringkey;
+	class Variant;
+	class SystemTargetInfo;
+
 	class ExpressionEvaluator
 		{
 		public:
-			virtual Variant evaluate(const char* expression) const=0;
-		protected:
-			~ExpressionEvaluator()=default;
+			ExpressionEvaluator(SystemTargetInfo&& targetinfo)=delete;
+			ExpressionEvaluator(const SystemTargetInfo& targetinfo);
+			~ExpressionEvaluator();
+
+			Variant variableGet(const Stringkey& variable) const noexcept;
+			Variant evaluate(const char* expression) const;
+
+		private:
+			const SystemTargetInfo& r_targetinfo;
 		};
 	}
-
 #endif

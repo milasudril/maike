@@ -21,6 +21,12 @@ void TargetPythonHook::configClear()
 	}
 
 
+TargetPythonHook& TargetPythonHook::configAppendDefault()
+	{
+	m_intpret.configAppendDefault();
+	return *this;
+	}
+
 TargetPythonHook& TargetPythonHook::configAppend(const ResourceObject& pythonoptions)
 	{
 	m_intpret.configAppend(pythonoptions);

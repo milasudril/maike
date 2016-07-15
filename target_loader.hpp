@@ -7,7 +7,6 @@ namespace Maike
 	{
 	class Spider;
 	class DependencyGraph;
-	class ExpressionEvaluator;
 	class Target_FactoryDelegator;
 
 	class Target_Loader

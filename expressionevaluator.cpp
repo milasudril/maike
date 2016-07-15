@@ -1,6 +1,6 @@
-//@	{"targets":[{"name":"expressionevaluatordefault.o","type":"object"}]}
+//@	{"targets":[{"name":"expressionevaluator.o","type":"object"}]}
 
-#include "expressionevaluatordefault.hpp"
+#include "expressionevaluator.hpp"
 #include "systemtargetinfo.hpp"
 #include "stringkey.hpp"
 #include "variant.hpp"
@@ -16,14 +16,14 @@
 
 using namespace Maike;
 
-ExpressionEvaluatorDefault::ExpressionEvaluatorDefault(const SystemTargetInfo& targetinfo):
+ExpressionEvaluator::ExpressionEvaluator(const SystemTargetInfo& targetinfo):
 	r_targetinfo(targetinfo)
 	{}
 
-ExpressionEvaluatorDefault::~ExpressionEvaluatorDefault()
+ExpressionEvaluator::~ExpressionEvaluator()
 	{}
 
-Variant ExpressionEvaluatorDefault::variableGet(const Stringkey& variable) const noexcept
+Variant ExpressionEvaluator::variableGet(const Stringkey& variable) const noexcept
 	{
 	return r_targetinfo.variableGet(variable);
 	}
@@ -40,7 +40,7 @@ namespace
 
 	static Variant argCreate(const char* value,bool string_is
 		,std::vector<std::string>& strings
-		,const ExpressionEvaluatorDefault& evaluator)
+		,const ExpressionEvaluator& evaluator)
 		{
 		if(string_is)
 			{
@@ -350,7 +350,7 @@ namespace
 		}
 	};
 
-Variant ExpressionEvaluatorDefault::evaluate(const char* expression) const
+Variant ExpressionEvaluator::evaluate(const char* expression) const
 	{
 	Variant ret=static_cast<int64_t>(0);
 	enum class State:int{NORMAL,STRING,ESCAPE};

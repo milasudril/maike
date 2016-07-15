@@ -1,1 +1,1 @@
-0.3.0-2-gebf0e72-dirty
+0.3.0-3-g1695b9e-dirty

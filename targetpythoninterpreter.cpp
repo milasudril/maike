@@ -37,9 +37,17 @@ void TargetPythonInterpreter::run(const char* script,Twins<const char* const*> a
 
 void TargetPythonInterpreter::configClear()
 	{
-	m_interpreter.nameSet("python3").argumentsClear().argumentAppend("--")
-		.argumentAppend("{script}").argumentAppend("{args}");
+	m_interpreter.nameSet("").argumentsClear();
 	}
+
+TargetPythonInterpreter& TargetPythonInterpreter::configAppendDefault()
+	{
+	m_interpreter.argumentsClear();
+	m_interpreter.nameSet("python3").argumentAppend("--")
+		.argumentAppend("{script}").argumentAppend("{args}");
+	return *this;
+	}
+
 
 TargetPythonInterpreter& TargetPythonInterpreter::configAppend(const ResourceObject& pythonoptions)
 	{

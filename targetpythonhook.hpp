@@ -30,6 +30,8 @@ namespace Maike
 
 			void configClear();
 
+			TargetPythonHook& configAppendDefault();
+
 			TargetPythonHook& configAppend(const ResourceObject& pythonoptions);
 
 			void configDump(ResourceObject& pythonoptions) const;

@@ -26,7 +26,7 @@ namespace Maike
 			TargetDirectoryLoader& pathAccept(const Stringkey& key);
 
 			void configClear();
-
+			TargetDirectoryLoader& configAppendDefault();
 			TargetDirectoryLoader& configAppend(const ResourceObject& directoryoptions);
 			void configDump(ResourceObject& directoryoptions) const;
 

@@ -32,7 +32,8 @@ namespace Maike
 			SystemTargetInfo& configAppend(const ResourceObject& targetinfo);
 			void configDump(ResourceObject& targetinfo) const;
 
-			void loadFromSystem();
+			SystemTargetInfo& sysvarsLoad();
+			SystemTargetInfo& configAppendDefault();
 
 		private:
 			std::map<Stringkey,Variant> m_sysvars;

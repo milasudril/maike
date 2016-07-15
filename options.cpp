@@ -18,10 +18,14 @@ static void optionsFill(Options::OptionMap& options)
 
 	MAKE_OPTION(options,0,"version","Print version information to `stdout`, or the given file, and exit.",1);
 
-	MAKE_OPTION(options,1,"configfiles","Load the listed configuration files.",2);
+	MAKE_OPTION(options,1,"configfiles","Load the listed configuration files. "
+		"If this argument is not given, Maike will look for a file called "
+		"maikeconfig.json within the current working directory. If that file "
+		"cannot be openend, Maike will load a built-in default configuration.",2);
 
-	MAKE_OPTION(options,1,"no-sysvars","Do not load any default system variable. "
-		"This is useful when using a cross-compiler.",0);
+	MAKE_OPTION(options,1,"no-sysvars","Do not load any default system variables. "
+		"This is useful when using a cross-compiler. Normally, Maike loads a "
+		"system-dependent set of variables that identifiesd the host platform.",0);
 
 	MAKE_OPTION(options,1,"configdump","Print the current configuration to the "
 		"given file, and exit. As defualt, the data is written to `stdout`.",1);

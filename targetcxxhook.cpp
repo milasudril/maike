@@ -16,7 +16,13 @@ void TargetCxxHook::destroy() noexcept
 	{delete this;}
 
 void TargetCxxHook::configClear()
-	{m_options.clear();}
+	{m_options.configClear();}
+
+TargetCxxHook& TargetCxxHook::configAppendDefault()
+	{
+	m_options.configAppendDefault();
+	return *this;
+	}
 
 TargetCxxHook& TargetCxxHook::configAppend(const ResourceObject& cxxoptions)
 	{

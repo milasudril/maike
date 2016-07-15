@@ -14,22 +14,24 @@ Session::Session():
 	 m_cxxhook(TargetCxxHook::create(m_targetinfo))
 	,m_pythonhook(TargetPythonHook::create(m_targetinfo))
 	,m_evaluator(m_targetinfo)
-	,m_delegator(static_cast<const char*>(m_targetinfo.variableGet(Stringkey("target_directory")))
-		,m_evaluator,m_id_gen)
+	,m_delegator(m_evaluator,m_id_gen)
 	,m_graph(m_id_gen)
 	,m_spider(m_delegator,m_graph)
 	{
+//TODO These things should be configurable as well. Needs to fix the SDK first.
+//See todo_abstractify.txt for classes that may need to be abstract.
 	m_delegator.factoryRegister(Stringkey(".cpp"),m_cxxhook->factoryGet())
 		.factoryRegister(Stringkey(".hpp"),m_cxxhook->factoryGet())
 		.factoryRegister(Stringkey(".h"),m_cxxhook->factoryGet())
 		.factoryRegister(Stringkey(".py"),m_pythonhook->factoryGet());
 
+//TODO These things should be configurable as well. Needs to fix the SDK first.
+//See todo_abstractify.txt for classes that may need to be abstract.
 	m_spider.loaderRegister(Stringkey("."),m_dirloader)
 		.loaderRegister(Stringkey(".cpp"),m_cxxhook->loaderGet())
 		.loaderRegister(Stringkey(".hpp"),m_cxxhook->loaderGet())
 		.loaderRegister(Stringkey(".h"),m_cxxhook->loaderGet())
 		.loaderRegister(Stringkey(".py"),m_pythonhook->loaderGet());
-	sourceFileAppend(".");
 	}
 
 Session& Session::configClear()
@@ -40,6 +42,22 @@ Session& Session::configClear()
 	m_cxxhook->configClear();
 	m_pythonhook->configClear();
 	m_graph_dirty=1;
+	return *this;
+	}
+
+Session& Session::configAppendDefault()
+	{
+	sourceFileAppend(".");
+	m_targetinfo.configAppendDefault();
+	m_dirloader.configAppendDefault();
+	m_cxxhook->configAppendDefault();
+	m_pythonhook->configAppendDefault();
+	return *this;
+	}
+
+Session& Session::sysvarsLoad()
+	{
+	m_targetinfo.sysvarsLoad();
 	return *this;
 	}
 

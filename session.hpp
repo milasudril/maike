@@ -9,7 +9,7 @@
 #include "systemtargetinfo.hpp"
 #include "targetdirectoryloader.hpp"
 #include "handle.hpp"
-#include "expressionevaluatordefault.hpp"
+#include "expressionevaluator.hpp"
 #include "idgenerator.hpp"
 #include "spiderdefault.hpp"
 #include "dependencygraphdefault.hpp"
@@ -27,6 +27,8 @@ namespace Maike
 			Session();
 
 			Session& configClear();
+			Session& sysvarsLoad();
+			Session& configAppendDefault();
 			Session& configAppend(const ResourceObject& maikeconfig);
 			Session& sourceFileAppend(const char* filename);
 			void configDump(ResourceObject& maikeconfig) const;
@@ -48,7 +50,7 @@ namespace Maike
 			Handle<TargetCxxHook> m_cxxhook;
 			Handle<TargetPythonHook> m_pythonhook;
 
-			ExpressionEvaluatorDefault m_evaluator;
+			ExpressionEvaluator m_evaluator;
 			IdGenerator<size_t> m_id_gen;
 			Target_FactoryDelegatorDefault m_delegator;
 			mutable DependencyGraphDefault m_graph;

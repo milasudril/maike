@@ -49,10 +49,12 @@ namespace Maike
 			const TargetCxxOptions& optionsGet() const noexcept
 				{return r_options;}
 
+			long int cxxversionDefaultGet() const;
+
 		private:
 			const TargetCxxOptions& r_options;
 			std::vector<const ParameterSet*> r_paramset;
-			long int m_cxxversion_default;
+			mutable long int m_cxxversion_default;
 		};
 	}
 

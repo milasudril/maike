@@ -13,7 +13,7 @@ using namespace Maike;
 
 SystemTargetInfo::SystemTargetInfo()
 	{
-	loadFromSystem();
+	clear();
 	}
 
 SystemTargetInfo::~SystemTargetInfo()
@@ -31,10 +31,18 @@ void SystemTargetInfo::clear()
 		}
 	}
 
-void SystemTargetInfo::loadFromSystem()
+SystemTargetInfo& SystemTargetInfo::sysvarsLoad()
 	{
-	clear();
-	sysvarsLoad(m_sysvars,m_strings,m_varnames);
+	::sysvarsLoad(m_sysvars,m_strings,m_varnames);
+	return *this;
+	}
+
+SystemTargetInfo& SystemTargetInfo::configAppendDefault()
+	{
+	Stringkey key("target_directory");
+	replace(m_sysvars,{key,"__targets"});
+	m_varnames[key]=std::string("target_directory");
+	return *this;
 	}
 
 SystemTargetInfo& SystemTargetInfo::configAppend(const ResourceObject& targetinfo)

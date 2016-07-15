@@ -28,12 +28,12 @@ static void stringArrayGet(ResourceObject& ret, const std::vector< std::string >
 
 TargetCxxOptions::TargetCxxOptions()
 	{
-	clear();
+	configClear();
 	}
 
 TargetCxxOptions::TargetCxxOptions(const ResourceObject& cxxoptions)
 	{
-	clear();
+	configClear();
 	configAppend(cxxoptions);
 	}
 
@@ -101,12 +101,17 @@ TargetCxxOptions& TargetCxxOptions::configAppend(const ResourceObject& cxxoption
 	return *this;
 	}
 
-void TargetCxxOptions::clear()
+void TargetCxxOptions::configClear()
+	{
+	m_includedir.clear();
+	m_libdir.clear();
+	m_objcompile.nameSet("").argumentsClear();
+	}
+
+TargetCxxOptions& TargetCxxOptions::configAppendDefault()
 	{
 	m_cxxversion_min=__cplusplus;
 	m_cxxversion_max=0;
-	m_includedir.clear();
-	m_libdir.clear();
 
 	m_includedir_format=std::string("-I^");
 	m_libdir_format=std::string("-L^");
@@ -114,30 +119,36 @@ void TargetCxxOptions::clear()
 	m_libint_format=std::string("-l:^");
 	m_stdprefix=std::string("-std=");
 
-	m_objcompile.nameSet("g++").argumentsClear().argumentAppend("-c")
+	m_objcompile.argumentsClear();
+	m_objcompile.nameSet("g++").argumentAppend("-c")
 		.argumentAppend("-g").argumentAppend("-fpic")
 		.argumentAppend("{cxxversion}").argumentAppend("-Wall")
 		.argumentAppend("{includedir}").argumentAppend("-o")
 		.argumentAppend("{target}").argumentAppend("{source}");
 
-	m_appcompile.nameSet("g++").argumentsClear().argumentAppend("-g")
+	m_appcompile.argumentsClear();
+	m_appcompile.nameSet("g++").argumentAppend("-g")
 		.argumentAppend("-fpic").argumentAppend("{cxxversion}")
 		.argumentAppend("-Wall").argumentAppend("{includedir}")
 		.argumentAppend("-o").argumentAppend("{target}")
 		.argumentAppend("{dependencies}");
 
-	m_dllcompile.nameSet("g++").argumentsClear().argumentAppend("-g")
+	m_dllcompile.argumentsClear();
+	m_dllcompile.nameSet("g++").argumentAppend("-g")
 		.argumentAppend("-fpic").argumentAppend("{cxxversion}")
 		.argumentAppend("-Wall").argumentAppend("{includedir}")
 		.argumentAppend("-shared").argumentAppend("-o")
 		.argumentAppend("{target}").argumentAppend("{dependencies}");
 
-	m_libcompile.nameSet("ar").argumentsClear().argumentAppend("rcs")
-		.argumentAppend("{target}").argumentAppend("{dependencies}");
+	m_libcompile.argumentsClear();
+	m_libcompile.nameSet("ar").argumentAppend("rcs").argumentAppend("{target}")
+		.argumentAppend("{dependencies}");
 
-	m_versionquery.nameSet("g++").argumentsClear().argumentAppend("-E")
-		.argumentAppend("-dM").argumentAppend("-x").argumentAppend("c++")
-		.argumentAppend("{nullfile}");
+	m_versionquery.argumentsClear();
+	m_versionquery.nameSet("g++").argumentAppend("-E").argumentAppend("-dM")
+		.argumentAppend("-x").argumentAppend("c++").argumentAppend("{nullfile}");
+
+	return *this;
 	}
 
 void TargetCxxOptions::configDump(ResourceObject& cxxoptions) const

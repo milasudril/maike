@@ -25,6 +25,8 @@ namespace Maike
 
 			void configClear();
 
+			TargetPythonInterpreter& configAppendDefault();
+
 			TargetPythonInterpreter& configAppend(const ResourceObject& pythonoptions);
 
 			void configDump(ResourceObject& pythonoptions) const;

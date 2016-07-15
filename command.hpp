@@ -31,7 +31,7 @@ namespace Maike
 
 			Command& nameSet(const char* name);
 			Command& argumentAppend(const char* arg);
-			Command& argumentsClear() noexcept;
+			void argumentsClear() noexcept;
 
 			void configDump(ResourceObject& cmd) const;
 

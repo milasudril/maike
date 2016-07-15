@@ -102,25 +102,17 @@ static long int cxxversionDefaultGet(const Command& versionquery
 	}
 
 TargetCxxCompiler::TargetCxxCompiler(const TargetCxxOptions& options
-	,const ParameterSet& sysvars):r_options(options)
+	,const ParameterSet& sysvars):r_options(options),m_cxxversion_default(0)
 	{
 	r_paramset.push_back(&sysvars);
-	r_paramset.push_back(&options.paramsGet());
-	m_cxxversion_default=cxxversionDefaultGet(options.versionqueryGet()
-		,{r_paramset.data(), r_paramset.data() + r_paramset.size()});
 	}
 
-// 16f3e46051eee3e8 target
-// 477c58df992a139e cxxversion
-// 76dbdc228f782db8 source
-// 89804aa1f3b7ef83 libdir
-// 90999e2acd53f306 includedir
-// ccfa12bb6c45a400 dependencies
-
-// dce2956d43782dcc bad_key
-
-typedef ParameterSetMapFixed<Stringkey("cxxversion"),Stringkey("dependencies")
-	,Stringkey("includedir"),Stringkey("libdir"),Stringkey("target")
+typedef ParameterSetMapFixed<
+	 Stringkey("cxxversion")
+	,Stringkey("dependencies")
+	,Stringkey("includedir")
+	,Stringkey("libdir")
+	,Stringkey("target")
 	,Stringkey("source")> CompilerParameters;
 
 static const char* cxxNameGet(long int cxxversion)
@@ -140,6 +132,16 @@ cxxVersionString(const char* stdprefix,long int cxxversion)
 	return ret;
 	}
 
+long int TargetCxxCompiler::cxxversionDefaultGet() const
+	{
+	if(m_cxxversion_default==0)
+		{
+		m_cxxversion_default=::cxxversionDefaultGet(r_options.versionqueryGet()
+			,{r_paramset.data(), r_paramset.data() + r_paramset.size()});
+		}
+	return m_cxxversion_default;
+	}
+
 void TargetCxxCompiler::compileObject(const char* source,const char* dest
 	,const TargetCxxOptions& options_extra) const
 	{
@@ -151,7 +153,7 @@ void TargetCxxCompiler::compileObject(const char* source,const char* dest
 //TODO merge with options_extra
 
 	auto cxxversion_min=options_result.cxxversionMinGet();
-	if(cxxversion_min > m_cxxversion_default)
+	if(cxxversion_min > cxxversionDefaultGet())
 		{
 		cxxparams.get<Stringkey("cxxversion")>()
 			.push_back(cxxVersionString(options_result.stdprefixGet(),cxxversion_min));
@@ -237,7 +239,7 @@ void TargetCxxCompiler::compileApplication(Twins<const FileInfo*> files
 	}
 
 	auto cxxversion_min=options_result.cxxversionMinGet();
-	if(cxxversion_min >  m_cxxversion_default)
+	if(cxxversion_min >  cxxversionDefaultGet())
 		{
 		cxxparams.get<Stringkey("cxxversion")>()
 			.push_back(cxxVersionString(options_result.stdprefixGet(),cxxversion_min));
@@ -284,7 +286,7 @@ void TargetCxxCompiler::compileDll(Twins<const FileInfo*> files
 	}
 
 	auto cxxversion_min=options_result.cxxversionMinGet();
-	if(cxxversion_min >  m_cxxversion_default)
+	if(cxxversion_min >  cxxversionDefaultGet())
 		{
 		cxxparams.get<Stringkey("cxxversion")>()
 			.push_back(cxxVersionString(options_result.stdprefixGet(),cxxversion_min));

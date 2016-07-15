@@ -63,10 +63,18 @@ TargetDirectoryLoader& TargetDirectoryLoader::pathAccept(const Stringkey& key)
 void TargetDirectoryLoader::configClear()
 	{
 	m_ignore.clear();
-	m_recursive=1;
+	m_recursive=0;
 //	IRP (Infinite Recursion Prevention)
 	pathReject(Stringkey(".")); //Remove references to this
 	pathReject(Stringkey(".."));//and parent directory
+	}
+
+TargetDirectoryLoader& TargetDirectoryLoader::configAppendDefault()
+	{
+	m_recursive=1;
+	pathReject(Stringkey("."));
+	pathReject(Stringkey(".."));
+	return *this;
 	}
 
 TargetDirectoryLoader& TargetDirectoryLoader::configAppend(const ResourceObject& directoryoptions)

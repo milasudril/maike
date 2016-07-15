@@ -20,6 +20,7 @@ namespace Maike
 			virtual const Target_Factory& factoryGet() const noexcept=0;
 			virtual const Target_Loader& loaderGet() const noexcept=0;
 			virtual void configClear()=0;
+			virtual Target_Hook& configAppendDefault()=0;
 			virtual Target_Hook& configAppend(const ResourceObject& config)=0;
 			virtual void configDump(ResourceObject& config) const=0;
 

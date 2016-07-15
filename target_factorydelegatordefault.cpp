@@ -17,9 +17,9 @@
 
 using namespace Maike;
 
-Target_FactoryDelegatorDefault::Target_FactoryDelegatorDefault(const char* target_dir
-	,const ExpressionEvaluator& eval,IdGenerator<size_t>& id_gen)
-	:r_eval(eval),r_id_gen(id_gen),m_target_dir(target_dir)
+Target_FactoryDelegatorDefault::Target_FactoryDelegatorDefault(const ExpressionEvaluator& eval
+	,IdGenerator<size_t>& id_gen)
+	:r_eval(eval),r_id_gen(id_gen)
 	{
 	}
 
@@ -62,7 +62,7 @@ Handle<Target> Target_FactoryDelegatorDefault::targetCreate(const ResourceObject
 
 	if(source_generated)
 		{
-		source_name+=m_target_dir;
+		source_name+=static_cast<const char*>(r_eval.variableGet(Stringkey("target_directory")));
 		source_name+='/';
 		}
 

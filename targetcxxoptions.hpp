@@ -8,7 +8,6 @@
 
 
 #include "command.hpp"
-#include "parametersetdefault.hpp"
 #include <vector>
 #include <string>
 
@@ -35,9 +34,6 @@ namespace Maike
 			const Command& dllcompileGet() const noexcept
 				{return m_dllcompile;}
 
-			const ParameterSetDefault& paramsGet() const noexcept
-				{return m_params;}
-
 			long long int cxxversionMinGet() const noexcept
 				{return m_cxxversion_min;}
 
@@ -53,16 +49,14 @@ namespace Maike
 			const char* libintFormatGet() const noexcept
 				{return m_libext_format.c_str();}
 
-			void clear();
-
+			void configClear();
+			TargetCxxOptions& configAppendDefault();
 			TargetCxxOptions& configAppend(const ResourceObject& cxxoptions);
 
 			void configDump(ResourceObject& cxxoptions) const;
 
 
 		private:
-			ParameterSetDefault m_params;
-
 			std::vector< std::string > m_includedir;
 			std::vector< std::string > m_libdir;
 

@@ -30,7 +30,7 @@ namespace Maike
 				{return m_loader;}
 
 			void configClear();
-
+			TargetCxxHook& configAppendDefault();
 			TargetCxxHook& configAppend(const ResourceObject& cxxoptions);
 			void configDump(ResourceObject& cxxoptions) const;
 

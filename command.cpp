@@ -175,10 +175,9 @@ Command& Command::argumentAppend(const char* arg)
 	return *this;
 	}
 
-Command& Command::argumentsClear() noexcept
+void Command::argumentsClear() noexcept
 	{
 	m_args.clear();
-	return *this;
 	}
 
 void Command::configDump(ResourceObject& cmd) const

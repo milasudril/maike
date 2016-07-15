@@ -1,10 +1,5 @@
 {
-"targetconfig":
-	{
-	"target_directory":"__targets"
-	}
-
-,"targetinfo":
+"targetinfo":
 	{
 	"target_directory":"__targets"
 	}
@@ -12,13 +7,6 @@
 ,"session":
 	{
 	"source_files":["."]
-	}
-
-,"directoryloader":
-	{
-	 "paths_reject":[".git",".codelite",".clang","test","Debug","Release"
-		,"__targets"]
-	,"recursive":1
 	}
 
 ,"directoryoptions":

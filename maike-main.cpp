@@ -46,9 +46,10 @@ static void configfilesLoad(Session& maike,const std::vector<std::string>* files
 		try
 			{
 			FileIn source("maikeconfig.json");
-			configLoad(maike,source);
+			configAppendDefault(maike,source);
 			}
-		catch(...){}
+		catch(...)
+			{configAppendDefault(maike);}
 		return;
 		}
 	auto ptr=files->data();
@@ -56,7 +57,7 @@ static void configfilesLoad(Session& maike,const std::vector<std::string>* files
 	while(ptr!=ptr_end)
 		{
 		FileIn source(ptr->c_str());
-		configLoad(maike,source);
+		configAppendDefault(maike,source);
 		++ptr;
 		}
 	}
@@ -174,8 +175,8 @@ int main(int argc,char** argv)
 		if(x!=nullptr)
 			{return versionPrint(*x);}
 
-		if(opts.get<Stringkey("no-sysvars")>()!=nullptr)
-			{maike.configClear();}
+		if(opts.get<Stringkey("no-sysvars")>()==nullptr)
+			{maike.sysvarsLoad();}
 
 		configfilesLoad(maike,opts.get<Stringkey("configfiles")>());
 
