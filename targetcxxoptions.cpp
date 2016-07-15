@@ -106,6 +106,8 @@ void TargetCxxOptions::configClear()
 	m_includedir.clear();
 	m_libdir.clear();
 	m_objcompile.nameSet("").argumentsClear();
+	m_cxxversion_min=0;
+	m_cxxversion_max=0;
 	}
 
 TargetCxxOptions& TargetCxxOptions::configAppendDefault()

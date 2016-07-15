@@ -52,7 +52,8 @@ static const char* type(TargetCxx::Type type)
 	}
 
 TargetCxx::TargetCxx(const ResourceObject& obj,const TargetCxxCompiler& compiler
-	,const char* name_src,const char* in_dir,size_t id):TargetBase(obj,name_src,in_dir,id)
+	,const char* name_src,const char* in_dir,size_t id,size_t line_count):
+	TargetBase(obj,name_src,in_dir,id,line_count)
 	,r_compiler(compiler)
 	{
 	m_type=type(name_src,static_cast<const char*>( obj.objectGet("type") ));
@@ -240,9 +241,9 @@ bool TargetCxx::upToDate(Twins<const Dependency*> dependency_list
 
 TargetCxx* TargetCxx::create(const ResourceObject& obj
 	,const TargetCxxCompiler& compiler,const char* name_src
-	,const char* in_dir,size_t id)
+	,const char* in_dir,size_t id,size_t line_count)
 	{
-	return new TargetCxx(obj,compiler,name_src,in_dir,id);
+	return new TargetCxx(obj,compiler,name_src,in_dir,id,line_count);
 	}
 
 void TargetCxx::destroy() noexcept

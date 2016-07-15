@@ -7,9 +7,9 @@
 using namespace Maike;
 
 TargetPython::TargetPython(const ResourceObject& obj
-	,const TargetPythonInterpreter& intpret
-	,const char* name_src
-	,const char* in_dir,size_t id):TargetBase(obj,name_src,in_dir,id)
+	,const TargetPythonInterpreter& intpret,const char* name_src
+	,const char* in_dir,size_t id,size_t line_count):
+	TargetBase(obj,name_src,in_dir,id,line_count)
 	,r_intpret(intpret)
 	{
 	if(obj.objectExists("args"))
@@ -57,8 +57,8 @@ Maike::TargetPython::~TargetPython()
 
 TargetPython* TargetPython::create(const ResourceObject& obj
 	,const TargetPythonInterpreter& intpret,const char* name_src
-	,const char* in_dir,size_t id)
-	{return new TargetPython(obj,intpret,name_src,in_dir,id);}
+	,const char* in_dir,size_t id,size_t line_count)
+	{return new TargetPython(obj,intpret,name_src,in_dir,id,line_count);}
 
 void TargetPython::destroy() noexcept
 	{delete this;}

@@ -19,10 +19,7 @@ namespace
 		{
 		public:
 			TagFilter(DataSource& source):m_reader(source)
-				,m_state(State::NEWLINE)
-				{}
-
-			TagFilter(DataSource&& source):TagFilter(source)
+				,m_state(State::NEWLINE),m_lines(0)
 				{}
 
 			size_t read(void* buffer,size_t length);
@@ -30,10 +27,14 @@ namespace
 			const char* nameGet() const noexcept
 				{return m_reader.nameGet();}
 
+			size_t linesGet() const noexcept
+				{return m_lines;}
+
 		private:
 			ReadBuffer m_reader;
-			enum class State:int{NEWLINE,COMMENT_0,JUNK,COMMENT_1,DATA};
+			enum class State:int{NEWLINE,COMMENT_0,COMMENT_1,DATA,CODE};
 			State m_state;
+			size_t m_lines;
 
 			void destroy()
 				{delete this;}
@@ -55,6 +56,8 @@ size_t TagFilter::read(void* buffer,size_t length)
 		switch(state)
 			{
 			case State::NEWLINE:
+				if(ch_in=='\n')
+					{++m_lines;}
 				if(!(ch_in<=' '))
 					{
 					switch(ch_in)
@@ -63,7 +66,7 @@ size_t TagFilter::read(void* buffer,size_t length)
 							state=State::COMMENT_0;
 							break;
 						default:
-							state=State::JUNK;
+							state=State::CODE;
 						}
 					}
 				break;
@@ -74,8 +77,14 @@ size_t TagFilter::read(void* buffer,size_t length)
 					case '/':
 						state=State::COMMENT_1;
 						break;
+					case '\r':
+						break;
+					case '\n':
+						state=State::NEWLINE;
+						++m_lines;
+						break;
 					default:
-						state=State::JUNK;
+						state=State::CODE;
 					}
 				break;
 
@@ -85,20 +94,28 @@ size_t TagFilter::read(void* buffer,size_t length)
 					case '@':
 						state=State::DATA;
 						break;
+					case '\r':
+						break;
+					case '\n':
+						state=State::NEWLINE;
+						++m_lines;
+						break;
 					default:
-						state=State::JUNK;
+						state=State::CODE;
 					}
 				break;
 
 			case State::DATA:
 				switch(ch_in)
 					{
-					case '\n':
 					case '\r':
+						break;
+					case '\n':
 						*buffer_out='\n';
 						++buffer_out;
 						++n_read;
 						state=State::NEWLINE;
+						++m_lines;
 						break;
 					default:
 						*buffer_out=ch_in;
@@ -107,11 +124,13 @@ size_t TagFilter::read(void* buffer,size_t length)
 					}
 				break;
 
-			case State::JUNK:
+			case State::CODE:
 				switch(ch_in)
 					{
-					case '\n':
 					case '\r':
+						break;
+					case '\n':
+						++m_lines;
 						state=State::NEWLINE;
 						break;
 					}
@@ -231,8 +250,9 @@ void TargetCxxLoader::targetsLoad(const char* name_src,const char* in_dir
 	name_full+=name_src;
 
 	FileIn source(name_src);
-	ResourceObject rc{TagFilter(source)};
+	TagFilter filter(source);
+	ResourceObject rc{filter};
 
-	factory.targetsCreate(rc,name_src,in_dir
+	factory.targetsCreate(rc,name_src,in_dir,filter.linesGet()
 		,TargetCreateCallback(name_src,in_dir,spider,graph));
 	}

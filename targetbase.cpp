@@ -10,9 +10,10 @@
 
 using namespace Maike;
 
-TargetBase::TargetBase(const ResourceObject& obj,const char* name_src,const char* in_dir,size_t id):
+TargetBase::TargetBase(const ResourceObject& obj,const char* name_src,const char* in_dir,size_t id
+	,size_t line_count):
 	m_child_counter(0),m_id(id),m_source_name(name_src),m_in_dir(in_dir)
-	,m_compilation_time(std::numeric_limits<double>::quiet_NaN()),m_loc(0)
+	,m_compilation_time(std::numeric_limits<double>::quiet_NaN()),m_loc(line_count)
 	{
 	m_name=in_dir;
 	m_name+='/';

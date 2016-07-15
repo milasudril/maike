@@ -31,7 +31,7 @@ Target_FactoryDelegatorDefault& Target_FactoryDelegatorDefault::factoryRegister(
 	}
 
 Handle<Target> Target_FactoryDelegatorDefault::targetCreate(const ResourceObject& obj
-	,const char* name_src,const char* in_dir)
+	,const char* name_src,const char* in_dir,size_t line_count)
 	{
 	auto suffix=strrchr(name_src,'.');
 	auto i=m_r_factories.find(Stringkey(suffix));
@@ -40,7 +40,7 @@ Handle<Target> Target_FactoryDelegatorDefault::targetCreate(const ResourceObject
 		exceptionRaise(ErrorMessage("#0;: #1; is not associated with any target factory"
 			,{name_src,suffix}));
 		}
-	return i->second->targetCreate(obj,name_src,in_dir,idGet());
+	return i->second->targetCreate(obj,name_src,in_dir,idGet(),line_count);
 	}
 
 
@@ -54,7 +54,7 @@ static bool sourceGeneratedIs(const ResourceObject& obj)
 	}
 
 Handle<Target> Target_FactoryDelegatorDefault::targetCreate(const ResourceObject& obj
-	,const char* in_dir)
+	,const char* in_dir,size_t line_count)
 	{
 	std::string source_name;
 	auto source_generated=sourceGeneratedIs(obj);
@@ -67,7 +67,7 @@ Handle<Target> Target_FactoryDelegatorDefault::targetCreate(const ResourceObject
 		}
 
 	source_name+=source_name_raw;
-	auto ret=targetCreate(obj,source_name.c_str(),in_dir);
+	auto ret=targetCreate(obj,source_name.c_str(),in_dir,line_count);
 	if(source_generated)
 		{
 		std::string depname("./");
@@ -81,7 +81,7 @@ Handle<Target> Target_FactoryDelegatorDefault::targetCreate(const ResourceObject
 
 
 static void targetsCreate(const ResourceObject& targets,const char* name_src
-	,const char* in_dir,Target_FactoryDelegator& delegator
+	,const char* in_dir,size_t line_count,Target_FactoryDelegator& delegator
 	,Target_FactoryDelegator::Callback& cb)
 	{
 	auto N=targets.objectCountGet();
@@ -89,25 +89,25 @@ static void targetsCreate(const ResourceObject& targets,const char* name_src
 		{
 		auto target=targets.objectGet(k);
 		if(target.objectExists("source_name" ) || name_src==nullptr)
-			{cb(delegator,delegator.targetCreate(target,in_dir));}
+			{cb(delegator,delegator.targetCreate(target,in_dir,0));}
 		else
-			{cb(delegator,delegator.targetCreate(target,name_src,in_dir));}
+			{cb(delegator,delegator.targetCreate(target,name_src,in_dir,line_count));}
 		}
 	}
 
 void Target_FactoryDelegatorDefault::targetsCreate(const ResourceObject& obj
-	,const char* name_src,const char* in_dir,Callback&& cb)
-	{targetsCreateImpl(obj,name_src,in_dir,cb);}
+	,const char* name_src,const char* in_dir,size_t line_count,Callback&& cb)
+	{targetsCreateImpl(obj,name_src,in_dir,line_count,cb);}
 
 void Target_FactoryDelegatorDefault::targetsCreate(const ResourceObject& obj
-	,const char* in_dir,Callback&& cb)
-	{targetsCreateImpl(obj,nullptr,in_dir,cb);}
+	,const char* in_dir,size_t line_count,Callback&& cb)
+	{targetsCreateImpl(obj,nullptr,in_dir,line_count,cb);}
 
 void Target_FactoryDelegatorDefault::targetsCreateImpl(const ResourceObject& obj
-	,const char* name_src,const char* in_dir,Callback& cb)
+	,const char* name_src,const char* in_dir,size_t line_count,Callback& cb)
 	{
 	if(obj.objectExists("targets"))
-		{::targetsCreate(obj.objectGet("targets"),name_src,in_dir,*this,cb);}
+		{::targetsCreate(obj.objectGet("targets"),name_src,in_dir,line_count,*this,cb);}
 	else
 		{
 		auto N_cases=obj.objectCountGet();
@@ -123,7 +123,7 @@ void Target_FactoryDelegatorDefault::targetsCreateImpl(const ResourceObject& obj
 				if(static_cast<int64_t>( r_eval.evaluate(expression) ))
 					{
 					::targetsCreate(case_obj.objectGet(1).objectGet("targets")
-						,name_src,in_dir,*this,cb);
+						,name_src,in_dir,line_count,*this,cb);
 					break;
 					}
 				}
@@ -131,7 +131,7 @@ void Target_FactoryDelegatorDefault::targetsCreateImpl(const ResourceObject& obj
 			if(case_obj.objectExists("targets"))
 				{
 				::targetsCreate(case_obj.objectGet("targets"),name_src,in_dir
-					,*this,cb);
+					,line_count,*this,cb);
 				break;
 				}
 			}

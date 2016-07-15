@@ -25,22 +25,22 @@ namespace Maike
 				,const Target_Factory& factory);
 
 			Handle<Target> targetCreate(const ResourceObject& obj,const char* name_src
-				,const char* in_dir);
+				,const char* in_dir,size_t line_count);
 
-			Handle<Target> targetCreate(const ResourceObject& obj,const char* in_dir);
+			Handle<Target> targetCreate(const ResourceObject& obj,const char* in_dir,size_t line_count);
 
 			void targetsCreate(const ResourceObject& obj,const char* name_src
-				,const char* in_dir,Callback&& cb);
+				,const char* in_dir,size_t line_count,Callback&& cb);
 
 			void targetsCreate(const ResourceObject& obj,const char* in_dir
-				,Callback&& cb);
+				,size_t line_count,Callback&& cb);
 
 			size_t idGet() noexcept
 				{return r_id_gen.idGet();}
 
 		private:
 			void targetsCreateImpl(const ResourceObject& obj,const char* name_src
-				,const char* in_dir,Callback& cb);
+				,const char* in_dir,size_t line_count,Callback& cb);
 
 			const ExpressionEvaluator& r_eval;
 			IdGenerator<size_t>& r_id_gen;

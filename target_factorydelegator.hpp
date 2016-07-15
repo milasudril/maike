@@ -15,9 +15,10 @@ namespace Maike
 		{
 		public:
 			virtual Handle<Target> targetCreate(const ResourceObject& obj
-				,const char* name_src,const char* in_dir)=0;
+				,const char* name_src,const char* in_dir,size_t line_count)=0;
 
-			virtual Handle<Target> targetCreate(const ResourceObject& obj,const char* in_dir)=0;
+			virtual Handle<Target> targetCreate(const ResourceObject& obj
+				,const char* in_dir,size_t line_count)=0;
 
 			class Callback
 				{
@@ -26,10 +27,10 @@ namespace Maike
 				};
 
 			virtual void targetsCreate(const ResourceObject& obj,const char* name_src
-				,const char* in_dir,Callback&& cb)=0;
+				,const char* in_dir,size_t line_count,Callback&& cb)=0;
 
 			virtual void targetsCreate(const ResourceObject& obj,const char* in_dir
-				,Callback&& cb)=0;
+				,size_t line_count,Callback&& cb)=0;
 
 			virtual Target_FactoryDelegator& factoryRegister(const Stringkey& filename_ext
 				,const Target_Factory& factory)=0;

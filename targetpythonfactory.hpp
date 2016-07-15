@@ -20,7 +20,8 @@ namespace Maike
 			TargetPythonFactory(TargetPythonInterpreter&&)=delete;
 
 			Handle<Target> targetCreate(const ResourceObject& obj
-				,const char* name_src,const char* in_dir,size_t id) const;
+				,const char* name_src,const char* in_dir,size_t id
+				,size_t line_count) const;
 
 		private:
 			const TargetPythonInterpreter& r_intpret;

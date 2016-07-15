@@ -352,7 +352,7 @@ void Maike::targetsDumpTSVHeader(TextWriter& writer)
 		.write("child_count\t")
 		.write("dependency_count\t")
 		.write("compilation_time\t")
-		.write("lines_of_code\n");
+		.write("line_count\n");
 	}
 
 

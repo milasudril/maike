@@ -22,7 +22,7 @@ namespace Maike
 			explicit TargetBase(const char* name,const char* name_src,const char* in_dir,size_t id);
 
 			explicit TargetBase(const ResourceObject& obj,const char* name_src
-				,const char* in_dir,size_t id);
+				,const char* in_dir,size_t id,size_t line_count);
 
 			TargetBase& childCounterIncrement() noexcept
 				{
