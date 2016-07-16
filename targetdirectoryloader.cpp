@@ -48,15 +48,15 @@ void TargetDirectoryLoader::targetsLoad(const char* name_src,const char* in_dir
 		}
 	}
 
-TargetDirectoryLoader& TargetDirectoryLoader::pathReject(const Stringkey& key)
+TargetDirectoryLoader& TargetDirectoryLoader::pathReject(const char* name)
 	{
-	m_ignore.insert(key);
+	m_ignore[Stringkey(name)]=std::string(name);
 	return *this;
 	}
 
-TargetDirectoryLoader& TargetDirectoryLoader::pathAccept(const Stringkey& key)
+TargetDirectoryLoader& TargetDirectoryLoader::pathAccept(const char* name)
 	{
-	m_ignore.erase(key);
+	m_ignore.erase(Stringkey(name));
 	return *this;
 	}
 
@@ -65,15 +65,15 @@ void TargetDirectoryLoader::configClear()
 	m_ignore.clear();
 	m_recursive=0;
 //	IRP (Infinite Recursion Prevention)
-	pathReject(Stringkey(".")); //Remove references to this
-	pathReject(Stringkey(".."));//and parent directory
+	pathReject("."); //Remove references to this
+	pathReject("..");//and parent directory
 	}
 
 TargetDirectoryLoader& TargetDirectoryLoader::configAppendDefault()
 	{
 	m_recursive=1;
-	pathReject(Stringkey("."));
-	pathReject(Stringkey(".."));
+	pathReject(".");
+	pathReject("..");
 	return *this;
 	}
 
@@ -92,7 +92,7 @@ TargetDirectoryLoader& TargetDirectoryLoader::configAppend(const ResourceObject&
 		for(decltype(N) k=0;k<N;++k)
 			{
 			auto path=static_cast<const char*>(paths_reject.objectGet(k));
-			pathReject(Stringkey(path));
+			pathReject(path);
 			}
 		}
 
@@ -103,4 +103,14 @@ TargetDirectoryLoader& TargetDirectoryLoader::configAppend(const ResourceObject&
 void TargetDirectoryLoader::configDump(ResourceObject& directoryoptions) const
 	{
 	directoryoptions.objectSet("recursive",ResourceObject(static_cast<long long int>(m_recursive)));
+
+	ResourceObject paths_reject(ResourceObject::Type::ARRAY);
+	auto i=m_ignore.begin();
+	auto i_end=m_ignore.end();
+	while(i!=i_end)
+		{
+		paths_reject.objectAppend(ResourceObject(i->second.c_str()));
+		++i;
+		}
+	directoryoptions.objectSet("paths_reject",std::move(paths_reject));
 	}

@@ -347,7 +347,8 @@ void Maike::targetsDump(const Session& maike,ResourceObject& db)
 
 void Maike::targetsDumpTSVHeader(TextWriter& writer)
 	{
-	writer.write("name\t")
+	writer.write("id\t")
+		.write("name\t")
 		.write("source_name\t")
 		.write("child_count\t")
 		.write("dependency_count\t")
@@ -359,7 +360,8 @@ void Maike::targetsDumpTSVHeader(TextWriter& writer)
 static void targetDumpTSV(const Target& target,TextWriter& writer)
 	{
 	auto deps=target.dependencies();
-	writer.write(target.nameGet()).write("\t")
+	writer.write(target.idGet()).write("\t")
+		.write(target.nameGet()).write("\t")
 		.write(target.sourceNameGet()).write("\t")
 		.write(target.childCounterGet()).write("\t")
 		.write(static_cast<size_t>(deps.second-deps.first)).write("\t")

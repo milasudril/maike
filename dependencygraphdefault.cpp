@@ -52,13 +52,19 @@ static Target& dependencyResolve(std::map< Stringkey,Handle<Target> >& targets
 
 DependencyGraphDefault& DependencyGraphDefault::targetsPatch()
 	{
-	m_id_range={0,0};
-	Twins<size_t> id_range{0,0};
 	auto i=m_targets.begin();
 	auto i_end=m_targets.end();
+	if(i==i_end)
+		{
+		m_id_range={0,0};
+		return *this;
+		}
+
+	auto t1=i->second.get();
+	Twins<size_t> id_range{t1->idGet(),t1->idGet()};
 	while(i!=i_end)
 		{
-		auto t1=i->second.get();
+		t1=i->second.get();
 		id_range.first=std::min(id_range.first,t1->idGet());
 		id_range.second=std::max(id_range.second,t1->idGet());
 		auto deps=t1->dependencies();
@@ -66,6 +72,8 @@ DependencyGraphDefault& DependencyGraphDefault::targetsPatch()
 			{
 			auto& t2=dependencyResolve(m_targets,t1->nameGet(),*deps.first
 				,r_id_gen);
+			id_range.first=std::min(id_range.first,t2.idGet());
+			id_range.second=std::max(id_range.second,t2.idGet());
 			deps.first->targetSet(t2);
 			++(deps.first);
 			}

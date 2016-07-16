@@ -8,7 +8,8 @@
 
 #include "target_loader.hpp"
 #include "stringkey.hpp"
-#include <set>
+#include <map>
+#include <string>
 
 namespace Maike
 	{
@@ -22,8 +23,8 @@ namespace Maike
 				,Spider& spider,DependencyGraph& graph
 				,Target_FactoryDelegator& factory) const;
 
-			TargetDirectoryLoader& pathReject(const Stringkey& key);
-			TargetDirectoryLoader& pathAccept(const Stringkey& key);
+			TargetDirectoryLoader& pathReject(const char* name);
+			TargetDirectoryLoader& pathAccept(const char* name);
 
 			void configClear();
 			TargetDirectoryLoader& configAppendDefault();
@@ -31,7 +32,7 @@ namespace Maike
 			void configDump(ResourceObject& directoryoptions) const;
 
 		private:
-			std::set<Stringkey> m_ignore;
+			std::map<Stringkey,std::string> m_ignore;
 			bool m_recursive;
 		};
 	}

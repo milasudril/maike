@@ -34,10 +34,10 @@ namespace Maike
 			const Command& dllcompileGet() const noexcept
 				{return m_dllcompile;}
 
-			long long int cxxversionMinGet() const noexcept
+			unsigned long long int cxxversionMinGet() const noexcept
 				{return m_cxxversion_min;}
 
-			long long int cxxversionMaxGet() const noexcept
+			unsigned long long int cxxversionMaxGet() const noexcept
 				{return m_cxxversion_max;}
 
 			const char* stdprefixGet() const noexcept
@@ -52,12 +52,47 @@ namespace Maike
 			void configClear();
 			TargetCxxOptions& configAppendDefault();
 			TargetCxxOptions& configAppend(const ResourceObject& cxxoptions);
+			TargetCxxOptions& configAppend(const TargetCxxOptions& options);
 
 			void configDump(ResourceObject& cxxoptions) const;
+
+			Twins<const std::string*> includedirGet() const noexcept
+				{
+				return
+					{
+					 m_includedir.data()
+					,m_includedir.data() + m_includedir.size()
+					};
+				}
+
+			Twins<const std::string*> includedirNoscanGet() const noexcept
+				{
+				return
+					{
+					 m_includedir_noscan.data()
+					,m_includedir_noscan.data() + m_includedir_noscan.size()
+					};
+				}
+
+			const char* includedirFormatGet() const noexcept
+				{return m_includedir_format.c_str();}
+
+			Twins<const std::string*> libdirGet() const noexcept
+				{
+				return
+					{
+					 m_libdir.data()
+					,m_libdir.data() + m_libdir.size()
+					};
+				}
+
+			const char* libdirFormatGet() const noexcept
+				{return m_libdir_format.c_str();}
 
 
 		private:
 			std::vector< std::string > m_includedir;
+			std::vector< std::string > m_includedir_noscan;
 			std::vector< std::string > m_libdir;
 
 			std::string m_platform_suffix;
@@ -67,8 +102,8 @@ namespace Maike
 			std::string m_libext_format;
 			std::string m_libint_format;
 
-			long long int m_cxxversion_min;
-			long long int m_cxxversion_max;
+			unsigned long long int m_cxxversion_min;
+			unsigned long long int m_cxxversion_max;
 
 			std::string m_stdprefix;
 
@@ -78,6 +113,9 @@ namespace Maike
 			Command m_objcompile;
 			Command m_versionquery;
 		};
+
+	inline TargetCxxOptions operator|(TargetCxxOptions a,const TargetCxxOptions& b)
+		{return a.configAppend(b);}
 	}
 
 #endif

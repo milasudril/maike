@@ -35,6 +35,8 @@ namespace Maike
 
 			void configDump(ResourceObject& cmd) const;
 
+			operator bool() const noexcept
+				{return m_name.size()!=0;}
 
 		private:
 			std::string m_name;

@@ -85,7 +85,7 @@ static long int cxxversionDefaultGet(Pipe& versionget)
 	}
 
 
-static long int cxxversionDefaultGet(const Command& versionquery
+static unsigned long long int cxxversionDefaultGet(const Command& versionquery
 	,Twins<const ParameterSet* const*> paramset)
 	{
 	auto versionget=versionquery.execute(Pipe::REDIRECT_STDOUT|Pipe::REDIRECT_STDERR
@@ -115,7 +115,7 @@ typedef ParameterSetMapFixed<
 	,Stringkey("target")
 	,Stringkey("source")> CompilerParameters;
 
-static const char* cxxNameGet(long int cxxversion)
+static const char* cxxNameGet(unsigned long long int cxxversion)
 	{
 	if(cxxversion < 201103L)
 		{return "c++03";}
@@ -132,7 +132,7 @@ cxxVersionString(const char* stdprefix,long int cxxversion)
 	return ret;
 	}
 
-long int TargetCxxCompiler::cxxversionDefaultGet() const
+unsigned long long int TargetCxxCompiler::cxxversionDefaultGet() const
 	{
 	if(m_cxxversion_default==0)
 		{
@@ -178,6 +178,16 @@ static std::string makeDepitemString(const TargetCxxCompiler::FileInfo& fileinfo
 	return std::string(fileinfo.filename);
 	}
 
+static void argvBuild(std::vector<std::string>& argv
+	,Twins<const std::string*> strings_raw,const char* string_template)
+	{
+	while(strings_raw.first!=strings_raw.second)
+		{
+		argv.push_back(placeholderSubstitute(string_template,strings_raw.first->c_str()));
+		++strings_raw.first;
+		}
+	}
+
 void TargetCxxCompiler::execute(const Command& cmd,const char* source
 	,Twins<const FileInfo*> dependencies
 	,const char* dest,const TargetCxxOptions& options_extra) const
@@ -186,15 +196,25 @@ void TargetCxxCompiler::execute(const Command& cmd,const char* source
 	cxxparams.get<Stringkey("target")>().push_back(dest);
 	cxxparams.get<Stringkey("source")>().push_back(source);
 
-	auto options_result=r_options;
+	auto options_result=r_options|options_extra;
 	auto cxxversion_min=options_result.cxxversionMinGet();
-	if(cxxversion_min >  cxxversionDefaultGet())
+	auto cxxversion_max=options_result.cxxversionMaxGet();
+	if(cxxversion_min > cxxversionDefaultGet())
 		{
 		cxxparams.get<Stringkey("cxxversion")>()
 			.push_back(cxxVersionString(options_result.stdprefixGet(),cxxversion_min));
 		}
+	if(cxxversion_max < cxxversionDefaultGet())
+		{
+		cxxparams.get<Stringkey("cxxversion")>()
+			.push_back(cxxVersionString(options_result.stdprefixGet(),cxxversion_max));
+		}
 
-//TODO fix includedir
+
+	argvBuild(cxxparams.get<Stringkey("includedir")>()
+		,options_result.includedirGet(),options_result.includedirFormatGet());
+	argvBuild(cxxparams.get<Stringkey("includedir")>()
+		,options_result.includedirNoscanGet(),options_result.includedirFormatGet());
 
 	if(dependencies.first!=dependencies.second)
 		{
@@ -205,7 +225,8 @@ void TargetCxxCompiler::execute(const Command& cmd,const char* source
 			++dependencies.first;
 			}
 		while(dependencies.first!=dependencies.second);
-	//TODO Fix libdir
+		argvBuild(cxxparams.get<Stringkey("libdir")>()
+			,options_result.libdirGet(),options_result.libdirFormatGet());
 		}
 
 	const ParameterSet* paramset[]={&cxxparams};

@@ -50,6 +50,7 @@ Session& Session::configAppendDefault()
 	sourceFileAppend(".");
 	m_targetinfo.configAppendDefault();
 	m_dirloader.configAppendDefault();
+	m_dirloader.pathReject(static_cast<const char*>(m_targetinfo.variableGet(Stringkey("target_directory"))));
 	m_cxxhook->configAppendDefault();
 	m_pythonhook->configAppendDefault();
 	return *this;
@@ -81,7 +82,10 @@ Session& Session::configAppend(const ResourceObject& maikeconfig)
 		{m_targetinfo.configAppend(maikeconfig.objectGet("targetinfo"));}
 
 	if(maikeconfig.objectExists("directoryoptions"))
-		{m_dirloader.configAppend(maikeconfig.objectGet("directoryoptions"));}
+		{
+		m_dirloader.configAppend(maikeconfig.objectGet("directoryoptions"))
+			.pathReject(static_cast<const char*>(m_targetinfo.variableGet(Stringkey("target_directory"))));
+		}
 
 	if(maikeconfig.objectExists("cxxoptions"))
 		{m_cxxhook->configAppend(maikeconfig.objectGet("cxxoptions"));}

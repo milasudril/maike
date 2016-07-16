@@ -50,12 +50,12 @@ namespace Maike
 			const TargetCxxOptions& optionsGet() const noexcept
 				{return r_options;}
 
-			long int cxxversionDefaultGet() const;
+			unsigned long long int cxxversionDefaultGet() const;
 
 		private:
 			const TargetCxxOptions& r_options;
 			std::vector<const ParameterSet*> r_paramset;
-			mutable long int m_cxxversion_default;
+			mutable unsigned long int m_cxxversion_default;
 
 			void execute(const Command& cmd,const char* source
 				,Twins<const FileInfo*> dependencies
