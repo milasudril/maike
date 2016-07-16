@@ -58,7 +58,3 @@ except:
 	write_error('%s: error: %s\n'%(sys.argv[0],sys.exc_info()[1]))
 	sys.exit(-1)
 
-
-#for arg in sys.argv:
-#	print(arg)
-#print('Hello, World')
