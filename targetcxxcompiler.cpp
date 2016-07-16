@@ -142,46 +142,6 @@ long int TargetCxxCompiler::cxxversionDefaultGet() const
 	return m_cxxversion_default;
 	}
 
-void TargetCxxCompiler::compileObject(const char* source,const char* dest
-	,const TargetCxxOptions& options_extra) const
-	{
-	CompilerParameters cxxparams;
-	cxxparams.get<Stringkey("target")>().push_back(dest);
-	cxxparams.get<Stringkey("source")>().push_back(source);
-
-	auto options_result=r_options;
-//TODO merge with options_extra
-
-	auto cxxversion_min=options_result.cxxversionMinGet();
-	if(cxxversion_min > cxxversionDefaultGet())
-		{
-		cxxparams.get<Stringkey("cxxversion")>()
-			.push_back(cxxVersionString(options_result.stdprefixGet(),cxxversion_min));
-		}
-
-//TODO Fix includedir
-
-	std::vector<const ParameterSet*> params(r_paramset);
-	params.push_back(&cxxparams);
-	auto compiler=r_options.objcompileGet().execute(Pipe::REDIRECT_STDERR
-		,{params.data(),params.data() + params.size()});
-	auto stream=compiler.stderrCapture();
-	ReadBuffer rb(*stream.get());
-	while(!rb.eof())
-		{
-		auto ch_in=rb.byteRead();
-		putchar(ch_in);
-		}
-	auto res=compiler.exitStatusGet();
-	if(res!=0)
-		{
-		exceptionRaise(ErrorMessage("#0;: It was not possible to generate #1;. "
-			"The compiler returned status code #2;",{source,dest,res}));
-		}
-	}
-
-
-
 static std::string placeholderSubstitute(const char* string_template
 	,const char* substitute)
 	{
@@ -218,26 +178,15 @@ static std::string makeDepitemString(const TargetCxxCompiler::FileInfo& fileinfo
 	return std::string(fileinfo.filename);
 	}
 
-void TargetCxxCompiler::compileApplication(Twins<const FileInfo*> files
+void TargetCxxCompiler::execute(const Command& cmd,const char* source
+	,Twins<const FileInfo*> dependencies
 	,const char* dest,const TargetCxxOptions& options_extra) const
 	{
-	const char* source=files.first[0].filename;
-
 	CompilerParameters cxxparams;
 	cxxparams.get<Stringkey("target")>().push_back(dest);
+	cxxparams.get<Stringkey("source")>().push_back(source);
 
 	auto options_result=r_options;
-//TODO merge with options_extra
-	{
-	auto& deps=cxxparams.get<Stringkey("dependencies")>();
-	while(files.first!=files.second)
-		{
-		deps.push_back(makeDepitemString(*files.first,options_result));
-		++files.first;
-		}
-//TODO Fix libdir
-	}
-
 	auto cxxversion_min=options_result.cxxversionMinGet();
 	if(cxxversion_min >  cxxversionDefaultGet())
 		{
@@ -245,18 +194,26 @@ void TargetCxxCompiler::compileApplication(Twins<const FileInfo*> files
 			.push_back(cxxVersionString(options_result.stdprefixGet(),cxxversion_min));
 		}
 
+//TODO fix includedir
 
-//TODO Fix includedir
-	std::vector<const ParameterSet*> params(r_paramset);
-	params.push_back(&cxxparams);
-	auto compiler=r_options.appcompileGet().execute(Pipe::REDIRECT_STDERR
-		,{params.data(),params.data() + params.size()});
+	if(dependencies.first!=dependencies.second)
+		{
+		auto& deps=cxxparams.get<Stringkey("dependencies")>();
+		do
+			{
+			deps.push_back(makeDepitemString(*dependencies.first,options_result));
+			++dependencies.first;
+			}
+		while(dependencies.first!=dependencies.second);
+	//TODO Fix libdir
+		}
+
+	const ParameterSet* paramset[]={&cxxparams};
+	auto compiler=cmd.execute(Pipe::REDIRECT_STDERR,{paramset, paramset + 1 });
 	auto stream=compiler.stderrCapture();
 	ReadBuffer rb(*stream.get());
 	while(!rb.eof())
-		{
-		fputc(rb.byteRead(),stderr);
-		}
+		{fputc(rb.byteRead(),stderr);}
 	auto res=compiler.exitStatusGet();
 	if(res!=0)
 		{
@@ -265,49 +222,22 @@ void TargetCxxCompiler::compileApplication(Twins<const FileInfo*> files
 		}
 	}
 
-void TargetCxxCompiler::compileDll(Twins<const FileInfo*> files
-	,const char* dest,const TargetCxxOptions& options_extra) const
+void TargetCxxCompiler::compileObject(const char* source,const char* dest
+	,const TargetCxxOptions& options_extra) const
 	{
-	const char* source=files.first[0].filename;
-
-	CompilerParameters cxxparams;
-	cxxparams.get<Stringkey("target")>().push_back(dest);
-
-	auto options_result=r_options;
-//TODO merge with options_extra
-	{
-	auto& deps=cxxparams.get<Stringkey("dependencies")>();
-	while(files.first!=files.second)
-		{
-		deps.push_back(makeDepitemString(*files.first,options_result));
-		++files.first;
-		}
-//TODO Fix libdir
+	execute(r_options.objcompileGet(),source,{nullptr,nullptr},dest,options_extra);
 	}
 
-	auto cxxversion_min=options_result.cxxversionMinGet();
-	if(cxxversion_min >  cxxversionDefaultGet())
-		{
-		cxxparams.get<Stringkey("cxxversion")>()
-			.push_back(cxxVersionString(options_result.stdprefixGet(),cxxversion_min));
-		}
+void TargetCxxCompiler::compileApplication(const char* source
+	,Twins<const FileInfo*> dependencies
+	,const char* dest,const TargetCxxOptions& options_extra) const
+	{
+	execute(r_options.appcompileGet(),source,dependencies,dest,options_extra);
+	}
 
-
-//TODO Fix includedir
-	std::vector<const ParameterSet*> params(r_paramset);
-	params.push_back(&cxxparams);
-	auto compiler=r_options.dllcompileGet().execute(Pipe::REDIRECT_STDERR
-		,{params.data(),params.data() + params.size()});
-	auto stream=compiler.stderrCapture();
-	ReadBuffer rb(*stream.get());
-	while(!rb.eof())
-		{
-		fputc(rb.byteRead(),stderr);
-		}
-	auto res=compiler.exitStatusGet();
-	if(res!=0)
-		{
-		exceptionRaise(ErrorMessage("#0;: It was not possible to generate #1;. "
-			"The compiler returned status code #2;",{source,dest,res}));
-		}
+void TargetCxxCompiler::compileDll(const char* source
+	,Twins<const FileInfo*> dependencies
+	,const char* dest,const TargetCxxOptions& options_extra) const
+	{
+	execute(r_options.dllcompileGet(),source,dependencies,dest,options_extra);
 	}

@@ -37,13 +37,13 @@
 		{
 		 "name":"g++"
 		,"args":["-g","-fpic","{cxxversion}","-Wall","-Woverflow","-Wconversion"
-			,"-Werror","{includedir}","{libdir}","-o","{target}","{source}","{dependencies}"]
+			,"-Werror","{includedir}","{libdir}","-o","{target}","{dependencies}"]
 		}
 	,"dllcompile":
 		{
 		 "name":"g++"
 		,"args":["-g","-fpic","{cxxversion}","-Wall","-Woverflow","-Wconversion"
-			,"-Werror","{includedir}","{libdir}","-shared","-o","{target}","{source}","{dependencies}"]
+			,"-Werror","{includedir}","{libdir}","-shared","-o","{target}","{dependencies}"]
 		}
 	,"versionquery":
 		{

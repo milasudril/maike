@@ -61,7 +61,7 @@ TargetCxxOptions& TargetCxxOptions::configAppend(const ResourceObject& cxxoption
 	if(m_cxxversion_max!=0 && m_cxxversion_min!=0
 		&& (m_cxxversion_max < m_cxxversion_min))
 		{
-		exceptionRaise(ErrorMessage("cxxoptions: In consistent C++ version requirements",{}));
+		exceptionRaise(ErrorMessage("cxxoptions: Inconsistent C++ version requirements",{}));
 		}
 
 
@@ -133,14 +133,15 @@ TargetCxxOptions& TargetCxxOptions::configAppendDefault()
 		.argumentAppend("-fpic").argumentAppend("{cxxversion}")
 		.argumentAppend("-Wall").argumentAppend("{includedir}")
 		.argumentAppend("-o").argumentAppend("{target}")
-		.argumentAppend("{dependencies}");
+		.argumentAppend("{source}").argumentAppend("{dependencies}");
 
 	m_dllcompile.argumentsClear();
 	m_dllcompile.nameSet("g++").argumentAppend("-g")
 		.argumentAppend("-fpic").argumentAppend("{cxxversion}")
 		.argumentAppend("-Wall").argumentAppend("{includedir}")
-		.argumentAppend("-shared").argumentAppend("-o")
-		.argumentAppend("{target}").argumentAppend("{dependencies}");
+		.argumentAppend("-shared")
+		.argumentAppend("-o").argumentAppend("{target}")
+		.argumentAppend("{source}").argumentAppend("{dependencies}");
 
 	m_libcompile.argumentsClear();
 	m_libcompile.nameSet("ar").argumentAppend("rcs").argumentAppend("{target}")

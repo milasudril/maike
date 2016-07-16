@@ -16,6 +16,7 @@ namespace Maike
 	class Target;
 	class TargetCxxOptions;
 	class ParameterSet;
+	class Command;
 
 	class TargetCxxCompiler
 		{
@@ -37,13 +38,13 @@ namespace Maike
 				const char* filename;
 				FileUsage usage;
 				};
-			void compileApplication(Twins<const FileInfo*> files
+			void compileApplication(const char* source,Twins<const FileInfo*> dependencies
 				,const char* dest,const TargetCxxOptions& options_extra) const;
 
-			void compileDll(Twins<const FileInfo*> files
+			void compileDll(const char* source,Twins<const FileInfo*> dependencies
 				,const char* dest,const TargetCxxOptions& options_extra) const;
 
-			void compileLibrary(Twins<const FileInfo*> files
+			void compileLibrary(const char* source,Twins<const FileInfo*> dependencies
 				,const char* dest,const TargetCxxOptions& options_extra) const;
 
 			const TargetCxxOptions& optionsGet() const noexcept
@@ -55,6 +56,10 @@ namespace Maike
 			const TargetCxxOptions& r_options;
 			std::vector<const ParameterSet*> r_paramset;
 			mutable long int m_cxxversion_default;
+
+			void execute(const Command& cmd,const char* source
+				,Twins<const FileInfo*> dependencies
+				,const char* dest,const TargetCxxOptions& options_extra) const;
 		};
 	}
 
