@@ -18,8 +18,6 @@ TargetBase::TargetBase(const ResourceObject& obj,const char* name_src,const char
 	{
 	m_name=dircat(in_dir,static_cast<const char*>(obj.objectGet("name")));
 
-	fprintf(stderr,"Registered target %s [in %s]\n",m_name.c_str(),in_dir);
-
 	if(obj.objectExists("dependencies"))
 		{
 		auto deps=obj.objectGet("dependencies");
@@ -37,7 +35,6 @@ TargetBase::TargetBase(const char* name,const char* name_src,const char* in_dir,
 	m_child_counter(0),m_id(id),m_name(name),m_source_name(name_src),m_in_dir(in_dir)
 	,m_compilation_time(std::numeric_limits<double>::quiet_NaN()),m_loc(0)
 	{
-	fprintf(stderr,"Registered target %s [in %s]\n",m_name.c_str(),in_dir);
 	if(*in_dir!='\0')
 		{dependencyAdd(Dependency(in_dir,Dependency::Relation::INTERNAL));}
 	}

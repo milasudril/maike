@@ -70,9 +70,7 @@ Handle<Target> Target_FactoryDelegatorDefault::targetCreate(const ResourceObject
 	auto ret=targetCreate(obj,source_name.c_str(),in_dir,line_count);
 	if(source_generated)
 		{
-		std::string depname("./");
-		depname+=source_name_raw;
-		ret->dependencyAdd(Dependency(depname.c_str(),Dependency::Relation::INTERNAL));
+		ret->dependencyAdd(Dependency(source_name_raw,Dependency::Relation::INTERNAL));
 		}
 	return ret;
 	}
