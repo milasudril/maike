@@ -15,5 +15,5 @@
 
 using namespace Maike;
 
-Target_Hook* Maike_Target_Hook_create(const ParameterSet& params)
+Target_Hook* Maike_Target_Hook_create(const ParameterSetDumpable& params)
 	{return TargetCxxHook::create(params);}

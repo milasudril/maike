@@ -18,7 +18,7 @@ namespace Maike
 			WriteBuffer(const WriteBuffer&)=delete;
 			WriteBuffer& operator=(const WriteBuffer&)=delete;
 
-			explicit WriteBuffer(DataSink& sink):r_sink(sink),n_written_tot(0)
+			explicit WriteBuffer(DataSink& sink):r_sink(sink)
 				{r_write_pos=m_buffer;}
 
 			~WriteBuffer()
@@ -43,20 +43,16 @@ namespace Maike
 
 			WriteBuffer& flush()
 				{
-				n_written_tot+=r_sink.write(m_buffer,r_write_pos - m_buffer);
+				r_sink.write(m_buffer,r_write_pos - m_buffer);
 				r_write_pos=m_buffer;
 				return *this;
 				}
-
-			unsigned long long int bytesWrittenGet() const noexcept
-				{return n_written_tot;}
 
 		private:
 			DataSink& r_sink;
 			static constexpr size_t N=4096;
 			uint8_t m_buffer[N];
 			uint8_t* r_write_pos;
-			unsigned long long int n_written_tot;
 
 			bool bufferFull() const noexcept
 				{return r_write_pos==m_buffer + N;}

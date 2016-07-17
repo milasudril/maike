@@ -7,14 +7,54 @@
 #include "errormessage.hpp"
 #include "variant.hpp"
 #include "exceptionhandler.hpp"
+#include "thread.hpp"
+#include "parametersetdumpable.hpp"
+
+#include "writebuffer.hpp"
 #include <cstdio>
 
 using namespace Maike;
 
-TargetPythonInterpreter::TargetPythonInterpreter(const ParameterSet& sysvars)
+TargetPythonInterpreter::TargetPythonInterpreter(const ParameterSetDumpable& sysvars)
 	:r_sysvars(sysvars)
 	{
 	configClear();
+	}
+
+
+namespace
+	{
+	class ReadCallback
+		{
+		public:
+			explicit ReadCallback(DataSource* src):r_src(src)
+				{}
+
+			void operator()()
+				{
+				try
+					{
+					ReadBuffer rb(*r_src);
+					while(!rb.eof())
+						{fputc(rb.byteRead(),stderr);}
+					}
+				catch(const ErrorMessage& message)
+					{fprintf(stderr,"Error: %s\n",message.messageGet());}
+				}
+
+		private:
+			DataSource* r_src;
+		};
+	}
+
+static void dataProcess(Pipe& interpreter,const ParameterSetDumpable& sysvars)
+	{
+	auto standard_error=interpreter.stderrCapture();
+	Thread<ReadCallback> stderr_reader(ReadCallback{standard_error.get()});
+	auto standard_input=interpreter.stdinCapture();
+	ResourceObject sysvars_out(ResourceObject::Type::OBJECT);
+	sysvars.configDump(sysvars_out);
+	sysvars_out.write(*standard_input.get());
 	}
 
 int TargetPythonInterpreter::run(const char* script,Twins<const char* const*> args) const
@@ -28,12 +68,10 @@ int TargetPythonInterpreter::run(const char* script,Twins<const char* const*> ar
 		}
 
 	const ParameterSet* paramset_tot[]={&r_sysvars,&params};
-	auto pipe=m_interpreter.execute(Pipe::REDIRECT_STDERR,{paramset_tot,paramset_tot + 2});
+	auto pipe=m_interpreter.execute(Pipe::REDIRECT_STDERR|Pipe::REDIRECT_STDIN
+		,{paramset_tot,paramset_tot + 2});
 
-	auto standard_error=pipe.stderrCapture();
-	ReadBuffer rb(*standard_error.get());
-	while(!rb.eof())
-		{fputc(rb.byteRead(),stderr);}
+	dataProcess(pipe,r_sysvars);
 
 	auto ret=pipe.exitStatusGet();
 	if(ret>1)

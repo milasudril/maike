@@ -12,6 +12,7 @@
 #include "targetcxxoptions.hpp"
 #include "targetcxxloader.hpp"
 #include "targetcxxfactory.hpp"
+#include "parametersetdumpable.hpp"
 
 namespace Maike
 	{

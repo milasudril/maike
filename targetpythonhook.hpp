@@ -17,7 +17,7 @@ namespace Maike
 	class TargetPythonHook final:public Target_Hook
 		{
 		public:
-			static TargetPythonHook* create(const ParameterSet& params);
+			static TargetPythonHook* create(const ParameterSetDumpable& params);
 
 			static TargetPythonHook* create(ParameterSet&& params)=delete;
 
@@ -41,7 +41,7 @@ namespace Maike
 			TargetPythonLoader m_loader;
 			TargetPythonFactory m_factory;
 
-			explicit TargetPythonHook(const ParameterSet& params);
+			explicit TargetPythonHook(const ParameterSetDumpable& params);
 
 			void destroy() noexcept;
 		};

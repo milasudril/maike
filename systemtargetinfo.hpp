@@ -6,17 +6,16 @@
 #ifndef MAIKE_SYSTEMTARGETINFO_HPP
 #define MAIKE_SYSTEMTARGETINFO_HPP
 
-#include "parameterset.hpp"
+#include "parametersetdumpable.hpp"
 #include <string>
 #include <map>
 #include <vector>
 
 namespace Maike
 	{
-	class ResourceObject;
 	class Variant;
 
-	class SystemTargetInfo:public ParameterSet
+	class SystemTargetInfo:public ParameterSetDumpable
 		{
 		public:
 			SystemTargetInfo();

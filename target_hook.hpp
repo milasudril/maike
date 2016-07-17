@@ -8,7 +8,7 @@ namespace Maike
 	class Target_Factory;
 	class Target_Loader;
 	class ResourceObject;
-	class ParameterSet;
+	class ParameterSetDumpable;
 
 	class Target_Hook
 		{
@@ -33,7 +33,7 @@ namespace Maike
 
 extern "C"
 	{
-	Maike::Target_Hook* Maike_Target_Hook_create(const Maike::ParameterSet& params);
+	Maike::Target_Hook* Maike_Target_Hook_create(const Maike::ParameterSetDumpable& params);
 	}
 
 #endif

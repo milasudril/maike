@@ -11,12 +11,13 @@
 namespace Maike
 	{
 	class ResourceObject;
+	class ParameterSetDumpable;
 	class TargetPythonInterpreter
 		{
 		public:
-			explicit TargetPythonInterpreter(const ParameterSet& sysvars);
+			explicit TargetPythonInterpreter(const ParameterSetDumpable& sysvars);
 
-			explicit TargetPythonInterpreter(ParameterSet&& sysvars)=delete;
+			explicit TargetPythonInterpreter(ParameterSetDumpable&& sysvars)=delete;
 
 			TargetPythonInterpreter(const ResourceObject& pythonoptions
 				,ParameterSet&& sysvars)=delete;
@@ -33,7 +34,7 @@ namespace Maike
 
 		private:
 			Command m_interpreter;
-			const ParameterSet& r_sysvars;
+			const ParameterSetDumpable& r_sysvars;
 		};
 	}
 

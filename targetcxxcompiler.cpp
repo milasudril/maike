@@ -31,10 +31,7 @@ namespace
 					{
 					ReadBuffer rb(*r_src);
 					while(!rb.eof())
-						{
-						auto ch_in=rb.byteRead();
-						putchar(ch_in);
-						}
+						{fputc(rb.byteRead(),stderr);}
 					}
 				catch(const ErrorMessage& message)
 					{fprintf(stderr,"Error: %s\n",message.messageGet());}

@@ -158,9 +158,29 @@ static std::vector<const char*> commandLineBuild(const char* command
 	return std::move(args_out);
 	}
 
+
+static void sigpipe(int signal,siginfo_t* info, void* context)
+	{
+	}
+
+static void sigpipeSetFilter()
+	{
+	struct sigaction sa;
+	sa.sa_sigaction=sigpipe;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags=SA_SIGINFO;
+	sa.sa_restorer=nullptr;
+
+	struct sigaction sa_old;
+
+	sigaction(SIGPIPE,&sa,&sa_old);
+	}
+
 Pipe::Pipe(const char* command,Twins<const char* const*> args
 	,unsigned int redirection_mask)
 	{
+	sigpipeSetFilter();
+
 	PipeHelper stdin_pipe;
 	if(redirection_mask&REDIRECT_STDIN)
 		{stdin_pipe.init();}
@@ -315,7 +335,7 @@ size_t Pipe::Writer::write(const void* buffer, size_t count)
 		auto res=::write(static_cast<int>(m_handle),bytes,count - n);
 		if(res==-1)
 			{
-			if(errno==ENOSPC)
+			if(errno==ENOSPC || errno==EPIPE)
 				{return n;}
 			if(!( errno==EINTR || errno==EAGAIN || errno==EWOULDBLOCK))
 				{exceptionRaise(ErrorMessage("I/O error",{}));}

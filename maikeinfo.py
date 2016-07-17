@@ -14,6 +14,7 @@ import sys
 import subprocess
 import time
 import string
+import json
 
 def write_error(*args, **kwargs):
 	print(*args,file=sys.stderr,**kwargs)
@@ -46,6 +47,8 @@ const char* Info::TIMESTAMP="$now";
 ''')
 
 try:
+#	sysvars=json.load(sys.stdin) Cannot be used, since we must be able to compile
+#	Maike through a simple shell script :-(
 	filename_out=sys.argv[1]+'/maikeinfo.cpp'
 	keys=dict()
 	keys['scriptname']=sys.argv[0]

@@ -4,12 +4,12 @@
 
 using namespace Maike;
 
-TargetPythonHook::TargetPythonHook(const ParameterSet& params):
+TargetPythonHook::TargetPythonHook(const ParameterSetDumpable& params):
 	m_intpret(params),m_factory(m_intpret)
 	{
 	}
 
-TargetPythonHook* TargetPythonHook::create(const ParameterSet& params)
+TargetPythonHook* TargetPythonHook::create(const ParameterSetDumpable& params)
 	{return new TargetPythonHook(params);}
 
 void TargetPythonHook::destroy() noexcept
