@@ -195,14 +195,9 @@ static void includesGet(const char* name_src,const char* in_dir
 							for(decltype(N) k=0;k<N;++k)
 								{
 								Dependency dep(deps.objectGet(k),in_dir_include.c_str());
+							//TODO What if there was more than one target in the file we came from...
 								if(strcmp(dep.nameGet(),target.nameGet())!=0)
 									{target.dependencyAdd(std::move(dep));}
-							/*	auto dep=deps.objectGet(k);
-								auto ref=static_cast<const char*>( dep.objectGet("ref") );
-								auto ref_full=dircat(in_dir_include,ref);
-							//TODO What if there was more than one target in the file we came from...
-								if(ref_full!=target.nameGet())
-									{target.dependencyAdd(Dependency(dep,in_dir_include));}*/
 								}
 							}
 						}
