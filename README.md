@@ -331,8 +331,7 @@ A code generator defines at least two targets: The source file, and the target g
 
 ## TODO:s
 
- * Add interface for setting up logwriters so Maike can be used as a library for graphical programs
- * Clean-up code
- * Add support for importing old targets like in Wand
+See [Issues][2]
 
  [1]: https://github.com/milasudril/maike/releases/latest
+ [2]: https://github.com/milasudril/maike/issues
