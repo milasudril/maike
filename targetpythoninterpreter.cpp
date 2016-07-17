@@ -4,6 +4,9 @@
 #include "resourceobject.hpp"
 #include "parametersetmapfixed.hpp"
 #include "readbuffer.hpp"
+#include "errormessage.hpp"
+#include "variant.hpp"
+#include "exceptionhandler.hpp"
 #include <cstdio>
 
 using namespace Maike;
@@ -14,7 +17,7 @@ TargetPythonInterpreter::TargetPythonInterpreter(const ParameterSet& sysvars)
 	configClear();
 	}
 
-void TargetPythonInterpreter::run(const char* script,Twins<const char* const*> args) const
+int TargetPythonInterpreter::run(const char* script,Twins<const char* const*> args) const
 	{
 	ParameterSetMapFixed<Stringkey("args"),Stringkey("script")> params;
 	params.get<Stringkey("script")>().push_back(std::string(script));
@@ -30,9 +33,14 @@ void TargetPythonInterpreter::run(const char* script,Twins<const char* const*> a
 	auto standard_error=pipe.stderrCapture();
 	ReadBuffer rb(*standard_error.get());
 	while(!rb.eof())
+		{fputc(rb.byteRead(),stderr);}
+
+	auto ret=pipe.exitStatusGet();
+	if(ret>1)
 		{
-		fputc(rb.byteRead(),stderr);
+		exceptionRaise(ErrorMessage("#0;: Script failed",{script}));
 		}
+	return ret;
 	}
 
 void TargetPythonInterpreter::configClear()

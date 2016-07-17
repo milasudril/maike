@@ -50,11 +50,13 @@ try:
 	keys=dict()
 	keys['scriptname']=sys.argv[0]
 	keys['version']=gitVersionGet()
-	keys['now']=time.strftime('%Y-%m-%d %H:%M')
+	keys['now']=time.strftime('%Y-%m-%d %H:%M %Z')
 
 	with open(filename_out,mode='w') as filehandle:
 		filehandle.write(template.substitute(keys))
-except:
+	sys.exit(0)
+
+except Exception:
 	write_error('%s: error: %s\n'%(sys.argv[0],sys.exc_info()[1]))
-	sys.exit(-1)
+	sys.exit(2)
 

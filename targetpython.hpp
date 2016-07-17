@@ -25,10 +25,7 @@ namespace Maike
 			bool upToDate(Twins<const Dependency*> dependency_list
 				,Twins<const Dependency*> dependency_list_full
 				,const char* target_dir) const
-				{
-			//	Better leave this check to the python script.
-				return 0;
-				}
+				{return m_status==0? 1 : 0;}
 
 			void compileImpl(Twins<const Dependency*> dependency_list
 				,Twins<const Dependency*> dependency_list_full
@@ -52,6 +49,7 @@ namespace Maike
 			~TargetPython();
 
 			std::vector<std::string> m_args;
+			int m_status;
 		};
 	}
 

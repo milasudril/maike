@@ -21,7 +21,7 @@ namespace Maike
 			TargetPythonInterpreter(const ResourceObject& pythonoptions
 				,ParameterSet&& sysvars)=delete;
 
-			void run(const char* script,Twins<const char* const*> args) const;
+			int run(const char* script,Twins<const char* const*> args) const;
 
 			void configClear();
 

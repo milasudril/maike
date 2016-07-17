@@ -10,7 +10,7 @@ TargetPython::TargetPython(const ResourceObject& obj
 	,const TargetPythonInterpreter& intpret,const char* name_src
 	,const char* in_dir,size_t id,size_t line_count):
 	TargetBase(obj,name_src,in_dir,id,line_count)
-	,r_intpret(intpret)
+	,r_intpret(intpret),m_status(1)
 	{
 	if(obj.objectExists("args"))
 		{
@@ -47,7 +47,8 @@ void TargetPython::compileImpl(Twins<const Dependency*> dependency_list
 		args.push_back(i->c_str());
 		++i;
 		}
-	r_intpret.run(sourceNameGet(),{args.data(),args.data() + args.size()});
+
+	m_status=r_intpret.run(sourceNameGet(),{args.data(),args.data() + args.size()});
 	}
 
 Maike::TargetPython::~TargetPython()
