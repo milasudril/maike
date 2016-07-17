@@ -7,7 +7,6 @@
 #include "exceptionhandler.hpp"
 #include "errormessage.hpp"
 #include "variant.hpp"
-#include "expressionevaluator.hpp"
 #include "target_factorydelegator.hpp"
 #include "dependencygraph.hpp"
 #include "target.hpp"
