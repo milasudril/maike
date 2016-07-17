@@ -273,7 +273,7 @@ It is possible to insert Python scripts into the dependency graph. These scripts
 	#@			,{
 	#@			 "name":"maikeinfo.o","type":"object","source_name":"maikeinfo.cpp"
 	#@			,"source_generated":1
-	#@			,"dependencies":[{"ref":"./maikeinfo.hpp","rel":"internal"}]
+	#@			,"dependencies":[{"ref":"maikeinfo.hpp","rel":"internal"}]
 	#@			}
 	#@		]
 	#@	}
