@@ -11,6 +11,7 @@
 #include "resourceobject.hpp"
 #include "handle.hpp"
 #include "target_factorydelegator.hpp"
+#include "pathutils.hpp"
 #include <string>
 #include <cstring>
 
@@ -34,10 +35,7 @@ void TargetDirectoryLoader::targetsLoad(const char* name_src,const char* in_dir
 		{
 		if(m_ignore.find(Stringkey(entry))==m_ignore.end())
 			{
-			std::string path_tot;
-			path_tot+=name_src;
-			path_tot+='/';
-			path_tot+=entry;
+			auto path_tot=dircat(name_src,entry);
 			auto entry_type=FileInfo(path_tot.c_str()).typeGet();
 			if((entry_type==FileInfo::Type::DIRECTORY && m_recursive)
 				|| entry_type==FileInfo::Type::FILE)

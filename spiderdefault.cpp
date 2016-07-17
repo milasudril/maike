@@ -72,6 +72,7 @@ SpiderDefault& SpiderDefault::run()
 		if(loader!=nullptr)
 			{
 			auto in_dir=p.second.c_str();
+			fprintf(stderr,"Scanning %s [in %s] for targets\n",filename,in_dir);
 			loader->targetsLoad(filename,in_dir,*this,r_targets,r_target_creator);
 			}
 		}

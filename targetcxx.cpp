@@ -8,6 +8,7 @@
 #include "exceptionhandler.hpp"
 #include "targetcxxcompiler.hpp"
 #include "fileutils.hpp"
+#include "pathutils.hpp"
 #include <algorithm>
 
 using namespace Maike;
@@ -97,9 +98,7 @@ static std::vector<TargetCxxCompiler::FileInfo> depstringCreate(
 				auto target_rel=dynamic_cast<const TargetCxx*>(dependency_list_full.first->target());
 				if(target_rel && target_rel->typeGet()!=TargetCxx::Type::INCLUDE)
 					{
-					std::string name_full(target_dir);
-					name_full+='/';
-					name_full+=target_rel->nameGet();
+					auto name_full=dircat(target_dir,target_rel->nameGet());
 					strings_temp.push_back(std::move(name_full));
 					ret.push_back({strings_temp.back().c_str(),TargetCxxCompiler::FileUsage::NORMAL});
 					}
@@ -118,9 +117,7 @@ void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 	,Twins<const Dependency*> dependency_list_full
 	,const char* target_dir)
 	{
-	std::string name_full( target_dir );
-	name_full+='/';
-	name_full+=nameGet();
+	auto name_full=dircat(target_dir,nameGet());
 
 	switch(m_type)
 		{
@@ -192,9 +189,7 @@ static bool applicationUpToDate(Twins<const Dependency*> dependency_list
 			{
 			if(target_rel->typeGet()!=TargetCxx::Type::INCLUDE)
 				{
-				std::string target_rel_name_full(target_dir);
-				target_rel_name_full+='/';
-				target_rel_name_full+=target_rel->nameGet();
+				auto target_rel_name_full=dircat(target_dir,target_rel->nameGet());
 				if(FileUtils::newer(target_rel_name_full.c_str(),target_name_full))
 					{return 0;}
 				}
@@ -208,9 +203,7 @@ bool TargetCxx::upToDate(Twins<const Dependency*> dependency_list
 	,Twins<const Dependency*> dependency_list_full
 	,const char* target_dir) const
 	{
-	std::string name_full( target_dir );
-	name_full+='/';
-	name_full+=nameGet();
+	auto name_full=dircat( target_dir,nameGet() );
 
 	if(FileUtils::newer(sourceNameGet(),name_full.c_str()))
 		{return 0;}

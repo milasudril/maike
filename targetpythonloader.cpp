@@ -156,10 +156,6 @@ namespace
 void TargetPythonLoader::targetsLoad(const char* name_src,const char* in_dir
 	,Spider& spider,DependencyGraph& graph,Target_FactoryDelegator& factory) const
 	{
-	std::string name_full(in_dir);
-	name_full+='/';
-	name_full+=name_src;
-
 	FileIn source(name_src);
 	TagFilter filter(source);
 	ResourceObject rc{TagFilter(source)};

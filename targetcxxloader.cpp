@@ -10,6 +10,7 @@
 #include "target.hpp"
 #include "dependency.hpp"
 #include "dependencygraph.hpp"
+#include "pathutils.hpp"
 
 using namespace Maike;
 
@@ -146,9 +147,7 @@ size_t TagFilter::read(void* buffer,size_t length)
 static void includesGet(const char* name_src,const char* in_dir
 	,Spider& spider,DependencyGraph& graph,Target& target)
 	{
-	std::string name_full(in_dir);
-	name_full+='/';
-	name_full+=name_src;
+	auto name_full=dircat(in_dir,name_src);
 
 	FileIn file_reader(name_src);
 	TargetCxxPPTokenizer cpptok(file_reader);
@@ -178,12 +177,11 @@ static void includesGet(const char* name_src,const char* in_dir
 						break;
 					case TargetCxxPPTokenizer::Token::Type::STRING:
 						{
-						std::string name_dep_full(in_dir);
-						name_dep_full+='/';
-						name_dep_full+=tok_in.value;
+						auto name_dep_full=dircat(in_dir,tok_in.value);
 						target.dependencyAdd(Dependency(name_dep_full.c_str()
 							,Dependency::Relation::INTERNAL));
-						spider.scanFile(name_dep_full.c_str(),in_dir);
+						auto in_dir_include=dirname(name_dep_full);
+						spider.scanFile(name_dep_full.c_str(),in_dir_include.c_str());
 						FileIn file(name_dep_full.c_str());
 						ResourceObject obj{TagFilter(file)};
 						if(obj.objectExists("dependencies_extra"))
@@ -197,9 +195,7 @@ static void includesGet(const char* name_src,const char* in_dir
 								{
 								auto dep=deps.objectGet(k);
 								auto ref=static_cast<const char*>( dep.objectGet("ref") );
-								std::string ref_full(in_dir);
-								ref_full+='/';
-								ref_full+=ref;
+								auto ref_full=dircat(in_dir_include,ref);
 							//TODO What if there was more than one target in the file we came from...
 								if(ref_full!=target.nameGet())
 									{target.dependencyAdd(Dependency(deps.objectGet(k),in_dir));}
@@ -245,10 +241,6 @@ namespace
 void TargetCxxLoader::targetsLoad(const char* name_src,const char* in_dir
 	,Spider& spider,DependencyGraph& graph,Target_FactoryDelegator& factory) const
 	{
-	std::string name_full(in_dir);
-	name_full+='/';
-	name_full+=name_src;
-
 	FileIn source(name_src);
 	TagFilter filter(source);
 	ResourceObject rc{filter};

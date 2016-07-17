@@ -8,6 +8,7 @@
 #include "errormessage.hpp"
 #include "exceptionhandler.hpp"
 #include "variant.hpp"
+#include "pathutils.hpp"
 
 using namespace Maike;
 
@@ -60,9 +61,7 @@ Dependency::Dependency(const ResourceObject& obj,const char* in_dir):
 	 r_target(nullptr)
 	,m_rel(relation(static_cast<const char*>(obj.objectGet("rel"))))
 	{
-	m_name=in_dir;
-	m_name+='/';
-	m_name+=static_cast<const char*>(obj.objectGet("ref"));
+	m_name=dircat(in_dir,static_cast<const char*>(obj.objectGet("ref")));
 	}
 
 void Dependency::dump(ResourceObject& dependency) const
