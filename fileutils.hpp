@@ -6,6 +6,7 @@
 #ifndef MAIKE_FILEUTILS_HPP
 #define MAIKE_FILEUTILS_HPP
 
+#include "visibility.hpp"
 
 namespace Maike
 	{
@@ -13,10 +14,10 @@ namespace Maike
 
 	namespace FileUtils
 		{
-		bool newer(const char* file_a,const char* file_b);
-		void mkdir(const char* name);
-		void copy(const char* source,const char* dest);
-		bool exists(const char* file);
+		PRIVATE bool newer(const char* file_a,const char* file_b);
+		PRIVATE void mkdir(const char* name);
+		PRIVATE void copy(const char* source,const char* dest);
+		PRIVATE bool exists(const char* file);
 		};
 	}
 

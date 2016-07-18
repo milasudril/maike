@@ -14,7 +14,7 @@
 namespace Maike
 	{
 	template<Stringkey::HashValue ... args>
-	class ParameterSetMapFixed : public ParameterSet
+	class PRIVATE ParameterSetMapFixed : public ParameterSet
 		,private MapFixed<Stringkey::HashValue,std::vector<std::string>,args...>
 		{
 		public:
@@ -31,7 +31,7 @@ namespace Maike
 		};
 
 	template<Stringkey::HashValue ... args>
-	void ParameterSetMapFixed<args...>::parameterGet(const Stringkey& key
+	PRIVATE void ParameterSetMapFixed<args...>::parameterGet(const Stringkey& key
 		,ParameterProcessor&& proc) const
 		{
 		auto i=find(key);

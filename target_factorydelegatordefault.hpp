@@ -8,12 +8,13 @@
 
 #include "target_factorydelegator.hpp"
 #include "idgenerator.hpp"
+#include "visibility.hpp"
 #include <map>
 
 namespace Maike
 	{
 	class ExpressionEvaluator;
-	class Target_FactoryDelegatorDefault:public Target_FactoryDelegator
+	class PRIVATE Target_FactoryDelegatorDefault:public Target_FactoryDelegator
 		{
 		public:
 			explicit Target_FactoryDelegatorDefault(const ExpressionEvaluator& eval

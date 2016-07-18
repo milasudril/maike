@@ -12,7 +12,7 @@ namespace Maike
 	{
 	class TargetDirectoryCompiler;
 
-	class TargetDirectory final:public TargetBase
+	class PRIVATE TargetDirectory final:public TargetBase
 		{
 		public:
 			static TargetDirectory* create(const char* name,const char* in_dir

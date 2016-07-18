@@ -7,6 +7,7 @@
 #define MAIKE_DEPENDENCY_HPP
 
 #include "target.hpp"
+#include "visibility.hpp"
 #include <string>
 #include <cassert>
 
@@ -14,7 +15,7 @@ namespace Maike
 	{
 	class ResourceObject;
 
-	class Dependency
+	class PRIVATE Dependency
 		{
 		public:
 			enum class Relation:unsigned int
@@ -54,7 +55,7 @@ namespace Maike
 				m_rel=obj.m_rel;
 				return *this;
 				}
-			~Dependency()
+			~Dependency() noexcept
 				{nameFree();}
 
 			Dependency(const Dependency& obj) noexcept
@@ -106,7 +107,7 @@ namespace Maike
 		private:
 			void nameSet(const char* name);
 			void nameSet(const char* name,size_t size);
-			void nameFree();
+			void nameFree() noexcept;
 			char* m_name;
 			Target* r_target;
 			Relation m_rel;

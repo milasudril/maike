@@ -34,10 +34,10 @@ void ThreadBase::start()
 	m_handle=thread;
 	}
 
-ThreadBase::~ThreadBase()
+ThreadBase::~ThreadBase() noexcept
 	{}
 
-void ThreadBase::synchronize()
+void ThreadBase::synchronize() noexcept
 	{
 	pthread_join(m_handle,NULL);
 	}

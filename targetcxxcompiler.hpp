@@ -7,6 +7,7 @@
 #define MAIKE_TARGETCXXCOMPILER_HPP
 
 #include "twins.hpp"
+#include "visibility.hpp"
 #include <string>
 #include <vector>
 
@@ -18,7 +19,7 @@ namespace Maike
 	class ParameterSet;
 	class Command;
 
-	class TargetCxxCompiler
+	class PRIVATE TargetCxxCompiler
 		{
 		public:
 			explicit TargetCxxCompiler(const TargetCxxOptions& options,const ParameterSet& sysvars);

@@ -3,12 +3,13 @@
 #ifndef MAIKE_IDGENERATOR_HPP
 #define MAIKE_IDGENERATOR_HPP
 
+#include "visibility.hpp"
 #include <vector>
 
 namespace Maike
 	{
 	template<class IdType>
-	class IdGenerator
+	class PRIVATE IdGenerator
 		{
 		public:
 			IdGenerator() noexcept:m_id_next(-1){}

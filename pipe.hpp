@@ -10,11 +10,12 @@
 #include "datasink.hpp"
 #include "twins.hpp"
 #include "handle.hpp"
+#include "visibility.hpp"
 #include <cstdint>
 
 namespace Maike
 	{
-	class Pipe
+	class PRIVATE Pipe
 		{
 		public:
 			static constexpr unsigned int REDIRECT_STDIN=1;
@@ -30,7 +31,7 @@ namespace Maike
 			Pipe(const char* command,Twins<const char* const*> args
 				,unsigned int redirection_mask);
 
-			~Pipe();
+			~Pipe() noexcept;
 
 			int exitStatusGet() noexcept;
 
@@ -44,11 +45,11 @@ namespace Maike
 				{return Handle<DataSink>( &m_stdin );}
 
 		private:
-			class Reader:public DataSource
+			class PRIVATE Reader:public DataSource
 				{
 				public:
 					Reader();
-					~Reader();
+					~Reader() noexcept;
 					void* operator new(size_t)=delete;
 					void* operator new[](size_t)=delete;
 					void operator delete(void *)=delete;
@@ -68,11 +69,11 @@ namespace Maike
 						{close();}
 				};
 
-			class Writer:public DataSink
+			class PRIVATE Writer:public DataSink
 				{
 				public:
 					Writer();
-					~Writer();
+					~Writer() noexcept;
 					void* operator new(size_t)=delete;
 					void* operator new[](size_t)=delete;
 					void operator delete(void *)=delete;

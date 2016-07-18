@@ -6,6 +6,7 @@
 #ifndef MAIKE_RESOURCEOBJECT_H
 #define MAIKE_RESOURCEOBJECT_H
 
+#include "visibility.hpp"
 #include <utility>
 #include <cstddef>
 
@@ -14,7 +15,7 @@ namespace Maike
 	class DataSource;
 	class DataSink;
 
-	class ResourceObject
+	class PRIVATE ResourceObject
 		{
 		public:
 			class Iterator
@@ -57,7 +58,7 @@ namespace Maike
 			enum class Type:unsigned int{OBJECT,ARRAY,STRING,INTEGER,FLOAT};
 			explicit ResourceObject(Type type);
 
-			~ResourceObject();
+			~ResourceObject() noexcept;
 
 			ResourceObject(ResourceObject&& tree) noexcept:m_handle(tree.m_handle)
 				{tree.m_handle=nullptr;}

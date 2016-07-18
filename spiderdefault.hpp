@@ -20,7 +20,7 @@ namespace Maike
 	class Target_Loader;
 	class Target_FactoryDelegator;
 
-	class SpiderDefault:public Spider
+	class PRIVATE SpiderDefault:public Spider
 		{
 		public:
 			explicit

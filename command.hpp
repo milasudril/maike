@@ -8,6 +8,7 @@
 
 #include "pipe.hpp"
 #include "twins.hpp"
+#include "visibility.hpp"
 #include <vector>
 #include <string>
 
@@ -18,7 +19,7 @@ namespace Maike
 	class ResourceObject;
 	class ParameterSet;
 
-	class Command
+	class PRIVATE Command
 		{
 		public:
 			Pipe execute(unsigned int redirection) const;

@@ -6,29 +6,30 @@
 #ifndef MAIKE_THREAD_H
 #define MAIKE_THREAD_H
 
+#include "visibility.hpp"
 #include <cstdint>
 #include <utility>
 
 namespace Maike
 	{
-	class ThreadBase
+	class PRIVATE ThreadBase
 		{
 		public:
 			virtual void run()=0;
 
 		protected:
 			ThreadBase();
-			~ThreadBase();
+			~ThreadBase() noexcept;
 
 			void start();
-			void synchronize();
+			void synchronize() noexcept;
 
 		private:
 			intptr_t m_handle;
 		};
 
 	template<class Runner>
-	class Thread:private ThreadBase
+	class PRIVATE Thread:private ThreadBase
 		{
 		public:
 			explicit Thread(const Runner& runner):m_runner(runner)
@@ -37,7 +38,7 @@ namespace Maike
 			explicit Thread(Runner&& runner):m_runner(std::move(runner))
 				{start();}
 
-			~Thread()
+			~Thread() noexcept
 				{synchronize();}
 
 		private:

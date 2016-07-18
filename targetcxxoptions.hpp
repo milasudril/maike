@@ -15,7 +15,7 @@ namespace Maike
 	{
 	class ResourceObject;
 
-	class TargetCxxOptions
+	class PRIVATE TargetCxxOptions
 		{
 		public:
 			TargetCxxOptions();

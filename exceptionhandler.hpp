@@ -6,6 +6,8 @@
 #ifndef MAIKE_EXCEPTIONHANDLER_HPP
 #define MAIKE_EXCEPTIONHANDLER_HPP
 
+#include "visibility.hpp"
+
 namespace Maike
 	{
 	class ErrorMessage;
@@ -14,8 +16,8 @@ namespace Maike
 
 	typedef __attribute__((__noreturn__)) decltype(&exceptionHandlerDefault) ExceptionHandler;
 
-	void exceptionHandlerSet(ExceptionHandler eh);
-	[[noreturn]] void exceptionRaise(const ErrorMessage& message);
+	PRIVATE void exceptionHandlerSet(ExceptionHandler eh);
+	PRIVATE [[noreturn]] void exceptionRaise(const ErrorMessage& message);
 	}
 
 #endif

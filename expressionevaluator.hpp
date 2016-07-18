@@ -6,7 +6,7 @@
 #ifndef MAIKE_EXPRESSIONEVALUATOR_HPP
 #define MAIKE_EXPRESSIONEVALUATOR_HPP
 
-#include <map>
+#include "visibility.hpp"
 
 namespace Maike
 	{
@@ -14,12 +14,12 @@ namespace Maike
 	class Variant;
 	class SystemTargetInfo;
 
-	class ExpressionEvaluator
+	class PRIVATE ExpressionEvaluator
 		{
 		public:
 			ExpressionEvaluator(SystemTargetInfo&& targetinfo)=delete;
 			ExpressionEvaluator(const SystemTargetInfo& targetinfo);
-			~ExpressionEvaluator();
+			~ExpressionEvaluator() noexcept;
 
 			Variant variableGet(const Stringkey& variable) const noexcept;
 			Variant evaluate(const char* expression) const;

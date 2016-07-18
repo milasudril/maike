@@ -6,9 +6,11 @@
 #ifndef MAIKE_TIMEDSCOPE_HPP
 #define MAIKE_TIMEDSCOPE_HPP
 
+#include "visibility.hpp"
+
 namespace Maike
 	{
-	class TimedScope
+	class PRIVATE TimedScope
 		{
 		public:
 			TimedScope(double& T) noexcept;

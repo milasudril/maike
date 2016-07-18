@@ -21,7 +21,7 @@ namespace Maike
 	{
 	class ResourceObject;
 
-	class Session
+	class PRIVATE Session
 		{
 		public:
 			Session();

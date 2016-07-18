@@ -26,7 +26,7 @@ namespace Maike
 							{ret.erase(ret.find_last_of('/'))+='/';}
 						}
 					else
-					if(elem_current!="." && elem_current.length()!=0)
+					if(elem_current!=".")
 						{ret.append(elem_current)+='/';}
 
 					elem_current.clear();

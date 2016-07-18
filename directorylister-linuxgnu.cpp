@@ -53,7 +53,7 @@ class DirectoryLister::Impl
 
 			}
 
-		~Impl()
+		~Impl() noexcept
 			{close(fd);}
 
 		const char* read()
@@ -87,7 +87,7 @@ DirectoryLister::DirectoryLister(const char* dirname):
 	m_impl(new Impl(dirname))
 	{}
 
-DirectoryLister::~DirectoryLister()
+DirectoryLister::~DirectoryLister() noexcept
 	{delete m_impl;}
 
 const char* DirectoryLister::read()

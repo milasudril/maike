@@ -16,7 +16,7 @@ SystemTargetInfo::SystemTargetInfo()
 	clear();
 	}
 
-SystemTargetInfo::~SystemTargetInfo()
+SystemTargetInfo::~SystemTargetInfo() noexcept
 	{
 	}
 

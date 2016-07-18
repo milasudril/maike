@@ -3,6 +3,7 @@
 #ifndef MAIKE_MAPFIXED_H
 #define MAIKE_MAPFIXED_H
 
+#include "visibility.hpp"
 #include <type_traits>
 #include <cstddef>
 #include <cstdio>
@@ -14,14 +15,14 @@ namespace Maike
 	{
 	// generate a sequence of integers as non-type template arguments
 	// (a basic meta-programming tool)
-	template<size_t... Is> struct seq {};
-	template<size_t N, size_t... Is> struct gen_seq : gen_seq<N-1, N-1, Is...> {};
-	template<size_t... Is> struct gen_seq<0, Is...> : seq<Is...> {};
+	template<size_t... Is> struct PRIVATE seq {};
+	template<size_t N, size_t... Is> struct PRIVATE gen_seq : gen_seq<N-1, N-1, Is...> {};
+	template<size_t... Is> struct PRIVATE gen_seq<0, Is...> : seq<Is...> {};
 
 	// an array type that can be returned from a function
 	// and has `constexpr` accessors (as opposed to C++11's `std::array`)
 	template<class T, size_t N>
-	struct c_array
+	struct PRIVATE c_array
 		{
 		template<typename... U>
 		constexpr explicit c_array(U... values):m{values...}
@@ -61,7 +62,7 @@ namespace Maike
 	/**\brief An associative container with compile-time keys.
 	*/
 	template<class Key,class Value, Key ... args>
-	class MapFixed
+	class PRIVATE MapFixed
 		{
 		public:
 			class Iterator
@@ -165,21 +166,21 @@ namespace Maike
 			Value m_values[sizeof...(args)];
 
 			template<Key key=keys[sizeof...(args)-1],size_t N=sizeof...(args),bool done=0>
-			struct Unique
+			struct PRIVATE Unique
 				{typedef typename Unique<keys[N-2], N-1, !(keys[N - 2] < key)>::unique_tag unique_tag;};
 
 			template<Key key,size_t N>
-			struct Unique<key,N,1>
+			struct PRIVATE Unique<key,N,1>
 				{};
 
 			template<Key key>
-			struct Unique<key,1,0>
+			struct PRIVATE Unique<key,1,0>
 				{typedef bool unique_tag;};
 
 			typedef typename Unique<>::unique_tag unique_tag;
 
 			template<Key key,size_t first=0,size_t count=sizeof...(args) - first>
-			struct LowerBound
+			struct PRIVATE LowerBound
 				{
 				static constexpr size_t it=first;
 				static constexpr size_t step=count/2;
@@ -191,29 +192,29 @@ namespace Maike
 				};
 
 			template<Key key,size_t first>
-			struct LowerBound<key,first,0>
+			struct PRIVATE LowerBound<key,first,0>
 				{
 				static constexpr size_t value=first;
 				};
 
 			template<bool x,size_t v>
-			struct IfFalse{};
+			struct PRIVATE IfFalse{};
 
 			template<size_t v>
-			struct IfFalse<0,v>
+			struct PRIVATE IfFalse<0,v>
 				{
 				static constexpr size_t value=v;
 				};
 
 			template<size_t v>
-			struct IfFalse<1,v>
+			struct PRIVATE IfFalse<1,v>
 				{
 				struct KeyNotFound{};
 				static constexpr KeyNotFound value{};
 				};
 
 			template<Key key>
-			struct Find
+			struct PRIVATE Find
 				{
 				static constexpr size_t value=IfFalse<
 					LowerBound<key>::value==sizeof...(args) || key < keys[LowerBound<key>::value],LowerBound<key>::value >::value;

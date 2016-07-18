@@ -23,6 +23,10 @@
 #include <unistd.h>
 #endif
 
+#ifdef __gnu_linux__
+#include <gnu/libc-version.h>
+#endif
+
 using namespace Maike;
 
 static void trim(std::string & str)
@@ -201,8 +205,14 @@ void Maike::sysvarsLoad(std::map<Stringkey, Variant>& variables
 	replace(variables,{Stringkey("android"),__ANDROID_API__});
 	varnames[Stringkey("android")]=std::string("android");
 #elif __gnu_linux__
-	replace(variables,{Stringkey("gnu"),1});
+	ver=version(gnu_get_libc_version());
+	replace(variables,{Stringkey("gnu"),ver});
 	varnames[Stringkey("gnu")]=std::string("gnu");
+		{
+		auto i=replace(strings,{Stringkey("gnu_string"),gnu_get_libc_version()});
+		replace(variables,{Stringkey("gnu_string"),i->second.c_str()});
+		varnames[Stringkey("gnu_string")]=std::string("gnu_string");
+		}
 #endif
 
 #ifdef __unix__

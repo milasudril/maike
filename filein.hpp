@@ -7,15 +7,16 @@
 #define MAIKE_FILEIN_H
 
 #include "datasource.hpp"
+#include "visibility.hpp"
 #include <string>
 
 namespace Maike
 	{
-	class FileIn final:public DataSource
+	class PRIVATE FileIn final:public DataSource
 		{
 		public:
 			explicit FileIn(const char* filename);
-			~FileIn();
+			~FileIn() noexcept;
 
 			size_t read(void* buffer,size_t count);
 

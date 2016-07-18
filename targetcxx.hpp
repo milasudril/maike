@@ -12,7 +12,7 @@
 namespace Maike
 	{
 	class TargetCxxCompiler;
-	class TargetCxx final:public TargetBase
+	class PRIVATE TargetCxx final:public TargetBase
 		{
 		public:
 			enum class Type:unsigned int

@@ -107,7 +107,7 @@ namespace
 					}
 				}
 
-			~ChildProcess()
+			~ChildProcess() noexcept
 				{
 				exitStatusGet();
 				}
@@ -242,7 +242,7 @@ Pipe::Pipe(const char* command,Twins<const char* const*> args
 	m_pid=child.pidRelease();
 	}
 
-Pipe::~Pipe()
+Pipe::~Pipe() noexcept
 	{
 	exitStatusGet();
 	}
@@ -264,7 +264,7 @@ int Pipe::exitStatusGet() noexcept
 
 Pipe::Reader::Reader():m_handle(-1){}
 
-Pipe::Reader::~Reader()
+Pipe::Reader::~Reader() noexcept
 	{
 	close();
 	}
@@ -312,7 +312,7 @@ const char* Pipe::Reader::nameGet() const noexcept
 Pipe::Writer::Writer():m_handle(-1)
 	{}
 
-Pipe::Writer::~Writer()
+Pipe::Writer::~Writer() noexcept
 	{close();}
 
 void Pipe::Writer::close() noexcept

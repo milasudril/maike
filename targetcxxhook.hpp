@@ -16,7 +16,7 @@
 
 namespace Maike
 	{
-	class TargetCxxHook final:public Target_Hook
+	class PRIVATE TargetCxxHook final:public Target_Hook
 		{
 		public:
 			static TargetCxxHook* create(const ParameterSet& params);

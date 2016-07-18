@@ -5,11 +5,12 @@
 #ifndef MAIKE_STRINGKEY_HPP
 #define MAIKE_STRINGKEY_HPP
 
+#include "visibility.hpp"
 #include <cstdint>
 
 namespace Maike
 	{
-	class Stringkey
+	class PRIVATE Stringkey
 		{
 		public:
 			typedef uint64_t HashValue;

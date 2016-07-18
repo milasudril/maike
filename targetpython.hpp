@@ -11,7 +11,7 @@
 namespace Maike
 	{
 	class TargetPythonInterpreter;
-	class TargetPython final : public Maike::TargetBase
+	class PRIVATE TargetPython final : public Maike::TargetBase
 		{
 		public:
 			static TargetPython* create(const ResourceObject& obj
@@ -46,7 +46,7 @@ namespace Maike
 				,TargetPythonInterpreter&& intpret,const char* name_src
 				,const char* in_dir,size_t id,size_t line_count)=delete;
 
-			~TargetPython();
+			~TargetPython() noexcept;
 
 			std::vector<std::string> m_args;
 			int m_status;

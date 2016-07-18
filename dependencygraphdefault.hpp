@@ -15,7 +15,7 @@
 
 namespace Maike
 	{
-	class DependencyGraphDefault:public DependencyGraph
+	class PRIVATE DependencyGraphDefault:public DependencyGraph
 		{
 		public:
 			explicit DependencyGraphDefault(IdGenerator<size_t>& id_gen):

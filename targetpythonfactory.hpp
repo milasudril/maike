@@ -13,7 +13,7 @@ namespace Maike
 	{
 	class TargetPythonInterpreter;
 
-	class TargetPythonFactory:public Target_Factory
+	class PRIVATE TargetPythonFactory:public Target_Factory
 		{
 		public:
 			explicit TargetPythonFactory(const TargetPythonInterpreter& intptret);

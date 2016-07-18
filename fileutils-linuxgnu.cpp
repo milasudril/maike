@@ -102,7 +102,7 @@ namespace
 					}
 				}
 
-			~FileDescriptor()
+			~FileDescriptor() noexcept
 				{close(m_fd);}
 
 			int get() noexcept

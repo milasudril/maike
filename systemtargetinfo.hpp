@@ -7,6 +7,7 @@
 #define MAIKE_SYSTEMTARGETINFO_HPP
 
 #include "parametersetdumpable.hpp"
+#include "visibility.hpp"
 #include <string>
 #include <map>
 #include <vector>
@@ -15,11 +16,11 @@ namespace Maike
 	{
 	class Variant;
 
-	class SystemTargetInfo:public ParameterSetDumpable
+	class PRIVATE SystemTargetInfo:public ParameterSetDumpable
 		{
 		public:
 			SystemTargetInfo();
-			~SystemTargetInfo();
+			~SystemTargetInfo() noexcept;
 
 			void parameterGet(const Stringkey& key
 				,ParameterProcessor&& proc) const;

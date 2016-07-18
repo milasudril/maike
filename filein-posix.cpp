@@ -27,7 +27,7 @@ FileIn::FileIn(const char* filename):m_name(filename)
 		}
 	}
 
-FileIn::~FileIn()
+FileIn::~FileIn() noexcept
 	{
 	fsync(static_cast<int>(m_handle));
 	close(static_cast<int>(m_handle));

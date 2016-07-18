@@ -20,7 +20,7 @@ ExpressionEvaluator::ExpressionEvaluator(const SystemTargetInfo& targetinfo):
 	r_targetinfo(targetinfo)
 	{}
 
-ExpressionEvaluator::~ExpressionEvaluator()
+ExpressionEvaluator::~ExpressionEvaluator() noexcept
 	{}
 
 Variant ExpressionEvaluator::variableGet(const Stringkey& variable) const noexcept

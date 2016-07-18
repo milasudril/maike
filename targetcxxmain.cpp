@@ -12,8 +12,14 @@
 //@	]
 
 #include "targetcxxhook.hpp"
+#include "exceptionhandler.hpp"
 
 using namespace Maike;
 
-Target_Hook* Maike_Target_Hook_create(const ParameterSetDumpable& params)
-	{return TargetCxxHook::create(params);}
+Target_Hook* Maike_Target_Hook_create(const ParameterSetDumpable& params
+	,DataSink& standard_error
+	,ExceptionHandler eh)
+	{
+	exceptionHandlerSet(eh);
+	return TargetCxxHook::create(params);
+	}

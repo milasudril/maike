@@ -14,7 +14,7 @@
 
 namespace Maike
 	{
-	class TargetPythonHook final:public Target_Hook
+	class PRIVATE TargetPythonHook final:public Target_Hook
 		{
 		public:
 			static TargetPythonHook* create(const ParameterSetDumpable& params);

@@ -15,10 +15,10 @@
 namespace Maike
 	{
 	class DataSink;
-	class Options
+	class PRIVATE Options
 		{
 		public:
-			struct Option
+			struct PRIVATE Option
 				{
 				const char* key;
 				const char* description;

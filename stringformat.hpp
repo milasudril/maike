@@ -13,7 +13,7 @@
 
 namespace Maike
 	{
-	void format(const Twins<char*>& buffer,const char* format_string
+	PRIVATE void format(const Twins<char*>& buffer,const char* format_string
 		,const Twins<const Variant*>& args);
 
 	inline void format(const Twins<char*>& buffer,const char* format_string

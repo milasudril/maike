@@ -115,7 +115,7 @@ ResourceObject::ResourceObject(void* handle,const char* name)
 	json_incref(static_cast<json_t*>(m_handle));
 	}
 
-ResourceObject::~ResourceObject()
+ResourceObject::~ResourceObject() noexcept
 	{
 	if(m_handle!=nullptr)
 		{json_decref(static_cast<json_t*>(m_handle));}

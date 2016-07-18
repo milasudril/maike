@@ -7,12 +7,13 @@
 #define MAIKE_TARGETCXXLOADER_HPP
 
 #include "target_loader.hpp"
+#include "visibility.hpp"
 
 namespace Maike
 	{
 	class TargetCxxOptions;
 
-	class TargetCxxLoader:public Target_Loader
+	class PRIVATE TargetCxxLoader:public Target_Loader
 		{
 		public:
 			explicit TargetCxxLoader(const TargetCxxOptions& options);

@@ -8,13 +8,14 @@
 
 #include "target_loader.hpp"
 #include "stringkey.hpp"
+#include "visibility.hpp"
 #include <map>
 #include <string>
 
 namespace Maike
 	{
 	class ResourceObject;
-	class TargetDirectoryLoader:public Target_Loader
+	class PRIVATE TargetDirectoryLoader:public Target_Loader
 		{
 		public:
 			TargetDirectoryLoader();

@@ -7,6 +7,24 @@
 ,"session":
 	{
 	"source_files":["."]
+	,"target_hook_setup":
+		{
+		 "targetcxx":"cxxoptions"
+		,"targetpython":"pythonoptions"
+		}
+	,"target_hook_map":
+		{
+		 ".cc":"targetcxx"
+		,".cxx":"targetcxx"
+		,".cpp":"targetcxx"
+		,".c++":"targetcxx"
+		,".hh":"targetcxx"
+		,".hxx":"targetcxx"
+		,".hpp":"targetcxx"
+		,".h++":"targetcxx"
+		,".h":"targetcxx"
+		,".py":"targetpython"
+		}
 	}
 
 ,"directoryoptions":

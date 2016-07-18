@@ -3,6 +3,7 @@
 #ifndef MAIKE_VARIANT_HPP
 #define MAIKE_VARIANT_HPP
 
+#include "visibility.hpp"
 #include <limits>
 #include <cstdint>
 #include <cstddef>
@@ -20,7 +21,7 @@ namespace Maike
 		return ~(std::numeric_limits<T>::max()>>1);
 		}
 
-	class Variant
+	class PRIVATE Variant
 		{
 		public:
 			static constexpr uintptr_t USER_OBJECT=0;

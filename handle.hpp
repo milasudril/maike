@@ -3,13 +3,14 @@
 #ifndef MAIKE_HANDLE_HPP
 #define MAIKE_HANDLE_HPP
 
+#include "visibility.hpp"
 #include <memory>
 #include <cassert>
 
 namespace Maike
 	{
 	template<class T>
-	class Handle:public std::unique_ptr<T,void (*)(typename T::Base*)>
+	class PRIVATE Handle:public std::unique_ptr<T,void (*)(typename T::Base*)>
 		{
 		public:
 			typedef std::unique_ptr<T,void (*)(typename T::Base*)> Base;

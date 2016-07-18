@@ -41,9 +41,9 @@ FileOut& FileOut::operator=(FileOut&& file)
 FileOut::FileOut():m_handle(STDOUT_FILENO)
 	{}
 
-FileOut::~FileOut()
+FileOut::~FileOut() noexcept
 	{
-	if(m_handle!=STDOUT_FILENO)
+	if(m_handle!=STDOUT_FILENO && m_handle!=-1)
 		{
 		fsync(static_cast<int>(m_handle));
 		close(static_cast<int>(m_handle));

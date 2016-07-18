@@ -7,7 +7,7 @@
 
 namespace Maike
 	{
-	class TargetPlaceholder final:public Maike::TargetBase
+	class PRIVATE TargetPlaceholder final:public Maike::TargetBase
 		{
 		public:
 			static TargetPlaceholder* create(const char* name,const char* name_src

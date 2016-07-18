@@ -7,9 +7,11 @@
 #define MAIKE_FILEOUT_H
 
 #include "datasink.hpp"
+#include "visibility.hpp"
+
 namespace Maike
 	{
-	class FileOut final:public DataSink
+	class PRIVATE FileOut final:public DataSink
 		{
 		public:
 			FileOut& operator=(const FileOut&)=delete;
@@ -18,7 +20,7 @@ namespace Maike
 			FileOut& operator=(FileOut&& file);
 			explicit FileOut(const char* filename);
 			FileOut();
-			~FileOut();
+			~FileOut() noexcept;
 
 			size_t write(const void* buffer,size_t count);
 

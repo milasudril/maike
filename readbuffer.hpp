@@ -4,11 +4,12 @@
 #define MAIKE_READBUFFER_HPP
 
 #include "datasource.hpp"
+#include "visibility.hpp"
 #include <cstdint>
 
 namespace Maike
 	{
-	class ReadBuffer
+	class PRIVATE ReadBuffer
 		{
 		public:
 			ReadBuffer(const ReadBuffer&)=delete;

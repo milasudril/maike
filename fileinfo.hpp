@@ -6,11 +6,12 @@
 #ifndef MAIKE_FILEINFO_HPP
 #define MAIKE_FILEINFO_HPP
 
+#include "visibility.hpp"
 #include <cstdint>
 
 namespace Maike
 	{
-	class FileInfo
+	class PRIVATE FileInfo
 		{
 		public:
             enum class Type:uint32_t{FILE,DIRECTORY,OTHER};

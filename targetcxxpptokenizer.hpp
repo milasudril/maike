@@ -7,14 +7,15 @@
 #define MAIKE_TARGETCXXPPTOKENIZER_H
 
 #include "readbuffer.hpp"
+#include "visibility.hpp"
 #include <string>
 
 namespace Maike
 	{
-	class TargetCxxPPTokenizer
+	class PRIVATE TargetCxxPPTokenizer
 		{
 		public:
-			struct Token
+			struct PRIVATE Token
 				{
 				Token():type(Type::OTHER){}
 				std::string value;

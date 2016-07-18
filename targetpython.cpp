@@ -51,7 +51,7 @@ void TargetPython::compileImpl(Twins<const Dependency*> dependency_list
 	m_status=r_intpret.run(sourceNameGet(),{args.data(),args.data() + args.size()});
 	}
 
-Maike::TargetPython::~TargetPython()
+Maike::TargetPython::~TargetPython() noexcept
 	{
 	}
 

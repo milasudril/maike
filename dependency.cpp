@@ -80,7 +80,7 @@ void Dependency::nameSet(const char* name,size_t size)
 	memcpy(m_name,name,N);
 	}
 
-void Dependency::nameFree()
+void Dependency::nameFree() noexcept
 	{
 	if(m_name!=nullptr)
 		{

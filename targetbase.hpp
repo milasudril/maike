@@ -8,6 +8,7 @@
 
 #include "target.hpp"
 #include "dependency.hpp"
+#include "visibility.hpp"
 #include <vector>
 #include <string>
 
@@ -16,7 +17,7 @@ namespace Maike
 	class Dependency;
 	class ResourceObject;
 
-	class TargetBase:public Target
+	class PRIVATE TargetBase:public Target
 		{
 		public:
 			explicit TargetBase(const char* name,const char* name_src,const char* in_dir,size_t id);

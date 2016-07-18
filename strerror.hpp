@@ -6,6 +6,7 @@
 #ifndef MAIKE_STRERROR_HPP
 #define MAIKE_STRERROR_HPP
 
+#include "visibility.hpp"
 #include <cstddef>
 
 namespace Maike
@@ -16,7 +17,7 @@ namespace Maike
 	typedef int ErrCode;
 #endif
 
-	class strerror
+	class PRIVATE strerror
 		{
 		public:
 			explicit strerror(ErrCode errcode) noexcept;

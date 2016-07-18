@@ -6,12 +6,13 @@
 #ifndef MAIKE_WRITEBUFFER_HPP
 #define MAIKE_WRITEBUFFER_HPP
 
+#include "visibility.hpp"
 #include "datasink.hpp"
 #include <cstdint>
 
 namespace Maike
 	{
-	class WriteBuffer
+	class PRIVATE WriteBuffer
 		{
 		public:
 			WriteBuffer(const WriteBuffer&)=delete;

@@ -6,11 +6,12 @@
 #ifndef MAIKE_VERSIONNUMBER_H
 #define MAIKE_VERSIONNUMBER_H
 
+#include "visibility.hpp"
 #include <cstdint>
 
 namespace Maike
 	{
-	int64_t version(const char* version_string) noexcept;
+	PRIVATE int64_t version(const char* version_string) noexcept;
 	}
 
 #endif

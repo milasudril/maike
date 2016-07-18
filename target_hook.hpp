@@ -3,12 +3,16 @@
 #ifndef MAIKE_TARGET_HOOK_HPP
 #define MAIKE_TARGET_HOOK_HPP
 
+#include "visibility.hpp"
+#include "exceptionhandler.hpp"
+
 namespace Maike
 	{
 	class Target_Factory;
 	class Target_Loader;
 	class ResourceObject;
 	class ParameterSetDumpable;
+	class DataSink;
 
 	class Target_Hook
 		{
@@ -33,7 +37,10 @@ namespace Maike
 
 extern "C"
 	{
-	Maike::Target_Hook* Maike_Target_Hook_create(const Maike::ParameterSetDumpable& params);
+	EXPORT Maike::Target_Hook* Maike_Target_Hook_create(
+		 const Maike::ParameterSetDumpable& params
+		,Maike::DataSink& standard_error
+		,Maike::ExceptionHandler eh);
 	}
 
 #endif

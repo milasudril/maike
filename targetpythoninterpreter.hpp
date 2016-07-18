@@ -12,7 +12,7 @@ namespace Maike
 	{
 	class ResourceObject;
 	class ParameterSetDumpable;
-	class TargetPythonInterpreter
+	class PRIVATE TargetPythonInterpreter
 		{
 		public:
 			explicit TargetPythonInterpreter(const ParameterSetDumpable& sysvars);

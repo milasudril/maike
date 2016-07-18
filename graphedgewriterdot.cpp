@@ -18,5 +18,8 @@ void GraphEdgeWriterDOT::edgeWrite(const char* from,const char* to,const char* c
 
 GraphEdgeWriterDOT::~GraphEdgeWriterDOT()
 	{
-	r_wb.write("\t}\n");
+	try
+		{r_wb.write("\t}\n");}
+	catch(...)
+		{}
 	}

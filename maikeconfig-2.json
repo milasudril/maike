@@ -1,0 +1,66 @@
+{
+"targetinfo":
+	{
+	"target_directory":"__targets"
+	}
+,"source_files":["."]
+,"directoryoptions":
+	{
+	 "paths_reject":[".git",".codelite",".clang","test","Debug","Release","__targets"]
+	,"recursive":1
+	}
+,"target_hooks":
+	[
+		{
+		"soname":"targetcxx"
+		,"filename_exts":[".cc",".cxx",".cpp",".c++",".hh",".hxx",".hpp",".h++",".h"]
+		,"config":
+			{
+			"includedir":[]
+			,"includedir_noscan":[]
+			,"libdir":[]
+			,"cxxversion_min":201103
+			,"stdprefix":"-std="
+			,"includedir_format":"-I^"
+			,"libdir_format":"-L^"
+			,"libext_format":"-l^"
+			,"libint_format":"-l:^"
+			,"objcompile":
+				{
+				"name":"g++"
+				,"args":["-c","-g","-fpic","{cxxversion}","-Wall","-Woverflow"
+					,"-Wconversion","-Werror","{includedir}","-o","{target}","{source}"]
+				}
+			,"appcompile":
+				{
+				"name":"g++"
+				,"args":["-g","-fpic","{cxxversion}","-Wall","-Woverflow","-Wconversion"
+					,"-Werror","{includedir}","{libdir}","-o","{target}","{source}","{dependencies}"]
+				}
+			,"dllcompile":
+				{
+				"name":"g++"
+				,"args":["-g","-fpic","{cxxversion}","-Wall","-Woverflow","-Wconversion"
+					,"-Werror","{includedir}","{libdir}","-shared","-o","{target}","{source}","{dependencies}"]
+				}
+			,"versionquery":
+				{
+				"name":"g++"
+				,"args":["-E","-dM","-x","c++","{nullfile}"]
+				}
+			}
+		}
+		,{
+		 "soname":"targetpython"
+		,"filename_exts":[".py"]
+		,"config":
+			{
+			"command":
+				{
+				"name":"python3"
+				,"args":["--","{script}","{args}"]
+				}
+			}
+		}
+	]
+}

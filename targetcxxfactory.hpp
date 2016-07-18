@@ -13,7 +13,7 @@ namespace Maike
 	{
 	class TargetCxxCompiler;
 
-	class TargetCxxFactory:public Target_Factory
+	class PRIVATE TargetCxxFactory:public Target_Factory
 		{
 		public:
 			explicit TargetCxxFactory(const TargetCxxCompiler& compiler);

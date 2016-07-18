@@ -7,11 +7,12 @@
 #define MAIKE_GRAPHEDGEWRITERDOT_HPP
 
 #include "graphedgewriter.hpp"
+#include "visibility.hpp"
 
 namespace Maike
 	{
 	class WriteBuffer;
-	class GraphEdgeWriterDOT:public GraphEdgeWriter
+	class PRIVATE GraphEdgeWriterDOT:public GraphEdgeWriter
 		{
 		public:
 			GraphEdgeWriterDOT(WriteBuffer& wb);
