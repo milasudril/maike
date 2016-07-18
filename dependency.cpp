@@ -9,6 +9,8 @@
 #include "exceptionhandler.hpp"
 #include "variant.hpp"
 #include "pathutils.hpp"
+#include <cstdlib>
+#include <cstring>
 
 using namespace Maike;
 
@@ -44,21 +46,45 @@ static const char* relation(Dependency::Relation rel)
 	}
 
 
-Dependency::Dependency(const ResourceObject& obj):
-	 m_name(static_cast<const char*>(obj.objectGet("ref"))),r_target(nullptr)
+Dependency::Dependency(const ResourceObject& obj):m_name(nullptr),r_target(nullptr)
 	,m_rel(relation(static_cast<const char*>(obj.objectGet("rel"))))
 	{
+	nameSet(static_cast<const char*>(obj.objectGet("ref")));
 	}
 
 Dependency::Dependency(const ResourceObject& obj,const char* in_dir):
-	 r_target(nullptr)
+	 m_name(nullptr),r_target(nullptr)
 	,m_rel(relation(static_cast<const char*>(obj.objectGet("rel"))))
 	{
-	m_name=dircat(in_dir,static_cast<const char*>(obj.objectGet("ref")));
+	auto name_temp=dircat(in_dir,static_cast<const char*>(obj.objectGet("ref")));
+	nameSet(name_temp.c_str(),name_temp.size());
 	}
 
 void Dependency::dump(ResourceObject& dependency) const
 	{
 	dependency.objectSet("ref",ResourceObject(nameGet()))
 		.objectSet("rel",ResourceObject(relation(relationGet())));
+	}
+
+void Dependency::nameSet(const char* name)
+	{
+	nameSet(name,strlen(name));
+	}
+
+void Dependency::nameSet(const char* name,size_t size)
+	{
+	auto N=size + 1;
+	m_name=static_cast<char*>( realloc(m_name,N*sizeof(N)) );
+	if(m_name==NULL)
+		{exceptionRaise(ErrorMessage("Out of memory",{}));}
+	memcpy(m_name,name,N);
+	}
+
+void Dependency::nameFree()
+	{
+	if(m_name!=nullptr)
+		{
+		free(m_name);
+		m_name=nullptr;
+		}
 	}
