@@ -39,6 +39,7 @@ namespace Maike
 				,Stringkey("list-all-targets")
 				,Stringkey("dump-database-json")
 				,Stringkey("dump-graph-dot")
+				,Stringkey("dump-graph-inv-dot")
 				,Stringkey("dump-targets-tsv")
 				> OptionMap;
 

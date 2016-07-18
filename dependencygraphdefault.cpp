@@ -74,7 +74,7 @@ DependencyGraphDefault& DependencyGraphDefault::targetsPatch()
 				,r_id_gen);
 			id_range.first=std::min(id_range.first,t2.idGet());
 			id_range.second=std::max(id_range.second,t2.idGet());
-			deps.first->targetSet(t2);
+			deps.first->targetSet(t2,*t1);
 			++(deps.first);
 			}
 		++i;

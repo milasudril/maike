@@ -10,15 +10,15 @@
 
 namespace Maike
 	{
-	class TextWriter;
+	class WriteBuffer;
 	class GraphEdgeWriterDOT:public GraphEdgeWriter
 		{
 		public:
-			GraphEdgeWriterDOT(TextWriter& writer);
+			GraphEdgeWriterDOT(WriteBuffer& wb);
 			void edgeWrite(const char* from,const char* to,const char* color);
 			~GraphEdgeWriterDOT();
 		private:
-			TextWriter& r_writer;
+			WriteBuffer& r_wb;
 		};
 	}
 

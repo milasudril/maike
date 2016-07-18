@@ -48,6 +48,15 @@ namespace Maike
 				return {ptr,ptr + m_dependencies.size()};
 				}
 
+
+			TargetBase& dependencyInverseAdd(Dependency&& dep);
+
+			Twins<const Dependency*> dependenciesInverseGet() const noexcept
+				{
+				auto ptr=m_deps_inverse.data();
+				return {ptr,ptr + m_deps_inverse.size()};
+				}
+
 			size_t idGet() const noexcept
 				{return m_id;}
 
@@ -87,6 +96,7 @@ namespace Maike
 			std::string m_source_name;
 			std::string m_in_dir;
 			std::vector<Dependency> m_dependencies;
+			std::vector<Dependency> m_deps_inverse;
 			double m_compilation_time;
 			size_t m_loc;
 		};

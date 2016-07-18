@@ -34,8 +34,7 @@ static int helpPrint(const Maike::Options& opts,const std::vector<std::string>& 
 static int versionPrint(const std::vector<std::string>& filename)
 	{
 	auto dest=fileGet(filename);
-	WriteBuffer wb(dest);
-	versionPrint(wb);
+	versionPrint(dest);
 	return 0;
 	}
 
@@ -72,24 +71,21 @@ static int configDump(const Maike::Session& maike,const std::vector<std::string>
 static int targetsListAll(const Maike::Session& maike,const std::vector<std::string>& filename)
 	{
 	auto dest=fileGet(filename);
-	WriteBuffer wb(dest);
-	targetsListAll(maike,wb);
+	targetsListAll(maike,dest);
 	return 0;
 	}
 
 static int targetsListLeaf(const Maike::Session& maike,const std::vector<std::string>& filename)
 	{
 	auto dest=fileGet(filename);
-	WriteBuffer wb(dest);
-	targetsListLeaf(maike,wb);
+	targetsListLeaf(maike,dest);
 	return 0;
 	}
 
 static int targetsListExternal(const Maike::Session& maike,const std::vector<std::string>& filename)
 	{
 	auto dest=fileGet(filename);
-	WriteBuffer wb(dest);
-	targetsListExternal(maike,wb);
+	targetsListExternal(maike,dest);
 	return 0;
 	}
 
@@ -136,6 +132,31 @@ static int graphDumpDOT(Maike::Session& maike
 	return 0;
 	}
 
+static int graphInvDumpDOT(Maike::Session& maike
+	,const std::vector<std::string>* targets
+	,const std::vector<std::string>& filename)
+	{
+	auto dest=fileGet(filename);
+	WriteBuffer wb(dest);
+	GraphEdgeWriterDOT graphwriter(wb);
+	if(targets==nullptr)
+		{
+		graphDump(maike,graphwriter);
+		return 0;
+		}
+
+	auto id_range=maike.targetIdRangeGet();
+	std::vector<uint8_t> visited((id_range.second-id_range.first) + 1,0);
+	auto ptr=targets->data();
+	auto ptr_end=ptr+targets->size();
+	while(ptr!=ptr_end)
+		{
+		graphInvDump(maike,graphwriter,ptr->c_str(),visited.data(),id_range.first);
+		++ptr;
+		}
+	return 0;
+	}
+
 static int databaseDumpJSON(Maike::Session& maike
 	,const std::vector<std::string>* targets
 	,const std::vector<std::string>& filename)
@@ -165,17 +186,16 @@ static int targetsDumpTSV(Maike::Session& maike
 	,const std::vector<std::string>& filename)
 	{
 	auto file=fileGet(filename);
-	WriteBuffer wb(file);
-	targetsDumpTSVHeader(wb);
+	targetsDumpTSVHeader(file);
 	if(targets==nullptr)
-		{targetsDumpTSV(maike,wb);}
+		{targetsDumpTSV(maike,file);}
 	else
 		{
 		auto ptr=targets->data();
 		auto ptr_end=ptr+targets->size();
 		while(ptr!=ptr_end)
 			{
-			targetDumpTSV(maike,wb,ptr->c_str());
+			targetDumpTSV(maike,file,ptr->c_str());
 			++ptr;
 			}
 		}
@@ -225,6 +245,10 @@ int main(int argc,char** argv)
 		x=opts.get<Stringkey("dump-graph-dot")>();
 		if(x!=nullptr)
 			{return graphDumpDOT(maike,opts.get<Stringkey("targets")>(),*x);}
+
+		x=opts.get<Stringkey("dump-graph-inv-dot")>();
+		if(x!=nullptr)
+			{return graphInvDumpDOT(maike,opts.get<Stringkey("targets")>(),*x);}
 
 		x=opts.get<Stringkey("dump-database-json")>();
 		if(x!=nullptr)

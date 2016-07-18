@@ -24,12 +24,19 @@ namespace Maike
 				,EXTERNAL
 				};
 
-			Dependency();
+			Dependency():r_target(nullptr),m_rel(Relation::LEAF)
+				{}
 
 			explicit Dependency(Target& target):Dependency()
 				{r_target=&target;}
 
-			explicit Dependency(const char* name,Relation relation);
+			explicit Dependency(Target& target,Relation rel):
+				r_target(&target),m_rel(rel)
+				{}
+
+			explicit Dependency(const char* name,Relation relation):
+				m_name(name),r_target(nullptr),m_rel(relation)
+				{}
 
 			explicit Dependency(const ResourceObject& obj);
 
@@ -46,10 +53,10 @@ namespace Maike
 					m_name.c_str() : r_target->nameGet();
 				}
 
-			Dependency& targetSet(Target& target) noexcept
+			Dependency& targetSet(Target& target,Target& target_from)
 				{
 				r_target=&target;
-				target.childCounterIncrement();
+				target.dependencyInverseAdd(Dependency(target_from,m_rel));
 				return *this;
 				}
 

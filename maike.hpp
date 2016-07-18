@@ -12,7 +12,6 @@
 namespace Maike
 	{
 	class Session;
-	class TextWriter;
 	class DataSink;
 	class DataSource;
 	class GraphEdgeWriter;
@@ -20,7 +19,7 @@ namespace Maike
 
 	template<class T> class Twins;
 
-	void versionPrint(TextWriter& writer);
+	void versionPrint(DataSink& sink);
 
 	void configDump(const Session& maike,DataSink& sink);
 
@@ -28,11 +27,11 @@ namespace Maike
 
 	void configAppendDefault(Session& maike,DataSource& source);
 
-	void targetsListAll(const Session& maike,TextWriter& writer);
+	void targetsListAll(const Session& maike,DataSink& sink);
 
-	void targetsListLeaf(const Session& maike,TextWriter& writer);
+	void targetsListLeaf(const Session& maike,DataSink& sink);
 
-	void targetsListExternal(const Session& maike,TextWriter& writer);
+	void targetsListExternal(const Session& maike,DataSink& sink);
 
 	void targetCompile(Session& maike,const char* target_name);
 	void targetsCompile(Session& maike);
@@ -41,13 +40,16 @@ namespace Maike
 		,const char* target_name);
 	void targetsDump(const Session& maike,ResourceObject& target);
 
-	void targetsDumpTSVHeader(TextWriter& writer);
-	void targetDumpTSV(const Session& maike,TextWriter& writer
+	void targetsDumpTSVHeader(DataSink& sink);
+	void targetDumpTSV(const Session& maike,DataSink& sink
 		,const char* target_name);
-	void targetsDumpTSV(const Session& maike,TextWriter& writer);
+	void targetsDumpTSV(const Session& maike,DataSink& sink);
 
 	void graphDump(const Session& maike,GraphEdgeWriter& writer);
 	void graphDump(const Session& maike,GraphEdgeWriter& writer
+		,const char* target_start,uint8_t* targets_visited,size_t id_min);
+
+	void graphInvDump(const Session& maike,GraphEdgeWriter& writer
 		,const char* target_start,uint8_t* targets_visited,size_t id_min);
 	}
 

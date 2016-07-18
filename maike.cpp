@@ -24,10 +24,12 @@
 using namespace Maike;
 
 
-void Maike::versionPrint(TextWriter& writer)
+void Maike::versionPrint(DataSink& sink)
 	{
-	writer.write("Maike version ").write(Info::VERSION)
-		.write("\nThis Maike was compiled on ").write(Info::TIMESTAMP).write("\n");
+	WriteBuffer wb(sink);
+	wb.write("Maike version ").write(Info::VERSION)
+		.write("\nThis Maike was compiled on ").write(Info::TIMESTAMP)
+		.write("\n");
 	}
 
 
@@ -59,24 +61,25 @@ namespace
 	class TargetsListAll:public DependencyGraph::TargetProcessorConst
 		{
 		public:
-			TargetsListAll(TextWriter& writer):r_writer(writer)
+			TargetsListAll(WriteBuffer& wb):r_wb(wb)
 				{}
 
 			int operator()(const DependencyGraph& graph,const Target& target)
 				{
-				r_writer.write(" * ").write(target.nameGet()).write("\n");
+				r_wb.write(" * ").write(target.nameGet()).write("\n");
 				return 0;
 				}
 		private:
-			TextWriter& r_writer;
+			WriteBuffer& r_wb;
 		};
 	}
 
-void Maike::targetsListAll(const Session& maike,TextWriter& writer)
+void Maike::targetsListAll(const Session& maike,DataSink& sink)
 	{
-	writer.write("All targets\n")
+	WriteBuffer wb(sink);
+	wb.write("All targets\n")
 		.write("===========\n");
-	maike.targetsProcess(TargetsListAll(writer));
+	maike.targetsProcess(TargetsListAll(wb));
 	}
 
 
@@ -86,25 +89,27 @@ namespace
 	class TargetsListLeaf:public DependencyGraph::TargetProcessorConst
 		{
 		public:
-			TargetsListLeaf(TextWriter& writer):r_writer(writer)
+			TargetsListLeaf(WriteBuffer& wb):r_wb(wb)
 				{}
 
 			int operator()(const DependencyGraph& graph,const Target& target)
 				{
-				if(target.childCounterGet()==0)
-					{r_writer.write(" * ").write(target.nameGet()).write("\n");}
+				auto x=target.dependenciesInverseGet();
+				if(x.second - x.first==0)
+					{r_wb.write(" * ").write(target.nameGet()).write("\n");}
 				return 0;
 				}
 		private:
-			TextWriter& r_writer;
+			WriteBuffer& r_wb;
 		};
 	}
 
-void Maike::targetsListLeaf(const Session& maike,TextWriter& writer)
+void Maike::targetsListLeaf(const Session& maike,DataSink& sink)
 	{
-	writer.write("Leaf targets\n")
+	WriteBuffer wb(sink);
+	wb.write("Leaf targets\n")
 		.write("============\n");
-	maike.targetsProcess(TargetsListLeaf(writer));
+	maike.targetsProcess(TargetsListLeaf(wb));
 	}
 
 
@@ -114,25 +119,26 @@ namespace
 	class TargetsListExternal:public DependencyGraph::TargetProcessorConst
 		{
 		public:
-			TargetsListExternal(TextWriter& writer):r_writer(writer)
+			TargetsListExternal(WriteBuffer& wb):r_wb(wb)
 				{}
 
 			int operator()(const DependencyGraph& graph,const Target& target)
 				{
 				if(dynamic_cast<const TargetPlaceholder*>(&target))
-					{r_writer.write(" * ").write(target.nameGet()).write("\n");}
+					{r_wb.write(" * ").write(target.nameGet()).write("\n");}
 				return 0;
 				}
 		private:
-			TextWriter& r_writer;
+			WriteBuffer& r_wb;
 		};
 	}
 
-void Maike::targetsListExternal(const Session& maike,TextWriter& writer)
+void Maike::targetsListExternal(const Session& maike,DataSink& sink)
 	{
-	writer.write("External dependencies\n")
+	WriteBuffer wb(sink);
+	wb.write("External dependencies\n")
 		.write("=====================\n");
-	maike.targetsProcess(TargetsListExternal(writer));
+	maike.targetsProcess(TargetsListExternal(wb));
 	}
 
 
@@ -222,7 +228,8 @@ namespace
 
 			int operator()(DependencyGraph& graph,Target& target)
 				{
-				if(target.childCounterGet()==0)
+				auto x=target.dependenciesInverseGet();
+				if(x.second - x.first==0)
 					{buildBranch(target,r_target_dir,id_range);}
 				return 0;
 				}
@@ -308,6 +315,37 @@ void Maike::graphDump(const Session& maike,GraphEdgeWriter& writer
 		}
 	}
 
+void Maike::graphInvDump(const Session& maike,GraphEdgeWriter& writer
+	,const char* target_start,uint8_t* targets_visited,size_t id_min)
+	{
+	std::stack<const Target*> nodes;
+	nodes.push(&maike.target(target_start));
+	while(!nodes.empty())
+		{
+		auto node_current=nodes.top();
+		nodes.pop();
+		auto id=node_current->idGet()-id_min;
+		if(targets_visited[id]==0)
+			{
+			auto name_target=node_current->nameGet();
+			auto dep=node_current->dependenciesInverseGet();
+			while(dep.first!=dep.second)
+				{
+				auto name_dep=dep.first->nameGet();
+				if(strcmp(name_dep,".")!=0)
+					{
+					writer.edgeWrite(name_dep,name_target
+						,dep.first->relationGet()==Dependency::Relation::IMPLEMENTATION
+							?"red":"blue");
+					nodes.push(dep.first->target());
+					}
+				++dep.first;
+				}
+			targets_visited[id]=1;
+			}
+		}
+	}
+
 void Maike::targetDump(const Session& maike,ResourceObject& db
 	,const char* target_name)
 	{
@@ -345,25 +383,27 @@ void Maike::targetsDump(const Session& maike,ResourceObject& db)
 
 
 
-void Maike::targetsDumpTSVHeader(TextWriter& writer)
+void Maike::targetsDumpTSVHeader(DataSink& sink)
 	{
-	writer.write("id\t")
+	WriteBuffer wb(sink);
+	wb.write("id\t")
 		.write("name\t")
 		.write("source_name\t")
-		.write("child_count\t")
+		.write("dependency_inv_count\t")
 		.write("dependency_count\t")
 		.write("compilation_time\t")
 		.write("line_count\n");
 	}
 
 
-static void targetDumpTSV(const Target& target,TextWriter& writer)
+static void targetDumpTSV(const Target& target,WriteBuffer& wb)
 	{
 	auto deps=target.dependencies();
-	writer.write(target.idGet()).write("\t")
+	auto deps_inv=target.dependenciesInverseGet();
+	wb.write(target.idGet()).write("\t")
 		.write(target.nameGet()).write("\t")
 		.write(target.sourceNameGet()).write("\t")
-		.write(target.childCounterGet()).write("\t")
+		.write(static_cast<size_t>(deps_inv.second-deps_inv.first)).write("\t")
 		.write(static_cast<size_t>(deps.second-deps.first)).write("\t")
 		.write(target.compilationTimeGet()).write("\t")
 		.write(target.lineCountGet()).write("\n");
@@ -374,26 +414,28 @@ namespace
 	class TargetDumpTSV:public DependencyGraph::TargetProcessorConst
 		{
 		public:
-			TargetDumpTSV(TextWriter& writer):r_writer(writer)
+			TargetDumpTSV(WriteBuffer& wb):r_wb(wb)
 				{}
 
 			int operator()(const DependencyGraph& graph,const Target& target)
 				{
-				::targetDumpTSV(target,r_writer);
+				::targetDumpTSV(target,r_wb);
 				return 0;
 				}
 		private:
-			TextWriter& r_writer;
+			WriteBuffer& r_wb;
 		};
 	}
 
-void Maike::targetsDumpTSV(const Session& maike,TextWriter& writer)
+void Maike::targetsDumpTSV(const Session& maike,DataSink& sink)
 	{
-	maike.targetsProcess(TargetDumpTSV(writer));
+	WriteBuffer wb(sink);
+	maike.targetsProcess(TargetDumpTSV(wb));
 	}
 
-void Maike::targetDumpTSV(const Session& maike,TextWriter& writer,const char* target_name)
+void Maike::targetDumpTSV(const Session& maike,DataSink& sink,const char* target_name)
 	{
-	::targetDumpTSV(maike.target(target_name),writer);
+	WriteBuffer wb(sink);
+	::targetDumpTSV(maike.target(target_name),wb);
 	}
 

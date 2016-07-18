@@ -31,7 +31,8 @@ static void optionsFill(Options::OptionMap& options)
 		"given file, and exit. As defualt, the data is written to `stdout`.",1);
 
 	MAKE_OPTION(options,2,"targets","Only process the listed targets. This "
-		"option reduces the output when using any of the --dump-* options.",2);
+		"option reduces the amount of output when using any of the --dump-* "
+		"options.",2);
 
 	MAKE_OPTION(options,2,"list-leaf-targets","Print all leaf targets to the "
 		"given file and exit. As default, data is written to `stdout`. A leaf "
@@ -47,6 +48,9 @@ static void optionsFill(Options::OptionMap& options)
 
 	MAKE_OPTION(options,3,"dump-graph-dot","Dump the dependnecy graph to a DOT "
 		"file and exit. As default, the data is written to `stdout`.",1);
+
+	MAKE_OPTION(options,3,"dump-graph-inv-dot","Dump an inverted dependnecy graph "
+		"to a DOT file and exit. As default, the data is written to `stdout`.",1);
 
 	MAKE_OPTION(options,3,"dump-database-json","Dump the internal database to a JSON "
 		"file and exit. As default, the data is written to `stdout`.",1);

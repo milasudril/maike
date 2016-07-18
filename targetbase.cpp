@@ -63,6 +63,12 @@ TargetBase& TargetBase::dependencyAdd(Dependency&& dep)
 	return *this;
 	}
 
+TargetBase& TargetBase::dependencyInverseAdd(Dependency&& dep)
+	{
+	m_deps_inverse.push_back(std::move(dep));
+	return *this;
+	}
+
 void TargetBase::compile(Twins<const Dependency*> dependency_list
 	,Twins<const Dependency*> dependency_list_full
 	,const char* target_dir)

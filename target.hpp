@@ -23,24 +23,33 @@ namespace Maike
 			typedef Target Base;
 			static void destroy(Target* target) noexcept
 				{target->destroy();}
-
-			virtual Target& childCounterIncrement() noexcept=0;
-			virtual size_t childCounterGet() const noexcept=0;
 			virtual void compile(Twins<const Dependency*> dependency_list
 				,Twins<const Dependency*> dependency_list_full
 				,const char* target_dir)=0;
+
 			virtual Target& dependencyAdd(Dependency&& dep)=0;
 			virtual Twins<const Dependency*> dependencies() const noexcept=0;
 			virtual Twins<Dependency*> dependencies() noexcept=0;
+
+			virtual Target& dependencyInverseAdd(Dependency&& dep)=0;
+			virtual Twins<const Dependency*> dependenciesInverseGet() const noexcept=0;
+
 			virtual size_t idGet() const noexcept=0;
+
 			virtual const char* nameGet() const noexcept=0;
+
 			virtual const char* sourceNameGet() const noexcept=0;
+
 			virtual const char* inDirGet() const noexcept=0;
+
 			virtual bool upToDate(Twins<const Dependency*> dependency_list
 				,Twins<const Dependency*> dependency_list_full
 				,const char* target_dir) const=0;
+
 			virtual void dump(ResourceObject& target) const=0;
+
 			virtual size_t lineCountGet() const noexcept=0;
+
 			virtual double compilationTimeGet() const noexcept=0;
 
 		protected:
