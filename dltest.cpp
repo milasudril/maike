@@ -1,17 +1,20 @@
 //@	{"targets":[{"name":"dltest","type":"application"}]}
 
-#include "pluginloader.hpp"
+#include "target_hook_registry.hpp"
+#include "systemtargetinfo.hpp"
+#include "filein.hpp"
+#include "resourceobject.hpp"
 #include "errormessage.hpp"
 #include "exceptionhandler.hpp"
-#include "target_hook.hpp"
 
 int main()
 	{
 	try
 		{
-		Maike::PluginLoader cxx("targetcxx");
-		auto function=cxx.entryPointGet<decltype(&Maike_Target_Hook_create)>("Maike_Target_Hook_create");
-		printf("%p\n",function);
+		Maike::SystemTargetInfo targetinfo;
+		Maike::Target_Hook_Registry reg(targetinfo);
+		Maike::ResourceObject rc{Maike::FileIn("maikeconfig-2.json")};
+		reg.configAppend(rc.objectGet("target_hooks"));
 		}
 	catch(const Maike::ErrorMessage& message)
 		{

@@ -37,11 +37,14 @@ namespace Maike
 
 extern "C"
 	{
-	EXPORT Maike::Target_Hook* Maike_Target_Hook_create(
-		 const Maike::ParameterSetDumpable& params
-		,Maike::DataSink& standard_output
+	EXPORT void Maike_Plugin_init(Maike::DataSink& standard_output
 		,Maike::DataSink& standard_error
 		,Maike::ExceptionHandler eh);
+
+	EXPORT void Maike_Plugin_cleanup();
+
+	EXPORT Maike::Target_Hook* Maike_Target_Hook_create(
+		 const Maike::ParameterSetDumpable& params);
 	}
 
 #endif

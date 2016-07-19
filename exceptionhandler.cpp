@@ -21,3 +21,8 @@ void Maike::exceptionHandlerSet(ExceptionHandler eh)
 	{
 	exception_handler(message);
 	}
+
+ExceptionHandler Maike::exceptionHandlerGet()
+	{
+	return exception_handler;
+	}

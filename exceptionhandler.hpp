@@ -18,6 +18,8 @@ namespace Maike
 
 	PRIVATE void exceptionHandlerSet(ExceptionHandler eh);
 	PRIVATE [[noreturn]] void exceptionRaise(const ErrorMessage& message);
+
+	PRIVATE ExceptionHandler exceptionHandlerGet();
 	}
 
 #endif

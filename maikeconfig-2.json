@@ -12,7 +12,8 @@
 ,"target_hooks":
 	[
 		{
-		"soname":"targetcxx"
+		 "plugin":"targetcxx"
+		,"name":"cxxdefault"
 		,"filename_exts":[".cc",".cxx",".cpp",".c++",".hh",".hxx",".hpp",".h++",".h"]
 		,"config":
 			{
@@ -51,7 +52,8 @@
 			}
 		}
 		,{
-		 "soname":"targetpython"
+		 "plugin":"targetpython"
+		,"name":"pythondefault"
 		,"filename_exts":[".py"]
 		,"config":
 			{

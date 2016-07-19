@@ -3,14 +3,14 @@
 //@			,{
 //@			 "targets":
 //@				[{
-//@				 "name":"pluginloader.o","type":"object"
+//@				 "name":"plugin.o","type":"object"
 //@				 ,"dependencies":[{"ref":"dl","rel":"external"}]
 //@				}]
 //@			}
 //@		]
 //@	]
 
-#include "pluginloader.hpp"
+#include "plugin.hpp"
 #include "errormessage.hpp"
 #include "variant.hpp"
 #include "exceptionhandler.hpp"
@@ -43,7 +43,7 @@ static std::string exename()
 	return std::move(ret);
 	}
 
-PluginLoader::PluginLoader(const char* name)
+Plugin::Plugin(const char* name)
 	{
 	if(strchr(name,'/')==nullptr)
 		{m_name=dircat(dirname(exename()),name);}
@@ -58,24 +58,24 @@ PluginLoader::PluginLoader(const char* name)
 		}
 	}
 
-PluginLoader::~PluginLoader()
+Plugin::~Plugin()
 	{
 	if(m_handle!=NULL)
 		{dlclose(m_handle);}
 	}
 
-PluginLoader::PluginLoader(PluginLoader&& obj) noexcept:
+Plugin::Plugin(Plugin&& obj) noexcept:
 	m_name(obj.m_name),m_handle(obj.m_handle)
 	{obj.m_handle=NULL;}
 
-PluginLoader& PluginLoader::operator=(PluginLoader&& obj) noexcept
+Plugin& Plugin::operator=(Plugin&& obj) noexcept
 	{
 	std::swap(m_handle,obj.m_handle);
 	std::swap(m_name,obj.m_name);
 	return *this;
 	}
 
-PluginLoader::Function PluginLoader::functionGet(const char* name) const
+Plugin::Function Plugin::functionGet(const char* name) const
 	{
 	auto ret=dlsym(m_handle,name);
 	if(ret==NULL)
@@ -85,3 +85,6 @@ PluginLoader::Function PluginLoader::functionGet(const char* name) const
 		}
 	return reinterpret_cast<Function>(ret);
 	}
+
+bool Plugin::dead() const noexcept
+	{return m_handle==NULL;}

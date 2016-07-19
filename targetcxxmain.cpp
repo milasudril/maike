@@ -17,13 +17,18 @@
 
 using namespace Maike;
 
-Target_Hook* Maike_Target_Hook_create(const ParameterSetDumpable& params
-	,DataSink& standard_output
-	,DataSink& standard_error
+void Maike_Plugin_init(DataSink& standard_output,DataSink& standard_error
 	,ExceptionHandler eh)
 	{
 	exceptionHandlerSet(eh);
 	StdStream::outputSet(standard_output);
 	StdStream::errorSet(standard_error);
+	}
+
+void Maike_Plugin_cleanup()
+	{}
+
+Target_Hook* Maike_Target_Hook_create(const ParameterSetDumpable& params)
+	{
 	return TargetCxxHook::create(params);
 	}
