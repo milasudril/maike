@@ -39,6 +39,7 @@ extern "C"
 	{
 	EXPORT Maike::Target_Hook* Maike_Target_Hook_create(
 		 const Maike::ParameterSetDumpable& params
+		,Maike::DataSink& standard_output
 		,Maike::DataSink& standard_error
 		,Maike::ExceptionHandler eh);
 	}

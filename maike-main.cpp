@@ -45,7 +45,7 @@ static void configfilesLoad(Session& maike,const std::vector<std::string>* files
 		try
 			{
 			FileIn source("maikeconfig.json");
-			configAppendDefault(maike,source);
+			configAppend(maike,source);
 			}
 		catch(...)
 			{configAppendDefault(maike);}
@@ -56,7 +56,7 @@ static void configfilesLoad(Session& maike,const std::vector<std::string>* files
 	while(ptr!=ptr_end)
 		{
 		FileIn source(ptr->c_str());
-		configAppendDefault(maike,source);
+		configAppend(maike,source);
 		++ptr;
 		}
 	}

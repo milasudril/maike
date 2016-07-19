@@ -8,14 +8,13 @@
 #include "dependency.hpp"
 #include "session.hpp"
 #include "stringkey.hpp"
-
 #include "writebuffer.hpp"
 #include "resourceobject.hpp"
 #include "graphedgewriter.hpp"
-
 #include "errormessage.hpp"
 #include "variant.hpp"
 #include "exceptionhandler.hpp"
+#include "stdstream.hpp"
 
 #include <vector>
 #include <stack>
@@ -32,6 +31,22 @@ void Maike::versionPrint(DataSink& sink)
 		.write("\n");
 	}
 
+void Maike::init(ExceptionHandler eh)
+	{exceptionHandlerSet(eh);}
+
+void Maike::init(DataSink& standard_output,DataSink& standard_error)
+	{
+	StdStream::outputSet(standard_output);
+	StdStream::errorSet(standard_error);
+	}
+
+void Maike::init(DataSink& standard_output,DataSink& standard_error
+	,ExceptionHandler eh)
+	{
+	init(eh);
+	init(standard_output,standard_error);
+	}
+
 
 
 void Maike::configDump(const Session& maike,DataSink& sink)
@@ -43,7 +58,7 @@ void Maike::configDump(const Session& maike,DataSink& sink)
 
 
 
-void Maike::configAppendDefault(Session& maike,DataSource& source)
+void Maike::configAppend(Session& maike,DataSource& source)
 	{
 	ResourceObject obj(source);
 	maike.configAppend(obj);

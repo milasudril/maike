@@ -13,7 +13,8 @@
 #include "variant.hpp"
 #include "exceptionhandler.hpp"
 #include "parametersetmapfixed.hpp"
-#include <cstdio>
+#include "stdstream.hpp"
+#include "writebuffer.hpp"
 
 using namespace Maike;
 
@@ -27,14 +28,17 @@ namespace
 
 			void operator()()
 				{
+				WriteBuffer wb(StdStream::error());
 				try
 					{
 					ReadBuffer rb(*r_src);
 					while(!rb.eof())
-						{fputc(rb.byteRead(),stderr);}
+						{
+						wb.write(rb.byteRead());
+						}
 					}
 				catch(const ErrorMessage& message)
-					{fprintf(stderr,"Error: %s\n",message.messageGet());}
+					{wb.write("Error: ").write(message.messageGet());}
 				}
 
 		private:
@@ -230,8 +234,9 @@ void TargetCxxCompiler::execute(const Command& cmd,const char* source
 	auto compiler=cmd.execute(Pipe::REDIRECT_STDERR,{paramset, paramset + 1 });
 	auto stream=compiler.stderrCapture();
 	ReadBuffer rb(*stream.get());
+	WriteBuffer wb(StdStream::error());
 	while(!rb.eof())
-		{fputc(rb.byteRead(),stderr);}
+		{wb.write(rb.byteRead());}
 	auto res=compiler.exitStatusGet();
 	if(res!=0)
 		{

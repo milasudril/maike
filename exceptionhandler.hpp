@@ -12,7 +12,7 @@ namespace Maike
 	{
 	class ErrorMessage;
 
-	[[noreturn]] void exceptionHandlerDefault(const ErrorMessage& message);
+	PRIVATE [[noreturn]] void exceptionHandlerDefault(const ErrorMessage& message);
 
 	typedef __attribute__((__noreturn__)) decltype(&exceptionHandlerDefault) ExceptionHandler;
 

@@ -6,6 +6,7 @@
 #ifndef MAIKE_MAIKE_HPP
 #define MAIKE_MAIKE_HPP
 
+#include "exceptionhandler.hpp"
 #include <cstddef>
 #include <cstdint>
 
@@ -21,11 +22,18 @@ namespace Maike
 
 	void versionPrint(DataSink& sink);
 
+	void init(ExceptionHandler eh);
+
+	void init(DataSink& standard_output,DataSink& standard_error);
+
+	void init(DataSink& standard_output,DataSink& standard_error
+		,ExceptionHandler eh);
+
 	void configDump(const Session& maike,DataSink& sink);
 
 	void configAppendDefault(Session& maike);
 
-	void configAppendDefault(Session& maike,DataSource& source);
+	void configAppend(Session& maike,DataSource& source);
 
 	void targetsListAll(const Session& maike,DataSink& sink);
 

@@ -20,6 +20,9 @@ namespace Maike
 			FileOut& operator=(FileOut&& file);
 			explicit FileOut(const char* filename);
 			FileOut();
+
+			enum class StdStream:unsigned int{OUTPUT,ERROR};
+			FileOut(StdStream stream);
 			~FileOut() noexcept;
 
 			size_t write(const void* buffer,size_t count);

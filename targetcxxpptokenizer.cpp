@@ -1,11 +1,14 @@
 //@	{"targets":[{"name":"targetcxxpptokenizer.o","type":"object"}]}
 
 #include "targetcxxpptokenizer.hpp"
+#include "stdstream.hpp"
+#include "writebuffer.hpp"
 
 using namespace Maike;
 
 bool TargetCxxPPTokenizer::read(Token& token)
 	{
+	WriteBuffer wb(StdStream::error());
 	if(m_reader.eof())
 		{
 		return 0;
@@ -83,8 +86,7 @@ bool TargetCxxPPTokenizer::read(Token& token)
 					{
 					case '\r':
 					case '\n':
-					//	logWrite(Log::MessageType::WARNING,"#0;: Newline after ##"
-						//	,{m_reader.nameGet()});
+						wb.write(m_reader.nameGet()).write(": Newline afer #\n");
 						state=State::NEWLINE;
 						break;
 
@@ -152,8 +154,7 @@ bool TargetCxxPPTokenizer::read(Token& token)
 
 					case '\r':
 					case '\n':
-					//	logWrite(Log::MessageType::WARNING,"#0;: Newline in string"
-						//	,{m_reader.nameGet()});
+						wb.write(m_reader.nameGet()).write(": Newline in string\n");
 						state=State::NEWLINE;
 						goto done;
 
@@ -171,8 +172,7 @@ bool TargetCxxPPTokenizer::read(Token& token)
 
 					case '\r':
 					case '\n':
-					//	logWrite(Log::MessageType::WARNING,"#0;: Newline in string"
-						//	,{m_reader.nameGet()});
+						wb.write(m_reader.nameGet()).write(": Newline in string\n");
 						state=State::NEWLINE;
 						goto done;
 

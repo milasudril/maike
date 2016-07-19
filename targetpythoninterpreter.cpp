@@ -9,9 +9,9 @@
 #include "exceptionhandler.hpp"
 #include "thread.hpp"
 #include "parametersetdumpable.hpp"
-
+#include "stdstream.hpp"
 #include "writebuffer.hpp"
-#include <cstdio>
+
 
 using namespace Maike;
 
@@ -32,14 +32,17 @@ namespace
 
 			void operator()()
 				{
+				WriteBuffer wb(StdStream::error());
 				try
 					{
 					ReadBuffer rb(*r_src);
 					while(!rb.eof())
-						{fputc(rb.byteRead(),stderr);}
+						{
+						wb.write(rb.byteRead());
+						}
 					}
 				catch(const ErrorMessage& message)
-					{fprintf(stderr,"Error: %s\n",message.messageGet());}
+					{wb.write("Error: ").write(message.messageGet());}
 				}
 
 		private:

@@ -9,6 +9,8 @@
 #include "targetcxxcompiler.hpp"
 #include "fileutils.hpp"
 #include "pathutils.hpp"
+#include "stdstream.hpp"
+#include "writebuffer.hpp"
 #include <algorithm>
 
 using namespace Maike;
@@ -147,7 +149,8 @@ void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 		case Type::INCLUDE:
 			break;
 		default:
-			printf("%s not handled\n",name_full.c_str());
+			WriteBuffer(StdStream::error()).write(name_full.c_str())
+				.write(": Target not handled\n");
 		}
 	}
 

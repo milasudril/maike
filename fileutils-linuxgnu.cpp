@@ -14,6 +14,8 @@
 #include "variant.hpp"
 #include "exceptionhandler.hpp"
 #include "strerror.hpp"
+#include "stdstream.hpp"
+#include "writebuffer.hpp"
 
 #include <unistd.h>
 #include <fcntl.h>
@@ -28,6 +30,27 @@
 #include <tuple>
 
 using namespace Maike;
+
+static WriteBuffer& escape(WriteBuffer& wb,const char* str)
+	{
+	wb.write(static_cast<uint8_t>('\''));
+	while(*str!='\0')
+		{
+		auto ch_in=*str;
+		switch(ch_in)
+			{
+			case '\'':
+				wb.write("'\\''");
+				break;
+			default:
+				wb.write(static_cast<uint8_t>(ch_in));
+				break;
+			}
+		++str;
+		}
+	wb.write(static_cast<uint8_t>('\''));
+	return wb;
+	}
 
 bool FileUtils::newer(const char* file_a,const char* file_b)
 	{
@@ -61,6 +84,10 @@ bool FileUtils::newer(const char* file_a,const char* file_b)
 
 void FileUtils::mkdir(const char* name)
 	{
+	WriteBuffer wb(StdStream::output());
+	wb.write("mkdir ");
+	escape(wb,name);
+	wb.write(static_cast<uint8_t>('\n'));
 	if( ::mkdir(name, S_IRWXU )==-1 )
 		{
 		exceptionRaise(ErrorMessage("It was not possible to create a directory with name #0;. #1;"
@@ -115,6 +142,12 @@ namespace
 
 void FileUtils::copy(const char* source,const char* dest)
 	{
+	WriteBuffer wb(StdStream::output());
+	wb.write("cp ");
+	escape(wb,source);
+	escape(wb,dest);
+	wb.write(static_cast<uint8_t>('\n'));
+
 	FileDescriptor source_fd(source,O_RDONLY);
 	FileDescriptor dest_fd(dest,O_CREAT|O_WRONLY,S_IRUSR|S_IWUSR);
 

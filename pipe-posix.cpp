@@ -10,6 +10,8 @@
 #include "variant.hpp"
 #include "exceptionhandler.hpp"
 #include "strerror.hpp"
+#include "stdstream.hpp"
+#include "writebuffer.hpp"
 
 #include <errno.h>
 #include <unistd.h>
@@ -20,8 +22,6 @@
 #include <cstdlib>
 
 #include <vector>
-
-#include <cstdio>
 
 using namespace Maike;
 
@@ -141,19 +141,43 @@ namespace
 		};
 	}
 
+static WriteBuffer& escape(WriteBuffer& wb,const char* str)
+	{
+	wb.write(static_cast<uint8_t>('\''));
+	while(*str!='\0')
+		{
+		auto ch_in=*str;
+		switch(ch_in)
+			{
+			case '\'':
+				wb.write("'\\''");
+				break;
+			default:
+				wb.write(static_cast<uint8_t>(ch_in));
+				break;
+			}
+		++str;
+		}
+	wb.write(static_cast<uint8_t>('\''));
+	return wb;
+	}
+
 static std::vector<const char*> commandLineBuild(const char* command
 	,Twins<const char* const*> args)
 	{
+
 	std::vector<const char*> args_out;
 	args_out.push_back(command);
-	fprintf(stderr,"Pipe: %s",command);
+	WriteBuffer cmd_writer(StdStream::output());
+	escape(cmd_writer,command);
 	while(args.first!=args.second)
 		{
-		fprintf(stderr," %s",*args.first);
+		cmd_writer.write(static_cast<uint8_t>(' '));
+		escape(cmd_writer,*args.first);
 		args_out.push_back(*args.first);
 		++args.first;
 		}
-	fprintf(stderr,"\n");
+	cmd_writer.write(static_cast<uint8_t>('\n'));
 	args_out.push_back(nullptr);
 	return std::move(args_out);
 	}

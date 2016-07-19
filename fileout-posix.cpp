@@ -41,9 +41,23 @@ FileOut& FileOut::operator=(FileOut&& file)
 FileOut::FileOut():m_handle(STDOUT_FILENO)
 	{}
 
+
+FileOut::FileOut(StdStream stream)
+	{
+	switch(stream)
+		{
+		case StdStream::OUTPUT:
+			m_handle=STDOUT_FILENO;
+			break;
+		case StdStream::ERROR:
+			m_handle=STDERR_FILENO;
+			break;
+		}
+	}
+
 FileOut::~FileOut() noexcept
 	{
-	if(m_handle!=STDOUT_FILENO && m_handle!=-1)
+	if(m_handle!=STDOUT_FILENO && m_handle!=STDERR_FILENO && m_handle!=-1)
 		{
 		fsync(static_cast<int>(m_handle));
 		close(static_cast<int>(m_handle));
