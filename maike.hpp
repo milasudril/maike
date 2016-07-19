@@ -9,6 +9,7 @@
 #include "exceptionhandler.hpp"
 #include <cstddef>
 #include <cstdint>
+#include <memory>
 
 namespace Maike
 	{
@@ -20,44 +21,69 @@ namespace Maike
 
 	template<class T> class Twins;
 
-	void versionPrint(DataSink& sink);
+	EXPORT Session* sessionCreateRaw();
 
-	void init(ExceptionHandler eh);
+	EXPORT void sessionDestroy(Session* maike);
 
-	void init(DataSink& standard_output,DataSink& standard_error);
+	PRIVATE inline std::unique_ptr<Session,decltype(&sessionDestroy)>
+	sessionCreate()
+		{
+		return {sessionCreateRaw(),sessionDestroy};
+		}
 
-	void init(DataSink& standard_output,DataSink& standard_error
+
+	EXPORT void versionPrint(DataSink& sink);
+
+	EXPORT void init(ExceptionHandler eh);
+
+	EXPORT void init(DataSink& standard_output,DataSink& standard_error);
+
+	EXPORT void init(DataSink& standard_output,DataSink& standard_error
 		,ExceptionHandler eh);
 
-	void configDump(const Session& maike,DataSink& sink);
 
-	void configAppendDefault(Session& maike);
 
-	void configAppend(Session& maike,DataSource& source);
+	EXPORT void configDump(const Session& maike,DataSink& sink);
 
-	void targetsListAll(const Session& maike,DataSink& sink);
+	EXPORT void configDump(const Session& maike,ResourceObject& obj);
 
-	void targetsListLeaf(const Session& maike,DataSink& sink);
+	EXPORT void configAppendDefault(Session& maike);
 
-	void targetsListExternal(const Session& maike,DataSink& sink);
+	EXPORT void configAppend(Session& maike,DataSource& source);
 
-	void targetCompile(Session& maike,const char* target_name);
-	void targetsCompile(Session& maike);
+	EXPORT void configAppend(Session& maike,const ResourceObject& obj);
 
-	void targetDump(const Session& maike,ResourceObject& target
+	EXPORT void configClear(Session& maike);
+
+	EXPORT void sysvarsLoad(Session& maike);
+
+	EXPORT Twins<size_t> targetIdRangeGet(Session& maike);
+
+
+
+	EXPORT void targetsListAll(const Session& maike,DataSink& sink);
+
+	EXPORT void targetsListLeaf(const Session& maike,DataSink& sink);
+
+	EXPORT void targetsListExternal(const Session& maike,DataSink& sink);
+
+	EXPORT void targetCompile(Session& maike,const char* target_name);
+	EXPORT void targetsCompile(Session& maike);
+
+	EXPORT void targetDump(const Session& maike,ResourceObject& target
 		,const char* target_name);
-	void targetsDump(const Session& maike,ResourceObject& target);
+	EXPORT void targetsDump(const Session& maike,ResourceObject& target);
 
-	void targetsDumpTSVHeader(DataSink& sink);
-	void targetDumpTSV(const Session& maike,DataSink& sink
+	EXPORT void targetsDumpTSVHeader(DataSink& sink);
+	EXPORT void targetDumpTSV(const Session& maike,DataSink& sink
 		,const char* target_name);
-	void targetsDumpTSV(const Session& maike,DataSink& sink);
+	EXPORT void targetsDumpTSV(const Session& maike,DataSink& sink);
 
-	void graphDump(const Session& maike,GraphEdgeWriter& writer);
-	void graphDump(const Session& maike,GraphEdgeWriter& writer
+	EXPORT void graphDump(const Session& maike,GraphEdgeWriter& writer);
+	EXPORT void graphDump(const Session& maike,GraphEdgeWriter& writer
 		,const char* target_start,uint8_t* targets_visited,size_t id_min);
 
-	void graphInvDump(const Session& maike,GraphEdgeWriter& writer
+	EXPORT void graphInvDump(const Session& maike,GraphEdgeWriter& writer
 		,const char* target_start,uint8_t* targets_visited,size_t id_min);
 	}
 

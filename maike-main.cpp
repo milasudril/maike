@@ -9,11 +9,11 @@
 #include "fileout.hpp"
 #include "filein.hpp"
 #include "resourceobject.hpp"
-#include "session.hpp"
 #include "maike.hpp"
 #include "writebuffer.hpp"
 #include "graphedgewriterdot.hpp"
 #include <cstdio>
+#include <memory>
 
 using namespace Maike;
 
@@ -120,7 +120,7 @@ static int graphDumpDOT(Maike::Session& maike
 		return 0;
 		}
 
-	auto id_range=maike.targetIdRangeGet();
+	auto id_range=targetIdRangeGet(maike);
 	std::vector<uint8_t> visited((id_range.second-id_range.first) + 1,0);
 	auto ptr=targets->data();
 	auto ptr_end=ptr+targets->size();
@@ -145,7 +145,7 @@ static int graphInvDumpDOT(Maike::Session& maike
 		return 0;
 		}
 
-	auto id_range=maike.targetIdRangeGet();
+	auto id_range=targetIdRangeGet(maike);
 	std::vector<uint8_t> visited((id_range.second-id_range.first) + 1,0);
 	auto ptr=targets->data();
 	auto ptr_end=ptr+targets->size();
@@ -206,7 +206,9 @@ int main(int argc,char** argv)
 	{
 	try
 		{
-		Session maike;
+		auto maike_ptr=sessionCreate();
+		auto& maike=*maike_ptr.get();
+
 		Options opts{Twins<const char* const*>(argv,argv+argc)};
 
 		auto x=opts.get<Stringkey("help")>();
@@ -218,7 +220,7 @@ int main(int argc,char** argv)
 			{return versionPrint(*x);}
 
 		if(opts.get<Stringkey("no-sysvars")>()==nullptr)
-			{maike.sysvarsLoad();}
+			{sysvarsLoad(maike);}
 
 		configfilesLoad(maike,opts.get<Stringkey("configfiles")>());
 

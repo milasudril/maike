@@ -6,6 +6,7 @@
 #include "exceptionhandler.hpp"
 #include "errormessage.hpp"
 #include "variant.hpp"
+#include "pathutils.hpp"
 #include <cstring>
 
 using namespace Maike;
@@ -184,7 +185,7 @@ Session& Session::scanFile(const char* filename)
 			{m_graph.targetsRemove(ByParentDirectory(t->sourceNameGet()));}
 		}
 	m_graph.targetsRemove(BySourceName(filename));
-	m_spider.scanFile(filename,"").run();
+	m_spider.scanFile(filename,dirname(filename).c_str()).run();
 	m_graph_dirty=0;
 	return *this;
 	}

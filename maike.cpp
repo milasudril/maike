@@ -48,6 +48,13 @@ void Maike::init(DataSink& standard_output,DataSink& standard_error
 	}
 
 
+Session* Maike::sessionCreateRaw()
+	{return new Session;}
+
+void Maike::sessionDestroy(Session* maike)
+	{delete maike;}
+
+
 
 void Maike::configDump(const Session& maike,DataSink& sink)
 	{
@@ -56,6 +63,8 @@ void Maike::configDump(const Session& maike,DataSink& sink)
 	obj.write(sink);
 	}
 
+void Maike::configDump(const Session& maike,ResourceObject& obj)
+	{maike.configDump(obj);}
 
 
 void Maike::configAppend(Session& maike,DataSource& source)
@@ -64,10 +73,20 @@ void Maike::configAppend(Session& maike,DataSource& source)
 	maike.configAppend(obj);
 	}
 
+void Maike::configAppend(Session& maike,const ResourceObject& obj)
+	{maike.configAppend(obj);}
+
 void Maike::configAppendDefault(Session& maike)
-	{
-	maike.configAppendDefault();
-	}
+	{maike.configAppendDefault();}
+
+void Maike::configClear(Session& maike)
+	{maike.configClear();}
+
+void Maike::sysvarsLoad(Session& maike)
+	{maike.sysvarsLoad();}
+
+Twins<size_t> Maike::targetIdRangeGet(Session& maike)
+	{return maike.targetIdRangeGet();}
 
 
 

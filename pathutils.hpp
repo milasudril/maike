@@ -2,12 +2,12 @@
 
 #ifndef MAIKE_PATHUTILS_HPP
 #define MAIKE_PATHUTILS_HPP
-
+#include "visibility.hpp"
 #include <string>
 
 namespace Maike
 	{
-	inline std::string directoryNormalize(const char* str)
+	PRIVATE inline std::string directoryNormalize(const char* str)
 		{
 		std::string ret;
 		std::string elem_current;
@@ -41,7 +41,7 @@ namespace Maike
 		return std::move(  ret );
 		}
 
-	inline std::string dirname(const std::string& path)
+	PRIVATE inline std::string dirname(const std::string& path)
 		{
 		auto pos=path.find_last_of('/');
 		if(pos==std::string::npos)
@@ -49,7 +49,7 @@ namespace Maike
 		return directoryNormalize(path.substr(0,pos).c_str());
 		}
 
-	inline std::string dircat(const char* a,const char* b)
+	PRIVATE inline std::string dircat(const char* a,const char* b)
 		{
 		std::string ret(a);
 		ret+='/';
@@ -57,7 +57,7 @@ namespace Maike
 		return directoryNormalize(ret.c_str());
 		}
 
-	inline std::string dircat(const char* a,const std::string& b)
+	PRIVATE inline std::string dircat(const char* a,const std::string& b)
 		{
 		std::string ret(a);
 		ret+='/';
@@ -65,7 +65,7 @@ namespace Maike
 		return directoryNormalize(ret.c_str());
 		}
 
-	inline std::string dircat(const std::string& a,const char* b)
+	PRIVATE inline std::string dircat(const std::string& a,const char* b)
 		{
 		std::string ret(a);
 		ret+='/';
