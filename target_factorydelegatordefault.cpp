@@ -86,7 +86,7 @@ static void targetsCreate(const ResourceObject& targets,const char* name_src
 	for(decltype(N) k=0;k<N;++k)
 		{
 		auto target=targets.objectGet(k);
-		if(target.objectExists("source_name" ) || name_src==nullptr)
+		if(target.objectExists("source_name") || name_src==nullptr)
 			{cb(delegator,delegator.targetCreate(target,in_dir,0));}
 		else
 			{cb(delegator,delegator.targetCreate(target,name_src,in_dir,line_count));}
@@ -115,7 +115,7 @@ void Target_FactoryDelegatorDefault::targetsCreateImpl(const ResourceObject& obj
 			if(case_obj.typeGet()==ResourceObject::Type::ARRAY)
 				{
 				if(case_obj.objectCountGet()!=2)
-					{exceptionRaise(ErrorMessage("A condition must have only a condition and a target definition.",{}));}
+					{exceptionRaise(ErrorMessage("#0;: A condition must have only a condition and a target definition.",{name_src}));}
 
 				auto expression=static_cast<const char*>( case_obj.objectGet(static_cast<size_t>(0)) );
 				if(static_cast<int64_t>( r_eval.evaluate(expression) ))
