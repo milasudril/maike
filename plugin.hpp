@@ -24,6 +24,12 @@ namespace Maike
 
 			bool dead() const noexcept;
 
+			const char* nameFullGet() const noexcept
+				{return m_name_full.c_str();}
+
+			const char* nameGet() const noexcept
+				{return m_name.c_str();}
+
 		protected:
 			template<class T>
 			T entryPointGet(const char* name) const
@@ -34,6 +40,7 @@ namespace Maike
 
 			Function functionGet(const char* name) const;
 
+			std::string m_name_full;
 			std::string m_name;
 			void* m_handle;
 		};

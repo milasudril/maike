@@ -1,5 +1,6 @@
 //@	[
-//@		["and(linux,not(less_than(gnu,version('2.3.4'))))"
+//@		[
+//@		"and(linux,not(less_than(gnu,version('2.3.4'))))"
 //@			,{
 //@			 "targets":
 //@				[{
@@ -43,14 +44,14 @@ static std::string exename()
 	return std::move(ret);
 	}
 
-Plugin::Plugin(const char* name)
+Plugin::Plugin(const char* name):m_name(name)
 	{
 	if(strchr(name,'/')==nullptr)
-		{m_name=dircat(dirname(exename()),name);}
+		{m_name_full=dircat(dirname(exename()),name);}
 	else
-		{m_name=name;}
-	m_name+=".so";
-	m_handle=dlopen(m_name.c_str(),RTLD_NOW|RTLD_DEEPBIND);
+		{m_name_full=name;}
+	m_name_full+=".so";
+	m_handle=dlopen(m_name_full.c_str(),RTLD_NOW|RTLD_DEEPBIND);
 	if(m_handle==NULL)
 		{
 		exceptionRaise(ErrorMessage("It was not possible to load #0;. #1;"

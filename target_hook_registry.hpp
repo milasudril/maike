@@ -8,6 +8,7 @@
 
 #include "visibility.hpp"
 #include "handle.hpp"
+#include "target_hook.hpp"
 #include <map>
 #include <vector>
 
@@ -16,7 +17,6 @@ namespace Maike
 	class ResourceObject;
 	class Target_Hook_Plugin;
 	class Stringkey;
-	class Target_Hook;
 	class ParameterSetDumpable;
 
 	class PRIVATE Target_Hook_Registry
@@ -30,12 +30,12 @@ namespace Maike
 			void configDump(ResourceObject& targethooks) const;
 			void configClear();
 
-			class PRIVATE EnumCallback
+			class PRIVATE EnumCallbackFilenameExt
 				{
 				public:
 					virtual void operator()(const Stringkey& filename_ext,const Target_Hook& hook)=0;
 				};
-			void enumerate(EnumCallback&& callback) const;
+			void enumerate(EnumCallbackFilenameExt&& callback) const;
 
 		private:
 			const ParameterSetDumpable& r_sysvars;
@@ -43,9 +43,17 @@ namespace Maike
 			static Target_Hook_Plugin& pluginLoad(const char* name);
 
 			static std::map<Stringkey,Target_Hook_Plugin> s_plugins;
-			std::map<Stringkey, Handle<Target_Hook> > m_hooks;
+			struct PRIVATE HookInfo
+				{
+				std::string plugin;
+				std::string name;
+				Handle<Target_Hook> hook;
+				};
+
+			Target_Hook& hookCreate(Target_Hook_Plugin& plug,const char* name);
+
+			std::map<Stringkey, HookInfo > m_hooks;
 			std::map<Stringkey, const Target_Hook* > r_filenameext_hook;
-			std::map<Stringkey,std::string> m_stringmap;
 		};
 	}
 

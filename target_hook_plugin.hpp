@@ -29,6 +29,9 @@ namespace Maike
 			Handle<Target_Hook> create(const Maike::ParameterSetDumpable& params)
 				{return Handle<Target_Hook>( m_hook_create(params) );}
 
+			using Plugin::nameGet;
+			using Plugin::nameFullGet;
+
 		private:
 			decltype(&Maike_Plugin_cleanup) m_cleanup;
 			decltype(&Maike_Plugin_init) m_init;
