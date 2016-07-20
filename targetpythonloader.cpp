@@ -157,7 +157,7 @@ void TargetPythonLoader::targetsLoad(const char* name_src,const char* in_dir
 	{
 	FileIn source(name_src);
 	TagFilter filter(source);
-	ResourceObject rc{TagFilter(source)};
+	ResourceObject rc{filter};
 	factory.targetsCreate(rc,name_src,in_dir,filter.linesGet()
 		,TargetCreateCallback(name_src,in_dir,spider,graph));
 	}
