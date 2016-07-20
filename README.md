@@ -8,20 +8,24 @@ The source for the latest Maike can be obtained by cloning the git repository.
 
 	git clone https://github.com/milasudril/maike
 
-The latest release version can be found at [the github release page][1]. The former may contain features not present in the later, while the later should be used if there is no sufficiently recent version of Maike installed.
+The latest release version can be found at [the github release page][1]. The former may contain features not present in the later and may require an up-to-date version of Maike in order to be compiled. The latter alternative always contains a build script that can be used for bootstrapping.
 
-Before compiling maike, make sure that appropriate `libjansson` development files are available on the system. If Maike is not available, run the script `build.sh` within the source directory. It may happen that it is needed to change the permission of that file first.
+Before compiling maike, make sure that appropriate `libjansson` development files are available on the system. If Maike is not available, or the installed version is to old, run the script `build.sh` within the source directory. It may happen that it is needed to change the permission of that file first.
 
 	chmod u+x build.sh
 	./build.sh
 
-If Maike is available, just run your installed version of Maike from the source directory.
+Otherwise, just run your installed version of Maike from the source directory.
 
 	maike
 
 If the compilation succeeded, the maike executable should be present in the newly created `__targets` directory. In order to use it, copy it to a directory mentioned in your `PATH` variable. For example
 
 	cp __targets/maike ~/bin/maike
+
+It is *very* likely that you need the additional target hooks. These reside inside two shared objects (dll:s)
+
+	cp __targets/*.so ~/bin/maike
 
 ## Creating a Maike project
 
