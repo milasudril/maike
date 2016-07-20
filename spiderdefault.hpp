@@ -33,6 +33,8 @@ namespace Maike
 			SpiderDefault& loaderRegister(const Stringkey& filename_ext
 				,const Target_Loader& loader);
 
+			void loadersUnregister() noexcept;
+
 		private:
 			std::map<Stringkey,const Target_Loader*> m_r_loaders;
 			Target_FactoryDelegator& r_target_creator;

@@ -43,6 +43,8 @@ namespace Maike
 
 	PRIVATE inline std::string dirname(const std::string& path)
 		{
+		if(path==".")
+			{return "";}
 		auto pos=path.find_last_of('/');
 		if(pos==std::string::npos)
 			{return std::string(".");}

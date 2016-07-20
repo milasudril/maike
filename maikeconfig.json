@@ -3,79 +3,66 @@
 	{
 	"target_directory":"__targets"
 	}
-
-,"session":
-	{
-	"source_files":["."]
-	,"target_hook_setup":
-		{
-		 "targetcxx":"cxxoptions"
-		,"targetpython":"pythonoptions"
-		}
-	,"target_hook_map":
-		{
-		 ".cc":"targetcxx"
-		,".cxx":"targetcxx"
-		,".cpp":"targetcxx"
-		,".c++":"targetcxx"
-		,".hh":"targetcxx"
-		,".hxx":"targetcxx"
-		,".hpp":"targetcxx"
-		,".h++":"targetcxx"
-		,".h":"targetcxx"
-		,".py":"targetpython"
-		}
-	}
-
+,"source_files":["."]
 ,"directoryoptions":
 	{
-	 "paths_reject":[".git",".codelite",".clang","test","Debug","Release"
-		,"__targets"]
+	 "paths_reject":[".git",".codelite",".clang","test","Debug","Release","__targets"]
 	,"recursive":1
 	}
-
-,"cxxoptions":
-	{
-	 "includedir":[]
-	,"includedir_noscan":[]
-	,"libdir":[]
-	,"cxxversion_min":201103
-	,"stdprefix":"-std="
-	,"includedir_format":"-I^"
-	,"libdir_format":"-L^"
-	,"libext_format":"-l^"
-	,"libint_format":"-l:^"
-	,"objcompile":
+,"target_hooks":
+	[
 		{
-		 "name":"g++"
-		,"args":["-c","-g","-fpic","{cxxversion}","-Wall","-Woverflow"
-			,"-Wconversion","-Werror","{includedir}","-o","{target}","{source}"]
+		 "plugin":"targetcxx"
+		,"name":"cxxdefault"
+		,"filename_exts":[".cc",".cxx",".cpp",".c++",".hh",".hxx",".hpp",".h++",".h"]
+		,"config":
+			{
+			"includedir":[]
+			,"includedir_noscan":[]
+			,"libdir":[]
+			,"cxxversion_min":201103
+			,"stdprefix":"-std="
+			,"includedir_format":"-I^"
+			,"libdir_format":"-L^"
+			,"libext_format":"-l^"
+			,"libint_format":"-l:^"
+			,"objcompile":
+				{
+				"name":"g++"
+				,"args":["-c","-g","-fpic","{cxxversion}","-Wall","-Woverflow"
+					,"-Wconversion","-Werror","{includedir}","-o","{target}","{source}"]
+				}
+			,"appcompile":
+				{
+				"name":"g++"
+				,"args":["-g","-fpic","{cxxversion}","-Wall","-Woverflow","-Wconversion"
+					,"-Werror","{includedir}","{libdir}","-o","{target}","{source}","{dependencies}"]
+				}
+			,"dllcompile":
+				{
+				"name":"g++"
+				,"args":["-g","-fpic","{cxxversion}","-Wall","-Woverflow","-Wconversion"
+					,"-Werror","{includedir}","{libdir}","-shared","-o","{target}","{source}","{dependencies}"]
+				}
+			,"versionquery":
+				{
+				"name":"g++"
+				,"args":["-E","-dM","-x","c++","{nullfile}"]
+				}
+			}
 		}
-	,"appcompile":
-		{
-		 "name":"g++"
-		,"args":["-g","-fpic","{cxxversion}","-Wall","-Woverflow","-Wconversion"
-			,"-Werror","{includedir}","{libdir}","-o","{target}","{source}","{dependencies}"]
+		,{
+		 "plugin":"targetpython"
+		,"name":"pythondefault"
+		,"filename_exts":[".py"]
+		,"config":
+			{
+			"command":
+				{
+				"name":"python3"
+				,"args":["--","{script}","{args}"]
+				}
+			}
 		}
-	,"dllcompile":
-		{
-		 "name":"g++"
-		,"args":["-g","-fpic","{cxxversion}","-Wall","-Woverflow","-Wconversion"
-			,"-Werror","{includedir}","{libdir}","-shared","-o","{target}","{source}","{dependencies}"]
-		}
-	,"versionquery":
-		{
-		 "name":"g++"
-		,"args":["-E","-dM","-x","c++","{nullfile}"]
-		}
-	}
-
-,"pythonoptions":
-	{
-	"command":
-		{
-		"name":"python3"
-		,"args":["--","{script}","{args}"]
-		}
-	}
+	]
 }

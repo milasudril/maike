@@ -39,6 +39,8 @@ namespace Maike
 			size_t idGet() noexcept
 				{return r_id_gen.idGet();}
 
+			void factoriesUnregister() noexcept;
+
 		private:
 			void targetsCreateImpl(const ResourceObject& obj,const char* name_src
 				,const char* in_dir,size_t line_count,Callback& cb);

@@ -13,8 +13,7 @@
 #include "idgenerator.hpp"
 #include "spiderdefault.hpp"
 #include "dependencygraphdefault.hpp"
-#include "targetcxxhook.hpp"
-#include "targetpythonhook.hpp"
+#include "target_hook_registry.hpp"
 #include "target_factorydelegatordefault.hpp"
 
 namespace Maike
@@ -34,8 +33,7 @@ namespace Maike
 			void configDump(ResourceObject& maikeconfig) const;
 
 			Session& scanFile(const char* filename);
-			Session& dependenciesClear() noexcept;
-			Session& dependenciesReload();
+			void dependenciesClear() noexcept;
 
 			void targetsProcess(DependencyGraph::TargetProcessor&& proc);
 			void targetsProcess(DependencyGraph::TargetProcessorConst&& proc) const;
@@ -47,16 +45,35 @@ namespace Maike
 		private:
 			SystemTargetInfo m_targetinfo;
 			TargetDirectoryLoader m_dirloader;
-			Handle<TargetCxxHook> m_cxxhook;
-			Handle<TargetPythonHook> m_pythonhook;
+			Target_Hook_Registry m_target_hooks;
 
 			ExpressionEvaluator m_evaluator;
 			IdGenerator<size_t> m_id_gen;
-			Target_FactoryDelegatorDefault m_delegator;
-			mutable DependencyGraphDefault m_graph;
-			mutable bool m_graph_dirty;
-			SpiderDefault m_spider;
 			std::vector<std::string> m_source_files;
+			mutable SpiderDefault m_spider;
+			mutable Target_FactoryDelegatorDefault m_delegator;
+			mutable DependencyGraphDefault m_graph;
+			mutable unsigned int m_dirty_flags;
+
+			static constexpr unsigned int GRAPH_DIRTY=1;
+			static constexpr unsigned int TARGET_HOOKS_DIRTY=2;
+
+			inline bool graphDirty() const noexcept
+				{return m_dirty_flags&GRAPH_DIRTY;}
+			inline void graphDirtySet() const noexcept
+				{m_dirty_flags|=GRAPH_DIRTY;}
+			inline void graphDirtyClear() const noexcept
+				{m_dirty_flags&=~GRAPH_DIRTY;}
+
+			inline bool targetHooksDirty() const noexcept
+				{return m_dirty_flags&TARGET_HOOKS_DIRTY;}
+			inline void targetHooksDirtySet() const noexcept
+				{m_dirty_flags|=TARGET_HOOKS_DIRTY;}
+			inline void targetHooksDirtyClear() const noexcept
+				{m_dirty_flags&=~TARGET_HOOKS_DIRTY;}
+
+			void targetHooksRegister() const;
+			void dependenciesReload() const;
 		};
 	}
 

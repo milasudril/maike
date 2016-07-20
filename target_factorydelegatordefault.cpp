@@ -136,3 +136,8 @@ void Target_FactoryDelegatorDefault::targetsCreateImpl(const ResourceObject& obj
 		}
 	}
 
+void Target_FactoryDelegatorDefault::factoriesUnregister() noexcept
+	{
+	m_r_factories.clear();
+	}
+

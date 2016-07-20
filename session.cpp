@@ -12,27 +12,13 @@
 using namespace Maike;
 
 Session::Session():
-	 m_cxxhook(TargetCxxHook::create(m_targetinfo))
-	,m_pythonhook(TargetPythonHook::create(m_targetinfo))
+	 m_target_hooks(m_targetinfo)
 	,m_evaluator(m_targetinfo)
-	,m_delegator(m_evaluator,m_id_gen)
-	,m_graph(m_id_gen)
 	,m_spider(m_delegator,m_graph)
+	,m_delegator(m_evaluator,m_id_gen)
+	,m_graph(m_id_gen),m_dirty_flags(0)
 	{
-//TODO These things should be configurable as well. Needs to fix the SDK first.
-//See todo_abstractify.txt for classes that may need to be abstract.
-	m_delegator.factoryRegister(Stringkey(".cpp"),m_cxxhook->factoryGet())
-		.factoryRegister(Stringkey(".hpp"),m_cxxhook->factoryGet())
-		.factoryRegister(Stringkey(".h"),m_cxxhook->factoryGet())
-		.factoryRegister(Stringkey(".py"),m_pythonhook->factoryGet());
-
-//TODO These things should be configurable as well. Needs to fix the SDK first.
-//See todo_abstractify.txt for classes that may need to be abstract.
-	m_spider.loaderRegister(Stringkey("."),m_dirloader)
-		.loaderRegister(Stringkey(".cpp"),m_cxxhook->loaderGet())
-		.loaderRegister(Stringkey(".hpp"),m_cxxhook->loaderGet())
-		.loaderRegister(Stringkey(".h"),m_cxxhook->loaderGet())
-		.loaderRegister(Stringkey(".py"),m_pythonhook->loaderGet());
+	configClear();
 	}
 
 Session& Session::configClear()
@@ -40,9 +26,11 @@ Session& Session::configClear()
 	m_targetinfo.clear();
 	m_source_files.clear();
 	m_dirloader.configClear();
-	m_cxxhook->configClear();
-	m_pythonhook->configClear();
-	m_graph_dirty=1;
+	m_spider.loadersUnregister();
+	m_delegator.factoriesUnregister();
+	m_target_hooks.configClear();
+	graphDirtySet();
+	targetHooksDirtySet();
 	return *this;
 	}
 
@@ -52,8 +40,9 @@ Session& Session::configAppendDefault()
 	m_targetinfo.configAppendDefault();
 	m_dirloader.configAppendDefault();
 	m_dirloader.pathReject(static_cast<const char*>(m_targetinfo.variableGet(Stringkey("target_directory"))));
-	m_cxxhook->configAppendDefault();
-	m_pythonhook->configAppendDefault();
+	m_target_hooks.configAppendDefault();
+	graphDirtySet();
+	targetHooksDirtySet();
 	return *this;
 	}
 
@@ -65,17 +54,13 @@ Session& Session::sysvarsLoad()
 
 Session& Session::configAppend(const ResourceObject& maikeconfig)
 	{
-	if(maikeconfig.objectExists("session"))
+	if(maikeconfig.objectExists("source_files"))
 		{
-		auto session=maikeconfig.objectGet("session");
-		if(session.objectExists("source_files"))
+		auto source_files=maikeconfig.objectGet("source_files");
+		auto N_sources=source_files.objectCountGet();
+		for(decltype(N_sources) k=0;k<N_sources;++k)
 			{
-			auto source_files=session.objectGet("source_files");
-			auto N_sources=source_files.objectCountGet();
-			for(decltype(N_sources) k=0;k<N_sources;++k)
-				{
-				sourceFileAppend(static_cast<const char*>(source_files.objectGet(k)));
-				}
+			sourceFileAppend(static_cast<const char*>(source_files.objectGet(k)));
 			}
 		}
 
@@ -88,32 +73,28 @@ Session& Session::configAppend(const ResourceObject& maikeconfig)
 			.pathReject(static_cast<const char*>(m_targetinfo.variableGet(Stringkey("target_directory"))));
 		}
 
-	if(maikeconfig.objectExists("cxxoptions"))
-		{m_cxxhook->configAppend(maikeconfig.objectGet("cxxoptions"));}
+	if(maikeconfig.objectExists("target_hooks"))
+		{
+		m_target_hooks.configAppend(maikeconfig.objectGet("target_hooks"));
+		}
 
-	if(maikeconfig.objectExists("pythonoptions"))
-		{m_pythonhook->configAppend(maikeconfig.objectGet("pythonoptions"));}
-
-	m_graph_dirty=1;
+	graphDirtySet();
+	targetHooksDirtySet();
 	return *this;
 	}
 
 void Session::configDump(ResourceObject& maikeconfig) const
 	{
 		{
-		ResourceObject session(ResourceObject::Type::OBJECT);
+		ResourceObject source_files(ResourceObject::Type::ARRAY);
+		auto ptr=m_source_files.data();
+		auto ptr_end=ptr+m_source_files.size();
+		while(ptr!=ptr_end)
 			{
-			ResourceObject source_files(ResourceObject::Type::ARRAY);
-			auto ptr=m_source_files.data();
-			auto ptr_end=ptr+m_source_files.size();
-			while(ptr!=ptr_end)
-				{
-				source_files.objectAppend(ResourceObject(ptr->c_str()));
-				++ptr;
-				}
-			session.objectSet("source_files",std::move(source_files));
+			source_files.objectAppend(ResourceObject(ptr->c_str()));
+			++ptr;
 			}
-		maikeconfig.objectSet("session",std::move(session));
+		maikeconfig.objectSet("source_files",std::move(source_files));
 		}
 
 		{
@@ -129,22 +110,16 @@ void Session::configDump(ResourceObject& maikeconfig) const
 		}
 
 		{
-		ResourceObject pythonoptions(ResourceObject::Type::OBJECT);
-		m_pythonhook->configDump(pythonoptions);
-		maikeconfig.objectSet("pythonoptions",std::move(pythonoptions));
-		}
-
-		{
-		ResourceObject cxxoptions(ResourceObject::Type::OBJECT);
-		m_cxxhook->configDump(cxxoptions);
-		maikeconfig.objectSet("cxxoptions",std::move(cxxoptions));
+		ResourceObject target_hooks(ResourceObject::Type::ARRAY);
+		m_target_hooks.configDump(target_hooks);
+		maikeconfig.objectSet("target_hooks",std::move(target_hooks));
 		}
 	}
 
 Session& Session::sourceFileAppend(const char* filename)
 	{
 	m_source_files.push_back(std::string(filename));
-	m_graph_dirty=1;
+	graphDirtySet();
 	return *this;
 	}
 
@@ -185,36 +160,67 @@ Session& Session::scanFile(const char* filename)
 			{m_graph.targetsRemove(ByParentDirectory(t->sourceNameGet()));}
 		}
 	m_graph.targetsRemove(BySourceName(filename));
+
+	if(targetHooksDirty())
+		{targetHooksRegister();}
 	m_spider.scanFile(filename,dirname(filename).c_str()).run();
-	m_graph_dirty=0;
+	graphDirtyClear();
 	return *this;
 	}
 
-Session& Session::dependenciesClear() noexcept
+void Session::dependenciesClear() noexcept
 	{
 	m_graph.clear();
-	m_graph_dirty=0;
-	return *this;
+	graphDirtyClear();
 	}
 
-Session& Session::dependenciesReload()
+void Session::dependenciesReload() const
 	{
-	dependenciesClear();
+	m_graph.clear();
 	auto i=m_source_files.data();
 	auto i_end=i + m_source_files.size();
 	while(i!=i_end)
 		{
-		m_spider.scanFile(i->c_str(),"");
+		m_spider.scanFile(i->c_str(),dirname(*i).c_str());
 		++i;
 		}
+	if(targetHooksDirty())
+		{targetHooksRegister();}
 	m_spider.run();
-	m_graph_dirty=0;
-	return *this;
+	graphDirtyClear();
+	}
+
+
+namespace
+	{
+	class TargetHookRegistrator:public Target_Hook_Registry::EnumCallbackFilenameExt
+		{
+		public:
+			explicit TargetHookRegistrator(Spider& spider,Target_FactoryDelegator& delegator) noexcept:
+				r_spider(spider),r_delegator(delegator)
+				{}
+
+			void operator()(const Stringkey& filename_ext,const Target_Hook& hook)
+				{
+				r_spider.loaderRegister(filename_ext,hook.loaderGet());
+				r_delegator.factoryRegister(filename_ext,hook.factoryGet());
+				}
+		private:
+			Spider& r_spider;
+			Target_FactoryDelegator& r_delegator;
+		};
+	}
+
+void Session::targetHooksRegister() const
+	{
+	m_target_hooks.enumerate(TargetHookRegistrator(m_spider,m_delegator));
+	m_spider.loaderRegister(Stringkey("."),m_dirloader);
+	targetHooksDirtyClear();
 	}
 
 void Session::targetsProcess(DependencyGraph::TargetProcessor&& proc)
 	{
-	if(m_graph_dirty)
+	if(graphDirty())
 		{dependenciesReload();}
 
 	m_graph.targetsProcess(std::move(proc));
@@ -222,16 +228,16 @@ void Session::targetsProcess(DependencyGraph::TargetProcessor&& proc)
 
 void Session::targetsProcess(DependencyGraph::TargetProcessorConst&& proc) const
 	{
-	if(m_graph_dirty)
-		{const_cast<Session*>(this)->dependenciesReload();}
+	if(graphDirty())
+		{dependenciesReload();}
 
 	m_graph.targetsProcess(std::move(proc));
 	}
 
 const Target& Session::target(const char* name) const
 	{
-	if(m_graph_dirty)
-		{const_cast<Session*>(this)->dependenciesReload();}
+	if(graphDirty())
+		{dependenciesReload();}
 	auto ret=m_graph.targetFind(Stringkey(name));
 	if(ret==nullptr)
 		{exceptionRaise(ErrorMessage("Target #0; has not been loaded.",{name}));}
@@ -240,7 +246,7 @@ const Target& Session::target(const char* name) const
 
 Target& Session::target(const char* name)
 	{
-	if(m_graph_dirty)
+	if(graphDirty())
 		{dependenciesReload();}
 	auto ret=m_graph.targetFind(Stringkey(name));
 	if(ret==nullptr)
@@ -255,7 +261,7 @@ const char* Session::targetDirectoryGet() const noexcept
 
 const Twins<size_t>& Session::targetIdRangeGet() const
 	{
-	if(m_graph_dirty)
-		{const_cast<Session*>(this)->dependenciesReload();}
+	if(graphDirty())
+		{dependenciesReload();}
 	return m_graph.idRangeGet();
 	}

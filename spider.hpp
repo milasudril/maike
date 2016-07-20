@@ -21,6 +21,8 @@ namespace Maike
 			virtual Spider& loaderRegister(const Stringkey& filename_ext
 				,const Target_Loader& loader)=0;
 
+			virtual void loadersUnregister() noexcept=0;
+
 		protected:
 			~Spider()=default;
 		};

@@ -32,6 +32,12 @@ SpiderDefault& SpiderDefault::loaderRegister(const Stringkey& filename_ext
 	m_r_loaders[filename_ext]=&loader;
 	return *this;
 	}
+
+void SpiderDefault::loadersUnregister() noexcept
+	{
+	m_r_loaders.clear();
+	}
+
 static const Target_Loader* targetLoaderGet(const Stringkey& key
 	,const std::map<Stringkey,const Target_Loader*>& loaders)
 	{

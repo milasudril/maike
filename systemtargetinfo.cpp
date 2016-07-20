@@ -7,7 +7,6 @@
 #include "variant.hpp"
 #include "stringformat.hpp"
 #include "mapreplace.hpp"
-#include "stringformat.hpp"
 
 using namespace Maike;
 

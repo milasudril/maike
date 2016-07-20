@@ -96,7 +96,6 @@ void Target_Hook_Registry::configClear()
 	{
 	r_filenameext_hook.clear();
 	m_hooks.clear();
-	s_plugins.clear();
 	}
 
 void Target_Hook_Registry::enumerate(EnumCallbackFilenameExt&& callback) const
