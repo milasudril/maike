@@ -4,6 +4,7 @@
 #define MAIKE_TARGET_FACTORYDELEGATOR_HPP
 
 #include "handle.hpp"
+#include "visibility.hpp"
 
 namespace Maike
 	{
@@ -11,7 +12,7 @@ namespace Maike
 	class Target;
 	class Target_Factory;
 	class Stringkey;
-	class Target_FactoryDelegator
+	class PRIVATE Target_FactoryDelegator
 		{
 		public:
 			virtual Handle<Target> targetCreate(const ResourceObject& obj

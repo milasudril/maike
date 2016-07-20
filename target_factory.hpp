@@ -4,12 +4,13 @@
 #define MAIKE_TARGET_FACTORY_HPP
 
 #include "handle.hpp"
+#include "visibility.hpp"
 
 namespace Maike
 	{
 	class Target;
 	class ResourceObject;
-	class Target_Factory
+	class PRIVATE Target_Factory
 		{
 		public:
 			virtual Handle<Target> targetCreate(const ResourceObject& obj

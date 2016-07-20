@@ -6,6 +6,7 @@
 #define MAIKE_TARGET_HPP
 
 #include "twins.hpp"
+#include "visibility.hpp"
 #include <cstddef>
 #include <memory>
 
@@ -17,7 +18,7 @@ namespace Maike
 	template<class T>
 	class Handle;
 
-	class Target
+	class PRIVATE Target
 		{
 		public:
 			typedef Target Base;

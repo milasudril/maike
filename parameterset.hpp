@@ -3,12 +3,13 @@
 #ifndef MAIKE_PARAMETERSET_HPP
 #define MAIKE_PARAMETERSET_HPP
 
+#include "visibility.hpp"
 #include "twins.hpp"
 
 namespace Maike
 	{
 	class Stringkey;
-	class ParameterSet
+	class PRIVATE ParameterSet
 		{
 		public:
 			class ParameterProcessor

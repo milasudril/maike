@@ -8,7 +8,7 @@
 namespace Maike
 	{
 	class ResourceObject;
-	class ParameterSetDumpable:public ParameterSet
+	class PRIVATE ParameterSetDumpable:public ParameterSet
 		{
 		public:
 			virtual void configDump(ResourceObject& targetinfo) const=0;

@@ -10,7 +10,7 @@
 
 namespace Maike
 	{
-	class TargetPythonLoader:public Target_Loader
+	class PRIVATE TargetPythonLoader:public Target_Loader
 		{
 		public:
 			TargetPythonLoader();

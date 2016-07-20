@@ -14,7 +14,7 @@ namespace Maike
 	class ParameterSetDumpable;
 	class DataSink;
 
-	class Target_Hook
+	class PRIVATE Target_Hook
 		{
 		public:
 			typedef Target_Hook Base;

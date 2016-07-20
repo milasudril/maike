@@ -5,6 +5,7 @@
 #ifndef MAIKE_SPIDER_HPP
 #define MAIKE_SPIDER_HPP
 
+#include "visibility.hpp"
 #include <memory>
 
 namespace Maike
@@ -12,7 +13,7 @@ namespace Maike
 	class Target_Loader;
 	class Stringkey;
 
-	class Spider
+	class PRIVATE Spider
 		{
 		public:
 			virtual Spider& scanFile(const char* filename,const char* in_dir)=0;

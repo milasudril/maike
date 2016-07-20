@@ -5,6 +5,7 @@
 #ifndef MAIKE_DEPENDENCYGRAPH_HPP
 #define MAIKE_DEPENDENCYGRAPH_HPP
 
+#include "visibility.hpp"
 #include <cstddef>
 
 namespace Maike
@@ -19,7 +20,7 @@ namespace Maike
 
 	class Stringkey;
 
-	class DependencyGraph
+	class PRIVATE DependencyGraph
 		{
 		public:
 			virtual DependencyGraph& targetRegister(Handle<Target>&& target)=0;

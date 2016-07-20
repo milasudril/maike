@@ -5,12 +5,13 @@
 #ifndef MAIKE_DATASOURCE_HPP
 #define MAIKE_DATASOURCE_HPP
 
+#include "visibility.hpp"
 #include <cstddef>
 #include <memory>
 
 namespace Maike
 	{
-	class DataSource
+	class PRIVATE DataSource
 		{
 		public:
 			typedef DataSource Base;

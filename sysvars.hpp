@@ -6,6 +6,7 @@
 #ifndef MAIKE_SYSVARS_HPP
 #define MAIKE_SYSVARS_HPP
 
+#include "visibility.hpp"
 #include <map>
 #include <string>
 
@@ -13,7 +14,7 @@ namespace Maike
 	{
 	class Stringkey;
 	class Variant;
-	void sysvarsLoad(std::map<Stringkey,Variant>& variables
+	PRIVATE void sysvarsLoad(std::map<Stringkey,Variant>& variables
 		,std::map<Stringkey,std::string>& strings
 		,std::map<Stringkey,std::string>& varnames);
 	}

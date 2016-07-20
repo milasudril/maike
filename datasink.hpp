@@ -5,12 +5,13 @@
 #ifndef MAIKE_DATASINK_HPP
 #define MAIKE_DATASINK_HPP
 
+#include "visibility.hpp"
 #include <cstddef>
 #include <memory>
 
 namespace Maike
 	{
-	class DataSink
+	class PRIVATE DataSink
 		{
 		public:
 			typedef DataSink Base;

@@ -6,13 +6,14 @@
 #ifndef MAIKE_ERRORMESSAGE_HPP
 #define MAIKE_ERRORMESSAGE_HPP
 
+#include "visibility.hpp"
 #include <initializer_list>
 #include <cstddef>
 
 namespace Maike
 	{
 	class Variant;
-	class ErrorMessage
+	class PRIVATE ErrorMessage
 		{
 		public:
 			explicit ErrorMessage(const char* format_string
