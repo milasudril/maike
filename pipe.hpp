@@ -50,6 +50,11 @@ namespace Maike
 				public:
 					Reader();
 					~Reader() noexcept;
+					Reader(const Reader&)=delete;
+					Reader& operator=(const Reader&)=delete;
+					Reader(Reader&& reader) noexcept;
+					Reader& operator=(Reader&& reader) noexcept;
+
 					void* operator new(size_t)=delete;
 					void* operator new[](size_t)=delete;
 					void operator delete(void *)=delete;
@@ -74,6 +79,12 @@ namespace Maike
 				public:
 					Writer();
 					~Writer() noexcept;
+					Writer(const Writer&)=delete;
+					Writer& operator=(const Writer&)=delete;
+
+					Writer(Writer&& writer) noexcept;
+					Writer& operator=(Writer&& writer) noexcept;
+
 					void* operator new(size_t)=delete;
 					void* operator new[](size_t)=delete;
 					void operator delete(void *)=delete;

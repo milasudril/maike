@@ -53,6 +53,8 @@ namespace Maike
 			Type m_type;
 			const TargetCxxCompiler& r_compiler;
 			TargetCxxOptions m_options_extra;
+
+			void pkgconfig(const ResourceObject& pkgconfig_libs);
 		};
 	}
 

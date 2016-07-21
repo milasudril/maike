@@ -34,6 +34,10 @@ namespace Maike
 			const Command& dllcompileGet() const noexcept
 				{return m_dllcompile;}
 
+			const Command& pkgconfigGet() const noexcept
+				{return m_pkgconfig;}
+
+
 			unsigned long long int cxxversionMinGet() const noexcept
 				{return m_cxxversion_min;}
 
@@ -48,6 +52,10 @@ namespace Maike
 
 			const char* libintFormatGet() const noexcept
 				{return m_libext_format.c_str();}
+
+			const char* cflagsFormatGet() const noexcept
+				{return m_cflags_format.c_str();}
+
 
 			void configClear();
 			TargetCxxOptions& configAppendDefault();
@@ -74,6 +82,9 @@ namespace Maike
 					};
 				}
 
+			TargetCxxOptions& includedirNoscanAppend(const char* dir);
+
+
 			const char* includedirFormatGet() const noexcept
 				{return m_includedir_format.c_str();}
 
@@ -89,6 +100,14 @@ namespace Maike
 			const char* libdirFormatGet() const noexcept
 				{return m_libdir_format.c_str();}
 
+			Twins<const std::string*> cflagsExtraGet() const noexcept
+				{
+				return
+					{
+					 m_cflags_extra.data()
+					,m_cflags_extra.data() + m_cflags_extra.size()
+					};
+				}
 
 		private:
 			std::vector< std::string > m_includedir;
@@ -102,6 +121,9 @@ namespace Maike
 			std::string m_libext_format;
 			std::string m_libint_format;
 
+			std::string m_cflags_format;
+			std::vector< std::string > m_cflags_extra;
+
 			unsigned long long int m_cxxversion_min;
 			unsigned long long int m_cxxversion_max;
 
@@ -112,6 +134,7 @@ namespace Maike
 			Command m_libcompile;
 			Command m_objcompile;
 			Command m_versionquery;
+			Command m_pkgconfig;
 		};
 
 	inline TargetCxxOptions operator|(TargetCxxOptions a,const TargetCxxOptions& b)

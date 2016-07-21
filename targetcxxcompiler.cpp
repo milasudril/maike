@@ -114,7 +114,8 @@ typedef ParameterSetMapFixed<
 	,Stringkey("includedir")
 	,Stringkey("libdir")
 	,Stringkey("target")
-	,Stringkey("source")> CompilerParameters;
+	,Stringkey("source")
+	,Stringkey("cflags_extra")> CompilerParameters;
 
 static const char* cxxNameGet(unsigned long long int cxxversion)
 	{
@@ -216,6 +217,8 @@ void TargetCxxCompiler::execute(const Command& cmd,const char* source
 		,options_result.includedirGet(),options_result.includedirFormatGet());
 	argvBuild(cxxparams.get<Stringkey("includedir")>()
 		,options_result.includedirNoscanGet(),options_result.includedirFormatGet());
+	argvBuild(cxxparams.get<Stringkey("cflags_extra")>()
+		,options_result.cflagsExtraGet(),options_result.cflagsFormatGet());
 
 	if(dependencies.first!=dependencies.second)
 		{

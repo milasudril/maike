@@ -288,6 +288,18 @@ int Pipe::exitStatusGet() noexcept
 
 Pipe::Reader::Reader():m_handle(-1){}
 
+Pipe::Reader::Reader(Reader&& reader) noexcept:
+	m_handle(reader.m_handle)
+	{
+	reader.m_handle=-1;
+	}
+
+Pipe::Reader& Pipe::Reader::operator=(Reader&& reader) noexcept
+	{
+	std::swap(reader.m_handle,m_handle);
+	return *this;
+	}
+
 Pipe::Reader::~Reader() noexcept
 	{
 	close();
@@ -339,6 +351,18 @@ Pipe::Writer::Writer():m_handle(-1)
 Pipe::Writer::~Writer() noexcept
 	{close();}
 
+Pipe::Writer::Writer(Writer&& writer) noexcept:
+	m_handle(writer.m_handle)
+	{
+	writer.m_handle=-1;
+	}
+
+Pipe::Writer& Pipe::Writer::operator=(Writer&& writer) noexcept
+	{
+	std::swap(writer.m_handle,m_handle);
+	return *this;
+	}
+
 void Pipe::Writer::close() noexcept
 	{
 	if(m_handle!=-1)
@@ -371,12 +395,12 @@ size_t Pipe::Writer::write(const void* buffer, size_t count)
 	return n;
 	}
 
-Pipe::Pipe(Pipe&& pipe) noexcept:m_stdin(pipe.m_stdin),m_stdout(pipe.m_stdout)
-,m_stderr(pipe.m_stderr),m_status(pipe.m_status)
+Pipe::Pipe(Pipe&& pipe) noexcept:m_stdin(std::move(pipe.m_stdin))
+	,m_stdout(std::move(pipe.m_stdout))
+	,m_stderr(std::move(pipe.m_stderr))
+	,m_pid(pipe.m_pid)
+	,m_status(pipe.m_status)
 	{
-	pipe.m_stdin.init(-1);
-	pipe.m_stdout.init(-1);
-	pipe.m_stderr.init(-1);
 	pipe.m_pid=0;
 	}
 

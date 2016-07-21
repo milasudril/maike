@@ -71,8 +71,14 @@ TargetCxxOptions& TargetCxxOptions::configAppend(const ResourceObject& cxxoption
 
 
 	if(cxxoptions.objectExists("stdprefix"))
-		{m_stdprefix=std::string( static_cast<const char*>(cxxoptions.objectGet("stdprefix")) );}
+		{m_stdprefix=std::string( static_cast<const char*>(cxxoptions.objectGet("stdprefix")));}
 
+
+	if(cxxoptions.objectExists("cflags_format"))
+		{m_cflags_format=std::string(static_cast<const char*>(cxxoptions.objectGet("cflags_format")));}
+
+	if(cxxoptions.objectExists("cflags_extra"))
+		{stringArrayBuild(cxxoptions.objectGet("cflags_extra"),m_cflags_extra);}
 
 
 	if(cxxoptions.objectExists("includedir_format"))
@@ -103,6 +109,10 @@ TargetCxxOptions& TargetCxxOptions::configAppend(const ResourceObject& cxxoption
 
 	if(cxxoptions.objectExists("versionquery"))
 		{m_versionquery=Command(cxxoptions.objectGet("versionquery"));}
+
+	if(cxxoptions.objectExists("pkgconfig"))
+		{m_pkgconfig=Command(cxxoptions.objectGet("pkgconfig"));}
+
 	return *this;
 	}
 
@@ -113,11 +123,20 @@ void append(std::vector<T>& a, const std::vector<T>& b)
     a.insert(a.end(), b.begin(), b.end());
 	}
 
+
+TargetCxxOptions& TargetCxxOptions::includedirNoscanAppend(const char* dir)
+	{
+	m_includedir_noscan.push_back(std::string(dir));
+	return *this;
+	}
+
 TargetCxxOptions& TargetCxxOptions::configAppend(const TargetCxxOptions& cxxoptions)
 	{
 	append(m_includedir,cxxoptions.m_includedir);
 	append(m_includedir_noscan,cxxoptions.m_includedir_noscan);
 	append(m_libdir,cxxoptions.m_libdir);
+	append(m_cflags_extra,cxxoptions.m_cflags_extra);
+
 	m_cxxversion_min=std::max(m_cxxversion_min,cxxoptions.m_cxxversion_min);
 	m_cxxversion_max=std::min(m_cxxversion_max,cxxoptions.m_cxxversion_max);
 	if(m_cxxversion_max < m_cxxversion_min)
@@ -126,6 +145,9 @@ TargetCxxOptions& TargetCxxOptions::configAppend(const TargetCxxOptions& cxxopti
 		}
 	if(cxxoptions.m_stdprefix.size()!=0)
 		{m_stdprefix=cxxoptions.m_stdprefix;}
+
+	if(cxxoptions.m_cflags_format.size()!=0)
+		{m_cflags_format=cxxoptions.m_cflags_format;}
 
 
 	if(cxxoptions.m_includedir_format.size()!=0)
@@ -156,6 +178,9 @@ TargetCxxOptions& TargetCxxOptions::configAppend(const TargetCxxOptions& cxxopti
 	if(cxxoptions.m_versionquery)
 		{m_versionquery=cxxoptions.m_versionquery;}
 
+	if(cxxoptions.m_pkgconfig)
+		{m_pkgconfig=cxxoptions.m_pkgconfig;}
+
 	return *this;
 	}
 
@@ -179,28 +204,32 @@ TargetCxxOptions& TargetCxxOptions::configAppendDefault()
 	m_libext_format=std::string("-l^");
 	m_libint_format=std::string("-l:^");
 	m_stdprefix=std::string("-std=");
+	m_cflags_format=std::string("-^");
 
 	m_objcompile.argumentsClear();
 	m_objcompile.nameSet("g++").argumentAppend("-c")
 		.argumentAppend("-g").argumentAppend("-fpic")
 		.argumentAppend("{cxxversion}").argumentAppend("-Wall")
-		.argumentAppend("{includedir}").argumentAppend("-o")
-		.argumentAppend("{target}").argumentAppend("{source}");
+		.argumentAppend("{cflags_extra}").argumentAppend("{includedir}")
+		.argumentAppend("-o").argumentAppend("{target}")
+		.argumentAppend("{source}");
 
 	m_appcompile.argumentsClear();
 	m_appcompile.nameSet("g++").argumentAppend("-g")
 		.argumentAppend("-fpic").argumentAppend("{cxxversion}")
-		.argumentAppend("-Wall").argumentAppend("{includedir}")
+		.argumentAppend("-Wall").argumentAppend("{cflags_extra}")
+		.argumentAppend("{includedir}")
 		.argumentAppend("-o").argumentAppend("{target}")
 		.argumentAppend("{source}").argumentAppend("{dependencies}");
 
 	m_dllcompile.argumentsClear();
 	m_dllcompile.nameSet("g++").argumentAppend("-g")
 		.argumentAppend("-fpic").argumentAppend("{cxxversion}")
-		.argumentAppend("-Wall").argumentAppend("{includedir}")
-		.argumentAppend("-shared")
-		.argumentAppend("-o").argumentAppend("{target}")
-		.argumentAppend("{source}").argumentAppend("{dependencies}");
+		.argumentAppend("-Wall").argumentAppend("{cflags_extra}")
+		.argumentAppend("{includedir}").argumentAppend("-shared")
+		.argumentAppend("-o")
+		.argumentAppend("{target}").argumentAppend("{source}")
+		.argumentAppend("{dependencies}");
 
 	m_libcompile.argumentsClear();
 	m_libcompile.nameSet("ar").argumentAppend("rcs").argumentAppend("{target}")
@@ -209,6 +238,10 @@ TargetCxxOptions& TargetCxxOptions::configAppendDefault()
 	m_versionquery.argumentsClear();
 	m_versionquery.nameSet("g++").argumentAppend("-E").argumentAppend("-dM")
 		.argumentAppend("-x").argumentAppend("c++").argumentAppend("{nullfile}");
+
+	m_pkgconfig.argumentsClear();
+	m_pkgconfig.nameSet("pkg-config");
+	m_pkgconfig.argumentAppend("{action}").argumentAppend("{libname}");
 
 	return *this;
 	}
@@ -245,13 +278,20 @@ void TargetCxxOptions::configDump(ResourceObject& cxxoptions) const
 		cxxoptions.objectSet("versionquery",std::move(versionquery));
 		}
 
+		{
+		ResourceObject pkgconfig(ResourceObject::Type::OBJECT);
+		m_pkgconfig.configDump(pkgconfig);
+		cxxoptions.objectSet("pkgconfig",std::move(pkgconfig));
+		}
+
 	cxxoptions.objectSet("libdir_format",ResourceObject(m_libdir_format.c_str()))
 		.objectSet("includedir_format",ResourceObject(m_includedir_format.c_str()))
 		.objectSet("libext_format",ResourceObject(m_libext_format.c_str()))
 		.objectSet("libint_format",ResourceObject(m_libint_format.c_str()))
 		.objectSet("stdprefix",ResourceObject(m_stdprefix.c_str()))
 		.objectSet("cxxversion_max",ResourceObject(static_cast<long long int>(m_cxxversion_max)))
-		.objectSet("cxxversion_min",ResourceObject(static_cast<long long int>(m_cxxversion_min)));
+		.objectSet("cxxversion_min",ResourceObject(static_cast<long long int>(m_cxxversion_min)))
+		.objectSet("cflags_format",ResourceObject(m_cflags_format.c_str()));
 
 		{
 		ResourceObject includedir(ResourceObject::Type::ARRAY);
@@ -269,5 +309,11 @@ void TargetCxxOptions::configDump(ResourceObject& cxxoptions) const
 		ResourceObject libdir(ResourceObject::Type::ARRAY);
 		stringArrayGet(libdir,m_libdir);
 		cxxoptions.objectSet("libdir",std::move(libdir));
+		}
+
+		{
+		ResourceObject cflags_extra(ResourceObject::Type::ARRAY);
+		stringArrayGet(cflags_extra,m_cflags_extra);
+		cxxoptions.objectSet("cflags_extra",std::move(cflags_extra));
 		}
 	}
