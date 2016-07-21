@@ -45,8 +45,8 @@ namespace Maike
 			static std::map<Stringkey,Target_Hook_Plugin> s_plugins;
 			struct PRIVATE HookInfo
 				{
-				std::string plugin;
 				std::string name;
+				std::string plugin;
 				Handle<Target_Hook> hook;
 				};
 
