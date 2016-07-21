@@ -10,7 +10,8 @@
 #include "handle.hpp"
 #include "target_hook.hpp"
 #include <map>
-#include <vector>
+#include <set>
+#include <string>
 
 namespace Maike
 	{
@@ -48,9 +49,10 @@ namespace Maike
 				std::string name;
 				std::string plugin;
 				Handle<Target_Hook> hook;
+				std::set<std::string> filename_exts;
 				};
 
-			Target_Hook& hookCreate(Target_Hook_Plugin& plug,const char* name);
+			HookInfo& hookCreate(const char* name,const char* plugname);
 
 			std::map<Stringkey, HookInfo > m_hooks;
 			std::map<Stringkey, const Target_Hook* > r_filenameext_hook;
