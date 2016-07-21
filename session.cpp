@@ -87,12 +87,12 @@ void Session::configDump(ResourceObject& maikeconfig) const
 	{
 		{
 		ResourceObject source_files(ResourceObject::Type::ARRAY);
-		auto ptr=m_source_files.data();
-		auto ptr_end=ptr+m_source_files.size();
-		while(ptr!=ptr_end)
+		auto i=m_source_files.begin();
+		auto i_end=m_source_files.end();
+		while(i!=i_end)
 			{
-			source_files.objectAppend(ResourceObject(ptr->c_str()));
-			++ptr;
+			source_files.objectAppend(ResourceObject(i->c_str()));
+			++i;
 			}
 		maikeconfig.objectSet("source_files",std::move(source_files));
 		}
@@ -118,7 +118,7 @@ void Session::configDump(ResourceObject& maikeconfig) const
 
 Session& Session::sourceFileAppend(const char* filename)
 	{
-	m_source_files.push_back(std::string(filename));
+	m_source_files.insert(std::string(filename));
 	graphDirtySet();
 	return *this;
 	}
@@ -171,14 +171,14 @@ Session& Session::scanFile(const char* filename)
 void Session::dependenciesClear() noexcept
 	{
 	m_graph.clear();
-	graphDirtyClear();
+	graphDirtySet();
 	}
 
 void Session::dependenciesReload() const
 	{
 	m_graph.clear();
-	auto i=m_source_files.data();
-	auto i_end=i + m_source_files.size();
+	auto i=m_source_files.begin();
+	auto i_end=m_source_files.end();
 	while(i!=i_end)
 		{
 		m_spider.scanFile(i->c_str(),dirname(*i).c_str());

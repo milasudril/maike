@@ -15,6 +15,8 @@
 #include "dependencygraphdefault.hpp"
 #include "target_hook_registry.hpp"
 #include "target_factorydelegatordefault.hpp"
+#include <set>
+#include <string>
 
 namespace Maike
 	{
@@ -49,7 +51,7 @@ namespace Maike
 
 			ExpressionEvaluator m_evaluator;
 			IdGenerator<size_t> m_id_gen;
-			std::vector<std::string> m_source_files;
+			std::set<std::string> m_source_files;
 			mutable SpiderDefault m_spider;
 			mutable Target_FactoryDelegatorDefault m_delegator;
 			mutable DependencyGraphDefault m_graph;
