@@ -12,12 +12,9 @@
 #include "variant.hpp"
 #include "exceptionhandler.hpp"
 #include "targetcxxoptions.hpp"
-
+#include "dependency.hpp"
 
 using namespace Maike;
-
-
-
 
 namespace
 	{
@@ -49,152 +46,119 @@ namespace
 
 namespace
 	{
-	class PkgConfigParser
+	class PkgConfigTokenizer
 		{
 		public:
-			PkgConfigParser(DataSource& src,const char* delim_seq):m_rb(src)
-				,m_state(0),r_delim_seq(delim_seq)
+			PkgConfigTokenizer(DataSource& src,const char* delim_seq):m_rb(src)
+				,r_delim_seq(delim_seq),m_ch_next('\0')
 				{}
 
-			bool itemGet(std::string& item);
+			bool itemRead(std::string& item);
 
 		private:
 			ReadBuffer m_rb;
-			size_t m_state;
 			const char* r_delim_seq;
+			char m_ch_next;
 		};
 	}
 
-
-static void pkgconfigIncludesRead(Pipe& cflags_only_i,TargetCxxOptions& options_out)
+bool PkgConfigTokenizer::itemRead(std::string& item)
 	{
-	auto standard_error=cflags_only_i.stderrCapture();
-	Thread<ReadCallback> stderr_reader(ReadCallback{standard_error.get()});
-	auto standard_output=cflags_only_i.stdoutCapture();
-	ReadBuffer rb(*standard_output.get());
-	WriteBuffer wb(StdStream::output());
-	enum class State:unsigned int{NORMAL,I,IDIR,REM1,REM2};
-	auto state=State::NORMAL;
+	auto ptr=r_delim_seq + ((m_ch_next=='\0')? 1 : 0);
 	std::string reminder;
-	std::string dir;
-	while(!rb.eof())
+	item.clear();
+	if(m_ch_next!='\0')
 		{
-		auto ch_in=rb.byteRead();
-		switch(state)
+		item+=m_ch_next;
+		m_ch_next='\0';
+		}
+	while(!m_rb.eof())
+		{
+		auto ch_in=m_rb.byteRead();
+		if(ch_in=='\n')
+			{return 1;}
+		if(ch_in==*ptr && ch_in!='\0')
 			{
-			case State::NORMAL:
+			reminder+=ch_in;
+			++ptr;
+			}
+		else
+			{
+			if(*ptr=='\0')
 				{
-				switch(ch_in)
-					{
-					case '-':
-						state=State::I;
-						break;
-					default:
-						break;
-					}
+				m_ch_next=ch_in;
+				return 1;
 				}
-				break;
-			case State::I:
-				{
-				switch(ch_in)
-					{
-					case 'I':
-						state=State::IDIR;
-						break;
-					default:
-						exceptionRaise(ErrorMessage("Unexpected data in `pkg-config` output",{}));
-					}
-				}
-				break;
-			case State::IDIR:
-				{
-				switch(ch_in)
-					{
-					case '\n':
-					case ' ':
-						state=State::REM1;
-						reminder+=ch_in;
-						break;
-					default:
-						dir+=ch_in;
-					}
-				}
-				break;
-			case State::REM1:
-				switch(ch_in)
-					{
-					case '-':
-						reminder+=ch_in;
-						state=State::REM2;
-						break;
-					default:
-						dir+=reminder;
-						reminder.clear();
-						state=State::IDIR;
-						break;
-					}
-				break;
-			case State::REM2:
-				switch(ch_in)
-					{
-					case 'I':
-						reminder.clear();
-						state=State::IDIR;
-						options_out.includedirNoscanAppend(dir.c_str());
-						dir.clear();
-						break;
-					default:
-						dir+=reminder;
-						reminder.clear();
-						state=State::IDIR;
-						break;
-					}
-				break;
+			ptr=r_delim_seq;
+			item+=reminder;
+			item+=ch_in;
 			}
 		}
-	options_out.includedirNoscanAppend(dir.c_str());
+	return 0;
 	}
 
-static void pkgconfigCflagsRead(Pipe& cflags,TargetCxxOptions& options_out)
+template<class ItemSink>
+PRIVATE void outputRead(Pipe& pipe,const char* delim_seq,const ItemSink& sink)
 	{
-	auto standard_error=cflags.stderrCapture();
+	auto standard_error=pipe.stderrCapture();
 	Thread<ReadCallback> stderr_reader(ReadCallback{standard_error.get()});
-	auto standard_output=cflags.stdoutCapture();
-	ReadBuffer rb(*standard_output.get());
-	WriteBuffer wb(StdStream::output());
-	while(!rb.eof())
+	auto standard_output=pipe.stdoutCapture();
+	PkgConfigTokenizer tokens(*standard_output.get(),delim_seq);
+	std::string str;
+	while(tokens.itemRead(str))
 		{
-		wb.write(rb.byteRead());
+		if(str.size()!=0)
+			{sink(str.c_str());}
 		}
 	}
-
 
 typedef ParameterSetMapFixed<
 	 Stringkey("action")
 	,Stringkey("libname")> PkgConfigParams;
 
+template<class ItemSink>
+PRIVATE int pipeExecute(const Command& cmd,const PkgConfigParams& params
+	,const char* delim_seq,const ItemSink& sink)
+	{
+	const ParameterSet* paramsets[]={&params};
+	auto pkgconfig=cmd.execute(Pipe::REDIRECT_STDERR|Pipe::REDIRECT_STDOUT,{paramsets,paramsets + 1});
+	outputRead(pkgconfig,delim_seq,sink);
+	return pkgconfig.exitStatusGet();
+	}
+
 void Maike::pkgconfigAsk(const Command& cmd,const char* libname
 	,Target& target,TargetCxxOptions& options_out)
 	{
 	PkgConfigParams params;
-	const ParameterSet* paramsets[]={&params};
 	params.get<Stringkey("libname")>().push_back(std::string(libname));
 
 	params.get<Stringkey("action")>().push_back(std::string("--cflags-only-I"));
-	auto pkgconfig=cmd.execute(Pipe::REDIRECT_STDERR|Pipe::REDIRECT_STDOUT,{paramsets,paramsets + 1});
-	pkgconfigIncludesRead(pkgconfig,options_out);
-	auto status=pkgconfig.exitStatusGet();
-	if(status!=0)
+	if(pipeExecute(cmd,params," -I",[&options_out](const char* str)
+		{options_out.includedirNoscanAppend(str);})!=0)
 		{
 		exceptionRaise(ErrorMessage("#0;: It was not possible to find information about "
 			"the library #1;",{target.sourceNameGet(),libname}));
 		}
 
 	params.get<Stringkey("action")>()[0]=std::string("--cflags-only-other");
-	pkgconfig=cmd.execute(Pipe::REDIRECT_STDERR|Pipe::REDIRECT_STDOUT,{paramsets,paramsets + 1});
-	pkgconfigCflagsRead(pkgconfig,options_out);
-	status=pkgconfig.exitStatusGet();
-	if(status!=0)
+	if(pipeExecute(cmd,params," -",[&options_out](const char* str)
+		{options_out.cflagsExtraAppend(str);})!=0)
+		{
+		exceptionRaise(ErrorMessage("#0;: It was not possible to find information about "
+			"the library #1;",{target.sourceNameGet(),libname}));
+		}
+
+	params.get<Stringkey("action")>()[0]=std::string("--libs-only-L");
+	if(pipeExecute(cmd,params," -L",[&options_out](const char* str)
+		{options_out.libdirAppend(str);})!=0)
+		{
+		exceptionRaise(ErrorMessage("#0;: It was not possible to find information about "
+			"the library #1;",{target.sourceNameGet(),libname}));
+		}
+
+	params.get<Stringkey("action")>()[0]=std::string("--libs-only-l");
+	if(pipeExecute(cmd,params," -l",[&target](const char* str)
+		{target.dependencyAdd(Dependency(str,Dependency::Relation::EXTERNAL));})!=0)
 		{
 		exceptionRaise(ErrorMessage("#0;: It was not possible to find information about "
 			"the library #1;",{target.sourceNameGet(),libname}));

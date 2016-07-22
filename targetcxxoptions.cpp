@@ -317,3 +317,15 @@ void TargetCxxOptions::configDump(ResourceObject& cxxoptions) const
 		cxxoptions.objectSet("cflags_extra",std::move(cflags_extra));
 		}
 	}
+
+TargetCxxOptions& TargetCxxOptions::cflagsExtraAppend(const char* flagname)
+	{
+	m_cflags_extra.push_back(std::string(flagname));
+	return *this;
+	}
+
+TargetCxxOptions& TargetCxxOptions::libdirAppend(const char* dir)
+	{
+	m_libdir.push_back(std::string(dir));
+	return *this;
+	}

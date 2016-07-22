@@ -53,8 +53,6 @@ namespace Maike
 			const char* libintFormatGet() const noexcept
 				{return m_libext_format.c_str();}
 
-			const char* cflagsFormatGet() const noexcept
-				{return m_cflags_format.c_str();}
 
 
 			void configClear();
@@ -84,9 +82,10 @@ namespace Maike
 
 			TargetCxxOptions& includedirNoscanAppend(const char* dir);
 
-
 			const char* includedirFormatGet() const noexcept
 				{return m_includedir_format.c_str();}
+
+
 
 			Twins<const std::string*> libdirGet() const noexcept
 				{
@@ -97,8 +96,12 @@ namespace Maike
 					};
 				}
 
+			TargetCxxOptions& libdirAppend(const char* libdir);
+
 			const char* libdirFormatGet() const noexcept
 				{return m_libdir_format.c_str();}
+
+
 
 			Twins<const std::string*> cflagsExtraGet() const noexcept
 				{
@@ -108,6 +111,11 @@ namespace Maike
 					,m_cflags_extra.data() + m_cflags_extra.size()
 					};
 				}
+
+			TargetCxxOptions& cflagsExtraAppend(const char* flagname);
+
+			const char* cflagsFormatGet() const noexcept
+				{return m_cflags_format.c_str();}
 
 		private:
 			std::vector< std::string > m_includedir;
