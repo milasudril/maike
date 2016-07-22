@@ -66,13 +66,14 @@ Plugin::~Plugin()
 	}
 
 Plugin::Plugin(Plugin&& obj) noexcept:
-	m_name(obj.m_name),m_handle(obj.m_handle)
+	m_name_full(obj.m_name_full),m_name(obj.m_name),m_handle(obj.m_handle)
 	{obj.m_handle=NULL;}
 
 Plugin& Plugin::operator=(Plugin&& obj) noexcept
 	{
 	std::swap(m_handle,obj.m_handle);
 	std::swap(m_name,obj.m_name);
+	std::swap(m_name_full,obj.m_name_full);
 	return *this;
 	}
 
