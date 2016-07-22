@@ -19,7 +19,7 @@ Otherwise, just run your installed version of Maike from the source directory.
 
 	maike
 
-If the compilation succeeded, the maike executable should be present in the newly created `__targets` directory. In order to use it, copy it to a directory mentioned in your `PATH` variable. For example
+If the compilation succeeded, the Maike executable should be present in the newly created `__targets` directory. In order to use it, copy it to a directory mentioned in your `PATH` variable. For example
 
 	cp __targets/maike ~/bin/maike
 
@@ -42,11 +42,9 @@ If another configuration is desired, a configuration file can be generated using
 
 	maike --configdump=name_of_your_configuration --no-sysvars
 
-or if I/O redirection is prefered
+It is possible to specify an additive  set of configuration files by using the option `--configfiles`. If this argument is not given, Maike will look for a file called `maikeconfig.json` within the current working directory. If that file cannot be opened, Maike will load a built-in default configuration.
 
-	maike --configdump --no-sysvars > name_of_your_configuration
-
-It is possible to specify an additive  set of configuration files by using the option `--configfiles`. If this argument is not given, Maike will look for a file called `maikeconfig.json` within the current working directory. If that file cannot be openend, Maike will load a built-in default configuration.
+Since Maike will look for `maikeconfig.json` before loading the default configuration, it is not possible to redirect a `configdump` to `maikeconfig.json`. This comes from the fact that the shell will create the file before Maike is started, and therefore, Maike will read an empty configuration file, instead of loading the the default configuration.
 
 ## Adding targets to the project
 
@@ -184,7 +182,7 @@ Sometimes it is convenient to rely on some external library. The include files f
 		return 0;
 		}
 
-By placing the code that depends on the external library into a separate module, it is no longer neccesary to remember to link to `sndfile`. In the above scenario, we may add a module `sndfile_processor`. Using a simple C-style interface, the include file becomes
+By placing the code that depends on the external library into a separate module, it is no longer necessary to remember to link to `sndfile`. In the above scenario, we may add a module `sndfile_processor`. Using a simple C-style interface, the include file becomes
 
 	//@	{
 	//@	 "targets":[{"name":"sndfile_processor.h","type":"include"}]
@@ -235,6 +233,25 @@ The dependency is now hidden inside the source for `sndfile_processor.o`:
 It may be interesting to find all external dependencies within the project. To do so, run Maike with the option `--list-external-targets`.
 
 	maike --list-external-targets
+
+Information about some libraries can be found by using the [pkg-config][2] tool. Maike supports this tool through the `pkgconfig_libs` attribute. This is what the Qt5 version of would Hello, World look like when using Maike:
+
+	//@	{
+	//@	"targets":
+	//@		[{
+	//@		"name":"qt-test","type":"application"
+	//@		,"pkgconfig_libs":["Qt5Widgets"]
+	//@		}]
+	//@	}
+
+	int main(int argc,char** argv)
+		{
+		QApplication app(argc,argv)
+		Qt5Widget window;
+		window.setFixedSize(400,300);
+		window.show();
+		return app.exec();
+		}
 
 ### Conditional target selection
 
@@ -330,12 +347,27 @@ It is possible to insert Python scripts into the dependency graph. These scripts
 		write_error('%s: error: %s\n'%(sys.argv[0],sys.exc_info()[1]))
 		sys.exit(-1)
 
-A code generator defines at least two targets: The source file, and the target generated from the source file. The latter is neccesary, since the dependency graph has to be completed before the compilation starts. If the generator emmits N files, then there will be 2*N targets defined by that generator.
+A code generator defines at least two targets: The source file, and the target generated from the source file. The latter is necessary, since the dependency graph has to be completed before the compilation starts. If the generator emits N files, then there will be 2*N targets defined by that generator.
 
+### Per-target compiler options
+
+In addition to global compiler options, it is possible to use additional options for different targets. For a C++ target, the attribute `cxxoptions` is added to the target definition. Example:
+
+	//@	{
+	//@	"targets":
+	//@		[{
+	//@		"name":"fast_computation.o","type":"object"
+	//@		,"cxxoptions":
+	//@			{"cflags_extra":["-ffast-math"]}
+	//@		}]
+	//@	}
+
+	...
 
 ## TODO:s
 
-See [Issues][2]
+See [Issues][3]
 
  [1]: https://github.com/milasudril/maike/releases/latest
- [2]: https://github.com/milasudril/maike/issues
+ [2]: https://www.freedesktop.org/wiki/Software/pkg-config
+ [3]: https://github.com/milasudril/maike/issues
