@@ -106,15 +106,33 @@ static void targetGet(ResourceObject& target,const SpellTree& target_in)
 static void build(ResourceObject& obj,const SpellTree& tree)
 	{
 	ResourceObject targets(ResourceObject::Type::ARRAY);
-	auto targets_in=tree.find(Stringkey("target"));
-	while(targets_in.first!=targets_in.second)
 		{
-		ResourceObject target(ResourceObject::Type::OBJECT);
-		auto& t=*(targets_in.first->get());
-		targetGet(target,t);
-		targets.objectAppend(std::move(target));
-		++targets_in.first;
+		auto targets_in=tree.find(Stringkey("target"));
+		while(targets_in.first!=targets_in.second)
+			{
+			ResourceObject target(ResourceObject::Type::OBJECT);
+			auto& t=*(targets_in.first->get());
+			targetGet(target,t);
+			targets.objectAppend(std::move(target));
+			++targets_in.first;
+			}
 		}
+
+		{
+		auto deps_in=tree.find(Stringkey("dependency"));
+		ResourceObject deps(ResourceObject::Type::ARRAY);
+		while(deps_in.first!=deps_in.second)
+			{
+			ResourceObject dep(ResourceObject::Type::OBJECT);
+			auto& d=*(deps_in.first->get());
+			dependencyGet(dep,d);
+			deps.objectAppend(std::move(dep));
+			++deps_in.first;
+			}
+		obj.objectSet("dependencies_extra",std::move(deps));
+		}
+
+
 	obj.objectSet("targets",std::move(targets));
 	}
 
