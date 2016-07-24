@@ -146,6 +146,7 @@ void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 		case Type::APPLICATION:
 			{
 			std::vector<std::string> strings_temp;
+			strings_temp.reserve(dependency_list_full.second - dependency_list_full.first);
 			auto depfiles=depstringCreate(strings_temp,target_dir,dependency_list_full);
 			auto deps_begin=depfiles.data();
 			auto deps_end=deps_begin + depfiles.size();
@@ -156,6 +157,7 @@ void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 		case Type::LIB_DYNAMIC:
 			{
 			std::vector<std::string> strings_temp;
+			strings_temp.reserve(dependency_list_full.second - dependency_list_full.first);
 			auto depfiles=depstringCreate(strings_temp,target_dir,dependency_list_full);
 			auto deps_begin=depfiles.data();
 			auto deps_end=deps_begin + depfiles.size();
