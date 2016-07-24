@@ -247,11 +247,13 @@ Information about some libraries can be found by using the [pkg-config][2] tool.
 	int main(int argc,char** argv)
 		{
 		QApplication app(argc,argv)
-		Qt5Widget window;
+		QtWidget window;
 		window.setFixedSize(400,300);
 		window.show();
 		return app.exec();
 		}
+
+In the case `Qt5Widgets` cannot be found by pkg-config, Maike will report an error before any compilation starts.
 
 ### Conditional target selection
 
@@ -358,11 +360,91 @@ In addition to global compiler options, it is possible to use additional options
 	//@		[{
 	//@		"name":"fast_computation.o","type":"object"
 	//@		,"cxxoptions":
-	//@			{"cflags_extra":["-ffast-math"]}
+	//@			{"cflags_extra":["ffast-math"]}
 	//@		}]
 	//@	}
 
 	...
+
+## Some useful command line options
+
+In addition to compiling the entire project, Maike can be used to fetch certain information about the project, or compile only a specified target. This is done by using different command line options. All command line options can be retrieved by invoking maike with the `--help` option.
+
+### Merge two configuration files
+
+The command below merges `config_a.json` and `config_b.json` into `maikeconfig.json`
+
+    maike --configfiles=config_a.json,config_b,json --no-sysvars --configdump=maikeconfig.json
+
+### Process only specified targets
+
+Sometimes, it is not desired to recompile the entire project. Maike can be instructed to compile only specific targets through the option `--targets`
+
+    maike --targets=foo,bar
+
+### Trace origins of cyclic dependencies
+
+It may happen that a larger project ends up in one or more cyclic dependency. In this case Maike will report that with an error message
+
+> A cyclic dependency between foo[x] and bar[y] was detected.
+
+By using the DOT graph generator, in combination with target selection, a dependency graph that shows the problem can be generated
+
+    maike --dump-graph-dot --targets=foo,bar | xdot /dev/stdin
+
+### Find any external libraries that a project uses
+
+Before a project can be compiled, all external dependencies has to be satisfied. Maike makes it easy to find any external dependencies
+
+    maike --list-external-targets
+
+This will print a list of all library names found within the project. It may happen that the name of the corresponding package provided by the system distribution, is different from the library name. For example, a project that uses `libjansson`, will have a dependency to `jansson`, and the corresponding package on Ubuntu is called `libjansson-dev`.
+
+It might be interesting to know which parts of a project that requires a given library. This is shown by an inverted dependency graph
+
+    maike --dump-graph-inv-dot --targets=jansson | xdot /dev/stdin
+
+## All command line options
+
+--help[=string]
+    Print this message to `stdout`, or to the given file, and exit.
+
+--version[=string]
+    Print version information to `stdout`, or the given file, and exit.
+
+--configdump[=string]
+    Print the current configuration to the given file, and exit. As defualt, the data is written to `stdout`.
+
+--configfiles=string,...
+    Load the listed configuration files. If this argument is not given, Maike will look for a file called maikeconfig.json within the current working directory. If that file cannot be openend, Maike will load a built-in default configuration.
+
+--no-sysvars
+    Do not load any default system variables. This is useful when using a cross-compiler. Normally, Maike loads a system-dependent set of variables that identifiesd the host platform.
+
+--list-all-targets[=string]
+    Print all targets to the given file and exit. As default, the data is written to `stdout`.
+
+--list-external-targets[=string]
+    Print all external targets to the given file and exit. As default, data is written to `stdout`. External targets are targets not tracked by Maike--usually external libraries.
+
+--list-leaf-targets[=string]
+    Print all leaf targets to the given file and exit. As default, data is written to `stdout`. A leaf target is a target that no other target refers to.
+
+--targets=string,...
+    Only process the listed targets. This option reduces the amount of output when using any of the --dump-* options.
+
+--dump-database-json[=string]
+    Dump the internal database to a JSON file and exit. As default, the data is written to `stdout`.
+
+--dump-graph-dot[=string]
+    Dump the dependnecy graph to a DOT file and exit. As default, the data is written to `stdout`.
+
+--dump-graph-inv-dot[=string]
+    Dump an inverted dependnecy graph to a DOT file and exit. As default, the data is written to `stdout`.
+
+--dump-targets-tsv[=string]
+    Dumps information about the selected targets to a TSV (Tab Separated Values) file. As defualt, the data is written to `stdout`.
+
 
 ## TODO:s
 
@@ -371,3 +453,4 @@ See [Issues][3]
  [1]: https://github.com/milasudril/maike/releases/latest
  [2]: https://www.freedesktop.org/wiki/Software/pkg-config
  [3]: https://github.com/milasudril/maike/issues
+
