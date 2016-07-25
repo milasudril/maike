@@ -16,7 +16,7 @@ namespace Maike
 		{
 		public:
 			enum class Type:unsigned int
-				{INCLUDE,OBJECT,APPLICATION,LIB_DYNAMIC,LIB_STATIC};
+				{INCLUDE,OBJECT,APPLICATION,LIB_DYNAMIC,LIB_STATIC,INCLUDE_LIB};
 
 			static TargetCxx* create(const ResourceObject& obj
 				,const TargetCxxCompiler& compiler,const char* name_src

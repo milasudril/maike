@@ -2,7 +2,7 @@
 //@	"targets":[{"name":"maike.o","type":"object"}]
 //@	}
 
-#include "maike.hpp"
+#include "maike_static.hpp"
 #include "maikeinfo.hpp"
 #include "targetplaceholder.hpp"
 #include "dependency.hpp"

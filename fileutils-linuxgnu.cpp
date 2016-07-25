@@ -16,6 +16,9 @@
 #include "strerror.hpp"
 #include "stdstream.hpp"
 #include "writebuffer.hpp"
+#include "filein.hpp"
+#include "fileout.hpp"
+#include "readbuffer.hpp"
 
 #include <unistd.h>
 #include <fcntl.h>
@@ -26,8 +29,9 @@
 
 #include <vector>
 #include <cstdint>
-#include <exception>
 #include <tuple>
+#include <string>
+#include <regex>
 
 using namespace Maike;
 
@@ -68,8 +72,8 @@ bool FileUtils::newer(const char* file_a,const char* file_b)
 			,{
 			 file_a
 			,file_b
-			,static_cast<const char*>(strerror(errno_a))
-			,static_cast<const char*>(strerror(errno_b))
+			,static_cast<const char*>(Maike::strerror(errno_a))
+			,static_cast<const char*>(Maike::strerror(errno_b))
 			}));
 		}
 
@@ -91,7 +95,7 @@ void FileUtils::mkdir(const char* name)
 	if( ::mkdir(name, S_IRWXU )==-1 )
 		{
 		exceptionRaise(ErrorMessage("It was not possible to create a directory with name #0;. #1;"
-			,{name,static_cast<const char*>(strerror(errno))}));
+			,{name,static_cast<const char*>(Maike::strerror(errno))}));
 		}
 	}
 
@@ -115,7 +119,7 @@ namespace
 				if(m_fd==-1)
 					{
 					exceptionRaise(ErrorMessage("It was not possible to open the file #0;. #1;"
-						,{static_cast<const char*>(strerror(errno))}));
+						,{static_cast<const char*>(Maike::strerror(errno))}));
 					}
 				}
 
@@ -125,7 +129,7 @@ namespace
 				if(m_fd==-1)
 					{
 					exceptionRaise(ErrorMessage("It was not possible to open the file #0;. #1;"
-						,{static_cast<const char*>(strerror(errno))}));
+						,{static_cast<const char*>(Maike::strerror(errno))}));
 					}
 				}
 
@@ -155,7 +159,7 @@ void FileUtils::copy(const char* source,const char* dest)
 	if(fstat(source_fd.get(),&source_stat)==-1)
 		{
 		unlink(dest);
-		exceptionRaise(ErrorMessage("stat error: #0;",{static_cast<const char*>(strerror(errno))}));
+		exceptionRaise(ErrorMessage("stat error: #0;",{static_cast<const char*>(Maike::strerror(errno))}));
 		}
 
 	auto size=source_stat.st_size;
@@ -166,9 +170,49 @@ void FileUtils::copy(const char* source,const char* dest)
 			{
 			unlink(dest);
 			exceptionRaise(ErrorMessage("It was not possible to copy #0; to #1;"
-				,{static_cast<const char*>(strerror(errno))}));
+				,{static_cast<const char*>(Maike::strerror(errno))}));
 			}
 
 		size-=res;
+		}
+	}
+
+void FileUtils::copyFilter(const char* source,const char* dest
+	,const char* comment_line_regexp)
+	{
+		{
+		WriteBuffer wb(StdStream::output());
+		wb.write("grep -v '").write(comment_line_regexp).write("' ");
+		escape(wb,source);
+		wb.write(" > ");
+		escape(wb,dest);
+		wb.write("\n");
+		}
+
+	std::regex comment_line(comment_line_regexp,std::regex_constants::basic);
+
+	FileIn src(source);
+	FileOut dst(dest);
+	ReadBuffer rb(src);
+	WriteBuffer wb(dst);
+	std::string line;
+	while(!rb.eof())
+		{
+		auto ch_in=rb.byteRead();
+		switch(ch_in)
+			{
+			case '\r':
+				break;
+			case '\n':
+				if(!std::regex_search(line,comment_line))
+					{
+					line+=ch_in;
+					wb.write(line.c_str());
+					}
+				line.clear();
+				break;
+			default:
+				line+=ch_in;
+			}
 		}
 	}

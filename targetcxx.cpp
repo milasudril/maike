@@ -12,8 +12,6 @@
 #include "targetcxxpkgconfig.hpp"
 #include "writebuffer.hpp"
 #include "stdstream.hpp"
-
-
 #include <algorithm>
 
 using namespace Maike;
@@ -36,7 +34,10 @@ static TargetCxx::Type type(const char* name_src,const char* type)
 	if(key==Stringkey("lib_static"))
 		{return TargetCxx::Type::LIB_STATIC;}
 
-	exceptionRaise(ErrorMessage("#0;: Unknown target type #1;."	,{name_src,type}));
+	if(key==Stringkey("include_lib"))
+		{return TargetCxx::Type::INCLUDE_LIB;}
+
+	exceptionRaise(ErrorMessage("#0;: Unknown target type #1;.",{name_src,type}));
 	}
 
 static const char* type(TargetCxx::Type type)
@@ -53,6 +54,8 @@ static const char* type(TargetCxx::Type type)
 			return "lib_dynamic";
 		case TargetCxx::Type::LIB_STATIC:
 			return "lib_static";
+		case TargetCxx::Type::INCLUDE_LIB:
+			return "include_lib";
 		}
 	return nullptr;
 	}
@@ -75,13 +78,9 @@ TargetCxx::TargetCxx(const ResourceObject& obj,const TargetCxxCompiler& compiler
 	m_type=type(name_src,static_cast<const char*>( obj.objectGet("type") ));
 
 	if(obj.objectExists("cxxoptions"))
-		{
-		m_options_extra=TargetCxxOptions(obj.objectGet("cxxoptions"));
-		}
+		{m_options_extra=TargetCxxOptions(obj.objectGet("cxxoptions"));}
 	if(obj.objectExists("pkgconfig_libs"))
-		{
-		pkgconfig(obj.objectGet("pkgconfig_libs"));
-		}
+		{pkgconfig(obj.objectGet("pkgconfig_libs"));}
 	}
 
 void TargetCxx::dumpDetails(ResourceObject& target) const
@@ -132,6 +131,26 @@ static std::vector<TargetCxxCompiler::FileInfo> depstringCreate(
 	return std::move(ret);
 	}
 
+static void includeBuild(Twins<const Dependency*> dependency_list
+	,const char* source_name,const char* name,const char* target_dir)
+	{
+	while(dependency_list.first!=dependency_list.second)
+		{
+		auto t=dynamic_cast<const TargetCxx*>(dependency_list.first->target());
+		if(t!=nullptr)
+			{
+			if(t->typeGet()==TargetCxx::Type::INCLUDE)
+				{
+				FileUtils::copyFilter(t->sourceNameGet()
+					,dircat(target_dir,t->nameGet()).c_str()
+					,"^[[:space:]]*//@");
+				}
+			}
+		++dependency_list.first;
+		}
+	FileUtils::copyFilter(source_name,name,"^[[:space:]]*//@");
+	}
+
 void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 	,Twins<const Dependency*> dependency_list_full
 	,const char* target_dir)
@@ -142,6 +161,9 @@ void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 		{
 		case Type::OBJECT:
 			r_compiler.compileObject(sourceNameGet(),name_full.c_str(),m_options_extra);
+			break;
+		case Type::INCLUDE_LIB:
+			includeBuild(dependency_list,sourceNameGet(),name_full.c_str(),target_dir);
 			break;
 		case Type::APPLICATION:
 			{
@@ -169,7 +191,7 @@ void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 			break;
 		default:
 			WriteBuffer(StdStream::error()).write(name_full.c_str())
-				.write(": Target not handled\n");
+				.write(": Target type ").write(static_cast<size_t>(m_type)).write(" not handled\n");
 		}
 	}
 
@@ -183,6 +205,27 @@ static bool objectUpToDate(Twins<const Dependency*> dependency_list
 		if(FileUtils::newer(dependency_list.first->nameGet()
 			,target_name_full))
 			{return 0;}
+		++dependency_list.first;
+		}
+	return 1;
+	}
+
+static bool includeLibUpToDate(Twins<const Dependency*> dependency_list
+	,Twins<const Dependency*> dependency_list_full
+	,const char* target_name_full
+	,const char* target_dir)
+	{
+	while(dependency_list.first!=dependency_list.second)
+		{
+		auto t=dynamic_cast<const TargetCxx*>(dependency_list.first->target());
+		if(t!=nullptr)
+			{
+			if(t->typeGet()==TargetCxx::Type::INCLUDE)
+				{
+				if(FileUtils::newer(t->sourceNameGet(),dircat(target_dir,t->nameGet()).c_str()))
+					{return 0;}
+				}
+			}
 		++dependency_list.first;
 		}
 	return 1;
@@ -232,6 +275,9 @@ bool TargetCxx::upToDate(Twins<const Dependency*> dependency_list
 
 	switch(m_type)
 		{
+		case Type::INCLUDE_LIB:
+			return includeLibUpToDate(dependency_list,dependency_list_full
+				,name_full.c_str(),target_dir);
 		case Type::OBJECT:
 			return objectUpToDate(dependency_list,dependency_list_full
 				,name_full.c_str());
