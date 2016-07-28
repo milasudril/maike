@@ -1,4 +1,7 @@
-//@	{"targets":[{"name":"pathutils.hpp","type":"include"}]}
+//@	{
+//@	 "targets":[{"name":"pathutils.hpp","type":"include"}]
+//@	,"dependencies_extra":[{"ref":"pathutils.o","rel":"implementation"}]
+//@	}
 
 #ifndef MAIKE_PATHUTILS_HPP
 #define MAIKE_PATHUTILS_HPP
@@ -7,39 +10,7 @@
 
 namespace Maike
 	{
-	PRIVATE inline std::string directoryNormalize(const char* str)
-		{
-		std::string ret;
-		std::string elem_current;
-		while(*str!='\0')
-			{
-			switch(*str)
-				{
-				case '/':
-					if(elem_current=="..")
-						{
-						ret.erase(ret.size()-1,1);
-						auto pos=ret.find_last_of('/');
-						if(pos==ret.npos)
-							{ret.clear();}
-						else
-							{ret.erase(ret.find_last_of('/'))+='/';}
-						}
-					else
-					if(elem_current!=".")
-						{ret.append(elem_current)+='/';}
-
-					elem_current.clear();
-					break;
-
-				default:
-					elem_current+=*str;
-				}
-			++str;
-			}
-		ret+=elem_current;
-		return std::move(  ret );
-		}
+	PRIVATE std::string directoryNormalize(const char* str);
 
 	PRIVATE inline std::string dirname(const std::string& path)
 		{
