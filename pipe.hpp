@@ -21,6 +21,7 @@ namespace Maike
 			static constexpr unsigned int REDIRECT_STDIN=1;
 			static constexpr unsigned int REDIRECT_STDOUT=2;
 			static constexpr unsigned int REDIRECT_STDERR=4;
+			static constexpr unsigned int ECHO_OFF=8;
 
 			Pipe(const Pipe& rhs)=delete;
 			Pipe& operator=(const Pipe& rhs)=delete;
@@ -29,7 +30,7 @@ namespace Maike
 			Pipe& operator=(Pipe&& pipe) noexcept;
 
 			Pipe(const char* command,Twins<const char* const*> args
-				,unsigned int redirection_mask);
+				,unsigned int flags);
 
 			~Pipe() noexcept;
 

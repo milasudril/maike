@@ -121,7 +121,8 @@ PRIVATE int pipeExecute(const Command& cmd,const PkgConfigParams& params
 	,const char* delim_seq,const ItemSink& sink)
 	{
 	const ParameterSet* paramsets[]={&params};
-	auto pkgconfig=cmd.execute(Pipe::REDIRECT_STDERR|Pipe::REDIRECT_STDOUT,{paramsets,paramsets + 1});
+	auto pkgconfig=cmd.execute(Pipe::REDIRECT_STDERR|Pipe::REDIRECT_STDOUT|Pipe::ECHO_OFF
+		,{paramsets,paramsets + 1});
 	outputRead(pkgconfig,delim_seq,sink);
 	return pkgconfig.exitStatusGet();
 	}

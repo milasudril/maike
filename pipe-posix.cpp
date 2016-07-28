@@ -165,19 +165,13 @@ static WriteBuffer& escape(WriteBuffer& wb,const char* str)
 static std::vector<const char*> commandLineBuild(const char* command
 	,Twins<const char* const*> args)
 	{
-
 	std::vector<const char*> args_out;
 	args_out.push_back(command);
-	WriteBuffer cmd_writer(StdStream::output());
-	escape(cmd_writer,command);
 	while(args.first!=args.second)
 		{
-		cmd_writer.write(static_cast<uint8_t>(' '));
-		escape(cmd_writer,*args.first);
 		args_out.push_back(*args.first);
 		++args.first;
 		}
-	cmd_writer.write(static_cast<uint8_t>('\n'));
 	args_out.push_back(nullptr);
 	return std::move(args_out);
 	}
@@ -200,27 +194,40 @@ static void sigpipeSetFilter()
 	sigaction(SIGPIPE,&sa,&sa_old);
 	}
 
+static void commandLinePrint(const char* const* cmdline)
+	{
+	WriteBuffer wb(StdStream::output());
+	while(*cmdline!=nullptr)
+		{
+		escape(wb,*cmdline);
+		++cmdline;
+		wb.write(*cmdline==nullptr?"\n":" ");
+		}
+	}
+
 Pipe::Pipe(const char* command,Twins<const char* const*> args
-	,unsigned int redirection_mask)
+	,unsigned int flags)
 	{
 	sigpipeSetFilter();
 
 	PipeHelper stdin_pipe;
-	if(redirection_mask&REDIRECT_STDIN)
+	if(flags&REDIRECT_STDIN)
 		{stdin_pipe.init();}
 
 	PipeHelper stdout_pipe;
-	if(redirection_mask&REDIRECT_STDOUT)
+	if(flags&REDIRECT_STDOUT)
 		{stdout_pipe.init();}
 
 	PipeHelper stderr_pipe;
-	if(redirection_mask&REDIRECT_STDERR)
+	if(flags&REDIRECT_STDERR)
 		{stderr_pipe.init();}
 
 	PipeHelper exec_error;
 	exec_error.init();
 
 	auto args_out=commandLineBuild(command,args);
+	if(!(flags&ECHO_OFF))
+		{commandLinePrint(args_out.data());}
 
 	ChildProcess child;
 	if(child.pidGet()==0)
@@ -229,13 +236,13 @@ Pipe::Pipe(const char* command,Twins<const char* const*> args
 		auto exec_error_write_end=exec_error.writeEndRelease();
 		fcntl(exec_error_write_end,F_SETFD,FD_CLOEXEC);
 
-		if(redirection_mask&REDIRECT_STDIN)
+		if(flags&REDIRECT_STDIN)
 			{dup2(stdin_pipe.readEndRelease(),STDIN_FILENO);}
 
-		if(redirection_mask&REDIRECT_STDOUT)
+		if(flags&REDIRECT_STDOUT)
 			{dup2(stdout_pipe.writeEndRelease(),STDOUT_FILENO);}
 
-		if(redirection_mask&REDIRECT_STDERR)
+		if(flags&REDIRECT_STDERR)
 			{dup2(stderr_pipe.writeEndRelease(),STDERR_FILENO);}
 
 		if(execvp(command,const_cast<char* const*>(args_out.data()))==-1)
@@ -254,13 +261,13 @@ Pipe::Pipe(const char* command,Twins<const char* const*> args
 			,{command,static_cast<const char*>(strerror(status))}));
 		}
 
-	if(redirection_mask&REDIRECT_STDIN)
+	if(flags&REDIRECT_STDIN)
 		{m_stdin.init(stdin_pipe.writeEndRelease());}
 
-	if(redirection_mask&REDIRECT_STDOUT)
+	if(flags&REDIRECT_STDOUT)
 		{m_stdout.init(stdout_pipe.readEndRelease());}
 
-	if(redirection_mask&REDIRECT_STDERR)
+	if(flags&REDIRECT_STDERR)
 		{m_stderr.init(stderr_pipe.readEndRelease());}
 
 	m_pid=child.pidRelease();
