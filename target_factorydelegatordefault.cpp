@@ -34,6 +34,12 @@ Handle<Target> Target_FactoryDelegatorDefault::targetCreate(const ResourceObject
 	,const char* name_src,const char* in_dir,size_t line_count)
 	{
 	auto suffix=strrchr(name_src,'.');
+	if(suffix==NULL)
+		{
+		exceptionRaise(ErrorMessage("#0;: It is impossible to choose a target factory "
+			"without filename extension"
+			,{name_src}));
+		}
 	auto i=m_r_factories.find(Stringkey(suffix));
 	if(i==m_r_factories.end())
 		{
