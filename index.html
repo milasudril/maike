@@ -1,8 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="google-site-verification" content="cjSwFU-l4ZUb5VWiwES1RTPvejAjVEDArR5C-lVKF2c">
+<title>Maike build system</title>
+<link rel="stylesheet" type="text/css" href="fonts.css">
+<link rel="stylesheet" type="text/css" href="layout.css">
+<link rel="stylesheet" type="text/css" href="colors.css">
+</head>
+
+<body>
+<header>
+<div class="logo"><h1 class="title">Maike</h1></div>
+<nav>
+<ul>
+<li><a href="#obtaining">Obtaining Maike</a></li>
+<li><a href="#projcreate">Creating a project</a></li>
+<li><a href="#targetdefs">Target definitions</a></li>
+<li><a href="#cmdlinetools">Managing a project</a></li>
+<li><a href="#cmdlineall">Command line options</a></li>
+</ul></nav></header>
+<main>
+
 <h1>Maike</h1>
 
 <p>Maike is a build system based on scanning of source files. To construct the dependency graph, Maike uses embedded JSON data to control the compilation process. The best guide on how to tag source files and describe a project is probably the Maike source itself.</p>
 
-<h2>Obtaining Maike</h2>
+<section>
+<h2 id="obtaining">Obtaining Maike</h2>
 
 <p>The source for the latest Maike can be obtained by cloning the git repository.</p>
 
@@ -31,8 +56,10 @@
 
 <pre><code>cp __targets/*.so ~/bin/maike
 </code></pre>
+</section>
 
-<h2>Creating a Maike project</h2>
+<section>
+<h2 id="projcreate">Creating a Maike project</h2>
 
 <p>Creating a Maike project is simple. Just create a project directory at an appropriate location in the file system and enter that directory.</p>
 
@@ -54,8 +81,6 @@ cd name_of_your_awesome_project
 
 <p>Since Maike will look for <code>maikeconfig.json</code> before loading the default configuration, it is not possible to redirect a <code>configdump</code> to <code>maikeconfig.json</code>. This comes from the fact that the shell will create the file before Maike is started, and therefore, Maike will read an empty configuration file, instead of loading the the default configuration.</p>
 
-<h2>Adding targets to the project</h2>
-
 <p>Adding a target for use with Maike is simple. Just add a <em>target definition</em> to the corresponding source file, within the project directory. The "Hello, World" application looks like this:</p>
 
 <pre><code>//@ {"targets":[{"name":"hello","type":"application"}]}
@@ -73,8 +98,9 @@ int main()
 
 <pre><code>__targets/hello
 </code></pre>
-
-<h2>An overview of the different forms of target definitions</h2>
+</section>
+<section>
+<h2 id="targetdefs">An overview of the different forms of target definitions</h2>
 
 <p>Since Maike is a self-hosting application, a good reference on how to write various kinds of target defintions is the Maike source code. This introduction aims to explain common kinds of target defintions and their usecases,</p>
 
@@ -387,8 +413,10 @@ except:
 
 ...
 </code></pre>
+</section>
+<section>
 
-<h2>Some useful command line options</h2>
+<h2 id="cmdlinetools">Managing a project</h2>
 
 <p>In addition to compiling the entire project, Maike can be used to fetch certain information about the project, or compile only a specified target. This is done by using different command line options. All command line options can be retrieved by invoking maike with the <code>--help</code> option.</p>
 
@@ -432,48 +460,49 @@ except:
 
 <pre><code>maike --dump-graph-inv-dot --targets=jansson | xdot /dev/stdin
 </code></pre>
+</section>
+<section>
+<h2 id="cmdlineall">All command line options</h2>
 
-<h2>All command line options</h2>
-
-<p>--help[=string]
+<p><strong>--help[=string]</strong>
     Print this message to <code>stdout</code>, or to the given file, and exit.</p>
 
-<p>--version[=string]
+<p><strong>--version[=string]</strong>
     Print version information to <code>stdout</code>, or the given file, and exit.</p>
 
-<p>--configdump[=string]
+<p><strong>--configdump[=string]</strong>
     Print the current configuration to the given file, and exit. As defualt, the data is written to <code>stdout</code>.</p>
 
-<p>--configfiles=string,...
+<p><strong>--configfiles=string,...</strong>
     Load the listed configuration files. If this argument is not given, Maike will look for a file called maikeconfig.json within the current working directory. If that file cannot be openend, Maike will load a built-in default configuration.</p>
 
-<p>--no-sysvars
+<p><strong>--no-sysvars</strong>
     Do not load any default system variables. This is useful when using a cross-compiler. Normally, Maike loads a system-dependent set of variables that identifiesd the host platform.</p>
 
-<p>--list-all-targets[=string]
+<p><strong>--list-all-targets[=string]</strong>
     Print all targets to the given file and exit. As default, the data is written to <code>stdout</code>.</p>
 
-<p>--list-external-targets[=string]
+<p><strong>--list-external-targets[=string]</strong>
     Print all external targets to the given file and exit. As default, data is written to <code>stdout</code>. External targets are targets not tracked by Maike--usually external libraries.</p>
 
-<p>--list-leaf-targets[=string]
+<p><strong>--list-leaf-targets[=string]</strong>
     Print all leaf targets to the given file and exit. As default, data is written to <code>stdout</code>. A leaf target is a target that no other target refers to.</p>
 
-<p>--targets=string,...
+<p><strong>--targets=string,...</strong>
     Only process the listed targets. This option reduces the amount of output when using any of the --dump-* options.</p>
 
-<p>--dump-database-json[=string]
+<p><strong>--dump-database-json[=string]</strong>
     Dump the internal database to a JSON file and exit. As default, the data is written to <code>stdout</code>.</p>
 
-<p>--dump-graph-dot[=string]
+<p><strong>--dump-graph-dot[=string]</strong>
     Dump the dependnecy graph to a DOT file and exit. As default, the data is written to <code>stdout</code>.</p>
 
-<p>--dump-graph-inv-dot[=string]
+<p><strong>--dump-graph-inv-dot[=string]</strong>
     Dump an inverted dependnecy graph to a DOT file and exit. As default, the data is written to <code>stdout</code>.</p>
 
-<p>--dump-targets-tsv[=string]
+<p><strong>--dump-targets-tsv[=string]</strong>
     Dumps information about the selected targets to a TSV (Tab Separated Values) file. As defualt, the data is written to <code>stdout</code>.</p>
-
-<h2>TODO:s</h2>
-
-<p>See <a href="https://github.com/milasudril/maike/issues">Issues</a></p>
+</section>
+</main>
+</body>
+</html>
