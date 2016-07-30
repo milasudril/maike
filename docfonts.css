@@ -1,0 +1,12 @@
+h1,h2,h3,h4,h5,h6,td,div,th,p,li,address{font-family:Andika;line-height:156%}
+code,pre{font-family: inconsolata;}
+
+body,p,td,th,div,li,pre,code{font-size:13px;}
+
+h1{font-size:3.5ex;padding-top:2.0ex;padding-bottom:0.7ex;}
+h2{font-size:2.5ex;padding-bottom:0.7ex;padding-top:2.3ex}
+aside>h2{padding-bottom:0.25ex;padding-top:0ex}
+h3{font-size:2.2ex;}
+div.logo{font-size:6ex;}
+header>nav>ul>li{font-weight: bold;}
+a{text-decoration: none;}

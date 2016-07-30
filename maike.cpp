@@ -85,7 +85,9 @@ void Maike::configClear(Session& maike)
 void Maike::sysvarsLoad(Session& maike)
 	{maike.sysvarsLoad();}
 
-Twins<size_t> Maike::targetIdRangeGet(Session& maike)
+
+
+Twins<size_t> Maike::targetIdRangeGet(const Session& maike)
 	{return maike.targetIdRangeGet();}
 
 

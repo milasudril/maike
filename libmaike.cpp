@@ -11,4 +11,5 @@
 //@		}
 //@	]
 
+#define MAIKE_EXPORT_H
 #include "maike_static.hpp"

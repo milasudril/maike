@@ -3,6 +3,8 @@
 #ifndef MAIKE_TARGET_HOOK_HPP
 #define MAIKE_TARGET_HOOK_HPP
 
+#define MAIKE_EXPORT
+
 #include "visibility.hpp"
 #include "exceptionhandler.hpp"
 

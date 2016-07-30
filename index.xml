@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<docset type="mainpage">
+	<h1>Maike</h1>
+<p>Maike is a build system based on scanning of source files. To construct the dependency graph, Maike uses embedded JSON data to control the compilation process. </p>
+	<nav>
+		<ul>
+			<li><a href="https://github.com/milasudril/maike/releases">Download latest release</a></li>
+			<li><a href="userguide.html">User's guide</a></li>
+			<li><a href="apiref.html">API reference</a></li>
+			<li><a href="pics.html">Example dependency diagrams</a></li>
+		</ul>
+	</nav>
+</docset>

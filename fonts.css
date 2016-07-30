@@ -1,0 +1,13 @@
+h1,h2,h3,h4,h5,h6,td,div,th,p,li,address
+	{font-family:Andika,Tahoma,Verdana,Arial,Helvetica,sans-serif;line-height:156%;font-weight:normal}
+code,pre{font-family: Inconsolata,Consolas,"Lucida Console",monospace;}
+
+body,p,td,th,div,li,pre,code{font-size:14px;}
+
+h1{font-size:3.5ex;padding-top:2.0ex;padding-bottom:0.7ex;}
+h2{font-size:2.5ex;padding-bottom:0.9ex;padding-top:2.3ex}
+aside > h2,aside>h3{padding-bottom:0.25ex;padding-top:0ex}
+h3{font-size:2.2ex;padding-bottom:0;padding-top:3ex;}
+div.logo{font-size:6ex;}
+header>nav>ul>li{font-weight: bold;}
+a{text-decoration: none;}
