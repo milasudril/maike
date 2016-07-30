@@ -1,0 +1,283 @@
+<!DOCTYPE html><html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
+<title>Maike: class Maike::Target</title>
+<link rel="stylesheet" type="text/css" href="fonts.css">
+<link rel="stylesheet" type="text/css" href="doclayout.css">
+<link rel="stylesheet" type="text/css" href="doccolors.css">
+<link rel="stylesheet" type="text/css" href="dochighlight.css">
+</head>
+<body>
+<header><div class="logo">Maike</div>
+<nav><ul>
+<li><a href="index.html">Maike</a></li>
+<li><a href="apiref.html">API reference</a></li>
+<li><a href="classes.html">Classes</a></li>
+</ul></nav></header><main><h1 id="top">class Maike::Target</h1>
+<section class="summary">
+    <aside>
+      <h2>Quick info</h2>
+      <p>Include <a href="target_8hpp.html">target.hpp</a></p>
+      <p>This class is abstract</p>
+      <p>This class is extended by</p>
+      <ul>
+        <li>
+          <a href="class_maike_1_1_target_base.html">Maike::TargetBase</a>
+        </li>
+      </ul>
+    </aside>
+    <p>The following table summarizes all members in this class.</p>
+    <table class="memberdecls">
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1ae09f92e48bafdf3baacf3d5ae4baa472">compile</a>
+(<span class="type"><a href="class_maike_1_1_twins.html">Twins</a>&lt; const <a href="class_maike_1_1_dependency.html">Dependency</a> * &gt;</span> <span class="declname">dependency_list</span>,<span class="type"><a href="class_maike_1_1_twins.html">Twins</a>&lt; const <a href="class_maike_1_1_dependency.html">Dependency</a> * &gt;</span> <span class="declname">dependency_list_full</span>,<span class="type">const char *</span> <span class="declname">target_dir</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type"><a href="class_maike_1_1_target.html">Target</a> &amp;</span> <a href="#1a6da67159384d1954bc7337e8c6191267">dependencyAdd</a>
+(<span class="type"><a href="class_maike_1_1_dependency.html">Dependency</a> &amp;&amp;</span> <span class="declname">dep</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type"><a href="class_maike_1_1_twins.html">Twins</a>&lt; const <a href="class_maike_1_1_dependency.html">Dependency</a> * &gt;</span> <a href="#1aca2d8c784e9f1ee8527b361dda109a20">dependencies</a>
+()</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type"><a href="class_maike_1_1_twins.html">Twins</a>&lt; <a href="class_maike_1_1_dependency.html">Dependency</a> * &gt;</span> <a href="#1a5e22273131ace8711219f2edf7e69a72">dependencies</a>
+()</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type"><a href="class_maike_1_1_target.html">Target</a> &amp;</span> <a href="#1af874e321912845616f75f303747ee21b">dependencyInverseAdd</a>
+(<span class="type"><a href="class_maike_1_1_dependency.html">Dependency</a> &amp;&amp;</span> <span class="declname">dep</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type"><a href="class_maike_1_1_twins.html">Twins</a>&lt; const <a href="class_maike_1_1_dependency.html">Dependency</a> * &gt;</span> <a href="#1a16f58c76bc7bf44db14fcfe4855dc3ce">dependenciesInverseGet</a>
+()</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">size_t</span> <a href="#1a8a8ee23dcb3c1ec7a674d8eed67233d5">idGet</a>
+()</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">const char *</span> <a href="#1ad68cea274bfcaef5cc99b7671f92be17">nameGet</a>
+()</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">const char *</span> <a href="#1a92a08944fb8ab1fe745cb4bdf1f15acb">sourceNameGet</a>
+()</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">const char *</span> <a href="#1a77c839c1dcd792b9d9fc8c6262ed9ca2">inDirGet</a>
+()</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">bool</span> <a href="#1aa3106228aa78ee9c4e2112203ca52546">upToDate</a>
+(<span class="type"><a href="class_maike_1_1_twins.html">Twins</a>&lt; const <a href="class_maike_1_1_dependency.html">Dependency</a> * &gt;</span> <span class="declname">dependency_list</span>,<span class="type"><a href="class_maike_1_1_twins.html">Twins</a>&lt; const <a href="class_maike_1_1_dependency.html">Dependency</a> * &gt;</span> <span class="declname">dependency_list_full</span>,<span class="type">const char *</span> <span class="declname">target_dir</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1a1cc8d00356507f76f3aa1e32976ae1bf">dump</a>
+(<span class="type"><a href="class_maike_1_1_resource_object.html">ResourceObject</a> &amp;</span> <span class="declname">target</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">size_t</span> <a href="#1adf2df53ecc8ad5333886e142a377465f">lineCountGet</a>
+()</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">double</span> <a href="#1ace55705250532586d8d67290847e1600">compilationTimeGet</a>
+()</th>
+        <td class="memberdesc"></td>
+      </tr>
+    </table>
+  </section><section>
+    <h2 class="memproto" id="1ae09f92e48bafdf3baacf3d5ae4baa472">
+<span class="type">void</span> compile
+(<span class="type"><a href="class_maike_1_1_twins.html">Twins</a>&lt; const <a href="class_maike_1_1_dependency.html">Dependency</a> * &gt;</span> <span class="declname">dependency_list</span>,<span class="type"><a href="class_maike_1_1_twins.html">Twins</a>&lt; const <a href="class_maike_1_1_dependency.html">Dependency</a> * &gt;</span> <span class="declname">dependency_list_full</span>,<span class="type">const char *</span> <span class="declname">target_dir</span>)</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Pure virtual</li>
+      </ul>
+    </aside>
+  </section><section>
+    <h2 class="memproto" id="1a6da67159384d1954bc7337e8c6191267">
+<span class="type"><a href="class_maike_1_1_target.html">Target</a> &amp;</span> dependencyAdd
+(<span class="type"><a href="class_maike_1_1_dependency.html">Dependency</a> &amp;&amp;</span> <span class="declname">dep</span>)</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Pure virtual</li>
+      </ul>
+    </aside>
+  </section><section>
+    <h2 class="memproto" id="1aca2d8c784e9f1ee8527b361dda109a20">
+<span class="type"><a href="class_maike_1_1_twins.html">Twins</a>&lt; const <a href="class_maike_1_1_dependency.html">Dependency</a> * &gt;</span> dependencies
+()</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Const</li>
+        <li>Pure virtual</li>
+      </ul>
+    </aside>
+  </section><section>
+    <h2 class="memproto" id="1a5e22273131ace8711219f2edf7e69a72">
+<span class="type"><a href="class_maike_1_1_twins.html">Twins</a>&lt; <a href="class_maike_1_1_dependency.html">Dependency</a> * &gt;</span> dependencies
+()</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Pure virtual</li>
+      </ul>
+    </aside>
+  </section><section>
+    <h2 class="memproto" id="1af874e321912845616f75f303747ee21b">
+<span class="type"><a href="class_maike_1_1_target.html">Target</a> &amp;</span> dependencyInverseAdd
+(<span class="type"><a href="class_maike_1_1_dependency.html">Dependency</a> &amp;&amp;</span> <span class="declname">dep</span>)</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Pure virtual</li>
+      </ul>
+    </aside>
+  </section><section>
+    <h2 class="memproto" id="1a16f58c76bc7bf44db14fcfe4855dc3ce">
+<span class="type"><a href="class_maike_1_1_twins.html">Twins</a>&lt; const <a href="class_maike_1_1_dependency.html">Dependency</a> * &gt;</span> dependenciesInverseGet
+()</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Const</li>
+        <li>Pure virtual</li>
+      </ul>
+    </aside>
+  </section><section>
+    <h2 class="memproto" id="1a8a8ee23dcb3c1ec7a674d8eed67233d5">
+<span class="type">size_t</span> idGet
+()</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Const</li>
+        <li>Pure virtual</li>
+      </ul>
+    </aside>
+  </section><section>
+    <h2 class="memproto" id="1ad68cea274bfcaef5cc99b7671f92be17">
+<span class="type">const char *</span> nameGet
+()</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Const</li>
+        <li>Pure virtual</li>
+      </ul>
+    </aside>
+  </section><section>
+    <h2 class="memproto" id="1a92a08944fb8ab1fe745cb4bdf1f15acb">
+<span class="type">const char *</span> sourceNameGet
+()</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Const</li>
+        <li>Pure virtual</li>
+      </ul>
+    </aside>
+  </section><section>
+    <h2 class="memproto" id="1a77c839c1dcd792b9d9fc8c6262ed9ca2">
+<span class="type">const char *</span> inDirGet
+()</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Const</li>
+        <li>Pure virtual</li>
+      </ul>
+    </aside>
+  </section><section>
+    <h2 class="memproto" id="1aa3106228aa78ee9c4e2112203ca52546">
+<span class="type">bool</span> upToDate
+(<span class="type"><a href="class_maike_1_1_twins.html">Twins</a>&lt; const <a href="class_maike_1_1_dependency.html">Dependency</a> * &gt;</span> <span class="declname">dependency_list</span>,<span class="type"><a href="class_maike_1_1_twins.html">Twins</a>&lt; const <a href="class_maike_1_1_dependency.html">Dependency</a> * &gt;</span> <span class="declname">dependency_list_full</span>,<span class="type">const char *</span> <span class="declname">target_dir</span>)</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Const</li>
+        <li>Pure virtual</li>
+      </ul>
+    </aside>
+  </section><section>
+    <h2 class="memproto" id="1a1cc8d00356507f76f3aa1e32976ae1bf">
+<span class="type">void</span> dump
+(<span class="type"><a href="class_maike_1_1_resource_object.html">ResourceObject</a> &amp;</span> <span class="declname">target</span>)</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Const</li>
+        <li>Pure virtual</li>
+      </ul>
+    </aside>
+  </section><section>
+    <h2 class="memproto" id="1adf2df53ecc8ad5333886e142a377465f">
+<span class="type">size_t</span> lineCountGet
+()</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Const</li>
+        <li>Pure virtual</li>
+      </ul>
+    </aside>
+  </section><section>
+    <h2 class="memproto" id="1ace55705250532586d8d67290847e1600">
+<span class="type">double</span> compilationTimeGet
+()</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Const</li>
+        <li>Pure virtual</li>
+      </ul>
+    </aside>
+  </section></main><footer><address>Torbjörn Rathsman 2016</address></footer>
+</body>
+</html>

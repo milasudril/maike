@@ -1,0 +1,11 @@
+.highlight_comment
+	{
+	color:  #619900;
+	font-weight:bold;
+	}
+
+.highlight_keywordflow,.highlight_keywordtype
+	{
+	font-weight :bold;
+	color: #A800F0
+	}

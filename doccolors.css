@@ -1,0 +1,56 @@
+a{color: #005a00;}
+a:hover{text-shadow:0 0 1px  #00a900;color:#00a900}
+div.logo
+	{
+	background-color: #00a900;
+	color: #ffd4a9;
+	text-shadow:0 0 2px #ffffff;
+	background-image: url('docheader.png');
+	}
+
+header>nav{background-color:#ffd4a9}
+footer{background-color:  #ffa9d4;color:#a90054}
+header>nav>ul>li>a{color: #5a2d00;}
+header>nav>ul>li>a:hover{text-shadow: 0 0 1px #a95400;color:#a95400}
+table
+	{
+	background-color:  #a9ffa9;
+	border:2px solid;
+	border-radius:4px;
+	border-color: #1aff1a;
+	}
+
+aside
+	{
+	background-color: #ffa9d4;
+	border:1px solid;
+	border-radius:5px;
+	border-color: #ff1a8c;
+	}
+.infobox_note
+	{
+	background-color: #a9ffa9;
+	border:1px solid;
+	border-radius:5px;
+	border-color: #1aff1a;
+	}
+
+.infobox_warning
+	{
+	background-color: #ffd4a9;
+	border:1px solid;
+	border-radius:3px;
+	border-color: #FF1300;
+	}
+pre.code,pre
+	{
+	background-color:#a9ffa9;
+	border-color:  #1aff1a;
+		
+	}
+
+h1,h2,h3{color:#5a2d00;}
+h2 a,h1 a {color: #00a900;}
+th > a,td > a{color:#a90054;}
+th > a:hover,td > a:hover{text-shadow:0 0 1px  #ff1a8c;color:#ff1a8c}
+aside>h3,aside>h2{color:#a90054}

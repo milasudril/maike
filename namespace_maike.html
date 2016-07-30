@@ -1,0 +1,447 @@
+<!DOCTYPE html><html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
+<title>Maike: namespace Maike</title>
+<link rel="stylesheet" type="text/css" href="fonts.css">
+<link rel="stylesheet" type="text/css" href="doclayout.css">
+<link rel="stylesheet" type="text/css" href="doccolors.css">
+<link rel="stylesheet" type="text/css" href="dochighlight.css">
+</head>
+<body>
+<header><div class="logo">Maike</div>
+<nav><ul>
+<li><a href="index.html">Maike</a></li>
+<li><a href="apiref.html">API reference</a></li>
+<li><a href="namespaces.html">Namespaces</a></li>
+</ul></nav></header><main><h1 id="top">namespace Maike</h1>
+<section class="summary">
+    <p>The following table summarizes all members in this namespace.</p>
+    <table class="memberdecls">
+      <tr>
+        <th class="membername">class <a href="class_maike_1_1_data_sink.html">Maike::DataSink</a>
+</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th class="membername">class <a href="class_maike_1_1_data_source.html">Maike::DataSource</a>
+</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th class="membername">class <a href="class_maike_1_1_dependency.html">Maike::Dependency</a>
+</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th class="membername">class <a href="class_maike_1_1_error_message.html">Maike::ErrorMessage</a>
+</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th class="membername">class <a href="class_maike_1_1_graph_edge_writer.html">Maike::GraphEdgeWriter</a>
+</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th class="membername">class <a href="class_maike_1_1_handle.html">Maike::Handle</a>
+</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th class="membername">class <a href="class_maike_1_1_resource_object.html">Maike::ResourceObject</a>
+</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th class="membername">class <a href="class_maike_1_1_target.html">Maike::Target</a>
+</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th class="membername">class <a href="class_maike_1_1_target___factory.html">Maike::Target_Factory</a>
+</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th class="membername">class <a href="class_maike_1_1_target___hook.html">Maike::Target_Hook</a>
+</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th class="membername">class <a href="class_maike_1_1_target___loader.html">Maike::Target_Loader</a>
+</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th class="membername">class <a href="class_maike_1_1_target_base.html">Maike::TargetBase</a>
+</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th class="membername">class <a href="class_maike_1_1_twins.html">Maike::Twins</a>
+</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th class="membername">typedef <span class="type">void(*</span> <a href="#1ab24551ee9ac5cf0b5195eb42e0f58c89">ExceptionHandler</a>
+</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">Session *</span> <a href="#1a981ea0a04f725f0a11c67f0041a4bba4">sessionCreateRaw</a>
+()</th>
+        <td class="memberdesc">Creates a new <a href="namespace_maike.html">Maike</a> Session. </td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1a0084c4d20ce1cb648dde68fc908d6472">sessionDestroy</a>
+(<span class="type">Session *</span> <span class="declname">maike</span>)</th>
+        <td class="memberdesc">Destroys a <a href="namespace_maike.html">Maike</a> Session. </td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">std::unique_ptr&lt; Session, decltype(&amp;<a href="namespace_maike.html#1a0084c4d20ce1cb648dde68fc908d6472">sessionDestroy</a>)&gt;</span> <a href="#1aaa1e9c5b32650e62565a4739221dd873">sessionCreate</a>
+()</th>
+        <td class="memberdesc">RAII wrapper for Session lifetime managment. </td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1a117b2120717881a99f9ffcbe4c01fcde">versionPrint</a>
+(<span class="type"><a href="class_maike_1_1_data_sink.html">DataSink</a> &amp;</span> <span class="declname">sink</span>)</th>
+        <td class="memberdesc">Prints version information to <em>sink</em> . </td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1a5f44f55d002ce2e02d1d2c2767479838">init</a>
+(<span class="type"><a href="namespace_maike.html#1ab24551ee9ac5cf0b5195eb42e0f58c89">ExceptionHandler</a></span> <span class="declname">eh</span>)</th>
+        <td class="memberdesc">Sets an ExceptionHandler that is called when an exception occurs. </td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1ad1e1f1f4841639402a0eb28833ae8407">init</a>
+(<span class="type"><a href="class_maike_1_1_data_sink.html">DataSink</a> &amp;</span> <span class="declname">standard_output</span>,<span class="type"><a href="class_maike_1_1_data_sink.html">DataSink</a> &amp;</span> <span class="declname">standard_error</span>)</th>
+        <td class="memberdesc">This function sets DataSinks for standard output and standard error. </td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1a77d8ef17c2d8064b986fb0ba129c5525">init</a>
+(<span class="type"><a href="class_maike_1_1_data_sink.html">DataSink</a> &amp;</span> <span class="declname">standard_output</span>,<span class="type"><a href="class_maike_1_1_data_sink.html">DataSink</a> &amp;</span> <span class="declname">standard_error</span>,<span class="type"><a href="namespace_maike.html#1ab24551ee9ac5cf0b5195eb42e0f58c89">ExceptionHandler</a></span> <span class="declname">eh</span>)</th>
+        <td class="memberdesc">Combines the effect of <a href="namespace_maike.html#1a5f44f55d002ce2e02d1d2c2767479838">init(ExceptionHandler)</a>, and <a href="namespace_maike.html#1ad1e1f1f4841639402a0eb28833ae8407">init(DataSink&amp; standard_output,DataSink&amp; standard_error)</a>
+</td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1a307c6b40e04e8e332657d2d6b69346df">configDump</a>
+(<span class="type">const Session &amp;</span> <span class="declname">maike</span>,<span class="type"><a href="class_maike_1_1_data_sink.html">DataSink</a> &amp;</span> <span class="declname">sink</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1a3422ad7e672a4cd5d52b1912cb68e318">configDump</a>
+(<span class="type">const Session &amp;</span> <span class="declname">maike</span>,<span class="type"><a href="class_maike_1_1_resource_object.html">ResourceObject</a> &amp;</span> <span class="declname">obj</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1a3041b9d3ecb202f6253fa05d19fc4fe0">configAppendDefault</a>
+(<span class="type">Session &amp;</span> <span class="declname">maike</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1ac39b01d74482b6d34eb402129082fbb9">configAppend</a>
+(<span class="type">Session &amp;</span> <span class="declname">maike</span>,<span class="type"><a href="class_maike_1_1_data_source.html">DataSource</a> &amp;</span> <span class="declname">source</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1a44e28305cd913c59cf4cafea330efc8a">configAppend</a>
+(<span class="type">Session &amp;</span> <span class="declname">maike</span>,<span class="type">const <a href="class_maike_1_1_resource_object.html">ResourceObject</a> &amp;</span> <span class="declname">obj</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1a3431f75fac75a9b9bef0719d6deff594">configClear</a>
+(<span class="type">Session &amp;</span> <span class="declname">maike</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1aceccee1ff86bf0c934be417e4ce0d4c6">sysvarsLoad</a>
+(<span class="type">Session &amp;</span> <span class="declname">maike</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type"><a href="class_maike_1_1_twins.html">Twins</a>&lt; size_t &gt;</span> <a href="#1a421a472fd1ce97ca6db682fe340f6cbd">targetIdRangeGet</a>
+(<span class="type">const Session &amp;</span> <span class="declname">maike</span>)</th>
+        <td class="memberdesc">Retrievs the range of target id:s. </td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1a5c581cda286144e09daf2de570c59867">targetsListAll</a>
+(<span class="type">const Session &amp;</span> <span class="declname">maike</span>,<span class="type"><a href="class_maike_1_1_data_sink.html">DataSink</a> &amp;</span> <span class="declname">sink</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1a839670a7816446bd833c205c8d93ef8e">targetsListLeaf</a>
+(<span class="type">const Session &amp;</span> <span class="declname">maike</span>,<span class="type"><a href="class_maike_1_1_data_sink.html">DataSink</a> &amp;</span> <span class="declname">sink</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1a3ce73c9d1720afdda80c7d810ab21d22">targetsListExternal</a>
+(<span class="type">const Session &amp;</span> <span class="declname">maike</span>,<span class="type"><a href="class_maike_1_1_data_sink.html">DataSink</a> &amp;</span> <span class="declname">sink</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1ab8358d11335e9224cad99f7f5a79ecc6">targetCompile</a>
+(<span class="type">Session &amp;</span> <span class="declname">maike</span>,<span class="type">const char *</span> <span class="declname">target_name</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1aac6cf6cf9ee3d73b34db90902ae52bcc">targetsCompile</a>
+(<span class="type">Session &amp;</span> <span class="declname">maike</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1a9ec8618cbcf2abb60e572ee8d0a31883">targetDump</a>
+(<span class="type">const Session &amp;</span> <span class="declname">maike</span>,<span class="type"><a href="class_maike_1_1_resource_object.html">ResourceObject</a> &amp;</span> <span class="declname">target</span>,<span class="type">const char *</span> <span class="declname">target_name</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1a5152aef2d31568b42c731f54fab3a5a5">targetsDump</a>
+(<span class="type">const Session &amp;</span> <span class="declname">maike</span>,<span class="type"><a href="class_maike_1_1_resource_object.html">ResourceObject</a> &amp;</span> <span class="declname">target</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1af36a3c0aba508eb92e069049c8abf02b">targetsDumpTSVHeader</a>
+(<span class="type"><a href="class_maike_1_1_data_sink.html">DataSink</a> &amp;</span> <span class="declname">sink</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1af19382923c7c09c3c04fff0f7d25c6d8">targetDumpTSV</a>
+(<span class="type">const Session &amp;</span> <span class="declname">maike</span>,<span class="type"><a href="class_maike_1_1_data_sink.html">DataSink</a> &amp;</span> <span class="declname">sink</span>,<span class="type">const char *</span> <span class="declname">target_name</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1a47c29e966ab0b3093eac1021eb0fde40">targetsDumpTSV</a>
+(<span class="type">const Session &amp;</span> <span class="declname">maike</span>,<span class="type"><a href="class_maike_1_1_data_sink.html">DataSink</a> &amp;</span> <span class="declname">sink</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1ad29a4f35e8460746fb050603403a8482">graphDump</a>
+(<span class="type">const Session &amp;</span> <span class="declname">maike</span>,<span class="type"><a href="class_maike_1_1_graph_edge_writer.html">GraphEdgeWriter</a> &amp;</span> <span class="declname">writer</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1aa0a80017e6d6146f9dc1cf463b020b50">graphDump</a>
+(<span class="type">const Session &amp;</span> <span class="declname">maike</span>,<span class="type"><a href="class_maike_1_1_graph_edge_writer.html">GraphEdgeWriter</a> &amp;</span> <span class="declname">writer</span>,<span class="type">const char *</span> <span class="declname">target_start</span>,<span class="type">uint8_t *</span> <span class="declname">targets_visited</span>,<span class="type">size_t</span> <span class="declname">id_min</span>)</th>
+        <td class="memberdesc">Dumps the dependency graph from and including <em>target_start</em>  in forwards. </td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1a16520c30003354819141a1924e6f97dc">graphInvDump</a>
+(<span class="type">const Session &amp;</span> <span class="declname">maike</span>,<span class="type"><a href="class_maike_1_1_graph_edge_writer.html">GraphEdgeWriter</a> &amp;</span> <span class="declname">writer</span>,<span class="type">const char *</span> <span class="declname">target_start</span>,<span class="type">uint8_t *</span> <span class="declname">targets_visited</span>,<span class="type">size_t</span> <span class="declname">id_min</span>)</th>
+        <td class="memberdesc">Dumps the dependency graph from and including <em>target_start</em>  backwards. </td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1afa623a839ce0dd2b6ed69452c4e94668">exceptionHandlerDefault</a>
+(<span class="type">const <a href="class_maike_1_1_error_message.html">ErrorMessage</a> &amp;</span> <span class="declname">message</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1a68fe70d736e077e7e1cddd38f3267d90">exceptionHandlerSet</a>
+(<span class="type"><a href="namespace_maike.html#1ab24551ee9ac5cf0b5195eb42e0f58c89">ExceptionHandler</a></span> <span class="declname">eh</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1a30200f33e854572e61db69222ba94c5d">exceptionRaise</a>
+(<span class="type">const <a href="class_maike_1_1_error_message.html">ErrorMessage</a> &amp;</span> <span class="declname">message</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type"><a href="namespace_maike.html#1ab24551ee9ac5cf0b5195eb42e0f58c89">ExceptionHandler</a></span> <a href="#1a330d93b6b42aacc30e97a96936b93ca2">exceptionHandlerGet</a>
+()</th>
+        <td class="memberdesc"></td>
+      </tr>
+    </table>
+  </section><section>
+    <h2 class="memproto" id="1ab24551ee9ac5cf0b5195eb42e0f58c89">
+<span class="type">void(*</span> ExceptionHandler</h2>
+  </section><section>
+    <h2 class="memproto" id="1a981ea0a04f725f0a11c67f0041a4bba4">
+<span class="type">Session *</span> sessionCreateRaw
+()</h2>
+    <p>This function creates a new <a href="namespace_maike.html">Maike</a> Session.</p>
+    <div class="infobox_note">
+      <p>The caller is resposible for deleting the session by calling sessionDestroy. </p>
+    </div>
+  </section><section>
+    <h2 class="memproto" id="1a0084c4d20ce1cb648dde68fc908d6472">
+<span class="type">void</span> sessionDestroy
+(<span class="type">Session *</span> <span class="declname">maike</span>)</h2>
+    <p>This function destroys the Session pointed to by <em>maike</em> . </p>
+  </section><section>
+    <h2 class="memproto" id="1aaa1e9c5b32650e62565a4739221dd873">
+<span class="type">std::unique_ptr&lt; Session, decltype(&amp;<a href="namespace_maike.html#1a0084c4d20ce1cb648dde68fc908d6472">sessionDestroy</a>)&gt;</span> sessionCreate
+()</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Inline</li>
+      </ul>
+    </aside>
+    <div class="infobox_see">
+      <p>
+        <a href="namespace_maike.html#1a981ea0a04f725f0a11c67f0041a4bba4">sessionCreateRaw</a>
+      </p>
+    </div>
+    <div class="infobox_see">
+      <p>
+        <a href="namespace_maike.html#1a0084c4d20ce1cb648dde68fc908d6472">sessionDestroy</a>
+      </p>
+    </div>
+  </section><section>
+    <h2 class="memproto" id="1a117b2120717881a99f9ffcbe4c01fcde">
+<span class="type">void</span> versionPrint
+(<span class="type"><a href="class_maike_1_1_data_sink.html">DataSink</a> &amp;</span> <span class="declname">sink</span>)</h2>
+    <p>This function prints version information to <em>sink</em> . </p>
+  </section><section>
+    <h2 class="memproto" id="1a5f44f55d002ce2e02d1d2c2767479838">
+<span class="type">void</span> init
+(<span class="type"><a href="namespace_maike.html#1ab24551ee9ac5cf0b5195eb42e0f58c89">ExceptionHandler</a></span> <span class="declname">eh</span>)</h2>
+    <p>This function sets an ExceptionHandler that is called when an exception occurs. </p>
+  </section><section>
+    <h2 class="memproto" id="1ad1e1f1f4841639402a0eb28833ae8407">
+<span class="type">void</span> init
+(<span class="type"><a href="class_maike_1_1_data_sink.html">DataSink</a> &amp;</span> <span class="declname">standard_output</span>,<span class="type"><a href="class_maike_1_1_data_sink.html">DataSink</a> &amp;</span> <span class="declname">standard_error</span>)</h2>
+    <p>This function sets DataSinks for standard output and standard error. These sinks are used to redirect output data from the programs invoked by <a href="namespace_maike.html">Maike</a> during the compilation process. By default, data are written to the corresponding standard stream. Through this function, it is possible to change that behaviour. This is useful when <a href="namespace_maike.html">Maike</a> is used from within an IDE, or another GUI application. </p>
+  </section><section>
+    <h2 class="memproto" id="1a77d8ef17c2d8064b986fb0ba129c5525">
+<span class="type">void</span> init
+(<span class="type"><a href="class_maike_1_1_data_sink.html">DataSink</a> &amp;</span> <span class="declname">standard_output</span>,<span class="type"><a href="class_maike_1_1_data_sink.html">DataSink</a> &amp;</span> <span class="declname">standard_error</span>,<span class="type"><a href="namespace_maike.html#1ab24551ee9ac5cf0b5195eb42e0f58c89">ExceptionHandler</a></span> <span class="declname">eh</span>)</h2>
+    <p>This function combines the effect of <a href="namespace_maike.html#1a5f44f55d002ce2e02d1d2c2767479838">init(ExceptionHandler)</a>, and <a href="namespace_maike.html#1ad1e1f1f4841639402a0eb28833ae8407">init(DataSink&amp; standard_output,DataSink&amp; standard_error)</a></p>
+  </section><section>
+    <h2 class="memproto" id="1a307c6b40e04e8e332657d2d6b69346df">
+<span class="type">void</span> configDump
+(<span class="type">const Session &amp;</span> <span class="declname">maike</span>,<span class="type"><a href="class_maike_1_1_data_sink.html">DataSink</a> &amp;</span> <span class="declname">sink</span>)</h2>
+  </section><section>
+    <h2 class="memproto" id="1a3422ad7e672a4cd5d52b1912cb68e318">
+<span class="type">void</span> configDump
+(<span class="type">const Session &amp;</span> <span class="declname">maike</span>,<span class="type"><a href="class_maike_1_1_resource_object.html">ResourceObject</a> &amp;</span> <span class="declname">obj</span>)</h2>
+  </section><section>
+    <h2 class="memproto" id="1a3041b9d3ecb202f6253fa05d19fc4fe0">
+<span class="type">void</span> configAppendDefault
+(<span class="type">Session &amp;</span> <span class="declname">maike</span>)</h2>
+  </section><section>
+    <h2 class="memproto" id="1ac39b01d74482b6d34eb402129082fbb9">
+<span class="type">void</span> configAppend
+(<span class="type">Session &amp;</span> <span class="declname">maike</span>,<span class="type"><a href="class_maike_1_1_data_source.html">DataSource</a> &amp;</span> <span class="declname">source</span>)</h2>
+  </section><section>
+    <h2 class="memproto" id="1a44e28305cd913c59cf4cafea330efc8a">
+<span class="type">void</span> configAppend
+(<span class="type">Session &amp;</span> <span class="declname">maike</span>,<span class="type">const <a href="class_maike_1_1_resource_object.html">ResourceObject</a> &amp;</span> <span class="declname">obj</span>)</h2>
+  </section><section>
+    <h2 class="memproto" id="1a3431f75fac75a9b9bef0719d6deff594">
+<span class="type">void</span> configClear
+(<span class="type">Session &amp;</span> <span class="declname">maike</span>)</h2>
+  </section><section>
+    <h2 class="memproto" id="1aceccee1ff86bf0c934be417e4ce0d4c6">
+<span class="type">void</span> sysvarsLoad
+(<span class="type">Session &amp;</span> <span class="declname">maike</span>)</h2>
+  </section><section>
+    <h2 class="memproto" id="1a421a472fd1ce97ca6db682fe340f6cbd">
+<span class="type"><a href="class_maike_1_1_twins.html">Twins</a>&lt; size_t &gt;</span> targetIdRangeGet
+(<span class="type">const Session &amp;</span> <span class="declname">maike</span>)</h2>
+    <p>This function retrieves the range of target id:s. The number of targets is the difference between the two members of the <a href="class_maike_1_1_twins.html">Twins</a> returned. </p>
+  </section><section>
+    <h2 class="memproto" id="1a5c581cda286144e09daf2de570c59867">
+<span class="type">void</span> targetsListAll
+(<span class="type">const Session &amp;</span> <span class="declname">maike</span>,<span class="type"><a href="class_maike_1_1_data_sink.html">DataSink</a> &amp;</span> <span class="declname">sink</span>)</h2>
+  </section><section>
+    <h2 class="memproto" id="1a839670a7816446bd833c205c8d93ef8e">
+<span class="type">void</span> targetsListLeaf
+(<span class="type">const Session &amp;</span> <span class="declname">maike</span>,<span class="type"><a href="class_maike_1_1_data_sink.html">DataSink</a> &amp;</span> <span class="declname">sink</span>)</h2>
+  </section><section>
+    <h2 class="memproto" id="1a3ce73c9d1720afdda80c7d810ab21d22">
+<span class="type">void</span> targetsListExternal
+(<span class="type">const Session &amp;</span> <span class="declname">maike</span>,<span class="type"><a href="class_maike_1_1_data_sink.html">DataSink</a> &amp;</span> <span class="declname">sink</span>)</h2>
+  </section><section>
+    <h2 class="memproto" id="1ab8358d11335e9224cad99f7f5a79ecc6">
+<span class="type">void</span> targetCompile
+(<span class="type">Session &amp;</span> <span class="declname">maike</span>,<span class="type">const char *</span> <span class="declname">target_name</span>)</h2>
+  </section><section>
+    <h2 class="memproto" id="1aac6cf6cf9ee3d73b34db90902ae52bcc">
+<span class="type">void</span> targetsCompile
+(<span class="type">Session &amp;</span> <span class="declname">maike</span>)</h2>
+  </section><section>
+    <h2 class="memproto" id="1a9ec8618cbcf2abb60e572ee8d0a31883">
+<span class="type">void</span> targetDump
+(<span class="type">const Session &amp;</span> <span class="declname">maike</span>,<span class="type"><a href="class_maike_1_1_resource_object.html">ResourceObject</a> &amp;</span> <span class="declname">target</span>,<span class="type">const char *</span> <span class="declname">target_name</span>)</h2>
+  </section><section>
+    <h2 class="memproto" id="1a5152aef2d31568b42c731f54fab3a5a5">
+<span class="type">void</span> targetsDump
+(<span class="type">const Session &amp;</span> <span class="declname">maike</span>,<span class="type"><a href="class_maike_1_1_resource_object.html">ResourceObject</a> &amp;</span> <span class="declname">target</span>)</h2>
+  </section><section>
+    <h2 class="memproto" id="1af36a3c0aba508eb92e069049c8abf02b">
+<span class="type">void</span> targetsDumpTSVHeader
+(<span class="type"><a href="class_maike_1_1_data_sink.html">DataSink</a> &amp;</span> <span class="declname">sink</span>)</h2>
+  </section><section>
+    <h2 class="memproto" id="1af19382923c7c09c3c04fff0f7d25c6d8">
+<span class="type">void</span> targetDumpTSV
+(<span class="type">const Session &amp;</span> <span class="declname">maike</span>,<span class="type"><a href="class_maike_1_1_data_sink.html">DataSink</a> &amp;</span> <span class="declname">sink</span>,<span class="type">const char *</span> <span class="declname">target_name</span>)</h2>
+  </section><section>
+    <h2 class="memproto" id="1a47c29e966ab0b3093eac1021eb0fde40">
+<span class="type">void</span> targetsDumpTSV
+(<span class="type">const Session &amp;</span> <span class="declname">maike</span>,<span class="type"><a href="class_maike_1_1_data_sink.html">DataSink</a> &amp;</span> <span class="declname">sink</span>)</h2>
+  </section><section>
+    <h2 class="memproto" id="1ad29a4f35e8460746fb050603403a8482">
+<span class="type">void</span> graphDump
+(<span class="type">const Session &amp;</span> <span class="declname">maike</span>,<span class="type"><a href="class_maike_1_1_graph_edge_writer.html">GraphEdgeWriter</a> &amp;</span> <span class="declname">writer</span>)</h2>
+  </section><section>
+    <h2 class="memproto" id="1aa0a80017e6d6146f9dc1cf463b020b50">
+<span class="type">void</span> graphDump
+(<span class="type">const Session &amp;</span> <span class="declname">maike</span>,<span class="type"><a href="class_maike_1_1_graph_edge_writer.html">GraphEdgeWriter</a> &amp;</span> <span class="declname">writer</span>,<span class="type">const char *</span> <span class="declname">target_start</span>,<span class="type">uint8_t *</span> <span class="declname">targets_visited</span>,<span class="type">size_t</span> <span class="declname">id_min</span>)</h2>
+    <p>Dumps the dependency graph from and including <em>target_start</em>  in forward direction. The parameter <em>targets_visited</em>  must point to an array with capacity of holding one element per registred target. The number of elements and <em>id_min</em>  can be retrieved by calling <a href="namespace_maike.html#1a421a472fd1ce97ca6db682fe340f6cbd">targetIdRangeGet(const Session&amp;)</a>. </p>
+  </section><section>
+    <h2 class="memproto" id="1a16520c30003354819141a1924e6f97dc">
+<span class="type">void</span> graphInvDump
+(<span class="type">const Session &amp;</span> <span class="declname">maike</span>,<span class="type"><a href="class_maike_1_1_graph_edge_writer.html">GraphEdgeWriter</a> &amp;</span> <span class="declname">writer</span>,<span class="type">const char *</span> <span class="declname">target_start</span>,<span class="type">uint8_t *</span> <span class="declname">targets_visited</span>,<span class="type">size_t</span> <span class="declname">id_min</span>)</h2>
+    <p>Dumps the dependency graph from and including <em>target_start</em>  in forward direction. The parameter <em>targets_visited</em>  must point to an array with capacity of holding one element per registred target. The number of elements and <em>id_min</em>  can be retrieved by calling <a href="namespace_maike.html#1a421a472fd1ce97ca6db682fe340f6cbd">targetIdRangeGet(const Session&amp;)</a>. </p>
+  </section><section>
+    <h2 class="memproto" id="1afa623a839ce0dd2b6ed69452c4e94668">
+<span class="type">void</span> exceptionHandlerDefault
+(<span class="type">const <a href="class_maike_1_1_error_message.html">ErrorMessage</a> &amp;</span> <span class="declname">message</span>)</h2>
+  </section><section>
+    <h2 class="memproto" id="1a68fe70d736e077e7e1cddd38f3267d90">
+<span class="type">void</span> exceptionHandlerSet
+(<span class="type"><a href="namespace_maike.html#1ab24551ee9ac5cf0b5195eb42e0f58c89">ExceptionHandler</a></span> <span class="declname">eh</span>)</h2>
+  </section><section>
+    <h2 class="memproto" id="1a30200f33e854572e61db69222ba94c5d">
+<span class="type">void</span> exceptionRaise
+(<span class="type">const <a href="class_maike_1_1_error_message.html">ErrorMessage</a> &amp;</span> <span class="declname">message</span>)</h2>
+  </section><section>
+    <h2 class="memproto" id="1a330d93b6b42aacc30e97a96936b93ca2">
+<span class="type"><a href="namespace_maike.html#1ab24551ee9ac5cf0b5195eb42e0f58c89">ExceptionHandler</a></span> exceptionHandlerGet
+()</h2>
+  </section></main><footer><address>Torbjörn Rathsman 2016</address></footer>
+</body>
+</html>
