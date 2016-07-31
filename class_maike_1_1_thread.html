@@ -3,8 +3,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta charset="utf-8">
 <title>Maike: 
-template&lt;class T&gt;
-class Maike::Handle</title>
+template&lt;class Runner&gt;
+class Maike::Thread</title>
 <link rel="stylesheet" type="text/css" href="fonts.css">
 <link rel="stylesheet" type="text/css" href="doclayout.css">
 <link rel="stylesheet" type="text/css" href="doccolors.css">
@@ -18,46 +18,38 @@ class Maike::Handle</title>
 <li><a href="classes.html">Classes</a></li>
 </ul></nav></header><main><h1 id="top">
 <span class="templatestring">
-template&lt;<span class="type">class T</span>&gt;
-</span>class Maike::Handle</h1>
+template&lt;<span class="type">class Runner</span>&gt;
+</span>class Maike::Thread</h1>
 <section class="summary">
     <aside>
       <h2>Quick info</h2>
-      <p>Include <a href="handle_8hpp.html">handle.hpp</a></p>
-      <p>This class extends</p>
-      <ul>
-        <li>
-          <a href=".html">std::unique_ptr&lt; T, void(*)(T::Base *)&gt;</a>
-        </li>
-      </ul>
+      <p>Include <a href="thread_8hpp.html">thread.hpp</a></p>
     </aside>
     <p>The following table summarizes all members in this class.</p>
     <table class="memberdecls">
       <tr>
-        <th class="membername">typedef <span class="type">std::unique_ptr&lt; T, void(*)(typename T::Base *)&gt;</span> <a href="#1aaf386881bd4dc77aab3d084ebc5fe1f7">Base</a>
-</th>
+        <th class="membername">
+<span class="type"></span> <a href="#1a027dc4f34b10b73ab307e23db8d7e541">Thread</a>
+(<span class="type">const Runner &amp;</span> <span class="declname">runner</span>)</th>
         <td class="memberdesc"></td>
       </tr>
       <tr>
         <th class="membername">
-<span class="type"></span> <a href="#1a2931bde559363795574f5669da01ae6d">Handle</a>
-(<span class="type">T *</span> <span class="declname">handle</span>)</th>
+<span class="type"></span> <a href="#1aebe0afde0e47d242ea28bbe03cbd5567">Thread</a>
+(<span class="type">Runner &amp;&amp;</span> <span class="declname">runner</span>)</th>
         <td class="memberdesc"></td>
       </tr>
       <tr>
         <th class="membername">
-<span class="type"></span> <a href="#1aa9f19e882f3061c7d1bcc012c5197f4a">operator Handle&lt; typename T::Base &gt;</a>
+<span class="type"></span> <a href="#1a4fc72a5808ac317593c0e54ea4c7442f">~Thread</a>
 ()</th>
         <td class="memberdesc"></td>
       </tr>
     </table>
   </section><section>
-    <h2 class="memproto" id="1aaf386881bd4dc77aab3d084ebc5fe1f7">
-<span class="type">std::unique_ptr&lt; T, void(*)(typename T::Base *)&gt;</span> Base</h2>
-  </section><section>
-    <h2 class="memproto" id="1a2931bde559363795574f5669da01ae6d">
-<span class="type"></span> Handle
-(<span class="type">T *</span> <span class="declname">handle</span>)</h2>
+    <h2 class="memproto" id="1a027dc4f34b10b73ab307e23db8d7e541">
+<span class="type"></span> Thread
+(<span class="type">const Runner &amp;</span> <span class="declname">runner</span>)</h2>
     <aside>
       <h3>Quick info</h3>
       <p>This member is</p>
@@ -67,8 +59,20 @@ template&lt;<span class="type">class T</span>&gt;
       </ul>
     </aside>
   </section><section>
-    <h2 class="memproto" id="1aa9f19e882f3061c7d1bcc012c5197f4a">
-<span class="type"></span> operator Handle&lt; typename T::Base &gt;
+    <h2 class="memproto" id="1aebe0afde0e47d242ea28bbe03cbd5567">
+<span class="type"></span> Thread
+(<span class="type">Runner &amp;&amp;</span> <span class="declname">runner</span>)</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Explicit</li>
+        <li>Inline</li>
+      </ul>
+    </aside>
+  </section><section>
+    <h2 class="memproto" id="1a4fc72a5808ac317593c0e54ea4c7442f">
+<span class="type"></span> ~Thread
 ()</h2>
     <aside>
       <h3>Quick info</h3>
