@@ -1,3 +1,29 @@
-//@	{"targets":[{"name":"libmaikeplug.a","type":"lib_static"}]}
+//@	{
+//@	"targets":
+//@		[
+//@			{"name":"libmaikeplug.a","type":"lib_static"}
+//@			,{"name":"maikeplug.hpp","type":"include_lib"}
+//@		]
+//@	}
 
+#include "dependency.hpp"
+#include "target_hook.hpp"
+#include "targetbase.hpp"
+#include "pipe.hpp"
+#include "fileutils.hpp"
+#include "thread.hpp"
+#include "command.hpp"
+#include "stdstream.hpp"
+#include "exceptionhandler.hpp"
+#include "errormessage.hpp"
+#include "filein.hpp"
+#include "fileout.hpp"
+#include "readbuffer.hpp"
+#include "writebuffer.hpp"
+#include "parametersetmapfixed.hpp"
+#include "stringformat.hpp"
+#include "spider.hpp"
+#include "target_factorydelegator.hpp"
+#include "target_factory.hpp"
+#include "target_loader.hpp"
 

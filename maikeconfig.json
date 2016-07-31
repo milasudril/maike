@@ -10,7 +10,8 @@
             "__targets",
 			"__doc",
             ".clang",
-            "test"
+            "test",
+			"gh-pages"
         ],
         "recursive":1
     },

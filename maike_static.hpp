@@ -7,6 +7,7 @@
 #define MAIKE_MAIKE_HPP
 
 #include "exceptionhandler.hpp"
+#include "twins.hpp"
 #include <cstddef>
 #include <cstdint>
 #include <memory>
@@ -23,8 +24,6 @@ namespace Maike
 	class DataSource;
 	class GraphEdgeWriter;
 	class ResourceObject;
-
-	template<class T> class Twins;
 
 	/**\brief Creates a new Maike Session.
 	*

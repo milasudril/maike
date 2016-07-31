@@ -171,9 +171,10 @@ static void includeBuild(Twins<const Dependency*> dependency_list
 			{
 			if(t->typeGet()==TargetCxx::Type::INCLUDE)
 				{
-				FileUtils::copyFilter(t->sourceNameGet()
-					,dircat(target_dir,t->nameGet()).c_str()
-					,"^[[:space:]]*//@");
+				auto src=t->sourceNameGet();
+				auto dest=dircat(target_dir,t->nameGet());
+				if(FileUtils::newer(src,dest.c_str()))
+					{FileUtils::copyFilter(src,dest.c_str(),"^[[:space:]]*//@");}
 				}
 			}
 		++dependency_list.first;
