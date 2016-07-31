@@ -2,4 +2,4 @@
 
 tidydox
 cp -pu __doc/html/* gh-pages
-rm -r __doc
+#rm -r __doc

@@ -43,8 +43,8 @@ namespace Maike
 
 	/**\brief RAII wrapper for Session lifetime managment.
 	* 
-	* \see sessionCreateRaw
-	* \see sessionDestroy
+	* \see sessionCreateRaw, sessionDestroy(Session*)
+	* 
 	*/
 	PRIVATE inline std::unique_ptr<Session,decltype(&sessionDestroy)>
 	sessionCreate()
