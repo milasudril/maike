@@ -131,6 +131,36 @@ static std::vector<TargetCxxCompiler::FileInfo> depstringCreate(
 	return std::move(ret);
 	}
 
+static std::vector<TargetCxxCompiler::FileInfo> depstringCreateAr(
+	 std::vector<std::string>& strings_temp
+	,const char* target_dir
+	,Twins<const Dependency*> dependency_list_full)
+	{
+	std::vector<TargetCxxCompiler::FileInfo> ret;
+	while(dependency_list_full.first!=dependency_list_full.second)
+		{
+		switch(dependency_list_full.first->relationGet())
+			{
+			case Dependency::Relation::IMPLEMENTATION:
+				{
+				auto target_rel=dynamic_cast<const TargetCxx*>(dependency_list_full.first->target());
+				if(target_rel && target_rel->typeGet()!=TargetCxx::Type::INCLUDE)
+					{
+					auto name_full=dircat(target_dir,target_rel->nameGet());
+					strings_temp.push_back(std::move(name_full));
+					ret.push_back({strings_temp.back().c_str(),TargetCxxCompiler::FileUsage::NORMAL});
+					}
+				}
+				break;
+
+			default:
+				break;
+			}
+		++dependency_list_full.first;
+		}
+	return std::move(ret);
+	}
+
 static void includeBuild(Twins<const Dependency*> dependency_list
 	,const char* source_name,const char* name,const char* target_dir)
 	{
@@ -187,6 +217,18 @@ void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 			r_compiler.compileDll(sourceNameGet(),{deps_begin,deps_end},name_full.c_str(),m_options_extra);
 			}
 			break;
+		case Type::LIB_STATIC:
+			{
+			std::vector<std::string> strings_temp;
+			strings_temp.reserve(dependency_list_full.second - dependency_list_full.first);
+			auto depfiles=depstringCreateAr(strings_temp,target_dir,dependency_list_full);
+			auto deps_begin=depfiles.data();
+			auto deps_end=deps_begin + depfiles.size();
+			std::reverse(deps_begin,deps_end);
+			r_compiler.compileLibrary(sourceNameGet(),{deps_begin,deps_end},name_full.c_str(),m_options_extra);
+			}
+			break;
+
 		case Type::INCLUDE:
 			break;
 		default:

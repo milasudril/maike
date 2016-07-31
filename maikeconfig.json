@@ -38,6 +38,7 @@
                     ],
                     "name":"g++"
                 },
+				"cflags_format":"-^",
                 "cflags_extra":[],
                 "cxxversion_max":-1,
                 "cxxversion_min":201103,
@@ -60,7 +61,6 @@
                     ],
                     "name":"g++"
                 },
-                "flag_prefix":"",
                 "includedir":[],
                 "includedir_format":"-I^",
                 "includedir_noscan":[],

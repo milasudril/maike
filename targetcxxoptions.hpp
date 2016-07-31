@@ -37,6 +37,9 @@ namespace Maike
 			const Command& pkgconfigGet() const noexcept
 				{return m_pkgconfig;}
 
+			const Command& libcompileGet() const noexcept
+				{return m_libcompile;}
+
 
 			unsigned long long int cxxversionMinGet() const noexcept
 				{return m_cxxversion_min;}

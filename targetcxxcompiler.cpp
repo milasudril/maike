@@ -267,3 +267,11 @@ void TargetCxxCompiler::compileDll(const char* source
 	{
 	execute(r_options.dllcompileGet(),source,dependencies,dest,options_extra);
 	}
+
+void TargetCxxCompiler::compileLibrary(const char* source
+	,Twins<const FileInfo*> dependencies
+	,const char* dest,const TargetCxxOptions& options_extra) const
+	{
+	execute(r_options.libcompileGet(),source,dependencies,dest,options_extra);
+	}
+
