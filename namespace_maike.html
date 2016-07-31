@@ -84,8 +84,7 @@
         <td></td>
       </tr>
       <tr>
-        <th class="membername">typedef <span class="type">void(*</span> <a href="#1ab24551ee9ac5cf0b5195eb42e0f58c89">ExceptionHandler</a>
-</th>
+        <th class="membername">typedef <span class="type">void(*</span> <a href="#1ab24551ee9ac5cf0b5195eb42e0f58c89">ExceptionHandler</a>)(const ErrorMessage &amp;message)</th>
         <td class="memberdesc"></td>
       </tr>
       <tr>
@@ -284,7 +283,21 @@
     </table>
   </section><section>
     <h2 class="memproto" id="1ab24551ee9ac5cf0b5195eb42e0f58c89">
-<span class="type">void(*</span> ExceptionHandler</h2>
+<span class="type">void(*</span> ExceptionHandler)(const ErrorMessage &amp;message)</h2>
+    <p>Function called when an exception happens.</p>
+    <p>An ExceptionHandler is a function that is called when an exception happens There are three legal ways to leave an ExceptionHandler:</p>
+    <ol>
+      <li>
+        <p>Throw the <a href="class_maike_1_1_error_message.html">ErrorMessage</a>. This is the default action.</p>
+      </li>
+      <li>
+        <p>Package the <a href="class_maike_1_1_error_message.html">ErrorMessage</a> into another object, and throw the result.</p>
+      </li>
+      <li>
+        <p>Terminate the process through any appropriate function provided by the runtime library or the operating system.</p>
+      </li>
+    </ol>
+    <p>An ExceptionHandler should not throw anything else than the <a href="class_maike_1_1_error_message.html">ErrorMessage</a>, or a repackaged version of it. </p>
   </section><section>
     <h2 class="memproto" id="1a981ea0a04f725f0a11c67f0041a4bba4">
 <span class="type">Session *</span> sessionCreateRaw
@@ -309,16 +322,8 @@
         <li>Inline</li>
       </ul>
     </aside>
-    <div class="infobox_see">
-      <p>
-        <a href="namespace_maike.html#1a981ea0a04f725f0a11c67f0041a4bba4">sessionCreateRaw</a>
-      </p>
-    </div>
-    <div class="infobox_see">
-      <p>
-        <a href="namespace_maike.html#1a0084c4d20ce1cb648dde68fc908d6472">sessionDestroy</a>
-      </p>
-    </div>
+    <h3>See also</h3>
+    <p><a href="namespace_maike.html#1a981ea0a04f725f0a11c67f0041a4bba4">sessionCreateRaw</a>, <a href="namespace_maike.html#1a0084c4d20ce1cb648dde68fc908d6472">sessionDestroy(Session*)</a></p>
   </section><section>
     <h2 class="memproto" id="1a117b2120717881a99f9ffcbe4c01fcde">
 <span class="type">void</span> versionPrint
