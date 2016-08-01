@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<docset>
+<navpath>
+<navitem href="index.html">Maike</navitem>
+</navpath>
+<h1>C++ interface</h1>
+
+<p>The Maike package comes with a C++ library. This maikes it possible to integrate Maike into other applications, for example, as the backend of an IDE, or as a compiler frontend for native plug-ins shipped as source code packes. Maike is also extendable through <a href="class_maike_1_1_target___hook.html">Target_Hook</a>s, which makes it possible to add support for new languages. The figure below gives an overview on how Maike is constructed.</p>
+
+<figure>
+<img src="sysarch.svg" alt="An overview on the construction of Maike"/>
+<figcaption><p>An overview on the construction of Maike</p></figcaption>
+</figure>
+
+<section>
+<h2>Using the maike library</h2>
+<p>The typical sequence for compiling a project using Maike, with the Maike library is</p>
+<ol>
+<li>Create a Maike session. This is done through either <a href="namespace_maike.html#1aaa1e9c5b32650e62565a4739221dd873">sessionCreate</a>, or <a href="namespace_maike.html#1a981ea0a04f725f0a11c67f0041a4bba4">sessionCreateRaw</a>. The latter requires that the session is destroyed by calling <a href="namespace_maike.html#1a0084c4d20ce1cb648dde68fc908d6472">sessionDestroy</a>.</li>
+<li><p>Configure the session. This can be done by using a <a href="class_maike_1_1_resource_object.html">ResourceObject</a>, or by using a <a href="class_maike_1_1_data_source.html">DataSource</a>, containing configuration information in JSON format. In both cases, the tree should follow the structure that is obtained through the command</p>
+<pre class="code">
+maike --configdump
+</pre>
+<p>There is also a function that loads a default configuration.</p></li>
+<li>Compile one or more targets</li>
+</ol>
+
+<p>In real code, the sequence above will look similar to the following example.</p>
+<pre class="code">
+//@	{
+//@	 "targets":
+//@		[{
+//@		 "name":"maikehello","type":"application"
+//@		,"dependencies":[{"ref":"maike","rel":"external"}]
+//@		}]
+//@	}
+
+#include &lt;maike.hpp&gt;
+#include &lt;cstdio&gt;
+
+int main()
+	{
+	try
+		{
+		auto session=Maike::sessionCreate();
+		Maike::sysvarsLoad(session);
+		Maike::configAppendDefault(session);
+		Maike::targetsCompile(session);
+		}
+	catch(const Maike::ErrorMessage&amp; msg)
+		{
+		fprintf(stderr,"%s\n",msg.messageGet());
+		return -1;
+		}
+	return 0;
+	}
+</pre>
+<p>Provided that the compiler can find `libmaike`, and `maike.hpp`. This example can be compiled by using the command</p>
+<pre class="code">
+maike --targets=maikehello
+</pre>
+</section>
+
+<section>
+<h2>Implementation of custom plug-ins</h2>
+<p>A Maike plug-in is a shared library that must export three functions: <a href="target__hook_8hpp.html#1a45b8630ba6bcb349d01134a4b8282ad9">Maike_Plugin_init</a>, <a href="target__hook_8hpp.html#1af8225081cfda966cb1d966511153ead3">Maike_Plugin_cleanup</a>, and <a href="target__hook_8hpp.html#1a9581221815bf4be121ff88b76fd77bc6">Maike_Target_Hook_create</a>. A the purpose of a <a href="class_maike_1_1_target___hook.html">Target_Hook</a> is to supply Maike with a <a href="class_maike_1_1_target___factory.html">Target_Factory</a>, and a <a href="class_maike_1_1_target___loader.html">Target_Loader</a>. The <a href="class_maike_1_1_target___loader.html">Target_Loader</a> extracs target information from the current source file, and is responsible for adding any dependenceis.</p>
+<p>The <a href="class_maike_1_1_target___factory.html">Target_Factory</a> allocates and initializes a target, upon request by the <a href="class_maike_1_1_target_factorydelegator">Target_FactoryDelegator</a>. If the given <a href="class_maike_1_1_resourceobject.html">ResourceObject</a> mentions some dependencies, these are added to the target during construction.</p>
+<p>The <a href="class_maike_1_1_target___loader.html">Target_Loader</a> extracs target information from the current source file, and is responsible for adding any dependenceis, not already added, to the target. It is also responsible for pushing the referenced files onto the <a href="class_maike_1_1_spider.html">Spider</a> scanning stack.</p>
+
+</section>
+</docset>

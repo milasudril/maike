@@ -13,6 +13,7 @@
 
 namespace Maike
 	{
+#ifndef DOXYGEN
 	// generate a sequence of integers as non-type template arguments
 	// (a basic meta-programming tool)
 	template<size_t... Is> struct PRIVATE seq {};
@@ -58,7 +59,7 @@ namespace Maike
 		return cur == Size ? arr :
 			c_sel_sort( c_swap(arr, cur, c_min_index(arr, cur, cur), gen_seq<Size>{}),cur+1 );
 		}
-
+#endif
 	/**\brief An associative container with compile-time keys.
 	*/
 	template<class Key,class Value, Key ... args>
@@ -162,6 +163,7 @@ namespace Maike
 				{return m_values;}
 
 		private:
+#ifndef DOXYGEN
 			static constexpr c_array<Key,sizeof...(args)> keys{c_sel_sort(c_array<Key,sizeof...(args)>( Key(args)... ))};
 			Value m_values[sizeof...(args)];
 
@@ -222,6 +224,7 @@ namespace Maike
 		};
 	template<class Key,class Value, Key ... args>
 		constexpr c_array<Key,sizeof...(args)> MapFixed<Key,Value,args...>::keys;
+#endif
 	}
 
 #endif

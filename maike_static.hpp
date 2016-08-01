@@ -142,8 +142,8 @@ namespace Maike
 	*
 	* Dumps the dependency graph from and including <var>target_start</var>
 	* in forward direction. The parameter <var>targets_visited</var> must
-	* point to an array with capacity of holding one element per registred
-	* target. The number of elements and <var>id_min</var> can be retrieved
+	* point to an array with the same capacity as the range of target id:s.
+	* This range, and <var>id_min</var>, can be retrieved
 	* by calling targetIdRangeGet(const Session&).
 	*
 	*/
@@ -155,8 +155,8 @@ namespace Maike
 	*
 	* Dumps the dependency graph from and including <var>target_start</var>
 	* in forward direction. The parameter <var>targets_visited</var> must
-	* point to an array with capacity of holding one element per registred
-	* target. The number of elements and <var>id_min</var> can be retrieved
+	* point to an array with the same capacity as the range of target id:s.
+	* This range, and <var>id_min</var>, can be retrieved
 	* by calling targetIdRangeGet(const Session&).
 	*
 	*/

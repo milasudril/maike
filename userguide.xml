@@ -14,7 +14,7 @@
 </ul></nav>
 
 
-<p>Maike is a build system based on scanning of source files. To construct the dependency graph, Maike uses embedded JSON data to control the compilation process. The best guide on how to tag source files and describe a project is probably the Maike source itself.</p>
+<p>Maike is a build system based on scanning of source files. To construct the dependency graph, Maike uses embedded JSON data to control the compilation process.</p>
 
 <section>
 <h2 id="obtaining">Obtaining Maike</h2>
@@ -92,7 +92,7 @@ int main()
 <section>
 <h2 id="targetdefs">An overview of the different forms of target definitions</h2>
 
-<p>Since Maike is a self-hosting application, a good reference on how to write various kinds of target defintions is the Maike source code. This introduction aims to explain common kinds of target defintions and their usecases,</p>
+<p>Due to the self-hosting nature of Maike, a good reference on how to write various kinds of target defintions is the Maike source code. This introduction aims to explain common kinds of target defintions and their usecases.</p>
 
 <h3>More than one translation unit</h3>
 
@@ -385,6 +385,8 @@ except:
     write_error('%s: error: %s\n'%(sys.argv[0],sys.exc_info()[1]))
     sys.exit(-1)
 </code></pre>
+
+<p>The target directory is passed to the script as the first command line argument. standard input contains additional configuration data encoded as JSON.</p>
 
 <p>A code generator defines at least two targets: The source file, and the target generated from the source file. The latter is necessary, since the dependency graph has to be completed before the compilation starts. If the generator emits N files, then there will be 2*N targets defined by that generator.</p>
 

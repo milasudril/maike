@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<docset>
+<navpath>
+<navitem href="index.html">Maike</navitem>
+</navpath>
+
+<h1>Plug-in search paths</h1>
+<p>The plug-in search paths determines where Maike can find plug-ins. Whenever a plug-in is found in any of the mentioned directories, Maike will use that plug-in.</p>
+
+<section>
+<h2>Search paths on a GNU system running on the Linux® kernel</h2>
+<p>On a GNU system running on the Linux® kernel, Maike looks for plug-ins in the following directories. The filename suffix <code>.so</code> is added automatically.</p>
+<ol>
+<li>The application load path</li>
+<li><code>/usr/local/lib/maike</code></li>
+<li><code>/usr/lib/maike</code></li>
+<li><code>~/lib/maike</code></li>
+<li>Current working directory</li>
+</ol>
+</section>
+
+</docset>
