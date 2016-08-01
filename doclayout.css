@@ -10,7 +10,7 @@ main,div.logo,footer{padding-left:10px;padding-right:10px;}
 th.membername,th.fieldname{text-align: left;}
 td,th{vertical-align: top;}
 
-pre{-moz-tab-with:4;}
+pre{-moz-tab-size:4;tab-size:4}
 
 /*template stuff*/
 span.templatestring{display:block;font-size:75%}
