@@ -590,12 +590,12 @@ template&lt;<span class="type">class T</span>&gt;
     <h2 class="memproto" id="1aa0a80017e6d6146f9dc1cf463b020b50">
 <span class="type">void</span> graphDump
 (<span class="type">const Session &amp;</span> <span class="declname">maike</span>,<span class="type"><a href="class_maike_1_1_graph_edge_writer.html">GraphEdgeWriter</a> &amp;</span> <span class="declname">writer</span>,<span class="type">const char *</span> <span class="declname">target_start</span>,<span class="type">uint8_t *</span> <span class="declname">targets_visited</span>,<span class="type">size_t</span> <span class="declname">id_min</span>)</h2>
-    <p>Dumps the dependency graph from and including <em>target_start</em>  in forward direction. The parameter <em>targets_visited</em>  must point to an array with capacity of holding one element per registred target. The number of elements and <em>id_min</em>  can be retrieved by calling <a href="namespace_maike.html#1a421a472fd1ce97ca6db682fe340f6cbd">targetIdRangeGet(const Session&amp;)</a>. </p>
+    <p>Dumps the dependency graph from and including <em>target_start</em>  in forward direction. The parameter <em>targets_visited</em>  must point to an array with the same capacity as the range of target id:s. This range, and <em>id_min</em> , can be retrieved by calling <a href="namespace_maike.html#1a421a472fd1ce97ca6db682fe340f6cbd">targetIdRangeGet(const Session&amp;)</a>. </p>
   </section><section>
     <h2 class="memproto" id="1a16520c30003354819141a1924e6f97dc">
 <span class="type">void</span> graphInvDump
 (<span class="type">const Session &amp;</span> <span class="declname">maike</span>,<span class="type"><a href="class_maike_1_1_graph_edge_writer.html">GraphEdgeWriter</a> &amp;</span> <span class="declname">writer</span>,<span class="type">const char *</span> <span class="declname">target_start</span>,<span class="type">uint8_t *</span> <span class="declname">targets_visited</span>,<span class="type">size_t</span> <span class="declname">id_min</span>)</h2>
-    <p>Dumps the dependency graph from and including <em>target_start</em>  in forward direction. The parameter <em>targets_visited</em>  must point to an array with capacity of holding one element per registred target. The number of elements and <em>id_min</em>  can be retrieved by calling <a href="namespace_maike.html#1a421a472fd1ce97ca6db682fe340f6cbd">targetIdRangeGet(const Session&amp;)</a>. </p>
+    <p>Dumps the dependency graph from and including <em>target_start</em>  in forward direction. The parameter <em>targets_visited</em>  must point to an array with the same capacity as the range of target id:s. This range, and <em>id_min</em> , can be retrieved by calling <a href="namespace_maike.html#1a421a472fd1ce97ca6db682fe340f6cbd">targetIdRangeGet(const Session&amp;)</a>. </p>
   </section><section>
     <h2 class="memproto" id="1ad875a9fb8be0247912559bb0cbfe948f">
 <span class="templatestring">

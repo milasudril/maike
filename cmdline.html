@@ -1,0 +1,56 @@
+<!DOCTYPE html><html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
+<title>Maike: Command line interfaces</title>
+<link rel="stylesheet" type="text/css" href="fonts.css">
+<link rel="stylesheet" type="text/css" href="doclayout.css">
+<link rel="stylesheet" type="text/css" href="doccolors.css">
+<link rel="stylesheet" type="text/css" href="dochighlight.css">
+</head>
+<body>
+<header><div class="logo">Maike</div>
+<nav><ul><li><a href="index.html">Maike</a></li></ul></nav></header><main><h1>Command line interfaces</h1>
+<p>The tool Maike is launched from the command line. This page contains a list of all command line options that Maike accepts. An entity within square brackets is optional.</p>
+<summary style="margin-left:2em;margin-bottom:2ex">
+<h2>--help[=string]</h2>
+<p>Print this information to <code>stdout</code>, or to the given file, and exit.</p>
+
+<h2>--version[=string]</h2>
+<p>Print version information to <code>stdout</code>, or the given file, and exit.</p>
+
+<h2>--configdump[=string]</h2>
+<p>Print the current configuration to the given file, and exit. As defualt, the data is written to <code>stdout</code>.</p>
+
+<h2>--configfiles=string,...</h2>
+<p>Load the listed configuration files. If this argument is not given, Maike will look for a file called maikeconfig.json within the current working directory. If that file cannot be openend, Maike will load a built-in default configuration.</p>
+
+<h2>--no-sysvars</h2>
+<p>Do not load any default system variables. This is useful when using a cross-compiler. Normally, Maike loads a system-dependent set of variables that identifiesd the host platform.</p>
+
+<h2>--list-all-targets[=string]</h2>
+<p>Print all targets to the given file and exit. As default, the data is written to <code>stdout</code>.</p>
+
+<h2>--list-external-targets[=string]</h2>
+<p>Print all external targets to the given file and exit. As default, data is written to <code>stdout</code>. External targets are targets not tracked by Maike--usually external libraries.</p>
+
+<h2>--list-leaf-targets[=string]</h2>
+<p>Print all leaf targets to the given file and exit. As default, data is written to <code>stdout</code>. A leaf target is a target that no other target refers to.</p>
+
+<h2>--targets=string,...</h2>
+<p>Only process the listed targets. This option reduces the amount of output when using any of the --dump-* options.</p>
+
+<h2>--dump-database-json[=string]</h2>
+<p>Dump the internal database to a JSON file and exit. As default, the data is written to <code>stdout</code>.</p>
+
+<h2>--dump-graph-dot[=string]</h2>
+<p>Dump the dependnecy graph to a DOT file and exit. As default, the data is written to <code>stdout</code>.</p>
+
+<h2>--dump-graph-inv-dot[=string]</h2>
+<p>Dump an inverted dependnecy graph to a DOT file and exit. As default, the data is written to <code>stdout</code>.</p>
+
+<h2>--dump-targets-tsv[=string]</h2>
+<p>Dumps information about the selected targets to a TSV (Tab Separated Values) file. As defualt, the data is written to <code>stdout</code>.</p>
+</summary></main><footer><address>Torbjörn Rathsman 2016</address></footer>
+</body>
+</html>

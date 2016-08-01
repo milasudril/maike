@@ -10,6 +10,8 @@ main,div.logo,footer{padding-left:10px;padding-right:10px;}
 th.membername,th.fieldname{text-align: left;}
 td,th{vertical-align: top;}
 
+pre{-moz-tab-with:4;}
+
 /*template stuff*/
 span.templatestring{display:block;font-size:75%}
 
@@ -30,6 +32,7 @@ p:first-of-type{text-indent:0ex;}
 	margin-bottom:2.5ex;
 	border:1px solid;
 	padding:0.3em;
+	border-radius:5px
 	}
 
 /*tables*/
