@@ -6,7 +6,7 @@
 #ifndef TARGETPYTHONLOADER_HPP
 #define TARGETPYTHONLOADER_HPP
 
-#include "target_loader.hpp"
+#include "../target_loader.hpp"
 
 namespace Maike
 	{

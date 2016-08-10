@@ -6,7 +6,7 @@
 #ifndef MAIKE_TARGETPYTHONSOURCE_HPP
 #define MAIKE_TARGETPYTHONSOURCE_HPP
 
-#include "targetbase.hpp"
+#include "../targetbase.hpp"
 
 namespace Maike
 	{

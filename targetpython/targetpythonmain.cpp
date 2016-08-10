@@ -1,19 +1,19 @@
 //@	[
 //@		[
 //@		"windows",
-//@			{"targets":[{"name":"targetpython.dll","type":"lib_dynamic"}]}
+//@			{"targets":[{"name":"../targetpython.dll","type":"lib_dynamic"}]}
 //@		],[
 //@		"os_x",
-//@			{"targets":[{"name":"targetpython.dylib","type":"lib_dynamic"}]}
+//@			{"targets":[{"name":"../targetpython.dylib","type":"lib_dynamic"}]}
 //@		],{
 //@		"targets":
-//@			[{"name":"targetpython.so","type":"lib_dynamic"}]
+//@			[{"name":"../targetpython.so","type":"lib_dynamic"}]
 //@		}
 //@	]
 
 #include "targetpythonhook.hpp"
-#include "exceptionhandler.hpp"
-#include "stdstream.hpp"
+#include "../exceptionhandler.hpp"
+#include "../stdstream.hpp"
 
 using namespace Maike;
 

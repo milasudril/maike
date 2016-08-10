@@ -1,16 +1,16 @@
 //@	{"targets":[{"name":"targetpythoninterpreter.o","type":"object"}]}
 
 #include "targetpythoninterpreter.hpp"
-#include "resourceobject.hpp"
-#include "parametersetmapfixed.hpp"
-#include "readbuffer.hpp"
-#include "errormessage.hpp"
-#include "variant.hpp"
-#include "exceptionhandler.hpp"
-#include "thread.hpp"
-#include "parametersetdumpable.hpp"
-#include "stdstream.hpp"
-#include "writebuffer.hpp"
+#include "../resourceobject.hpp"
+#include "../parametersetmapfixed.hpp"
+#include "../readbuffer.hpp"
+#include "../errormessage.hpp"
+#include "../variant.hpp"
+#include "../exceptionhandler.hpp"
+#include "../thread.hpp"
+#include "../parametersetdumpable.hpp"
+#include "../stdstream.hpp"
+#include "../writebuffer.hpp"
 
 
 using namespace Maike;

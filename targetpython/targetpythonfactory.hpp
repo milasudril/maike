@@ -6,7 +6,7 @@
 #ifndef MAIKE_TARGETPYTHONFACTORY_HPP
 #define MAIKE_TARGETPYTHONFACTORY_HPP
 
-#include "target_factory.hpp"
+#include "../target_factory.hpp"
 #include "targetpython.hpp"
 
 namespace Maike

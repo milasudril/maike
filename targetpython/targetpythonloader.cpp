@@ -1,15 +1,15 @@
 //@	{"targets":[{"name":"targetpythonloader.o","type":"object"}]}
 
 #include "targetpythonloader.hpp"
-#include "readbuffer.hpp"
-#include "filein.hpp"
-#include "resourceobject.hpp"
-#include "exceptionhandler.hpp"
-#include "errormessage.hpp"
-#include "variant.hpp"
-#include "target_factorydelegator.hpp"
-#include "dependencygraph.hpp"
-#include "target.hpp"
+#include "../readbuffer.hpp"
+#include "../filein.hpp"
+#include "../resourceobject.hpp"
+#include "../exceptionhandler.hpp"
+#include "../errormessage.hpp"
+#include "../variant.hpp"
+#include "../target_factorydelegator.hpp"
+#include "../dependencygraph.hpp"
+#include "../target.hpp"
 
 using namespace Maike;
 

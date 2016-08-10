@@ -6,7 +6,7 @@
 #ifndef MAIKE_TARGETPYTHONINTERPRETER_HPP
 #define MAIKE_TARGETPYTHONINTERPRETER_HPP
 
-#include "command.hpp"
+#include "../command.hpp"
 
 namespace Maike
 	{

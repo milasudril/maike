@@ -6,7 +6,7 @@
 #ifndef MAIKE_TARGETPYTHONHOOK_HPP
 #define MAIKE_TARGETPYTHONHOOK_HPP
 
-#include "target_hook.hpp"
+#include "../target_hook.hpp"
 
 #include "targetpythoninterpreter.hpp"
 #include "targetpythonloader.hpp"

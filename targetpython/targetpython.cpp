@@ -1,8 +1,8 @@
 //@	{"targets":[{"name":"targetpython.o","type":"object"}]}
 
 #include "targetpython.hpp"
-#include "resourceobject.hpp"
 #include "targetpythoninterpreter.hpp"
+#include "../resourceobject.hpp"
 
 using namespace Maike;
 
