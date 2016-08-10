@@ -69,7 +69,7 @@ void TargetDirectoryLoader::configClear()
 
 TargetDirectoryLoader& TargetDirectoryLoader::configAppendDefault()
 	{
-	m_recursive=1;
+	m_recursive=0;
 	pathReject(".");
 	pathReject("..");
 	return *this;
