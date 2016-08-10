@@ -6,7 +6,7 @@
 #ifndef MAIKE_TARGETCXXPKGCONFIG_HPP
 #define MAIKE_TARGETCXXPKGCONFIG_HPP
 
-#include "visibility.hpp"
+#include "../visibility.hpp"
 
 namespace Maike
 	{

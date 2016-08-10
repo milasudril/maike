@@ -7,7 +7,7 @@
 #define MAIKE_TARGETCXXOPTIONS_HPP
 
 
-#include "command.hpp"
+#include "../command.hpp"
 #include <vector>
 #include <string>
 

@@ -6,13 +6,14 @@
 #ifndef MAIKE_TARGETCXXHOOK_HPP
 #define MAIKE_TARGETCXXHOOK_HPP
 
-#include "target_hook.hpp"
+#include "../target_hook.hpp"
 
 #include "targetcxxcompiler.hpp"
 #include "targetcxxoptions.hpp"
 #include "targetcxxloader.hpp"
 #include "targetcxxfactory.hpp"
-#include "parametersetdumpable.hpp"
+
+#include "../parametersetdumpable.hpp"
 
 namespace Maike
 	{

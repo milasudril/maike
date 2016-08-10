@@ -1,17 +1,17 @@
 //@	{"targets":[{"name":"targetcxx.o","type":"object"}]}
 
 #include "targetcxx.hpp"
-#include "resourceobject.hpp"
-#include "stringkey.hpp"
-#include "errormessage.hpp"
-#include "variant.hpp"
-#include "exceptionhandler.hpp"
-#include "targetcxxcompiler.hpp"
-#include "fileutils.hpp"
-#include "pathutils.hpp"
 #include "targetcxxpkgconfig.hpp"
-#include "writebuffer.hpp"
-#include "stdstream.hpp"
+#include "targetcxxcompiler.hpp"
+#include "../resourceobject.hpp"
+#include "../stringkey.hpp"
+#include "../errormessage.hpp"
+#include "../variant.hpp"
+#include "../exceptionhandler.hpp"
+#include "../fileutils.hpp"
+#include "../pathutils.hpp"
+#include "../writebuffer.hpp"
+#include "../stdstream.hpp"
 #include <algorithm>
 
 using namespace Maike;

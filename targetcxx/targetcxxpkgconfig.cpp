@@ -1,18 +1,17 @@
 //@	{"targets":[{"name":"targetcxxpkgconfig.o","type":"object"}]}
 
 #include "targetcxxpkgconfig.hpp"
-#include "command.hpp"
-#include "target.hpp"
-#include "stdstream.hpp"
-#include "writebuffer.hpp"
-#include "parametersetmapfixed.hpp"
-#include "readbuffer.hpp"
-#include "thread.hpp"
-#include "errormessage.hpp"
-#include "variant.hpp"
-#include "exceptionhandler.hpp"
 #include "targetcxxoptions.hpp"
-#include "dependency.hpp"
+#include "../target.hpp"
+#include "../stdstream.hpp"
+#include "../writebuffer.hpp"
+#include "../parametersetmapfixed.hpp"
+#include "../readbuffer.hpp"
+#include "../thread.hpp"
+#include "../errormessage.hpp"
+#include "../variant.hpp"
+#include "../exceptionhandler.hpp"
+#include "../dependency.hpp"
 
 using namespace Maike;
 

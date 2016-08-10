@@ -1,19 +1,19 @@
 //@	[
 //@		[
 //@		"windows",
-//@			{"targets":[{"name":"targetcxx.dll","type":"lib_dynamic"}]}
+//@			{"targets":[{"name":"../targetcxx.dll","type":"lib_dynamic"}]}
 //@		],[
 //@		"os_x",
-//@			{"targets":[{"name":"targetcxx.dylib","type":"lib_dynamic"}]}
+//@			{"targets":[{"name":"../targetcxx.dylib","type":"lib_dynamic"}]}
 //@		],{
 //@		"targets":
-//@			[{"name":"targetcxx.so","type":"lib_dynamic"}]
+//@			[{"name":"../targetcxx.so","type":"lib_dynamic"}]
 //@		}
 //@	]
 
 #include "targetcxxhook.hpp"
-#include "exceptionhandler.hpp"
-#include "stdstream.hpp"
+#include "../exceptionhandler.hpp"
+#include "../stdstream.hpp"
 
 using namespace Maike;
 

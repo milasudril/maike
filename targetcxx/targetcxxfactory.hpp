@@ -6,7 +6,7 @@
 #ifndef MAIKE_TARGETCXXFACTORY_HPP
 #define MAIKE_TARGETCXXFACTORY_HPP
 
-#include "target_factory.hpp"
+#include "../target_factory.hpp"
 #include "targetcxx.hpp"
 
 namespace Maike

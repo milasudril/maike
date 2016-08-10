@@ -6,7 +6,7 @@
 #ifndef MAIKE_TARGETCXX_HPP
 #define MAIKE_TARGETCXX_HPP
 
-#include "targetbase.hpp"
+#include "../targetbase.hpp"
 #include "targetcxxoptions.hpp"
 
 namespace Maike

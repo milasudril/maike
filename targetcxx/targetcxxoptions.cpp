@@ -1,10 +1,10 @@
 //@	 {"targets":[{"name":"targetcxxoptions.o","type":"object"}]}
 
 #include "targetcxxoptions.hpp"
-#include "resourceobject.hpp"
-#include "exceptionhandler.hpp"
-#include "errormessage.hpp"
-#include "variant.hpp"
+#include "../resourceobject.hpp"
+#include "../exceptionhandler.hpp"
+#include "../errormessage.hpp"
+#include "../variant.hpp"
 #include <limits>
 
 using namespace Maike;

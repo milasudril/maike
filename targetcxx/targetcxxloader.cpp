@@ -1,16 +1,16 @@
 //@	{"targets":[{"name":"targetcxxloader.o","type":"object"}]}
 
 #include "targetcxxloader.hpp"
-#include "filein.hpp"
 #include "targetcxxpptokenizer.hpp"
-#include "spider.hpp"
-#include "resourceobject.hpp"
-#include "handle.hpp"
-#include "target_factorydelegator.hpp"
-#include "target.hpp"
-#include "dependency.hpp"
-#include "dependencygraph.hpp"
-#include "pathutils.hpp"
+#include "../target_factorydelegator.hpp"
+#include "../filein.hpp"
+#include "../spider.hpp"
+#include "../resourceobject.hpp"
+#include "../handle.hpp"
+#include "../target.hpp"
+#include "../dependency.hpp"
+#include "../dependencygraph.hpp"
+#include "../pathutils.hpp"
 #include <cstring>
 
 using namespace Maike;

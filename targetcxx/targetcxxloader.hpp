@@ -6,8 +6,8 @@
 #ifndef MAIKE_TARGETCXXLOADER_HPP
 #define MAIKE_TARGETCXXLOADER_HPP
 
-#include "target_loader.hpp"
-#include "visibility.hpp"
+#include "../target_loader.hpp"
+#include "../visibility.hpp"
 
 namespace Maike
 	{

@@ -6,8 +6,8 @@
 #ifndef MAIKE_TARGETCXXCOMPILER_HPP
 #define MAIKE_TARGETCXXCOMPILER_HPP
 
-#include "twins.hpp"
-#include "visibility.hpp"
+#include "../twins.hpp"
+#include "../visibility.hpp"
 #include <string>
 #include <vector>
 

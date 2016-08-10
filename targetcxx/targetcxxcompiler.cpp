@@ -4,17 +4,17 @@
 
 #include "targetcxxcompiler.hpp"
 #include "targetcxxoptions.hpp"
-#include "dependency.hpp"
-#include "fileutils.hpp"
-#include "readbuffer.hpp"
-#include "thread.hpp"
 #include "targetcxxpptokenizer.hpp"
-#include "errormessage.hpp"
-#include "variant.hpp"
-#include "exceptionhandler.hpp"
-#include "parametersetmapfixed.hpp"
-#include "stdstream.hpp"
-#include "writebuffer.hpp"
+#include "../dependency.hpp"
+#include "../fileutils.hpp"
+#include "../readbuffer.hpp"
+#include "../thread.hpp"
+#include "../errormessage.hpp"
+#include "../variant.hpp"
+#include "../exceptionhandler.hpp"
+#include "../parametersetmapfixed.hpp"
+#include "../stdstream.hpp"
+#include "../writebuffer.hpp"
 
 using namespace Maike;
 

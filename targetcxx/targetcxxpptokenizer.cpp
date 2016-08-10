@@ -1,8 +1,8 @@
 //@	{"targets":[{"name":"targetcxxpptokenizer.o","type":"object"}]}
 
 #include "targetcxxpptokenizer.hpp"
-#include "stdstream.hpp"
-#include "writebuffer.hpp"
+#include "../stdstream.hpp"
+#include "../writebuffer.hpp"
 
 using namespace Maike;
 
