@@ -43,9 +43,9 @@ int main()
 	try
 		{
 		auto session=Maike::sessionCreate();
-		Maike::sysvarsLoad(session);
-		Maike::configAppendDefault(session);
-		Maike::targetsCompile(session);
+		Maike::sysvarsLoad(*session);
+		Maike::configAppendDefault(*session);
+		Maike::targetsCompile(*session);
 		}
 	catch(const Maike::ErrorMessage&amp; msg)
 		{
