@@ -9,6 +9,7 @@
             ".",
             "__targets",
 			"__doc",
+			"doc",
             ".clang",
             "test",
 			"gh-pages"
