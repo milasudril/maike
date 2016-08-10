@@ -24,7 +24,7 @@
 <pre><code>git clone https://github.com/milasudril/maike
 </code></pre>
 
-<p>The latest release version can be found at <a href="https://github.com/milasudril/maike/releases/latest">the github release page</a>. The former may contain features not present in the later and may require an up-to-date version of Maike in order to be compiled. The latter alternative always contains a build script that can be used for bootstrapping.</p>
+<p>The latest release version can be found at <a href="https://github.com/milasudril/maike/releases/latest">the github release page</a>. The git repository may contain features not present in the release version, but may require an up-to-date version of Maike in order to be compiled. The release package always contains a build script that can be used for bootstrapping.</p>
 
 <p>Before compiling maike, make sure that appropriate <code>libjansson</code> development files are available on the system. If Maike is not available, or the installed version is to old, run the script <code>build.sh</code> within the source directory. It may happen that it is needed to change the permission of that file first.</p>
 
