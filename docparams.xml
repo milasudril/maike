@@ -10,14 +10,14 @@
 		<item page="structs.html" type="struct">Structs</item>
 	</apisections>
 	<resources>
-		<item source="fonts.css" type="stylesheet" />
-		<item source="doclayout.css" type="stylesheet"/>
-		<item source="doccolors.css" type="stylesheet" />
-		<item source="dochighlight.css" type="stylesheet" />
-		<item source="docheader.png" type="other" />
-		<item source="janssondeps.svg" type="other" />
-		<item source="targetcxx.svg" type="other" />
-		<item source="snowflakes.svg" type="other" />
-		<item source="sysarch.svg" type="other" />
+		<item source="doc/fonts.css" type="stylesheet" />
+		<item source="doc/doclayout.css" type="stylesheet"/>
+		<item source="doc/doccolors.css" type="stylesheet" />
+		<item source="doc/dochighlight.css" type="stylesheet" />
+		<item source="doc/docheader.png" type="other" />
+		<item source="doc/janssondeps.svg" type="other" />
+		<item source="doc/targetcxx.svg" type="other" />
+		<item source="doc/snowflakes.svg" type="other" />
+		<item source="doc/sysarch.svg" type="other" />
 	</resources>
 </docparams>
