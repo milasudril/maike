@@ -26,6 +26,8 @@ namespace Maike
 
 			TargetDirectoryLoader& pathReject(const char* name);
 			TargetDirectoryLoader& pathAccept(const char* name);
+			TargetDirectoryLoader& pathFullReject(const char* name);
+			TargetDirectoryLoader& pathFullAccept(const char* name);
 
 			void configClear();
 			TargetDirectoryLoader& configAppendDefault();
@@ -34,6 +36,7 @@ namespace Maike
 
 		private:
 			std::map<Stringkey,std::string> m_ignore;
+			std::map<Stringkey,std::string> m_ignore_fullname;
 			bool m_recursive;
 		};
 	}

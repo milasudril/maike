@@ -1,18 +1,10 @@
 {
     "directoryoptions":{
-        "paths_reject":[
-            "..",
-            "Release",
-            ".codelite",
-            ".git",
-            "Debug",
-            ".",
-            "__targets",
-			"__doc",
+        "paths_full_reject":[
 			"doc",
-            ".clang",
             "test",
-			"gh-pages"
+			"gh-pages",
+			".git"
         ],
         "recursive":1
     },
