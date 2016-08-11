@@ -31,11 +31,11 @@ It is *very* likely that you need the additional target hooks. These reside insi
 
 	cp __targets/*.so ~/bin/maike
 
-A complete installation can be done by running the supplied install script.
+Alternately, a complete installation can be done by running the supplied install script.
 
     sudo ./install.sh
 
-By default, it copies stuff to `/usr/local`. If not root, or if want to install Maike somewhere else anyways, you can change that by using the `--prefix` option.
+By default, it copies stuff to `/usr/local`. If not root, or if you want to install Maike somewhere else anyways, you can change that by using the `--prefix` option.
 
     ./install.sh --prefix=/home/alice
 
