@@ -61,6 +61,8 @@ transaction 'mkdir -p "$PREFIX"/lib' \
 	'rmdir "$PREFIX"/lib'
 transaction 'cp __targets/libmaike.so "$PREFIX/lib"'\
 	'rm "$PREFIX"/lib/libmaike.so'
+transaction 'cp __targets/libmaikeplug.a "$PREFIX/lib"'\
+	'rm "$PREFIX"/lib/libmaikeplug.a'
 transaction 'mkdir -p "$PREFIX/lib/maike"' \
 	'rmdir "$PREFIX"/lib/maike'
 transaction 'cp __targets/target*.so "$PREFIX/lib/maike"' \
