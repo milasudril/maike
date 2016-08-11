@@ -43,6 +43,7 @@ namespace Maike
 			Target& target(const char* name);
 			const char* targetDirectoryGet() const noexcept;
 			const Twins<size_t>& targetIdRangeGet() const;
+			size_t targetsCountGet() const;
 
 		private:
 			SystemTargetInfo m_targetinfo;

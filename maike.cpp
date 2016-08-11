@@ -177,6 +177,11 @@ void Maike::targetsListExternal(const Session& maike,DataSink& sink)
 	maike.targetsProcess(TargetsListExternal(wb));
 	}
 
+size_t Maike::targetsCountGet(const Session& maike)
+	{
+	return maike.targetsCountGet();
+	}
+
 
 
 static void toposort(const Maike::Dependency& dependency_first
@@ -213,7 +218,7 @@ static void toposort(Target& target_first
 	,std::vector<Maike::Dependency>& dependency_list,const Twins<size_t>& id_range
 	,bool full)
 	{
-	std::vector<uint8_t> visited((id_range.second-id_range.first) + 1,0);
+	std::vector<uint8_t> visited(id_range.second-id_range.first,0);
 	toposort(Dependency(target_first),dependency_list,full,visited,id_range.first);
 	}
 
@@ -277,6 +282,15 @@ namespace
 
 void Maike::targetsCompile(Session& maike)
 	{
+//	If there is only one target, it is the project root directory
+//	In that case, do not compile it, since that would create an
+//	empty target directory.
+	if(maike.targetsCountGet()<=1)
+		{
+		exceptionRaise(ErrorMessage("I could not identify any targets "
+			"in any of the input directories.",{}));
+		}
+
 	maike.targetsProcess(TargetsCompileLeaf(maike));
 	}
 

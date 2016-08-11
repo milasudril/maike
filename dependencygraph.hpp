@@ -26,6 +26,7 @@ namespace Maike
 			virtual DependencyGraph& targetRegister(Handle<Target>&& target)=0;
 			virtual DependencyGraph& targetsPatch()=0;
 			virtual const Twins<size_t>& idRangeGet() const=0;
+			virtual size_t targetsCountGet() const noexcept=0;
 
 			class TargetProcessor
 				{

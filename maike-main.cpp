@@ -121,7 +121,7 @@ static int graphDumpDOT(Maike::Session& maike
 		}
 
 	auto id_range=targetIdRangeGet(maike);
-	std::vector<uint8_t> visited((id_range.second-id_range.first) + 1,0);
+	std::vector<uint8_t> visited(id_range.second-id_range.first,0);
 	auto ptr=targets->data();
 	auto ptr_end=ptr+targets->size();
 	while(ptr!=ptr_end)
@@ -146,7 +146,7 @@ static int graphInvDumpDOT(Maike::Session& maike
 		}
 
 	auto id_range=targetIdRangeGet(maike);
-	std::vector<uint8_t> visited((id_range.second-id_range.first) + 1,0);
+	std::vector<uint8_t> visited(id_range.second-id_range.first,0);
 	auto ptr=targets->data();
 	auto ptr_end=ptr+targets->size();
 	while(ptr!=ptr_end)

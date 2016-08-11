@@ -79,6 +79,10 @@ DependencyGraphDefault& DependencyGraphDefault::targetsPatch()
 			}
 		++i;
 		}
+
+//	Increment end value, in order to follow the half-open intervalconvention
+	++id_range.second; 
+
 	m_id_range=id_range;
 	m_patch_needed=0;
 	return *this;

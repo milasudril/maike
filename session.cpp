@@ -265,3 +265,10 @@ const Twins<size_t>& Session::targetIdRangeGet() const
 		{dependenciesReload();}
 	return m_graph.idRangeGet();
 	}
+
+size_t Session::targetsCountGet() const
+	{
+	if(graphDirty())
+		{dependenciesReload();}
+	return m_graph.targetsCountGet();
+	}

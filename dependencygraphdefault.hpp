@@ -34,6 +34,9 @@ namespace Maike
 
 			DependencyGraphDefault& clear() noexcept;
 
+			size_t targetsCountGet() const noexcept
+				{return m_targets.size();}
+
 		private:
 			IdGenerator<size_t>& r_id_gen;
 			std::map< Stringkey,Handle<Target> > m_targets;

@@ -113,6 +113,12 @@ namespace Maike
 	*/
 	EXPORT Twins<size_t> targetIdRangeGet(const Session& maike);
 
+	/**\brief Retrievs the number of targets.
+	*
+	* This function retrievs the number of targets.
+	*/
+	EXPORT size_t targetsCountGet(const Session& maike);
+
 	EXPORT void targetsListAll(const Session& maike,DataSink& sink);
 
 	EXPORT void targetsListLeaf(const Session& maike,DataSink& sink);
