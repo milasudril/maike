@@ -5,11 +5,8 @@
 *.a
 *.lib
 *.pdf
-bin
-Debug
-Release
-.codelite
 __targets
 ./maike
 gh-pages
 __doc
+.uninstall.sh
