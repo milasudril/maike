@@ -11,8 +11,8 @@ namespace Maike
 		{
 		public:
 			static TargetPlaceholder* create(const char* name,const char* name_src
-				,size_t id)
-				{return new TargetPlaceholder(name,name_src,id);}
+				,const char* root,size_t id)
+				{return new TargetPlaceholder(name,name_src,root,id);}
 
 			virtual void destroy() noexcept
 				{delete this;}
@@ -28,8 +28,8 @@ namespace Maike
 				{}
 
 		private:
-			TargetPlaceholder(const char* name,const char* name_src,size_t id):
-				TargetBase(name,name_src,"",id)
+			TargetPlaceholder(const char* name,const char* name_src,const char* root,size_t id):
+				TargetBase(name,name_src,"",root,id)
 				{}
 
 			~TargetPlaceholder()=default;

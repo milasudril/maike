@@ -20,11 +20,24 @@ namespace Maike
 
 	class Stringkey;
 
+	class Dependency;
+
 	class PRIVATE DependencyGraph
 		{
 		public:
+			class EventHandler
+				{
+				public:
+					virtual Target& dependencyResolve(DependencyGraph& graph
+						,const char* target_from,const Dependency& dep)=0;
+					virtual void targetRemoved(DependencyGraph& graph,Target& target)=0;
+					virtual void graphCleared(DependencyGraph& graph)=0;
+				};
+
 			virtual DependencyGraph& targetRegister(Handle<Target>&& target)=0;
+
 			virtual DependencyGraph& targetsPatch()=0;
+
 			virtual const Twins<size_t>& idRangeGet() const=0;
 			virtual size_t targetsCountGet() const noexcept=0;
 

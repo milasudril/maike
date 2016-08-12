@@ -15,8 +15,8 @@ Session::Session():
 	 m_target_hooks(m_targetinfo)
 	,m_evaluator(m_targetinfo)
 	,m_spider(m_delegator,m_graph)
-	,m_delegator(m_evaluator,m_id_gen)
-	,m_graph(m_id_gen),m_dirty_flags(0)
+	,m_delegator(m_evaluator)
+	,m_graph(m_delegator),m_dirty_flags(0)
 	{
 	configClear();
 	}

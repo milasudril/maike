@@ -40,6 +40,8 @@ namespace Maike
 
 			virtual size_t idGet() noexcept=0;
 
+			virtual const char* rootGet() const noexcept=0;
+
 		protected:
 			~Target_FactoryDelegator()=default;
 		};

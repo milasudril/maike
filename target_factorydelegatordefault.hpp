@@ -7,18 +7,20 @@
 #define MAIKE_TARGET_FACTORYDELEGATORDEFAULT_HPP
 
 #include "target_factorydelegator.hpp"
+#include "dependencygraph.hpp"
 #include "idgenerator.hpp"
 #include "visibility.hpp"
+#include "target.hpp"
 #include <map>
 
 namespace Maike
 	{
 	class ExpressionEvaluator;
 	class PRIVATE Target_FactoryDelegatorDefault:public Target_FactoryDelegator
+		,public DependencyGraph::EventHandler
 		{
 		public:
-			explicit Target_FactoryDelegatorDefault(const ExpressionEvaluator& eval
-				,IdGenerator<size_t>& id_gen);
+			explicit Target_FactoryDelegatorDefault(const ExpressionEvaluator& eval);
 
 			Target_FactoryDelegatorDefault(ExpressionEvaluator&& eval)=delete;
 
@@ -28,7 +30,8 @@ namespace Maike
 			Handle<Target> targetCreate(const ResourceObject& obj,const char* name_src
 				,const char* in_dir,size_t line_count);
 
-			Handle<Target> targetCreate(const ResourceObject& obj,const char* in_dir,size_t line_count);
+			Handle<Target> targetCreate(const ResourceObject& obj,const char* in_dir
+				,size_t line_count);
 
 			void targetsCreate(const ResourceObject& obj,const char* name_src
 				,const char* in_dir,size_t line_count,Callback&& cb);
@@ -37,16 +40,35 @@ namespace Maike
 				,size_t line_count,Callback&& cb);
 
 			size_t idGet() noexcept
-				{return r_id_gen.idGet();}
+				{return m_id_gen.idGet();}
 
 			void factoriesUnregister() noexcept;
+
+			const char* rootGet() const noexcept
+				{return m_root.c_str();}
+
+			Target_FactoryDelegatorDefault& rootSet(const char* root)
+				{
+				m_root=std::string(root);
+				return *this;
+				}
+
+			Target& dependencyResolve(DependencyGraph& graph
+				,const char* target_from,const Dependency& dep);
+
+			void targetRemoved(DependencyGraph& graph,Target& target)
+				{m_id_gen.idRelease(target.idGet());}
+
+			void graphCleared(DependencyGraph& graph)
+				{m_id_gen.reset();}
 
 		private:
 			void targetsCreateImpl(const ResourceObject& obj,const char* name_src
 				,const char* in_dir,size_t line_count,Callback& cb);
 
 			const ExpressionEvaluator& r_eval;
-			IdGenerator<size_t>& r_id_gen;
+			IdGenerator<size_t> m_id_gen;
+			std::string m_root;
 			std::map<Stringkey,const Target_Factory*> m_r_factories;
 			size_t m_id_current;
 		};

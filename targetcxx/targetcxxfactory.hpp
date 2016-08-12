@@ -20,7 +20,7 @@ namespace Maike
 			TargetCxxFactory(TargetCxxCompiler&&)=delete;
 
 			Handle<Target> targetCreate(const ResourceObject& obj
-				,const char* name_src,const char* in_dir,size_t id
+				,const char* name_src,const char* in_dir,const char* root,size_t id
 				,size_t line_count) const;
 
 		private:

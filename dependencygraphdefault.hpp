@@ -18,8 +18,8 @@ namespace Maike
 	class PRIVATE DependencyGraphDefault:public DependencyGraph
 		{
 		public:
-			explicit DependencyGraphDefault(IdGenerator<size_t>& id_gen):
-				r_id_gen(id_gen),m_patch_needed(0)
+			explicit DependencyGraphDefault(EventHandler& handler):
+				r_handler(handler),m_patch_needed(0)
 				{}
 
 			DependencyGraphDefault& targetRegister(Handle<Target>&& target);
@@ -38,7 +38,7 @@ namespace Maike
 				{return m_targets.size();}
 
 		private:
-			IdGenerator<size_t>& r_id_gen;
+			EventHandler& r_handler;
 			std::map< Stringkey,Handle<Target> > m_targets;
 			Twins<size_t> m_id_range;
 			bool m_patch_needed;

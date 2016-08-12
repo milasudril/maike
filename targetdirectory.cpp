@@ -1,3 +1,4 @@
+
 //@	{"targets":[{"name":"targetdirectory.o","type":"object"}]}
 
 #include "targetdirectory.hpp"
@@ -38,5 +39,5 @@ void TargetDirectory::destroy() noexcept
 	{delete this;}
 
 TargetDirectory* TargetDirectory::create(const char* name,const char* in_dir
-	,size_t id)
-	{return new TargetDirectory(name,in_dir,id);}
+	,const char* root,size_t id)
+	{return new TargetDirectory(name,in_dir,root,id);}

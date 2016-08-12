@@ -16,7 +16,7 @@ namespace Maike
 		{
 		public:
 			static TargetDirectory* create(const char* name,const char* in_dir
-				,size_t id);
+				,const char* root,size_t id);
 
 			void compileImpl(Twins<const Dependency*> dependency_list
 				,Twins<const Dependency*> dependency_list_full
@@ -30,7 +30,7 @@ namespace Maike
 
 		private:
 			explicit TargetDirectory(const char* name,const char* in_dir
-				,size_t id):TargetBase(name,name,in_dir,id)
+				,const char* root,size_t id):TargetBase(name,name,in_dir,root,id)
 				{}
 		};
 	}

@@ -20,11 +20,11 @@ namespace Maike
 
 			static TargetCxx* create(const ResourceObject& obj
 				,const TargetCxxCompiler& compiler,const char* name_src
-				,const char* in_dir,size_t id,size_t line_count);
+				,const char* in_dir,const char* root,size_t id,size_t line_count);
 
 			static TargetCxx* create(const ResourceObject& obj
 				,TargetCxxCompiler&& compiler,const char* name_src
-				,const char* in_dir,size_t id,size_t line_count)=delete;
+				,const char* in_dir,const char* root,size_t id,size_t line_count)=delete;
 
 			void compileImpl(Twins<const Dependency*> dependency_list
 				,Twins<const Dependency*> dependency_list_full
@@ -43,11 +43,11 @@ namespace Maike
 
 		private:
 			TargetCxx(const ResourceObject& obj,const TargetCxxCompiler& compiler
-				,const char* name_src,const char* in_dir,size_t id
+				,const char* name_src,const char* in_dir,const char* root,size_t id
 				,size_t line_count);
 
 			TargetCxx(const ResourceObject& obj,TargetCxxCompiler&& compiler
-				,const char* name_src,const char* in_dir,size_t id
+				,const char* name_src,const char* in_dir,const char* root,size_t id
 				,size_t line_count)=delete;
 
 			Type m_type;

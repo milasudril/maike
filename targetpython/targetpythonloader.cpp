@@ -10,6 +10,7 @@
 #include "../target_factorydelegator.hpp"
 #include "../dependencygraph.hpp"
 #include "../target.hpp"
+#include "../spider.hpp"
 
 using namespace Maike;
 

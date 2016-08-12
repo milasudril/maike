@@ -45,6 +45,8 @@ namespace Maike
 		ret+=b;
 		return directoryNormalize(ret.c_str());
 		}
+
+	PRIVATE std::string rootStrip(const std::string& path,const char* root);
 	}
 
 #endif

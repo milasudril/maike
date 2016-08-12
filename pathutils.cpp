@@ -55,3 +55,24 @@ PRIVATE std::string Maike::directoryNormalize(const char* str)
 	ret+=elem_current;
 	return std::move(  ret );
 	}
+
+PRIVATE std::string Maike::rootStrip(const std::string& path,const char* root)
+	{
+	auto ptr=path.data();
+	auto ch_root_prev='/';
+	while(true)
+		{
+		auto ch_in=*ptr;
+		auto ch_root=*root;
+		if(ch_in=='\0')
+			{return std::string(ptr);}
+		if(ch_root=='\0' && ch_root_prev!='/')
+			{return std::string(ptr + 1);}
+		if(ch_in!=ch_root)
+			{return std::string(ptr);}
+		ch_root_prev=ch_root;
+		++ptr;
+		++root;
+		}
+	return std::string("");
+	}

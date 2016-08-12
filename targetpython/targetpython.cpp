@@ -8,8 +8,8 @@ using namespace Maike;
 
 TargetPython::TargetPython(const ResourceObject& obj
 	,const TargetPythonInterpreter& intpret,const char* name_src
-	,const char* in_dir,size_t id,size_t line_count):
-	TargetBase(obj,name_src,in_dir,id,line_count)
+	,const char* in_dir,const char* root,size_t id,size_t line_count):
+	TargetBase(obj,name_src,in_dir,root,id,line_count)
 	,r_intpret(intpret),m_status(1)
 	{
 	if(obj.objectExists("args"))
@@ -58,8 +58,8 @@ Maike::TargetPython::~TargetPython() noexcept
 
 TargetPython* TargetPython::create(const ResourceObject& obj
 	,const TargetPythonInterpreter& intpret,const char* name_src
-	,const char* in_dir,size_t id,size_t line_count)
-	{return new TargetPython(obj,intpret,name_src,in_dir,id,line_count);}
+	,const char* in_dir,const char* root,size_t id,size_t line_count)
+	{return new TargetPython(obj,intpret,name_src,in_dir,root,id,line_count);}
 
 void TargetPython::destroy() noexcept
 	{delete this;}

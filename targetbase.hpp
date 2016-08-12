@@ -20,10 +20,11 @@ namespace Maike
 	class PRIVATE TargetBase:public Target
 		{
 		public:
-			explicit TargetBase(const char* name,const char* name_src,const char* in_dir,size_t id);
+			explicit TargetBase(const char* name,const char* name_src,const char* in_dir
+				,const char* root,size_t id);
 
 			explicit TargetBase(const ResourceObject& obj,const char* name_src
-				,const char* in_dir,size_t id,size_t line_count);
+				,const char* in_dir,const char* root,size_t id,size_t line_count);
 
 			TargetBase& childCounterIncrement() noexcept
 				{

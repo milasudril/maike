@@ -10,6 +10,8 @@
 #include "target.hpp"
 #include "expressionevaluator.hpp"
 #include "dependency.hpp"
+#include "fileutils.hpp"
+#include "targetplaceholder.hpp"
 
 #include <cstring>
 
@@ -17,9 +19,44 @@
 
 using namespace Maike;
 
-Target_FactoryDelegatorDefault::Target_FactoryDelegatorDefault(const ExpressionEvaluator& eval
-	,IdGenerator<size_t>& id_gen)
-	:r_eval(eval),r_id_gen(id_gen)
+Target& Target_FactoryDelegatorDefault::dependencyResolve(DependencyGraph& graph
+	,const char* target_from,const Dependency& dependency)
+	{
+	auto name=dependency.nameGet();
+	auto key=Stringkey(name);
+
+//	Is the target represented in the graph?
+	auto ptr_ret=graph.targetFind(key);
+	if(ptr_ret!=nullptr)
+		{return *ptr_ret;}
+
+//	It is not. Is it an existing file?
+	if(FileUtils::exists(name))
+		{
+		Handle<TargetPlaceholder> target(
+			TargetPlaceholder::create(name,name,rootGet(),idGet()));
+		auto ret=target.get();
+		graph.targetRegister(std::move(target));
+		return *ret;
+		}
+
+//	It does not. Is it an external dependency?
+	if(dependency.relationGet()==Dependency::Relation::EXTERNAL)
+		{
+		Handle<TargetPlaceholder> target(
+			TargetPlaceholder::create(name,name,rootGet(),idGet()));
+		auto ret=target.get();
+		graph.targetRegister(std::move(target));
+		return *ret;
+		}
+
+//	Everything failed. Conclude that the dependency is not satisfied
+	exceptionRaise(ErrorMessage("#0;: Dependency #1; is not satisfied"
+		,{target_from,name}));
+	}
+
+Target_FactoryDelegatorDefault::Target_FactoryDelegatorDefault(const ExpressionEvaluator& eval)
+	:r_eval(eval)
 	{
 	}
 
@@ -46,7 +83,7 @@ Handle<Target> Target_FactoryDelegatorDefault::targetCreate(const ResourceObject
 		exceptionRaise(ErrorMessage("#0;: #1; is not associated with any target factory"
 			,{name_src,suffix}));
 		}
-	return i->second->targetCreate(obj,name_src,in_dir,idGet(),line_count);
+	return i->second->targetCreate(obj,name_src,in_dir,rootGet(),idGet(),line_count);
 	}
 
 
@@ -85,7 +122,8 @@ Handle<Target> Target_FactoryDelegatorDefault::targetCreate(const ResourceObject
 
 
 static void targetsCreate(const ResourceObject& targets,const char* name_src
-	,const char* in_dir,size_t line_count,Target_FactoryDelegator& delegator
+	,const char* in_dir,size_t line_count
+	,Target_FactoryDelegator& delegator
 	,Target_FactoryDelegator::Callback& cb)
 	{
 	auto N=targets.objectCountGet();

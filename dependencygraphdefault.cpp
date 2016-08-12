@@ -5,7 +5,6 @@
 #include "errormessage.hpp"
 #include "variant.hpp"
 #include "exceptionhandler.hpp"
-#include "targetplaceholder.hpp"
 
 using namespace Maike;
 
@@ -23,31 +22,6 @@ DependencyGraphDefault& DependencyGraphDefault::targetRegister(Handle<Target>&& 
 	m_targets.emplace(key,std::move(target));
 	m_patch_needed=1;
 	return *this;
-	}
-
-static Target& dependencyResolve(std::map< Stringkey,Handle<Target> >& targets
-	,const char* from
-	,const Dependency& dependency
-	,IdGenerator<size_t>& id_gen)
-	{
-	auto name=dependency.nameGet();
-	auto key=Stringkey(name);
-	auto i=targets.find(key);
-	if(i!=targets.end()) //Is the target represented in the graph?
-		{return *(i->second);}
-
-//	It is not. Is this an external relation?
-	if(dependency.relationGet()==Dependency::Relation::EXTERNAL)
-		{
-	//	Create a placeholder for an external target
-		Handle<TargetPlaceholder> target(
-			TargetPlaceholder::create(name,name,id_gen.idGet()));
-		return *(targets.emplace(key,std::move(target)).first)->second;
-		}
-
-//	It is not an external relation. Conclude that the dependency is not satisfied
-	exceptionRaise(ErrorMessage("#0;: Dependency #1; is not satisfied"
-		,{from,name}));
 	}
 
 DependencyGraphDefault& DependencyGraphDefault::targetsPatch()
@@ -70,8 +44,8 @@ DependencyGraphDefault& DependencyGraphDefault::targetsPatch()
 		auto deps=t1->dependencies();
 		while(deps.first!=deps.second)
 			{
-			auto& t2=dependencyResolve(m_targets,t1->nameGet(),*deps.first
-				,r_id_gen);
+		//	auto& t2=dependencyResolve(m_targets,t1->nameGet(),*deps.first,r_id_gen);
+			auto& t2=r_handler.dependencyResolve(*this,t1->nameGet(),*deps.first);
 			id_range.first=std::min(id_range.first,t2.idGet());
 			id_range.second=std::max(id_range.second,t2.idGet());
 			deps.first->targetSet(t2,*t1);
@@ -145,7 +119,8 @@ DependencyGraphDefault& DependencyGraphDefault::targetsRemove(TargetProcessor&& 
 		{
 		if(condition(*this,*(i->second))==0)
 			{
-			r_id_gen.idRelease(i->second->idGet());
+			r_handler.targetRemoved(*this,*i->second);
+		//	r_id_gen.idRelease(i->second->idGet());
 			m_targets.erase(i);
 			}
 		++i;
@@ -157,7 +132,8 @@ DependencyGraphDefault& DependencyGraphDefault::targetsRemove(TargetProcessor&& 
 DependencyGraphDefault& DependencyGraphDefault::clear() noexcept
 	{
 	m_targets.clear();
-	r_id_gen.reset();
+//	r_id_gen.reset();
+	r_handler.graphCleared(*this);
 	m_patch_needed=0;
 	return *this;
 	}

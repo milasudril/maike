@@ -51,7 +51,6 @@ namespace Maike
 			Target_Hook_Registry m_target_hooks;
 
 			ExpressionEvaluator m_evaluator;
-			IdGenerator<size_t> m_id_gen;
 			std::set<std::string> m_source_files;
 			mutable SpiderDefault m_spider;
 			mutable Target_FactoryDelegatorDefault m_delegator;

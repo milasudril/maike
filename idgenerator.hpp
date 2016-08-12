@@ -35,7 +35,7 @@ namespace Maike
 			IdGenerator& reset() noexcept
 				{
 				m_freelist.clear();
-				m_id_next=0;
+				m_id_next=-1;
 				return *this;
 				}
 
