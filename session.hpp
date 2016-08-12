@@ -32,6 +32,8 @@ namespace Maike
 			Session& configAppendDefault();
 			Session& configAppend(const ResourceObject& maikeconfig);
 			Session& sourceFileAppend(const char* filename);
+			Session& rootSet(const char* root);
+			const char* rootGet() const noexcept;
 			void configDump(ResourceObject& maikeconfig) const;
 
 			Session& scanFile(const char* filename);

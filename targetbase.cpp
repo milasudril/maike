@@ -13,11 +13,12 @@ using namespace Maike;
 
 TargetBase::TargetBase(const ResourceObject& obj,const char* name_src,const char* in_dir
 	,const char* root,size_t id,size_t line_count):
-	m_child_counter(0),m_id(id),m_source_name(name_src),m_in_dir(in_dir)
+	m_child_counter(0),m_id(id),m_source_name(name_src)
 	,m_compilation_time(std::numeric_limits<double>::quiet_NaN()),m_loc(line_count)
 	{
 	m_name=rootStrip(dircat(in_dir,static_cast<const char*>(obj.objectGet("name")))
 		,root);
+	m_in_dir=rootStrip(in_dir,root);
 
 	if(obj.objectExists("dependencies"))
 		{
@@ -27,18 +28,20 @@ TargetBase::TargetBase(const ResourceObject& obj,const char* name_src,const char
 			{dependencyAdd(Dependency(deps.objectGet(l)));}
 		}
 
-	if(*in_dir!='\0')
-		{dependencyAdd(Dependency(in_dir,Dependency::Relation::INTERNAL));}
+	if(m_name!=m_in_dir && *in_dir!='\0')
+		{dependencyAdd(Dependency(m_in_dir.c_str(),Dependency::Relation::INTERNAL));}
 	}
 
 
 TargetBase::TargetBase(const char* name,const char* name_src,const char* in_dir,const char* root
 	,size_t id):
-	m_child_counter(0),m_id(id),m_name(rootStrip(name,root)),m_source_name(name_src),m_in_dir(in_dir)
+	m_child_counter(0),m_id(id),m_source_name(name_src)
 	,m_compilation_time(std::numeric_limits<double>::quiet_NaN()),m_loc(0)
 	{
-	if(*in_dir!='\0')
-		{dependencyAdd(Dependency(in_dir,Dependency::Relation::INTERNAL));}
+	m_name=rootStrip(name,root);
+	m_in_dir=rootStrip(in_dir,root);
+	if(m_name!=m_in_dir && *in_dir!='\0')
+		{dependencyAdd(Dependency(m_in_dir.c_str(),Dependency::Relation::INTERNAL));}
 	}
 
 

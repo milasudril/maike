@@ -104,6 +104,10 @@ namespace Maike
 
 	EXPORT void sysvarsLoad(Session& maike);
 
+	EXPORT void rootSet(Session& maike,const char* root);
+
+	EXPORT void scanFile(Session& maike,const char* file);
+
 
 	/**\brief Retrievs the range of target id:s.
 	*

@@ -85,6 +85,12 @@ void Maike::configClear(Session& maike)
 void Maike::sysvarsLoad(Session& maike)
 	{maike.sysvarsLoad();}
 
+void Maike::rootSet(Session& maike,const char* root)
+	{maike.rootSet(root);}
+
+void Maike::scanFile(Session& maike,const char* file)
+	{maike.scanFile(file);}
+
 
 
 Twins<size_t> Maike::targetIdRangeGet(const Session& maike)

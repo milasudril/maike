@@ -116,9 +116,21 @@ void Session::configDump(ResourceObject& maikeconfig) const
 		}
 	}
 
+Session& Session::rootSet(const char* root)
+	{
+	m_delegator.rootSet(root);
+	graphDirtySet();
+	return *this;
+	}
+
+const char* Session::rootGet()	const noexcept
+	{
+	return m_delegator.rootGet();
+	}
+
 Session& Session::sourceFileAppend(const char* filename)
 	{
-	m_source_files.insert(std::string(filename));
+	m_source_files.insert(filename);
 	graphDirtySet();
 	return *this;
 	}
@@ -154,16 +166,18 @@ namespace
 
 Session& Session::scanFile(const char* filename)
 	{
+	auto name_full=dircat(rootGet(),filename);
 		{
-		auto t=m_graph.targetFind(Stringkey(filename));
+		auto t=m_graph.targetFind(Stringkey(name_full.c_str()));
 		if(dynamic_cast<TargetDirectory*>(t))
 			{m_graph.targetsRemove(ByParentDirectory(t->sourceNameGet()));}
 		}
-	m_graph.targetsRemove(BySourceName(filename));
+	m_graph.targetsRemove(BySourceName(name_full.c_str()));
 
 	if(targetHooksDirty())
 		{targetHooksRegister();}
-	m_spider.scanFile(filename,dirname(filename).c_str()).run();
+
+	m_spider.scanFile(name_full.c_str(),dirname(name_full.c_str()).c_str()).run();
 	graphDirtyClear();
 	return *this;
 	}
@@ -181,7 +195,8 @@ void Session::dependenciesReload() const
 	auto i_end=m_source_files.end();
 	while(i!=i_end)
 		{
-		m_spider.scanFile(i->c_str(),dirname(*i).c_str());
+		auto name_full=dircat(rootGet(),i->c_str());
+		m_spider.scanFile(name_full.c_str(),dirname(name_full.c_str()).c_str());
 		++i;
 		}
 	if(targetHooksDirty())

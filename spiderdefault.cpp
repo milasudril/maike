@@ -56,6 +56,8 @@ static Stringkey targetLoaderKeyGet(const std::string& filename)
 		case FileInfo::Type::FILE:
 			{
 			auto pos=filename.find_last_of('.');
+			if(pos==std::string::npos)
+				{return Stringkey("");}
 			return Stringkey(&filename[pos]);
 			}
 

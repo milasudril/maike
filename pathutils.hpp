@@ -24,6 +24,8 @@ namespace Maike
 
 	PRIVATE inline std::string dircat(const char* a,const char* b)
 		{
+		if(*a=='\0')
+			{return directoryNormalize(b);}
 		std::string ret(a);
 		ret+='/';
 		ret+=b;
