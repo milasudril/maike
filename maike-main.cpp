@@ -9,7 +9,7 @@
 #include "fileout.hpp"
 #include "filein.hpp"
 #include "resourceobject.hpp"
-#include "maike_static.hpp"
+#include "maike_base.hpp"
 #include "writebuffer.hpp"
 #include "graphedgewriterdot.hpp"
 #include <cstdio>

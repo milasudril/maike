@@ -1,3 +1,3 @@
 //@	{"targets":[{"name":"libmaike.a","type":"lib_static"}]}
 
-#include "maike_static.hpp"
+#include "maike_base.hpp"

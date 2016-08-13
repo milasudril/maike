@@ -1,5 +1,5 @@
 //@	{
-//@	 "targets":[ {"name":"maike_static.hpp","type":"include"} ]
+//@	 "targets":[ {"name":"maike_base.hpp","type":"include"} ]
 //@	,"dependencies_extra":[{"ref":"maike.o","rel":"implementation"}]
 //@	}
 

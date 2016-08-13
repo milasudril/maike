@@ -5,7 +5,7 @@
 #ifndef MAIKE_HPP
 #define MAIKE_HPP
 
-#include "maike_static.hpp"
+#include "maike_base.hpp"
 #include "datasource.hpp"
 #include "datasink.hpp"
 #include "resourceobject.hpp"
