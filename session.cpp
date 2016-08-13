@@ -19,6 +19,7 @@ Session::Session():
 	,m_graph(m_delegator),m_dirty_flags(0)
 	{
 	configClear();
+	rootSet("");
 	}
 
 Session& Session::configClear()
@@ -119,6 +120,8 @@ void Session::configDump(ResourceObject& maikeconfig) const
 Session& Session::rootSet(const char* root)
 	{
 	m_delegator.rootSet(root);
+	m_target_dir_full=dircat(root
+		,static_cast<const char*>(m_targetinfo.variableGet(Stringkey("target_directory"))));
 	graphDirtySet();
 	return *this;
 	}
@@ -282,7 +285,7 @@ Target& Session::target(const char* name)
 
 const char* Session::targetDirectoryGet() const noexcept
 	{
-	return static_cast<const char*>(m_targetinfo.variableGet(Stringkey("target_directory")));
+	return m_target_dir_full.c_str();
 	}
 
 const Twins<size_t>& Session::targetIdRangeGet() const

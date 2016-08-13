@@ -56,6 +56,7 @@ namespace Maike
 
 			ExpressionEvaluator m_evaluator;
 			std::set<std::string> m_source_files;
+			std::string m_target_dir_full;
 			mutable SpiderDefault m_spider;
 			mutable Target_FactoryDelegatorDefault m_delegator;
 			mutable DependencyGraphDefault m_graph;
