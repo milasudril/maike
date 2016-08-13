@@ -28,11 +28,19 @@ namespace Maike
 			TargetDirectoryLoader& pathAccept(const char* name);
 			TargetDirectoryLoader& pathFullReject(const char* name);
 			TargetDirectoryLoader& pathFullAccept(const char* name);
+			TargetDirectoryLoader& recursiveSet(bool recursive) noexcept
+				{
+				m_recursive=recursive;
+				return *this;
+				}
+			bool recursiveGet() const noexcept
+				{return m_recursive;}
 
 			void configClear();
 			TargetDirectoryLoader& configAppendDefault();
 			TargetDirectoryLoader& configAppend(const ResourceObject& directoryoptions);
 			void configDump(ResourceObject& directoryoptions) const;
+			
 
 		private:
 			std::map<Stringkey,std::string> m_ignore;

@@ -34,6 +34,8 @@ namespace Maike
 			Session& sourceFileAppend(const char* filename);
 			Session& rootSet(const char* root);
 			const char* rootGet() const noexcept;
+			Session& scanRecursiveSet(bool recursive) noexcept;
+			bool scanRecursiveGet() const noexcept;
 			void configDump(ResourceObject& maikeconfig) const;
 
 			Session& scanFile(const char* filename);

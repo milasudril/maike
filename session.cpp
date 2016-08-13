@@ -128,6 +128,17 @@ const char* Session::rootGet()	const noexcept
 	return m_delegator.rootGet();
 	}
 
+Session& Session::scanRecursiveSet(bool recursive) noexcept
+	{
+	m_dirloader.recursiveSet(recursive);
+	return *this;
+	}
+
+bool Session::scanRecursiveGet() const noexcept
+	{
+	return m_dirloader.recursiveGet();
+	}
+
 Session& Session::sourceFileAppend(const char* filename)
 	{
 	m_source_files.insert(filename);

@@ -91,6 +91,12 @@ void Maike::rootSet(Session& maike,const char* root)
 void Maike::scanFile(Session& maike,const char* file)
 	{maike.scanFile(file);}
 
+void Maike::scanRecursiveSet(Session& maike,bool recursive)
+	{maike.scanRecursiveSet(recursive);}
+
+bool Maike::scanRecursiveGet(const Session& maike)
+	{return maike.scanRecursiveGet();}
+
 
 
 Twins<size_t> Maike::targetIdRangeGet(const Session& maike)
