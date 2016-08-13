@@ -46,17 +46,17 @@ static const char* relation(Dependency::Relation rel)
 	}
 
 
-Dependency::Dependency(const ResourceObject& obj):m_name(nullptr),r_target(nullptr)
+Dependency::Dependency(const ResourceObject& obj,const char* root):m_name(nullptr),r_target(nullptr)
 	,m_rel(relation(static_cast<const char*>(obj.objectGet("rel"))))
 	{
-	nameSet(static_cast<const char*>(obj.objectGet("ref")));
+	nameSet(rootStrip(static_cast<const char*>(obj.objectGet("ref")),root).c_str());
 	}
 
-Dependency::Dependency(const ResourceObject& obj,const char* in_dir):
+Dependency::Dependency(const ResourceObject& obj,const char* in_dir,const char* root):
 	 m_name(nullptr),r_target(nullptr)
 	,m_rel(relation(static_cast<const char*>(obj.objectGet("rel"))))
 	{
-	auto name_temp=dircat(in_dir,static_cast<const char*>(obj.objectGet("ref")));
+	auto name_temp=rootStrip(dircat(in_dir,static_cast<const char*>(obj.objectGet("ref"))),root);
 	nameSet(name_temp.c_str(),name_temp.size());
 	}
 

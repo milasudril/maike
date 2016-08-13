@@ -25,11 +25,11 @@ TargetBase::TargetBase(const ResourceObject& obj,const char* name_src,const char
 		auto deps=obj.objectGet("dependencies");
 		auto M=deps.objectCountGet();
 		for(decltype(M) l=0;l<M;++l)
-			{dependencyAdd(Dependency(deps.objectGet(l)));}
+			{dependencyAdd(Dependency(deps.objectGet(l),root));}
 		}
 
 	if(m_name!=m_in_dir && *in_dir!='\0')
-		{dependencyAdd(Dependency(m_in_dir.c_str(),Dependency::Relation::INTERNAL));}
+		{dependencyAdd(Dependency(in_dir,root,Dependency::Relation::INTERNAL));}
 	}
 
 
@@ -41,7 +41,7 @@ TargetBase::TargetBase(const char* name,const char* name_src,const char* in_dir,
 	m_name=rootStrip(name,root);
 	m_in_dir=rootStrip(in_dir,root);
 	if(m_name!=m_in_dir && *in_dir!='\0')
-		{dependencyAdd(Dependency(m_in_dir.c_str(),Dependency::Relation::INTERNAL));}
+		{dependencyAdd(Dependency(in_dir,root,Dependency::Relation::INTERNAL));}
 	}
 
 

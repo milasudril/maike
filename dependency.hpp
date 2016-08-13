@@ -8,6 +8,7 @@
 
 #include "target.hpp"
 #include "visibility.hpp"
+#include "pathutils.hpp"
 #include <string>
 #include <cassert>
 
@@ -36,9 +37,9 @@ namespace Maike
 				m_name(nullptr),r_target(&target),m_rel(rel)
 				{}
 
-			explicit Dependency(const char* name,Relation relation):
+			explicit Dependency(const char* name,const char* root,Relation relation):
 				m_name(nullptr),r_target(nullptr),m_rel(relation)
-				{nameSet(name);}
+				{nameSet(rootStrip(name,root).c_str());}
 
 			Dependency(Dependency&& obj) noexcept
 				{
@@ -73,9 +74,9 @@ namespace Maike
 				return *this;
 				}
 
-			explicit Dependency(const ResourceObject& obj);
+			explicit Dependency(const ResourceObject& obj,const char* root);
 
-			explicit Dependency(const ResourceObject& obj,const char* in_dir);
+			explicit Dependency(const ResourceObject& obj,const char* in_dir,const char* root);
 
 
 			const char* nameGet() const noexcept

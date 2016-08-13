@@ -146,10 +146,9 @@ size_t TagFilter::read(void* buffer,size_t length)
 
 
 static void includesGet(const char* name_src,const char* in_dir
+	,const char* root
 	,Spider& spider,DependencyGraph& graph,Target& target)
 	{
-	auto name_full=dircat(in_dir,name_src);
-
 	FileIn file_reader(name_src);
 	TargetCxxPPTokenizer cpptok(file_reader);
 	TargetCxxPPTokenizer::Token tok_in;
@@ -179,7 +178,7 @@ static void includesGet(const char* name_src,const char* in_dir
 					case TargetCxxPPTokenizer::Token::Type::STRING:
 						{
 						auto name_dep_full=dircat(in_dir,tok_in.value);
-						target.dependencyAdd(Dependency(name_dep_full.c_str()
+						target.dependencyAdd(Dependency(name_dep_full.c_str(),root
 							,Dependency::Relation::INTERNAL));
 						auto in_dir_include=dirname(name_dep_full);
 						spider.scanFile(name_dep_full.c_str(),in_dir_include.c_str());
@@ -194,7 +193,7 @@ static void includesGet(const char* name_src,const char* in_dir
 							auto N=deps.objectCountGet();
 							for(decltype(N) k=0;k<N;++k)
 								{
-								Dependency dep(deps.objectGet(k),in_dir_include.c_str());
+								Dependency dep(deps.objectGet(k),in_dir_include.c_str(),root);
 							//TODO What if there was more than one target in the file we came from...
 								if(strcmp(dep.nameGet(),target.nameGet())!=0)
 									{target.dependencyAdd(std::move(dep));}
@@ -217,21 +216,23 @@ namespace
 	class TargetCreateCallback:public Target_FactoryDelegator::Callback
 		{
 		public:
-			explicit TargetCreateCallback(const char* name_src,const char* in_dir
+			explicit TargetCreateCallback(const char* name_src,const char* in_dir,const char* root
 				,Spider& spider,DependencyGraph& graph):
-				r_name_src(name_src),r_in_dir(in_dir),r_spider(spider),r_graph(graph)
+				r_name_src(name_src),r_in_dir(in_dir),r_root(root),r_spider(spider)
+				,r_graph(graph)
 				{}
 
 			void operator()(const Target_FactoryDelegator& delegator
 				,Handle<Target>&& target)
 				{
-				includesGet(r_name_src,r_in_dir,r_spider,r_graph,*target.get());
+				includesGet(r_name_src,r_in_dir,r_root,r_spider,r_graph,*target.get());
 				r_graph.targetRegister(std::move(target));
 				}
 
 		private:
 			const char* r_name_src;
 			const char* r_in_dir;
+			const char* r_root;
 			Spider& r_spider;
 			DependencyGraph& r_graph;
 		};
@@ -245,5 +246,5 @@ void TargetCxxLoader::targetsLoad(const char* name_src,const char* in_dir
 	ResourceObject rc{filter};
 
 	factory.targetsCreate(rc,name_src,in_dir,filter.linesGet()
-		,TargetCreateCallback(name_src,in_dir,spider,graph));
+		,TargetCreateCallback(name_src,in_dir,factory.rootGet(),spider,graph));
 	}

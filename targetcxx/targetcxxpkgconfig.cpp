@@ -159,7 +159,7 @@ void Maike::pkgconfigAsk(const Command& cmd,const char* libname
 	params.get<Stringkey("action")>()[0]=std::string("--libs-only-l");
 	std::vector<Dependency> depnames;
 	if(pipeExecute(cmd,params," -l",[&depnames](const char* str)
-		{depnames.push_back(Dependency(str,Dependency::Relation::EXTERNAL));})!=0)
+		{depnames.push_back(Dependency(str,"",Dependency::Relation::EXTERNAL));})!=0)
 		{
 		exceptionRaise(ErrorMessage("#0;: It was not possible to find information about "
 			"the library #1;",{target.sourceNameGet(),libname}));

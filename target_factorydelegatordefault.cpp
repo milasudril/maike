@@ -22,6 +22,7 @@ using namespace Maike;
 Target& Target_FactoryDelegatorDefault::dependencyResolve(DependencyGraph& graph
 	,const char* target_from,const Dependency& dependency)
 	{
+//TODO: Strip root from dependency name
 	auto name=dependency.nameGet();
 	auto key=Stringkey(name);
 
@@ -83,6 +84,7 @@ Handle<Target> Target_FactoryDelegatorDefault::targetCreate(const ResourceObject
 		exceptionRaise(ErrorMessage("#0;: #1; is not associated with any target factory"
 			,{name_src,suffix}));
 		}
+//TODO: Look up target name, and strip root here?
 	return i->second->targetCreate(obj,name_src,in_dir,rootGet(),idGet(),line_count);
 	}
 
@@ -113,7 +115,7 @@ Handle<Target> Target_FactoryDelegatorDefault::targetCreate(const ResourceObject
 	auto ret=targetCreate(obj,source_name.c_str(),in_dir,line_count);
 	if(source_generated)
 		{
-		ret->dependencyAdd(Dependency(source_name_raw,Dependency::Relation::INTERNAL));
+		ret->dependencyAdd(Dependency(source_name_raw,rootGet(),Dependency::Relation::INTERNAL));
 		}
 	return ret;
 	}
