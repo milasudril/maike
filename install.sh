@@ -72,11 +72,13 @@ transaction 'mkdir -p "$PREFIX/bin"' \
 transaction 'cp __targets/maike "$PREFIX/bin"' \
 	'rm "$PREFIX"/bin/maike'
 
-chmod -R o+r "$PREFIX"/include
-chmod -R o+r "$PREFIX"/bin
-chmod -R o+r "$PREFIX"/lib
-chmod -R o+r "$PREFIX"/include/maike
-chmod -R o+r "$PREFIX"/lib/maike
+if [ "$(id -u)" == "0" ]; then
+	chmod -R o+r "$PREFIX"/include
+	chmod -R o+r "$PREFIX"/bin
+	chmod -R o+r "$PREFIX"/lib
+	chmod -R o+r "$PREFIX"/include/maike
+	chmod -R o+r "$PREFIX"/lib/maike
+fi
 
 
 uninstall_cmds > .uninstall.sh
