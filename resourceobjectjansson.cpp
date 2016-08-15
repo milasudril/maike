@@ -76,6 +76,9 @@ template<class T>
 ResourceObject ResourceObjectJansson::createImpl(T data)
 	{return ResourceObjectJansson(data);}
 
+ResourceObject ResourceObjectJansson::createImpl(DataSource& source)
+	{return ResourceObjectJansson(source);}
+
 ResourceObjectJansson::ResourceObjectJansson(Type type)
 	:ResourceObject(s_vtable)
 	{
@@ -232,6 +235,7 @@ void ResourceObjectJansson::writeImpl(const void* handle,DataSink& sink)
 const ResourceObjectJansson::Vtable ResourceObjectJansson::s_vtable
 	{
 	 destroy
+	,createImpl
 	,createImpl
 	,createImpl
 	,createImpl

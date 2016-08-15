@@ -126,37 +126,21 @@ size_t TagExtractor::read(void* buffer,size_t length)
 	return n_read;
 	}
 
-
-
 namespace
 	{
-	class TargetCreateCallback:public Target_FactoryDelegator::Callback
+	class DependencyCollector:public Target_FactoryDelegator::DependencyCollector
 		{
 		public:
-			explicit TargetCreateCallback(const char* name_src,const char* in_dir
-				,Spider& spider,DependencyGraph& graph):
-				r_name_src(name_src),r_in_dir(in_dir),r_spider(spider),r_graph(graph)
-				{}
-
-			void operator()(const Target_FactoryDelegator& delegator
-				,Handle<Target>&& target)
-				{
-				r_graph.targetRegister(std::move(target));
-				}
-
-		private:
-			const char* r_name_src;
-			const char* r_in_dir;
-			Spider& r_spider;
-			DependencyGraph& r_graph;
+			bool operator()(const Target_FactoryDelegator& delegator,Dependency& dep_primary
+				,ResourceObject::Reader rc_reader)
+				{return 0;}
 		};
 	}
-
 
 void TargetPythonLoader::targetsLoad(const char* name_src,const char* in_dir
 	,Spider& spider,DependencyGraph& graph,Target_FactoryDelegator& factory) const
 	{
 	FileIn source(name_src);
 	factory.targetsCreate(TagExtractor(source),name_src,in_dir
-		,TargetCreateCallback(name_src,in_dir,spider,graph));
+		,DependencyCollector(),graph);
 	}

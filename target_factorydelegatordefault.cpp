@@ -119,41 +119,97 @@ Handle<Target> Target_FactoryDelegatorDefault::targetCreate(const ResourceObject
 	return ret;
 	}
 
+static bool backrefIs(const char* depname,const ResourceObject& targets,const char* in_dir
+	,const char* root)
+	{
+	auto M=targets.objectCountGet();
+	for(decltype(M) l=0;l<M;++l)
+		{
+		auto target=targets.objectGet(l);
+		auto target_name=rootStrip(
+			 dircat(in_dir,static_cast<const char*>(target.objectGet("name")))
+			,root);
+		if(target_name==depname)
+			{return 1;}
+		}
+	return 0;
+	}
 
+static std::vector<Dependency> dependenciesCollect(
+	Target_FactoryDelegator& delegator
+	,Target_FactoryDelegator::DependencyCollector& cb
+	,const ResourceObject& targets,const char* in_dir)
+	{
+	std::vector<Dependency> ret;
+		{
+		Dependency dep;
+		while(cb(delegator,dep,ResourceObjectJansson::createImpl))
+			{
+			if(!backrefIs(dep.nameGet(),targets,in_dir,delegator.rootGet()))
+				{ret.push_back(dep);}
+			}
+		}
+	return std::move(ret);
+	}
 
+static void dependenciesAdd(Handle<Target>& target,const std::vector<Dependency>& deps)
+	{
+	auto dep_first=deps.data();
+	auto deps_end=dep_first + deps.size();
+	while(dep_first!=deps_end)
+		{
+		Dependency dep(*dep_first);
+		target->dependencyAdd(std::move(dep));
+		++dep_first;
+		}
+	}
 
 static void targetsCreate(const ResourceObject& targets,const char* name_src
 	,const char* in_dir,size_t line_count
 	,Target_FactoryDelegator& delegator
-	,Target_FactoryDelegator::Callback& cb)
+	,Target_FactoryDelegator::DependencyCollector& cb
+	,DependencyGraph& graph)
 	{
+	auto deps=dependenciesCollect(delegator,cb,targets,in_dir);
+
+
 	auto N=targets.objectCountGet();
 	for(decltype(N) k=0;k<N;++k)
 		{
 		auto target=targets.objectGet(k);
 		if(target.objectExists("source_name") || name_src==nullptr)
-			{cb(delegator,delegator.targetCreate(target,in_dir,0));}
+			{
+			auto t=delegator.targetCreate(target,in_dir,0);
+			dependenciesAdd(t,deps);
+			graph.targetRegister(std::move(t));
+			}
 		else
-			{cb(delegator,delegator.targetCreate(target,name_src,in_dir,line_count));}
+			{
+			auto t=delegator.targetCreate(target,name_src,in_dir,line_count);
+			dependenciesAdd(t,deps);
+			graph.targetRegister(std::move(t));
+			}
 		}
 	}
 
 void Target_FactoryDelegatorDefault::targetsCreate(TagExtractor&& extractor
-	,const char* name_src,const char* in_dir,Callback&& cb)
-	{targetsCreateImpl(extractor,name_src,in_dir,cb);}
+	,const char* name_src,const char* in_dir,DependencyCollector&& cb
+	,DependencyGraph& graph)
+	{targetsCreateImpl(extractor,name_src,in_dir,cb,graph);}
 
 void Target_FactoryDelegatorDefault::targetsCreate(TagExtractor&& extractor
-	,const char* in_dir,Callback&& cb)
-	{targetsCreateImpl(extractor,nullptr,in_dir,cb);}
+	,const char* in_dir,DependencyCollector&& cb,DependencyGraph& graph)
+	{targetsCreateImpl(extractor,nullptr,in_dir,cb,graph);}
 
 void Target_FactoryDelegatorDefault::targetsCreateImpl(TagExtractor& extractor
-	,const char* name_src,const char* in_dir,Callback& cb)
+	,const char* name_src,const char* in_dir,DependencyCollector& cb
+	,DependencyGraph& graph)
 	{
 	ResourceObjectJansson obj(extractor);
 	auto line_count=extractor.linesCountGet();
 
 	if(obj.objectExists("targets"))
-		{::targetsCreate(obj.objectGet("targets"),name_src,in_dir,line_count,*this,cb);}
+		{::targetsCreate(obj.objectGet("targets"),name_src,in_dir,line_count,*this,cb,graph);}
 	else
 		{
 		auto N_cases=obj.objectCountGet();
@@ -169,7 +225,7 @@ void Target_FactoryDelegatorDefault::targetsCreateImpl(TagExtractor& extractor
 				if(static_cast<int64_t>( r_eval.evaluate(expression) ))
 					{
 					::targetsCreate(case_obj.objectGet(1).objectGet("targets")
-						,name_src,in_dir,line_count,*this,cb);
+						,name_src,in_dir,line_count,*this,cb,graph);
 					break;
 					}
 				}
@@ -177,15 +233,10 @@ void Target_FactoryDelegatorDefault::targetsCreateImpl(TagExtractor& extractor
 			if(case_obj.objectExists("targets"))
 				{
 				::targetsCreate(case_obj.objectGet("targets"),name_src,in_dir
-					,line_count,*this,cb);
+					,line_count,*this,cb,graph);
 				break;
 				}
 			}
-		}
-
-	if(obj.objectExists("dependencies_extra"))
-		{
-		printf("Extra deps\n");
 		}
 	}
 

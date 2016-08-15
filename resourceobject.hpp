@@ -59,6 +59,14 @@ namespace Maike
 
 			enum class Type:unsigned int{OBJECT,ARRAY,STRING,INTEGER,FLOAT};
 
+			typedef ResourceObject (*Reader)(DataSource& source);
+
+			ResourceObject create(DataSource& source) const
+				{return r_vtable->createSource(source);}
+
+			ResourceObject create(DataSource&& source) const
+				{return r_vtable->createSource(source);}
+
 			ResourceObject create(const char* str) const
 				{return r_vtable->createString(str);}
 
@@ -139,6 +147,7 @@ namespace Maike
 			struct Vtable
 				{
 				void (*destroy)(void* handle);
+				ResourceObject (*createSource)(DataSource& source);
 				ResourceObject (*createString)(const char* str);
 				ResourceObject (*createLongLong)(long long int x);
 				ResourceObject (*createDouble)(double x);

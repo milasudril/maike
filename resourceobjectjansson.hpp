@@ -25,6 +25,8 @@ namespace Maike
 			explicit ResourceObjectJansson(double x);
 			explicit ResourceObjectJansson(Type type);
 
+			static ResourceObject createImpl(DataSource& source);
+
 		private:
 			class PRIVATE Iterator:public ResourceObject::Iterator
 				{

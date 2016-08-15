@@ -61,9 +61,16 @@ namespace Maike
 
 			Dependency(const Dependency& obj) noexcept
 				{
-				assert(obj.m_name==nullptr);
 				m_name=nullptr;
-				r_target=obj.r_target;
+				if(obj.m_name==nullptr)
+					{
+					r_target=obj.r_target;
+					}
+				else
+					{
+					nameSet(obj.m_name);
+					r_target=nullptr;
+					}
 				m_rel=obj.m_rel;
 				}
 
