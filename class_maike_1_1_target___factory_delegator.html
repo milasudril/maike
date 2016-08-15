@@ -24,32 +24,37 @@
     <p>The following table summarizes all members in this class.</p>
     <table class="memberdecls">
       <tr>
-        <th class="membername">class <a href="class_maike_1_1_target___factory_delegator_1_1_callback.html">Maike::Target_FactoryDelegator::Callback</a>
+        <th class="membername">class <a href="class_maike_1_1_target___factory_delegator_1_1_dependency_collector.html">Maike::Target_FactoryDelegator::DependencyCollector</a>
+</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th class="membername">class <a href="class_maike_1_1_target___factory_delegator_1_1_tag_extractor.html">Maike::Target_FactoryDelegator::TagExtractor</a>
 </th>
         <td></td>
       </tr>
       <tr>
         <th class="membername">
-<span class="type"><a href="class_maike_1_1_handle.html">Handle</a>&lt; <a href="class_maike_1_1_target.html">Target</a> &gt;</span> <a href="#1a05e04f0e724ed3b07875207545a6b6a6">targetCreate</a>
-(<span class="type">const <a href="class_maike_1_1_resource_object.html">ResourceObject</a> &amp;</span> <span class="declname">obj</span>,<span class="type">const char *</span> <span class="declname">name_src</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type">size_t</span> <span class="declname">line_count</span>)</th>
+<span class="type"><a href="class_maike_1_1_handle.html">Handle</a>&lt; <a href="class_maike_1_1_target.html">Target</a> &gt;</span> <a href="#1a4caa2db2c96f3821bbd61492fe2b9881">targetCreate</a>
+(<span class="type">const <a href="class_maike_1_1_resource_object.html">ResourceObject</a> &amp;</span> <span class="declname">target</span>,<span class="type">const char *</span> <span class="declname">name_src</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type">size_t</span> <span class="declname">line_count</span>)</th>
         <td class="memberdesc"></td>
       </tr>
       <tr>
         <th class="membername">
-<span class="type"><a href="class_maike_1_1_handle.html">Handle</a>&lt; <a href="class_maike_1_1_target.html">Target</a> &gt;</span> <a href="#1abbff8232beb0c961dc4efded769f4cb0">targetCreate</a>
-(<span class="type">const <a href="class_maike_1_1_resource_object.html">ResourceObject</a> &amp;</span> <span class="declname">obj</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type">size_t</span> <span class="declname">line_count</span>)</th>
+<span class="type"><a href="class_maike_1_1_handle.html">Handle</a>&lt; <a href="class_maike_1_1_target.html">Target</a> &gt;</span> <a href="#1a9e33cee4df9e483dda50013815d2e742">targetCreate</a>
+(<span class="type">const <a href="class_maike_1_1_resource_object.html">ResourceObject</a> &amp;</span> <span class="declname">target</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type">size_t</span> <span class="declname">line_count</span>)</th>
         <td class="memberdesc"></td>
       </tr>
       <tr>
         <th class="membername">
-<span class="type">void</span> <a href="#1a559bd0bc7a24a1a467c7176c90fef981">targetsCreate</a>
-(<span class="type">const <a href="class_maike_1_1_resource_object.html">ResourceObject</a> &amp;</span> <span class="declname">obj</span>,<span class="type">const char *</span> <span class="declname">name_src</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type">size_t</span> <span class="declname">line_count</span>,<span class="type"><a href="class_maike_1_1_target___factory_delegator_1_1_callback.html">Callback</a> &amp;&amp;</span> <span class="declname">cb</span>)</th>
+<span class="type">void</span> <a href="#1a306679300c7288ccff21aa7996e6eb3b">targetsCreate</a>
+(<span class="type"><a href="class_maike_1_1_target___factory_delegator_1_1_tag_extractor.html">TagExtractor</a> &amp;&amp;</span> <span class="declname">extractor</span>,<span class="type">const char *</span> <span class="declname">name_src</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type"><a href="class_maike_1_1_target___factory_delegator_1_1_dependency_collector.html">DependencyCollector</a> &amp;&amp;</span> <span class="declname">collector</span>,<span class="type">DependencyGraph &amp;</span> <span class="declname">graph</span>)</th>
         <td class="memberdesc"></td>
       </tr>
       <tr>
         <th class="membername">
-<span class="type">void</span> <a href="#1a696fd6f90553e3edcd443abcd0bc3ae1">targetsCreate</a>
-(<span class="type">const <a href="class_maike_1_1_resource_object.html">ResourceObject</a> &amp;</span> <span class="declname">obj</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type">size_t</span> <span class="declname">line_count</span>,<span class="type"><a href="class_maike_1_1_target___factory_delegator_1_1_callback.html">Callback</a> &amp;&amp;</span> <span class="declname">cb</span>)</th>
+<span class="type">void</span> <a href="#1af9cd5203ce5da1028fef188eed3f5782">targetsCreate</a>
+(<span class="type"><a href="class_maike_1_1_target___factory_delegator_1_1_tag_extractor.html">TagExtractor</a> &amp;&amp;</span> <span class="declname">extractor</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type"><a href="class_maike_1_1_target___factory_delegator_1_1_dependency_collector.html">DependencyCollector</a> &amp;&amp;</span> <span class="declname">cb</span>,<span class="type">DependencyGraph &amp;</span> <span class="declname">graph</span>)</th>
         <td class="memberdesc"></td>
       </tr>
       <tr>
@@ -70,11 +75,17 @@
 ()</th>
         <td class="memberdesc"></td>
       </tr>
+      <tr>
+        <th class="membername">
+<span class="type">const char *</span> <a href="#1a52dd7ac089c92fbca80ce974ec06cd17">rootGet</a>
+()</th>
+        <td class="memberdesc"></td>
+      </tr>
     </table>
   </section><section>
-    <h2 class="memproto" id="1a05e04f0e724ed3b07875207545a6b6a6">
+    <h2 class="memproto" id="1a4caa2db2c96f3821bbd61492fe2b9881">
 <span class="type"><a href="class_maike_1_1_handle.html">Handle</a>&lt; <a href="class_maike_1_1_target.html">Target</a> &gt;</span> targetCreate
-(<span class="type">const <a href="class_maike_1_1_resource_object.html">ResourceObject</a> &amp;</span> <span class="declname">obj</span>,<span class="type">const char *</span> <span class="declname">name_src</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type">size_t</span> <span class="declname">line_count</span>)</h2>
+(<span class="type">const <a href="class_maike_1_1_resource_object.html">ResourceObject</a> &amp;</span> <span class="declname">target</span>,<span class="type">const char *</span> <span class="declname">name_src</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type">size_t</span> <span class="declname">line_count</span>)</h2>
     <aside>
       <h3>Quick info</h3>
       <p>This member is</p>
@@ -83,9 +94,9 @@
       </ul>
     </aside>
   </section><section>
-    <h2 class="memproto" id="1abbff8232beb0c961dc4efded769f4cb0">
+    <h2 class="memproto" id="1a9e33cee4df9e483dda50013815d2e742">
 <span class="type"><a href="class_maike_1_1_handle.html">Handle</a>&lt; <a href="class_maike_1_1_target.html">Target</a> &gt;</span> targetCreate
-(<span class="type">const <a href="class_maike_1_1_resource_object.html">ResourceObject</a> &amp;</span> <span class="declname">obj</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type">size_t</span> <span class="declname">line_count</span>)</h2>
+(<span class="type">const <a href="class_maike_1_1_resource_object.html">ResourceObject</a> &amp;</span> <span class="declname">target</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type">size_t</span> <span class="declname">line_count</span>)</h2>
     <aside>
       <h3>Quick info</h3>
       <p>This member is</p>
@@ -94,9 +105,9 @@
       </ul>
     </aside>
   </section><section>
-    <h2 class="memproto" id="1a559bd0bc7a24a1a467c7176c90fef981">
+    <h2 class="memproto" id="1a306679300c7288ccff21aa7996e6eb3b">
 <span class="type">void</span> targetsCreate
-(<span class="type">const <a href="class_maike_1_1_resource_object.html">ResourceObject</a> &amp;</span> <span class="declname">obj</span>,<span class="type">const char *</span> <span class="declname">name_src</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type">size_t</span> <span class="declname">line_count</span>,<span class="type"><a href="class_maike_1_1_target___factory_delegator_1_1_callback.html">Callback</a> &amp;&amp;</span> <span class="declname">cb</span>)</h2>
+(<span class="type"><a href="class_maike_1_1_target___factory_delegator_1_1_tag_extractor.html">TagExtractor</a> &amp;&amp;</span> <span class="declname">extractor</span>,<span class="type">const char *</span> <span class="declname">name_src</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type"><a href="class_maike_1_1_target___factory_delegator_1_1_dependency_collector.html">DependencyCollector</a> &amp;&amp;</span> <span class="declname">collector</span>,<span class="type">DependencyGraph &amp;</span> <span class="declname">graph</span>)</h2>
     <aside>
       <h3>Quick info</h3>
       <p>This member is</p>
@@ -105,9 +116,9 @@
       </ul>
     </aside>
   </section><section>
-    <h2 class="memproto" id="1a696fd6f90553e3edcd443abcd0bc3ae1">
+    <h2 class="memproto" id="1af9cd5203ce5da1028fef188eed3f5782">
 <span class="type">void</span> targetsCreate
-(<span class="type">const <a href="class_maike_1_1_resource_object.html">ResourceObject</a> &amp;</span> <span class="declname">obj</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type">size_t</span> <span class="declname">line_count</span>,<span class="type"><a href="class_maike_1_1_target___factory_delegator_1_1_callback.html">Callback</a> &amp;&amp;</span> <span class="declname">cb</span>)</h2>
+(<span class="type"><a href="class_maike_1_1_target___factory_delegator_1_1_tag_extractor.html">TagExtractor</a> &amp;&amp;</span> <span class="declname">extractor</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type"><a href="class_maike_1_1_target___factory_delegator_1_1_dependency_collector.html">DependencyCollector</a> &amp;&amp;</span> <span class="declname">cb</span>,<span class="type">DependencyGraph &amp;</span> <span class="declname">graph</span>)</h2>
     <aside>
       <h3>Quick info</h3>
       <p>This member is</p>
@@ -145,6 +156,18 @@
       <h3>Quick info</h3>
       <p>This member is</p>
       <ul>
+        <li>Pure virtual</li>
+      </ul>
+    </aside>
+  </section><section>
+    <h2 class="memproto" id="1a52dd7ac089c92fbca80ce974ec06cd17">
+<span class="type">const char *</span> rootGet
+()</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Const</li>
         <li>Pure virtual</li>
       </ul>
     </aside>
