@@ -1,10 +1,10 @@
-//@	{
-//@	"targets":
-//@		[{
-//@		 "name":"resourceobject.o","type":"object"
-//@		,"dependencies":[{"ref":"jansson","rel":"external"}]
-//@		}]
-//@	}
+//	{
+//	"targets":
+//		[{
+//		 "name":"resourceobject.o","type":"object"
+//		,"dependencies":[{"ref":"jansson","rel":"external"}]
+//		}]
+//	}
 
 #include "resourceobject.hpp"
 #include "errormessage.hpp"

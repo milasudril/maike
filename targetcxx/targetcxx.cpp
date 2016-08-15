@@ -86,9 +86,9 @@ TargetCxx::TargetCxx(const ResourceObject& obj,const TargetCxxCompiler& compiler
 
 void TargetCxx::dumpDetails(ResourceObject& target) const
 	{
-	target.objectSet("type",ResourceObject(type(typeGet())));
+	target.objectSet("type",target.create(type(typeGet())));
 
-	ResourceObject cxxoptions(ResourceObject::Type::OBJECT);
+	auto cxxoptions=target.createObject();
 	m_options_extra.configDump(cxxoptions);
 	target.objectSet("cxxoptions",std::move(cxxoptions));
 	}

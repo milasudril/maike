@@ -31,6 +31,7 @@ namespace Maike
 
 			SystemTargetInfo& configAppend(const ResourceObject& targetinfo);
 			void configDump(ResourceObject& targetinfo) const;
+			ResourceObject configDump() const;
 
 			SystemTargetInfo& sysvarsLoad();
 			SystemTargetInfo& configAppendDefault();

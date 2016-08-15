@@ -7,7 +7,7 @@
 #include "readbuffer.hpp"
 #include "writebuffer.hpp"
 #include "pathutils.hpp"
-#include "resourceobject.hpp"
+#include "resourceobjectjansson.hpp"
 #include "stringkey.hpp"
 #include "twins.hpp"
 #include "errormessage.hpp"
@@ -60,24 +60,24 @@ class PRIVATE SpellTree
 		std::vector<std::string> m_items;
 	};
 
-static void dependencyGet(ResourceObject& dep,const SpellTree& dep_in)
+static void dependencyGet(ResourceObjectJansson& dep,const SpellTree& dep_in)
 	{
 	if(dep_in.itemCountGet()>0)
-		{dep.objectSet("ref",ResourceObject(dep_in.itemGet(0)));}
+		{dep.objectSet("ref",ResourceObjectJansson(dep_in.itemGet(0)));}
 	if(dep_in.itemCountGet()>1)
-		{dep.objectSet("rel",ResourceObject(dep_in.itemGet(1)));}
+		{dep.objectSet("rel",ResourceObjectJansson(dep_in.itemGet(1)));}
 	else
-		{dep.objectSet("rel",ResourceObject("implementation"));}
+		{dep.objectSet("rel",ResourceObjectJansson("implementation"));}
 	}
 
-static void targetGet(ResourceObject& target,const SpellTree& target_in)
+static void targetGet(ResourceObjectJansson& target,const SpellTree& target_in)
 	{
 		{
 		auto name=target_in.find(Stringkey("name")).first->get();
 		if(name!=nullptr)
 			{
 			if( name->itemCountGet()!=0)
-				{target.objectSet("name",ResourceObject(name->itemGet(0)));}
+				{target.objectSet("name",ResourceObjectJansson(name->itemGet(0)));}
 			}
 		}
 
@@ -86,15 +86,15 @@ static void targetGet(ResourceObject& target,const SpellTree& target_in)
 		if(type!=nullptr)
 			{
 			if( type->itemCountGet()!=0)
-				{target.objectSet("type",ResourceObject(type->itemGet(0)));}
+				{target.objectSet("type",ResourceObjectJansson(type->itemGet(0)));}
 			}
 		}
 
 	auto deps_in=target_in.find(Stringkey("dependency"));
-	ResourceObject deps(ResourceObject::Type::ARRAY);
+	ResourceObjectJansson deps(ResourceObject::Type::ARRAY);
 	while(deps_in.first!=deps_in.second)
 		{
-		ResourceObject dep(ResourceObject::Type::OBJECT);
+		ResourceObjectJansson dep(ResourceObject::Type::OBJECT);
 		auto& d=*(deps_in.first->get());
 		dependencyGet(dep,d);
 		deps.objectAppend(std::move(dep));
@@ -103,14 +103,14 @@ static void targetGet(ResourceObject& target,const SpellTree& target_in)
 	target.objectSet("dependencies",std::move(deps));
 	}
 
-static void build(ResourceObject& obj,const SpellTree& tree)
+static void build(ResourceObjectJansson& obj,const SpellTree& tree)
 	{
-	ResourceObject targets(ResourceObject::Type::ARRAY);
+	ResourceObjectJansson targets(ResourceObject::Type::ARRAY);
 		{
 		auto targets_in=tree.find(Stringkey("target"));
 		while(targets_in.first!=targets_in.second)
 			{
-			ResourceObject target(ResourceObject::Type::OBJECT);
+			ResourceObjectJansson target(ResourceObject::Type::OBJECT);
 			auto& t=*(targets_in.first->get());
 			targetGet(target,t);
 			targets.objectAppend(std::move(target));
@@ -120,10 +120,10 @@ static void build(ResourceObject& obj,const SpellTree& tree)
 
 		{
 		auto deps_in=tree.find(Stringkey("dependency"));
-		ResourceObject deps(ResourceObject::Type::ARRAY);
+		ResourceObjectJansson deps(ResourceObject::Type::ARRAY);
 		while(deps_in.first!=deps_in.second)
 			{
-			ResourceObject dep(ResourceObject::Type::OBJECT);
+			ResourceObjectJansson dep(ResourceObject::Type::OBJECT);
 			auto& d=*(deps_in.first->get());
 			dependencyGet(dep,d);
 			deps.objectAppend(std::move(dep));
@@ -209,7 +209,7 @@ static void process(const char* filename,const char* out_dir)
 						if(!tree_stack.empty())
 							{throw "Spell error: unterminated spell tree";}
 						state=State::SPELL_END;
-						ResourceObject rc(ResourceObject::Type::OBJECT);
+						ResourceObjectJansson rc(ResourceObject::Type::OBJECT);
 						build(rc,root);
 						rc.write(Encoder(wb));
 						}

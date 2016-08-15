@@ -23,12 +23,12 @@ TargetPython::TargetPython(const ResourceObject& obj
 
 void TargetPython::dumpDetails(ResourceObject& target) const
 	{
-	ResourceObject args(ResourceObject::Type::ARRAY);
+	auto args=target.createArray();
 	auto i=m_args.data();
 	auto i_end=i+m_args.size();
 	while(i!=i_end)
 		{
-		args.objectAppend(ResourceObject(i->c_str()));
+		args.objectAppend(args.create(i->c_str()));
 		++i;
 		}
 	target.objectSet("args",std::move(args));

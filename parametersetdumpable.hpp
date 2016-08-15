@@ -12,6 +12,7 @@ namespace Maike
 		{
 		public:
 			virtual void configDump(ResourceObject& targetinfo) const=0;
+			virtual ResourceObject configDump() const=0;
 		};
 	}
 

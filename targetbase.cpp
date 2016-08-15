@@ -47,13 +47,13 @@ TargetBase::TargetBase(const char* name,const char* name_src,const char* in_dir,
 
 void TargetBase::dump(ResourceObject& target) const
 	{
-	target.objectSet("name",ResourceObject(m_name.c_str()))
-		.objectSet("source",ResourceObject(m_source_name.c_str()));
-	ResourceObject dependency_array(ResourceObject::Type::ARRAY);
+	target.objectSet("name",target.create(m_name.c_str()))
+		.objectSet("source",target.create(m_source_name.c_str()));
+	auto dependency_array=target.createArray();
 	auto deps=dependencies();
 	while(deps.first!=deps.second)
 		{
-		ResourceObject dep(ResourceObject::Type::OBJECT);
+		auto dep=target.createObject();
 		deps.first->dump(dep);
 		dependency_array.objectAppend(std::move(dep));
 		++deps.first;

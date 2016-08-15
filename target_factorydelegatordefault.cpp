@@ -12,6 +12,7 @@
 #include "dependency.hpp"
 #include "fileutils.hpp"
 #include "targetplaceholder.hpp"
+#include "resourceobjectjansson.hpp"
 
 #include <cstring>
 
@@ -22,7 +23,6 @@ using namespace Maike;
 Target& Target_FactoryDelegatorDefault::dependencyResolve(DependencyGraph& graph
 	,const char* target_from,const Dependency& dependency)
 	{
-//TODO: Strip root from dependency name
 	auto name=dependency.nameGet();
 	auto key=Stringkey(name);
 
@@ -84,7 +84,6 @@ Handle<Target> Target_FactoryDelegatorDefault::targetCreate(const ResourceObject
 		exceptionRaise(ErrorMessage("#0;: #1; is not associated with any target factory"
 			,{name_src,suffix}));
 		}
-//TODO: Look up target name, and strip root here?
 	return i->second->targetCreate(obj,name_src,in_dir,rootGet(),idGet(),line_count);
 	}
 
@@ -139,17 +138,20 @@ static void targetsCreate(const ResourceObject& targets,const char* name_src
 		}
 	}
 
-void Target_FactoryDelegatorDefault::targetsCreate(const ResourceObject& obj
-	,const char* name_src,const char* in_dir,size_t line_count,Callback&& cb)
-	{targetsCreateImpl(obj,name_src,in_dir,line_count,cb);}
+void Target_FactoryDelegatorDefault::targetsCreate(TagExtractor&& extractor
+	,const char* name_src,const char* in_dir,Callback&& cb)
+	{targetsCreateImpl(extractor,name_src,in_dir,cb);}
 
-void Target_FactoryDelegatorDefault::targetsCreate(const ResourceObject& obj
-	,const char* in_dir,size_t line_count,Callback&& cb)
-	{targetsCreateImpl(obj,nullptr,in_dir,line_count,cb);}
+void Target_FactoryDelegatorDefault::targetsCreate(TagExtractor&& extractor
+	,const char* in_dir,Callback&& cb)
+	{targetsCreateImpl(extractor,nullptr,in_dir,cb);}
 
-void Target_FactoryDelegatorDefault::targetsCreateImpl(const ResourceObject& obj
-	,const char* name_src,const char* in_dir,size_t line_count,Callback& cb)
+void Target_FactoryDelegatorDefault::targetsCreateImpl(TagExtractor& extractor
+	,const char* name_src,const char* in_dir,Callback& cb)
 	{
+	ResourceObjectJansson obj(extractor);
+	auto line_count=extractor.linesCountGet();
+
 	if(obj.objectExists("targets"))
 		{::targetsCreate(obj.objectGet("targets"),name_src,in_dir,line_count,*this,cb);}
 	else
@@ -179,6 +181,11 @@ void Target_FactoryDelegatorDefault::targetsCreateImpl(const ResourceObject& obj
 				break;
 				}
 			}
+		}
+
+	if(obj.objectExists("dependencies_extra"))
+		{
+		printf("Extra deps\n");
 		}
 	}
 

@@ -161,13 +161,13 @@ static int databaseDumpJSON(Maike::Session& maike
 	,const std::vector<std::string>* targets
 	,const std::vector<std::string>& filename)
 	{
-	ResourceObject db(ResourceObject::Type::ARRAY);
 	if(targets==nullptr)
-		{targetsDump(maike,db);}
+		{targetsDump(maike).write(fileGet(filename));}
 	else
 		{
 		auto ptr=targets->data();
 		auto ptr_end=ptr+targets->size();
+		auto db=resourceObjectCreate(ResourceObject::Type::ARRAY);
 		while(ptr!=ptr_end)
 			{
 			targetDump(maike,db,ptr->c_str());
@@ -175,8 +175,6 @@ static int databaseDumpJSON(Maike::Session& maike
 			}
 		}
 
-	auto file=fileGet(filename);
-	db.write(file);
 
 	return 0;
 	}

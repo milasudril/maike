@@ -132,25 +132,25 @@ void Target_Hook_Registry::configDump(ResourceObject& targethooks) const
 	auto i_end=m_hooks.end();
 	while(i!=i_end)
 		{
-		ResourceObject hook(ResourceObject::Type::OBJECT);
+		auto hook=targethooks.createObject();
 
-		hook.objectSet("name",ResourceObject(i->second.name.c_str()))
-			.objectSet("plugin",ResourceObject(i->second.plugin.c_str()));
+		hook.objectSet("name",hook.create(i->second.name.c_str()))
+			.objectSet("plugin",hook.create(i->second.plugin.c_str()));
 
 			{
-			ResourceObject filename_exts(ResourceObject::Type::ARRAY);
+			auto filename_exts=hook.createArray();
 			auto j=i->second.filename_exts.begin();
 			auto j_end=i->second.filename_exts.end();
 			while(j!=j_end)
 				{
-				filename_exts.objectAppend(ResourceObject(j->c_str()));
+				filename_exts.objectAppend(filename_exts.create(j->c_str()));
 				++j;
 				}
 			hook.objectSet("filename_exts",std::move(filename_exts));
 			}
 
 			{
-			ResourceObject config(ResourceObject::Type::OBJECT);
+			auto config=hook.createObject();
 			i->second.hook->configDump(config);
 			hook.objectSet("config",std::move(config));
 			}

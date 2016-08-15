@@ -62,8 +62,8 @@ Dependency::Dependency(const ResourceObject& obj,const char* in_dir,const char* 
 
 void Dependency::dump(ResourceObject& dependency) const
 	{
-	dependency.objectSet("ref",ResourceObject(nameGet()))
-		.objectSet("rel",ResourceObject(relation(relationGet())));
+	dependency.objectSet("ref",dependency.create(nameGet()))
+		.objectSet("rel",dependency.create(relation(relationGet())));
 	}
 
 void Dependency::nameSet(const char* name)

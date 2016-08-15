@@ -22,7 +22,7 @@ static void stringArrayGet(ResourceObject& ret, const std::vector< std::string >
 	auto ptr_end=ptr + array.size();
 	while(ptr!=ptr_end)
 		{
-		ret.objectAppend(ResourceObject(ptr->c_str()));
+		ret.objectAppend(ret.create(ptr->c_str()));
 		++ptr;
 		}
 	}
@@ -249,70 +249,70 @@ TargetCxxOptions& TargetCxxOptions::configAppendDefault()
 void TargetCxxOptions::configDump(ResourceObject& cxxoptions) const
 	{
 		{
-		ResourceObject objcompile(ResourceObject::Type::OBJECT);
+		auto objcompile=cxxoptions.createObject();
 		m_objcompile.configDump(objcompile);
 		cxxoptions.objectSet("objcompile",std::move(objcompile));
 		}
 
 		{
-		ResourceObject appcompile(ResourceObject::Type::OBJECT);
+		auto appcompile=cxxoptions.createObject();
 		m_appcompile.configDump(appcompile);
 		cxxoptions.objectSet("appcompile",std::move(appcompile));
 		}
 
 		{
-		ResourceObject dllcompile(ResourceObject::Type::OBJECT);
+		auto dllcompile=cxxoptions.createObject();
 		m_dllcompile.configDump(dllcompile);
 		cxxoptions.objectSet("dllcompile",std::move(dllcompile));
 		}
 
 		{
-		ResourceObject libcompile(ResourceObject::Type::OBJECT);
+		auto libcompile=cxxoptions.createObject();
 		m_libcompile.configDump(libcompile);
 		cxxoptions.objectSet("libcompile",std::move(libcompile));
 		}
 
 		{
-		ResourceObject versionquery(ResourceObject::Type::OBJECT);
+		auto versionquery=cxxoptions.createObject();
 		m_versionquery.configDump(versionquery);
 		cxxoptions.objectSet("versionquery",std::move(versionquery));
 		}
 
 		{
-		ResourceObject pkgconfig(ResourceObject::Type::OBJECT);
+		auto pkgconfig=cxxoptions.createObject();
 		m_pkgconfig.configDump(pkgconfig);
 		cxxoptions.objectSet("pkgconfig",std::move(pkgconfig));
 		}
 
-	cxxoptions.objectSet("libdir_format",ResourceObject(m_libdir_format.c_str()))
-		.objectSet("includedir_format",ResourceObject(m_includedir_format.c_str()))
-		.objectSet("libext_format",ResourceObject(m_libext_format.c_str()))
-		.objectSet("libint_format",ResourceObject(m_libint_format.c_str()))
-		.objectSet("stdprefix",ResourceObject(m_stdprefix.c_str()))
-		.objectSet("cxxversion_max",ResourceObject(static_cast<long long int>(m_cxxversion_max)))
-		.objectSet("cxxversion_min",ResourceObject(static_cast<long long int>(m_cxxversion_min)))
-		.objectSet("cflags_format",ResourceObject(m_cflags_format.c_str()));
+	cxxoptions.objectSet("libdir_format",cxxoptions.create(m_libdir_format.c_str()))
+		.objectSet("includedir_format",cxxoptions.create(m_includedir_format.c_str()))
+		.objectSet("libext_format",cxxoptions.create(m_libext_format.c_str()))
+		.objectSet("libint_format",cxxoptions.create(m_libint_format.c_str()))
+		.objectSet("stdprefix",cxxoptions.create(m_stdprefix.c_str()))
+		.objectSet("cxxversion_max",cxxoptions.create(static_cast<long long int>(m_cxxversion_max)))
+		.objectSet("cxxversion_min",cxxoptions.create(static_cast<long long int>(m_cxxversion_min)))
+		.objectSet("cflags_format",cxxoptions.create(m_cflags_format.c_str()));
 
 		{
-		ResourceObject includedir(ResourceObject::Type::ARRAY);
+		auto includedir=cxxoptions.createArray();
 		stringArrayGet(includedir,m_includedir);
 		cxxoptions.objectSet("includedir",std::move(includedir));
 		}
 
 		{
-		ResourceObject includedir_noscan(ResourceObject::Type::ARRAY);
+		auto includedir_noscan=cxxoptions.createArray();
 		stringArrayGet(includedir_noscan,m_includedir_noscan);
 		cxxoptions.objectSet("includedir_noscan",std::move(includedir_noscan));
 		}
 
 		{
-		ResourceObject libdir(ResourceObject::Type::ARRAY);
+		auto libdir=cxxoptions.createArray();
 		stringArrayGet(libdir,m_libdir);
 		cxxoptions.objectSet("libdir",std::move(libdir));
 		}
 
 		{
-		ResourceObject cflags_extra(ResourceObject::Type::ARRAY);
+		auto cflags_extra=cxxoptions.createArray();
 		stringArrayGet(cflags_extra,m_cflags_extra);
 		cxxoptions.objectSet("cflags_extra",std::move(cflags_extra));
 		}

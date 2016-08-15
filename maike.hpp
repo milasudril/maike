@@ -8,7 +8,6 @@
 #include "maike_base.hpp"
 #include "datasource.hpp"
 #include "datasink.hpp"
-#include "resourceobject.hpp"
 #include "graphedgewriter.hpp"
 #include "errormessage.hpp"
 

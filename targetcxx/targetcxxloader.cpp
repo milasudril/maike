@@ -17,10 +17,10 @@ using namespace Maike;
 
 namespace
 	{
-	class TagFilter final:public DataSource
+	class TagExtractor final:public Target_FactoryDelegator::TagExtractor
 		{
 		public:
-			TagFilter(DataSource& source):m_reader(source)
+			TagExtractor(DataSource& source):m_reader(source)
 				,m_state(State::NEWLINE),m_lines(0)
 				{}
 
@@ -29,7 +29,7 @@ namespace
 			const char* nameGet() const noexcept
 				{return m_reader.nameGet();}
 
-			size_t linesGet() const noexcept
+			size_t linesCountGet() const noexcept
 				{return m_lines;}
 
 		private:
@@ -43,11 +43,7 @@ namespace
 		};
 	}
 
-TargetCxxLoader::TargetCxxLoader(const TargetCxxOptions& options):
-	r_options(options)
-	{}
-
-size_t TagFilter::read(void* buffer,size_t length)
+size_t TagExtractor::read(void* buffer,size_t length)
 	{
 	auto buffer_out=reinterpret_cast<uint8_t*>(buffer);
 	size_t n_read=0;
@@ -145,6 +141,14 @@ size_t TagFilter::read(void* buffer,size_t length)
 
 
 
+TargetCxxLoader::TargetCxxLoader(const TargetCxxOptions& options):
+	r_options(options)
+	{}
+
+
+
+
+
 static void includesGet(const char* name_src,const char* in_dir
 	,const char* root
 	,Spider& spider,DependencyGraph& graph,Target& target)
@@ -182,6 +186,8 @@ static void includesGet(const char* name_src,const char* in_dir
 							,Dependency::Relation::INTERNAL));
 						auto in_dir_include=dirname(name_dep_full);
 						spider.scanFile(name_dep_full.c_str(),in_dir_include.c_str());
+
+					/*	Move this to Target_FactoryDelegator, or rather to TargetCxx?
 						FileIn file(name_dep_full.c_str());
 						ResourceObject obj{TagFilter(file)};
 						if(obj.objectExists("dependencies_extra"))
@@ -195,10 +201,12 @@ static void includesGet(const char* name_src,const char* in_dir
 								{
 								Dependency dep(deps.objectGet(k),in_dir_include.c_str(),root);
 							//TODO What if there was more than one target in the file we came from...
+							//None of these should have the extra dependency
 								if(strcmp(dep.nameGet(),target.nameGet())!=0)
 									{target.dependencyAdd(std::move(dep));}
 								}
 							}
+					*/
 						}
 						break;
 					default:
@@ -242,9 +250,6 @@ void TargetCxxLoader::targetsLoad(const char* name_src,const char* in_dir
 	,Spider& spider,DependencyGraph& graph,Target_FactoryDelegator& factory) const
 	{
 	FileIn source(name_src);
-	TagFilter filter(source);
-	ResourceObject rc{filter};
-
-	factory.targetsCreate(rc,name_src,in_dir,filter.linesGet()
+	factory.targetsCreate(TagExtractor(source),name_src,in_dir
 		,TargetCreateCallback(name_src,in_dir,factory.rootGet(),spider,graph));
 	}

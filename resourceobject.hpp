@@ -1,7 +1,4 @@
-//@	{
-//@	 "targets":[{"name":"resourceobject.hpp","type":"include"}]
-//@	,"dependencies_extra":[{"ref":"resourceobject.o","rel":"implementation"}]
-//@	}
+//@	{"targets":[{"name":"resourceobject.hpp","type":"include"}]}
 
 #ifndef MAIKE_RESOURCEOBJECT_H
 #define MAIKE_RESOURCEOBJECT_H
@@ -24,43 +21,61 @@ namespace Maike
 					Iterator(const Iterator&)=delete;
 					Iterator& operator=(const Iterator&)=delete;
 
-					Iterator(Iterator&& i) noexcept:
-						r_object(i.r_object),m_handle(i.m_handle)
+					Iterator(Iterator&& i) noexcept:r_vtable(i.r_vtable)
+						,r_owner(i.r_owner),m_handle(i.m_handle)
 						{i.m_handle=nullptr;}
+
 					Iterator& operator=(Iterator&& i)=delete;
 
+					void next() noexcept
+						{m_handle=r_vtable->next(m_handle,r_owner);}
 
+					std::pair<const char*,ResourceObject> get() const noexcept
+						{return r_vtable->get(m_handle);}
 
-					Iterator(const ResourceObject& object);
-					Iterator(ResourceObject&& object)=delete;
-					void next() noexcept;
-					std::pair<const char*,ResourceObject> get() const noexcept;
-					bool endAt() noexcept;
+					bool endAt() const noexcept
+						{return r_vtable->endAt(m_handle);}
 
-				private:
-					const ResourceObject& r_object;
+				protected:
+					struct Vtable
+						{
+						void (*destroy)(void* handle);
+						void* (*next)(void* handle,void* owner);
+						std::pair<const char*,ResourceObject> (*get)(void* handle);
+						bool (*endAt)(const void* handle);
+						};
+
+					Iterator(const Vtable& vtable,void* owner,void* handle) noexcept:
+						r_vtable(&vtable),r_owner(owner),m_handle(handle)
+						{}
+
+					const Vtable* r_vtable;
+					void* r_owner;
 					void* m_handle;
-
 				};
 
 			ResourceObject(const ResourceObject&)=delete;
 			ResourceObject& operator=(const ResourceObject&)=delete;
 
-			explicit ResourceObject(DataSource&& reader):ResourceObject(reader)
-				{}
-
-			explicit ResourceObject(DataSource& reader);
-
-			explicit ResourceObject(long long int x);
-			explicit ResourceObject(const char* str);
-			explicit ResourceObject(double x);
-
 			enum class Type:unsigned int{OBJECT,ARRAY,STRING,INTEGER,FLOAT};
-			explicit ResourceObject(Type type);
 
-			~ResourceObject() noexcept;
+			ResourceObject create(const char* str) const
+				{return r_vtable->createString(str);}
 
-			ResourceObject(ResourceObject&& tree) noexcept:m_handle(tree.m_handle)
+			ResourceObject create(long long int x) const
+				{return r_vtable->createLongLong(x);}
+
+			ResourceObject create(double x) const
+				{return r_vtable->createDouble(x);}
+
+			ResourceObject createObject() const
+				{return r_vtable->createObject();}
+
+			ResourceObject createArray() const
+				{return r_vtable->createArray();}
+
+			ResourceObject(ResourceObject&& tree) noexcept:r_vtable(tree.r_vtable)
+				,m_handle(tree.m_handle)
 				{tree.m_handle=nullptr;}
 
 			ResourceObject& operator=(ResourceObject&& tree) noexcept
@@ -69,43 +84,93 @@ namespace Maike
 				return *this;
 				}
 
-			Type typeGet() const noexcept;
+			Type typeGet() const noexcept
+				{return r_vtable->typeGet(m_handle);}
 
-			ResourceObject objectGet(const char* name) const;
-			bool objectExists(const char* name) const noexcept;
-			size_t objectCountGet() const noexcept;
-			ResourceObject objectGet(size_t index) const;
+			ResourceObject objectGet(const char* name) const
+				{return r_vtable->objectGet(m_handle,name);}
+
+			bool objectExists(const char* name) const noexcept
+				{return r_vtable->objectExists(m_handle,name);}
+
+			size_t objectCountGet() const noexcept
+				{return r_vtable->objectCountGet(m_handle);}
+
+			ResourceObject objectGet(size_t index) const
+				{return r_vtable->objectGetIndex(m_handle,index);}
+
 			Iterator objectIteratorGet() const noexcept
+				{return r_vtable->objectIteratorGet(m_handle);}
+
+			explicit operator const char*() const
+				{return r_vtable->stringGet(m_handle);}
+				
+			explicit operator long long int() const
+				{return r_vtable->integerGet(m_handle);}
+
+			explicit operator double() const
+				{return r_vtable->floatGet(m_handle);}
+
+			ResourceObject& objectAppend(ResourceObject&& object)
 				{
-				Iterator i(*this);
-				return std::move(i);
+				r_vtable->objectAppend(m_handle,std::move(object));
+				return *this;
 				}
 
-			const char* stringGet() const noexcept;
-			long long int integerGet() const noexcept;
-			double floatGet() const noexcept;
-
-			explicit operator const char*() const;
-			explicit operator long long int() const;
-			explicit operator double() const;
-
-			ResourceObject& objectAppend(ResourceObject&& object);
 			ResourceObject& objectAppend(const ResourceObject& object)=delete;
-			ResourceObject& objectSet(const char* key,ResourceObject&& object);
+			ResourceObject& objectSet(const char* key,ResourceObject&& object)
+				{
+				r_vtable->objectSet(m_handle,key,std::move(object));
+				return *this;
+				}
+
 			ResourceObject& objectSet(const ResourceObject& object)=delete;
 
 			void write(DataSink&& sink) const
-				{writeImpl(sink);}
+				{r_vtable->write(m_handle,sink);}
 
 			void write(DataSink& sink) const
-				{writeImpl(sink);}
+				{r_vtable->write(m_handle,sink);}
 
-		private:
-			ResourceObject(void* handle,const char* name);
+			~ResourceObject()
+				{r_vtable->destroy(m_handle);}
+
+		protected:
+			struct Vtable
+				{
+				void (*destroy)(void* handle);
+				ResourceObject (*createString)(const char* str);
+				ResourceObject (*createLongLong)(long long int x);
+				ResourceObject (*createDouble)(double x);
+				ResourceObject (*createObject)();
+				ResourceObject (*createArray)();
+				Type (*typeGet)(const void* handle);
+				bool (*objectExists)(const void* handle,const char* name);
+				ResourceObject (*objectGet)(const void* handle,const char* name);
+				Iterator (*objectIteratorGet)(void* handle);
+				size_t (*objectCountGet)(const void* handle);
+				ResourceObject (*objectGetIndex)(const void* handle,size_t index);
+				const char* (*stringGet)(const void* handle);
+				long long int (*integerGet)(const void* handle);
+				double (*floatGet)(const void* handle);
+
+				void (*objectAppend)(void* handle,ResourceObject&& obj);
+				void (*objectSet)(void* handle,const char* key,ResourceObject&& obj);
+				void (*write)(const void* handle,DataSink& sink);
+				};
+
+			ResourceObject(const Vtable& vtable):r_vtable(&vtable),m_handle(nullptr)
+				{}
+
+			ResourceObject(const Vtable& vtable,void* handle) noexcept:
+				r_vtable(&vtable),m_handle(handle)
+				{}
+
+			
+			const Vtable* r_vtable;
 			void* m_handle;
-
-			void writeImpl(DataSink& sink) const;
 		};
 	};
 
 #endif
+

@@ -129,26 +129,26 @@ TargetDirectoryLoader& TargetDirectoryLoader::configAppend(const ResourceObject&
 
 void TargetDirectoryLoader::configDump(ResourceObject& directoryoptions) const
 	{
-	directoryoptions.objectSet("recursive",ResourceObject(static_cast<long long int>(m_recursive)));
+	directoryoptions.objectSet("recursive",directoryoptions.create(static_cast<long long int>(m_recursive)));
 		{
-		ResourceObject paths_reject(ResourceObject::Type::ARRAY);
+		auto paths_reject=directoryoptions.createArray();
 		auto i=m_ignore.begin();
 		auto i_end=m_ignore.end();
 		while(i!=i_end)
 			{
-			paths_reject.objectAppend(ResourceObject(i->second.c_str()));
+			paths_reject.objectAppend(paths_reject.create(i->second.c_str()));
 			++i;
 			}
 		directoryoptions.objectSet("paths_reject",std::move(paths_reject));
 		}
 
 		{
-		ResourceObject paths_reject(ResourceObject::Type::ARRAY);
+		auto paths_reject=directoryoptions.createArray();
 		auto i=m_ignore_fullname.begin();
 		auto i_end=m_ignore_fullname.end();
 		while(i!=i_end)
 			{
-			paths_reject.objectAppend(ResourceObject(i->second.c_str()));
+			paths_reject.objectAppend(paths_reject.create(i->second.c_str()));
 			++i;
 			}
 		directoryoptions.objectSet("paths_full_reject",std::move(paths_reject));

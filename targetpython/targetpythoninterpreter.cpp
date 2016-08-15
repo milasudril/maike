@@ -55,9 +55,7 @@ static void dataProcess(Pipe& interpreter,const ParameterSetDumpable& sysvars)
 	auto standard_error=interpreter.stderrCapture();
 	Thread<ReadCallback> stderr_reader(ReadCallback{standard_error.get()});
 	auto standard_input=interpreter.stdinCapture();
-	ResourceObject sysvars_out(ResourceObject::Type::OBJECT);
-	sysvars.configDump(sysvars_out);
-	sysvars_out.write(*standard_input.get());
+	sysvars.configDump().write(*standard_input.get());
 	}
 
 int TargetPythonInterpreter::run(const char* script,Twins<const char* const*> args) const
@@ -107,7 +105,7 @@ TargetPythonInterpreter& TargetPythonInterpreter::configAppend(const ResourceObj
 
 void TargetPythonInterpreter::configDump(ResourceObject& pythonoptions) const
 	{
-	ResourceObject command(ResourceObject::Type::OBJECT);
+	auto command=pythonoptions.createObject();
 	m_interpreter.configDump(command);
 	pythonoptions.objectSet("command",std::move(command));
 	}

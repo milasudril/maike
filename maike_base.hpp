@@ -8,6 +8,7 @@
 
 #include "exceptionhandler.hpp"
 #include "twins.hpp"
+#include "resourceobject.hpp"
 #include <cstddef>
 #include <cstdint>
 #include <memory>
@@ -23,7 +24,10 @@ namespace Maike
 	class DataSink;
 	class DataSource;
 	class GraphEdgeWriter;
-	class ResourceObject;
+
+	EXPORT ResourceObject resourceObjectCreate(ResourceObject::Type type);
+
+
 
 	/**\brief Creates a new Maike Session.
 	*
@@ -92,7 +96,7 @@ namespace Maike
 
 	EXPORT void configDump(const Session& maike,DataSink& sink);
 
-	EXPORT void configDump(const Session& maike,ResourceObject& obj);
+	EXPORT ResourceObject configDump(const Session& maike);
 
 	EXPORT void configAppendDefault(Session& maike);
 
@@ -137,10 +141,9 @@ namespace Maike
 
 	EXPORT void targetsCompile(Session& maike);
 
-	EXPORT void targetDump(const Session& maike,ResourceObject& target
-		,const char* target_name);
+	EXPORT void targetDump(const Session& maike,ResourceObject& db,const char* target_name);
 
-	EXPORT void targetsDump(const Session& maike,ResourceObject& target);
+	EXPORT ResourceObject targetsDump(const Session& maike);
 
 	EXPORT void targetsDumpTSVHeader(DataSink& sink);
 

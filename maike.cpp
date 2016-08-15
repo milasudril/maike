@@ -15,6 +15,7 @@
 #include "variant.hpp"
 #include "exceptionhandler.hpp"
 #include "stdstream.hpp"
+#include "resourceobjectjansson.hpp"
 
 #include <vector>
 #include <stack>
@@ -29,6 +30,12 @@ void Maike::versionPrint(DataSink& sink)
 	wb.write("Maike version ").write(Info::VERSION)
 		.write("\nThis Maike was compiled on ").write(Info::TIMESTAMP)
 		.write("\n");
+	}
+
+ResourceObject Maike::resourceObjectCreate(ResourceObject::Type type)
+	{
+	ResourceObjectJansson ret(type);
+	return std::move(ret);
 	}
 
 void Maike::init(ExceptionHandler eh)
@@ -58,18 +65,20 @@ void Maike::sessionDestroy(Session* maike)
 
 void Maike::configDump(const Session& maike,DataSink& sink)
 	{
-	ResourceObject obj(ResourceObject::Type::OBJECT);
-	maike.configDump(obj);
-	obj.write(sink);
+	configDump(maike).write(sink);
 	}
 
-void Maike::configDump(const Session& maike,ResourceObject& obj)
-	{maike.configDump(obj);}
+ResourceObject Maike::configDump(const Session& maike)
+	{
+	ResourceObjectJansson obj(ResourceObject::Type::OBJECT);
+	maike.configDump(obj);
+	return std::move(obj);
+	}
 
 
 void Maike::configAppend(Session& maike,DataSource& source)
 	{
-	ResourceObject obj(source);
+	ResourceObjectJansson obj(source);
 	maike.configAppend(obj);
 	}
 
@@ -411,11 +420,10 @@ void Maike::graphInvDump(const Session& maike,GraphEdgeWriter& writer
 void Maike::targetDump(const Session& maike,ResourceObject& db
 	,const char* target_name)
 	{
-	ResourceObject target_obj(ResourceObject::Type::OBJECT);
+	auto target_obj=db.createObject();
 	maike.target(target_name).dump(target_obj);
 	db.objectAppend(std::move(target_obj));
 	}
-
 
 
 namespace
@@ -428,7 +436,7 @@ namespace
 
 			int operator()(const DependencyGraph& graph,const Target& target)
 				{
-				ResourceObject target_obj(ResourceObject::Type::OBJECT);
+				auto target_obj=r_db.createObject();
 				target.dump(target_obj);
 				r_db.objectAppend(std::move(target_obj));
 				return 0;
@@ -438,9 +446,11 @@ namespace
 		};
 	}
 
-void Maike::targetsDump(const Session& maike,ResourceObject& db)
+ResourceObject Maike::targetsDump(const Session& maike)
 	{
+	ResourceObjectJansson db(ResourceObject::Type::ARRAY);
 	maike.targetsProcess(TargetDumpJSON(db));
+	return std::move(db);
 	}
 
 

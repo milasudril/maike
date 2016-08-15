@@ -1,7 +1,7 @@
 //@	{"targets":[{"name":"systemtargetinfo.o","type":"object"}]}
 
 #include "systemtargetinfo.hpp"
-#include "resourceobject.hpp"
+#include "resourceobjectjansson.hpp"
 #include "sysvars.hpp"
 #include "stringkey.hpp"
 #include "variant.hpp"
@@ -116,21 +116,28 @@ void SystemTargetInfo::configDump(ResourceObject& targetinfo) const
 		switch(val.typeGet())
 			{
 			case Variant::STRING:
-				targetinfo.objectSet(key,ResourceObject(static_cast<const char*>(val)));
+				targetinfo.objectSet(key,targetinfo.create(static_cast<const char*>(val)));
 				break;
 			case Variant::FLOAT:
-				targetinfo.objectSet(key,ResourceObject(static_cast<float>(val)));
+				targetinfo.objectSet(key,targetinfo.create(static_cast<float>(val)));
 				break;
 			case Variant::DOUBLE:
-				targetinfo.objectSet(key,ResourceObject(static_cast<double>(val)));
+				targetinfo.objectSet(key,targetinfo.create(static_cast<double>(val)));
 				break;
 			case Variant::INT:
 				targetinfo.objectSet(key
-					,ResourceObject(static_cast<long long int>(static_cast<int64_t>(val))));
+					,targetinfo.create(static_cast<long long int>(static_cast<int64_t>(val))));
 				break;
 			default:
 				break;
 			}
 		++i;
 		}
+	}
+
+ResourceObject SystemTargetInfo::configDump() const
+	{
+	ResourceObjectJansson ret(ResourceObject::Type::OBJECT);
+	configDump(ret);
+	return std::move(ret);
 	}

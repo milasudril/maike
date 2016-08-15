@@ -182,15 +182,15 @@ void Command::argumentsClear() noexcept
 
 void Command::configDump(ResourceObject& cmd) const
 	{
-	cmd.objectSet("name",ResourceObject(m_name.c_str()));
+	cmd.objectSet("name",cmd.create(m_name.c_str()));
 
 		{
-		ResourceObject args(ResourceObject::Type::ARRAY);
+		auto args=cmd.createArray();
 		auto ptr_args=m_args.data();
 		auto ptr_end=ptr_args + m_args.size();
 		while(ptr_args!=ptr_end)
 			{
-			args.objectAppend(ResourceObject(ptr_args->c_str()));
+			args.objectAppend(args.create(ptr_args->c_str()));
 			++ptr_args;
 			}
 		cmd.objectSet("args",std::move(args));

@@ -20,10 +20,10 @@ TargetPythonLoader::TargetPythonLoader()
 
 namespace
 	{
-	class TagFilter final:public DataSource
+	class TagExtractor final:public Target_FactoryDelegator::TagExtractor
 		{
 		public:
-			TagFilter(DataSource& source):m_reader(source)
+			TagExtractor(DataSource& source):m_reader(source)
 				,m_state(State::NEWLINE),m_lines(0)
 				{}
 
@@ -32,7 +32,7 @@ namespace
 			const char* nameGet() const noexcept
 				{return m_reader.nameGet();}
 
-			size_t linesGet() const noexcept
+			size_t linesCountGet() const noexcept
 				{return m_lines;}
 
 		private:
@@ -46,7 +46,7 @@ namespace
 		};
 	}
 
-size_t TagFilter::read(void* buffer,size_t length)
+size_t TagExtractor::read(void* buffer,size_t length)
 	{
 	auto buffer_out=reinterpret_cast<uint8_t*>(buffer);
 	size_t n_read=0;
@@ -157,8 +157,6 @@ void TargetPythonLoader::targetsLoad(const char* name_src,const char* in_dir
 	,Spider& spider,DependencyGraph& graph,Target_FactoryDelegator& factory) const
 	{
 	FileIn source(name_src);
-	TagFilter filter(source);
-	ResourceObject rc{filter};
-	factory.targetsCreate(rc,name_src,in_dir,filter.linesGet()
+	factory.targetsCreate(TagExtractor(source),name_src,in_dir
 		,TargetCreateCallback(name_src,in_dir,spider,graph));
 	}

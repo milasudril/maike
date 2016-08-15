@@ -87,31 +87,31 @@ Session& Session::configAppend(const ResourceObject& maikeconfig)
 void Session::configDump(ResourceObject& maikeconfig) const
 	{
 		{
-		ResourceObject source_files(ResourceObject::Type::ARRAY);
+		auto source_files=maikeconfig.createArray();
 		auto i=m_source_files.begin();
 		auto i_end=m_source_files.end();
 		while(i!=i_end)
 			{
-			source_files.objectAppend(ResourceObject(i->c_str()));
+			source_files.objectAppend(source_files.create(i->c_str()));
 			++i;
 			}
 		maikeconfig.objectSet("source_files",std::move(source_files));
 		}
 
 		{
-		ResourceObject targetinfo(ResourceObject::Type::OBJECT);
+		auto targetinfo=maikeconfig.createObject();
 		m_targetinfo.configDump(targetinfo);
 		maikeconfig.objectSet("targetinfo",std::move(targetinfo));
 		}
 
 		{
-		ResourceObject directoryoptions(ResourceObject::Type::OBJECT);
+		auto directoryoptions=maikeconfig.createObject();
 		m_dirloader.configDump(directoryoptions);
 		maikeconfig.objectSet("directoryoptions",std::move(directoryoptions));
 		}
 
 		{
-		ResourceObject target_hooks(ResourceObject::Type::ARRAY);
+		auto target_hooks=maikeconfig.createArray();
 		m_target_hooks.configDump(target_hooks);
 		maikeconfig.objectSet("target_hooks",std::move(target_hooks));
 		}

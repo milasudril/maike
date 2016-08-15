@@ -33,11 +33,11 @@ namespace Maike
 			Handle<Target> targetCreate(const ResourceObject& obj,const char* in_dir
 				,size_t line_count);
 
-			void targetsCreate(const ResourceObject& obj,const char* name_src
-				,const char* in_dir,size_t line_count,Callback&& cb);
+			void targetsCreate(TagExtractor&& extractor,const char* name_src
+				,const char* in_dir,Callback&& cb);
 
-			void targetsCreate(const ResourceObject& obj,const char* in_dir
-				,size_t line_count,Callback&& cb);
+			void targetsCreate(TagExtractor&& extractor,const char* in_dir
+				,Callback&& cb);
 
 			size_t idGet() noexcept
 				{return m_id_gen.idGet();}
@@ -63,8 +63,8 @@ namespace Maike
 				{m_id_gen.reset();}
 
 		private:
-			void targetsCreateImpl(const ResourceObject& obj,const char* name_src
-				,const char* in_dir,size_t line_count,Callback& cb);
+			void targetsCreateImpl(TagExtractor& extractor,const char* name_src
+				,const char* in_dir,Callback& cb);
 
 			const ExpressionEvaluator& r_eval;
 			IdGenerator<size_t> m_id_gen;
