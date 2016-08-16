@@ -118,6 +118,8 @@ namespace Maike
 
 	EXPORT const char* targetDirectoryGet(const Session& maike);
 
+	EXPORT bool loaderHas(const Session& maike,const char* filename);
+
 
 	/**\brief Retrievs the range of target id:s.
 	*

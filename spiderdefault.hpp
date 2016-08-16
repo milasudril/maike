@@ -35,6 +35,9 @@ namespace Maike
 
 			void loadersUnregister() noexcept;
 
+			bool loaderHas(const Stringkey& filename_ext) const noexcept
+				{return m_r_loaders.find(filename_ext)!=m_r_loaders.end();}
+
 		private:
 			std::map<Stringkey,const Target_Loader*> m_r_loaders;
 			Target_FactoryDelegator& r_target_creator;

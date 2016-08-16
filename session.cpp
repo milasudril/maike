@@ -301,3 +301,13 @@ size_t Session::targetsCountGet() const
 		{dependenciesReload();}
 	return m_graph.targetsCountGet();
 	}
+
+bool Session::loaderHas(const char* filename) const
+	{
+	auto filename_ext=strrchr(filename,'.');
+	if(filename_ext==NULL)
+		{return 0;}
+	if(targetHooksDirty())
+		{targetHooksRegister();}
+	return m_spider.loaderHas(Stringkey(filename_ext));
+	}

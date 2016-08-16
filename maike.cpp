@@ -109,7 +109,8 @@ bool Maike::scanRecursiveGet(const Session& maike)
 const char* Maike::targetDirectoryGet(const Session& maike)
 	{return maike.targetDirectoryGet();}
 
-
+bool Maike::loaderHas(const Session& maike,const char* filename)
+	{return maike.loaderHas(filename);}
 
 Twins<size_t> Maike::targetIdRangeGet(const Session& maike)
 	{return maike.targetIdRangeGet();}

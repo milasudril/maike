@@ -49,6 +49,8 @@ namespace Maike
 			const Twins<size_t>& targetIdRangeGet() const;
 			size_t targetsCountGet() const;
 
+			bool loaderHas(const char* filename) const;
+
 		private:
 			SystemTargetInfo m_targetinfo;
 			TargetDirectoryLoader m_dirloader;
