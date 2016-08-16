@@ -106,6 +106,9 @@ void Maike::scanRecursiveSet(Session& maike,bool recursive)
 bool Maike::scanRecursiveGet(const Session& maike)
 	{return maike.scanRecursiveGet();}
 
+const char* Maike::targetDirectoryGet(const Session& maike)
+	{return maike.targetDirectoryGet();}
+
 
 
 Twins<size_t> Maike::targetIdRangeGet(const Session& maike)

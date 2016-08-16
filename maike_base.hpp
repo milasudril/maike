@@ -116,6 +116,8 @@ namespace Maike
 
 	EXPORT void scanRecursiveSet(Session& maike,bool recursive);
 
+	EXPORT const char* targetDirectoryGet(const Session& maike);
+
 
 	/**\brief Retrievs the range of target id:s.
 	*
