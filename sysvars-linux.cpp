@@ -154,7 +154,8 @@ static void cpuinfoSet(const std::map<Stringkey,std::string>& cpuinfo
 		auto i=cpuinfo.find(find);
 		if(i!=cpuinfo.end())
 			{
-			replace(variables,{Stringkey(keymap[N_keys].first),atoll(i->second.c_str())});
+			replace(variables,{Stringkey(keymap[N_keys].first)
+				,static_cast<int64_t>(atoll(i->second.c_str()))});
 			varnames[Stringkey(keymap[N_keys].first)]=std::string(keymap[N_keys].first);
 			}
 		}
