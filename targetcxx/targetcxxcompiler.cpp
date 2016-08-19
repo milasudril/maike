@@ -46,7 +46,7 @@ namespace
 		};
 	}
 
-static long int cxxversionDefaultGet(Pipe& versionget)
+static unsigned long long int cxxversionDefaultGet(Pipe& versionget)
 	{
 	auto standard_error=versionget.stderrCapture();
 	Thread<ReadCallback> stderr_reader(ReadCallback{standard_error.get()});
@@ -127,7 +127,7 @@ static const char* cxxNameGet(unsigned long long int cxxversion)
 	}
 
 static std::string
-cxxVersionString(const char* stdprefix,long int cxxversion)
+cxxVersionString(const char* stdprefix,unsigned long long int cxxversion)
 	{
 	std::string ret(stdprefix);
 	ret+=cxxNameGet(cxxversion);

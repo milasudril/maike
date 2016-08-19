@@ -154,7 +154,7 @@ static void cpuinfoSet(const std::map<Stringkey,std::string>& cpuinfo
 		auto i=cpuinfo.find(find);
 		if(i!=cpuinfo.end())
 			{
-			replace(variables,{Stringkey(keymap[N_keys].first),atol(i->second.c_str())});
+			replace(variables,{Stringkey(keymap[N_keys].first),atoll(i->second.c_str())});
 			varnames[Stringkey(keymap[N_keys].first)]=std::string(keymap[N_keys].first);
 			}
 		}
@@ -216,7 +216,7 @@ void Maike::sysvarsLoad(std::map<Stringkey, Variant>& variables
 #endif
 
 #ifdef __unix__
-	replace(variables,{Stringkey("posix"),_POSIX_VERSION});
+	replace(variables,{Stringkey("posix"),static_cast<int64_t>(_POSIX_VERSION)});
 	varnames[Stringkey("posix")]=std::string("posix");
 #endif
 

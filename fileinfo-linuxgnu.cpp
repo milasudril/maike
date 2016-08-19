@@ -6,7 +6,7 @@
 //@	]
 
 #define _LARGEFILE64_SOURCE
-#define FILE_OFFSET_BITS 64
+#define _FILE_OFFSET_BITS 64
 
 #include "fileinfo.hpp"
 #include "variant.hpp"
