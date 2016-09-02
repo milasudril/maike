@@ -39,6 +39,8 @@ Session& Session::configAppendDefault()
 	{
 	sourceFileAppend(".");
 	m_targetinfo.configAppendDefault();
+	m_target_dir_full=dircat(m_delegator.rootGet()
+		,static_cast<const char*>(m_targetinfo.variableGet(Stringkey("target_directory"))));
 	m_dirloader.configAppendDefault();
 	m_dirloader.pathReject(static_cast<const char*>(m_targetinfo.variableGet(Stringkey("target_directory"))));
 	m_target_hooks.configAppendDefault();
@@ -66,7 +68,11 @@ Session& Session::configAppend(const ResourceObject& maikeconfig)
 		}
 
 	if(maikeconfig.objectExists("targetinfo"))
-		{m_targetinfo.configAppend(maikeconfig.objectGet("targetinfo"));}
+		{
+		m_targetinfo.configAppend(maikeconfig.objectGet("targetinfo"));
+		m_target_dir_full=dircat(m_delegator.rootGet()
+			,static_cast<const char*>(m_targetinfo.variableGet(Stringkey("target_directory"))));
+		}
 
 	if(maikeconfig.objectExists("directoryoptions"))
 		{
