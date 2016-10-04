@@ -233,8 +233,11 @@ void TargetCxxCompiler::execute(const Command& cmd,const char* source
 			,options_result.libdirGet(),options_result.libdirFormatGet());
 		}
 
-	const ParameterSet* paramset[]={&cxxparams};
-	auto compiler=cmd.execute(Pipe::REDIRECT_STDERR,{paramset, paramset + 1 });
+//	const ParameterSet* paramset[]={&cxxparams};
+	auto paramset=r_paramset;
+	paramset.push_back(&cxxparams);
+	auto compiler=cmd.execute(Pipe::REDIRECT_STDERR
+		,{paramset.data(),paramset.data() + paramset.size() });
 	auto stream=compiler.stderrCapture();
 	ReadBuffer rb(*stream.get());
 	WriteBuffer wb(StdStream::error());
