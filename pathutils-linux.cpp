@@ -12,6 +12,9 @@
 #include "strerror.hpp"
 #include "filein.hpp"
 #include "readbuffer.hpp"
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif
 #include <cstring>
 #include <unistd.h>
 
@@ -190,4 +193,19 @@ std::string Maike::homedir()
 			}
 		}
 	return std::string("");
+	}
+
+std::string Maike::configdir()
+	{
+	auto exe=exename();
+	auto ret=dircat(dirname(exename()),"../share");
+	return dircat(ret,basename(exe.c_str()));
+	}
+
+std::string Maike::configdirUser()
+	{
+	auto home=homedir();
+	auto ret=dircat(home,".config");
+	auto exe=exename();
+	return dircat(ret,basename(exe.c_str()));	
 	}

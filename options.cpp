@@ -16,21 +16,26 @@ static void optionsFill(Options::OptionMap& options)
 	{
 	MAKE_OPTION(options,0,"help","Print this message to `stdout`, or to the given file, and exit.",1);
 
-	MAKE_OPTION(options,0,"version","Print version information to `stdout`, or the given file, and exit.",1);
+	MAKE_OPTION(options,0,"version","Print version information to `stdout`, or to the given file, and exit.",1);
 
 	MAKE_OPTION(options,0,"load-path","Print the load path of the Maike executable to `stdout`, or the given file, and exit.",1);
 
 	MAKE_OPTION(options,1,"configfiles","Load the listed configuration files. "
-		"If this argument is not given, Maike will look for a file called "
-		"maikeconfig.json within the current working directory. If that file "
-		"cannot be openend, Maike will load a built-in default configuration.",2);
+		"If this argument is not given, Maike will instead load options from "
+		"files `maikeconfig.json`, found in system specific directories, and "
+		"the current working,",2);
 
 	MAKE_OPTION(options,1,"no-sysvars","Do not load any default system variables. "
-		"This is useful when using a cross-compiler. Normally, Maike loads a "
-		"system-dependent set of variables that identifiesd the host platform.",0);
+		"This option is useful when using a cross-compiler. Normally, Maike loads a "
+		"system-dependent set of variables that identifies the host platform.",0);
 
-	MAKE_OPTION(options,1,"configdump","Print the current configuration to the "
-		"given file, and exit. As defualt, the data is written to `stdout`.",1);
+	MAKE_OPTION(options,1,"configclean","Do not load any system specific default configuration. "
+		"In this mode, Maike will only load its build-in configuration, either followed by the file "
+		"`maikeconfig.json`, if present in the current directory, or the files listed in `configfiles`. "
+		"If the option `configfiles` is given, `maikeconfig.json` will not be loaded.",0);
+
+	MAKE_OPTION(options,1,"configdump","Print the current configuration to `stdout`, "
+		"or to the given file, and exit.",1);
 
 	MAKE_OPTION(options,2,"targets","Only process the listed targets. This "
 		"option reduces the amount of output when using any of the --dump-* "
@@ -42,23 +47,23 @@ static void optionsFill(Options::OptionMap& options)
 
 	MAKE_OPTION(options,2,"list-external-targets","Print all external targets to "
 		"the given file and exit. As default, data is written to `stdout`. "
-		"External targets are targets not tracked by Maike--usually external "
+		"External targets are targets not tracked by Maike--usually, they refer to external "
 		"libraries.",1);
 
 	MAKE_OPTION(options,2,"list-all-targets","Print all targets "
 		"to the given file and exit. As default, the data is written to `stdout`.",1);
 
-	MAKE_OPTION(options,3,"dump-graph-dot","Dump the dependnecy graph to a DOT "
+	MAKE_OPTION(options,3,"dump-graph-dot","Dump the dependency graph to a DOT "
 		"file and exit. As default, the data is written to `stdout`.",1);
 
-	MAKE_OPTION(options,3,"dump-graph-inv-dot","Dump an inverted dependnecy graph "
+	MAKE_OPTION(options,3,"dump-graph-inv-dot","Dump an inverted dependency graph "
 		"to a DOT file and exit. As default, the data is written to `stdout`.",1);
 
 	MAKE_OPTION(options,3,"dump-database-json","Dump the internal database to a JSON "
 		"file and exit. As default, the data is written to `stdout`.",1);
 
 	MAKE_OPTION(options,3,"dump-targets-tsv","Dumps information about the selected "
-		"targets to a TSV (Tab Separated Values) file. As defualt, the data is "
+		"targets to a TSV (Tab Separated Values) file. As default, the data is "
 		"written to `stdout`.",1);
 
 	}

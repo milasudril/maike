@@ -45,7 +45,7 @@ static int loadPathPrint(const std::vector<std::string>& filename)
 	return 0;
 	}
 
-static void configfilesLoad(Session& maike,const std::vector<std::string>* files)
+static void configfilesLoadClean(Session& maike,const std::vector<std::string>* files)
 	{
 	if(files==nullptr)
 		{
@@ -59,6 +59,24 @@ static void configfilesLoad(Session& maike,const std::vector<std::string>* files
 			fprintf(stderr,"(!) %s. Loading default configuration.\n\n",msg.messageGet());
 			configAppendDefault(maike);
 			}
+		return;
+		}
+	auto ptr=files->data();
+	auto ptr_end=ptr+files->size();
+	while(ptr!=ptr_end)
+		{
+		FileIn source(ptr->c_str());
+		configAppend(maike,source);
+		++ptr;
+		}
+}
+
+static void configfilesLoad(Session& maike,const std::vector<std::string>* files)
+	{
+	if(files==nullptr)
+		{
+		configAppendDefault(maike);
+		configAppendCommon(maike);
 		return;
 		}
 	auto ptr=files->data();
@@ -234,7 +252,10 @@ int main(int argc,char** argv)
 		if(opts.get<Stringkey("no-sysvars")>()==nullptr)
 			{sysvarsLoad(maike);}
 
-		configfilesLoad(maike,opts.get<Stringkey("configfiles")>());
+		if(opts.get<Stringkey("configclean")>()==nullptr)
+			{configfilesLoad(maike,opts.get<Stringkey("configfiles")>());}
+		else
+			{configfilesLoadClean(maike,opts.get<Stringkey("configfiles")>());}
 
 		x=opts.get<Stringkey("configdump")>();
 		if(x!=nullptr)

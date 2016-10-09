@@ -16,10 +16,12 @@
 #include "exceptionhandler.hpp"
 #include "stdstream.hpp"
 #include "resourceobjectjansson.hpp"
+#include "filein.hpp"
 
 #include <vector>
 #include <stack>
 #include <cstring>
+#include <array>
 
 using namespace Maike;
 
@@ -93,6 +95,25 @@ void Maike::configAppend(Session& maike,const ResourceObject& obj)
 
 void Maike::configAppendDefault(Session& maike)
 	{maike.configAppendDefault();}
+
+void Maike::configAppendCommon(Session& maike)
+	{
+	std::array<std::string,3> dirs{configdir(),configdirUser(),getcwd()};
+	WriteBuffer wb(StdStream::error());
+	for(size_t k=0;k<dirs.size();++k)
+		{
+		try
+			{
+			FileIn source(dircat(dirs[k],"maikeconfig.json").c_str());
+			ResourceObjectJansson obj(source);
+			maike.configAppend(obj);
+			}
+		catch(const ErrorMessage& msg)
+			{
+			wb.write(msg.messageGet()).write(". Continuing search...\n");
+			}
+		}
+	}
 
 void Maike::configClear(Session& maike)
 	{maike.configClear();}

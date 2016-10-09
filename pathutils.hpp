@@ -55,6 +55,10 @@ namespace Maike
 	PRIVATE std::string getcwd();
 
 	PRIVATE std::string homedir();
+
+	PRIVATE std::string configdir();
+
+	PRIVATE std::string configdirUser();
 	}
 
 #endif

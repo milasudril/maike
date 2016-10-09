@@ -110,6 +110,13 @@ namespace Maike
 
 	EXPORT void configAppend(Session& maike,const ResourceObject& obj);
 
+	/**\brief Appends common configuration resources to <var>maike</var>
+	* 
+	* This function appends configuration resources from common configuration
+	* files.
+	*/
+	EXPORT void configAppendCommon(Session& maike);
+
 	EXPORT void configClear(Session& maike);
 
 	EXPORT void sysvarsLoad(Session& maike);

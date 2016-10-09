@@ -42,6 +42,7 @@ namespace Maike
 				,Stringkey("dump-graph-inv-dot")
 				,Stringkey("dump-targets-tsv")
 				,Stringkey("load-path")
+				,Stringkey("configclean")
 				> OptionMap;
 
 			Options(Twins<const char* const*> args);
