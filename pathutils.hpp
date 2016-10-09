@@ -49,6 +49,12 @@ namespace Maike
 		}
 
 	PRIVATE std::string rootStrip(const std::string& path,const char* root);
+
+	PRIVATE std::string exename();
+
+	PRIVATE std::string getcwd();
+
+	PRIVATE std::string homedir();
 	}
 
 #endif

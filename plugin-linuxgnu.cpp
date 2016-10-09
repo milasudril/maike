@@ -21,91 +21,10 @@
 #include "readbuffer.hpp"
 
 #include <dlfcn.h>
-#include <limits.h>
-#include <unistd.h>
 #include <cstring>
 #include <vector>
 
 using namespace Maike;
-
-static std::string exename()
-	{
-//TODO: This function belongs to pathutils
-	ssize_t N=1;
-	ssize_t n=0;
-	std::string ret;
-	while(N-1==n)
-		{
-		N<<=1;
-		ret.resize(N);
-		n=readlink("/proc/self/exe",&ret[0],N-1);
-		if(n==-1)
-			{
-			exceptionRaise(ErrorMessage("It was not possible to resolve the path to Maike. #0;"
-				,{static_cast<const char*>(Maike::strerror(errno))}));
-			}
-		}
-	ret.resize(n);
-	return std::move(ret);
-	}
-
-static std::string getcwd()
-	{
-//TODO: This function belongs to pathutils
-	ssize_t N=1;
-	std::string ret;
-	char* result=NULL;
-	while(result==NULL)
-		{
-		ret.resize(N);
-		result=getcwd(&ret[0],N+1);
-		N<<=1;
-		}
-	ret.resize(strlen(ret.c_str()));
-	return std::move(ret);
-	}
-
-static std::string homedir()
-	{
-//TODO: This function belongs to pathutils
-	FileIn src("/etc/passwd");
-	ReadBuffer rb(src);
-	std::string field;
-	auto uid=getuid();
-	decltype(uid) uid_from_file;
-	std::string ret;
-	size_t field_count=0;
-	while(!rb.eof())
-		{
-		auto ch_in=rb.byteRead();
-		switch(ch_in)
-			{
-			case ':':
-				switch(field_count)
-					{
-					case 2:
-						uid_from_file=atoi(field.c_str());
-						break;
-					case 5:
-						ret=field;
-						break;
-					default:
-						break;
-					}
-				++field_count;
-				field.clear();
-				break;
-			case '\n':
-				if(uid_from_file==uid)
-					{return std::move(ret);}
-				field_count=0;
-				break;
-			default:
-				field+=ch_in;
-			}
-		}
-	return std::string("");
-	}
 
 static void* open(const std::vector<std::string>& names_to_try,std::string& name)
 	{
