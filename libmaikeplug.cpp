@@ -21,9 +21,11 @@
 #include "readbuffer.hpp"
 #include "writebuffer.hpp"
 #include "parametersetmapfixed.hpp"
+#include "parametersetdumpable.hpp"
 #include "stringformat.hpp"
 #include "spider.hpp"
 #include "target_factorydelegator.hpp"
 #include "target_factory.hpp"
 #include "target_loader.hpp"
+#include "dependencygraph.hpp"
 

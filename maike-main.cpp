@@ -47,8 +47,11 @@ static void configfilesLoad(Session& maike,const std::vector<std::string>* files
 			FileIn source("maikeconfig.json");
 			configAppend(maike,source);
 			}
-		catch(...)
-			{configAppendDefault(maike);}
+		catch(const ErrorMessage& msg)
+			{
+			fprintf(stderr,"(!) %s. Loading default configuration.\n\n",msg.messageGet());
+			configAppendDefault(maike);
+			}
 		return;
 		}
 	auto ptr=files->data();
