@@ -1,0 +1,218 @@
+<!DOCTYPE html><html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
+<title>Maike: class Maike::DependencyGraph</title>
+<link rel="stylesheet" type="text/css" href="fonts.css">
+<link rel="stylesheet" type="text/css" href="doclayout.css">
+<link rel="stylesheet" type="text/css" href="doccolors.css">
+<link rel="stylesheet" type="text/css" href="dochighlight.css">
+</head>
+<body>
+<header><div class="logo">Maike</div>
+<nav><ul>
+<li><a href="index.html">Maike</a></li>
+<li><a href="apiref.html">API reference</a></li>
+<li><a href="classes.html">Classes</a></li>
+</ul></nav></header><main><h1 id="top">class Maike::DependencyGraph</h1>
+<section class="summary">
+    <aside>
+      <h2>Quick info</h2>
+      <p>Include <a href="dependencygraph_8hpp.html">dependencygraph.hpp</a></p>
+      <p>This class is abstract</p>
+    </aside>
+    <p>The following table summarizes all members in this class.</p>
+    <table class="memberdecls">
+      <tr>
+        <th class="membername">class <a href="class_maike_1_1_dependency_graph_1_1_event_handler.html">Maike::DependencyGraph::EventHandler</a>
+</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th class="membername">class <a href="class_maike_1_1_dependency_graph_1_1_target_processor.html">Maike::DependencyGraph::TargetProcessor</a>
+</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th class="membername">class <a href="class_maike_1_1_dependency_graph_1_1_target_processor_const.html">Maike::DependencyGraph::TargetProcessorConst</a>
+</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type"><a href="class_maike_1_1_dependency_graph.html">DependencyGraph</a> &amp;</span> <a href="#1af0953daa59c8b0fc9c638169e1d1ae2d">targetRegister</a>
+(<span class="type"><a href="class_maike_1_1_handle.html">Handle</a>&lt; <a href="class_maike_1_1_target.html">Target</a> &gt; &amp;&amp;</span> <span class="declname">target</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type"><a href="class_maike_1_1_dependency_graph.html">DependencyGraph</a> &amp;</span> <a href="#1a49ac42d37065fd3c976e5ec9966816a8">targetsPatch</a>
+()</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">const <a href="class_maike_1_1_twins.html">Twins</a>&lt; size_t &gt; &amp;</span> <a href="#1ade78479dfd5c0e4905a6b216b1dd11aa">idRangeGet</a>
+()</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">size_t</span> <a href="#1a167cb724f9fecc339a965df9af0f4f72">targetsCountGet</a>
+()</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type"><a href="class_maike_1_1_dependency_graph.html">DependencyGraph</a> &amp;</span> <a href="#1a8a9a603b3d0d7c62241510b8d59a9711">targetsProcess</a>
+(<span class="type"><a href="class_maike_1_1_dependency_graph_1_1_target_processor.html">TargetProcessor</a> &amp;&amp;</span> <span class="declname">proc</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type"><a href="class_maike_1_1_dependency_graph.html">DependencyGraph</a> &amp;</span> <a href="#1af9266f633d872f0376c32babe515e7ce">targetsRemove</a>
+(<span class="type"><a href="class_maike_1_1_dependency_graph_1_1_target_processor.html">TargetProcessor</a> &amp;&amp;</span> <span class="declname">condition</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1a6240ebd94b778923c5bdc8cf9acf1e12">targetsProcess</a>
+(<span class="type"><a href="class_maike_1_1_dependency_graph_1_1_target_processor_const.html">TargetProcessorConst</a> &amp;&amp;</span> <span class="declname">proc</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type"><a href="class_maike_1_1_target.html">Target</a> *</span> <a href="#1a67e241036d9a18a423d096013c38681a">targetFind</a>
+(<span class="type">const <a href="class_maike_1_1_stringkey.html">Stringkey</a> &amp;</span> <span class="declname">key</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">const <a href="class_maike_1_1_target.html">Target</a> *</span> <a href="#1ae55b7b7499dc3f5b153ca78492abee05">targetFind</a>
+(<span class="type">const <a href="class_maike_1_1_stringkey.html">Stringkey</a> &amp;</span> <span class="declname">key</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type"><a href="class_maike_1_1_dependency_graph.html">DependencyGraph</a> &amp;</span> <a href="#1aaf7201a4a8793cd6444c56d553552144">clear</a>
+()</th>
+        <td class="memberdesc"></td>
+      </tr>
+    </table>
+  </section><section>
+    <h2 class="memproto" id="1af0953daa59c8b0fc9c638169e1d1ae2d">
+<span class="type"><a href="class_maike_1_1_dependency_graph.html">DependencyGraph</a> &amp;</span> targetRegister
+(<span class="type"><a href="class_maike_1_1_handle.html">Handle</a>&lt; <a href="class_maike_1_1_target.html">Target</a> &gt; &amp;&amp;</span> <span class="declname">target</span>)</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Pure virtual</li>
+      </ul>
+    </aside>
+  </section><section>
+    <h2 class="memproto" id="1a49ac42d37065fd3c976e5ec9966816a8">
+<span class="type"><a href="class_maike_1_1_dependency_graph.html">DependencyGraph</a> &amp;</span> targetsPatch
+()</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Pure virtual</li>
+      </ul>
+    </aside>
+  </section><section>
+    <h2 class="memproto" id="1ade78479dfd5c0e4905a6b216b1dd11aa">
+<span class="type">const <a href="class_maike_1_1_twins.html">Twins</a>&lt; size_t &gt; &amp;</span> idRangeGet
+()</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Const</li>
+        <li>Pure virtual</li>
+      </ul>
+    </aside>
+  </section><section>
+    <h2 class="memproto" id="1a167cb724f9fecc339a965df9af0f4f72">
+<span class="type">size_t</span> targetsCountGet
+()</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Const</li>
+        <li>Pure virtual</li>
+      </ul>
+    </aside>
+  </section><section>
+    <h2 class="memproto" id="1a8a9a603b3d0d7c62241510b8d59a9711">
+<span class="type"><a href="class_maike_1_1_dependency_graph.html">DependencyGraph</a> &amp;</span> targetsProcess
+(<span class="type"><a href="class_maike_1_1_dependency_graph_1_1_target_processor.html">TargetProcessor</a> &amp;&amp;</span> <span class="declname">proc</span>)</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Pure virtual</li>
+      </ul>
+    </aside>
+  </section><section>
+    <h2 class="memproto" id="1af9266f633d872f0376c32babe515e7ce">
+<span class="type"><a href="class_maike_1_1_dependency_graph.html">DependencyGraph</a> &amp;</span> targetsRemove
+(<span class="type"><a href="class_maike_1_1_dependency_graph_1_1_target_processor.html">TargetProcessor</a> &amp;&amp;</span> <span class="declname">condition</span>)</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Pure virtual</li>
+      </ul>
+    </aside>
+  </section><section>
+    <h2 class="memproto" id="1a6240ebd94b778923c5bdc8cf9acf1e12">
+<span class="type">void</span> targetsProcess
+(<span class="type"><a href="class_maike_1_1_dependency_graph_1_1_target_processor_const.html">TargetProcessorConst</a> &amp;&amp;</span> <span class="declname">proc</span>)</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Const</li>
+        <li>Pure virtual</li>
+      </ul>
+    </aside>
+  </section><section>
+    <h2 class="memproto" id="1a67e241036d9a18a423d096013c38681a">
+<span class="type"><a href="class_maike_1_1_target.html">Target</a> *</span> targetFind
+(<span class="type">const <a href="class_maike_1_1_stringkey.html">Stringkey</a> &amp;</span> <span class="declname">key</span>)</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Pure virtual</li>
+      </ul>
+    </aside>
+  </section><section>
+    <h2 class="memproto" id="1ae55b7b7499dc3f5b153ca78492abee05">
+<span class="type">const <a href="class_maike_1_1_target.html">Target</a> *</span> targetFind
+(<span class="type">const <a href="class_maike_1_1_stringkey.html">Stringkey</a> &amp;</span> <span class="declname">key</span>)</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Const</li>
+        <li>Pure virtual</li>
+      </ul>
+    </aside>
+  </section><section>
+    <h2 class="memproto" id="1aaf7201a4a8793cd6444c56d553552144">
+<span class="type"><a href="class_maike_1_1_dependency_graph.html">DependencyGraph</a> &amp;</span> clear
+()</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Pure virtual</li>
+      </ul>
+    </aside>
+  </section></main><footer><address>Torbjörn Rathsman 2016</address></footer>
+</body>
+</html>

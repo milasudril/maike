@@ -44,6 +44,11 @@
         <td></td>
       </tr>
       <tr>
+        <th class="membername">class <a href="class_maike_1_1_dependency_graph.html">Maike::DependencyGraph</a>
+</th>
+        <td></td>
+      </tr>
+      <tr>
         <th class="membername">class <a href="class_maike_1_1_error_message.html">Maike::ErrorMessage</a>
 </th>
         <td></td>
@@ -85,6 +90,11 @@
       </tr>
       <tr>
         <th class="membername">class <a href="class_maike_1_1_parameter_set.html">Maike::ParameterSet</a>
+</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th class="membername">class <a href="class_maike_1_1_parameter_set_dumpable.html">Maike::ParameterSetDumpable</a>
 </th>
         <td></td>
       </tr>
@@ -164,7 +174,7 @@
         <td></td>
       </tr>
       <tr>
-        <th class="membername">class <a href="struct_maike_1_1_twins.html">Maike::Twins</a>
+        <th class="membername">class <a href="class_maike_1_1_twins.html">Maike::Twins</a>
 </th>
         <td></td>
       </tr>
@@ -248,6 +258,12 @@
       </tr>
       <tr>
         <th class="membername">
+<span class="type">void</span> <a href="#1ae9b80af02eec4d086d43acc41da5563b">loadPath</a>
+(<span class="type"><a href="class_maike_1_1_data_sink.html">DataSink</a> &amp;</span> <span class="declname">sink</span>)</th>
+        <td class="memberdesc">Prints the path to the current executable to <em>sink</em> . </td>
+      </tr>
+      <tr>
+        <th class="membername">
 <span class="type">void</span> <a href="#1a5f44f55d002ce2e02d1d2c2767479838">init</a>
 (<span class="type"><a href="namespace_maike.html#1ab24551ee9ac5cf0b5195eb42e0f58c89">ExceptionHandler</a></span> <span class="declname">eh</span>)</th>
         <td class="memberdesc">Sets an ExceptionHandler that is called when an exception occurs. </td>
@@ -297,6 +313,12 @@
       </tr>
       <tr>
         <th class="membername">
+<span class="type">void</span> <a href="#1aeee8dd0ceb0231ef2c2cd57227ead259">configAppendCommon</a>
+(<span class="type">Session &amp;</span> <span class="declname">maike</span>)</th>
+        <td class="memberdesc">Appends common configuration resources to <em>maike</em> </td>
+      </tr>
+      <tr>
+        <th class="membername">
 <span class="type">void</span> <a href="#1a3431f75fac75a9b9bef0719d6deff594">configClear</a>
 (<span class="type">Session &amp;</span> <span class="declname">maike</span>)</th>
         <td class="memberdesc"></td>
@@ -333,7 +355,19 @@
       </tr>
       <tr>
         <th class="membername">
-<span class="type"><a href="struct_maike_1_1_twins.html">Twins</a>&lt; size_t &gt;</span> <a href="#1a421a472fd1ce97ca6db682fe340f6cbd">targetIdRangeGet</a>
+<span class="type">const char *</span> <a href="#1aedab6365f423be513d143aee7274f0b9">targetDirectoryGet</a>
+(<span class="type">const Session &amp;</span> <span class="declname">maike</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">bool</span> <a href="#1ac9f86e19e8d27bda51699f20c610b6d7">loaderHas</a>
+(<span class="type">const Session &amp;</span> <span class="declname">maike</span>,<span class="type">const char *</span> <span class="declname">filename</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type"><a href="class_maike_1_1_twins.html">Twins</a>&lt; size_t &gt;</span> <a href="#1a421a472fd1ce97ca6db682fe340f6cbd">targetIdRangeGet</a>
 (<span class="type">const Session &amp;</span> <span class="declname">maike</span>)</th>
         <td class="memberdesc">Retrievs the range of target id:s. </td>
       </tr>
@@ -483,14 +517,44 @@ template&lt;<span class="type">class T</span>,<span class="type">size_t</span> <
       </tr>
       <tr>
         <th class="membername">
+<span class="type">std::string</span> <a href="#1ae95c4b93c77bb7852744f433a23d7c6b">exename</a>
+()</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">std::string</span> <a href="#1aba6385c794906768f0cad0a1787b7677">getcwd</a>
+()</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">std::string</span> <a href="#1a0d64b88de25de833027ffc917c3adb71">homedir</a>
+()</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">std::string</span> <a href="#1a08a5eeb762964ef93affede40f93e411">configdir</a>
+()</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">std::string</span> <a href="#1a364c9ed05a34be43bf75d76c9ce30267">configdirUser</a>
+()</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
 <span class="type">void</span> <a href="#1aed07eacc8c125c4140f8bafe04825e24">format</a>
-(<span class="type">const <a href="struct_maike_1_1_twins.html">Twins</a>&lt; char * &gt; &amp;</span> <span class="declname">buffer</span>,<span class="type">const char *</span> <span class="declname">format_string</span>,<span class="type">const <a href="struct_maike_1_1_twins.html">Twins</a>&lt; const <a href="class_maike_1_1_variant.html">Variant</a> * &gt; &amp;</span> <span class="declname">args</span>)</th>
+(<span class="type">const <a href="class_maike_1_1_twins.html">Twins</a>&lt; char * &gt; &amp;</span> <span class="declname">buffer</span>,<span class="type">const char *</span> <span class="declname">format_string</span>,<span class="type">const <a href="class_maike_1_1_twins.html">Twins</a>&lt; const <a href="class_maike_1_1_variant.html">Variant</a> * &gt; &amp;</span> <span class="declname">args</span>)</th>
         <td class="memberdesc"></td>
       </tr>
       <tr>
         <th class="membername">
 <span class="type">void</span> <a href="#1ad424a1b0afade8609aace6163e7cb142">format</a>
-(<span class="type">const <a href="struct_maike_1_1_twins.html">Twins</a>&lt; char * &gt; &amp;</span> <span class="declname">buffer</span>,<span class="type">const char *</span> <span class="declname">format_string</span>,<span class="type">const std::initializer_list&lt; <a href="class_maike_1_1_variant.html">Variant</a> &gt; &amp;</span> <span class="declname">args</span>)</th>
+(<span class="type">const <a href="class_maike_1_1_twins.html">Twins</a>&lt; char * &gt; &amp;</span> <span class="declname">buffer</span>,<span class="type">const char *</span> <span class="declname">format_string</span>,<span class="type">const std::initializer_list&lt; <a href="class_maike_1_1_variant.html">Variant</a> &gt; &amp;</span> <span class="declname">args</span>)</th>
         <td class="memberdesc"></td>
       </tr>
       <tr>
@@ -571,6 +635,11 @@ template&lt;<span class="type">class T</span>&gt;
 (<span class="type"><a href="class_maike_1_1_data_sink.html">DataSink</a> &amp;</span> <span class="declname">sink</span>)</h2>
     <p>This function prints version information to <em>sink</em> . </p>
   </section><section>
+    <h2 class="memproto" id="1ae9b80af02eec4d086d43acc41da5563b">
+<span class="type">void</span> loadPath
+(<span class="type"><a href="class_maike_1_1_data_sink.html">DataSink</a> &amp;</span> <span class="declname">sink</span>)</h2>
+    <p>This function prints the path to the current executable to <em>sink</em> . </p>
+  </section><section>
     <h2 class="memproto" id="1a5f44f55d002ce2e02d1d2c2767479838">
 <span class="type">void</span> init
 (<span class="type"><a href="namespace_maike.html#1ab24551ee9ac5cf0b5195eb42e0f58c89">ExceptionHandler</a></span> <span class="declname">eh</span>)</h2>
@@ -606,6 +675,11 @@ template&lt;<span class="type">class T</span>&gt;
 <span class="type">void</span> configAppend
 (<span class="type">Session &amp;</span> <span class="declname">maike</span>,<span class="type">const <a href="class_maike_1_1_resource_object.html">ResourceObject</a> &amp;</span> <span class="declname">obj</span>)</h2>
   </section><section>
+    <h2 class="memproto" id="1aeee8dd0ceb0231ef2c2cd57227ead259">
+<span class="type">void</span> configAppendCommon
+(<span class="type">Session &amp;</span> <span class="declname">maike</span>)</h2>
+    <p>This function appends configuration resources from common configuration files. </p>
+  </section><section>
     <h2 class="memproto" id="1a3431f75fac75a9b9bef0719d6deff594">
 <span class="type">void</span> configClear
 (<span class="type">Session &amp;</span> <span class="declname">maike</span>)</h2>
@@ -630,10 +704,18 @@ template&lt;<span class="type">class T</span>&gt;
 <span class="type">void</span> scanRecursiveSet
 (<span class="type">Session &amp;</span> <span class="declname">maike</span>,<span class="type">bool</span> <span class="declname">recursive</span>)</h2>
   </section><section>
-    <h2 class="memproto" id="1a421a472fd1ce97ca6db682fe340f6cbd">
-<span class="type"><a href="struct_maike_1_1_twins.html">Twins</a>&lt; size_t &gt;</span> targetIdRangeGet
+    <h2 class="memproto" id="1aedab6365f423be513d143aee7274f0b9">
+<span class="type">const char *</span> targetDirectoryGet
 (<span class="type">const Session &amp;</span> <span class="declname">maike</span>)</h2>
-    <p>This function retrieves the range of target id:s. The number of targets is the difference between the two members of the <a href="struct_maike_1_1_twins.html">Twins</a> returned. </p>
+  </section><section>
+    <h2 class="memproto" id="1ac9f86e19e8d27bda51699f20c610b6d7">
+<span class="type">bool</span> loaderHas
+(<span class="type">const Session &amp;</span> <span class="declname">maike</span>,<span class="type">const char *</span> <span class="declname">filename</span>)</h2>
+  </section><section>
+    <h2 class="memproto" id="1a421a472fd1ce97ca6db682fe340f6cbd">
+<span class="type"><a href="class_maike_1_1_twins.html">Twins</a>&lt; size_t &gt;</span> targetIdRangeGet
+(<span class="type">const Session &amp;</span> <span class="declname">maike</span>)</h2>
+    <p>This function retrieves the range of target id:s. The number of targets is the difference between the two members of the <a href="class_maike_1_1_twins.html">Twins</a> returned. </p>
   </section><section>
     <h2 class="memproto" id="1a5285fd6611e8a93d36628b90eed87685">
 <span class="type">size_t</span> targetsCountGet
@@ -764,13 +846,33 @@ template&lt;<span class="type">class T</span>,<span class="type">size_t</span> <
 <span class="type">std::string</span> rootStrip
 (<span class="type">const std::string &amp;</span> <span class="declname">path</span>,<span class="type">const char *</span> <span class="declname">root</span>)</h2>
   </section><section>
+    <h2 class="memproto" id="1ae95c4b93c77bb7852744f433a23d7c6b">
+<span class="type">std::string</span> exename
+()</h2>
+  </section><section>
+    <h2 class="memproto" id="1aba6385c794906768f0cad0a1787b7677">
+<span class="type">std::string</span> getcwd
+()</h2>
+  </section><section>
+    <h2 class="memproto" id="1a0d64b88de25de833027ffc917c3adb71">
+<span class="type">std::string</span> homedir
+()</h2>
+  </section><section>
+    <h2 class="memproto" id="1a08a5eeb762964ef93affede40f93e411">
+<span class="type">std::string</span> configdir
+()</h2>
+  </section><section>
+    <h2 class="memproto" id="1a364c9ed05a34be43bf75d76c9ce30267">
+<span class="type">std::string</span> configdirUser
+()</h2>
+  </section><section>
     <h2 class="memproto" id="1aed07eacc8c125c4140f8bafe04825e24">
 <span class="type">void</span> format
-(<span class="type">const <a href="struct_maike_1_1_twins.html">Twins</a>&lt; char * &gt; &amp;</span> <span class="declname">buffer</span>,<span class="type">const char *</span> <span class="declname">format_string</span>,<span class="type">const <a href="struct_maike_1_1_twins.html">Twins</a>&lt; const <a href="class_maike_1_1_variant.html">Variant</a> * &gt; &amp;</span> <span class="declname">args</span>)</h2>
+(<span class="type">const <a href="class_maike_1_1_twins.html">Twins</a>&lt; char * &gt; &amp;</span> <span class="declname">buffer</span>,<span class="type">const char *</span> <span class="declname">format_string</span>,<span class="type">const <a href="class_maike_1_1_twins.html">Twins</a>&lt; const <a href="class_maike_1_1_variant.html">Variant</a> * &gt; &amp;</span> <span class="declname">args</span>)</h2>
   </section><section>
     <h2 class="memproto" id="1ad424a1b0afade8609aace6163e7cb142">
 <span class="type">void</span> format
-(<span class="type">const <a href="struct_maike_1_1_twins.html">Twins</a>&lt; char * &gt; &amp;</span> <span class="declname">buffer</span>,<span class="type">const char *</span> <span class="declname">format_string</span>,<span class="type">const std::initializer_list&lt; <a href="class_maike_1_1_variant.html">Variant</a> &gt; &amp;</span> <span class="declname">args</span>)</h2>
+(<span class="type">const <a href="class_maike_1_1_twins.html">Twins</a>&lt; char * &gt; &amp;</span> <span class="declname">buffer</span>,<span class="type">const char *</span> <span class="declname">format_string</span>,<span class="type">const std::initializer_list&lt; <a href="class_maike_1_1_variant.html">Variant</a> &gt; &amp;</span> <span class="declname">args</span>)</h2>
     <aside>
       <h3>Quick info</h3>
       <p>This member is</p>
