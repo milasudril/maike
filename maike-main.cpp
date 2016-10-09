@@ -38,6 +38,13 @@ static int versionPrint(const std::vector<std::string>& filename)
 	return 0;
 	}
 
+static int loadPathPrint(const std::vector<std::string>& filename)
+	{
+	auto dest=fileGet(filename);
+	loadPath(dest);
+	return 0;
+	}
+
 static void configfilesLoad(Session& maike,const std::vector<std::string>* files)
 	{
 	if(files==nullptr)
@@ -219,6 +226,10 @@ int main(int argc,char** argv)
 		x=opts.get<Stringkey("version")>();
 		if(x!=nullptr)
 			{return versionPrint(*x);}
+
+		x=opts.get<Stringkey("load-path")>();
+		if(x!=nullptr)
+			{return loadPathPrint(*x);}
 
 		if(opts.get<Stringkey("no-sysvars")>()==nullptr)
 			{sysvarsLoad(maike);}

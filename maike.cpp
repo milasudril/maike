@@ -32,6 +32,12 @@ void Maike::versionPrint(DataSink& sink)
 		.write("\n");
 	}
 
+void Maike::loadPath(DataSink& sink)
+	{
+	WriteBuffer wb(sink);
+	wb.write(dirname(exename()).c_str());
+	}
+
 ResourceObject Maike::resourceObjectCreate(ResourceObject::Type type)
 	{
 	ResourceObjectJansson ret(type);

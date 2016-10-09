@@ -18,6 +18,8 @@ static void optionsFill(Options::OptionMap& options)
 
 	MAKE_OPTION(options,0,"version","Print version information to `stdout`, or the given file, and exit.",1);
 
+	MAKE_OPTION(options,0,"load-path","Print the load path of the Maike executable to `stdout`, or the given file, and exit.",1);
+
 	MAKE_OPTION(options,1,"configfiles","Load the listed configuration files. "
 		"If this argument is not given, Maike will look for a file called "
 		"maikeconfig.json within the current working directory. If that file "

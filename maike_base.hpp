@@ -61,6 +61,12 @@ namespace Maike
 	*/
 	EXPORT void versionPrint(DataSink& sink);
 
+	/**\brief Prints the path to the current executable to <var>sink</var>.
+	* 
+	* This function prints the path to the current executable to <var>sink</var>.
+	*/
+	EXPORT void loadPath(DataSink& sink);
+
 	/**\brief Sets an ExceptionHandler that is called when an exception
 	* occurs.
 	* 
