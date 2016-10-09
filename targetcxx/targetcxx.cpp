@@ -328,6 +328,7 @@ bool TargetCxx::upToDate(Twins<const Dependency*> dependency_list
 		case Type::INCLUDE:
 			return 1;
 
+		case Type::LIB_STATIC:
 		case Type::LIB_DYNAMIC:
 		case Type::APPLICATION:
 			return applicationUpToDate(dependency_list,dependency_list_full
