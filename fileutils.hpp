@@ -20,6 +20,7 @@ namespace Maike
 		PRIVATE void copyFilter(const char* source,const char* dest
 			,const char* comment_line_regexp);
 		PRIVATE bool exists(const char* file);
+		PRIVATE void remove(const char* name);
 		};
 	}
 

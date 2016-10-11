@@ -19,6 +19,8 @@
 #include "filein.hpp"
 #include "fileout.hpp"
 #include "readbuffer.hpp"
+#include "pathutils.hpp"
+#include "directorylister.hpp"
 
 #include <unistd.h>
 #include <fcntl.h>
@@ -169,8 +171,8 @@ void FileUtils::copy(const char* source,const char* dest)
 		if(res==-1)
 			{
 			unlink(dest);
-			exceptionRaise(ErrorMessage("It was not possible to copy #0; to #1;"
-				,{static_cast<const char*>(Maike::strerror(errno))}));
+			exceptionRaise(ErrorMessage("It was not possible to copy #0; to #1;: "
+				,{source,dest,static_cast<const char*>(Maike::strerror(errno))}));
 			}
 
 		size-=res;
@@ -216,3 +218,51 @@ void FileUtils::copyFilter(const char* source,const char* dest
 			}
 		}
 	}
+
+static void removeRecursive(const char* name)
+	{
+	std::stack<std::string> nodes;
+	nodes.push(name);
+
+	while(!nodes.empty())
+		{
+		auto node=std::move( nodes.top() );
+		nodes.pop();
+		struct stat info;
+		if(stat(name,&info)!=0)
+			{
+			exceptionRaise(ErrorMessage("It was not possible to remove #0: "
+				,{name,static_cast<const char*>(Maike::strerror(errno))}));
+			}
+		if(S_ISDIR(info.st_mode))
+			{
+			if( rmdir(node.c_str())==-1 )
+				{
+				auto err=errno;
+				if( err==ENOTEMPTY || err==EEXIST)
+					{
+					nodes.push(node);
+					DirectoryLister dir(node.c_str());
+					const char* entry;
+					while((entry=dir.read())!=nullptr)
+						{nodes.push(dircat(node,name));}
+					}
+				}
+			}
+		else
+			{
+			if(unlink(node.c_str())==-1)
+				{
+				exceptionRaise(ErrorMessage("It was not possible to remove #0: "
+					,{name,static_cast<const char*>(Maike::strerror(errno))}));
+				}
+			}
+		}
+	}
+
+void FileUtils::remove(const char* name)
+	{
+	removeRecursive(name);
+	rmdir(dirname(name).c_str());
+	}
+
