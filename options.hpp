@@ -43,6 +43,8 @@ namespace Maike
 				,Stringkey("dump-targets-tsv")
 				,Stringkey("load-path")
 				,Stringkey("configclean")
+				,Stringkey("clean")
+				,Stringkey("remove-orphans")
 				> OptionMap;
 
 			Options(Twins<const char* const*> args);

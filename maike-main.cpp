@@ -135,6 +135,24 @@ static int targetsCompile(Maike::Session& maike,const std::vector<std::string>* 
 	return 0;
 	}
 
+static int clean(Maike::Session& maike,const std::vector<std::string>* targets)
+	{
+	if(targets==nullptr)
+		{
+		clean(maike);
+		return 0;
+		}
+
+	auto ptr=targets->data();
+	auto ptr_end=ptr+targets->size();
+	while(ptr!=ptr_end)
+		{
+		clean(maike,ptr->c_str());
+		++ptr;
+		}
+	return 0;
+	}
+
 static int graphDumpDOT(Maike::Session& maike
 	,const std::vector<std::string>* targets
 	,const std::vector<std::string>& filename)
@@ -288,6 +306,10 @@ int main(int argc,char** argv)
 		x=opts.get<Stringkey("dump-database-json")>();
 		if(x!=nullptr)
 			{return databaseDumpJSON(maike,opts.get<Stringkey("targets")>(),*x);}
+
+		x=opts.get<Stringkey("clean")>();
+		if(x!=nullptr)
+			{return clean(maike,opts.get<Stringkey("targets")>());}
 
 		targetsCompile(maike,opts.get<Stringkey("targets")>());
 

@@ -219,7 +219,7 @@ void FileUtils::copyFilter(const char* source,const char* dest
 		}
 	}
 
-static void removeRecursive(const char* name)
+void FileUtils::removeTree(const char* name)
 	{
 	std::stack<std::string> nodes;
 	nodes.push(name);
@@ -228,18 +228,22 @@ static void removeRecursive(const char* name)
 		{
 		auto node=std::move( nodes.top() );
 		nodes.pop();
-		struct stat info;
-		if(stat(name,&info)!=0)
+		if(rmdir(node.c_str())==-1)
 			{
-			exceptionRaise(ErrorMessage("It was not possible to remove #0: "
-				,{name,static_cast<const char*>(Maike::strerror(errno))}));
-			}
-		if(S_ISDIR(info.st_mode))
-			{
-			if( rmdir(node.c_str())==-1 )
+			auto res=errno;
+			switch(res)
 				{
-				auto err=errno;
-				if( err==ENOTEMPTY || err==EEXIST)
+				case ENOENT:
+					break;
+				case ENOTDIR:
+					if(unlink(node.c_str())==-1)
+						{
+						exceptionRaise(ErrorMessage("It was not possible to remove #0: "
+							,{node.c_str(),static_cast<const char*>(Maike::strerror(errno))}));
+						}
+					break;
+				case ENOTEMPTY:
+				case EEXIST:
 					{
 					nodes.push(node);
 					DirectoryLister dir(node.c_str());
@@ -247,14 +251,10 @@ static void removeRecursive(const char* name)
 					while((entry=dir.read())!=nullptr)
 						{nodes.push(dircat(node,name));}
 					}
-				}
-			}
-		else
-			{
-			if(unlink(node.c_str())==-1)
-				{
-				exceptionRaise(ErrorMessage("It was not possible to remove #0: "
-					,{name,static_cast<const char*>(Maike::strerror(errno))}));
+					break;
+				default:
+					exceptionRaise(ErrorMessage("It was not possible to remove #0: "
+						,{node.c_str(),static_cast<const char*>(Maike::strerror(errno))}));
 				}
 			}
 		}
@@ -262,7 +262,30 @@ static void removeRecursive(const char* name)
 
 void FileUtils::remove(const char* name)
 	{
-	removeRecursive(name);
-	rmdir(dirname(name).c_str());
-	}
+	WriteBuffer wb(StdStream::output());
+	wb.write("rm ");
+	escape(wb,name);
+	wb.write(static_cast<uint8_t>('\n'));
 
+	if(rmdir(name)==-1)
+		{
+		auto res=errno;
+		switch(res)
+			{
+			case ENOTEMPTY:
+			case EEXIST:
+			case ENOENT:
+				break;
+			case ENOTDIR:
+				if(unlink(name)==-1)
+					{
+					exceptionRaise(ErrorMessage("It was not possible to remove #0: "
+						,{name,static_cast<const char*>(Maike::strerror(errno))}));
+					}
+				break;
+			default:
+				exceptionRaise(ErrorMessage("It was not possible to remove #0: "
+					,{name,static_cast<const char*>(Maike::strerror(errno))}));
+			}
+		}
+	}

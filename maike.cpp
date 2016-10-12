@@ -17,6 +17,7 @@
 #include "stdstream.hpp"
 #include "resourceobjectjansson.hpp"
 #include "filein.hpp"
+#include "fileutils.hpp"
 
 #include <vector>
 #include <stack>
@@ -542,3 +543,58 @@ void Maike::targetDumpTSV(const Session& maike,DataSink& sink,const char* target
 	::targetDumpTSV(maike.target(target_name),wb);
 	}
 
+
+
+static void deleteBranch(Target& target,const char* target_dir
+	,const Twins<size_t>& id_range)
+	{
+	std::vector<Dependency> dependency_list_full;
+	toposort(target,dependency_list_full,id_range,1);
+
+	auto deps_begin=dependency_list_full.data();
+	Twins<Dependency*> deps(deps_begin,deps_begin + dependency_list_full.size());
+
+	while(deps.first!=deps.second)
+		{
+		--deps.second;
+		auto target=deps.second->target();
+		if(target!=nullptr)
+			{
+			FileUtils::remove( dircat(target_dir,target->nameGet() ).c_str());
+			}
+		}
+	}
+
+namespace
+	{
+	class TargetsDelete:public DependencyGraph::TargetProcessor
+		{
+		public:
+			TargetsDelete(const Session& maike):
+				r_target_dir(maike.targetDirectoryGet())
+				,id_range(maike.targetIdRangeGet())
+				{}
+
+			int operator()(DependencyGraph& graph,Target& target)
+				{
+				auto x=target.dependenciesInverseGet();
+				if(x.second - x.first==0)
+					{deleteBranch(target,r_target_dir,id_range);}
+				return 0;
+				}
+		private:
+			const char* r_target_dir;
+			Twins<size_t> id_range;
+		};
+	}
+
+void Maike::clean(Session& maike)
+	{
+	maike.targetsProcess(TargetsDelete(maike));
+	}
+
+void Maike::clean(Session& maike,const char* target_name)
+	{
+	auto target_dir=maike.targetDirectoryGet();
+	FileUtils::remove(dircat(target_dir,target_name).c_str());
+	}

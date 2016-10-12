@@ -41,6 +41,14 @@ static void optionsFill(Options::OptionMap& options)
 		"option reduces the amount of output when using any of the --dump-* "
 		"options.",2);
 
+	MAKE_OPTION(options,2,"clean","Remove targets from disk. This option "
+		"is like a conventional `make clean`, with the addition that "
+		"the affected targets can be controlled by the `targets` option",0);
+
+	MAKE_OPTION(options,2,"remove-orphans","Remove targets *not* known by Maike, "
+		"from disk. This option removes the complement to `clean` targeting all "
+		"targets.")
+
 	MAKE_OPTION(options,2,"list-leaf-targets","Print all leaf targets to the "
 		"given file and exit. As default, data is written to `stdout`. A leaf "
 		"target is a target that no other target refers to.",1);

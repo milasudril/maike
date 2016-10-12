@@ -187,15 +187,36 @@ namespace Maike
 	/**\brief Dumps the dependency graph from and including <var>target_start</var>
 	* backwards.
 	*
-	* Dumps the dependency graph from and including <var>target_start</var>
-	* in forward direction. The parameter <var>targets_visited</var> must
-	* point to an array with the same capacity as the range of target id:s.
-	* This range, and <var>id_min</var>, can be retrieved
-	* by calling targetIdRangeGet(const Session&).
+	* This function dumps the dependency graph from and including
+	* <var>target_start</var> in forward direction. The parameter
+	* <var>targets_visited</var> must point to an array with the same
+	* capacity as the range of target id:s. This range, and <var>id_min</var>, 
+	* can be retrieved by calling targetIdRangeGet(const Session&).
 	*
 	*/
 	EXPORT void graphInvDump(const Session& maike,GraphEdgeWriter& writer
 		,const char* target_start,uint8_t* targets_visited,size_t id_min);
+
+	/**\brief Removes all targets from disk
+	*
+	* This function removes all targets from disk. It behaves like
+	* a conventional `make clean`
+	*/
+	EXPORT void clean(Session& maike);
+
+	/**\brief Removes <var>target_name</var>, *and* its dependencies
+	* from disk.
+	*/
+	EXPORT void clean(Session& maike,const char* target_name);
+
+	/**\brief Removes all dead targets from disk
+	* 
+	* This function removes all dead targets from disk. A dead target
+	* is a target that has no corresponding source files.
+	*/
+	EXPORT void removeDeadTargets(const Session& maike);
+
+
 	}
 
 #endif

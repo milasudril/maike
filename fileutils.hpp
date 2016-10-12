@@ -21,6 +21,7 @@ namespace Maike
 			,const char* comment_line_regexp);
 		PRIVATE bool exists(const char* file);
 		PRIVATE void remove(const char* name);
+		PRIVATE void removeTree(const char* name);
 		};
 	}
 
