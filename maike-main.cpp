@@ -315,7 +315,7 @@ int main(int argc,char** argv)
 		if(x!=nullptr)
 			{return clean(maike,opts.get<Stringkey("targets")>());}
 
-		if(x==nullptr)
+		if(x!=nullptr)
 			{return 0;}
 
 		targetsCompile(maike,opts.get<Stringkey("targets")>());
