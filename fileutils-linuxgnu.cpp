@@ -222,6 +222,7 @@ void FileUtils::copyFilter(const char* source,const char* dest
 void FileUtils::removeTree(const char* name
 	,const std::set<Stringkey>& keeplist)
 	{
+	WriteBuffer wb(StdStream::output());
 	std::stack< std::pair<std::string,bool> > nodes;
 	nodes.push({name,0});
 
@@ -244,6 +245,12 @@ void FileUtils::removeTree(const char* name
 						exceptionRaise(ErrorMessage("It was not possible to remove #0: "
 							,{node.first.c_str(),static_cast<const char*>(Maike::strerror(errno))}));
 						}
+					else
+						{
+						wb.write("rm ");
+						escape(wb,node.first.c_str());
+						wb.write(static_cast<uint8_t>('\n'));
+						}
 					break;
 				case ENOTEMPTY:
 				case EEXIST:
@@ -264,6 +271,12 @@ void FileUtils::removeTree(const char* name
 						,{node.first.c_str(),static_cast<const char*>(Maike::strerror(errno))}));
 				}
 			}
+		else
+			{
+			wb.write("rm -d");
+			escape(wb,node.first.c_str());
+			wb.write(static_cast<uint8_t>('\n'));
+			}
 		}
 	}
 
@@ -277,7 +290,7 @@ void FileUtils::remove(const char* name)
 			case ENOTEMPTY:
 			case EEXIST:
 			case ENOENT:
-				break;
+				return;
 			case ENOTDIR:
 				if(unlink(name)==-1)
 					{
@@ -290,4 +303,8 @@ void FileUtils::remove(const char* name)
 					,{name,static_cast<const char*>(Maike::strerror(errno))}));
 			}
 		}
+	WriteBuffer wb(StdStream::output());
+	wb.write("rm -d ");
+	escape(wb,name);
+	wb.write(static_cast<uint8_t>('\n'));
 	}
