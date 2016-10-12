@@ -47,7 +47,7 @@ static void optionsFill(Options::OptionMap& options)
 
 	MAKE_OPTION(options,2,"remove-orphans","Remove targets *not* known by Maike, "
 		"from disk. This option removes the complement to `clean` targeting all "
-		"targets.")
+		"targets.",0);
 
 	MAKE_OPTION(options,2,"list-leaf-targets","Print all leaf targets to the "
 		"given file and exit. As default, data is written to `stdout`. A leaf "

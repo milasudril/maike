@@ -209,12 +209,12 @@ namespace Maike
 	*/
 	EXPORT void clean(Session& maike,const char* target_name);
 
-	/**\brief Removes all dead targets from disk
+	/**\brief Removes all orphans from disk
 	* 
-	* This function removes all dead targets from disk. A dead target
+	* This function removes all orphans from disk. An orphan
 	* is a target that has no corresponding source files.
 	*/
-	EXPORT void removeDeadTargets(const Session& maike);
+	EXPORT void removeOrphans(const Session& maike);
 
 
 	}

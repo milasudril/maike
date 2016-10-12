@@ -7,6 +7,8 @@
 #define MAIKE_FILEUTILS_HPP
 
 #include "visibility.hpp"
+#include "stringkey.hpp"
+#include <set>
 
 namespace Maike
 	{
@@ -21,7 +23,7 @@ namespace Maike
 			,const char* comment_line_regexp);
 		PRIVATE bool exists(const char* file);
 		PRIVATE void remove(const char* name);
-		PRIVATE void removeTree(const char* name);
+		PRIVATE void removeTree(const char* name,const std::set<Stringkey>& keeplist);
 		};
 	}
 

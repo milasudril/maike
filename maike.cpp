@@ -598,3 +598,33 @@ void Maike::clean(Session& maike,const char* target_name)
 	auto target_dir=maike.targetDirectoryGet();
 	FileUtils::remove(dircat(target_dir,target_name).c_str());
 	}
+
+
+namespace
+	{
+	class TargetsMakeSet:public DependencyGraph::TargetProcessorConst
+		{
+		public:
+			TargetsMakeSet(const char* target_dir,std::set<Stringkey>& target_list):
+				r_target_dir(target_dir),r_target_list(target_list)
+				{}
+
+			int operator()(const DependencyGraph& graph,const Target& target)
+				{
+				r_target_list.insert(Stringkey(dircat(r_target_dir,target.nameGet()).c_str()));
+				return 0;
+				}
+
+		private:
+			const char* r_target_dir;
+			std::set<Stringkey>& r_target_list;
+		};
+	}
+
+void Maike::removeOrphans(const Session& maike)
+	{
+	auto target_dir=maike.targetDirectoryGet();
+	std::set<Stringkey> keeplist;
+	maike.targetsProcess(TargetsMakeSet(target_dir,keeplist));
+	FileUtils::removeTree(target_dir,keeplist);
+	}

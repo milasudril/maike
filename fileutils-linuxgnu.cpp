@@ -219,42 +219,49 @@ void FileUtils::copyFilter(const char* source,const char* dest
 		}
 	}
 
-void FileUtils::removeTree(const char* name)
+void FileUtils::removeTree(const char* name
+	,const std::set<Stringkey>& keeplist)
 	{
-	std::stack<std::string> nodes;
-	nodes.push(name);
+	std::stack< std::pair<std::string,bool> > nodes;
+	nodes.push({name,0});
 
 	while(!nodes.empty())
 		{
 		auto node=std::move( nodes.top() );
 		nodes.pop();
-		if(rmdir(node.c_str())==-1)
+		if(rmdir(node.first.c_str())==-1)
 			{
 			auto res=errno;
+			if(node.second)
+				{continue;}
 			switch(res)
 				{
 				case ENOENT:
 					break;
 				case ENOTDIR:
-					if(unlink(node.c_str())==-1)
+					if(unlink(node.first.c_str())==-1)
 						{
 						exceptionRaise(ErrorMessage("It was not possible to remove #0: "
-							,{node.c_str(),static_cast<const char*>(Maike::strerror(errno))}));
+							,{node.first.c_str(),static_cast<const char*>(Maike::strerror(errno))}));
 						}
 					break;
 				case ENOTEMPTY:
 				case EEXIST:
 					{
-					nodes.push(node);
-					DirectoryLister dir(node.c_str());
+					nodes.push({node.first,1});
+					DirectoryLister dir(node.first.c_str());
 					const char* entry;
 					while((entry=dir.read())!=nullptr)
-						{nodes.push(dircat(node,name));}
+						{
+						auto elem=dircat(node.first,entry);
+						if( keeplist.find(Stringkey(elem.c_str()))==keeplist.end() )
+							{nodes.push({elem,0});}
+						}
 					}
 					break;
 				default:
 					exceptionRaise(ErrorMessage("It was not possible to remove #0: "
-						,{node.c_str(),static_cast<const char*>(Maike::strerror(errno))}));
+						,{node.first.c_str(),static_cast<const char*>(Maike::strerror(errno))}));
 				}
 			}
 		}
@@ -262,11 +269,6 @@ void FileUtils::removeTree(const char* name)
 
 void FileUtils::remove(const char* name)
 	{
-	WriteBuffer wb(StdStream::output());
-	wb.write("rm ");
-	escape(wb,name);
-	wb.write(static_cast<uint8_t>('\n'));
-
 	if(rmdir(name)==-1)
 		{
 		auto res=errno;

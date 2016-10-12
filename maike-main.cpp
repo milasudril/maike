@@ -307,9 +307,16 @@ int main(int argc,char** argv)
 		if(x!=nullptr)
 			{return databaseDumpJSON(maike,opts.get<Stringkey("targets")>(),*x);}
 
+		x=opts.get<Stringkey("remove-orphans")>();
+		if(x!=nullptr)
+			{removeOrphans(maike);}
+
 		x=opts.get<Stringkey("clean")>();
 		if(x!=nullptr)
 			{return clean(maike,opts.get<Stringkey("targets")>());}
+
+		if(x==nullptr)
+			{return 0;}
 
 		targetsCompile(maike,opts.get<Stringkey("targets")>());
 
