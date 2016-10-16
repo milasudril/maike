@@ -242,13 +242,22 @@ void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 
 static bool objectUpToDate(Twins<const Dependency*> dependency_list
 	,Twins<const Dependency*> dependency_list_full
-	,const char* target_name_full)
+	,const char* target_name_full
+	,const char* target_dir)
 	{
 	while(dependency_list.first!=dependency_list.second)
 		{
-		if(FileUtils::newer(dependency_list.first->nameGet()
-			,target_name_full))
-			{return 0;}
+		auto dep=dependency_list.first;
+		switch(dep->relationGet())
+			{
+			case Dependency::Relation::GENERATED:
+				if( FileUtils::newer(dircat(target_dir,dep->nameGet()).c_str(),target_name_full))
+					{return 0;}
+				break;
+			default:
+				if(FileUtils::newer(dep->nameGet(),target_name_full))
+					{return 0;}
+			}
 		++dependency_list.first;
 		}
 	return 1;
@@ -282,11 +291,19 @@ static bool applicationUpToDate(Twins<const Dependency*> dependency_list
 	{
 	while(dependency_list.first!=dependency_list.second)
 		{
-		if(dependency_list.first->relationGet()!=Dependency::Relation::EXTERNAL)
+		auto dep=dependency_list.first;
+		switch(dep->relationGet())
 			{
-			if(FileUtils::newer(dependency_list.first->nameGet()
-				,target_name_full))
-				{return 0;}
+			case Dependency::Relation::GENERATED:
+				if( FileUtils::newer(dircat(target_dir,dep->nameGet()).c_str(),target_name_full ))
+					{return 0;}
+				break;
+			case Dependency::Relation::EXTERNAL:
+				break;
+				
+			default:
+				if(FileUtils::newer(dep->nameGet(),target_name_full))
+					{return 0;}
 			}
 		++dependency_list.first;
 		}
@@ -324,7 +341,7 @@ bool TargetCxx::upToDate(Twins<const Dependency*> dependency_list
 				,name_full.c_str(),target_dir);
 		case Type::OBJECT:
 			return objectUpToDate(dependency_list,dependency_list_full
-				,name_full.c_str());
+				,name_full.c_str(),target_dir);
 		case Type::INCLUDE:
 			return 1;
 
