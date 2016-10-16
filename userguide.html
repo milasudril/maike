@@ -393,9 +393,18 @@ except:
     sys.exit(-1)
 </code></pre>
 
-<p>The target directory is passed to the script as the first command line argument. standard input contains additional configuration data encoded as JSON.</p>
+<p>The target directory is passed to the script in the first command line argument. Standard input contains additional configuration data encoded as JSON.</p>
 
-<p>A code generator defines at least two targets: The source file, and the target generated from the source file. The latter is necessary, since the dependency graph has to be completed before the compilation starts. If the generator emits N files, then there will be 2*N targets defined by that generator.</p>
+<p>A code generator that produces source files defines at least two targets: The source file, and the target generated from the source file. The latter is necessary, since the dependency graph has to be completed before the compilation starts. If the generator emits N files, then there will be 2*N targets defined by that generator.</p>
+
+<p>It is also possible to use generated include files. Since such files do not exists during the scanning phase, it is not possible to include them in a convetional way. Instead, they are included by a special macro:</p>
+
+<pre><code>#include &lt;makie/targetinclude.hpp&gt; //Needed for the MAIKE_TARGET macro
+#include MAIKE_TARGET(your_generated_file)</code></pre>
+
+<p>The macro uses another macro, <code>MAIKE_TARGET_DIRECTORY</code>, which is defined by the default compiler command line. If the macro is not defined before using the macro, an error is generated.</p>
+
+
 
 <h3>Per-target compiler options</h3>
 
@@ -482,6 +491,9 @@ except:
 <h3>--no-sysvars</h3>
 <p>    Do not load any default system variables. This option is useful when using a cross-compiler. Normally, Maike loads a system-dependent set of variables that identifies the host platform.</p>
 
+<h3>--clean</h3>
+<p>    Remove targets from disk. This option is like a conventional <code>make clean</code>, with the addition that the affected targets can be controlled by the <code>targets</code> option.</p>
+
 <h3>--list-all-targets[=string]</h3>
 <p>    Print all targets to the given file and exit. As default, the data is written to <code>stdout</code>.</p>
 
@@ -490,6 +502,9 @@ except:
 
 <h3>--list-leaf-targets[=string]</h3>
 <p>    Print all leaf targets to the given file and exit. As default, data is written to <code>stdout</code>. A leaf target is a target that no other target refers to.</p>
+
+<h3>--remove-orphans</h3>
+    <p>Remove targets <em>not</em> known by Maike, from disk. This option removes the complement to <code>clean</code> targeting all targets.</p>
 
 <h3>--targets=string,...</h3>
 <p>    Only process the listed targets. This option reduces the amount of output when using any of the --dump-* options.</p>

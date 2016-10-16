@@ -457,6 +457,24 @@
       </tr>
       <tr>
         <th class="membername">
+<span class="type">void</span> <a href="#1ad5e84ec092502b169e4c790b6bd5764f">clean</a>
+(<span class="type">Session &amp;</span> <span class="declname">maike</span>)</th>
+        <td class="memberdesc">Removes all targets from disk. </td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1aa8623c2af837bd5f3cc8ac27b956f82e">clean</a>
+(<span class="type">Session &amp;</span> <span class="declname">maike</span>,<span class="type">const char *</span> <span class="declname">target_name</span>)</th>
+        <td class="memberdesc">Removes <em>target_name</em> , <em>and</em>  its dependencies from disk. </td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1a85cf05ba2290e6e234ade15f0c9b8faa">removeOrphans</a>
+(<span class="type">const Session &amp;</span> <span class="declname">maike</span>)</th>
+        <td class="memberdesc">Removes all orphans from disk. </td>
+      </tr>
+      <tr>
+        <th class="membername">
 <span class="templatestring">
 template&lt;<span class="type">class T</span>,<span class="type">size_t</span> <span class="declname">Size</span>&gt;
 </span><span class="type">constexpr size_t</span> <a href="#1ad875a9fb8be0247912559bb0cbfe948f">c_min_index</a>
@@ -774,7 +792,21 @@ template&lt;<span class="type">class T</span>&gt;
     <h2 class="memproto" id="1a16520c30003354819141a1924e6f97dc">
 <span class="type">void</span> graphInvDump
 (<span class="type">const Session &amp;</span> <span class="declname">maike</span>,<span class="type"><a href="class_maike_1_1_graph_edge_writer.html">GraphEdgeWriter</a> &amp;</span> <span class="declname">writer</span>,<span class="type">const char *</span> <span class="declname">target_start</span>,<span class="type">uint8_t *</span> <span class="declname">targets_visited</span>,<span class="type">size_t</span> <span class="declname">id_min</span>)</h2>
-    <p>Dumps the dependency graph from and including <em>target_start</em>  in forward direction. The parameter <em>targets_visited</em>  must point to an array with the same capacity as the range of target id:s. This range, and <em>id_min</em> , can be retrieved by calling <a href="namespace_maike.html#1a421a472fd1ce97ca6db682fe340f6cbd">targetIdRangeGet(const Session&amp;)</a>. </p>
+    <p>This function dumps the dependency graph from and including <em>target_start</em>  in forward direction. The parameter <em>targets_visited</em>  must point to an array with the same capacity as the range of target id:s. This range, and <em>id_min</em> , can be retrieved by calling <a href="namespace_maike.html#1a421a472fd1ce97ca6db682fe340f6cbd">targetIdRangeGet(const Session&amp;)</a>. </p>
+  </section><section>
+    <h2 class="memproto" id="1ad5e84ec092502b169e4c790b6bd5764f">
+<span class="type">void</span> clean
+(<span class="type">Session &amp;</span> <span class="declname">maike</span>)</h2>
+    <p>This function removes all targets from disk. It behaves like a conventional <code>make clean</code></p>
+  </section><section>
+    <h2 class="memproto" id="1aa8623c2af837bd5f3cc8ac27b956f82e">
+<span class="type">void</span> clean
+(<span class="type">Session &amp;</span> <span class="declname">maike</span>,<span class="type">const char *</span> <span class="declname">target_name</span>)</h2>
+  </section><section>
+    <h2 class="memproto" id="1a85cf05ba2290e6e234ade15f0c9b8faa">
+<span class="type">void</span> removeOrphans
+(<span class="type">const Session &amp;</span> <span class="declname">maike</span>)</h2>
+    <p>This function removes all orphans from disk. An orphan is a target that has no corresponding source files. </p>
   </section><section>
     <h2 class="memproto" id="1ad875a9fb8be0247912559bb0cbfe948f">
 <span class="templatestring">
