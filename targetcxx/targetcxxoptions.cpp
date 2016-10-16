@@ -81,6 +81,7 @@ TargetCxxOptions& TargetCxxOptions::configAppend(const ResourceObject& cxxoption
 		{stringArrayBuild(cxxoptions.objectGet("cflags_extra"),m_cflags_extra);}
 
 
+
 	if(cxxoptions.objectExists("includedir_format"))
 		{m_includedir_format=std::string(static_cast<const char*>(cxxoptions.objectGet("includedir_format")));}
 
@@ -112,6 +113,8 @@ TargetCxxOptions& TargetCxxOptions::configAppend(const ResourceObject& cxxoption
 
 	if(cxxoptions.objectExists("pkgconfig"))
 		{m_pkgconfig=Command(cxxoptions.objectGet("pkgconfig"));}
+
+
 
 	return *this;
 	}
@@ -181,6 +184,8 @@ TargetCxxOptions& TargetCxxOptions::configAppend(const TargetCxxOptions& cxxopti
 	if(cxxoptions.m_pkgconfig)
 		{m_pkgconfig=cxxoptions.m_pkgconfig;}
 
+	
+
 	return *this;
 	}
 
@@ -211,6 +216,7 @@ TargetCxxOptions& TargetCxxOptions::configAppendDefault()
 		.argumentAppend("-g").argumentAppend("-fpic")
 		.argumentAppend("{cxxversion}").argumentAppend("-Wall")
 		.argumentAppend("{cflags_extra}").argumentAppend("{includedir}")
+		.argumentAppend("-DMAIKE_TARGET_DIRECTORY={target_directory}")
 		.argumentAppend("-o").argumentAppend("{target}")
 		.argumentAppend("{source}");
 
@@ -219,6 +225,7 @@ TargetCxxOptions& TargetCxxOptions::configAppendDefault()
 		.argumentAppend("-fpic").argumentAppend("{cxxversion}")
 		.argumentAppend("-Wall").argumentAppend("{cflags_extra}")
 		.argumentAppend("{includedir}")
+		.argumentAppend("-DMAIKE_TARGET_DIRECTORY={target_directory}")
 		.argumentAppend("-o").argumentAppend("{target}")
 		.argumentAppend("{source}").argumentAppend("{dependencies}");
 
@@ -226,7 +233,9 @@ TargetCxxOptions& TargetCxxOptions::configAppendDefault()
 	m_dllcompile.nameSet("g++").argumentAppend("-g")
 		.argumentAppend("-fpic").argumentAppend("{cxxversion}")
 		.argumentAppend("-Wall").argumentAppend("{cflags_extra}")
-		.argumentAppend("{includedir}").argumentAppend("-shared")
+		.argumentAppend("{includedir}")
+		.argumentAppend("-DMAIKE_TARGET_DIRECTORY={target_directory}")
+		.argumentAppend("-shared")
 		.argumentAppend("-o")
 		.argumentAppend("{target}").argumentAppend("{source}")
 		.argumentAppend("{dependencies}");

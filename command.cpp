@@ -46,16 +46,18 @@ namespace
 	class ParamExtractor:public ParameterSet::ParameterProcessor
 		{
 		public:
-			ParamExtractor(std::vector<std::string>& result):r_result(result)
+			ParamExtractor(const std::string& prefix
+				,std::vector<std::string>& result):r_prefix(prefix),r_result(result)
 				{}
 			void operator()(const char* value)
-				{r_result.push_back(std::string(value));}
+				{r_result.push_back(r_prefix + value);}
 		private:
+			const std::string& r_prefix;
 			std::vector<std::string>& r_result;
 		};
 	}
 
-static void substitutesAppend(const Stringkey& key
+static void substitutesAppend(const std::string& prefix,const Stringkey& key
 	,Twins<const ParameterSet* const*> substitutes
 	,std::vector<std::string>& result)
 	{
@@ -63,7 +65,7 @@ static void substitutesAppend(const Stringkey& key
 	while(substitutes.first!=substitutes.second)
 		{
 		--substitutes.second;
-		(*substitutes.second)->parameterGet(key,ParamExtractor(result));
+		(*substitutes.second)->parameterGet(key,ParamExtractor(prefix,result));
 		auto n=result.size();
 		if(n_0!=n) //Parameter found
 			{return;}
@@ -77,6 +79,7 @@ static void varsSubstitute(const char* str
 	,std::vector<std::string>& result)
 	{
 	std::string temp;
+	std::string name_old;
 	enum class State:unsigned int{NORMAL,VARIABLE,ESCAPE};
 	auto state=State::NORMAL;
 	while(true)
@@ -88,12 +91,8 @@ static void varsSubstitute(const char* str
 				switch(ch_in)
 					{
 					case '{':
-					//FIXME: How to treat fixed content together with array argument
-						if(temp.size()!=0)
-							{
-							result.push_back(temp);
-							temp.clear();
-							}
+						name_old=temp;
+						temp.clear();
 						state=State::VARIABLE;
 						break;
 
@@ -117,7 +116,8 @@ static void varsSubstitute(const char* str
 					case '}':
 					//FIXME: How to treat fixed content together with array argument
 						state=State::NORMAL;
-						substitutesAppend(Stringkey(temp.c_str()),substitutes,result);
+						substitutesAppend(name_old,Stringkey(temp.c_str()),substitutes,result);
+						name_old.clear();
 						temp.clear();
 						break;
 
