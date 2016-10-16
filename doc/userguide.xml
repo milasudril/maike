@@ -394,16 +394,14 @@ except:
     sys.exit(-1)
 </code></pre>
 
-<p>The target directory is passed to the script as the first command line argument. standard input contains additional configuration data encoded as JSON.</p>
+<p>The target directory is passed to the script in the first command line argument. Standard input contains additional configuration data encoded as JSON.</p>
 
 <p>A code generator that produces source files defines at least two targets: The source file, and the target generated from the source file. The latter is necessary, since the dependency graph has to be completed before the compilation starts. If the generator emits N files, then there will be 2*N targets defined by that generator.</p>
 
-<p>It is also possible to use generated include files. Since such files does not exists during the scanning phase, it is not possible to include them in a convetional way. Instead, they are included by a special macro:</p>
+<p>It is also possible to use generated include files. Since such files do not exists during the scanning phase, it is not possible to include them in a convetional way. Instead, they are included by a special macro:</p>
 
-<pre><code>
-#include &lt;makie/targetinclude.hpp&gt; //Needed for the MAIKE_TARGET macro
-#include MAIKE_TARGET(your_generated_file)
-</code></pre>
+<pre><code>#include &lt;makie/targetinclude.hpp&gt; //Needed for the MAIKE_TARGET macro
+#include MAIKE_TARGET(your_generated_file)</code></pre>
 
 <p>The macro uses another macro, <code>MAIKE_TARGET_DIRECTORY</code>, which is defined by the default compiler command line. If the macro is not defined before using the macro, an error is generated.</p>
 

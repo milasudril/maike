@@ -227,7 +227,9 @@ TargetCxxOptions& TargetCxxOptions::configAppendDefault()
 		.argumentAppend("{includedir}")
 		.argumentAppend("-DMAIKE_TARGET_DIRECTORY={target_directory}")
 		.argumentAppend("-o").argumentAppend("{target}")
-		.argumentAppend("{source}").argumentAppend("{dependencies}");
+		.argumentAppend("{source}")
+		.argumentAppend("{libdir}")
+		.argumentAppend("{dependencies}");
 
 	m_dllcompile.argumentsClear();
 	m_dllcompile.nameSet("g++").argumentAppend("-g")
@@ -238,6 +240,7 @@ TargetCxxOptions& TargetCxxOptions::configAppendDefault()
 		.argumentAppend("-shared")
 		.argumentAppend("-o")
 		.argumentAppend("{target}").argumentAppend("{source}")
+	.argumentAppend("{libdir}")
 		.argumentAppend("{dependencies}");
 
 	m_libcompile.argumentsClear();
