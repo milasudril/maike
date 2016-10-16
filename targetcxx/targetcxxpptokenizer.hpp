@@ -9,6 +9,7 @@
 #include "../readbuffer.hpp"
 #include "../visibility.hpp"
 #include <string>
+#include <vector>
 
 namespace Maike
 	{
@@ -30,6 +31,8 @@ namespace Maike
 				{}
 
 			bool read(Token& token);
+
+			std::vector<std::string> macroDecode(const char* str);
 
 		private:
 			ReadBuffer m_reader;

@@ -10,5 +10,6 @@
 #include "datasink.hpp"
 #include "graphedgewriter.hpp"
 #include "errormessage.hpp"
+#include "targetinclude.hpp"
 
 #endif

@@ -6,6 +6,52 @@
 
 using namespace Maike;
 
+
+std::vector<std::string> TargetCxxPPTokenizer::macroDecode(const char* str)
+	{
+	std::string tok_current;
+	std::vector<std::string> ret;
+	enum class State:unsigned int{NAME,ARGUMENT};
+	auto state_current=State::NAME;
+	while(true)
+		{
+		auto ch_in=*str;
+		switch(state_current)
+			{
+			case State::NAME:
+				switch(ch_in)
+					{
+					case '\0':
+						ret.push_back(tok_current);
+						return std::move(ret);
+					case '(':
+						ret.push_back(tok_current);
+						tok_current.clear();
+						state_current=State::ARGUMENT;
+						break;
+					default:
+						tok_current+=ch_in;
+					}
+				break;
+			case State::ARGUMENT:
+				switch(ch_in)
+					{
+					case ',':
+						ret.push_back(tok_current);
+						tok_current.clear();
+						break;
+					case ')':
+						ret.push_back(tok_current);
+						return std::move(ret);
+					default:
+						tok_current+=ch_in;
+					}
+				break;
+			}
+		++str;
+		}
+	}
+
 bool TargetCxxPPTokenizer::read(Token& token)
 	{
 	WriteBuffer wb(StdStream::error());

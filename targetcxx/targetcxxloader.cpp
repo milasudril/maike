@@ -153,11 +153,14 @@ namespace
 		public:
 			DependencyCollector(const char* name_source,const char* in_dir,Spider& spider):
 				 m_file_reader(name_source),m_cpptok(m_file_reader),r_in_dir(in_dir),r_spider(spider)
-				,m_mode(Mode::NORMAL)
+				,m_mode(Mode::NORMAL),m_target_include(0)
 				{}
 
 			bool operator()(const Target_FactoryDelegator&,Dependency& dep_primary
 				,ResourceObject::Reader rc_reader);
+
+			bool targetInclude() const noexcept
+				{return m_target_include;}
 
 		private:
 			FileIn m_file_reader;
@@ -167,6 +170,7 @@ namespace
 			Spider& r_spider;
  			enum class Mode:uint8_t{NORMAL,INCLUDE};
 			Mode m_mode;
+			bool m_target_include;
 		};
 	}
 
@@ -229,7 +233,19 @@ bool DependencyCollector::operator()(const Target_FactoryDelegator& delegator,De
 						}
 						break;
 					default:
-					//CHECK Is this a legal case?
+						{
+						auto macro=m_cpptok.macroDecode(tok_in.value.c_str());
+						if(macro.size()!=2)
+							{break;}
+						if(macro[0]=="MAIKE_TARGET")
+							{
+							auto name_dep_full=dircat(r_in_dir,macro[1]);
+							dep_primary=Dependency(name_dep_full.c_str(),delegator.rootGet()
+								,Dependency::Relation::GENERATED);
+							m_target_include=1;
+							return 1;
+							}
+						}
 						break;
 					}
 				mode=Mode::NORMAL;

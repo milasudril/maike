@@ -44,7 +44,6 @@ DependencyGraphDefault& DependencyGraphDefault::targetsPatch()
 		auto deps=t1->dependencies();
 		while(deps.first!=deps.second)
 			{
-		//	auto& t2=dependencyResolve(m_targets,t1->nameGet(),*deps.first,r_id_gen);
 			auto& t2=r_handler.dependencyResolve(*this,t1->nameGet(),*deps.first);
 			id_range.first=std::min(id_range.first,t2.idGet());
 			id_range.second=std::max(id_range.second,t2.idGet());

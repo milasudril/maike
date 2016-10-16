@@ -25,6 +25,8 @@ static Dependency::Relation relation(const char* string)
 		{return Dependency::Relation::INTERNAL;}
 	if(key==Stringkey("leaf"))
 		{return Dependency::Relation::LEAF;}
+	if(key==Stringkey("generated"))
+		{return Dependency::Relation::GENERATED;}
 
 	exceptionRaise(ErrorMessage("Unknown relation type #0;",{string}));
 	}
@@ -41,6 +43,8 @@ static const char* relation(Dependency::Relation rel)
 			return "internal";
 		case Dependency::Relation::LEAF:
 			return "leaf";
+		case Dependency::Relation::GENERATED:
+			return "generated";
 		}
 	return nullptr;
 	}
