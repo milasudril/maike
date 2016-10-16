@@ -28,6 +28,9 @@
 <h2>--no-sysvars</h2>
 <p>    Do not load any default system variables. This option is useful when using a cross-compiler. Normally, Maike loads a system-dependent set of variables that identifies the host platform.</p>
 
+<h2>--clean</h2>
+<p>    Remove targets from disk. This option is like a conventional <code>make clean</code>, with the addition that the affected targets can be controlled by the <code>targets</code> option.</p>
+
 <h2>--list-all-targets[=string]</h2>
 <p>    Print all targets to the given file and exit. As default, the data is written to <code>stdout</code>.</p>
 
@@ -36,6 +39,9 @@
 
 <h2>--list-leaf-targets[=string]</h2>
 <p>    Print all leaf targets to the given file and exit. As default, data is written to <code>stdout</code>. A leaf target is a target that no other target refers to.</p>
+
+<h2>--remove-orphans</h2>
+    <p>Remove targets <em>not</em> known by Maike, from disk. This option removes the complement to <code>clean</code> targeting all targets.</p>
 
 <h2>--targets=string,...</h2>
 <p>    Only process the listed targets. This option reduces the amount of output when using any of the --dump-* options.</p>

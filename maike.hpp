@@ -11,5 +11,8 @@
 #include "graphedgewriter.hpp"
 #include "errormessage.hpp"
 #include "targetinclude.hpp"
+#ifndef MAIKE_TARGET_DIRECTORY
+#include "targetdirunknown.hpp"
+#endif
 
 #endif
