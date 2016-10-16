@@ -41,6 +41,9 @@ namespace Maike
 
 			void dumpDetails(ResourceObject& target) const;
 
+			const TargetCxxOptions& optionsExtraGet() const noexcept
+				{return m_options_extra;}
+
 		private:
 			TargetCxx(const ResourceObject& obj,const TargetCxxCompiler& compiler
 				,const char* name_src,const char* in_dir,const char* root,size_t id

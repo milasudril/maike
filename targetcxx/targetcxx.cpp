@@ -132,6 +132,30 @@ static std::vector<TargetCxxCompiler::FileInfo> depstringCreate(
 	return std::move(ret);
 	}
 
+static void optionsCollect(Twins<const Dependency*> dependency_list_full
+	,TargetCxxOptions& options_out)
+	{
+	while(dependency_list_full.first!=dependency_list_full.second)
+		{
+		switch(dependency_list_full.first->relationGet())
+			{
+			case Dependency::Relation::IMPLEMENTATION:
+				{
+				auto target_rel=dynamic_cast<const TargetCxx*>(dependency_list_full.first->target());
+				if(target_rel)
+					{
+					options_out.configAppend( target_rel->optionsExtraGet() );
+					}
+				}
+				break;
+
+			default:
+				break;
+			}
+		++dependency_list_full.first;
+		}
+	}
+
 static std::vector<TargetCxxCompiler::FileInfo> depstringCreateAr(
 	 std::vector<std::string>& strings_temp
 	,const char* target_dir
@@ -205,7 +229,10 @@ void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 			auto deps_begin=depfiles.data();
 			auto deps_end=deps_begin + depfiles.size();
 			std::reverse(deps_begin,deps_end);
-			r_compiler.compileApplication(sourceNameGet(),{deps_begin,deps_end},name_full.c_str(),m_options_extra);
+
+			auto options_extra=m_options_extra;
+			optionsCollect(dependency_list_full,options_extra);
+			r_compiler.compileApplication(sourceNameGet(),{deps_begin,deps_end},name_full.c_str(),options_extra);
 			}
 			break;
 		case Type::LIB_DYNAMIC:
@@ -216,7 +243,9 @@ void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 			auto deps_begin=depfiles.data();
 			auto deps_end=deps_begin + depfiles.size();
 			std::reverse(deps_begin,deps_end);
-			r_compiler.compileDll(sourceNameGet(),{deps_begin,deps_end},name_full.c_str(),m_options_extra);
+			auto options_extra=m_options_extra;
+			optionsCollect(dependency_list_full,options_extra);
+			r_compiler.compileDll(sourceNameGet(),{deps_begin,deps_end},name_full.c_str(),options_extra);
 			}
 			break;
 		case Type::LIB_STATIC:
