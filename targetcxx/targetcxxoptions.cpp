@@ -9,14 +9,20 @@
 
 using namespace Maike;
 
-static void stringArrayBuild(const ResourceObject& array,std::vector< std::string >& ret )
+template<class Validator>
+static void stringArrayBuild(const ResourceObject& array,std::vector< std::string >& ret
+	,Validator&& valid)
 	{
 	auto N=array.objectCountGet();
 	for(decltype(N) k=0;k<N;++k)
-		{ret.push_back(std::string(static_cast<const char*>(array.objectGet(k))));}
+		{
+		auto str=static_cast<const char*>(array.objectGet(k));
+		if(valid(str))
+			{ret.push_back(std::string(str));}
+		}
 	}
 
-static void stringArrayGet(ResourceObject& ret, const std::vector< std::string >& array)
+static void stringArrayGet(ResourceObject& ret,const std::vector< std::string >& array)
 	{
 	auto ptr=array.data();
 	auto ptr_end=ptr + array.size();
@@ -41,13 +47,28 @@ TargetCxxOptions::TargetCxxOptions(const ResourceObject& cxxoptions)
 TargetCxxOptions& TargetCxxOptions::configAppend(const ResourceObject& cxxoptions)
 	{
 	if(cxxoptions.objectExists("includedir"))
-		{stringArrayBuild(cxxoptions.objectGet("includedir"),m_includedir);}
+		{
+		stringArrayBuild(cxxoptions.objectGet("includedir"),m_includedir
+			,[this](const char* testval)
+				{return m_includedir_dup.insert(Stringkey(testval)).second;}
+			);
+		}
 
 	if(cxxoptions.objectExists("includedir_noscan"))
-		{stringArrayBuild(cxxoptions.objectGet("includedir_noscan"),m_includedir_noscan);}
+		{
+		stringArrayBuild(cxxoptions.objectGet("includedir_noscan"),m_includedir_noscan
+			,[this](const char* testval)
+				{return m_includedir_noscan_dup.insert(Stringkey(testval)).second;}
+			);
+		}
 
 	if(cxxoptions.objectExists("libdir"))
-		{stringArrayBuild(cxxoptions.objectGet("libdir"),m_libdir);}
+		{
+		stringArrayBuild(cxxoptions.objectGet("libdir"),m_libdir
+			,[this](const char* testval)
+				{return m_libdir_dup.insert(Stringkey(testval)).second;}
+			);
+		}
 
 
 	if(cxxoptions.objectExists("cxxversion_min"))
@@ -78,7 +99,12 @@ TargetCxxOptions& TargetCxxOptions::configAppend(const ResourceObject& cxxoption
 		{m_cflags_format=std::string(static_cast<const char*>(cxxoptions.objectGet("cflags_format")));}
 
 	if(cxxoptions.objectExists("cflags_extra"))
-		{stringArrayBuild(cxxoptions.objectGet("cflags_extra"),m_cflags_extra);}
+		{
+		stringArrayBuild(cxxoptions.objectGet("cflags_extra"),m_cflags_extra
+			,[this](const char* testval)
+				{return m_cflags_extra_dup.insert(Stringkey(testval)).second;}
+			);
+		}
 
 
 
@@ -119,26 +145,46 @@ TargetCxxOptions& TargetCxxOptions::configAppend(const ResourceObject& cxxoption
 	return *this;
 	}
 
-template <typename T>
-void append(std::vector<T>& a, const std::vector<T>& b)
+template<class T,class Validator>
+void append(std::vector<T>& a, const std::vector<T>& b,Validator&& valid)
 	{
-	a.reserve(a.size() + b.size());
-    a.insert(a.end(), b.begin(), b.end());
+	auto ptr=b.data();
+	auto ptr_end=ptr + b.size();
+	while(ptr!=ptr_end)
+		{
+		if(valid(*ptr))
+			{a.push_back(*ptr);}
+		++ptr;
+		}
 	}
 
 
 TargetCxxOptions& TargetCxxOptions::includedirNoscanAppend(const char* dir)
 	{
-	m_includedir_noscan.push_back(std::string(dir));
+	auto key=Stringkey(dir);
+	if(m_includedir_noscan_dup.insert(key).second)
+		{m_includedir_noscan.push_back(std::string(dir));}
 	return *this;
 	}
 
 TargetCxxOptions& TargetCxxOptions::configAppend(const TargetCxxOptions& cxxoptions)
 	{
-	append(m_includedir,cxxoptions.m_includedir);
-	append(m_includedir_noscan,cxxoptions.m_includedir_noscan);
-	append(m_libdir,cxxoptions.m_libdir);
-	append(m_cflags_extra,cxxoptions.m_cflags_extra);
+	append(m_includedir,cxxoptions.m_includedir
+		,[this](const std::string& testval)
+			{return m_includedir_dup.insert(Stringkey(testval.c_str())).second;}
+		);
+	append(m_includedir_noscan,cxxoptions.m_includedir_noscan
+		,[this](const std::string& testval)
+			{return m_includedir_noscan_dup.insert(Stringkey(testval.c_str())).second;}
+		);
+	append(m_libdir,cxxoptions.m_libdir
+		,[this](const std::string& testval)
+			{return m_libdir_dup.insert(Stringkey(testval.c_str())).second;}
+		);
+	append(m_cflags_extra,cxxoptions.m_cflags_extra
+		,[this](const std::string& testval)
+			{return m_cflags_extra_dup.insert(Stringkey(testval.c_str())).second;}
+		);
 
 	m_cxxversion_min=std::max(m_cxxversion_min,cxxoptions.m_cxxversion_min);
 	m_cxxversion_max=std::min(m_cxxversion_max,cxxoptions.m_cxxversion_max);
@@ -192,8 +238,13 @@ TargetCxxOptions& TargetCxxOptions::configAppend(const TargetCxxOptions& cxxopti
 void TargetCxxOptions::configClear()
 	{
 	m_includedir.clear();
+	m_includedir_dup.clear();
 	m_includedir_noscan.clear();
+	m_includedir_noscan_dup.clear();
 	m_libdir.clear();
+	m_libdir_dup.clear();
+	m_cflags_extra.clear();
+	m_cflags_extra_dup.clear();
 	m_objcompile.nameSet("").argumentsClear();
 	m_cxxversion_min=0;
 	m_cxxversion_max=std::numeric_limits<decltype(m_cxxversion_max)>::max();
@@ -332,12 +383,14 @@ void TargetCxxOptions::configDump(ResourceObject& cxxoptions) const
 
 TargetCxxOptions& TargetCxxOptions::cflagsExtraAppend(const char* flagname)
 	{
-	m_cflags_extra.push_back(std::string(flagname));
+	if(m_cflags_extra_dup.insert(Stringkey(flagname)).second)
+		{m_cflags_extra.push_back(std::string(flagname));}
 	return *this;
 	}
 
 TargetCxxOptions& TargetCxxOptions::libdirAppend(const char* dir)
 	{
-	m_libdir.push_back(std::string(dir));
+	if(m_libdir_dup.insert(Stringkey(dir)).second)
+		{m_libdir.push_back(std::string(dir));}
 	return *this;
 	}

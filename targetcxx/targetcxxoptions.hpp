@@ -8,8 +8,10 @@
 
 
 #include "../command.hpp"
+#include "../stringkey.hpp"
 #include <vector>
 #include <string>
+#include <set>
 
 namespace Maike
 	{
@@ -122,8 +124,11 @@ namespace Maike
 
 		private:
 			std::vector< std::string > m_includedir;
+			std::set<Stringkey> m_includedir_dup;
 			std::vector< std::string > m_includedir_noscan;
+			std::set<Stringkey> m_includedir_noscan_dup;
 			std::vector< std::string > m_libdir;
+			std::set<Stringkey> m_libdir_dup;
 
 			std::string m_platform_suffix;
 
@@ -134,6 +139,7 @@ namespace Maike
 
 			std::string m_cflags_format;
 			std::vector< std::string > m_cflags_extra;
+			std::set<Stringkey> m_cflags_extra_dup;
 
 			unsigned long long int m_cxxversion_min;
 			unsigned long long int m_cxxversion_max;
