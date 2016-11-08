@@ -83,6 +83,9 @@ namespace Maike
 			size_t lineCountGet() const noexcept
 				{return m_loc;}
 
+			const char* descriptionGet() const noexcept
+				{return m_description.c_str();}
+
 
 		private:
 			virtual void compileImpl(Twins<const Dependency*> dependency_list
@@ -97,6 +100,7 @@ namespace Maike
 			std::string m_name;
 			std::string m_source_name;
 			std::string m_in_dir;
+			std::string m_description;
 			std::vector<Dependency> m_dependencies;
 			std::vector<Dependency> m_deps_inverse;
 			double m_compilation_time;

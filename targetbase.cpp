@@ -30,6 +30,9 @@ TargetBase::TargetBase(const ResourceObject& obj,const char* name_src,const char
 
 	if(m_name!=m_in_dir && *in_dir!='\0')
 		{dependencyAdd(Dependency(in_dir,root,Dependency::Relation::INTERNAL));}
+
+	if(obj.objectExists("description"))
+		{m_description=std::string(static_cast<const char*>(obj.objectGet("description")));}
 	}
 
 

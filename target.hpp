@@ -53,6 +53,8 @@ namespace Maike
 
 			virtual double compilationTimeGet() const noexcept=0;
 
+			virtual const char* descriptionGet() const noexcept=0;
+
 		protected:
 			~Target()=default;
 		private:
