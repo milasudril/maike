@@ -155,8 +155,11 @@ namespace
 
 			int operator()(const DependencyGraph& graph,const Target& target)
 				{
-				r_wb.write(" * ").write(target.nameGet()).write(" -- ")
-					.write(target.descriptionGet()).write("\n");
+				r_wb.write(" * ").write(target.nameGet());
+				auto description=target.descriptionGet();
+				if(*description!='\0')
+					{r_wb.write(" -- ").write(description);}
+				r_wb.write("\n");
 				return 0;
 				}
 		private:
@@ -187,8 +190,11 @@ namespace
 				auto x=target.dependenciesInverseGet();
 				if(x.second - x.first==0)
 					{
-					r_wb.write(" * ").write(target.nameGet()).write(" -- ")
-						.write(target.descriptionGet()).write("\n");
+					r_wb.write(" * ").write(target.nameGet());
+					auto description=target.descriptionGet();
+					if(*description!='\0')
+						{r_wb.write(" -- ").write(description);}
+					r_wb.write("\n");
 					}	
 				return 0;
 				}
