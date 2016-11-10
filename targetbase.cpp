@@ -25,7 +25,7 @@ TargetBase::TargetBase(const ResourceObject& obj,const char* name_src,const char
 		auto deps=obj.objectGet("dependencies");
 		auto M=deps.objectCountGet();
 		for(decltype(M) l=0;l<M;++l)
-			{dependencyAdd(Dependency(deps.objectGet(l),root));}
+			{dependencyAdd(Dependency(deps.objectGet(l),in_dir,root));}
 		}
 
 	if(m_name!=m_in_dir && *in_dir!='\0')

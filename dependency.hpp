@@ -26,6 +26,7 @@ namespace Maike
 				,IMPLEMENTATION
 				,EXTERNAL
 				,GENERATED
+				,FILE
 				};
 
 			Dependency():m_name(nullptr),r_target(nullptr),m_rel(Relation::LEAF)
@@ -81,8 +82,6 @@ namespace Maike
 				*this=std::move(obj_new);
 				return *this;
 				}
-
-			explicit Dependency(const ResourceObject& obj,const char* root);
 
 			explicit Dependency(const ResourceObject& obj,const char* in_dir,const char* root);
 

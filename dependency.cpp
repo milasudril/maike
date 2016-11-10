@@ -27,6 +27,8 @@ static Dependency::Relation relation(const char* string)
 		{return Dependency::Relation::LEAF;}
 	if(key==Stringkey("generated"))
 		{return Dependency::Relation::GENERATED;}
+	if(key==Stringkey("file"))
+		{return Dependency::Relation::FILE;}
 
 	exceptionRaise(ErrorMessage("Unknown relation type #0;",{string}));
 	}
@@ -45,23 +47,25 @@ static const char* relation(Dependency::Relation rel)
 			return "leaf";
 		case Dependency::Relation::GENERATED:
 			return "generated";
+		case Dependency::Relation::FILE:
+			return "file";
 		}
 	return nullptr;
-	}
-
-
-Dependency::Dependency(const ResourceObject& obj,const char* root):m_name(nullptr),r_target(nullptr)
-	,m_rel(relation(static_cast<const char*>(obj.objectGet("rel"))))
-	{
-	nameSet(rootStrip(static_cast<const char*>(obj.objectGet("ref")),root).c_str());
 	}
 
 Dependency::Dependency(const ResourceObject& obj,const char* in_dir,const char* root):
 	 m_name(nullptr),r_target(nullptr)
 	,m_rel(relation(static_cast<const char*>(obj.objectGet("rel"))))
 	{
-	auto name_temp=rootStrip(dircat(in_dir,static_cast<const char*>(obj.objectGet("ref"))),root);
-	nameSet(name_temp.c_str(),name_temp.size());
+	assert(m_rel!=Relation::INTERNAL && m_rel!=Relation::LEAF);
+	if(m_rel==Relation::IMPLEMENTATION || m_rel==Relation::GENERATED 
+		|| m_rel==Relation::FILE)
+		{
+		auto name_temp=rootStrip(dircat(in_dir,static_cast<const char*>(obj.objectGet("ref"))),root);
+		nameSet(name_temp.c_str(),name_temp.size());
+		}
+	else
+		{nameSet(rootStrip(static_cast<const char*>(obj.objectGet("ref")),root).c_str());}
 	}
 
 void Dependency::dump(ResourceObject& dependency) const
