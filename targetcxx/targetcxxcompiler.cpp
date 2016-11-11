@@ -115,7 +115,8 @@ typedef ParameterSetMapFixed<
 	,Stringkey("libdir")
 	,Stringkey("target")
 	,Stringkey("source")
-	,Stringkey("cflags_extra")> CompilerParameters;
+	,Stringkey("cflags_extra")
+	,Stringkey("iquote")> CompilerParameters;
 
 static const char* cxxNameGet(unsigned long long int cxxversion)
 	{
@@ -219,6 +220,8 @@ void TargetCxxCompiler::execute(const Command& cmd,const char* source
 		,options_result.includedirNoscanGet(),options_result.includedirFormatGet());
 	argvBuild(cxxparams.get<Stringkey("cflags_extra")>()
 		,options_result.cflagsExtraGet(),options_result.cflagsFormatGet());
+	argvBuild(cxxparams.get<Stringkey("iquote")>()
+		,options_result.iquoteGet(),options_result.iquoteFormatGet());
 
 	if(dependencies.first!=dependencies.second)
 		{
@@ -233,7 +236,6 @@ void TargetCxxCompiler::execute(const Command& cmd,const char* source
 			,options_result.libdirGet(),options_result.libdirFormatGet());
 		}
 
-//	const ParameterSet* paramset[]={&cxxparams};
 	auto paramset=r_paramset;
 	paramset.push_back(&cxxparams);
 	auto compiler=cmd.execute(Pipe::REDIRECT_STDERR

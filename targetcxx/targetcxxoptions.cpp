@@ -70,6 +70,14 @@ TargetCxxOptions& TargetCxxOptions::configAppend(const ResourceObject& cxxoption
 			);
 		}
 
+	if(cxxoptions.objectExists("iquote"))
+		{
+		stringArrayBuild(cxxoptions.objectGet("iquote"),m_iquote
+			,[this](const char* testval)
+				{return m_iquote_dup.insert(Stringkey(testval)).second;}
+			);
+		}
+
 
 	if(cxxoptions.objectExists("cxxversion_min"))
 		{
@@ -185,6 +193,10 @@ TargetCxxOptions& TargetCxxOptions::configAppend(const TargetCxxOptions& cxxopti
 		,[this](const std::string& testval)
 			{return m_cflags_extra_dup.insert(Stringkey(testval.c_str())).second;}
 		);
+	append(m_iquote,cxxoptions.m_iquote
+		,[this](const std::string& testval)
+			{return m_iquote_dup.insert(Stringkey(testval.c_str())).second;}
+		);
 
 	m_cxxversion_min=std::max(m_cxxversion_min,cxxoptions.m_cxxversion_min);
 	m_cxxversion_max=std::min(m_cxxversion_max,cxxoptions.m_cxxversion_max);
@@ -230,8 +242,6 @@ TargetCxxOptions& TargetCxxOptions::configAppend(const TargetCxxOptions& cxxopti
 	if(cxxoptions.m_pkgconfig)
 		{m_pkgconfig=cxxoptions.m_pkgconfig;}
 
-	
-
 	return *this;
 	}
 
@@ -248,6 +258,8 @@ void TargetCxxOptions::configClear()
 	m_objcompile.nameSet("").argumentsClear();
 	m_cxxversion_min=0;
 	m_cxxversion_max=std::numeric_limits<decltype(m_cxxversion_max)>::max();
+	m_iquote.clear();
+	m_iquote_dup.clear();
 	}
 
 TargetCxxOptions& TargetCxxOptions::configAppendDefault()
@@ -261,12 +273,14 @@ TargetCxxOptions& TargetCxxOptions::configAppendDefault()
 	m_libint_format=std::string("-l:^");
 	m_stdprefix=std::string("-std=");
 	m_cflags_format=std::string("-^");
+	m_iquote_format=std::string("-iquote=^");
 
 	m_objcompile.argumentsClear();
 	m_objcompile.nameSet("g++").argumentAppend("-c")
 		.argumentAppend("-g").argumentAppend("-fpic")
 		.argumentAppend("{cxxversion}").argumentAppend("-Wall")
-		.argumentAppend("{cflags_extra}").argumentAppend("{includedir}")
+		.argumentAppend("{cflags_extra}").argumentAppend("{iquote}")
+		.argumentAppend("{includedir}")
 		.argumentAppend("-DMAIKE_TARGET_DIRECTORY={target_directory}")
 		.argumentAppend("-o").argumentAppend("{target}")
 		.argumentAppend("{source}");
@@ -275,7 +289,7 @@ TargetCxxOptions& TargetCxxOptions::configAppendDefault()
 	m_appcompile.nameSet("g++").argumentAppend("-g")
 		.argumentAppend("-fpic").argumentAppend("{cxxversion}")
 		.argumentAppend("-Wall").argumentAppend("{cflags_extra}")
-		.argumentAppend("{includedir}")
+		.argumentAppend("{iquote}").argumentAppend("{includedir}")
 		.argumentAppend("-DMAIKE_TARGET_DIRECTORY={target_directory}")
 		.argumentAppend("-o").argumentAppend("{target}")
 		.argumentAppend("{source}")
@@ -286,7 +300,7 @@ TargetCxxOptions& TargetCxxOptions::configAppendDefault()
 	m_dllcompile.nameSet("g++").argumentAppend("-g")
 		.argumentAppend("-fpic").argumentAppend("{cxxversion}")
 		.argumentAppend("-Wall").argumentAppend("{cflags_extra}")
-		.argumentAppend("{includedir}")
+		.argumentAppend("{iquote}").argumentAppend("{includedir}")
 		.argumentAppend("-DMAIKE_TARGET_DIRECTORY={target_directory}")
 		.argumentAppend("-shared")
 		.argumentAppend("-o")
@@ -305,6 +319,8 @@ TargetCxxOptions& TargetCxxOptions::configAppendDefault()
 	m_pkgconfig.argumentsClear();
 	m_pkgconfig.nameSet("pkg-config");
 	m_pkgconfig.argumentAppend("{action}").argumentAppend("{libname}");
+
+	iquoteAppend(".");
 
 	return *this;
 	}
@@ -354,7 +370,8 @@ void TargetCxxOptions::configDump(ResourceObject& cxxoptions) const
 		.objectSet("stdprefix",cxxoptions.create(m_stdprefix.c_str()))
 		.objectSet("cxxversion_max",cxxoptions.create(static_cast<long long int>(m_cxxversion_max)))
 		.objectSet("cxxversion_min",cxxoptions.create(static_cast<long long int>(m_cxxversion_min)))
-		.objectSet("cflags_format",cxxoptions.create(m_cflags_format.c_str()));
+		.objectSet("cflags_format",cxxoptions.create(m_cflags_format.c_str()))
+		.objectSet("iquote_format",cxxoptions.create(m_iquote_format.c_str()));
 
 		{
 		auto includedir=cxxoptions.createArray();
@@ -375,6 +392,12 @@ void TargetCxxOptions::configDump(ResourceObject& cxxoptions) const
 		}
 
 		{
+		auto iquote=cxxoptions.createArray();
+		stringArrayGet(iquote,m_iquote);
+		cxxoptions.objectSet("iquote",std::move(iquote));
+		}
+
+		{
 		auto cflags_extra=cxxoptions.createArray();
 		stringArrayGet(cflags_extra,m_cflags_extra);
 		cxxoptions.objectSet("cflags_extra",std::move(cflags_extra));
@@ -392,5 +415,12 @@ TargetCxxOptions& TargetCxxOptions::libdirAppend(const char* dir)
 	{
 	if(m_libdir_dup.insert(Stringkey(dir)).second)
 		{m_libdir.push_back(std::string(dir));}
+	return *this;
+	}
+
+TargetCxxOptions& TargetCxxOptions::iquoteAppend(const char* dir)
+	{
+	if(m_iquote_dup.insert(Stringkey(dir)).second)
+		{m_iquote.push_back(std::string(dir));}
 	return *this;
 	}

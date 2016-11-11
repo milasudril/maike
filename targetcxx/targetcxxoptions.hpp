@@ -122,6 +122,21 @@ namespace Maike
 			const char* cflagsFormatGet() const noexcept
 				{return m_cflags_format.c_str();}
 
+
+			Twins<const std::string*> iquoteGet() const noexcept
+				{
+				return
+					{
+					 m_iquote.data()
+					,m_iquote.data() + m_iquote.size()
+					};
+				}
+
+			TargetCxxOptions& iquoteAppend(const char* dir);
+
+			const char* iquoteFormatGet() const noexcept
+				{return m_iquote_format.c_str();}
+
 		private:
 			std::vector< std::string > m_includedir;
 			std::set<Stringkey> m_includedir_dup;
@@ -129,6 +144,8 @@ namespace Maike
 			std::set<Stringkey> m_includedir_noscan_dup;
 			std::vector< std::string > m_libdir;
 			std::set<Stringkey> m_libdir_dup;
+			std::vector< std::string > m_iquote;
+			std::set<Stringkey> m_iquote_dup;
 
 			std::string m_platform_suffix;
 
@@ -136,6 +153,7 @@ namespace Maike
 			std::string m_libdir_format;
 			std::string m_libext_format;
 			std::string m_libint_format;
+			std::string m_iquote_format;
 
 			std::string m_cflags_format;
 			std::vector< std::string > m_cflags_extra;

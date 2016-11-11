@@ -40,6 +40,7 @@ void TargetPython::compileImpl(Twins<const Dependency*> dependency_list
 	{
 	std::vector<const char*> args;
 	args.push_back(target_dir);
+	args.push_back(inDirGet());
 	auto i=m_args.data();
 	auto i_end=i+m_args.size();
 	while(i!=i_end)
