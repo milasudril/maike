@@ -128,6 +128,8 @@ TargetCxxOptions& TargetCxxOptions::configAppend(const ResourceObject& cxxoption
 	if(cxxoptions.objectExists("libint_format"))
 		{m_libint_format=std::string(static_cast<const char*>(cxxoptions.objectGet("libint_format")));}
 
+	if(cxxoptions.objectExists("iquote_format"))
+		{m_iquote_format=std::string(static_cast<const char*>(cxxoptions.objectGet("iquote_format")));}
 
 
 	if(cxxoptions.objectExists("objcompile"))
@@ -147,8 +149,6 @@ TargetCxxOptions& TargetCxxOptions::configAppend(const ResourceObject& cxxoption
 
 	if(cxxoptions.objectExists("pkgconfig"))
 		{m_pkgconfig=Command(cxxoptions.objectGet("pkgconfig"));}
-
-
 
 	return *this;
 	}
@@ -222,6 +222,9 @@ TargetCxxOptions& TargetCxxOptions::configAppend(const TargetCxxOptions& cxxopti
 
 	if(cxxoptions.m_libint_format.size()!=0)
 		{m_libint_format=cxxoptions.m_libint_format;}
+
+	if(cxxoptions.m_iquote_format.size()!=0)
+		{m_iquote_format=cxxoptions.m_iquote_format;}
 
 
 	if(cxxoptions.m_objcompile)
