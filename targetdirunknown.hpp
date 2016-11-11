@@ -4,7 +4,7 @@
 #define MAIKE_TARGETDIRUNKNOWN_HPP
 
 static_assert(0,"The current target directory is not known by the compiler. "
-	"Make sure the macro MAIKE_TARGET_DIRECTORY has been passed correctly on "
-	"the command line.");
+	"Make sure the macros MAIKE_TARGET_DIRECTORY, and MAIKE_CURRENT_DIRECTORY "
+	"has been passed correctly on the command line.");
 
 #endif
