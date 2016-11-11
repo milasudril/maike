@@ -116,7 +116,8 @@ typedef ParameterSetMapFixed<
 	,Stringkey("target")
 	,Stringkey("source")
 	,Stringkey("cflags_extra")
-	,Stringkey("iquote")> CompilerParameters;
+	,Stringkey("iquote")
+	,Stringkey("current_directory")> CompilerParameters;
 
 static const char* cxxNameGet(unsigned long long int cxxversion)
 	{
@@ -191,13 +192,16 @@ static void argvBuild(std::vector<std::string>& argv
 		}
 	}
 
-void TargetCxxCompiler::execute(const Command& cmd,const char* source
+void TargetCxxCompiler::execute(const Command& cmd
+	,const char* source
+	,const char* in_dir
 	,Twins<const FileInfo*> dependencies
 	,const char* dest,const TargetCxxOptions& options_extra) const
 	{
 	CompilerParameters cxxparams;
 	cxxparams.get<Stringkey("target")>().push_back(dest);
 	cxxparams.get<Stringkey("source")>().push_back(source);
+	cxxparams.get<Stringkey("current_directory")>().push_back(in_dir);
 
 	auto options_result=r_options|options_extra;
 	auto cxxversion_min=options_result.cxxversionMinGet();
@@ -253,30 +257,31 @@ void TargetCxxCompiler::execute(const Command& cmd,const char* source
 		}
 	}
 
-void TargetCxxCompiler::compileObject(const char* source,const char* dest
+void TargetCxxCompiler::compileObject(const char* source,const char* in_dir
+	,const char* dest
 	,const TargetCxxOptions& options_extra) const
 	{
-	execute(r_options.objcompileGet(),source,{nullptr,nullptr},dest,options_extra);
+	execute(r_options.objcompileGet(),source,in_dir,{nullptr,nullptr},dest,options_extra);
 	}
 
-void TargetCxxCompiler::compileApplication(const char* source
+void TargetCxxCompiler::compileApplication(const char* source,const char* in_dir
 	,Twins<const FileInfo*> dependencies
 	,const char* dest,const TargetCxxOptions& options_extra) const
 	{
-	execute(r_options.appcompileGet(),source,dependencies,dest,options_extra);
+	execute(r_options.appcompileGet(),source,in_dir,dependencies,dest,options_extra);
 	}
 
-void TargetCxxCompiler::compileDll(const char* source
+void TargetCxxCompiler::compileDll(const char* source,const char* in_dir
 	,Twins<const FileInfo*> dependencies
 	,const char* dest,const TargetCxxOptions& options_extra) const
 	{
-	execute(r_options.dllcompileGet(),source,dependencies,dest,options_extra);
+	execute(r_options.dllcompileGet(),source,in_dir,dependencies,dest,options_extra);
 	}
 
-void TargetCxxCompiler::compileLibrary(const char* source
+void TargetCxxCompiler::compileLibrary(const char* source,const char* in_dir
 	,Twins<const FileInfo*> dependencies
 	,const char* dest,const TargetCxxOptions& options_extra) const
 	{
-	execute(r_options.libcompileGet(),source,dependencies,dest,options_extra);
+	execute(r_options.libcompileGet(),source,in_dir,dependencies,dest,options_extra);
 	}
 

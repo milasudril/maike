@@ -30,7 +30,7 @@ namespace Maike
 
 			TargetCxxCompiler(const TargetCxxOptions&& options,const ParameterSet& params)=delete;
 
-			void compileObject(const char* source,const char* dest
+			void compileObject(const char* source,const char* in_dir,const char* dest
 				,const TargetCxxOptions& options_extra) const;
 
 			enum class FileUsage:unsigned int{NORMAL,LIB_INTERNAL,LIB_EXTERNAL};
@@ -39,13 +39,13 @@ namespace Maike
 				const char* filename;
 				FileUsage usage;
 				};
-			void compileApplication(const char* source,Twins<const FileInfo*> dependencies
+			void compileApplication(const char* source,const char* in_dir,Twins<const FileInfo*> dependencies
 				,const char* dest,const TargetCxxOptions& options_extra) const;
 
-			void compileDll(const char* source,Twins<const FileInfo*> dependencies
+			void compileDll(const char* source,const char* in_dir,Twins<const FileInfo*> dependencies
 				,const char* dest,const TargetCxxOptions& options_extra) const;
 
-			void compileLibrary(const char* source,Twins<const FileInfo*> dependencies
+			void compileLibrary(const char* source,const char* in_dir,Twins<const FileInfo*> dependencies
 				,const char* dest,const TargetCxxOptions& options_extra) const;
 
 			const TargetCxxOptions& optionsGet() const noexcept
@@ -59,6 +59,7 @@ namespace Maike
 			mutable unsigned long long int m_cxxversion_default;
 
 			void execute(const Command& cmd,const char* source
+				,const char* in_dir
 				,Twins<const FileInfo*> dependencies
 				,const char* dest,const TargetCxxOptions& options_extra) const;
 		};

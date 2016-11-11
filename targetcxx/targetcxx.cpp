@@ -216,7 +216,7 @@ void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 	switch(m_type)
 		{
 		case Type::OBJECT:
-			r_compiler.compileObject(sourceNameGet(),name_full.c_str(),m_options_extra);
+			r_compiler.compileObject(sourceNameGet(),inDirGet(),name_full.c_str(),m_options_extra);
 			break;
 		case Type::INCLUDE_LIB:
 			includeBuild(dependency_list,sourceNameGet(),name_full.c_str(),target_dir);
@@ -232,7 +232,7 @@ void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 
 			auto options_extra=m_options_extra;
 			optionsCollect(dependency_list_full,options_extra);
-			r_compiler.compileApplication(sourceNameGet(),{deps_begin,deps_end},name_full.c_str(),options_extra);
+			r_compiler.compileApplication(sourceNameGet(),inDirGet(),{deps_begin,deps_end},name_full.c_str(),options_extra);
 			}
 			break;
 		case Type::LIB_DYNAMIC:
@@ -245,7 +245,7 @@ void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 			std::reverse(deps_begin,deps_end);
 			auto options_extra=m_options_extra;
 			optionsCollect(dependency_list_full,options_extra);
-			r_compiler.compileDll(sourceNameGet(),{deps_begin,deps_end},name_full.c_str(),options_extra);
+			r_compiler.compileDll(sourceNameGet(),inDirGet(),{deps_begin,deps_end},name_full.c_str(),options_extra);
 			}
 			break;
 		case Type::LIB_STATIC:
@@ -256,7 +256,7 @@ void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 			auto deps_begin=depfiles.data();
 			auto deps_end=deps_begin + depfiles.size();
 			std::reverse(deps_begin,deps_end);
-			r_compiler.compileLibrary(sourceNameGet(),{deps_begin,deps_end},name_full.c_str(),m_options_extra);
+			r_compiler.compileLibrary(sourceNameGet(),inDirGet(),{deps_begin,deps_end},name_full.c_str(),m_options_extra);
 			}
 			break;
 
