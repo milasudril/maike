@@ -1,0 +1,13 @@
+{
+"targets":
+	[
+		 {"name":"test.tar","type":"tar","root":"test","compression":"gzip"}
+		,{"name":"test.zip","type":"zip","root":"test"}
+	]
+
+"contents":
+	[
+		 {"from":"source","file":"foo"}
+		,{"from":"targets","file":"bar"}
+	]
+}
