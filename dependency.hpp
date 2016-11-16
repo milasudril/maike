@@ -43,6 +43,10 @@ namespace Maike
 				m_name(nullptr),r_target(nullptr),m_rel(relation)
 				{nameSet(rootStrip(name,root).c_str());}
 
+			explicit Dependency(const char* name,Relation relation):
+				m_name(nullptr),r_target(nullptr),m_rel(relation)
+				{nameSet(name);}
+
 			Dependency(Dependency&& obj) noexcept
 				{
 				m_name=obj.m_name;

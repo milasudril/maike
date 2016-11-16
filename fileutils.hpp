@@ -24,6 +24,7 @@ namespace Maike
 		PRIVATE bool exists(const char* file);
 		PRIVATE void remove(const char* name);
 		PRIVATE void removeTree(const char* name,const std::set<Stringkey>& keeplist);
+		PRIVATE void echo(const char* str,const char* filename);
 		};
 	}
 

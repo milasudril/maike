@@ -27,10 +27,11 @@ mkdir '__targets/targetcxx'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetcxx/targetcxxfactory.o' 'targetcxx/targetcxxfactory.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetcxx/targetcxxhook.o' 'targetcxx/targetcxxhook.cpp'
 'g++' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-shared' '-o' '__targets/targetcxx.so' 'targetcxx/targetcxxmain.cpp' '__targets/targetcxx/targetcxxhook.o' '__targets/targetcxx/targetcxxfactory.o' '__targets/targetcxx/targetcxx.o' '__targets/targetcxx/targetcxxpkgconfig.o' '__targets/targetbase.o' '__targets/timedscope.o' '__targets/targetcxx/targetcxxloader.o' '__targets/targetcxx/targetcxxcompiler.o' '__targets/thread.o' '-lpthread' '__targets/fileutils.o' '__targets/directorylister.o' '__targets/dependency.o' '__targets/pathutils.o' '__targets/filein.o' '__targets/targetcxx/targetcxxpptokenizer.o' '__targets/targetcxx/targetcxxoptions.o' '__targets/command.o' '__targets/pipe.o' '__targets/writebuffer.o' '__targets/stdstream.o' '__targets/fileout.o' '__targets/strerror.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
+mkdir '__targets/test2'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/fileinfo.o' 'fileinfo-linuxgnu.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/resourceobjectjansson.o' 'resourceobjectjansson.cpp'
 'g++' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/wand2maike' 'wand2maike.cpp' '__targets/resourceobjectjansson.o' '-ljansson' '__targets/fileinfo.o' '__targets/fileutils.o' '__targets/directorylister.o' '__targets/pathutils.o' '__targets/filein.o' '__targets/writebuffer.o' '__targets/stdstream.o' '__targets/fileout.o' '__targets/strerror.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
-'python3' '--' 'maikeinfo.py' '__targets'
+'python3' '--' 'maikeinfo.py' '__targets' '.'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/maikeinfo.o' '__targets/maikeinfo.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/versionnumber.o' 'versionnumber.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/sysvars.o' 'sysvars-linux.cpp'
@@ -44,9 +45,10 @@ mkdir '__targets/targetcxx'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/target_hook_plugin.o' 'target_hook_plugin.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/target_hook_registry.o' 'target_hook_registry.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/target_factorydelegatordefault.o' 'target_factorydelegatordefault.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetconfig.o' 'targetconfig.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/session.o' 'session.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/maike.o' 'maike.cpp'
-'ar' 'rcs' '__targets/libmaike.a' '__targets/maike.o' '__targets/session.o' '__targets/target_factorydelegatordefault.o' '__targets/target_hook_registry.o' '__targets/target_hook_plugin.o' '__targets/plugin.o' '__targets/dependencygraphdefault.o' '__targets/spiderdefault.o' '__targets/expressionevaluator.o' '__targets/targetdirectoryloader.o' '__targets/targetdirectory.o' '__targets/fileutils.o' '__targets/writebuffer.o' '__targets/stdstream.o' '__targets/fileout.o' '__targets/fileinfo.o' '__targets/directorylister.o' '__targets/systemtargetinfo.o' '__targets/sysvars.o' '__targets/versionnumber.o' '__targets/resourceobjectjansson.o' '__targets/targetbase.o' '__targets/timedscope.o' '__targets/dependency.o' '__targets/pathutils.o' '__targets/filein.o' '__targets/strerror.o' '__targets/maikeinfo.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
+'ar' 'rcs' '__targets/libmaike.a' '__targets/maike.o' '__targets/session.o' '__targets/targetconfig.o' '__targets/target_factorydelegatordefault.o' '__targets/target_hook_registry.o' '__targets/target_hook_plugin.o' '__targets/plugin.o' '__targets/dependencygraphdefault.o' '__targets/spiderdefault.o' '__targets/expressionevaluator.o' '__targets/targetdirectoryloader.o' '__targets/targetdirectory.o' '__targets/fileutils.o' '__targets/writebuffer.o' '__targets/stdstream.o' '__targets/fileout.o' '__targets/fileinfo.o' '__targets/directorylister.o' '__targets/systemtargetinfo.o' '__targets/sysvars.o' '__targets/versionnumber.o' '__targets/resourceobjectjansson.o' '__targets/targetbase.o' '__targets/timedscope.o' '__targets/dependency.o' '__targets/pathutils.o' '__targets/filein.o' '__targets/strerror.o' '__targets/maikeinfo.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
 grep -v '^[[:space:]]*//@' 'visibility.hpp' > '__targets/visibility.hpp'
 grep -v '^[[:space:]]*//@' 'exceptionhandler.hpp' > '__targets/exceptionhandler.hpp'
 grep -v '^[[:space:]]*//@' 'twins.hpp' > '__targets/twins.hpp'
@@ -66,6 +68,261 @@ mkdir '__targets/targetpython'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetpython/targetpythonfactory.o' 'targetpython/targetpythonfactory.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetpython/targetpythonhook.o' 'targetpython/targetpythonhook.cpp'
 'g++' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-shared' '-o' '__targets/targetpython.so' 'targetpython/targetpythonmain.cpp' '__targets/targetpython/targetpythonhook.o' '__targets/targetpython/targetpythonfactory.o' '__targets/targetpython/targetpython.o' '__targets/targetbase.o' '__targets/timedscope.o' '__targets/dependency.o' '__targets/pathutils.o' '__targets/targetpython/targetpythonloader.o' '__targets/filein.o' '__targets/targetpython/targetpythoninterpreter.o' '__targets/thread.o' '-lpthread' '__targets/command.o' '__targets/pipe.o' '__targets/writebuffer.o' '__targets/stdstream.o' '__targets/fileout.o' '__targets/strerror.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
+mkdir '__targets/targetarchive'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetarchive/targetarchivecompiler.o' 'targetarchive/targetarchivecompiler.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetarchive/targetarchiveloader.o' 'targetarchive/targetarchiveloader.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetarchive/targetarchive.o' 'targetarchive/targetarchive.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetarchive/targetarchivefactory.o' 'targetarchive/targetarchivefactory.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetarchive/targetarchivehook.o' 'targetarchive/targetarchivehook.cpp'
+'g++' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-shared' '-o' '__targets/targetarchive.so' 'targetarchive/targetarchivenmain.cpp' '__targets/targetarchive/targetarchivehook.o' '__targets/targetarchive/targetarchivefactory.o' '__targets/targetarchive/targetarchive.o' '__targets/targetbase.o' '__targets/timedscope.o' '__targets/dependency.o' '__targets/pathutils.o' '__targets/targetarchive/targetarchiveloader.o' '__targets/filein.o' '__targets/targetarchive/targetarchivecompiler.o' '__targets/thread.o' '-lpthread' '__targets/command.o' '__targets/pipe.o' '__targets/writebuffer.o' '__targets/stdstream.o' '__targets/fileout.o' '__targets/strerror.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
+cat << 'MAIKE_CONFIG' > '__targets/maikeconfig.json'
+{
+    "directoryoptions":{
+        "paths_full_reject":[
+            ".git",
+            "gh-pages",
+            "doc",
+            "test"
+        ],
+        "paths_reject":[
+            "..",
+            ".",
+            "__targets"
+        ],
+        "recursive":1
+    },
+    "source_files":[
+        "."
+    ],
+    "target_hooks":[
+        {
+            "config":{
+                "appcompile":{
+                    "args":[
+                        "-g",
+                        "-fpic",
+                        "{cxxversion}",
+                        "-Wall",
+                        "-Woverflow",
+                        "-Wconversion",
+                        "-Werror",
+                        "{includedir}",
+                        "{libdir}",
+                        "-o",
+                        "{target}",
+                        "{source}",
+                        "{dependencies}"
+                    ],
+                    "name":"g++"
+                },
+                "cflags_extra":[],
+                "cflags_format":"-^",
+                "cxxversion_max":-1,
+                "cxxversion_min":201103,
+                "dllcompile":{
+                    "args":[
+                        "-g",
+                        "-fpic",
+                        "{cxxversion}",
+                        "-Wall",
+                        "-Woverflow",
+                        "-Wconversion",
+                        "-Werror",
+                        "{includedir}",
+                        "{libdir}",
+                        "-shared",
+                        "-o",
+                        "{target}",
+                        "{source}",
+                        "{dependencies}"
+                    ],
+                    "name":"g++"
+                },
+                "includedir":[],
+                "includedir_format":"-I^",
+                "includedir_noscan":[],
+                "iquote":[
+                    "."
+                ],
+                "iquote_format":"-iquote^",
+                "libcompile":{
+                    "args":[
+                        "rcs",
+                        "{target}",
+                        "{dependencies}"
+                    ],
+                    "name":"ar"
+                },
+                "libdir":[],
+                "libdir_format":"-L^",
+                "libext_format":"-l^",
+                "libint_format":"-l:^",
+                "objcompile":{
+                    "args":[
+                        "-c",
+                        "-g",
+                        "-fpic",
+                        "{cxxversion}",
+                        "-Wall",
+                        "-Woverflow",
+                        "-Wconversion",
+                        "-Werror",
+                        "{includedir}",
+                        "-o",
+                        "{target}",
+                        "{source}"
+                    ],
+                    "name":"g++"
+                },
+                "pkgconfig":{
+                    "args":[
+                        "{action}",
+                        "{libname}"
+                    ],
+                    "name":"pkg-config"
+                },
+                "stdprefix":"-std=",
+                "versionquery":{
+                    "args":[
+                        "-E",
+                        "-dM",
+                        "-x",
+                        "c++",
+                        "{nullfile}"
+                    ],
+                    "name":"g++"
+                }
+            },
+            "filename_exts":[
+                ".c++",
+                ".cc",
+                ".cpp",
+                ".cxx",
+                ".h",
+                ".h++",
+                ".hh",
+                ".hpp",
+                ".hxx"
+            ],
+            "name":"cxxdefault",
+            "plugin":"targetcxx"
+        },
+        {
+            "config":{
+                "command":{
+                    "args":[
+                        "--",
+                        "{script}",
+                        "{args}"
+                    ],
+                    "name":"python3"
+                }
+            },
+            "filename_exts":[
+                ".py"
+            ],
+            "name":"pythondefault",
+            "plugin":"targetpython"
+        }
+    ],
+    "targetinfo":{
+        "architecture":"x86_64",
+        "cpu_cache_alignment":64,
+        "cpu_cache_flushsize":64,
+        "cpu_cache_size":6144,
+        "cpu_vendor":"GenuineIntel",
+        "cpufeature_acpi":1,
+        "cpufeature_aes":1,
+        "cpufeature_aperfmperf":1,
+        "cpufeature_apic":1,
+        "cpufeature_arat":1,
+        "cpufeature_arch_perfmon":1,
+        "cpufeature_avx":1,
+        "cpufeature_bts":1,
+        "cpufeature_clflush":1,
+        "cpufeature_cmov":1,
+        "cpufeature_constant_tsc":1,
+        "cpufeature_cx16":1,
+        "cpufeature_cx8":1,
+        "cpufeature_de":1,
+        "cpufeature_ds_cpl":1,
+        "cpufeature_dtes64":1,
+        "cpufeature_dtherm":1,
+        "cpufeature_dts":1,
+        "cpufeature_eagerfpu":1,
+        "cpufeature_epb":1,
+        "cpufeature_ept":1,
+        "cpufeature_erms":1,
+        "cpufeature_est":1,
+        "cpufeature_f16c":1,
+        "cpufeature_flexpriority":1,
+        "cpufeature_fpu":1,
+        "cpufeature_fsgsbase":1,
+        "cpufeature_fxsr":1,
+        "cpufeature_ht":1,
+        "cpufeature_ida":1,
+        "cpufeature_lahf_lm":1,
+        "cpufeature_lm":1,
+        "cpufeature_mca":1,
+        "cpufeature_mce":1,
+        "cpufeature_mmx":1,
+        "cpufeature_monitor":1,
+        "cpufeature_msr":1,
+        "cpufeature_mtrr":1,
+        "cpufeature_nonstop_tsc":1,
+        "cpufeature_nopl":1,
+        "cpufeature_nx":1,
+        "cpufeature_pae":1,
+        "cpufeature_pat":1,
+        "cpufeature_pbe":1,
+        "cpufeature_pcid":1,
+        "cpufeature_pclmulqdq":1,
+        "cpufeature_pdcm":1,
+        "cpufeature_pebs":1,
+        "cpufeature_pge":1,
+        "cpufeature_pln":1,
+        "cpufeature_pni":1,
+        "cpufeature_popcnt":1,
+        "cpufeature_pse":1,
+        "cpufeature_pse36":1,
+        "cpufeature_pts":1,
+        "cpufeature_rdrand":1,
+        "cpufeature_rdtscp":1,
+        "cpufeature_rep_good":1,
+        "cpufeature_sep":1,
+        "cpufeature_smep":1,
+        "cpufeature_ss":1,
+        "cpufeature_sse":1,
+        "cpufeature_sse2":1,
+        "cpufeature_sse4_1":1,
+        "cpufeature_sse4_2":1,
+        "cpufeature_ssse3":1,
+        "cpufeature_syscall":1,
+        "cpufeature_tm":1,
+        "cpufeature_tm2":1,
+        "cpufeature_tpr_shadow":1,
+        "cpufeature_tsc":1,
+        "cpufeature_tsc_deadline_timer":1,
+        "cpufeature_vme":1,
+        "cpufeature_vmx":1,
+        "cpufeature_vnmi":1,
+        "cpufeature_vpid":1,
+        "cpufeature_xsave":1,
+        "cpufeature_xsaveopt":1,
+        "cpufeature_xtopology":1,
+        "cpufeature_xtpr":1,
+        "gnu":563048737669120,
+        "gnu_string":"2.23",
+        "linux":1125917086711808,
+        "linux_string":"4.4.0-47-lowlatency",
+        "nullfile":"/dev/null",
+        "posix":200809,
+        "target_directory":"__targets",
+        "wordsize":64,
+        "x86_64":1
+    }
+}
+MAIKE_CONFIG
 grep -v '^[[:space:]]*//@' 'target.hpp' > '__targets/target.hpp'
 grep -v '^[[:space:]]*//@' 'pathutils.hpp' > '__targets/pathutils.hpp'
 grep -v '^[[:space:]]*//@' 'dependency.hpp' > '__targets/dependency.hpp'
@@ -98,5 +355,5 @@ grep -v '^[[:space:]]*//@' 'libmaikeplug.cpp' > '__targets/maikeplug.hpp'
 'g++' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/pathutils-test' 'pathutils-test.cpp' '__targets/pathutils.o' '__targets/filein.o' '__targets/strerror.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/options.o' 'options.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/graphedgewriterdot.o' 'graphedgewriterdot.cpp'
-'g++' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/maike' 'maike-main.cpp' '__targets/graphedgewriterdot.o' '__targets/maike.o' '__targets/session.o' '__targets/target_factorydelegatordefault.o' '__targets/target_hook_registry.o' '__targets/target_hook_plugin.o' '__targets/plugin.o' '-ldl' '__targets/dependencygraphdefault.o' '__targets/spiderdefault.o' '__targets/expressionevaluator.o' '__targets/targetdirectoryloader.o' '__targets/targetdirectory.o' '__targets/fileutils.o' '__targets/stdstream.o' '__targets/fileinfo.o' '__targets/directorylister.o' '__targets/systemtargetinfo.o' '__targets/sysvars.o' '__targets/versionnumber.o' '__targets/resourceobjectjansson.o' '-ljansson' '__targets/targetbase.o' '__targets/timedscope.o' '__targets/dependency.o' '__targets/pathutils.o' '__targets/maikeinfo.o' '__targets/filein.o' '__targets/fileout.o' '__targets/strerror.o' '__targets/options.o' '__targets/writebuffer.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
-'g++' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-shared' '-o' '__targets/libmaike.so' 'libmaike.cpp' '__targets/maike.o' '__targets/session.o' '__targets/target_factorydelegatordefault.o' '__targets/target_hook_registry.o' '__targets/target_hook_plugin.o' '__targets/plugin.o' '-ldl' '__targets/dependencygraphdefault.o' '__targets/spiderdefault.o' '__targets/expressionevaluator.o' '__targets/targetdirectoryloader.o' '__targets/targetdirectory.o' '__targets/fileutils.o' '__targets/writebuffer.o' '__targets/stdstream.o' '__targets/fileout.o' '__targets/fileinfo.o' '__targets/directorylister.o' '__targets/systemtargetinfo.o' '__targets/sysvars.o' '__targets/versionnumber.o' '__targets/resourceobjectjansson.o' '-ljansson' '__targets/targetbase.o' '__targets/timedscope.o' '__targets/dependency.o' '__targets/pathutils.o' '__targets/filein.o' '__targets/strerror.o' '__targets/maikeinfo.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
+'g++' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/maike' 'maike-main.cpp' '__targets/graphedgewriterdot.o' '__targets/maike.o' '__targets/session.o' '__targets/targetconfig.o' '__targets/target_factorydelegatordefault.o' '__targets/target_hook_registry.o' '__targets/target_hook_plugin.o' '__targets/plugin.o' '-ldl' '__targets/dependencygraphdefault.o' '__targets/spiderdefault.o' '__targets/expressionevaluator.o' '__targets/targetdirectoryloader.o' '__targets/targetdirectory.o' '__targets/fileutils.o' '__targets/stdstream.o' '__targets/fileinfo.o' '__targets/directorylister.o' '__targets/systemtargetinfo.o' '__targets/sysvars.o' '__targets/versionnumber.o' '__targets/resourceobjectjansson.o' '-ljansson' '__targets/targetbase.o' '__targets/timedscope.o' '__targets/dependency.o' '__targets/pathutils.o' '__targets/maikeinfo.o' '__targets/filein.o' '__targets/fileout.o' '__targets/strerror.o' '__targets/options.o' '__targets/writebuffer.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
+'g++' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-shared' '-o' '__targets/libmaike.so' 'libmaike.cpp' '__targets/maike.o' '__targets/session.o' '__targets/targetconfig.o' '__targets/target_factorydelegatordefault.o' '__targets/target_hook_registry.o' '__targets/target_hook_plugin.o' '__targets/plugin.o' '-ldl' '__targets/dependencygraphdefault.o' '__targets/spiderdefault.o' '__targets/expressionevaluator.o' '__targets/targetdirectoryloader.o' '__targets/targetdirectory.o' '__targets/fileutils.o' '__targets/writebuffer.o' '__targets/stdstream.o' '__targets/fileout.o' '__targets/fileinfo.o' '__targets/directorylister.o' '__targets/systemtargetinfo.o' '__targets/sysvars.o' '__targets/versionnumber.o' '__targets/resourceobjectjansson.o' '-ljansson' '__targets/targetbase.o' '__targets/timedscope.o' '__targets/dependency.o' '__targets/pathutils.o' '__targets/filein.o' '__targets/strerror.o' '__targets/maikeinfo.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'

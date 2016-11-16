@@ -7,6 +7,8 @@
 #include "errormessage.hpp"
 #include "variant.hpp"
 #include "pathutils.hpp"
+#include "targetconfig.hpp"
+#include "resourceobjectjansson.hpp"
 #include <cstring>
 
 using namespace Maike;
@@ -211,6 +213,13 @@ void Session::dependenciesClear() noexcept
 void Session::dependenciesReload() const
 	{
 	m_graph.clear();
+	
+		{
+		ResourceObjectJansson config(ResourceObject::Type::OBJECT);
+		configDump(config);
+		m_graph.targetRegister(Handle<Target>(TargetConfig::create(config,m_delegator.idGet())));
+		}
+
 	auto i=m_source_files.begin();
 	auto i_end=m_source_files.end();
 	while(i!=i_end)

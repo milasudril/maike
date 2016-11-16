@@ -308,3 +308,20 @@ void FileUtils::remove(const char* name)
 	escape(wb,name);
 	wb.write(static_cast<uint8_t>('\n'));
 	}
+
+void FileUtils::echo(const char* str,const char* filename)
+	{
+	//	Shell stuff
+		{
+		WriteBuffer wb(StdStream::output());
+		wb.write("cat << 'MAIKE_CONFIG' > ");
+		escape(wb,filename);
+		wb.write("\n").write(str).write("\nMAIKE_CONFIG\n");
+		}
+	
+		{
+		FileOut file(filename);
+		WriteBuffer wb(file);
+		wb.write(str);
+		}
+	}
