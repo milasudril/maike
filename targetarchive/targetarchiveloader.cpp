@@ -10,7 +10,8 @@
 #include "../target_factorydelegator.hpp"
 #include "../dependencygraph.hpp"
 #include "../target.hpp"
-#include "../spider.hpp"
+#include "../dependency.hpp"
+#include <vector>
 
 using namespace Maike;
 
@@ -63,9 +64,20 @@ namespace
 	class DependencyCollector:public Target_FactoryDelegator::DependencyCollector
 		{
 		public:
+			DependencyCollector(const char* name_src,const char* in_dir):
+				r_name_src(name_src),r_in_dir(in_dir)
+				{
+				printf("Dependency collector: %s %s\n",name_src,in_dir);
+				}
+
 			bool operator()(const Target_FactoryDelegator& delegator,Dependency& dep_primary
 				,ResourceObject::Reader rc_reader)
 				{return 0;}
+
+		private:
+			const char* r_name_src;
+			const char* r_in_dir;
+			std::vector<Dependency> m_deps;
 		};
 	}
 
@@ -74,5 +86,5 @@ void TargetArchiveLoader::targetsLoad(const char* name_src,const char* in_dir
 	{
 	FileIn source(name_src);
 	factory.targetsCreate(TagExtractor(source),name_src,in_dir
-		,DependencyCollector(),graph);
+		,DependencyCollector(name_src,in_dir),graph);
 	}
