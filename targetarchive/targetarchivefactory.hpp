@@ -16,7 +16,8 @@ namespace Maike
 	class PRIVATE TargetArchiveFactory:public Target_Factory
 		{
 		public:
-			explicit TargetArchiveFactory(const TargetArchiveCompiler& intptret);
+			explicit TargetArchiveFactory(const TargetArchiveCompiler& compiler);
+
 			TargetArchiveFactory(TargetArchiveCompiler&&)=delete;
 
 			Handle<Target> targetCreate(const ResourceObject& obj
@@ -24,7 +25,7 @@ namespace Maike
 				,size_t id,size_t line_count) const;
 
 		private:
-			const TargetArchiveCompiler& r_intpret;
+			const TargetArchiveCompiler& r_compiler;
 		};
 	}
 

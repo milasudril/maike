@@ -136,7 +136,15 @@
             ],
             "name":"pythondefault",
             "plugin":"targetpython"
-        }
+        },
+		{
+		"config":
+			{
+			}
+		,"filename_exts":[".archive"]
+		,"plugin":"targetarchive"
+		,"name":"archivedefault"
+		}
     ],
     "targetinfo":{
         "target_directory":"__targets"

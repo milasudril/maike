@@ -1,13 +1,13 @@
 {
 "targets":
 	[
-		 {"name":"test.tar","type":"tar","root":"test","compression":"gzip"}
-		,{"name":"test.zip","type":"zip","root":"test"}
+	 {"name":"test.tar","type":"tar","root":"test","compression":"gzip"}
+	,{"name":"test.zip","type":"zip","root":"test"}
 	]
 
-"contents":
+,"contents":
 	[
-		 {"from":"source","file":"foo"}
-		,{"from":"targets","file":"bar"}
+	 {"from":"source","file":"sample.archive"}
+	,{"from":"targets","file":"../targetarchive.so"}
 	]
 }

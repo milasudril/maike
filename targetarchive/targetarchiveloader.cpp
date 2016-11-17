@@ -17,14 +17,12 @@ using namespace Maike;
 TargetArchiveLoader::TargetArchiveLoader()
 	{}
 
-
 namespace
 	{
 	class TagExtractor final:public Target_FactoryDelegator::TagExtractor
 		{
 		public:
-			TagExtractor(DataSource& source):m_reader(source)
-				,m_state(State::NEWLINE),m_lines(0)
+			TagExtractor(DataSource& source):m_reader(source),m_lines(0)
 				{}
 
 			size_t read(void* buffer,size_t length);
@@ -37,8 +35,6 @@ namespace
 
 		private:
 			ReadBuffer m_reader;
-			enum class State:int{NEWLINE,COMMENT_0,CODE,DATA};
-			State m_state;
 			size_t m_lines;
 
 			void destroy()
@@ -50,79 +46,15 @@ size_t TagExtractor::read(void* buffer,size_t length)
 	{
 	auto buffer_out=reinterpret_cast<uint8_t*>(buffer);
 	size_t n_read=0;
-	auto state=m_state;
 	while(n_read!=length && !m_reader.eof())
 		{
 		auto ch_in=m_reader.byteRead();
-		switch(state)
-			{
-			case State::NEWLINE:
-				if(ch_in=='\n')
-					{++m_lines;}
-				if(!(ch_in<=' '))
-					{
-					switch(ch_in)
-						{
-						case '#':
-							state=State::COMMENT_0;
-							break;
-						default:
-							state=State::CODE;
-						}
-					}
-				break;
-
-
-			case State::COMMENT_0:
-				switch(ch_in)
-					{
-					case '@':
-						state=State::DATA;
-						break;
-					case '\r':
-						break;
-					case '\n':
-						state=State::NEWLINE;
-						++m_lines;
-						break;
-					default:
-						state=State::CODE;
-					}
-				break;
-
-			case State::DATA:
-				switch(ch_in)
-					{
-					case '\r':
-						break;
-					case '\n':
-						*buffer_out='\n';
-						++buffer_out;
-						++n_read;
-						++m_lines;
-						state=State::NEWLINE;
-						break;
-					default:
-						*buffer_out=ch_in;
-						++buffer_out;
-						++n_read;
-					}
-				break;
-
-			case State::CODE:
-				switch(ch_in)
-					{
-					case '\r':
-						break;
-					case '\n':
-						++m_lines;
-						state=State::NEWLINE;
-						break;
-					}
-				break;
-			}
+		if(ch_in=='\n')
+			{++m_lines;}
+		*buffer_out=ch_in;
+		++n_read;
+		++buffer_out;
 		}
-	m_state=state;
 	return n_read;
 	}
 
