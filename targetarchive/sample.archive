@@ -8,6 +8,6 @@
 ,"contents":
 	[
 	 {"from":"source","file":"sample.archive"}
-	,{"from":"targets","file":"../targetarchive.so"}
+	,{"from":"target","file":"../targetarchive.so"}
 	]
 }
