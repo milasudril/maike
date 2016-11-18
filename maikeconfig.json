@@ -137,11 +137,38 @@
             "name":"pythondefault",
             "plugin":"targetpython"
         }
-		,{
-			"name":"archivedefault"
-			,"plugin":"targetarchive"
-			,"filename_exts":[".archive"]
-		}
+,
+        {
+            "config":{
+                "tar":{
+                    "command":{
+                        "args":[
+                            "{target_strip}",
+                            "{root_append}",
+                            "{compressor}",
+                            "-cf",
+                            "{target}",
+                            "-T",
+                            "-"
+                        ],
+                        "name":"tar"
+                    },
+                    "compressors":{
+                        "bzip2":"-j",
+                        "gzip":"-z",
+                        "lzma":"-J"
+                    },
+                    "root_append":"--transform=s,\\\\(.*\\\\),^\\\\1,g",
+                    "target_strip":"--transform=s,\\^^,,g"
+                }
+            },
+            "filename_exts":[
+                ".archive"
+            ],
+            "name":"archivedefault",
+            "plugin":"targetarchive"
+        }
+
     ],
     "targetinfo":{
         "target_directory":"__targets"

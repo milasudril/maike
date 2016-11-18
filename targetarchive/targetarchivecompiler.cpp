@@ -61,7 +61,6 @@ static void dataProcess(Pipe& compiler,Twins<const char* const*> files)
 		wb.write(*files.first).write(static_cast<uint8_t>('\n'));
 		++files.first;
 		}
-//	sysvars.configDump().write(*standard_input.get());
 	}
 
 static std::string placeholderSubstitute(const char* string_template
