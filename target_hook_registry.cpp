@@ -69,7 +69,10 @@ Target_Hook_Registry& Target_Hook_Registry::configAppend(const ResourceObject& t
 			hook_info.filename_exts.insert(std::string(fext));
 			}
 
-		hook_info.hook->configAppend(target_hook.objectGet("config"));
+		if(target_hook.objectExists("config"))
+			{hook_info.hook->configAppend(target_hook.objectGet("config"));}
+		else
+			{hook_info.hook->configAppendDefault();}
 		}
 
 	return *this;
