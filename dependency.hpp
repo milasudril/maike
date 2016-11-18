@@ -23,6 +23,7 @@ namespace Maike
 				{
 				 LEAF
 				,INTERNAL
+				,INCLUDE
 				,IMPLEMENTATION
 				,EXTERNAL
 				,GENERATED

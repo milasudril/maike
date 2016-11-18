@@ -35,31 +35,6 @@ static const char* type(TargetArchive::Type type)
 	return nullptr;
 	}
 
-static TargetArchive::Compression compression(const char* name_src,const char* compression)
-	{
-	auto key=Stringkey(compression);
-	if(key==Stringkey("none"))
-		{return TargetArchive::Compression::NONE;}
-
-	if(key==Stringkey("gzip"))
-		{return TargetArchive::Compression::GZIP;}
-
-	exceptionRaise(ErrorMessage("#0;: Unknown compression scheme #1;.",{name_src,compression}));
-	}
-
-static const char* compression(TargetArchive::Compression compression)
-	{
-	switch(compression)
-		{
-		case TargetArchive::Compression::NONE:
-			return "none";
-		case TargetArchive::Compression::GZIP:
-			return "gzip";
-		}
-	return nullptr;
-	}
-
-
 TargetArchive::TargetArchive(const ResourceObject& obj
 	,const TargetArchiveCompiler& compiler,const char* name_src
 	,const char* in_dir,const char* root,size_t id,size_t line_count):
@@ -67,15 +42,17 @@ TargetArchive::TargetArchive(const ResourceObject& obj
 	,r_compiler(compiler)
 	{
 	m_type=type(name_src,static_cast<const char*>( obj.objectGet("type") ));
-	m_compression=Compression::NONE;
-	if(obj.objectExists("compression"))
-		{m_compression=compression(name_src,static_cast<const char*>( obj.objectGet("compression") ));}
+	if(obj.objectExists("compressor"))
+		{m_compression=std::string(static_cast<const char*>( obj.objectGet("compressor") ));}
+	if(obj.objectExists("root"))
+		{m_root=std::string(static_cast<const char*>(obj.objectGet("root")));}
 	}
 
 void TargetArchive::dumpDetails(ResourceObject& target) const
 	{
 	target.objectSet("type",target.create(type(typeGet())))
-		.objectSet("compression",target.create(compression(compressionGet())));
+		.objectSet("compressor",target.create(compressionGet()))
+		.objectSet("root",target.create(rootGet()));
 	}
 
 bool TargetArchive::upToDate(Twins<const Dependency*> dependency_list
@@ -96,20 +73,74 @@ bool TargetArchive::upToDate(Twins<const Dependency*> dependency_list
 					,name_full.c_str()))
 					{return 0;}
 				break;
-			default:
+			case Dependency::Relation::FILE:
 				if(FileUtils::newer(dep->nameGet(),name_full.c_str()))
 					{return 0;}
+				break;
+			default:
+				break;
 			}
 		++dependency_list.first;
 		}
 	return 1;
 	}
 
+static std::vector<std::string> filesCollect(Twins<const Dependency*> dependency_list
+	,const char* target_dir)
+	{
+	std::vector<std::string> ret;
+	while(dependency_list.first!=dependency_list.second)
+		{
+		auto dep=dependency_list.first;
+		switch(dep->relationGet())
+			{
+			case Dependency::Relation::GENERATED:
+				ret.push_back(dircat(target_dir,dep->nameGet()));
+				break;
+
+			case Dependency::Relation::FILE:
+				ret.push_back(dep->nameGet());
+				break;
+
+			default:
+				break;
+			}
+		++dependency_list.first;
+		}
+	return std::move(ret);
+	}
+
+static std::vector<const char*> filesCollect(std::vector<std::string>&& files)=delete;
+
+static std::vector<const char*> filesCollect(const std::vector<std::string>& files)
+	{
+	std::vector<const char*> ret;
+	auto ptr=files.data();
+	auto ptr_end=ptr + files.size();
+	while(ptr!=ptr_end)
+		{
+		ret.push_back(ptr->c_str());
+		++ptr;
+		}
+	return std::move(ret);
+	}
+
 void TargetArchive::compileImpl(Twins<const Dependency*> dependency_list
 	,Twins<const Dependency*> dependency_list_full
 	,const char* target_dir)
 	{
-	printf("Compile %s\n",nameGet());
+	auto files_input=filesCollect(dependency_list,target_dir);
+	auto r_files_input=filesCollect(files_input);
+	auto range=Twins<const char* const*>(r_files_input.data(),r_files_input.data() + r_files_input.size()); 
+	switch(typeGet())
+		{
+		case Type::TAR:
+			r_compiler.tar(range,nameGet(),target_dir,rootGet(),compressionGet());
+			break;
+		case Type::ZIP:
+		//	r_compiler.zip(range,nameGet(),target_dir,rootGet());
+			break;
+		}
 	}
 
 Maike::TargetArchive::~TargetArchive() noexcept

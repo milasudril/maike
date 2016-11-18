@@ -11,7 +11,7 @@
 #include "../parametersetdumpable.hpp"
 #include "../stdstream.hpp"
 #include "../writebuffer.hpp"
-
+#include "../pathutils.hpp"
 
 using namespace Maike;
 
@@ -50,62 +50,122 @@ namespace
 		};
 	}
 
-static void dataProcess(Pipe& compiler,const ParameterSetDumpable& sysvars)
+static void dataProcess(Pipe& compiler,Twins<const char* const*> files)
 	{
 	auto standard_error=compiler.stderrCapture();
 	Thread<ReadCallback> stderr_reader(ReadCallback{standard_error.get()});
 	auto standard_input=compiler.stdinCapture();
-	sysvars.configDump().write(*standard_input.get());
+	WriteBuffer wb(*standard_input.get());
+	while(files.first!=files.second)
+		{
+		wb.write(*files.first).write(static_cast<uint8_t>('\n'));
+		++files.first;
+		}
+//	sysvars.configDump().write(*standard_input.get());
 	}
 
-int TargetArchiveCompiler::run(const char* script,Twins<const char* const*> args) const
+static std::string placeholderSubstitute(const char* string_template
+	,const char* substitute)
 	{
-	ParameterSetMapFixed<Stringkey("args"),Stringkey("script")> params;
-	params.get<Stringkey("script")>().push_back(std::string(script));
-	while(args.first!=args.second)
+	std::string ret;
+	bool escape=0;
+	while(true)
 		{
-		params.get<Stringkey("args")>().push_back(std::string(*args.first));
-		++args.first;
+		auto ch_in=*string_template;
+		if(escape)
+			{
+			escape=0;
+			ret+=ch_in;
+			}
+		else
+			{
+			switch(ch_in)
+				{
+				case '\\':
+					escape=1;
+					break;
+				case '^':
+					ret+=substitute;
+					break;
+				case '\0':
+					return std::move(ret);
+				default:
+					ret+=ch_in;
+				}
+			}
+		++string_template;
 		}
+	}
+
+int TargetArchiveCompiler::tar(Twins<const char* const*> files,const char* name
+	,const char* target_dir,const char* root
+	,const char* compressor) const
+	{
+	ParameterSetMapFixed<
+		 Stringkey("target_strip")
+		,Stringkey("root_append")
+		,Stringkey("compressor")
+		,Stringkey("target")
+		> params;
+
+		{
+		auto compressor_val=m_tar.compressorGet(compressor);
+		if(compressor_val==nullptr)
+			{
+			exceptionRaise(ErrorMessage("#0;: It was not possible create the archive. Unregistred compressor #1;."
+				,{name,compressor}));
+			}
+		params.get<Stringkey("compressor")>().push_back(std::string(compressor_val));
+		}
+
+	auto target_dir_temp=*target_dir?std::string(target_dir)+'/'
+		:std::string(target_dir);
+	auto root_temp=*root?std::string(root)+'/'
+		:std::string(root);
+
+	params.get<Stringkey("target")>().push_back(dircat(target_dir,name));
+	params.get<Stringkey("target_strip")>()
+		.push_back(placeholderSubstitute(m_tar.targetStripGet(),target_dir_temp.c_str()));
+	params.get<Stringkey("root_append")>()
+		.push_back(placeholderSubstitute(m_tar.rootAppendGet(),root_temp.c_str()));
 
 	const ParameterSet* paramset_tot[]={&r_sysvars,&params};
-	auto pipe=m_compiler.execute(Pipe::REDIRECT_STDERR|Pipe::REDIRECT_STDIN
+	auto pipe=m_tar.commandGet().execute(Pipe::REDIRECT_STDERR|Pipe::REDIRECT_STDIN
 		,{paramset_tot,paramset_tot + 2});
 
-	dataProcess(pipe,r_sysvars);
+	dataProcess(pipe,files);
 
 	auto ret=pipe.exitStatusGet();
-	if(ret>1)
+	if(ret!=0)
 		{
-		exceptionRaise(ErrorMessage("#0;: Script failed",{script}));
+		exceptionRaise(ErrorMessage("It was not possible to create #0;. The archiver returned status code #0;"
+			,{name,ret}));
 		}
-	return ret;
+	return 0;
 	}
 
 void TargetArchiveCompiler::configClear()
 	{
-	m_compiler.nameSet("").argumentsClear();
+	m_tar.configClear();
 	}
 
 TargetArchiveCompiler& TargetArchiveCompiler::configAppendDefault()
 	{
-	m_compiler.argumentsClear();
-	m_compiler.nameSet("archive3").argumentAppend("--")
-		.argumentAppend("{script}").argumentAppend("{args}");
+	m_tar.configAppendDefault();
 	return *this;
 	}
 
 
 TargetArchiveCompiler& TargetArchiveCompiler::configAppend(const ResourceObject& archiveoptions)
 	{
-	if(archiveoptions.objectExists("command"))
-		{m_compiler=Command(archiveoptions.objectGet("command"));}
+	if(archiveoptions.objectExists("tar"))
+		{m_tar=Taroptions(archiveoptions.objectGet("tar"));}
 	return *this;
 	}
 
 void TargetArchiveCompiler::configDump(ResourceObject& archiveoptions) const
 	{
-	auto command=archiveoptions.createObject();
-	m_compiler.configDump(command);
-	archiveoptions.objectSet("command",std::move(command));
+	auto tar=archiveoptions.createObject();
+	m_tar.configDump(tar);
+	archiveoptions.objectSet("tar",std::move(tar));
 	}

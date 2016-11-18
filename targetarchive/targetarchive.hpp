@@ -15,7 +15,6 @@ namespace Maike
 		{
 		public:
 			enum class Type:int{TAR,ZIP};
-			enum class Compression:int{NONE,GZIP};
 
 			static TargetArchive* create(const ResourceObject& obj
 				,const TargetArchiveCompiler& compiler,const char* name_src
@@ -41,8 +40,11 @@ namespace Maike
 			Type typeGet() const noexcept
 				{return m_type;}
 
-			Compression compressionGet() const noexcept
-				{return m_compression;}
+			const char* compressionGet() const noexcept
+				{return m_compression.c_str();}
+
+			const char* rootGet() const noexcept
+				{return m_root.c_str();}
 
 		private:
 			const TargetArchiveCompiler& r_compiler;
@@ -58,7 +60,8 @@ namespace Maike
 
 			~TargetArchive() noexcept;
 			Type m_type;
-			Compression m_compression;
+			std::string m_compression;
+			std::string m_root;
 		};
 	}
 

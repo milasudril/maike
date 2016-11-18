@@ -6,7 +6,7 @@
 #ifndef MAIKE_TARGETARCHIVECOMPILER_HPP
 #define MAIKE_TARGETARCHIVECOMPILER_HPP
 
-#include "../command.hpp"
+#include "taroptions.hpp"
 
 namespace Maike
 	{
@@ -22,7 +22,12 @@ namespace Maike
 			TargetArchiveCompiler(const ResourceObject& archiveoptions
 				,ParameterSet&& sysvars)=delete;
 
-			int run(const char* script,Twins<const char* const*> args) const;
+			int tar(Twins<const char* const*> files,const char* name
+				,const char* target_dir,const char* root
+				,const char* compressor) const;
+
+			int zip(Twins<const char* const*> files,const char* name
+				,const char* target_dir,const char* root) const;
 
 			void configClear();
 
@@ -33,7 +38,7 @@ namespace Maike
 			void configDump(ResourceObject& archiveoptions) const;
 
 		private:
-			Command m_compiler;
+			Taroptions m_tar;
 			const ParameterSetDumpable& r_sysvars;
 		};
 	}

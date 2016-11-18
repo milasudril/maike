@@ -29,6 +29,8 @@ static Dependency::Relation relation(const char* string)
 		{return Dependency::Relation::GENERATED;}
 	if(key==Stringkey("file"))
 		{return Dependency::Relation::FILE;}
+	if(key==Stringkey("include"))
+		{return Dependency::Relation::INCLUDE;}
 
 	exceptionRaise(ErrorMessage("Unknown relation type #0;",{string}));
 	}
@@ -48,6 +50,8 @@ static const char* relation(Dependency::Relation rel)
 		case Dependency::Relation::GENERATED:
 			return "generated";
 		case Dependency::Relation::FILE:
+			return "file";
+		case Dependency::Relation::INCLUDE:
 			return "file";
 		}
 	return nullptr;

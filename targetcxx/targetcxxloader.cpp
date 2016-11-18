@@ -210,7 +210,7 @@ bool DependencyCollector::operator()(const Target_FactoryDelegator& delegator,De
 						{
 						auto name_dep_full=dircat(r_in_dir,tok_in.value);
 						dep_primary=Dependency(name_dep_full.c_str(),delegator.rootGet()
-							,Dependency::Relation::INTERNAL);
+							,Dependency::Relation::INCLUDE);
 						auto in_dir_include=dirname(name_dep_full);
 						r_spider.scanFile(name_dep_full.c_str(),in_dir_include.c_str());
 

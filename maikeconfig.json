@@ -136,14 +136,11 @@
             ],
             "name":"pythondefault",
             "plugin":"targetpython"
-        },
-		{
-		"config":
-			{
-			}
-		,"filename_exts":[".archive"]
-		,"plugin":"targetarchive"
-		,"name":"archivedefault"
+        }
+		,{
+			"name":"archivedefault"
+			,"plugin":"targetarchive"
+			,"filename_exts":[".archive"]
 		}
     ],
     "targetinfo":{
