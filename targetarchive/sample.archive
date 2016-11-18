@@ -1,7 +1,7 @@
 {
 "targets":
 	[
-	 {"name":"test.tar","type":"tar","root":"test","compression":"gzip"}
+	 {"name":"test.tar.gz","type":"tar","root":"test","compression":"gzip"}
 	,{"name":"test.zip","type":"zip","root":"test"}
 	]
 

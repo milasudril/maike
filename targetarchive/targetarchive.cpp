@@ -7,6 +7,7 @@
 #include "../errormessage.hpp"
 #include "../variant.hpp"
 #include "../exceptionhandler.hpp"
+#include "../fileutils.hpp"
 
 using namespace Maike;
 
@@ -81,8 +82,27 @@ bool TargetArchive::upToDate(Twins<const Dependency*> dependency_list
 	,Twins<const Dependency*> dependency_list_full
 	,const char* target_dir) const
 	{
-	printf("%s up to date?\n",nameGet());
-	return 0;
+	auto name_full=dircat( target_dir,nameGet() );
+	if(FileUtils::newer(sourceNameGet(),name_full.c_str()))
+		{return 0;}
+
+	while(dependency_list.first!=dependency_list.second)
+		{
+		auto dep=dependency_list.first;
+		switch(dep->relationGet())
+			{
+			case Dependency::Relation::GENERATED:
+				if( FileUtils::newer(dircat(target_dir,dep->nameGet()).c_str()	
+					,name_full.c_str()))
+					{return 0;}
+				break;
+			default:
+				if(FileUtils::newer(dep->nameGet(),name_full.c_str()))
+					{return 0;}
+			}
+		++dependency_list.first;
+		}
+	return 1;
 	}
 
 void TargetArchive::compileImpl(Twins<const Dependency*> dependency_list
