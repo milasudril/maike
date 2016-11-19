@@ -1,5 +1,5 @@
 mkdir '__targets'
-mkdir '__targets/targetcxx'
+mkdir '__targets/targetarchive'
 'g++' '-E' '-dM' '-x' 'c++' '/dev/null'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/stringformat.o' 'stringformat.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/errormessage.o' 'errormessage.cpp'
@@ -10,18 +10,26 @@ mkdir '__targets/targetcxx'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/writebuffer.o' 'writebuffer.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/pipe.o' 'pipe-posix.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/command.o' 'command.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetcxx/targetcxxoptions.o' 'targetcxx/targetcxxoptions.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetcxx/targetcxxpptokenizer.o' 'targetcxx/targetcxxpptokenizer.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetarchive/taroptions.o' 'targetarchive/taroptions.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/thread.o' 'thread-posix.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/filein.o' 'filein-posix.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/pathutils.o' 'pathutils-linux.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetarchive/targetarchivecompiler.o' 'targetarchive/targetarchivecompiler.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/dependency.o' 'dependency.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/directorylister.o' 'directorylister-linuxgnu.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/fileutils.o' 'fileutils-linuxgnu.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/thread.o' 'thread-posix.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetcxx/targetcxxcompiler.o' 'targetcxx/targetcxxcompiler.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetcxx/targetcxxloader.o' 'targetcxx/targetcxxloader.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetarchive/targetarchiveloader.o' 'targetarchive/targetarchiveloader.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/timedscope.o' 'timedscope-linux.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetbase.o' 'targetbase.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/directorylister.o' 'directorylister-linuxgnu.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/fileutils.o' 'fileutils-linuxgnu.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetarchive/targetarchive.o' 'targetarchive/targetarchive.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetarchive/targetarchivefactory.o' 'targetarchive/targetarchivefactory.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetarchive/targetarchivehook.o' 'targetarchive/targetarchivehook.cpp'
+'g++' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-shared' '-o' '__targets/targetarchive.so' 'targetarchive/targetarchivenmain.cpp' '__targets/targetarchive/targetarchivehook.o' '__targets/targetarchive/targetarchivefactory.o' '__targets/targetarchive/targetarchive.o' '__targets/fileutils.o' '__targets/directorylister.o' '__targets/targetbase.o' '__targets/timedscope.o' '__targets/targetarchive/targetarchiveloader.o' '__targets/dependency.o' '__targets/targetarchive/targetarchivecompiler.o' '__targets/pathutils.o' '__targets/filein.o' '__targets/thread.o' '-lpthread' '__targets/targetarchive/taroptions.o' '__targets/command.o' '__targets/pipe.o' '__targets/writebuffer.o' '__targets/stdstream.o' '__targets/fileout.o' '__targets/strerror.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
+mkdir '__targets/targetcxx'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetcxx/targetcxxoptions.o' 'targetcxx/targetcxxoptions.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetcxx/targetcxxpptokenizer.o' 'targetcxx/targetcxxpptokenizer.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetcxx/targetcxxcompiler.o' 'targetcxx/targetcxxcompiler.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetcxx/targetcxxloader.o' 'targetcxx/targetcxxloader.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetcxx/targetcxxpkgconfig.o' 'targetcxx/targetcxxpkgconfig.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetcxx/targetcxx.o' 'targetcxx/targetcxx.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetcxx/targetcxxfactory.o' 'targetcxx/targetcxxfactory.cpp'
@@ -61,6 +69,7 @@ grep -v '^[[:space:]]*//@' 'errormessage.hpp' > '__targets/errormessage.hpp'
 grep -v '^[[:space:]]*//@' 'targetinclude.hpp' > '__targets/targetinclude.hpp'
 grep -v '^[[:space:]]*//@' 'targetdirunknown.hpp' > '__targets/targetdirunknown.hpp'
 grep -v '^[[:space:]]*//@' 'maike.hpp' > '__targets/maike.hpp'
+'g++' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/heredoctag' 'heredoctag.cpp'
 mkdir '__targets/targetpython'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetpython/targetpythoninterpreter.o' 'targetpython/targetpythoninterpreter.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetpython/targetpythonloader.o' 'targetpython/targetpythonloader.cpp'
@@ -68,14 +77,7 @@ mkdir '__targets/targetpython'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetpython/targetpythonfactory.o' 'targetpython/targetpythonfactory.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetpython/targetpythonhook.o' 'targetpython/targetpythonhook.cpp'
 'g++' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-shared' '-o' '__targets/targetpython.so' 'targetpython/targetpythonmain.cpp' '__targets/targetpython/targetpythonhook.o' '__targets/targetpython/targetpythonfactory.o' '__targets/targetpython/targetpython.o' '__targets/targetbase.o' '__targets/timedscope.o' '__targets/dependency.o' '__targets/pathutils.o' '__targets/targetpython/targetpythonloader.o' '__targets/filein.o' '__targets/targetpython/targetpythoninterpreter.o' '__targets/thread.o' '-lpthread' '__targets/command.o' '__targets/pipe.o' '__targets/writebuffer.o' '__targets/stdstream.o' '__targets/fileout.o' '__targets/strerror.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
-mkdir '__targets/targetarchive'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetarchive/targetarchivecompiler.o' 'targetarchive/targetarchivecompiler.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetarchive/targetarchiveloader.o' 'targetarchive/targetarchiveloader.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetarchive/targetarchive.o' 'targetarchive/targetarchive.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetarchive/targetarchivefactory.o' 'targetarchive/targetarchivefactory.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetarchive/targetarchivehook.o' 'targetarchive/targetarchivehook.cpp'
-'g++' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-shared' '-o' '__targets/targetarchive.so' 'targetarchive/targetarchivenmain.cpp' '__targets/targetarchive/targetarchivehook.o' '__targets/targetarchive/targetarchivefactory.o' '__targets/targetarchive/targetarchive.o' '__targets/targetbase.o' '__targets/timedscope.o' '__targets/dependency.o' '__targets/pathutils.o' '__targets/targetarchive/targetarchiveloader.o' '__targets/filein.o' '__targets/targetarchive/targetarchivecompiler.o' '__targets/thread.o' '-lpthread' '__targets/command.o' '__targets/pipe.o' '__targets/writebuffer.o' '__targets/stdstream.o' '__targets/fileout.o' '__targets/strerror.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
-cat << 'MAIKE_CONFIG' > '__targets/maikeconfig.json'
+cat << '+xk`BD+)I~>gu?*!4i+CBg<]9k~Q5C:{$nd/.P<W' > '__targets/maikeconfig.json'
 {
     "directoryoptions":{
         "paths_full_reject":[
@@ -223,6 +225,36 @@ cat << 'MAIKE_CONFIG' > '__targets/maikeconfig.json'
             ],
             "name":"pythondefault",
             "plugin":"targetpython"
+        },
+        {
+            "config":{
+                "tar":{
+                    "command":{
+                        "args":[
+                            "{target_strip}",
+                            "{root_append}",
+                            "{compressor}",
+                            "-cf",
+                            "{target}",
+                            "-T",
+                            "-"
+                        ],
+                        "name":"tar"
+                    },
+                    "compressors":{
+                        "bzip2":"-j",
+                        "gzip":"-z",
+                        "lzma":"-J"
+                    },
+                    "root_append":"--transform=s,\\\\(.*\\\\),^\\\\1,g",
+                    "target_strip":"--transform=s,\\^^,,g"
+                }
+            },
+            "filename_exts":[
+                ".archive"
+            ],
+            "name":"archivedefault",
+            "plugin":"targetarchive"
         }
     ],
     "targetinfo":{
@@ -322,7 +354,7 @@ cat << 'MAIKE_CONFIG' > '__targets/maikeconfig.json'
         "x86_64":1
     }
 }
-MAIKE_CONFIG
++xk`BD+)I~>gu?*!4i+CBg<]9k~Q5C:{$nd/.P<W
 grep -v '^[[:space:]]*//@' 'target.hpp' > '__targets/target.hpp'
 grep -v '^[[:space:]]*//@' 'pathutils.hpp' > '__targets/pathutils.hpp'
 grep -v '^[[:space:]]*//@' 'dependency.hpp' > '__targets/dependency.hpp'
@@ -351,6 +383,7 @@ grep -v '^[[:space:]]*//@' 'target_factory.hpp' > '__targets/target_factory.hpp'
 grep -v '^[[:space:]]*//@' 'target_loader.hpp' > '__targets/target_loader.hpp'
 grep -v '^[[:space:]]*//@' 'dependencygraph.hpp' > '__targets/dependencygraph.hpp'
 grep -v '^[[:space:]]*//@' 'libmaikeplug.cpp' > '__targets/maikeplug.hpp'
+'tar' '--transform=s,^__targets/,,g' '--transform=s,\(.*\),\1,g' '-z' '-cf' '__targets/targetarchive/test.tar.gz' '-T' '-'
 'ar' 'rcs' '__targets/libmaikeplug.a' '__targets/command.o' '__targets/thread.o' '__targets/fileutils.o' '__targets/directorylister.o' '__targets/pipe.o' '__targets/writebuffer.o' '__targets/stdstream.o' '__targets/fileout.o' '__targets/targetbase.o' '__targets/timedscope.o' '__targets/dependency.o' '__targets/pathutils.o' '__targets/filein.o' '__targets/strerror.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
 'g++' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/pathutils-test' 'pathutils-test.cpp' '__targets/pathutils.o' '__targets/filein.o' '__targets/strerror.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/options.o' 'options.cpp'

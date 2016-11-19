@@ -21,6 +21,7 @@
 #include "readbuffer.hpp"
 #include "pathutils.hpp"
 #include "directorylister.hpp"
+#include "heredoctag.hpp"
 
 #include <unistd.h>
 #include <fcntl.h>
@@ -314,9 +315,10 @@ void FileUtils::echo(const char* str,const char* filename)
 	//	Shell stuff
 		{
 		WriteBuffer wb(StdStream::output());
-		wb.write("cat << 'MAIKE_CONFIG' > ");
+		wb.write("cat << '").write(HEREDOC).write("' > ");
 		escape(wb,filename);
-		wb.write("\n").write(str).write("\nMAIKE_CONFIG\n");
+		wb.write("\n").write(str).write("\n").write(HEREDOC)
+			.write("\n");
 		}
 	
 		{
