@@ -39,7 +39,104 @@ mkdir '__targets/test2'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/fileinfo.o' 'fileinfo-linuxgnu.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/resourceobjectjansson.o' 'resourceobjectjansson.cpp'
 'g++' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/wand2maike' 'wand2maike.cpp' '__targets/resourceobjectjansson.o' '-ljansson' '__targets/fileinfo.o' '__targets/fileutils.o' '__targets/directorylister.o' '__targets/pathutils.o' '__targets/filein.o' '__targets/writebuffer.o' '__targets/stdstream.o' '__targets/fileout.o' '__targets/strerror.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
-'python3' '--' 'maikeinfo.py' '__targets' '.'
+'python3' '--' 'maikeinfo.py' '__targets' '.' << '+xk`BD+)I~>gu?*!4i+CBg<]9k~Q5C:{$nd/.P<W'
+{
+    "architecture":"x86_64",
+    "cpu_cache_alignment":64,
+    "cpu_cache_flushsize":64,
+    "cpu_cache_size":6144,
+    "cpu_vendor":"GenuineIntel",
+    "cpufeature_acpi":1,
+    "cpufeature_aes":1,
+    "cpufeature_aperfmperf":1,
+    "cpufeature_apic":1,
+    "cpufeature_arat":1,
+    "cpufeature_arch_perfmon":1,
+    "cpufeature_avx":1,
+    "cpufeature_bts":1,
+    "cpufeature_clflush":1,
+    "cpufeature_cmov":1,
+    "cpufeature_constant_tsc":1,
+    "cpufeature_cx16":1,
+    "cpufeature_cx8":1,
+    "cpufeature_de":1,
+    "cpufeature_ds_cpl":1,
+    "cpufeature_dtes64":1,
+    "cpufeature_dtherm":1,
+    "cpufeature_dts":1,
+    "cpufeature_eagerfpu":1,
+    "cpufeature_epb":1,
+    "cpufeature_ept":1,
+    "cpufeature_erms":1,
+    "cpufeature_est":1,
+    "cpufeature_f16c":1,
+    "cpufeature_flexpriority":1,
+    "cpufeature_fpu":1,
+    "cpufeature_fsgsbase":1,
+    "cpufeature_fxsr":1,
+    "cpufeature_ht":1,
+    "cpufeature_ida":1,
+    "cpufeature_lahf_lm":1,
+    "cpufeature_lm":1,
+    "cpufeature_mca":1,
+    "cpufeature_mce":1,
+    "cpufeature_mmx":1,
+    "cpufeature_monitor":1,
+    "cpufeature_msr":1,
+    "cpufeature_mtrr":1,
+    "cpufeature_nonstop_tsc":1,
+    "cpufeature_nopl":1,
+    "cpufeature_nx":1,
+    "cpufeature_pae":1,
+    "cpufeature_pat":1,
+    "cpufeature_pbe":1,
+    "cpufeature_pcid":1,
+    "cpufeature_pclmulqdq":1,
+    "cpufeature_pdcm":1,
+    "cpufeature_pebs":1,
+    "cpufeature_pge":1,
+    "cpufeature_pln":1,
+    "cpufeature_pni":1,
+    "cpufeature_popcnt":1,
+    "cpufeature_pse":1,
+    "cpufeature_pse36":1,
+    "cpufeature_pts":1,
+    "cpufeature_rdrand":1,
+    "cpufeature_rdtscp":1,
+    "cpufeature_rep_good":1,
+    "cpufeature_sep":1,
+    "cpufeature_smep":1,
+    "cpufeature_ss":1,
+    "cpufeature_sse":1,
+    "cpufeature_sse2":1,
+    "cpufeature_sse4_1":1,
+    "cpufeature_sse4_2":1,
+    "cpufeature_ssse3":1,
+    "cpufeature_syscall":1,
+    "cpufeature_tm":1,
+    "cpufeature_tm2":1,
+    "cpufeature_tpr_shadow":1,
+    "cpufeature_tsc":1,
+    "cpufeature_tsc_deadline_timer":1,
+    "cpufeature_vme":1,
+    "cpufeature_vmx":1,
+    "cpufeature_vnmi":1,
+    "cpufeature_vpid":1,
+    "cpufeature_xsave":1,
+    "cpufeature_xsaveopt":1,
+    "cpufeature_xtopology":1,
+    "cpufeature_xtpr":1,
+    "gnu":563048737669120,
+    "gnu_string":"2.23",
+    "linux":1125917086711808,
+    "linux_string":"4.4.0-47-lowlatency",
+    "nullfile":"/dev/null",
+    "posix":200809,
+    "target_directory":"__targets",
+    "wordsize":64,
+    "x86_64":1
+}
++xk`BD+)I~>gu?*!4i+CBg<]9k~Q5C:{$nd/.P<W
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/maikeinfo.o' '__targets/maikeinfo.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/versionnumber.o' 'versionnumber.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/sysvars.o' 'sysvars-linux.cpp'
@@ -383,7 +480,11 @@ grep -v '^[[:space:]]*//@' 'target_factory.hpp' > '__targets/target_factory.hpp'
 grep -v '^[[:space:]]*//@' 'target_loader.hpp' > '__targets/target_loader.hpp'
 grep -v '^[[:space:]]*//@' 'dependencygraph.hpp' > '__targets/dependencygraph.hpp'
 grep -v '^[[:space:]]*//@' 'libmaikeplug.cpp' > '__targets/maikeplug.hpp'
-'tar' '--transform=s,^__targets/,,g' '--transform=s,\(.*\),\1,g' '-z' '-cf' '__targets/targetarchive/test.tar.gz' '-T' '-'
+'tar' '--transform=s,^__targets/,,g' '--transform=s,\(.*\),\1,g' '-z' '-cf' '__targets/targetarchive/test.tar.gz' '-T' '-' << '+xk`BD+)I~>gu?*!4i+CBg<]9k~Q5C:{$nd/.P<W'
+__targets/targetarchive.so
+targetarchive/sample.archive
+
++xk`BD+)I~>gu?*!4i+CBg<]9k~Q5C:{$nd/.P<W
 'ar' 'rcs' '__targets/libmaikeplug.a' '__targets/command.o' '__targets/thread.o' '__targets/fileutils.o' '__targets/directorylister.o' '__targets/pipe.o' '__targets/writebuffer.o' '__targets/stdstream.o' '__targets/fileout.o' '__targets/targetbase.o' '__targets/timedscope.o' '__targets/dependency.o' '__targets/pathutils.o' '__targets/filein.o' '__targets/strerror.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
 'g++' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/pathutils-test' 'pathutils-test.cpp' '__targets/pathutils.o' '__targets/filein.o' '__targets/strerror.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/options.o' 'options.cpp'

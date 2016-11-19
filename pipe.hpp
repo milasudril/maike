@@ -93,13 +93,14 @@ namespace Maike
 
 					size_t write(const void* buffer, size_t n);
 
-					void init(intptr_t handle) noexcept
-						{m_handle=handle;}
+					void init(intptr_t handle,bool echo) noexcept
+						{m_handle=handle; m_echo=echo;}
 
 					void close() noexcept;
 
 				private:
 					intptr_t m_handle;
+					bool m_echo;
 					void destroy() noexcept
 						{close();}
 				};

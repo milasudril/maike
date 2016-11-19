@@ -12,6 +12,7 @@
 #include "strerror.hpp"
 #include "stdstream.hpp"
 #include "writebuffer.hpp"
+#include "heredoctag.hpp"
 
 #include <errno.h>
 #include <unistd.h>
@@ -194,14 +195,21 @@ static void sigpipeSetFilter()
 	sigaction(SIGPIPE,&sa,&sa_old);
 	}
 
-static void commandLinePrint(const char* const* cmdline)
+static void commandLinePrint(const char* const* cmdline,bool use_stdin)
 	{
 	WriteBuffer wb(StdStream::output());
 	while(*cmdline!=nullptr)
 		{
 		escape(wb,*cmdline);
 		++cmdline;
-		wb.write(*cmdline==nullptr?"\n":" ");
+		if(*cmdline==nullptr)
+			{
+			if(use_stdin)
+				{wb.write(" << '").write(HEREDOC).write("'");}
+			wb.write("\n");
+			}
+		else
+			{wb.write(" ");}
 		}
 	}
 
@@ -227,7 +235,7 @@ Pipe::Pipe(const char* command,Twins<const char* const*> args
 
 	auto args_out=commandLineBuild(command,args);
 	if(!(flags&ECHO_OFF))
-		{commandLinePrint(args_out.data());}
+		{commandLinePrint(args_out.data(),flags&REDIRECT_STDIN);}
 
 	ChildProcess child;
 	if(child.pidGet()==0)
@@ -262,7 +270,7 @@ Pipe::Pipe(const char* command,Twins<const char* const*> args
 		}
 
 	if(flags&REDIRECT_STDIN)
-		{m_stdin.init(stdin_pipe.writeEndRelease());}
+		{m_stdin.init(stdin_pipe.writeEndRelease(),!(flags&ECHO_OFF));}
 
 	if(flags&REDIRECT_STDOUT)
 		{m_stdout.init(stdout_pipe.readEndRelease());}
@@ -352,14 +360,14 @@ const char* Pipe::Reader::nameGet() const noexcept
 
 
 
-Pipe::Writer::Writer():m_handle(-1)
+Pipe::Writer::Writer():m_handle(-1),m_echo(0)
 	{}
 
 Pipe::Writer::~Writer() noexcept
 	{close();}
 
 Pipe::Writer::Writer(Writer&& writer) noexcept:
-	m_handle(writer.m_handle)
+	m_handle(writer.m_handle),m_echo(writer.m_echo)
 	{
 	writer.m_handle=-1;
 	}
@@ -367,6 +375,7 @@ Pipe::Writer::Writer(Writer&& writer) noexcept:
 Pipe::Writer& Pipe::Writer::operator=(Writer&& writer) noexcept
 	{
 	std::swap(writer.m_handle,m_handle);
+	m_echo=writer.m_echo;
 	return *this;
 	}
 
@@ -374,6 +383,11 @@ void Pipe::Writer::close() noexcept
 	{
 	if(m_handle!=-1)
 		{
+		if(m_echo)
+			{
+			WriteBuffer wb(StdStream::output());
+			wb.write("\n").write(HEREDOC).write("\n");
+			}
 		::close(static_cast<int>(m_handle));
 		m_handle=-1;
 		}
@@ -385,6 +399,7 @@ size_t Pipe::Writer::write(const void* buffer, size_t count)
 		{return 0;}
 	auto bytes=reinterpret_cast<const uint8_t*>(buffer);
 	size_t n=0;
+	StdStream::output().write(buffer,count);
 	while(n!=count)
 		{
 		auto res=::write(static_cast<int>(m_handle),bytes,count - n);
