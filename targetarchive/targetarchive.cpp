@@ -138,7 +138,7 @@ void TargetArchive::compileImpl(Twins<const Dependency*> dependency_list
 			r_compiler.tar(range,nameGet(),target_dir,rootGet(),compressionGet());
 			break;
 		case Type::ZIP:
-		//	r_compiler.zip(range,nameGet(),target_dir,rootGet());
+			r_compiler.zip(range,nameGet(),target_dir,rootGet());
 			break;
 		}
 	}

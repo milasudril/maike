@@ -88,9 +88,9 @@ PRIVATE std::string Maike::directoryNormalize(const char* str)
 	return std::string(".");
 	}
 
-PRIVATE std::string Maike::rootStrip(const std::string& path,const char* root)
+PRIVATE std::string Maike::rootStrip(const char* path,const char* root)
 	{
-	auto ptr=path.data();
+	auto ptr=path;
 	auto ch_root_prev='/';
 	std::string ret;
 	while(true)

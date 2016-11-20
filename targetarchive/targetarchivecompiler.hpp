@@ -7,6 +7,7 @@
 #define MAIKE_TARGETARCHIVECOMPILER_HPP
 
 #include "taroptions.hpp"
+#include "zipoptions.hpp"
 
 namespace Maike
 	{
@@ -39,6 +40,7 @@ namespace Maike
 
 		private:
 			Taroptions m_tar;
+			Zipoptions m_zip;
 			const ParameterSetDumpable& r_sysvars;
 		};
 	}

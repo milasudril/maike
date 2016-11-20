@@ -11,20 +11,34 @@ mkdir '__targets/targetarchive'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/pipe.o' 'pipe-posix.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/command.o' 'command.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetarchive/taroptions.o' 'targetarchive/taroptions.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetarchive/zipoptions.o' 'targetarchive/zipoptions.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/thread.o' 'thread-posix.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/filein.o' 'filein-posix.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/pathutils.o' 'pathutils-linux.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/directorylister.o' 'directorylister-linuxgnu.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/fileutils.o' 'fileutils-linuxgnu.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetarchive/targetarchivecompiler.o' 'targetarchive/targetarchivecompiler.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/dependency.o' 'dependency.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetarchive/targetarchiveloader.o' 'targetarchive/targetarchiveloader.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/timedscope.o' 'timedscope-linux.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetbase.o' 'targetbase.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/directorylister.o' 'directorylister-linuxgnu.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/fileutils.o' 'fileutils-linuxgnu.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetarchive/targetarchive.o' 'targetarchive/targetarchive.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetarchive/targetarchivefactory.o' 'targetarchive/targetarchivefactory.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetarchive/targetarchivehook.o' 'targetarchive/targetarchivehook.cpp'
-'g++' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-shared' '-o' '__targets/targetarchive.so' 'targetarchive/targetarchivenmain.cpp' '__targets/targetarchive/targetarchivehook.o' '__targets/targetarchive/targetarchivefactory.o' '__targets/targetarchive/targetarchive.o' '__targets/fileutils.o' '__targets/directorylister.o' '__targets/targetbase.o' '__targets/timedscope.o' '__targets/targetarchive/targetarchiveloader.o' '__targets/dependency.o' '__targets/targetarchive/targetarchivecompiler.o' '__targets/pathutils.o' '__targets/filein.o' '__targets/thread.o' '-lpthread' '__targets/targetarchive/taroptions.o' '__targets/command.o' '__targets/pipe.o' '__targets/writebuffer.o' '__targets/stdstream.o' '__targets/fileout.o' '__targets/strerror.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
+'g++' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-shared' '-o' '__targets/targetarchive.so' 'targetarchive/targetarchivenmain.cpp' '__targets/targetarchive/targetarchivehook.o' '__targets/targetarchive/targetarchivefactory.o' '__targets/targetarchive/targetarchive.o' '__targets/targetbase.o' '__targets/timedscope.o' '__targets/targetarchive/targetarchiveloader.o' '__targets/dependency.o' '__targets/targetarchive/targetarchivecompiler.o' '__targets/fileutils.o' '__targets/directorylister.o' '__targets/pathutils.o' '__targets/filein.o' '__targets/thread.o' '-lpthread' '__targets/targetarchive/zipoptions.o' '__targets/targetarchive/taroptions.o' '__targets/command.o' '__targets/pipe.o' '__targets/writebuffer.o' '__targets/stdstream.o' '__targets/fileout.o' '__targets/strerror.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
+'zip' '-@' '__targets/targetarchive/test.zip' << '+xk`BD+)I~>gu?*!4i+CBg<]9k~Q5C:{$nd/.P<W'
+__targets/targetarchive.so
+targetarchive/sample.archive
+
++xk`BD+)I~>gu?*!4i+CBg<]9k~Q5C:{$nd/.P<W
+'zipnote' '-w' '__targets/targetarchive/test.zip' << '+xk`BD+)I~>gu?*!4i+CBg<]9k~Q5C:{$nd/.P<W'
+@ __targets/targetarchive.so
+@=test/targetarchive.so
+@ ()
+@ targetarchive/sample.archive
+@=test/targetarchive/sample.archive
+@ ()
++xk`BD+)I~>gu?*!4i+CBg<]9k~Q5C:{$nd/.P<W
 mkdir '__targets/targetcxx'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetcxx/targetcxxoptions.o' 'targetcxx/targetcxxoptions.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Woverflow' '-Wconversion' '-Werror' '-o' '__targets/targetcxx/targetcxxpptokenizer.o' 'targetcxx/targetcxxpptokenizer.cpp'
@@ -345,6 +359,22 @@ cat << '+xk`BD+)I~>gu?*!4i+CBg<]9k~Q5C:{$nd/.P<W' > '__targets/maikeconfig.json'
                     },
                     "root_append":"--transform=s,\\\\(.*\\\\),^\\\\1,g",
                     "target_strip":"--transform=s,\\^^,,g"
+                },
+                "zip":{
+                    "create":{
+                        "args":[
+                            "-@",
+                            "{target}"
+                        ],
+                        "name":"zip"
+                    },
+                    "rename":{
+                        "args":[
+                            "-w",
+                            "{target}"
+                        ],
+                        "name":"zipnote"
+                    }
                 }
             },
             "filename_exts":[

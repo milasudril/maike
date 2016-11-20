@@ -160,7 +160,25 @@
                     },
                     "root_append":"--transform=s,\\\\(.*\\\\),^\\\\1,g",
                     "target_strip":"--transform=s,\\^^,,g"
-                }
+                },
+				"zip":
+					{
+			        "create":{
+                        "args":[
+                            "-@",
+                            "{target}"
+                        ],
+                        "name":"zip"
+                    },
+                    "rename":{
+                        "args":[
+                            "-w",
+                            "{target}"
+                        ],
+                        "name":"zipnote"
+                    }
+		
+				}
             },
             "filename_exts":[
                 ".archive"

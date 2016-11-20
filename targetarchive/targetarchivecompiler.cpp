@@ -12,6 +12,7 @@
 #include "../stdstream.hpp"
 #include "../writebuffer.hpp"
 #include "../pathutils.hpp"
+#include "../fileutils.hpp"
 
 using namespace Maike;
 
@@ -53,13 +54,34 @@ namespace
 static void dataProcess(Pipe& compiler,Twins<const char* const*> files)
 	{
 	auto standard_error=compiler.stderrCapture();
+	auto standard_output=compiler.stdoutCapture();
 	Thread<ReadCallback> stderr_reader(ReadCallback{standard_error.get()});
 	auto standard_input=compiler.stdinCapture();
 	WriteBuffer wb(*standard_input.get());
 	while(files.first!=files.second)
 		{
-		wb.write(*files.first).write(static_cast<uint8_t>('\n'));
+		wb.write(*files.first).write("\n");
 		++files.first;
+		}
+	}
+
+static void dataProcess(Pipe& compiler,Twins<const char* const*> files
+	,const char* in_dir,const char* root)
+	{
+	auto standard_error=compiler.stderrCapture();
+	auto standard_output=compiler.stdoutCapture();
+	Thread<ReadCallback> stderr_reader(ReadCallback{standard_error.get()});
+	auto standard_input=compiler.stdinCapture();
+	WriteBuffer wb(*standard_input.get());
+	while(files.first!=files.second)
+		{
+		wb.write("@ ").write(*files.first).write("\n");
+		auto name_new=dircat(root,rootStrip(*files.first,in_dir));
+		wb.write("@=").write(name_new.c_str()).write("\n")
+			.write("@ ()");
+		++files.first;
+		if(files.first!=files.second)
+			{wb.write("\n");}
 		}
 	}
 
@@ -129,7 +151,8 @@ int TargetArchiveCompiler::tar(Twins<const char* const*> files,const char* name
 		.push_back(placeholderSubstitute(m_tar.rootAppendGet(),root_temp.c_str()));
 
 	const ParameterSet* paramset_tot[]={&r_sysvars,&params};
-	auto pipe=m_tar.commandGet().execute(Pipe::REDIRECT_STDERR|Pipe::REDIRECT_STDIN
+	auto pipe=m_tar.commandGet().execute(
+		 Pipe::REDIRECT_STDERR|Pipe::REDIRECT_STDIN|Pipe::REDIRECT_STDOUT
 		,{paramset_tot,paramset_tot + 2});
 
 	dataProcess(pipe,files);
@@ -143,6 +166,46 @@ int TargetArchiveCompiler::tar(Twins<const char* const*> files,const char* name
 	return 0;
 	}
 
+int TargetArchiveCompiler::zip(Twins<const char* const*> files,const char* name
+	,const char* target_dir,const char* root) const
+	{
+	ParameterSetMapFixed<Stringkey("target")> params;
+	params.get<Stringkey("target")>().push_back(dircat(target_dir,name));
+
+	FileUtils::remove(params.get<Stringkey("target")>().front().c_str());
+	
+	const ParameterSet* paramset_tot[]={&r_sysvars,&params};
+		{
+		auto pipe=m_zip.createGet().execute(
+			 Pipe::REDIRECT_STDERR|Pipe::REDIRECT_STDIN|Pipe::REDIRECT_STDOUT
+			,{paramset_tot,paramset_tot + 2});
+
+		dataProcess(pipe,files);
+		auto ret=pipe.exitStatusGet();
+		if(ret!=0)
+			{
+			exceptionRaise(ErrorMessage("It was not possible to create #0;. The archiver returned status code #0;"
+				,{name,ret}));
+			}
+		}
+		{
+		auto pipe=m_zip.renameGet().execute(
+			 Pipe::REDIRECT_STDERR|Pipe::REDIRECT_STDIN|Pipe::REDIRECT_STDOUT
+			,{paramset_tot,paramset_tot + 2});
+		
+		dataProcess(pipe,files,target_dir,root);
+		auto ret=pipe.exitStatusGet();
+		if(ret!=0)
+			{
+			FileUtils::remove(params.get<Stringkey("target")>().front().c_str());
+			exceptionRaise(ErrorMessage("It was not possible to create #0;. The archiver returned status code #0;"
+				,{name,ret}));
+			}
+		}
+
+	return 0;
+	}
+
 void TargetArchiveCompiler::configClear()
 	{
 	m_tar.configClear();
@@ -151,6 +214,7 @@ void TargetArchiveCompiler::configClear()
 TargetArchiveCompiler& TargetArchiveCompiler::configAppendDefault()
 	{
 	m_tar.configAppendDefault();
+	m_zip.configAppendDefault();
 	return *this;
 	}
 
@@ -159,12 +223,23 @@ TargetArchiveCompiler& TargetArchiveCompiler::configAppend(const ResourceObject&
 	{
 	if(archiveoptions.objectExists("tar"))
 		{m_tar=Taroptions(archiveoptions.objectGet("tar"));}
+	if(archiveoptions.objectExists("zip"))
+		{m_zip=Zipoptions(archiveoptions.objectGet("zip"));}
 	return *this;
 	}
 
 void TargetArchiveCompiler::configDump(ResourceObject& archiveoptions) const
 	{
-	auto tar=archiveoptions.createObject();
-	m_tar.configDump(tar);
-	archiveoptions.objectSet("tar",std::move(tar));
+		{
+		auto tar=archiveoptions.createObject();
+		m_tar.configDump(tar);
+		archiveoptions.objectSet("tar",std::move(tar));
+		}
+
+		{
+		auto zip=archiveoptions.createObject();
+		m_zip.configDump(zip);
+		archiveoptions.objectSet("zip",std::move(zip));
+		}
+
 	}

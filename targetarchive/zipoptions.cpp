@@ -18,7 +18,7 @@ Zipoptions& Zipoptions::configAppend(const ResourceObject& options)
 		{m_create=Command(options.objectGet("create"));}
 
 	if(options.objectExists("rename"))
-		{m_create=Command(options.objectGet("rename"));}
+		{m_rename=Command(options.objectGet("rename"));}
 
 	return *this;
 	}
@@ -41,7 +41,7 @@ void Zipoptions::configDump(ResourceObject& options) const
 		{
 		auto create=options.createObject();
 		m_create.configDump(create);
-		create.objectSet("command",std::move(create));
+		options.objectSet("create",std::move(create));
 		}
 
 		{
