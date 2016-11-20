@@ -51,7 +51,8 @@ TargetBase::TargetBase(const char* name,const char* name_src,const char* in_dir,
 void TargetBase::dump(ResourceObject& target) const
 	{
 	target.objectSet("name",target.create(m_name.c_str()))
-		.objectSet("source",target.create(m_source_name.c_str()));
+		.objectSet("source",target.create(m_source_name.c_str()))
+		.objectSet("description",target.create(m_description.c_str()));
 	auto dependency_array=target.createArray();
 	auto deps=dependencies();
 	while(deps.first!=deps.second)
