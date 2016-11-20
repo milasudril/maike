@@ -8,6 +8,7 @@
 #include "../variant.hpp"
 #include "../exceptionhandler.hpp"
 #include "../fileutils.hpp"
+#include <cstring>
 
 using namespace Maike;
 
@@ -35,6 +36,12 @@ static const char* type(TargetArchive::Type type)
 	return nullptr;
 	}
 
+static Dependency::Relation dependencyRelation(const char* str)
+	{
+	return strcmp(str,"target")?Dependency::Relation::FILE
+		:Dependency::Relation::GENERATED;
+	}
+
 TargetArchive::TargetArchive(const ResourceObject& obj
 	,const TargetArchiveCompiler& compiler,const char* name_src
 	,const char* in_dir,const char* root,size_t id,size_t line_count):
@@ -46,6 +53,24 @@ TargetArchive::TargetArchive(const ResourceObject& obj
 		{m_compression=std::string(static_cast<const char*>( obj.objectGet("compressor") ));}
 	if(obj.objectExists("root"))
 		{m_root=std::string(static_cast<const char*>(obj.objectGet("root")));}
+
+	if(obj.objectExists("contents"))
+		{	
+		auto contents=obj.objectGet("contents");
+		if(contents.typeGet()==ResourceObject::Type::ARRAY)
+			{
+			auto N=contents.objectCountGet();
+			for(decltype(N) n=0;n<N;++n)
+				{
+				auto obj=contents.objectGet(n);
+				auto from=static_cast<const char*>(obj.objectGet("from"));
+				auto file=static_cast<const char*>(obj.objectGet("file"));
+				auto filename_full=dircat(in_dir,file);
+				dependencyAdd(Dependency(filename_full.c_str(),root
+					,dependencyRelation(from)));
+				}
+			}
+		}
 	}
 
 void TargetArchive::dumpDetails(ResourceObject& target) const
