@@ -5,7 +5,7 @@
 #@			,{
 #@			 "name":"maikeinfo.o","type":"object","source_name":"maikeinfo.cpp"
 #@			,"source_generated":1
-#@			,"dependencies":[{"ref":"maikeinfo.hpp","rel":"file"}]
+#@			,"dependencies":[{"ref":"maikeinfo.hpp","rel":"include"}]
 #@			}
 #@		]
 #@	}
@@ -47,8 +47,6 @@ const char* Info::TIMESTAMP="$now";
 ''')
 
 try:
-#	sysvars=json.load(sys.stdin) Cannot be used, since we must be able to compile
-#	Maike through a simple shell script :-(
 	filename_out=sys.argv[1]+'/maikeinfo.cpp'
 	keys=dict()
 	keys['scriptname']=sys.argv[0]

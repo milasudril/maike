@@ -54,8 +54,6 @@ static void dataProcess(Pipe& interpreter,const ParameterSetDumpable& sysvars)
 	{
 	auto standard_error=interpreter.stderrCapture();
 	Thread<ReadCallback> stderr_reader(ReadCallback{standard_error.get()});
-	auto standard_input=interpreter.stdinCapture();
-	sysvars.configDump().write(*standard_input.get());
 	}
 
 int TargetPythonInterpreter::run(const char* script,Twins<const char* const*> args) const
@@ -69,8 +67,7 @@ int TargetPythonInterpreter::run(const char* script,Twins<const char* const*> ar
 		}
 
 	const ParameterSet* paramset_tot[]={&r_sysvars,&params};
-	auto pipe=m_interpreter.execute(Pipe::REDIRECT_STDERR|Pipe::REDIRECT_STDIN
-		,{paramset_tot,paramset_tot + 2});
+	auto pipe=m_interpreter.execute(Pipe::REDIRECT_STDERR,{paramset_tot,paramset_tot + 2});
 
 	dataProcess(pipe,r_sysvars);
 
