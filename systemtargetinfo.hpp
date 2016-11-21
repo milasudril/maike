@@ -8,14 +8,15 @@
 
 #include "parametersetdumpable.hpp"
 #include "visibility.hpp"
+#include "mapreplace.hpp"
+#include "variant.hpp"
+#include "stringkey.hpp"
 #include <string>
 #include <map>
 #include <vector>
 
 namespace Maike
 	{
-	class Variant;
-
 	class PRIVATE SystemTargetInfo:public ParameterSetDumpable
 		{
 		public:
@@ -26,6 +27,16 @@ namespace Maike
 				,ParameterProcessor&& proc) const;
 
 			Variant variableGet(const Stringkey& key) const noexcept;
+
+			void variableSet(const Stringkey& key,const char* str)
+				{
+				auto i=replace(m_strings,{key,std::string(str)});
+				replace(m_sysvars,{key,Variant(i->second.c_str())});
+				}
+
+			template<class T>
+			void variableSet(const Stringkey& key,const T& value)
+				{replace(m_sysvars,{key,Variant(value)});}
 
 			void clear();
 
@@ -41,6 +52,7 @@ namespace Maike
 			std::map<Stringkey,std::string> m_strings;
 			std::map<Stringkey,std::string> m_varnames;
 		};
+
 	}
 
 #endif // MAIKE_SYSTEMINFO_HPP

@@ -3,10 +3,7 @@
 #include "systemtargetinfo.hpp"
 #include "resourceobjectjansson.hpp"
 #include "sysvars.hpp"
-#include "stringkey.hpp"
-#include "variant.hpp"
 #include "stringformat.hpp"
-#include "mapreplace.hpp"
 
 using namespace Maike;
 
