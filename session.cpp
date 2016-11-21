@@ -128,7 +128,7 @@ void Session::configDump(ResourceObject& maikeconfig) const
 Session& Session::rootSet(const char* root)
 	{
 	m_delegator.rootSet(root);
-	m_targetinfo.variableSet(Stringkey("project_root"),root);
+	m_targetinfo.variableSet("project_root",root);
 	m_target_dir_full=dircat(root
 		,static_cast<const char*>(m_targetinfo.variableGet(Stringkey("target_directory"))));
 //	TODO: m_targetinfo.variableSet(Stringkey("target_directory_full"),m_targetdir_full.c_str())

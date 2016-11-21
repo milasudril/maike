@@ -28,15 +28,21 @@ namespace Maike
 
 			Variant variableGet(const Stringkey& key) const noexcept;
 
-			void variableSet(const Stringkey& key,const char* str)
+			void variableSet(const char* key,const char* str)
 				{
-				auto i=replace(m_strings,{key,std::string(str)});
-				replace(m_sysvars,{key,Variant(i->second.c_str())});
+				auto key_hash=Stringkey(key);
+				m_varnames[key_hash]=std::string(key);
+				auto i=replace(m_strings,{key_hash,std::string(str)});
+				replace(m_sysvars,{key_hash,Variant(i->second.c_str())});
 				}
 
 			template<class T>
-			void variableSet(const Stringkey& key,const T& value)
-				{replace(m_sysvars,{key,Variant(value)});}
+			void variableSet(const char* key,const T& value)
+				{
+				auto key_hash=Stringkey(key);
+				m_varnames[key_hash]=std::string(key);
+				replace(m_sysvars,{key_hash,Variant(value)});
+				}
 
 			void clear();
 
@@ -56,3 +62,4 @@ namespace Maike
 	}
 
 #endif // MAIKE_SYSTEMINFO_HPP
+
