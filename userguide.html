@@ -14,8 +14,9 @@
 <nav>
 <ul>
 <li><a href="#projcreate">Creating a project</a></li>
-<li><a href="#targetdefscxx">Target definitions for C++ files</a></li>
-<li><a href="#pythongen">Using Python scripts as code generator</a></li>
+<li><a href="#targetcxx">Target definitions for C++ files</a></li>
+<li><a href="#targetpython">Using Python scripts as code generators</a></li>
+<li><a href="#archives">Generating archives</a></li>
 <li><a href="#cmdlinetools">Managing a project</a></li>
 <li><a href="#cmdlineall">Command line options</a></li>
 </ul></nav><p>Maike is a build system based on scanning of source files. To construct the dependency graph, Maike uses embedded JSON data to control the compilation process.</p>
@@ -98,7 +99,7 @@ int main()
 <pre><code>__targets/hello
 </code></pre>
 </section><section>
-<h2 id="targetdefs">An overview of the different forms of target definitions</h2>
+<h2 id="targetcxx">Target definitions for C++ files</h2>
 
 <p>Due to the self-hosting nature of Maike, a good reference on how to write various kinds of target defintions is the Maike source code. This introduction aims to explain common kinds of target defintions and their usecases.</p>
 
@@ -345,7 +346,7 @@ int main(int argc,char** argv)
 ...
 </code></pre>
 
-<h2>Using Python scripts as code generator</h2>
+<h2 id="targetpython">Using Python scripts as code generators</h2>
 
 <p>It is possible to insert Python scripts into the dependency graph. These scripts will be executed during the compilation process, and may produce arbitrary output. Such scripts can be used to dynamically capture version tag information from <code>git</code>.</p>
 
@@ -421,7 +422,7 @@ except:
 
 <p>The macro uses two another macros, <code>MAIKE_TARGET_DIRECTORY</code> and <code>MAIKE_CURRENT_DIRECTORY</code>, which are defined by the default compiler command line. If these macros are not defined before using the <code>MAIKE_TARGET</code>, an error is generated. Also notice that the macro requires that the option <code>-iquoate.</code> is used. This is also ensured when using the default options.</p>
 </section><section>
-<h2>Generating archives</h2>
+<h2 id="archives">Generating archives</h2>
 <p>The archive hook allows for copying files into file archives. The name and contents of the archive is written as JSON data, stored with the filename suffix <code>.archive</code>.</p>
 <pre><code>
 {
