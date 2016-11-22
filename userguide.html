@@ -14,7 +14,8 @@
 <nav>
 <ul>
 <li><a href="#projcreate">Creating a project</a></li>
-<li><a href="#targetdefs">Target definitions</a></li>
+<li><a href="#targetdefscxx">Target definitions for C++ files</a></li>
+<li><a href="#pythongen">Using Python scripts as code generator</a></li>
 <li><a href="#cmdlinetools">Managing a project</a></li>
 <li><a href="#cmdlineall">Command line options</a></li>
 </ul></nav><p>Maike is a build system based on scanning of source files. To construct the dependency graph, Maike uses embedded JSON data to control the compilation process.</p>
@@ -328,7 +329,23 @@ int main(int argc,char** argv)
 
 <p>In this case, the first definition, whose condition evaluates to a non-zero value will be choosen. The condition is evaluated by using the variables set under the key <code>targetinfo</code> found in the configuration file. Normally, Maike examines the characteristics of the host system and sets these variables. This can be prevented by supplying the option <code>--no-sysvars</code> to Maike. This feature can be used when running a cross-compiler. Notice that when <code>--no-sysvars</code> is in effect, it is likely that you want to specify custom system variables in your configuration file.</p>
 
-<h3>Using Python scripts as code generator</h3>
+<h3>Per-target compiler options</h3>
+
+<p>In addition to global compiler options, it is possible to use additional options for different targets. For a C++ target, the attribute <code>cxxoptions</code> is added to the target definition. Example:</p>
+
+<pre><code>//@ {
+//@ "targets":
+//@     [{
+//@     "name":"fast_computation.o","type":"object"
+//@     ,"cxxoptions":
+//@         {"cflags_extra":["ffast-math"]}
+//@     }]
+//@ }
+
+...
+</code></pre>
+
+<h2>Using Python scripts as code generator</h2>
 
 <p>It is possible to insert Python scripts into the dependency graph. These scripts will be executed during the compilation process, and may produce arbitrary output. Such scripts can be used to dynamically capture version tag information from <code>git</code>.</p>
 
@@ -402,25 +419,26 @@ except:
 <pre><code>#include &lt;makie/targetinclude.hpp&gt; //Needed for the MAIKE_TARGET macro
 #include MAIKE_TARGET(your_generated_file)</code></pre>
 
-<p>The macro uses another macro, <code>MAIKE_TARGET_DIRECTORY</code>, which is defined by the default compiler command line. If the macro is not defined before using the macro, an error is generated.</p>
+<p>The macro uses two another macros, <code>MAIKE_TARGET_DIRECTORY</code> and <code>MAIKE_CURRENT_DIRECTORY</code>, which are defined by the default compiler command line. If these macros are not defined before using the <code>MAIKE_TARGET</code>, an error is generated. Also notice that the macro requires that the option <code>-iquoate.</code> is used. This is also ensured when using the default options.</p>
+</section><section>
+<h2>Generating archives</h2>
+<p>The archive hook allows for copying files into file archives. The name and contents of the archive is written as JSON data, stored with the filename suffix <code>.archive</code>.</p>
+<pre><code>
+{
+"targets":
+	[
+	 {"name":"test.tar.gz","type":"tar","compressor":"gzip"}
+	,{"name":"test.zip","type":"zip","root":"test"}
+	]
 
-
-
-<h3>Per-target compiler options</h3>
-
-<p>In addition to global compiler options, it is possible to use additional options for different targets. For a C++ target, the attribute <code>cxxoptions</code> is added to the target definition. Example:</p>
-
-<pre><code>//@ {
-//@ "targets":
-//@     [{
-//@     "name":"fast_computation.o","type":"object"
-//@     ,"cxxoptions":
-//@         {"cflags_extra":["ffast-math"]}
-//@     }]
-//@ }
-
-...
+,"contents":
+	[
+	 {"from":"source","file":"sample.archive"}
+	,{"from":"target","file":"../targetarchive.so"}
+	]
+}
 </code></pre>
+<p>If the <code>from</code> key is set to <code>source</code>, then the file will be taken as a source file. The value <code>target</code> indicates that the file is a target.</p>
 </section><section>
 
 <h2 id="cmdlinetools">Managing a project</h2>
