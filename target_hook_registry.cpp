@@ -50,6 +50,29 @@ Target_Hook_Registry::HookInfo& Target_Hook_Registry::hookCreate(const char* nam
 	return i->second;
 	}
 
+Target_Hook_Registry& Target_Hook_Registry::hookRegister(const char* name_plugin
+	,Twins<const char* const*> filename_exts)
+	{
+	auto hook_name=std::string(name_plugin);
+	hook_name+="default";
+	size_t counter=0;
+	while(m_hooks.find(Stringkey(hook_name.c_str()))!=m_hooks.end())
+		{
+		hook_name=std::string(name_plugin);
+		hook_name+=std::to_string(counter);
+		++counter;
+		}
+	auto& hook_info=hookCreate(hook_name.c_str(),name_plugin);
+	while(filename_exts.first!=filename_exts.second)
+		{
+		r_filenameext_hook[Stringkey(*filename_exts.first)]=hook_info.hook.get();
+		++filename_exts.first;
+		}
+	hook_info.hook->configAppendDefault();
+	return *this;
+	}
+
+
 Target_Hook_Registry& Target_Hook_Registry::configAppend(const ResourceObject& targethooks)
 	{
 	auto N=targethooks.objectCountGet();

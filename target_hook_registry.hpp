@@ -9,6 +9,7 @@
 #include "visibility.hpp"
 #include "handle.hpp"
 #include "target_hook.hpp"
+#include "twins.hpp"
 #include <map>
 #include <set>
 #include <string>
@@ -30,6 +31,8 @@ namespace Maike
 			Target_Hook_Registry& configAppendDefault();
 			void configDump(ResourceObject& targethooks) const;
 			void configClear();
+			Target_Hook_Registry& hookRegister(const char* name_plugin
+				,Twins<const char* const*> filename_exts);
 
 			class PRIVATE EnumCallbackFilenameExt
 				{
