@@ -10,7 +10,7 @@ TargetPython::TargetPython(const ResourceObject& obj
 	,const TargetPythonInterpreter& intpret,const char* name_src
 	,const char* in_dir,const char* root,size_t id,size_t line_count):
 	TargetBase(obj,name_src,in_dir,root,id,line_count)
-	,r_intpret(intpret),m_status(1)
+	,r_intpret(intpret),m_root(root),m_status(1)
 	{
 	if(obj.objectExists("args"))
 		{
@@ -38,9 +38,12 @@ void TargetPython::compileImpl(Twins<const Dependency*> dependency_list
 	,Twins<const Dependency*> dependency_list_full
 	,const char* target_dir)
 	{
+	auto in_dir=dircat(m_root,inDirGet());
+	auto cfg=dircat(target_dir,"maikeconfig.json");
 	std::vector<const char*> args;
 	args.push_back(target_dir);
-	args.push_back(inDirGet());
+	args.push_back(in_dir.c_str());
+	args.push_back(cfg.c_str());
 	auto i=m_args.data();
 	auto i_end=i+m_args.size();
 	while(i!=i_end)
@@ -48,7 +51,6 @@ void TargetPython::compileImpl(Twins<const Dependency*> dependency_list
 		args.push_back(i->c_str());
 		++i;
 		}
-
 	m_status=r_intpret.run(sourceNameGet(),{args.data(),args.data() + args.size()});
 	}
 

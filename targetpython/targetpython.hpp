@@ -51,6 +51,7 @@ namespace Maike
 			~TargetPython() noexcept;
 
 			std::vector<std::string> m_args;
+			std::string m_root;
 			int m_status;
 		};
 	}
