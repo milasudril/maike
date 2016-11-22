@@ -1,9 +1,10 @@
 {
     "directoryoptions":{
-        "paths_full_reject":[
-			"doc",
-            "test",
-			"gh-pages",
+        "paths_full_reject":[],
+        "paths_reject":[
+            "..",
+            ".",
+            "__targets",
 			".git"
         ],
         "recursive":1
@@ -20,20 +21,21 @@
                         "-fpic",
                         "{cxxversion}",
                         "-Wall",
-                        "-Woverflow",
-                        "-Wconversion",
-                        "-Werror",
+                        "{cflags_extra}",
+                        "{iquote}",
                         "{includedir}",
-                        "{libdir}",
+                        "-DMAIKE_TARGET_DIRECTORY={target_directory}",
+                        "-DMAIKE_CURRENT_DIRECTORY={current_directory}",
                         "-o",
                         "{target}",
                         "{source}",
+                        "{libdir}",
                         "{dependencies}"
                     ],
                     "name":"g++"
                 },
-				"cflags_format":"-^",
                 "cflags_extra":[],
+                "cflags_format":"-^",
                 "cxxversion_max":-1,
                 "cxxversion_min":201103,
                 "dllcompile":{
@@ -42,15 +44,16 @@
                         "-fpic",
                         "{cxxversion}",
                         "-Wall",
-                        "-Woverflow",
-                        "-Wconversion",
-                        "-Werror",
+                        "{cflags_extra}",
+                        "{iquote}",
                         "{includedir}",
-                        "{libdir}",
+                        "-DMAIKE_TARGET_DIRECTORY={target_directory}",
+                        "-DMAIKE_CURRENT_DIRECTORY={current_directory}",
                         "-shared",
                         "-o",
                         "{target}",
                         "{source}",
+                        "{libdir}",
                         "{dependencies}"
                     ],
                     "name":"g++"
@@ -58,6 +61,10 @@
                 "includedir":[],
                 "includedir_format":"-I^",
                 "includedir_noscan":[],
+                "iquote":[
+                    "."
+                ],
+                "iquote_format":"-iquote^",
                 "libcompile":{
                     "args":[
                         "rcs",
@@ -77,10 +84,11 @@
                         "-fpic",
                         "{cxxversion}",
                         "-Wall",
-                        "-Woverflow",
-                        "-Wconversion",
-                        "-Werror",
+                        "{cflags_extra}",
+                        "{iquote}",
                         "{includedir}",
+                        "-DMAIKE_TARGET_DIRECTORY={target_directory}",
+                        "-DMAIKE_CURRENT_DIRECTORY={current_directory}",
                         "-o",
                         "{target}",
                         "{source}"
@@ -136,8 +144,7 @@
             ],
             "name":"pythondefault",
             "plugin":"targetpython"
-        }
-,
+        },
         {
             "config":{
                 "tar":{
@@ -161,9 +168,8 @@
                     "root_append":"--transform=s,\\\\(.*\\\\),^\\\\1,g",
                     "target_strip":"--transform=s,\\^^,,g"
                 },
-				"zip":
-					{
-			        "create":{
+                "zip":{
+                    "create":{
                         "args":[
                             "-@",
                             "{target}"
@@ -177,8 +183,7 @@
                         ],
                         "name":"zipnote"
                     }
-		
-				}
+                }
             },
             "filename_exts":[
                 ".archive"
@@ -186,7 +191,6 @@
             "name":"archivedefault",
             "plugin":"targetarchive"
         }
-
     ],
     "targetinfo":{
         "target_directory":"__targets"

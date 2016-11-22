@@ -45,6 +45,7 @@ namespace Maike
 				,Stringkey("configclean")
 				,Stringkey("clean")
 				,Stringkey("remove-orphans")
+				,Stringkey("about")
 				> OptionMap;
 
 			Options(Twins<const char* const*> args);

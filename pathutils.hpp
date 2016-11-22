@@ -33,28 +33,13 @@ namespace Maike
 		}
 
 	PRIVATE inline std::string dircat(const char* a,const std::string& b)
-		{
-		std::string ret(a);
-		ret+='/';
-		ret+=b;
-		return directoryNormalize(ret.c_str());
-		}
+		{return dircat(a,b.c_str());}
 
 	PRIVATE inline std::string dircat(const std::string& a,const char* b)
-		{
-		std::string ret(a);
-		ret+='/';
-		ret+=b;
-		return directoryNormalize(ret.c_str());
-		}
+		{return dircat(a.c_str(),b);}
 
 	PRIVATE inline std::string dircat(const std::string& a,const std::string& b)
-		{
-		std::string ret(a);
-		ret+='/';
-		ret+=b;
-		return directoryNormalize(ret.c_str());
-		}
+		{return dircat(a.c_str(),b.c_str());}
 
 	PRIVATE std::string rootStrip(const char* path,const char* root);
 

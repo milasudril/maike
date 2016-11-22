@@ -74,6 +74,7 @@ static void optionsFill(Options::OptionMap& options)
 		"targets to a TSV (Tab Separated Values) file. As default, the data is "
 		"written to `stdout`.",1);
 
+	MAKE_OPTION(options,0,"about","Print information about maike  to `stdout`, or to the given file, and exit.",1);
 	}
 
 static void optionLoad(Options::OptionMap& options

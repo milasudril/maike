@@ -3,7 +3,8 @@
 //@	}
 
 #include "maike_base.hpp"
-#include "maikeinfo.hpp"
+#include "targetinclude.hpp"
+#include MAIKE_TARGET(projectinfo.hpp)
 #include "targetplaceholder.hpp"
 #include "dependency.hpp"
 #include "session.hpp"
@@ -30,9 +31,18 @@ using namespace Maike;
 void Maike::versionPrint(DataSink& sink)
 	{
 	WriteBuffer wb(sink);
-	wb.write("Maike version ").write(Info::VERSION)
-		.write("\nThis Maike was compiled on ").write(Info::TIMESTAMP)
+	wb.write(ProjectInfo::name()).write(" version ").write(ProjectInfo::version())
+		.write("\nThis Maike was compiled on ").write(ProjectInfo::timestamp())
 		.write("\n");
+	}
+
+void Maike::about(DataSink& sink)
+	{
+	versionPrint(sink);
+	WriteBuffer wb(sink);
+	wb.write("Copyright (C) ").write(ProjectInfo::yearString()).write(" ")
+		.write(ProjectInfo::author()).write("\n\n")
+		.write(ProjectInfo::legalBrief());
 	}
 
 void Maike::loadPath(DataSink& sink)

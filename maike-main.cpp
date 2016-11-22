@@ -31,12 +31,21 @@ static int helpPrint(const Maike::Options& opts,const std::vector<std::string>& 
 	return 0;
 	}
 
+
 static int versionPrint(const std::vector<std::string>& filename)
 	{
 	auto dest=fileGet(filename);
 	versionPrint(dest);
 	return 0;
 	}
+
+static int about(const std::vector<std::string>& filename)
+	{
+	auto dest=fileGet(filename);
+	about(dest);
+	return 0;
+	}
+
 
 static int loadPathPrint(const std::vector<std::string>& filename)
 	{
@@ -262,6 +271,11 @@ int main(int argc,char** argv)
 		x=opts.get<Stringkey("version")>();
 		if(x!=nullptr)
 			{return versionPrint(*x);}
+
+
+		x=opts.get<Stringkey("about")>();
+		if(x!=nullptr)
+			{return about(*x);}
 
 		x=opts.get<Stringkey("load-path")>();
 		if(x!=nullptr)
