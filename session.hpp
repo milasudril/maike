@@ -31,6 +31,8 @@ namespace Maike
 			Session& sysvarsLoad();
 			Session& configAppendDefault();
 			Session& configAppend(const ResourceObject& maikeconfig);
+			Session& hookRegister(const char* name_plugin
+				,Twins<const char* const*> filename_exts);
 			Session& sourceFileAppend(const char* filename);
 			Session& rootSet(const char* root);
 			const char* rootGet() const noexcept;
@@ -50,6 +52,7 @@ namespace Maike
 			size_t targetsCountGet() const;
 
 			bool loaderHas(const char* filename) const;
+
 
 		private:
 			SystemTargetInfo m_targetinfo;

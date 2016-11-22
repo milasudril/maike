@@ -117,6 +117,9 @@ namespace Maike
 
 	EXPORT void configAppend(Session& maike,const ResourceObject& obj);
 
+	EXPORT void hookRegister(Session& maike,const char* name_plugin
+		,Twins<const char* const*> filename_exts);
+
 	/**\brief Appends common configuration resources to <var>maike</var>
 	* 
 	* This function appends configuration resources from common configuration

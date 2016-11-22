@@ -144,6 +144,10 @@ void Maike::configAppend(Session& maike,DataSource& source)
 void Maike::configAppend(Session& maike,const ResourceObject& obj)
 	{maike.configAppend(obj);}
 
+void Maike::hookRegister(Session& maike,const char* name_plugin
+	,Twins<const char* const*> filename_exts)
+	{maike.hookRegister(name_plugin,filename_exts);}
+
 void Maike::configAppendDefault(Session& maike)
 	{maike.configAppendDefault();}
 

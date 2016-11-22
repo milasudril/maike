@@ -92,6 +92,12 @@ Session& Session::configAppend(const ResourceObject& maikeconfig)
 	return *this;
 	}
 
+Session& Session::hookRegister(const char* name_plugin,Twins<const char* const*> filename_exts)
+	{
+	m_target_hooks.hookRegister(name_plugin,filename_exts);
+	return *this;
+	}
+
 void Session::configDump(ResourceObject& maikeconfig) const
 	{
 		{
