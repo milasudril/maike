@@ -105,7 +105,7 @@ static unsigned long long int cxxversionDefaultGet(const Command& versionquery
 TargetCxxCompiler::TargetCxxCompiler(const TargetCxxOptions& options
 	,const ParameterSet& sysvars):r_options(options),m_cxxversion_default(0)
 	{
-	r_paramset.push_back(&sysvars);
+	r_paramset=&sysvars;
 	}
 
 typedef ParameterSetMapFixed<
@@ -117,7 +117,8 @@ typedef ParameterSetMapFixed<
 	,Stringkey("source")
 	,Stringkey("cflags_extra")
 	,Stringkey("iquote")
-	,Stringkey("current_directory")> CompilerParameters;
+	,Stringkey("current_directory")
+	,Stringkey("target_directory")> CompilerParameters;
 
 static const char* cxxNameGet(unsigned long long int cxxversion)
 	{
@@ -140,8 +141,9 @@ unsigned long long int TargetCxxCompiler::cxxversionDefaultGet() const
 	{
 	if(m_cxxversion_default==0)
 		{
+		auto p=&r_paramset;
 		m_cxxversion_default=::cxxversionDefaultGet(r_options.versionqueryGet()
-			,{r_paramset.data(), r_paramset.data() + r_paramset.size()});
+			,{p, p + 1});
 		}
 	return m_cxxversion_default;
 	}
@@ -192,6 +194,22 @@ static void argvBuild(std::vector<std::string>& argv
 		}
 	}
 
+namespace
+	{
+	class StringGet:public ParameterSet::ParameterProcessor
+		{
+		public:
+			StringGet(std::string& ret):r_ret(ret)
+				{}
+
+		virtual void operator()(const char* element)
+			{r_ret=std::string(element);}
+
+		private:
+			std::string& r_ret;
+		};
+	}
+
 void TargetCxxCompiler::execute(const Command& cmd
 	,const char* source
 	,const char* in_dir
@@ -199,9 +217,17 @@ void TargetCxxCompiler::execute(const Command& cmd
 	,const char* dest,const TargetCxxOptions& options_extra) const
 	{
 	CompilerParameters cxxparams;
+
+	std::string target_dir;
+	r_paramset->parameterGet(Stringkey("target_directory"),StringGet(target_dir));
+
+	std::string root;
+	r_paramset->parameterGet(Stringkey("project_root"),StringGet(root));
+	
 	cxxparams.get<Stringkey("target")>().push_back(dest);
 	cxxparams.get<Stringkey("source")>().push_back(source);
-	cxxparams.get<Stringkey("current_directory")>().push_back(in_dir);
+	cxxparams.get<Stringkey("current_directory")>().push_back(dircat(root,in_dir));
+	cxxparams.get<Stringkey("target_directory")>().push_back(dircat(root,target_dir));
 
 	auto options_result=r_options|options_extra;
 	auto cxxversion_min=options_result.cxxversionMinGet();
@@ -240,10 +266,9 @@ void TargetCxxCompiler::execute(const Command& cmd
 			,options_result.libdirGet(),options_result.libdirFormatGet());
 		}
 
-	auto paramset=r_paramset;
-	paramset.push_back(&cxxparams);
+	const ParameterSet* paramset[]={r_paramset,&cxxparams};
 	auto compiler=cmd.execute(Pipe::REDIRECT_STDERR
-		,{paramset.data(),paramset.data() + paramset.size() });
+		,{paramset,paramset + 2 });
 	auto stream=compiler.stderrCapture();
 	ReadBuffer rb(*stream.get());
 	WriteBuffer wb(StdStream::error());

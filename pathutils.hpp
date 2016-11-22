@@ -48,6 +48,14 @@ namespace Maike
 		return directoryNormalize(ret.c_str());
 		}
 
+	PRIVATE inline std::string dircat(const std::string& a,const std::string& b)
+		{
+		std::string ret(a);
+		ret+='/';
+		ret+=b;
+		return directoryNormalize(ret.c_str());
+		}
+
 	PRIVATE std::string rootStrip(const char* path,const char* root);
 
 	PRIVATE inline std::string rootStrip(const std::string& path,const char* root)

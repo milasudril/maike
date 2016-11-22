@@ -55,7 +55,7 @@ namespace Maike
 
 		private:
 			const TargetCxxOptions& r_options;
-			std::vector<const ParameterSet*> r_paramset;
+			const ParameterSet* r_paramset;
 			mutable unsigned long long int m_cxxversion_default;
 
 			void execute(const Command& cmd,const char* source
