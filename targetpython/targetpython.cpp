@@ -19,6 +19,8 @@ TargetPython::TargetPython(const ResourceObject& obj
 		for(decltype(N) k=0;k<N;++k)
 			{m_args.push_back(std::string(static_cast<const char*>(args.objectGet(k))));}
 		}
+
+	dependencyAdd(Dependency("maikeconfig.json",root,Dependency::Relation::GENERATED));
 	}
 
 void TargetPython::dumpDetails(ResourceObject& target) const

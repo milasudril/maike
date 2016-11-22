@@ -10,6 +10,7 @@
 #include "dependency.hpp"
 #include <string>
 #include <vector>
+#include <cmath>
 
 namespace Maike
 	{
@@ -58,7 +59,7 @@ namespace Maike
 			bool upToDate(Twins<const Dependency*> dependency_list
 				,Twins<const Dependency*> dependency_list_full
 				,const char* target_dir) const
-				{return 0;}
+				{return !std::isnan(m_compilation_time);}
 
 			void dump(ResourceObject& target) const
 				{}
