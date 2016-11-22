@@ -19,6 +19,7 @@
 #include "resourceobjectjansson.hpp"
 #include "filein.hpp"
 #include "fileutils.hpp"
+#include "readbuffer.hpp"
 
 #include <vector>
 #include <stack>
@@ -42,7 +43,7 @@ void Maike::about(DataSink& sink)
 	WriteBuffer wb(sink);
 	wb.write("Copyright (C) ").write(ProjectInfo::yearString()).write(" ")
 		.write(ProjectInfo::author()).write("\n\n")
-		.write(ProjectInfo::legalBrief());
+		.write(ProjectInfo::legalBrief()).write("\n");
 	}
 
 void Maike::loadPath(DataSink& sink)
@@ -73,9 +74,48 @@ void Maike::init(DataSink& standard_output,DataSink& standard_error
 	init(standard_output,standard_error);
 	}
 
+static bool findString(const char* filename,const char* str)
+	{
+	FileIn src(filename);
+	ReadBuffer buffer(src);
+	auto pos_init=reinterpret_cast<const uint8_t*>(str);
+	auto pos_current=pos_init;
+	while(!buffer.eof())
+		{
+		auto ch_in=buffer.byteRead();
+		auto v_str=*pos_current;
+		if(v_str=='\0')
+			{return 1;}
+		if(v_str==ch_in)
+			{++pos_current;}
+		else
+			{
+			pos_current=pos_init;
+			if(*pos_current==ch_in)
+				{++pos_current;}
+			}
+		}
+	return 0;
+	}
+
+static bool isMaike()
+	{
+	static bool checked=0;
+	if(checked)
+		{return 1;}
+	auto filename=exename();
+	checked=1;
+	return findString(filename.c_str(),ProjectInfo::name())
+		&& findString(filename.c_str(),ProjectInfo::legalBrief())
+		&& findString(filename.c_str(),ProjectInfo::author());
+	}
 
 Session* Maike::sessionCreateRaw()
-	{return new Session;}
+	{
+	if(!isMaike())
+		{about(StdStream::error());}
+	return new Session;
+	}
 
 void Maike::sessionDestroy(Session* maike)
 	{delete maike;}
