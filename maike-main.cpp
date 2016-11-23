@@ -57,6 +57,7 @@ static int loadPathPrint(const std::vector<std::string>& filename)
 
 static void configfilesLoadClean(Session& maike,const std::vector<std::string>* files)
 	{
+	configAppendDefault(maike);
 	if(files==nullptr)
 		{
 		try
@@ -65,10 +66,7 @@ static void configfilesLoadClean(Session& maike,const std::vector<std::string>* 
 			configAppend(maike,source);
 			}
 		catch(const ErrorMessage& msg)
-			{
-			fprintf(stderr,"(!) %s. Loading default configuration.\n\n",msg.messageGet());
-			configAppendDefault(maike);
-			}
+			{fprintf(stderr,"(!) %s. Loading default configuration.\n\n",msg.messageGet());}
 		return;
 		}
 	auto ptr=files->data();
