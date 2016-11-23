@@ -79,7 +79,7 @@ static void configfilesLoadClean(Session& maike,const std::vector<std::string>* 
 		configAppend(maike,source);
 		++ptr;
 		}
-}
+	}
 
 static void configfilesLoad(Session& maike,const std::vector<std::string>* files)
 	{
