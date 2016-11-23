@@ -65,7 +65,9 @@ Target_Hook_Registry& Target_Hook_Registry::hookRegister(const char* name_plugin
 	auto& hook_info=hookCreate(hook_name.c_str(),name_plugin);
 	while(filename_exts.first!=filename_exts.second)
 		{
-		r_filenameext_hook[Stringkey(*filename_exts.first)]=hook_info.hook.get();
+		auto fext=*filename_exts.first;
+		r_filenameext_hook[Stringkey(fext)]=hook_info.hook.get();
+		hook_info.filename_exts.insert(std::string(fext));
 		++filename_exts.first;
 		}
 	hook_info.hook->configAppendDefault();
