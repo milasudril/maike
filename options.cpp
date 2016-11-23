@@ -88,6 +88,7 @@ static void optionLoad(Options::OptionMap& options
 	auto state=State::START_0;
 	Options::Option* option_current=nullptr;
 	std::vector<std::string>* val_current=nullptr;
+	size_t brackets=0;
 	while(true)
 		{
 		auto ch_in=*arg;
@@ -160,6 +161,16 @@ static void optionLoad(Options::OptionMap& options
 			case State::VALUE:
 				switch(ch_in)
 					{
+					case '[':
+						if(brackets!=0)
+							{buffer+=ch_in;}
+						++brackets;
+						break;
+					case ']':
+						brackets=brackets==0?0:brackets-1;
+						if(brackets!=0)
+							{buffer+=ch_in;}
+						break;
 					case '\\':
 						state=State::VALUE_ESCAPE;
 						break;
