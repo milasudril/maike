@@ -12,6 +12,7 @@
 #include "maike_base.hpp"
 #include "writebuffer.hpp"
 #include "graphedgewriterdot.hpp"
+#include "variant.hpp"
 #include <cstdio>
 #include <memory>
 
@@ -95,6 +96,54 @@ static void configfilesLoad(Session& maike,const std::vector<std::string>* files
 		FileIn source(ptr->c_str());
 		configAppend(maike,source);
 		++ptr;
+		}
+	}
+
+static std::pair<std::string,const char*> pluginNameGet(const char* strpos)
+	{
+	auto pos_start=strpos;
+	while(1)
+		{
+		auto ch_in=*strpos;
+		switch(ch_in)
+			{
+			case '\0':
+				return {std::string(""),pos_start};
+			case ':':
+				return {std::string(pos_start,strpos),strpos + 1};
+			}
+		++strpos;
+		}
+	}
+
+static void hooksLoad(Session& maike,const std::vector<std::string>& plugins)
+	{
+	auto ptr=plugins.data();
+	auto ptr_end=ptr + plugins.size();
+	std::string plugname;
+	std::vector<const char*> filename_exts;
+	while(ptr!=ptr_end)
+		{
+		auto temp=pluginNameGet(ptr->c_str());
+		if(temp.first.size())
+			{
+			if(plugname.size())
+				{
+				hookRegister(maike,plugname.c_str()
+					,{filename_exts.data(),filename_exts.data() + filename_exts.size()});
+				}
+			plugname=std::move(temp.first);
+			filename_exts.clear();
+			filename_exts.push_back(temp.second);
+			}
+		else
+			{filename_exts.push_back(temp.second);}
+		++ptr;
+		}
+	if(plugname.size())
+		{
+		hookRegister(maike,plugname.c_str()
+			,{filename_exts.data(),filename_exts.data() + filename_exts.size()});
 		}
 	}
 
@@ -288,6 +337,10 @@ int main(int argc,char** argv)
 			{configfilesLoad(maike,opts.get<Stringkey("configfiles")>());}
 		else
 			{configfilesLoadClean(maike,opts.get<Stringkey("configfiles")>());}
+
+		x=opts.get<Stringkey("hooks-load")>();
+		if(x!=nullptr)
+			{hooksLoad(maike,*x);}
 
 		x=opts.get<Stringkey("configdump")>();
 		if(x!=nullptr)

@@ -33,6 +33,7 @@ namespace Maike
 				,Stringkey("configfiles")
 				,Stringkey("configdump")
 				,Stringkey("no-sysvars")
+				,Stringkey("hooks-load")
 				,Stringkey("targets")
 				,Stringkey("list-leaf-targets")
 				,Stringkey("list-external-targets")
