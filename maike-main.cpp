@@ -97,51 +97,61 @@ static void configfilesLoad(Session& maike,const std::vector<std::string>* files
 		}
 	}
 
-static std::pair<std::string,const char*> pluginNameGet(const char* strpos)
+static std::vector<std::string> hookDataExtract(const char* str)
 	{
-	auto pos_start=strpos;
+	std::vector<std::string> ret;
+	std::string buffer;
 	while(1)
 		{
-		auto ch_in=*strpos;
+		auto ch_in=*str;
 		switch(ch_in)
 			{
-			case '\0':
-				return {std::string(""),pos_start};
+			case ',':
+				if(ret.size()==0)
+					{exceptionRaise(ErrorMessage("Missing hook filename",{}));}
+				ret.push_back(buffer);
+				buffer.clear();
+				break;
 			case ':':
-				return {std::string(pos_start,strpos),strpos + 1};
+				ret.push_back(buffer);
+				buffer.clear();
+				break;
+			case '\0':
+				ret.push_back(buffer);
+				return ret;
+			default:
+				buffer+=ch_in;
 			}
-		++strpos;
+		++str;
 		}
 	}
 
-static void hooksLoad(Session& maike,const std::vector<std::string>& plugins)
+static std::vector<const char*> stringsExtract(std::vector<std::string>&& strings)=delete;
+
+static std::vector<const char*> stringsExtract(const std::vector<std::string>& strings)
 	{
-	auto ptr=plugins.data();
-	auto ptr_end=ptr + plugins.size();
-	std::string plugname;
-	std::vector<const char*> filename_exts;
+	std::vector<const char*> ret;
+	auto ptr=strings.data();
+	auto ptr_end=ptr+strings.size();
 	while(ptr!=ptr_end)
 		{
-		auto temp=pluginNameGet(ptr->c_str());
-		if(temp.first.size())
-			{
-			if(plugname.size())
-				{
-				hookRegister(maike,plugname.c_str()
-					,{filename_exts.data(),filename_exts.data() + filename_exts.size()});
-				}
-			plugname=std::move(temp.first);
-			filename_exts.clear();
-			filename_exts.push_back(temp.second);
-			}
-		else
-			{filename_exts.push_back(temp.second);}
+		ret.push_back(ptr->c_str());
 		++ptr;
 		}
-	if(plugname.size())
+	return std::move(ret);
+	}
+
+
+static void hooksLoad(Session& maike,const std::vector<std::string>& hook_strings)
+	{
+	auto ptr=hook_strings.data();
+	auto ptr_end=ptr + hook_strings.size();
+	while(ptr!=ptr_end)
 		{
-		hookRegister(maike,plugname.c_str()
-			,{filename_exts.data(),filename_exts.data() + filename_exts.size()});
+		auto hd=hookDataExtract(ptr->c_str());
+		auto strings=stringsExtract(hd);
+		hookRegister(maike,strings[0],{strings.data() + 1,strings.data() + hd.size()});
+		++ptr;
 		}
 	}
 

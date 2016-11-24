@@ -178,8 +178,13 @@ static void optionLoad(Options::OptionMap& options
 						if(option_current->argcount<2 &&
 							val_current->size()==option_current->argcount)
 							{exceptionRaise(ErrorMessage("Command line error: Option #0; only takes 1 value.",{option_current->key}));}
-						val_current->push_back(buffer);
-						buffer.clear();
+						if(brackets==0)
+							{
+							val_current->push_back(buffer);
+							buffer.clear();
+							}
+						else
+							{buffer+=ch_in;}
 						break;
 					case '\0':
 						if(option_current->argcount<2 &&
