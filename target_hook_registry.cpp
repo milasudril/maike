@@ -54,12 +54,12 @@ Target_Hook_Registry& Target_Hook_Registry::hookRegister(const char* name_plugin
 	,Twins<const char* const*> filename_exts)
 	{
 	auto hook_name=std::string(name_plugin);
-	hook_name+="default";
+	hook_name+="_default";
 	size_t counter=0;
 	while(m_hooks.find(Stringkey(hook_name.c_str()))!=m_hooks.end())
 		{
 		hook_name=std::string(name_plugin);
-		hook_name+=std::to_string(counter);
+		hook_name+='_'+std::to_string(counter);
 		++counter;
 		}
 	auto& hook_info=hookCreate(hook_name.c_str(),name_plugin);
@@ -118,7 +118,7 @@ Target_Hook_Registry& Target_Hook_Registry::configAppend(const ResourceObject& t
 Target_Hook_Registry& Target_Hook_Registry::configAppendDefault()
 	{
 		{
-		auto& hook_info=hookCreate("cxxdefault","targetcxx");
+		auto& hook_info=hookCreate("targetcxx_default","targetcxx");
 		r_filenameext_hook[Stringkey(".cpp")]=hook_info.hook.get();
 		hook_info.filename_exts.insert(std::string(".cpp"));
 		r_filenameext_hook[Stringkey(".cxx")]=hook_info.hook.get();
@@ -141,14 +141,14 @@ Target_Hook_Registry& Target_Hook_Registry::configAppendDefault()
 		}
 
 		{
-		auto& hook_info=hookCreate("pythondefault","targetpython");
+		auto& hook_info=hookCreate("targetpython_default","targetpython");
 		r_filenameext_hook[Stringkey(".py")]=hook_info.hook.get();
 		hook_info.filename_exts.insert(std::string(".py"));
 		hook_info.hook->configAppendDefault();
 		}
 
 		{
-		auto& hook_info=hookCreate("archivedefault","targetarchive");
+		auto& hook_info=hookCreate("targetarchive_default","targetarchive");
 		r_filenameext_hook[Stringkey(".archive")]=hook_info.hook.get();
 		hook_info.filename_exts.insert(std::string(".archive"));
 		hook_info.hook->configAppendDefault();
