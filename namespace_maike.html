@@ -239,6 +239,12 @@
       </tr>
       <tr>
         <th class="membername">
+<span class="type"><a href="class_maike_1_1_resource_object.html">ResourceObject</a></span> <a href="#1ae594d314af19bc870f11f0428bf79443">resourceObjectCreate</a>
+(<span class="type"><a href="class_maike_1_1_data_source.html">DataSource</a> &amp;</span> <span class="declname">src</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
 <span class="type">Session *</span> <a href="#1a981ea0a04f725f0a11c67f0041a4bba4">sessionCreateRaw</a>
 ()</th>
         <td class="memberdesc">Creates a new <a href="namespace_maike.html">Maike</a> Session. </td>
@@ -326,6 +332,12 @@
         <th class="membername">
 <span class="type">void</span> <a href="#1a9e05c04d5be76c0903d9d52af09114e6">hookRegister</a>
 (<span class="type">Session &amp;</span> <span class="declname">maike</span>,<span class="type">const char *</span> <span class="declname">name_plugin</span>,<span class="type"><a href="class_maike_1_1_twins.html">Twins</a>&lt; const char *const * &gt;</span> <span class="declname">filename_exts</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1ab5d56b05d5067d25aa3e76c209a6b5a1">hookConfigAppend</a>
+(<span class="type">Session &amp;</span> <span class="declname">maike</span>,<span class="type">const char *</span> <span class="declname">name_hook</span>,<span class="type">const <a href="class_maike_1_1_resource_object.html">ResourceObject</a> &amp;</span> <span class="declname">rc</span>)</th>
         <td class="memberdesc"></td>
       </tr>
       <tr>
@@ -651,6 +663,10 @@ template&lt;<span class="type">class T</span>&gt;
 <span class="type"><a href="class_maike_1_1_resource_object.html">ResourceObject</a></span> resourceObjectCreate
 (<span class="type"><a href="class_maike_1_1_resource_object.html#1a0daf07feb869d19d57ed89f73be5ca50">ResourceObject::Type</a></span> <span class="declname">type</span>)</h2>
   </section><section>
+    <h2 class="memproto" id="1ae594d314af19bc870f11f0428bf79443">
+<span class="type"><a href="class_maike_1_1_resource_object.html">ResourceObject</a></span> resourceObjectCreate
+(<span class="type"><a href="class_maike_1_1_data_source.html">DataSource</a> &amp;</span> <span class="declname">src</span>)</h2>
+  </section><section>
     <h2 class="memproto" id="1a981ea0a04f725f0a11c67f0041a4bba4">
 <span class="type">Session *</span> sessionCreateRaw
 ()</h2>
@@ -730,6 +746,10 @@ template&lt;<span class="type">class T</span>&gt;
     <h2 class="memproto" id="1a9e05c04d5be76c0903d9d52af09114e6">
 <span class="type">void</span> hookRegister
 (<span class="type">Session &amp;</span> <span class="declname">maike</span>,<span class="type">const char *</span> <span class="declname">name_plugin</span>,<span class="type"><a href="class_maike_1_1_twins.html">Twins</a>&lt; const char *const * &gt;</span> <span class="declname">filename_exts</span>)</h2>
+  </section><section>
+    <h2 class="memproto" id="1ab5d56b05d5067d25aa3e76c209a6b5a1">
+<span class="type">void</span> hookConfigAppend
+(<span class="type">Session &amp;</span> <span class="declname">maike</span>,<span class="type">const char *</span> <span class="declname">name_hook</span>,<span class="type">const <a href="class_maike_1_1_resource_object.html">ResourceObject</a> &amp;</span> <span class="declname">rc</span>)</h2>
   </section><section>
     <h2 class="memproto" id="1aeee8dd0ceb0231ef2c2cd57227ead259">
 <span class="type">void</span> configAppendCommon
