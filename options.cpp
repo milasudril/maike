@@ -35,7 +35,7 @@ static void optionsFill(Options::OptionMap& options)
 		"If the option `configfiles` is given, `maikeconfig.json` will not be loaded.",0);
 
 	MAKE_OPTION(options,1,"hooks-load","Explicitly load the given target hooks. The string follows the "
-		"syntax `hookname_1`:[`filename_ext`,...]",2);
+		"syntax `hook_plugin`:[`filename_ext`,...]",2);
 
 	MAKE_OPTION(options,1,"configdump","Print the current configuration to `stdout`, "
 		"or to the given file, and exit.",1);
