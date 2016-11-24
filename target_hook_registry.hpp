@@ -34,6 +34,8 @@ namespace Maike
 			Target_Hook_Registry& hookRegister(const char* name_plugin
 				,Twins<const char* const*> filename_exts);
 
+			Target_Hook_Registry& hookConfigAppend(const char* name,const ResourceObject& config);
+
 			class PRIVATE EnumCallbackFilenameExt
 				{
 				public:

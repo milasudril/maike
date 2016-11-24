@@ -74,6 +74,18 @@ Target_Hook_Registry& Target_Hook_Registry::hookRegister(const char* name_plugin
 	return *this;
 	}
 
+Target_Hook_Registry& Target_Hook_Registry::hookConfigAppend(const char* name,const ResourceObject& config)
+	{
+	auto i=m_hooks.find(Stringkey(name));
+	if(i==m_hooks.end())
+		{
+		exceptionRaise(ErrorMessage("No hook with name #0; has been loaded"
+			,{name}));
+		}
+	i->second.hook->configAppend(config);
+	return *this;
+	}
+
 
 Target_Hook_Registry& Target_Hook_Registry::configAppend(const ResourceObject& targethooks)
 	{
