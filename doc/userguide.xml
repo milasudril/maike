@@ -513,8 +513,11 @@ except:
 <h3>--configfiles=string,...</h3>
 <p>    Load the listed configuration files. If this argument is not given, Maike will instead load options from files <code>maikeconfig.json</code>, found in system specific directories, and the current working,</p>
 
+<h3>--hooks-config=string,...</h3>
+<p>    Set properties for the given target hooks. The string follows the syntax <code>hook_name</code>:[<code>JSON string without surrounding curly braces</code>]. </p>
+
 <h3>--hooks-load=string,...</h3>
-<p>Explicitly load the given target hooks. The string follows the syntax <code>hook_name</code>:[<code>filename_ext</code>,...]</p>
+<p>Explicitly load the given target hooks. The string follows the syntax <code>hook_plugin</code>:[<code>filename_ext</code>,...]</p>
 
 <h3>--no-sysvars</h3>
 <p>    Do not load any default system variables. This option is useful when using a cross-compiler. Normally, Maike loads a system-dependent set of variables that identifies the host platform.</p>

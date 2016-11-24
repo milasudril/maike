@@ -25,6 +25,10 @@
 <h2>--configfiles=string,...</h2>
 <p>    Load the listed configuration files. If this argument is not given, Maike will instead load options from files <code>maikeconfig.json</code>, found in system specific directories, and the current working,</p>
 
+<h2>--hooks-config=string,...</h2>
+<p>    Set properties for the given target hooks. The string follows the syntax <code>hook_name</code>:[<code>JSON string without surrounding curly braces</code>]. </p>
+
+
 <h2>--hooks-load=string,...</h2>
 <p>Explicitly load the given target hooks. The string follows the syntax <code>hook_plugin</code>:[<code>filename_ext</code>,...]</p>
 
