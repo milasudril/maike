@@ -27,6 +27,7 @@ namespace Maike
 
 	EXPORT ResourceObject resourceObjectCreate(ResourceObject::Type type);
 
+	EXPORT ResourceObject resourceObjectCreate(DataSource& src);
 
 
 	/**\brief Creates a new Maike Session.
@@ -119,6 +120,8 @@ namespace Maike
 
 	EXPORT void hookRegister(Session& maike,const char* name_plugin
 		,Twins<const char* const*> filename_exts);
+
+	EXPORT void hookConfigAppend(Session& maike,const char* name_hook,const ResourceObject& rc);
 
 	/**\brief Appends common configuration resources to <var>maike</var>
 	* 

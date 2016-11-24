@@ -58,6 +58,12 @@ ResourceObject Maike::resourceObjectCreate(ResourceObject::Type type)
 	return std::move(ret);
 	}
 
+ResourceObject Maike::resourceObjectCreate(DataSource& src)
+	{
+	ResourceObjectJansson ret(src);
+	return std::move(ret);
+	}
+
 void Maike::init(ExceptionHandler eh)
 	{exceptionHandlerSet(eh);}
 
@@ -147,6 +153,9 @@ void Maike::configAppend(Session& maike,const ResourceObject& obj)
 void Maike::hookRegister(Session& maike,const char* name_plugin
 	,Twins<const char* const*> filename_exts)
 	{maike.hookRegister(name_plugin,filename_exts);}
+
+void Maike::hookConfigAppend(Session& maike,const char* name_hook,const ResourceObject& rc)
+	{maike.hookConfigAppend(name_hook,rc);}
 
 void Maike::configAppendDefault(Session& maike)
 	{maike.configAppendDefault();}

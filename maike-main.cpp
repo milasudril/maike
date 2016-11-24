@@ -15,6 +15,7 @@
 #include "variant.hpp"
 #include <cstdio>
 #include <memory>
+#include <cstring>
 
 using namespace Maike;
 
@@ -141,7 +142,6 @@ static std::vector<const char*> stringsExtract(const std::vector<std::string>& s
 	return std::move(ret);
 	}
 
-
 static void hooksLoad(Session& maike,const std::vector<std::string>& hook_strings)
 	{
 	auto ptr=hook_strings.data();
@@ -151,6 +151,78 @@ static void hooksLoad(Session& maike,const std::vector<std::string>& hook_string
 		auto hd=hookDataExtract(ptr->c_str());
 		auto strings=stringsExtract(hd);
 		hookRegister(maike,strings[0],{strings.data() + 1,strings.data() + hd.size()});
+		++ptr;
+		}
+	}
+
+static Twins<std::string> hookConfigExtract(const char* hook_str)
+	{
+	Twins<std::string> ret;
+	int state=0;
+	while(1)
+		{
+		auto ch_in=*hook_str;
+		switch(state)
+			{
+			case 0:
+				switch(ch_in)
+					{
+					case '\0':
+						return std::move(ret);
+					case ':':
+						++state;
+						break;
+					default:
+						ret.first+=ch_in;
+					}
+				break;
+			case 1:
+				ret.second+='{';
+				ret.second+=hook_str;
+				ret.second+='}';
+				return std::move(ret);
+			}
+		++hook_str;
+		}
+	}
+
+namespace
+	{
+	class StringReader:public DataSource
+		{
+		public:
+			StringReader(const char* str,size_t n):r_str(str),m_n(n)
+				{}
+
+			size_t read(void* buffer,size_t n)
+				{
+				auto n_read=std::min(n,m_n);
+				memcpy(buffer,r_str,n_read);
+				m_n-=n_read;
+				return n_read;
+				}
+
+			const char* nameGet() const noexcept
+				{return "Command line buffer";}
+
+			void destroy(){}
+
+		private:
+			const char* r_str;
+			size_t m_n;
+		};
+	}
+
+static void hooksConfig(Session& maike,const std::vector<std::string>& config_strings)
+	{
+	auto ptr=config_strings.data();
+	auto ptr_end=ptr + config_strings.size();
+	while(ptr!=ptr_end)
+		{
+		auto content=hookConfigExtract(ptr->c_str());
+		StringReader reader(content.second.c_str(),content.second.size());
+		auto rc=resourceObjectCreate(reader);
+		hookConfigAppend(maike,content.first.c_str(),rc);
 		++ptr;
 		}
 	}
@@ -286,8 +358,6 @@ static int databaseDumpJSON(Maike::Session& maike
 			++ptr;
 			}
 		}
-
-
 	return 0;
 	}
 
@@ -349,6 +419,10 @@ int main(int argc,char** argv)
 		x=opts.get<Stringkey("hooks-load")>();
 		if(x!=nullptr)
 			{hooksLoad(maike,*x);}
+
+		x=opts.get<Stringkey("hooks-config")>();
+		if(x!=nullptr)
+			{hooksConfig(maike,*x);}
 
 		x=opts.get<Stringkey("configdump")>();
 		if(x!=nullptr)

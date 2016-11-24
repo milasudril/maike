@@ -33,6 +33,7 @@ namespace Maike
 			Session& configAppend(const ResourceObject& maikeconfig);
 			Session& hookRegister(const char* name_plugin
 				,Twins<const char* const*> filename_exts);
+			Session& hookConfigAppend(const char* name,const ResourceObject& config);
 			Session& sourceFileAppend(const char* filename);
 			Session& rootSet(const char* root);
 			const char* rootGet() const noexcept;

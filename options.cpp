@@ -23,7 +23,7 @@ static void optionsFill(Options::OptionMap& options)
 	MAKE_OPTION(options,1,"configfiles","Load the listed configuration files. "
 		"If this argument is not given, Maike will instead load options from "
 		"files `maikeconfig.json`, found in system specific directories, and "
-		"the current working,",2);
+		"the current working directory.",2);
 
 	MAKE_OPTION(options,1,"no-sysvars","Do not load any default system variables. "
 		"This option is useful when using a cross-compiler. Normally, Maike loads a "
@@ -34,8 +34,11 @@ static void optionsFill(Options::OptionMap& options)
 		"`maikeconfig.json`, if present in the current directory, or the files listed in `configfiles`. "
 		"If the option `configfiles` is given, `maikeconfig.json` will not be loaded.",0);
 
-	MAKE_OPTION(options,1,"hooks-load","Explicitly load the given target hooks. The string follows the "
-		"syntax `hook_plugin`:[`filename_ext`,...]",2);
+	MAKE_OPTION(options,1,"hooks-load","Explicitly load the given target hook plugins. The string follows the "
+		"syntax `hook_plugin`:[`filename_ext`,...].",2);
+
+	MAKE_OPTION(options,1,"hooks-config","Set properties for the given target hooks. The string follows the "
+		"syntax `hook_name`:[`JSON string without surrounding curly braces`]. ",2);
 
 	MAKE_OPTION(options,1,"configdump","Print the current configuration to `stdout`, "
 		"or to the given file, and exit.",1);
@@ -46,7 +49,7 @@ static void optionsFill(Options::OptionMap& options)
 
 	MAKE_OPTION(options,2,"clean","Remove targets from disk. This option "
 		"is like a conventional `make clean`, with the addition that "
-		"the affected targets can be controlled by the `targets` option",0);
+		"the affected targets can be controlled by the `targets` option.",0);
 
 	MAKE_OPTION(options,2,"remove-orphans","Remove targets *not* known by Maike, "
 		"from disk. This option removes the complement to `clean` targeting all "
