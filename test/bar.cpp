@@ -1,3 +1,3 @@
-//@	{"targets":[{"name":"bar.o","type":"object","dependencies":[{"ref":"png","rel":"external"}]}]}
+//@	{"targets":[{"name":"bar.o","type":"object"}]}
 
 #include "bar.hpp"

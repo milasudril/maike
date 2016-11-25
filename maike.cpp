@@ -351,22 +351,28 @@ static void toposort(Target& target_first
 static void buildBranch(Target& target,const char* target_dir
 	,const Twins<size_t>& id_range)
 	{
-	std::vector<Dependency> dependency_list_full;
-	toposort(target,dependency_list_full,id_range,1);
+	std::vector<Dependency> dependency_list_in;
+	toposort(target,dependency_list_in,id_range,1);
 
-	auto deps_begin=dependency_list_full.data();
-	Twins<Dependency*> deps(deps_begin,deps_begin + dependency_list_full.size());
+	auto deps_begin=dependency_list_in.data();
+	Twins<Dependency*> deps(deps_begin,deps_begin + dependency_list_in.size());
 
 	while(deps.first!=deps.second)
 		{
-		Twins<const Dependency*> deps_rel_full(deps_begin,deps.first);
 		auto target=deps.first->target();
 		if(target!=nullptr)
 			{
 			std::vector<Dependency> dependency_list;
 			toposort(*target,dependency_list,id_range,0);
+
+			std::vector<Dependency> dependency_list_full;
+			toposort(*target,dependency_list_full,id_range,1);
+
 			Twins<const Dependency*> deps_rel(dependency_list.data()
 				,dependency_list.data() + dependency_list.size());
+
+			Twins<const Dependency*> deps_rel_full(dependency_list_full.data()
+				,dependency_list_full.data() + dependency_list_full.size());
 
 			if(!target->upToDate(deps_rel,deps_rel_full,target_dir))
 				{target->compile(deps_rel,deps_rel_full,target_dir);}
