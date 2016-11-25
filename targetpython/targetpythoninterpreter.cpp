@@ -37,9 +37,7 @@ namespace
 					{
 					ReadBuffer rb(*r_src);
 					while(!rb.eof())
-						{
-						wb.write(rb.byteRead());
-						}
+						{wb.write(rb.byteRead());}
 					}
 				catch(const ErrorMessage& message)
 					{wb.write("Error: ").write(message.messageGet());}
