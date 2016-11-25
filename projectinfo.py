@@ -1,7 +1,7 @@
 #@	{
 #@	"targets":
 #@		[
-#@			 {"name":"projectinfo.hpp","dependencies":[]}
+#@			 {"name":"projectinfo.hpp","status_check":"dynamic"}
 #@		]
 #@	}
 

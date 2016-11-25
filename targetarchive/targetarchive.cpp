@@ -57,18 +57,15 @@ TargetArchive::TargetArchive(const ResourceObject& obj
 	if(obj.objectExists("contents"))
 		{	
 		auto contents=obj.objectGet("contents");
-		if(contents.typeGet()==ResourceObject::Type::ARRAY)
+		auto N=contents.objectCountGet();
+		for(decltype(N) n=0;n<N;++n)
 			{
-			auto N=contents.objectCountGet();
-			for(decltype(N) n=0;n<N;++n)
-				{
-				auto obj=contents.objectGet(n);
-				auto from=static_cast<const char*>(obj.objectGet("from"));
-				auto file=static_cast<const char*>(obj.objectGet("file"));
-				auto filename_full=dircat(in_dir,file);
-				dependencyAdd(Dependency(filename_full.c_str(),root
-					,dependencyRelation(from)));
-				}
+			auto obj=contents.objectGet(n);
+			auto from=static_cast<const char*>(obj.objectGet("from"));
+			auto file=static_cast<const char*>(obj.objectGet("file"));
+			auto filename_full=dircat(in_dir,file);
+			dependencyAdd(Dependency(filename_full.c_str(),root
+				,dependencyRelation(from)));
 			}
 		}
 	}

@@ -25,8 +25,7 @@ namespace Maike
 
 			bool upToDate(Twins<const Dependency*> dependency_list
 				,Twins<const Dependency*> dependency_list_full
-				,const char* target_dir) const
-				{return m_status==0? 1 : 0;}
+				,const char* target_dir) const;
 
 			void compileImpl(Twins<const Dependency*> dependency_list
 				,Twins<const Dependency*> dependency_list_full
@@ -53,6 +52,7 @@ namespace Maike
 			std::vector<std::string> m_args;
 			std::string m_root;
 			int m_status;
+			bool m_static;
 		};
 	}
 

@@ -3,6 +3,8 @@
 #include "targetpython.hpp"
 #include "targetpythoninterpreter.hpp"
 #include "../resourceobject.hpp"
+#include "../fileutils.hpp"
+#include <cstring>
 
 using namespace Maike;
 
@@ -10,7 +12,7 @@ TargetPython::TargetPython(const ResourceObject& obj
 	,const TargetPythonInterpreter& intpret,const char* name_src
 	,const char* in_dir,const char* root,size_t id,size_t line_count):
 	TargetBase(obj,name_src,in_dir,root,id,line_count)
-	,r_intpret(intpret),m_root(root),m_status(1)
+	,r_intpret(intpret),m_root(root),m_status(0),m_static(1)
 	{
 	if(obj.objectExists("args"))
 		{
@@ -19,6 +21,22 @@ TargetPython::TargetPython(const ResourceObject& obj
 		for(decltype(N) k=0;k<N;++k)
 			{m_args.push_back(std::string(static_cast<const char*>(args.objectGet(k))));}
 		}
+	if(obj.objectExists("status_check"))
+		{
+		auto x=static_cast<const char*>(obj.objectGet("status_check"));
+		if(strcmp(x,"dynamic")==0)
+			{
+			m_status=1;
+			m_static=0;
+			}
+		else
+		if(strcmp(x,"static")==0)
+			{
+			m_status=0;
+			m_static=1;
+			}
+		}
+			
 
 	dependencyAdd(Dependency("maikeconfig.json",root,Dependency::Relation::GENERATED));
 	}
@@ -33,7 +51,41 @@ void TargetPython::dumpDetails(ResourceObject& target) const
 		args.objectAppend(args.create(i->c_str()));
 		++i;
 		}
-	target.objectSet("args",std::move(args));
+	target.objectSet("args",std::move(args))
+		.objectSet("status_check",target.create(m_static?"static":"dynamic"));
+	}
+
+bool TargetPython::upToDate(Twins<const Dependency*> dependency_list
+	,Twins<const Dependency*> dependency_list_full
+	,const char* target_dir) const
+	{
+	auto name_out=dircat(target_dir,nameGet());
+	
+	if(FileUtils::newer(sourceNameGet(),name_out.c_str()))
+		{return 0;}
+
+	if(dependency_list.first==dependency_list.second)
+		{return m_status;}
+
+	while(dependency_list.first!=dependency_list.second)
+		{
+		switch(dependency_list.first->relationGet())
+			{
+			case Dependency::Relation::GENERATED:
+				{
+				auto name_dep=dircat(target_dir,dependency_list.first->nameGet());
+				if(FileUtils::newer(name_dep.c_str(),name_out.c_str()))
+					{return 0;}
+				}
+				break;
+			default:
+				if(FileUtils::newer(dependency_list.first->nameGet(),name_out.c_str()))
+					{return 0;}
+			}
+		++dependency_list.first;
+		}
+
+	return m_status==0;
 	}
 
 void TargetPython::compileImpl(Twins<const Dependency*> dependency_list
