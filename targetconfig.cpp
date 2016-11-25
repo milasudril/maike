@@ -4,10 +4,11 @@
 
 #include "targetconfig.hpp"
 #include "datasink.hpp"
-#include "resourceobject.hpp"
+#include "resourceobjectjansson.hpp"
 #include "fileutils.hpp"
 #include "pathutils.hpp"
 #include "timedscope.hpp"
+#include "filein.hpp"
 #include <limits>
 
 using namespace Maike;
@@ -59,4 +60,18 @@ void TargetConfig::compile(Twins<const Dependency*> dependency_list
 	TimedScope scope(m_compilation_time);
 	auto filename=dircat(target_dir,"maikeconfig.json");
 	FileUtils::echo(m_content.c_str(),filename.c_str());
+	}
+
+bool TargetConfig::upToDate(Twins<const Dependency*> dependency_list
+	,Twins<const Dependency*> dependency_list_full
+	,const char* target_dir) const
+	{
+	auto filename=dircat(target_dir,"maikeconfig.json");
+	if(!FileUtils::exists(filename.c_str()))
+		{return 0;}
+	
+	std::string temp;
+	ResourceObjectJansson(FileIn(filename.c_str())).write(StringWriter(temp));
+	
+	return temp==m_content;
 	}

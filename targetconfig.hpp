@@ -58,8 +58,7 @@ namespace Maike
 
 			bool upToDate(Twins<const Dependency*> dependency_list
 				,Twins<const Dependency*> dependency_list_full
-				,const char* target_dir) const
-				{return !std::isnan(m_compilation_time);}
+				,const char* target_dir) const;
 
 			void dump(ResourceObject& target) const
 				{}
