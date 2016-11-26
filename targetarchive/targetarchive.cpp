@@ -85,6 +85,25 @@ bool TargetArchive::upToDate(Twins<const Dependency*> dependency_list
 	if(FileUtils::newer(sourceNameGet(),name_full.c_str()))
 		{return 0;}
 
+	auto deps_local=dependencies();
+	while(deps_local.first!=deps_local.second)
+		{
+		switch(deps_local.first->relationGet())
+			{
+			case Dependency::Relation::GENERATED:
+				if( FileUtils::newer(dircat(target_dir,deps_local.first->nameGet()).c_str()
+					,name_full.c_str()))
+					{return 0;}
+				break;
+			default:
+				if( FileUtils::newer( deps_local.first->nameGet(),name_full.c_str() ) )
+					{return 0;}
+				break;
+			}
+		++deps_local.first;
+		}
+
+#if EMBED_RELATED_COMPLETED
 	while(dependency_list.first!=dependency_list.second)
 		{
 		auto dep=dependency_list.first;
@@ -104,6 +123,7 @@ bool TargetArchive::upToDate(Twins<const Dependency*> dependency_list
 			}
 		++dependency_list.first;
 		}
+#endif
 	return 1;
 	}
 
@@ -120,11 +140,8 @@ static std::vector<std::string> filesCollect(Twins<const Dependency*> dependency
 				ret.push_back(dircat(target_dir,dep->nameGet()));
 				break;
 
-			case Dependency::Relation::FILE:
-				ret.push_back(dep->nameGet());
-				break;
-
 			default:
+				ret.push_back(dep->nameGet());
 				break;
 			}
 		++dependency_list.first;
@@ -151,7 +168,7 @@ void TargetArchive::compileImpl(Twins<const Dependency*> dependency_list
 	,Twins<const Dependency*> dependency_list_full
 	,const char* target_dir)
 	{
-	auto files_input=filesCollect(dependency_list,target_dir);
+	auto files_input=filesCollect(dependencies(),target_dir);
 	auto r_files_input=filesCollect(files_input);
 	auto range=Twins<const char* const*>(r_files_input.data(),r_files_input.data() + r_files_input.size()); 
 	switch(typeGet())
