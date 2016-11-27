@@ -22,6 +22,7 @@
 #include "pathutils.hpp"
 #include "directorylister.hpp"
 #include "heredoctag.hpp"
+#include "hashlong.hpp"
 
 #include <unistd.h>
 #include <fcntl.h>
