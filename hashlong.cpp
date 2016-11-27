@@ -2,13 +2,13 @@
 //@	"targets":
 //@		[{
 //@		 "name":"hashlong.o","type":"object"
-//@		,"pkgconfig_libs":["openssl"]
+//@		,"pkgconfig_libs":["mhash"]
 //@		}]
 //@	}
 
 #include "hashlong.hpp"
 #include "datasource.hpp"
-#include <openssl/sha.h>
+#include <mhash.h>
 
 using namespace Maike;
 
@@ -18,16 +18,16 @@ namespace
 		{
 		public:
 			Sha256Context(std::array<uint8_t,32>& buffer):r_buffer(buffer)
-				{SHA256_Init(&m_state);}
+				{m_state=mhash_init(MHASH_SHA256);}
 
 			~Sha256Context()
-				{SHA256_Final(r_buffer.begin(),&m_state);}
+				{mhash_deinit(m_state,r_buffer.begin());}
 
 			int update(const void* data,size_t length) noexcept
-				{return SHA256_Update(&m_state,data,length);}
+				{return mhash(m_state,data,length);}
 
 		private:
-			SHA256_CTX m_state;
+			MHASH m_state;
 			std::array<uint8_t,32>& r_buffer;
 		};
 	}
@@ -35,7 +35,6 @@ namespace
 std::array<uint8_t,32> Maike::hashlong(DataSource&& src)
 	{
 	std::array<uint8_t,32> ret;
-	static_assert(SHA256_DIGEST_LENGTH==32,"SHA Digest length is wrong");
 	Sha256Context ctx(ret);
 
 	std::array<uint8_t,4096> buffer;
