@@ -13,6 +13,7 @@
 #include "../writebuffer.hpp"
 #include "../pathutils.hpp"
 #include "../fileutils.hpp"
+#include <cstring>
 
 using namespace Maike;
 
@@ -75,13 +76,18 @@ static void dataProcess(Pipe& compiler,Twins<const char* const*> files
 	WriteBuffer wb(*standard_input.get());
 	while(files.first!=files.second)
 		{
-		wb.write("@ ").write(*files.first).write("\n");
-		auto name_new=dircat(root,rootStrip(*files.first,in_dir));
-		wb.write("@=").write(name_new.c_str()).write("\n")
-			.write("@ ()");
-		++files.first;
-		if(files.first!=files.second)
-			{wb.write("\n");}
+		if(strcmp(*files.first,"."))
+			{
+			wb.write("@ ").write(*files.first).write("\n");
+			auto name_new=dircat(root,rootStrip(*files.first,in_dir));
+			wb.write("@=").write(name_new.c_str()).write("\n")
+				.write("@ ()");
+			++files.first;
+			if(files.first!=files.second)
+				{wb.write("\n");}
+			}
+		else
+			{++files.first;}
 		}
 	}
 
