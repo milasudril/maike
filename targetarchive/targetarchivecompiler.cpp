@@ -160,7 +160,7 @@ int TargetArchiveCompiler::tar(Twins<const char* const*> files,const char* name
 	auto ret=pipe.exitStatusGet();
 	if(ret!=0)
 		{
-		exceptionRaise(ErrorMessage("It was not possible to create #0;. The archiver returned status code #0;"
+		exceptionRaise(ErrorMessage("It was not possible to create #0;. The archiver returned status code #1;"
 			,{name,ret}));
 		}
 	return 0;
@@ -184,7 +184,7 @@ int TargetArchiveCompiler::zip(Twins<const char* const*> files,const char* name
 		auto ret=pipe.exitStatusGet();
 		if(ret!=0)
 			{
-			exceptionRaise(ErrorMessage("It was not possible to create #0;. The archiver returned status code #0;"
+			exceptionRaise(ErrorMessage("It was not possible to create #0;. The archiver returned status code #1;"
 				,{name,ret}));
 			}
 		}
@@ -198,7 +198,7 @@ int TargetArchiveCompiler::zip(Twins<const char* const*> files,const char* name
 		if(ret!=0)
 			{
 			FileUtils::remove(params.get<Stringkey("target")>().front().c_str());
-			exceptionRaise(ErrorMessage("It was not possible to create #0;. The archiver returned status code #0;"
+			exceptionRaise(ErrorMessage("It was not possible to create #0;. The archiver returned status code #1;"
 				,{name,ret}));
 			}
 		}
