@@ -147,6 +147,14 @@ Target_Hook_Registry& Target_Hook_Registry::configAppendDefault()
 		hook_info.hook->configAppendDefault();
 		}
 
+
+		{
+		auto& hook_info=hookCreate("targetoctave_default","targetoctave");
+		r_filenameext_hook[Stringkey(".m")]=hook_info.hook.get();
+		hook_info.filename_exts.insert(std::string(".m"));
+		hook_info.hook->configAppendDefault();
+		}
+
 		{
 		auto& hook_info=hookCreate("targetarchive_default","targetarchive");
 		r_filenameext_hook[Stringkey(".archive")]=hook_info.hook.get();
