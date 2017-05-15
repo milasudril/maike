@@ -28,6 +28,7 @@ namespace Maike
 				,EXTERNAL
 				,GENERATED
 				,FILE
+				,TOOL
 				};
 
 			Dependency():m_name(nullptr),r_target(nullptr),m_rel(Relation::LEAF)

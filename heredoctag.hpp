@@ -1,4 +1,4 @@
-//@	{"target":[{"name":"heredoctag.hpp","type":"include"}]}
+//@	{"targets":[{"name":"heredoctag.hpp","type":"include"}]}
 
 #ifndef MAIKE_HEREDOCTAG_HPP
 #define MAIKE_HEREDOCTAG_HPP

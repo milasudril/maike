@@ -32,6 +32,8 @@ namespace Maike
 
 			void configDump(ResourceObject& pythonoptions) const;
 
+			const char* executable() const noexcept;
+
 		private:
 			Command m_interpreter;
 			const ParameterSetDumpable& r_sysvars;

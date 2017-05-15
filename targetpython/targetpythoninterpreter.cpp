@@ -104,3 +104,6 @@ void TargetPythonInterpreter::configDump(ResourceObject& pythonoptions) const
 	m_interpreter.configDump(command);
 	pythonoptions.objectSet("command",std::move(command));
 	}
+
+const char* TargetPythonInterpreter::executable() const noexcept
+	{return m_interpreter.nameGet();}

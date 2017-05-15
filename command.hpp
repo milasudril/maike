@@ -39,6 +39,9 @@ namespace Maike
 			operator bool() const noexcept
 				{return m_name.size()!=0;}
 
+			const char* nameGet() const noexcept
+				{return m_name.c_str();}
+
 		private:
 			std::string m_name;
 			std::vector< std::string > m_args;

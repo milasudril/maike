@@ -42,7 +42,8 @@ Target& Target_FactoryDelegatorDefault::dependencyResolve(DependencyGraph& graph
 		}
 
 //	It does not. Is it an external dependency?
-	if(dependency.relationGet()==Dependency::Relation::EXTERNAL)
+	if(dependency.relationGet()==Dependency::Relation::EXTERNAL
+		|| dependency.relationGet()==Dependency::Relation::TOOL)
 		{
 		Handle<TargetPlaceholder> target(
 			TargetPlaceholder::create(name,name,rootGet(),idGet()));

@@ -39,6 +39,7 @@ TargetPython::TargetPython(const ResourceObject& obj
 			
 
 	dependencyAdd(Dependency("maikeconfig.json",root,Dependency::Relation::GENERATED));
+	dependencyAdd(Dependency(intpret.executable(),Dependency::Relation::TOOL));
 	}
 
 void TargetPython::dumpDetails(ResourceObject& target) const
