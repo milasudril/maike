@@ -39,6 +39,7 @@ TargetOctave::TargetOctave(const ResourceObject& obj
 			
 
 	dependencyAdd(Dependency("maikeconfig.json",root,Dependency::Relation::GENERATED));
+	dependencyAdd(Dependency(intpret.executable(),Dependency::Relation::TOOL));
 	}
 
 void TargetOctave::dumpDetails(ResourceObject& target) const

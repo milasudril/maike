@@ -32,6 +32,9 @@ namespace Maike
 
 			void configDump(ResourceObject& octaveoptions) const;
 
+			const char* executable() const noexcept
+				{return m_interpreter.nameGet();}
+
 		private:
 			Command m_interpreter;
 			const ParameterSetDumpable& r_sysvars;
