@@ -132,6 +132,7 @@ static std::vector<TargetCxxCompiler::FileInfo> depstringCreate(
 	return std::move(ret);
 	}
 
+/*
 static void optionsCollect(Twins<const Dependency*> dependency_list_full
 	,TargetCxxOptions& options_out)
 	{
@@ -154,7 +155,7 @@ static void optionsCollect(Twins<const Dependency*> dependency_list_full
 			}
 		++dependency_list_full.first;
 		}
-	}
+	}*/
 
 static std::vector<TargetCxxCompiler::FileInfo> depstringCreateAr(
 	 std::vector<std::string>& strings_temp
@@ -231,7 +232,9 @@ void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 			std::reverse(deps_begin,deps_end);
 
 			auto options_extra=m_options_extra;
-			optionsCollect(dependency_list_full,options_extra);
+		//	-flto cannot be used with .incbin, and if some module is compiled with
+		//	-flto, so must the application. Therfore do not do this for now
+		//	optionsCollect(dependency_list_full,options_extra);
 			r_compiler.compileApplication(sourceNameGet(),inDirGet(),{deps_begin,deps_end},name_full.c_str(),options_extra);
 			}
 			break;
@@ -244,7 +247,9 @@ void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 			auto deps_end=deps_begin + depfiles.size();
 			std::reverse(deps_begin,deps_end);
 			auto options_extra=m_options_extra;
-			optionsCollect(dependency_list_full,options_extra);
+		//	-flto cannot be used with .incbin, and if some module is compiled with
+		//	-flto, so must the application. Therfore do not do this for now
+		//	optionsCollect(dependency_list_full,options_extra);
 			r_compiler.compileDll(sourceNameGet(),inDirGet(),{deps_begin,deps_end},name_full.c_str(),options_extra);
 			}
 			break;
@@ -329,7 +334,7 @@ static bool applicationUpToDate(Twins<const Dependency*> dependency_list
 				break;
 			case Dependency::Relation::EXTERNAL:
 				break;
-				
+
 			default:
 				if(FileUtils::newer(dep->nameGet(),target_name_full))
 					{return 0;}
