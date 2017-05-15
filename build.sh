@@ -358,6 +358,22 @@ cat << '+xk`BD+)I~>gu?*!4i+CBg<]9k~Q5C:{$nd/.P<W' > '__targets/maikeconfig.json'
         },
         {
             "config":{
+                "command":{
+                    "args":[
+                        "{script}",
+                        "{args}"
+                    ],
+                    "name":"octave-cli"
+                }
+            },
+            "filename_exts":[
+                ".m"
+            ],
+            "name":"targetoctave_default",
+            "plugin":"targetoctave"
+        },
+        {
+            "config":{
                 "tar":{
                     "command":{
                         "args":[
@@ -492,7 +508,7 @@ cat << '+xk`BD+)I~>gu?*!4i+CBg<]9k~Q5C:{$nd/.P<W' > '__targets/maikeconfig.json'
         "gnu":563048737669120,
         "gnu_string":"2.23",
         "linux":1125917086711808,
-        "linux_string":"4.4.0-51-lowlatency",
+        "linux_string":"4.4.0-77-lowlatency",
         "nullfile":"/dev/null",
         "posix":200809,
         "project_root":"",
@@ -519,6 +535,13 @@ cat << '+xk`BD+)I~>gu?*!4i+CBg<]9k~Q5C:{$nd/.P<W' > '__targets/maikeconfig.json'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/session.o' 'session.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/maike.o' 'maike.cpp'
 'ar' 'rcs' '__targets/libmaike.a' '__targets/maike.o' '__targets/session.o' '__targets/targetconfig.o' '__targets/target_factorydelegatordefault.o' '__targets/target_hook_registry.o' '__targets/target_hook_plugin.o' '__targets/plugin.o' '__targets/dependencygraphdefault.o' '__targets/spiderdefault.o' '__targets/expressionevaluator.o' '__targets/targetdirectoryloader.o' '__targets/targetdirectory.o' '__targets/fileutils.o' '__targets/writebuffer.o' '__targets/stdstream.o' '__targets/fileout.o' '__targets/fileinfo.o' '__targets/directorylister.o' '__targets/systemtargetinfo.o' '__targets/sysvars.o' '__targets/versionnumber.o' '__targets/resourceobjectjansson.o' '__targets/targetbase.o' '__targets/timedscope.o' '__targets/dependency.o' '__targets/pathutils.o' '__targets/filein.o' '__targets/strerror.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
+mkdir '__targets/targetoctave'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetoctave' '-o' '__targets/targetoctave/targetoctaveinterpreter.o' 'targetoctave/targetoctaveinterpreter.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetoctave' '-o' '__targets/targetoctave/targetoctaveloader.o' 'targetoctave/targetoctaveloader.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetoctave' '-o' '__targets/targetoctave/targetoctave.o' 'targetoctave/targetoctave.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetoctave' '-o' '__targets/targetoctave/targetoctavefactory.o' 'targetoctave/targetoctavefactory.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetoctave' '-o' '__targets/targetoctave/targetoctavehook.o' 'targetoctave/targetoctavehook.cpp'
+'g++' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetoctave' '-shared' '-o' '__targets/targetoctave.so' 'targetoctave/targetoctavemain.cpp' '__targets/targetoctave/targetoctavehook.o' '__targets/targetoctave/targetoctavefactory.o' '__targets/targetoctave/targetoctave.o' '__targets/fileutils.o' '__targets/directorylister.o' '__targets/targetbase.o' '__targets/timedscope.o' '__targets/dependency.o' '__targets/pathutils.o' '__targets/targetoctave/targetoctaveloader.o' '__targets/filein.o' '__targets/targetoctave/targetoctaveinterpreter.o' '__targets/thread.o' '-lpthread' '__targets/command.o' '__targets/pipe.o' '__targets/writebuffer.o' '__targets/stdstream.o' '__targets/fileout.o' '__targets/strerror.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
 grep -v '^[[:space:]]*//@' 'visibility.hpp' > '__targets/visibility.hpp'
 grep -v '^[[:space:]]*//@' 'exceptionhandler.hpp' > '__targets/exceptionhandler.hpp'
 grep -v '^[[:space:]]*//@' 'twins.hpp' > '__targets/twins.hpp'
