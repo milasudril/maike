@@ -33,9 +33,6 @@ namespace Maike
 			std::vector<std::string> m_libdir;
 			std::vector<Dependency> m_deps;
 		};
-
- 	PRIVATE void pkgconfigAsk(const Command& cmd,const char* libname
-		,Target& target,TargetCxxOptions& options);
 	}
 
 #endif

@@ -66,7 +66,8 @@ void TargetCxx::pkgconfig(const ResourceObject& pkgconfig_libs)
 	auto N=pkgconfig_libs.objectCountGet();
 	for(decltype(N) k=0;k<N;++k)
 		{
-		pkgconfigAsk(cmd,static_cast<const char*>(pkgconfig_libs.objectGet(k)),*this,m_options_extra);
+		r_compiler.pkgconfigAsk(static_cast<const char*>(pkgconfig_libs.objectGet(k)),sourceNameGet())
+			.optionsPush(m_options_extra).dependenciesPush(*this);
 		}
 	}
 

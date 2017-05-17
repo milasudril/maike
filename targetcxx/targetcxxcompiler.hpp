@@ -6,10 +6,13 @@
 #ifndef MAIKE_TARGETCXXCOMPILER_HPP
 #define MAIKE_TARGETCXXCOMPILER_HPP
 
+#include "targetcxxpkgconfig.hpp"
 #include "../twins.hpp"
 #include "../visibility.hpp"
+#include "../stringkey.hpp"
 #include <string>
 #include <vector>
+#include <map>
 
 namespace Maike
 	{
@@ -53,10 +56,13 @@ namespace Maike
 
 			unsigned long long int cxxversionDefaultGet() const;
 
+			const PkgConfigRequest& pkgconfigAsk(const char* library,const char* context) const;
+
 		private:
 			const TargetCxxOptions& r_options;
 			const ParameterSet* r_paramset;
 			mutable unsigned long long int m_cxxversion_default;
+			mutable std::map<Stringkey,PkgConfigRequest> m_pkgconfig_cache;
 
 			void execute(const Command& cmd,const char* source
 				,const char* in_dir

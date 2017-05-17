@@ -189,10 +189,3 @@ const PkgConfigRequest& PkgConfigRequest::dependenciesPush(Target& t) const
 	return *this;
 	}
 
-
-void Maike::pkgconfigAsk(const Command& cmd,const char* libname,Target& target
-	,TargetCxxOptions& options)
-	{
-	PkgConfigRequest req(cmd,libname,target.sourceNameGet());
-	req.optionsPush(options).dependenciesPush(target);
-	}

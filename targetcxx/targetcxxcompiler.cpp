@@ -310,3 +310,14 @@ void TargetCxxCompiler::compileLibrary(const char* source,const char* in_dir
 	execute(r_options.libcompileGet(),source,in_dir,dependencies,dest,options_extra);
 	}
 
+const PkgConfigRequest& TargetCxxCompiler::pkgconfigAsk(const char* library,const char* context) const
+	{
+	auto key=Stringkey(library);
+	auto i=m_pkgconfig_cache.find(key);
+	if(i!=m_pkgconfig_cache.end())
+		{return i->second;}
+
+	auto ip=m_pkgconfig_cache.insert({key,PkgConfigRequest(r_options.pkgconfigGet(),library,context)});
+	return ip.first->second;
+	}
+
