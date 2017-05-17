@@ -168,7 +168,37 @@ PkgConfigRequest::PkgConfigRequest(const Command& cmd,const char* libname
 	}
 
 
-void Maike::pkgconfigAsk(const Command& cmd,const char* libname
+const PkgConfigRequest& PkgConfigRequest::optionsPush(TargetCxxOptions& options) const
+	{
+	std::for_each(m_incdir.begin(),m_incdir.end(),[&options](const std::string& dir)
+		{options.includedirNoscanAppend(dir.c_str());});
+	std::for_each(m_cflags.begin(),m_cflags.end(),[&options](const std::string& flag)
+		{options.cflagsExtraAppend(flag.c_str());});
+	std::for_each(m_libdir.begin(),m_libdir.end(),[&options](const std::string& dir)
+		{options.libdirAppend(dir.c_str());});
+	return *this;
+	}
+
+const PkgConfigRequest& PkgConfigRequest::dependenciesPush(Target& t) const
+	{
+	std::for_each(m_deps.begin(),m_deps.end(),[&t](const Dependency& dep)
+		{
+		Dependency dep_copy(dep);
+		t.dependencyAdd(std::move(dep_copy));
+		});
+	return *this;
+	}
+
+
+void Maike::pkgconfigAsk(const Command& cmd,const char* libname,Target& target
+	,TargetCxxOptions& options)
+	{
+	PkgConfigRequest req(cmd,libname,target.sourceNameGet());
+	req.optionsPush(options).dependenciesPush(target);
+	}
+
+
+/*void Maike::pkgconfigAsk(const Command& cmd,const char* libname
 	,Target& target,TargetCxxOptions& options_out)
 	{
 	PkgConfigParams params;
@@ -193,7 +223,7 @@ void Maike::pkgconfigAsk(const Command& cmd,const char* libname
 	params.get<Stringkey("action")>()[0]=std::string("--libs-only-L");
 	if(pipeExecute(cmd,params," -L",[&options_out](const char* str)
 		{options_out.libdirAppend(str);})!=0)
-		{
+			{
 		exceptionRaise(ErrorMessage("#0;: It was not possible to find information about "
 			"the library #1;",{target.sourceNameGet(),libname}));
 		}
@@ -217,3 +247,4 @@ void Maike::pkgconfigAsk(const Command& cmd,const char* libname
 			}
 		}
 	}
+*/

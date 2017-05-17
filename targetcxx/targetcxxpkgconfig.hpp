@@ -24,6 +24,9 @@ namespace Maike
 			PkgConfigRequest(const Command& cmd,const char* libname
 				,const char* context);
 
+			const PkgConfigRequest& optionsPush(TargetCxxOptions& options) const;
+			const PkgConfigRequest& dependenciesPush(Target& t) const;
+
 		private:
 			std::vector<std::string> m_incdir;
 			std::vector<std::string> m_cflags;

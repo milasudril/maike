@@ -67,7 +67,7 @@ namespace Maike
 			~Dependency() noexcept
 				{nameFree();}
 
-			Dependency(const Dependency& obj) noexcept
+			Dependency(const Dependency& obj)
 				{
 				m_name=nullptr;
 				if(obj.m_name==nullptr)
