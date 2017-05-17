@@ -8,11 +8,29 @@
 
 #include "../visibility.hpp"
 
+#include <vector>
+#include <string>
+
 namespace Maike
 	{
 	class Command;
 	class Target;
 	class TargetCxxOptions;
+	class Dependency;
+
+	class PRIVATE PkgConfigRequest
+		{
+		public:
+			PkgConfigRequest(const Command& cmd,const char* libname
+				,const char* context);
+
+		private:
+			std::vector<std::string> m_incdir;
+			std::vector<std::string> m_cflags;
+			std::vector<std::string> m_libdir;
+			std::vector<Dependency> m_deps;
+		};
+
  	PRIVATE void pkgconfigAsk(const Command& cmd,const char* libname
 		,Target& target,TargetCxxOptions& options);
 	}

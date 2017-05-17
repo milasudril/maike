@@ -126,6 +126,48 @@ PRIVATE int pipeExecute(const Command& cmd,const PkgConfigParams& params
 	return pkgconfig.exitStatusGet();
 	}
 
+PkgConfigRequest::PkgConfigRequest(const Command& cmd,const char* libname
+	,const char* context)
+	{
+	PkgConfigParams params;
+	params.get<Stringkey("libname")>().push_back(std::string(libname));
+
+	params.get<Stringkey("action")>().push_back(std::string("--cflags-only-I"));
+	if(pipeExecute(cmd,params," -I",[this](const char* str)
+		{m_incdir.push_back(std::string(str));})!=0)
+		{
+		exceptionRaise(ErrorMessage("#0;: It was not possible to find information about "
+			"the library #1;",{context,libname}));
+		}
+
+	params.get<Stringkey("action")>()[0]=std::string("--cflags-only-other");
+	if(pipeExecute(cmd,params," -",[this](const char* str)
+		{m_cflags.push_back(std::string(str));})!=0)
+		{
+		exceptionRaise(ErrorMessage("#0;: It was not possible to find information about "
+			"the library #1;",{context,libname}));
+		}
+
+	params.get<Stringkey("action")>()[0]=std::string("--libs-only-L");
+	if(pipeExecute(cmd,params," -L",[this](const char* str)
+		{m_libdir.push_back(std::string(str));})!=0)
+		{
+		exceptionRaise(ErrorMessage("#0;: It was not possible to find information about "
+			"the library #1;",{context,libname}));
+		}
+
+	params.get<Stringkey("action")>()[0]=std::string("--libs-only-l");
+	std::vector<Dependency> depnames;
+	if(pipeExecute(cmd,params," -l",[this](const char* str)
+		{m_deps.push_back(Dependency(str,"",Dependency::Relation::EXTERNAL));})!=0)
+		{
+		exceptionRaise(ErrorMessage("#0;: It was not possible to find information about "
+			"the library #1;",{context,libname}));
+		}
+	std::reverse(m_deps.data(),m_deps.data() + m_deps.size());
+	}
+
+
 void Maike::pkgconfigAsk(const Command& cmd,const char* libname
 	,Target& target,TargetCxxOptions& options_out)
 	{
