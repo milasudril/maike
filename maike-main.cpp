@@ -357,6 +357,7 @@ static int databaseDumpJSON(Maike::Session& maike
 			targetDump(maike,db,ptr->c_str());
 			++ptr;
 			}
+		db.write(fileGet(filename));
 		}
 	return 0;
 	}
