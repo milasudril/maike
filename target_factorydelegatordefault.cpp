@@ -35,7 +35,7 @@ Target& Target_FactoryDelegatorDefault::dependencyResolve(DependencyGraph& graph
 	if(FileUtils::exists(name))
 		{
 		Handle<TargetPlaceholder> target(
-			TargetPlaceholder::create(name,name,rootGet(),idGet(),1));
+			TargetPlaceholder::create(name,name,rootGet(),idGet(),Dependency::Relation::FILE));
 		auto ret=target.get();
 		graph.targetRegister(std::move(target));
 		return *ret;
@@ -46,7 +46,7 @@ Target& Target_FactoryDelegatorDefault::dependencyResolve(DependencyGraph& graph
 		|| dependency.relationGet()==Dependency::Relation::TOOL)
 		{
 		Handle<TargetPlaceholder> target(
-			TargetPlaceholder::create(name,name,rootGet(),idGet(),0));
+			TargetPlaceholder::create(name,name,rootGet(),idGet(),dependency.relationGet()));
 		auto ret=target.get();
 		graph.targetRegister(std::move(target));
 		return *ret;

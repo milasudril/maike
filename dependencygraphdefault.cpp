@@ -119,7 +119,6 @@ DependencyGraphDefault& DependencyGraphDefault::targetsRemove(TargetProcessor&& 
 		if(condition(*this,*(i->second))==0)
 			{
 			r_handler.targetRemoved(*this,*i->second);
-		//	r_id_gen.idRelease(i->second->idGet());
 			m_targets.erase(i);
 			}
 		++i;
@@ -131,7 +130,6 @@ DependencyGraphDefault& DependencyGraphDefault::targetsRemove(TargetProcessor&& 
 DependencyGraphDefault& DependencyGraphDefault::clear() noexcept
 	{
 	m_targets.clear();
-//	r_id_gen.reset();
 	r_handler.graphCleared(*this);
 	m_patch_needed=0;
 	return *this;

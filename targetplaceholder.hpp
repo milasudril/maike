@@ -11,8 +11,8 @@ namespace Maike
 		{
 		public:
 			static TargetPlaceholder* create(const char* name,const char* name_src
-				,const char* root,size_t id,bool file_is)
-				{return new TargetPlaceholder(name,name_src,root,id,file_is);}
+				,const char* root,size_t id,Dependency::Relation rel)
+				{return new TargetPlaceholder(name,name_src,root,id,rel);}
 
 			virtual void destroy() noexcept
 				{delete this;}
@@ -27,17 +27,18 @@ namespace Maike
 				,const char* target_dir)
 				{}
 
-			bool fileIs() const noexcept
-				{return m_file_is;}
+			Dependency::Relation relation() const noexcept
+				{return m_relation;}
 
 		private:
-			TargetPlaceholder(const char* name,const char* name_src,const char* root,size_t id,bool file_is):
-				TargetBase(name,name_src,"",root,id),m_file_is(file_is)
+			TargetPlaceholder(const char* name,const char* name_src,const char* root,size_t id
+				,Dependency::Relation rel):
+				TargetBase(name,name_src,"",root,id),m_relation(rel)
 				{}
 
 			~TargetPlaceholder()=default;
 
-			bool m_file_is;
+			Dependency::Relation m_relation;
 		};
 	}
 
