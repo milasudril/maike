@@ -92,13 +92,16 @@ bool FileUtils::newer(const char* file_a,const char* file_b)
 void FileUtils::mkdir(const char* name)
 	{
 	WriteBuffer wb(StdStream::output());
-	wb.write("mkdir ");
+	wb.write("mkdir -p ");
 	escape(wb,name);
 	wb.write(static_cast<uint8_t>('\n'));
 	if( ::mkdir(name, S_IRWXU )==-1 )
 		{
-		exceptionRaise(ErrorMessage("It was not possible to create a directory with name #0;. #1;"
-			,{name,static_cast<const char*>(Maike::strerror(errno))}));
+		if(errno!=EEXIST)
+			{
+			exceptionRaise(ErrorMessage("It was not possible to create a directory with name #0;. #1;"
+				,{name,static_cast<const char*>(Maike::strerror(errno))}));
+			}
 		}
 	}
 
