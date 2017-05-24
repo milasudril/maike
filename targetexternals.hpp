@@ -85,8 +85,9 @@ namespace Maike
 			size_t m_id;
 			Dependency m_dep;
 			std::vector<Dependency> m_deps_inverse;
-			double m_compilation_time;
+			mutable double m_compilation_time;
 			const DependencyGraph& r_graph;
+			mutable std::string m_data;
 		};
 	}
 

@@ -16,6 +16,25 @@
 
 using namespace Maike;
 
+TargetExternals::TargetExternals(const DependencyGraph& graph,size_t id):
+	m_id(id)
+	,m_dep(".",Dependency::Relation::INTERNAL)
+	,m_compilation_time(std::numeric_limits<double>::quiet_NaN())
+	,r_graph(graph)
+	{
+	}
+
+void TargetExternals::compile(Twins<const Dependency*> dependency_list
+	,Twins<const Dependency*> dependency_list_full
+	,const char* target_dir)
+	{
+	double t;
+	TimedScope timer(t);
+	auto filename=dircat(target_dir,"externals.json");
+	FileUtils::echo(m_data.c_str(),filename.c_str());
+	m_compilation_time+=t;
+	}
+
 namespace
 	{
 	class StringWriter:public DataSink
@@ -47,22 +66,26 @@ namespace
 		};
 	}
 
-TargetExternals::TargetExternals(const DependencyGraph& graph,size_t id):
-	m_id(id)
-	,m_dep(".",Dependency::Relation::INTERNAL)
-	,m_compilation_time(std::numeric_limits<double>::quiet_NaN())
-	,r_graph(graph)
+static std::string data_reload(const char* filename)
 	{
+	std::string ret;
+	try
+		{
+		ResourceObjectJansson src(FileIn{filename});
+		src.write(StringWriter{ret});
+		}
+	catch(...)
+		{}
+	return std::move(ret);
 	}
 
 namespace
 	{
-
 	class TargetsExternalDump:public DependencyGraph::TargetProcessorConst
 		{
 		public:
-			TargetsExternalDump(std::vector<std::string>& libs
-				,std::vector<std::string>& tools):r_libs(libs),r_tools(tools)
+			TargetsExternalDump(ResourceObject& libs,ResourceObject& tools):
+				r_libs(libs),r_tools(tools)
 				{}
 
 			int operator()(const DependencyGraph& graph,const Target& target)
@@ -73,10 +96,10 @@ namespace
 					switch(ptr->relation())
 						{
 						case Dependency::Relation::EXTERNAL:
-							r_libs.push_back(ptr->nameGet());
+							r_libs.objectAppend(r_libs.create(ptr->nameGet()));
 							break;
 						case Dependency::Relation::TOOL:
-							r_tools.push_back(ptr->nameGet());
+							r_tools.objectAppend(r_tools.create(ptr->nameGet()));
 							break;
 						default:
 							break;
@@ -86,55 +109,25 @@ namespace
 				}
 
 		private:
-			std::vector<std::string>& r_libs;
-			std::vector<std::string>& r_tools;
+			ResourceObject& r_libs;
+			ResourceObject& r_tools;
 		};
-	}
-
-void TargetExternals::compile(Twins<const Dependency*> dependency_list
-	,Twins<const Dependency*> dependency_list_full
-	,const char* target_dir)
-	{
-	TimedScope scope(m_compilation_time);
-	auto filename=dircat(target_dir,"externals.json");
-	
-	std::vector<std::string> libs;
-	std::vector<std::string> tools;
-	r_graph.targetsProcess(TargetsExternalDump{libs,tools});
-	std::string json_out(R"EOF({
-	"libs":[)EOF");
-	std::for_each(libs.begin(),libs.end()
-		,[&json_out](const std::string& str)
-			{
-			json_out+='"';
-			//TODO: Escape str
-			json_out+=str;
-			json_out+="\",";
-			});
-	json_out.pop_back();
-	json_out+=R"EOF(]
-	,"tools":[)EOF";
-	std::for_each(tools.begin(),tools.end()
-		,[&json_out](const std::string& str)
-			{
-			json_out+='"';
-			//TODO: Escape str
-			json_out+=str;
-			json_out+="\",";
-			});
-	json_out.pop_back();
-	json_out+=R"EOF(]
-})EOF";
-	FileUtils::echo(json_out.c_str(),filename.c_str());
 	}
 
 bool TargetExternals::upToDate(Twins<const Dependency*> dependency_list
 	,Twins<const Dependency*> dependency_list_full
 	,const char* target_dir) const
 	{
+	TimedScope timer(m_compilation_time);
 	auto filename=dircat(target_dir,"externals.json");
-	if(!FileUtils::exists(filename.c_str()))
-		{return 0;}
-	
-	return 0;
+	auto data=data_reload(filename.c_str());
+
+	ResourceObjectJansson libs(ResourceObject::Type::ARRAY);
+	ResourceObjectJansson tools(ResourceObject::Type::ARRAY);
+	r_graph.targetsProcess(TargetsExternalDump{libs,tools});
+	ResourceObjectJansson obj(ResourceObject::Type::OBJECT);
+	obj.objectSet("libraries",std::move(libs))
+		.objectSet("tools",std::move(tools));
+	obj.write(StringWriter(m_data));
+	return m_data==data;
 	}
