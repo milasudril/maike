@@ -18,7 +18,6 @@
 #include "stdstream.hpp"
 #include "resourceobjectjansson.hpp"
 #include "filein.hpp"
-#include "fileout.hpp"
 #include "fileutils.hpp"
 #include "readbuffer.hpp"
 
@@ -388,16 +387,6 @@ void Maike::targetCompile(Session& maike,const char* target_name)
 	auto& target=maike.target(target_name);
 	auto target_dir=maike.targetDirectoryGet();
 	auto& id_range=maike.targetIdRangeGet();
-
-//	For documentation purpose, dump the target database before
-//	compiling anything.
-//FIXME: This only writes one record (the current target), and
-//not its dependencies. We must call toposort first.
-	ResourceObjectJansson obj(ResourceObject::Type::ARRAY);
-	targetDump(maike,obj,target_name);
-	FileUtils::mkdir(maike.targetDirectoryGet());
-	obj.write(FileOut(dircat(maike.targetDirectoryGet(),"__targets.json").c_str()));
-
 	buildBranch(target,target_dir,id_range);
 	}
 
@@ -426,20 +415,15 @@ namespace
 
 void Maike::targetsCompile(Session& maike)
 	{
-//	If there are only two targets, they must be the project root
-//	directory, and the configuration file. In that case, do not
-//	compile it, since that would create an almost empty target
-//	directory.
-	if(maike.targetsCountGet()<=2)
+//	If there are only three targets, they must be the project root
+//	directory, the configuration file, and externals file. In that
+//	case, do not compile it, since that would create an almost
+//	empty target directory.
+	if(maike.targetsCountGet()<=3)
 		{
 		exceptionRaise(ErrorMessage("I could not identify any targets "
 			"in any of the input directories.",{}));
 		}
-//	For documentation purpose, dump the target database before
-//	compiling anything.
-	FileUtils::mkdir(maike.targetDirectoryGet());
-	targetsDump(maike).write(FileOut(dircat(maike.targetDirectoryGet(),"__targets.json").c_str()));
-
 	maike.targetsProcess(TargetsCompileLeaf(maike));
 	}
 

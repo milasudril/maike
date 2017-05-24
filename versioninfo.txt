@@ -1,1 +1,1 @@
-0.11.1-5-g0a6a11b-dirty
+0.11.1-6-gf315fcc-dirty
