@@ -80,9 +80,9 @@ namespace Maike
 				{delete this;}
 			size_t m_id;
 			Dependency m_dep;
-			std::string m_content;
 			std::vector<Dependency> m_deps_inverse;
-			double m_compilation_time;
+			std::string m_content;
+			mutable double m_compilation_time;
 
 		};
 	}

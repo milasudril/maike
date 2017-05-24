@@ -57,9 +57,22 @@ void TargetConfig::compile(Twins<const Dependency*> dependency_list
 	,Twins<const Dependency*> dependency_list_full
 	,const char* target_dir)
 	{
-	TimedScope scope(m_compilation_time);
+	TimedScope timer(m_compilation_time);
 	auto filename=dircat(target_dir,"maikeconfig.json");
 	FileUtils::echo(m_content.c_str(),filename.c_str());
+	}
+
+static std::string data_reload(const char* filename)
+	{
+	std::string ret;
+	try
+		{
+		ResourceObjectJansson src(FileIn{filename});
+		src.write(StringWriter{ret});
+		}
+	catch(...)
+		{}
+	return std::move(ret);
 	}
 
 bool TargetConfig::upToDate(Twins<const Dependency*> dependency_list
@@ -67,11 +80,5 @@ bool TargetConfig::upToDate(Twins<const Dependency*> dependency_list
 	,const char* target_dir) const
 	{
 	auto filename=dircat(target_dir,"maikeconfig.json");
-	if(!FileUtils::exists(filename.c_str()))
-		{return 0;}
-	
-	std::string temp;
-	ResourceObjectJansson(FileIn(filename.c_str())).write(StringWriter(temp));
-	
-	return temp==m_content;
+	return data_reload(filename.c_str())==m_content; //m_content was set in CTOR
 	}
