@@ -62,6 +62,7 @@ size_t TagExtractor::read(void* buffer,size_t length)
 					{
 					switch(ch_in)
 						{
+						case '#':
 						case '%':
 							state=State::COMMENT_0;
 							break;
