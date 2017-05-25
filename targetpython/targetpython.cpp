@@ -36,9 +36,6 @@ TargetPython::TargetPython(const ResourceObject& obj
 			m_static=1;
 			}
 		}
-			
-
-	dependencyAdd(Dependency("maikeconfig.json",root,Dependency::Relation::GENERATED));
 	dependencyAdd(Dependency(intpret.executable(),Dependency::Relation::TOOL));
 	}
 
