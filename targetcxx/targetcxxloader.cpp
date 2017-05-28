@@ -11,6 +11,8 @@
 #include "../dependency.hpp"
 #include "../dependencygraph.hpp"
 #include "../pathutils.hpp"
+#include "../writebuffer.hpp"
+#include "../stdstream.hpp"
 #include <cstring>
 #include <vector>
 
@@ -177,6 +179,8 @@ namespace
 bool DependencyCollector::operator()(const Target_FactoryDelegator& delegator,Dependency& dep_primary
 	,ResourceObject::Reader rc_reader)
 	{
+	WriteBuffer wb(StdStream::error());
+
 	if(!m_deps_pending.empty())
 		{
 		dep_primary=std::move(m_deps_pending.back());
@@ -239,6 +243,8 @@ bool DependencyCollector::operator()(const Target_FactoryDelegator& delegator,De
 							{break;}
 						if(macro[0]=="MAIKE_TARGET")
 							{
+							wb.write(m_file_reader.nameGet()).write(": Warning: Using MAIKE_TARGET in this context is deprecated. "
+								"Support will be removed when #44 is closed.\n");
 							auto name_dep_full=dircat(r_in_dir,macro[1]);
 							dep_primary=Dependency(name_dep_full.c_str(),delegator.rootGet()
 								,Dependency::Relation::GENERATED);
