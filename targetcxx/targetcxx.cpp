@@ -83,6 +83,17 @@ TargetCxx::TargetCxx(const ResourceObject& obj,const TargetCxxCompiler& compiler
 		{m_options_extra=TargetCxxOptions(obj.objectGet("cxxoptions"));}
 	if(obj.objectExists("pkgconfig_libs"))
 		{pkgconfig(obj.objectGet("pkgconfig_libs"));}
+	if(obj.objectExists("include_targets"))
+		{
+		auto itargets=obj.objectGet("include_targets");
+		auto N=itargets.objectCountGet();
+		for(decltype(N) k=0;k<N;++k)
+			{
+			auto dep_name=static_cast<const char*>(itargets.objectGet(k));
+			Dependency dep( dircat(in_dir,dep_name).c_str(),root,Dependency::Relation::GENERATED );
+			dependencyAdd( std::move(dep) );
+			}
+		}
 	}
 
 void TargetCxx::dumpDetails(ResourceObject& target) const
@@ -133,30 +144,29 @@ static std::vector<TargetCxxCompiler::FileInfo> depstringCreate(
 	return std::move(ret);
 	}
 
-/*
-static void optionsCollect(Twins<const Dependency*> dependency_list_full
+
+static void optionsCollect(Twins<const Dependency*> deps
 	,TargetCxxOptions& options_out)
 	{
-	while(dependency_list_full.first!=dependency_list_full.second)
+	while(deps.first!=deps.second)
 		{
-		switch(dependency_list_full.first->relationGet())
+		switch(deps.first->relationGet())
 			{
-			case Dependency::Relation::IMPLEMENTATION:
+			case Dependency::Relation::INCLUDE:
 				{
-				auto target_rel=dynamic_cast<const TargetCxx*>(dependency_list_full.first->target());
+				auto target_rel=dynamic_cast<const TargetCxx*>(deps.first->target());
 				if(target_rel)
-					{
-					options_out.configAppend( target_rel->optionsExtraGet() );
-					}
+					{options_out.configAppend( target_rel->optionsExtraGet() );}
 				}
 				break;
 
 			default:
 				break;
 			}
-		++dependency_list_full.first;
+		++deps.first;
 		}
-	}*/
+	putchar('\n');
+	}
 
 static std::vector<TargetCxxCompiler::FileInfo> depstringCreateAr(
 	 std::vector<std::string>& strings_temp
@@ -218,7 +228,11 @@ void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 	switch(m_type)
 		{
 		case Type::OBJECT:
-			r_compiler.compileObject(sourceNameGet(),inDirGet(),name_full.c_str(),m_options_extra);
+			{
+			auto options_extra=m_options_extra;
+			optionsCollect(dependency_list,options_extra);
+			r_compiler.compileObject(sourceNameGet(),inDirGet(),name_full.c_str(),options_extra);
+			}
 			break;
 		case Type::INCLUDE_LIB:
 			includeBuild(dependency_list,sourceNameGet(),name_full.c_str(),target_dir);
@@ -232,11 +246,11 @@ void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 			auto deps_end=deps_begin + depfiles.size();
 			std::reverse(deps_begin,deps_end);
 
-			auto options_extra=m_options_extra;
 		//	-flto cannot be used with .incbin, and if some module is compiled with
 		//	-flto, so must the application. Therfore do not do this for now
+		//	auto options_extra=m_options_extra;
 		//	optionsCollect(dependency_list_full,options_extra);
-			r_compiler.compileApplication(sourceNameGet(),inDirGet(),{deps_begin,deps_end},name_full.c_str(),options_extra);
+			r_compiler.compileApplication(sourceNameGet(),inDirGet(),{deps_begin,deps_end},name_full.c_str(),m_options_extra);
 			}
 			break;
 		case Type::LIB_DYNAMIC:
@@ -247,11 +261,11 @@ void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 			auto deps_begin=depfiles.data();
 			auto deps_end=deps_begin + depfiles.size();
 			std::reverse(deps_begin,deps_end);
-			auto options_extra=m_options_extra;
 		//	-flto cannot be used with .incbin, and if some module is compiled with
 		//	-flto, so must the application. Therfore do not do this for now
+		//	auto options_extra=m_options_extra;
 		//	optionsCollect(dependency_list_full,options_extra);
-			r_compiler.compileDll(sourceNameGet(),inDirGet(),{deps_begin,deps_end},name_full.c_str(),options_extra);
+			r_compiler.compileDll(sourceNameGet(),inDirGet(),{deps_begin,deps_end},name_full.c_str(),m_options_extra);
 			}
 			break;
 		case Type::LIB_STATIC:
