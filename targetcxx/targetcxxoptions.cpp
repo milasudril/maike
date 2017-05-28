@@ -388,7 +388,8 @@ void TargetCxxOptions::configDump(ResourceObject& cxxoptions) const
 		.objectSet("cxxversion_max",cxxoptions.create(static_cast<long long int>(m_cxxversion_max)))
 		.objectSet("cxxversion_min",cxxoptions.create(static_cast<long long int>(m_cxxversion_min)))
 		.objectSet("cflags_format",cxxoptions.create(m_cflags_format.c_str()))
-		.objectSet("iquote_format",cxxoptions.create(m_iquote_format.c_str()));
+		.objectSet("iquote_format",cxxoptions.create(m_iquote_format.c_str()))
+		.objectSet("include_format",cxxoptions.create(m_include_format.c_str()));
 
 		{
 		auto includedir=cxxoptions.createArray();
