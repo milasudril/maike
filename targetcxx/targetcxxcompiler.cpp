@@ -118,7 +118,8 @@ typedef ParameterSetMapFixed<
 	,Stringkey("cflags_extra")
 	,Stringkey("iquote")
 	,Stringkey("current_directory")
-	,Stringkey("target_directory")> CompilerParameters;
+	,Stringkey("target_directory")
+	,Stringkey("includes_extra")> CompilerParameters;
 
 static const char* cxxNameGet(unsigned long long int cxxversion)
 	{
@@ -180,8 +181,23 @@ static std::string makeDepitemString(const TargetCxxCompiler::FileInfo& fileinfo
 			return placeholderSubstitute(options.libintFormatGet(),fileinfo.filename);
 		case TargetCxxCompiler::FileUsage::LIB_EXTERNAL:
 			return placeholderSubstitute(options.libextFormatGet(),fileinfo.filename);
+		default:
+			return std::string("");
 		}
-	return std::string(fileinfo.filename);
+	return std::string("");
+	}
+
+static std::string makeIncludeString(const TargetCxxCompiler::FileInfo& fileinfo
+	,const TargetCxxOptions& options)
+	{
+	switch(fileinfo.usage)
+		{
+		case TargetCxxCompiler::FileUsage::INCLUDE_EXTRA:
+			return placeholderSubstitute(options.includeFormatGet(),fileinfo.filename);
+		default:
+			return std::string("");
+		}
+	return std::string("");
 	}
 
 static void argvBuild(std::vector<std::string>& argv
@@ -256,14 +272,31 @@ void TargetCxxCompiler::execute(const Command& cmd
 	if(dependencies.first!=dependencies.second)
 		{
 		auto& deps=cxxparams.get<Stringkey("dependencies")>();
+		auto ptr=dependencies.first;
 		do
 			{
-			deps.push_back(makeDepitemString(*dependencies.first,options_result));
-			++dependencies.first;
+			auto str=makeDepitemString(*ptr,options_result);
+			if(str.size()!=0)
+				{deps.push_back(std::move(str));}
+			++ptr;
 			}
-		while(dependencies.first!=dependencies.second);
-		argvBuild(cxxparams.get<Stringkey("libdir")>()
-			,options_result.libdirGet(),options_result.libdirFormatGet());
+		while(ptr!=dependencies.second);
+		if(deps.size()!=0)
+			{
+			argvBuild(cxxparams.get<Stringkey("libdir")>()
+				,options_result.libdirGet(),options_result.libdirFormatGet());
+			}
+		
+		auto& includes=cxxparams.get<Stringkey("includes_extra")>();
+		ptr=dependencies.first;
+		do
+			{
+			auto str=makeIncludeString(*ptr,options_result);
+			if(str.size()!=0)
+				{includes.push_back(std::move(str));}
+			++ptr;
+			}
+		while(ptr!=dependencies.second);
 		}
 
 	const ParameterSet* paramset[]={r_paramset,&cxxparams};
@@ -283,10 +316,11 @@ void TargetCxxCompiler::execute(const Command& cmd
 	}
 
 void TargetCxxCompiler::compileObject(const char* source,const char* in_dir
+	,Twins<const FileInfo*> dependencies
 	,const char* dest
 	,const TargetCxxOptions& options_extra) const
 	{
-	execute(r_options.objcompileGet(),source,in_dir,{nullptr,nullptr},dest,options_extra);
+	execute(r_options.objcompileGet(),source,in_dir,dependencies,dest,options_extra);
 	}
 
 void TargetCxxCompiler::compileApplication(const char* source,const char* in_dir

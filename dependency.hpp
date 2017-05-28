@@ -29,6 +29,7 @@ namespace Maike
 				,GENERATED
 				,FILE
 				,TOOL
+				,INCLUDE_GENERATED
 				};
 
 			Dependency():m_name(nullptr),r_target(nullptr),m_rel(Relation::LEAF)
@@ -116,7 +117,6 @@ namespace Maike
 				{return m_rel;}
 
 			void dump(ResourceObject& dependency) const;
-
 
 		private:
 			void nameSet(const char* name);

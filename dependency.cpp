@@ -27,6 +27,8 @@ static Dependency::Relation relation(const char* string)
 		{return Dependency::Relation::LEAF;}
 	if(key==Stringkey("generated"))
 		{return Dependency::Relation::GENERATED;}
+	if(key==Stringkey("include_generated"))
+		{return Dependency::Relation::INCLUDE_GENERATED;}
 	if(key==Stringkey("file"))
 		{return Dependency::Relation::FILE;}
 	if(key==Stringkey("include"))
@@ -57,6 +59,8 @@ static const char* relation(Dependency::Relation rel)
 			return "file";
 		case Dependency::Relation::TOOL:
 			return "tool";
+		case Dependency::Relation::INCLUDE_GENERATED:
+			return "include_generated";
 		}
 	return nullptr;
 	}

@@ -131,6 +131,9 @@ TargetCxxOptions& TargetCxxOptions::configAppend(const ResourceObject& cxxoption
 	if(cxxoptions.objectExists("iquote_format"))
 		{m_iquote_format=std::string(static_cast<const char*>(cxxoptions.objectGet("iquote_format")));}
 
+	if(cxxoptions.objectExists("include_format"))
+		{m_include_format=std::string(static_cast<const char*>(cxxoptions.objectGet("include_format")));}
+
 
 	if(cxxoptions.objectExists("objcompile"))
 		{m_objcompile=Command(cxxoptions.objectGet("objcompile"));}
@@ -226,6 +229,9 @@ TargetCxxOptions& TargetCxxOptions::configAppend(const TargetCxxOptions& cxxopti
 	if(cxxoptions.m_iquote_format.size()!=0)
 		{m_iquote_format=cxxoptions.m_iquote_format;}
 
+	if(cxxoptions.m_include_format.size()!=0)
+		{m_include_format=cxxoptions.m_include_format;}
+
 
 	if(cxxoptions.m_objcompile)
 		{m_objcompile=cxxoptions.m_objcompile;}
@@ -277,15 +283,18 @@ TargetCxxOptions& TargetCxxOptions::configAppendDefault()
 	m_stdprefix=std::string("-std=");
 	m_cflags_format=std::string("-^");
 	m_iquote_format=std::string("-iquote^");
+	m_include_format=std::string("-include^");
 
 	m_objcompile.argumentsClear();
 	m_objcompile.nameSet("g++").argumentAppend("-c")
 		.argumentAppend("-g").argumentAppend("-fpic")
 		.argumentAppend("{cxxversion}").argumentAppend("-Wall")
-		.argumentAppend("{cflags_extra}").argumentAppend("{iquote}")
+		.argumentAppend("{cflags_extra}")
+		.argumentAppend("{iquote}")
 		.argumentAppend("{includedir}")
 		.argumentAppend("-DMAIKE_TARGET_DIRECTORY={target_directory}")
 		.argumentAppend("-DMAIKE_CURRENT_DIRECTORY={current_directory}")
+		.argumentAppend("{includes_extra}")
 		.argumentAppend("-o").argumentAppend("{target}")
 		.argumentAppend("{source}");
 
@@ -296,6 +305,7 @@ TargetCxxOptions& TargetCxxOptions::configAppendDefault()
 		.argumentAppend("{iquote}").argumentAppend("{includedir}")
 		.argumentAppend("-DMAIKE_TARGET_DIRECTORY={target_directory}")
 		.argumentAppend("-DMAIKE_CURRENT_DIRECTORY={current_directory}")
+		.argumentAppend("{includes_extra}")
 		.argumentAppend("-o").argumentAppend("{target}")
 		.argumentAppend("{source}")
 		.argumentAppend("{libdir}")
@@ -308,10 +318,11 @@ TargetCxxOptions& TargetCxxOptions::configAppendDefault()
 		.argumentAppend("{iquote}").argumentAppend("{includedir}")
 		.argumentAppend("-DMAIKE_TARGET_DIRECTORY={target_directory}")
 		.argumentAppend("-DMAIKE_CURRENT_DIRECTORY={current_directory}")
+		.argumentAppend("{includes_extra}")
 		.argumentAppend("-shared")
 		.argumentAppend("-o")
 		.argumentAppend("{target}").argumentAppend("{source}")
-	.argumentAppend("{libdir}")
+		.argumentAppend("{libdir}")
 		.argumentAppend("{dependencies}");
 
 	m_libcompile.argumentsClear();

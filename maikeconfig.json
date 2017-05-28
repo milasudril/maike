@@ -3,9 +3,9 @@
         "paths_full_reject":[],
         "paths_reject":[
             "..",
+            ".git",
             ".",
-            "__targets",
-			".git"
+            "__targets"
         ],
         "recursive":1
     },
@@ -13,6 +13,124 @@
         "."
     ],
     "target_hooks":[
+        {
+            "config":{
+                "appcompile":{
+                    "args":[
+                        "-g",
+                        "-fpic",
+                        "{cxxversion}",
+                        "-Wall",
+                        "{cflags_extra}",
+                        "{iquote}",
+                        "{includedir}",
+                        "-DMAIKE_TARGET_DIRECTORY={target_directory}",
+                        "-DMAIKE_CURRENT_DIRECTORY={current_directory}",
+                        "{includes_extra}",
+                        "-o",
+                        "{target}",
+                        "{source}",
+                        "{libdir}",
+                        "{dependencies}"
+                    ],
+                    "name":"g++"
+                },
+                "cflags_extra":[],
+                "cflags_format":"-^",
+                "cxxversion_max":-1,
+                "cxxversion_min":201103,
+                "dllcompile":{
+                    "args":[
+                        "-g",
+                        "-fpic",
+                        "{cxxversion}",
+                        "-Wall",
+                        "{cflags_extra}",
+                        "{iquote}",
+                        "{includedir}",
+                        "-DMAIKE_TARGET_DIRECTORY={target_directory}",
+                        "-DMAIKE_CURRENT_DIRECTORY={current_directory}",
+                        "{includes_extra}",
+                        "-shared",
+                        "-o",
+                        "{target}",
+                        "{source}",
+                        "{libdir}",
+                        "{dependencies}"
+                    ],
+                    "name":"g++"
+                },
+                "includedir":[],
+                "includedir_format":"-I^",
+                "includedir_noscan":[],
+                "iquote":[
+                    "."
+                ],
+                "iquote_format":"-iquote^",
+                "libcompile":{
+                    "args":[
+                        "rcs",
+                        "{target}",
+                        "{dependencies}"
+                    ],
+                    "name":"ar"
+                },
+                "libdir":[],
+                "libdir_format":"-L^",
+                "libext_format":"-l^",
+                "libint_format":"-l:^",
+                "objcompile":{
+                    "args":[
+                        "-c",
+                        "-g",
+                        "-fpic",
+                        "{cxxversion}",
+                        "-Wall",
+                        "{cflags_extra}",
+                        "{iquote}",
+                        "{includedir}",
+                        "-DMAIKE_TARGET_DIRECTORY={target_directory}",
+                        "-DMAIKE_CURRENT_DIRECTORY={current_directory}",
+                        "{includes_extra}",
+                        "-o",
+                        "{target}",
+                        "{source}"
+                    ],
+                    "name":"g++"
+                },
+                "pkgconfig":{
+                    "args":[
+                        "{action}",
+                        "{libname}"
+                    ],
+                    "name":"pkg-config"
+                },
+                "stdprefix":"-std=",
+                "versionquery":{
+                    "args":[
+                        "-E",
+                        "-dM",
+                        "-x",
+                        "c++",
+                        "{nullfile}"
+                    ],
+                    "name":"g++"
+                }
+            },
+            "filename_exts":[
+                ".c++",
+                ".cc",
+                ".cpp",
+                ".cxx",
+                ".h",
+                ".h++",
+                ".hh",
+                ".hpp",
+                ".hxx"
+            ],
+            "name":"targetcxx_default",
+            "plugin":"targetcxx"
+        },
         {
             "config":{
                 "appcompile":{
@@ -142,8 +260,87 @@
             "filename_exts":[
                 ".py"
             ],
+            "name":"targetpython_default",
+            "plugin":"targetpython"
+        },
+        {
+            "config":{
+                "tar":{
+                    "command":{
+                        "args":[
+                            "{target_strip}",
+                            "{root_append}",
+                            "{compressor}",
+                            "-cf",
+                            "{target}",
+                            "-T",
+                            "-"
+                        ],
+                        "name":"tar"
+                    },
+                    "compressors":{
+                        "bzip2":"-j",
+                        "gzip":"-z",
+                        "lzma":"-J"
+                    },
+                    "root_append":"--transform=s,\\\\(.*\\\\),^\\\\1,g",
+                    "target_strip":"--transform=s,\\^^,,g"
+                },
+                "zip":{
+                    "create":{
+                        "args":[
+                            "-@",
+                            "{target}"
+                        ],
+                        "name":"zip"
+                    },
+                    "rename":{
+                        "args":[
+                            "-w",
+                            "{target}"
+                        ],
+                        "name":"zipnote"
+                    }
+                }
+            },
+            "filename_exts":[
+                ".archive"
+            ],
+            "name":"targetarchive_default",
+            "plugin":"targetarchive"
+        },
+        {
+            "config":{
+                "command":{
+                    "args":[
+                        "--",
+                        "{script}",
+                        "{args}"
+                    ],
+                    "name":"python3"
+                }
+            },
+            "filename_exts":[
+                ".py"
+            ],
             "name":"pythondefault",
             "plugin":"targetpython"
+        },
+        {
+            "config":{
+                "command":{
+                    "args":[
+                        "{script}",
+                        "{args}"
+                    ],
+                    "name":"octave-cli"
+                }
+            },
+            "filename_exts":[
+                ".m"
+            ],
+            "name":"targetoctave_default",
+            "plugin":"targetoctave"
         },
         {
             "config":{
@@ -193,6 +390,7 @@
         }
     ],
     "targetinfo":{
+        "project_root":"",
         "target_directory":"__targets"
     }
 }

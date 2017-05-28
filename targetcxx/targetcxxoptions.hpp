@@ -137,6 +137,9 @@ namespace Maike
 			const char* iquoteFormatGet() const noexcept
 				{return m_iquote_format.c_str();}
 
+			const char* includeFormatGet() const noexcept
+				{return m_include_format.c_str();}
+
 		private:
 			std::vector< std::string > m_includedir;
 			std::set<Stringkey> m_includedir_dup;
@@ -154,6 +157,7 @@ namespace Maike
 			std::string m_libext_format;
 			std::string m_libint_format;
 			std::string m_iquote_format;
+			std::string m_include_format;
 
 			std::string m_cflags_format;
 			std::vector< std::string > m_cflags_extra;

@@ -90,7 +90,7 @@ TargetCxx::TargetCxx(const ResourceObject& obj,const TargetCxxCompiler& compiler
 		for(decltype(N) k=0;k<N;++k)
 			{
 			auto dep_name=static_cast<const char*>(itargets.objectGet(k));
-			Dependency dep( dircat(in_dir,dep_name).c_str(),root,Dependency::Relation::GENERATED );
+			Dependency dep( dircat(in_dir,dep_name).c_str(),root,Dependency::Relation::INCLUDE_GENERATED );
 			dependencyAdd( std::move(dep) );
 			}
 		}
@@ -110,23 +110,23 @@ void TargetCxx::dumpDetails(ResourceObject& target) const
 static std::vector<TargetCxxCompiler::FileInfo> depstringCreate(
 	 std::vector<std::string>& strings_temp
 	,const char* target_dir
-	,Twins<const Dependency*> dependency_list_full)
+	,Twins<const Dependency*> deps)
 	{
 	std::vector<TargetCxxCompiler::FileInfo> ret;
-	while(dependency_list_full.first!=dependency_list_full.second)
+	while(deps.first!=deps.second)
 		{
-		switch(dependency_list_full.first->relationGet())
+		switch(deps.first->relationGet())
 			{
 			case Dependency::Relation::EXTERNAL:
 				{
-				auto t=dependency_list_full.first->target();
+				auto t=deps.first->target();
 				ret.push_back({t->nameGet(),TargetCxxCompiler::FileUsage::LIB_EXTERNAL});
 				}
 				break;
 
 			case Dependency::Relation::IMPLEMENTATION:
 				{
-				auto target_rel=dynamic_cast<const TargetCxx*>(dependency_list_full.first->target());
+				auto target_rel=dynamic_cast<const TargetCxx*>(deps.first->target());
 				if(target_rel && target_rel->typeGet()!=TargetCxx::Type::INCLUDE)
 					{
 					auto name_full=dircat(target_dir,target_rel->nameGet());
@@ -136,10 +136,18 @@ static std::vector<TargetCxxCompiler::FileInfo> depstringCreate(
 				}
 				break;
 
+			case Dependency::Relation::INCLUDE_GENERATED:
+				{
+				auto name_full=dircat(target_dir,deps.first->target()->nameGet());
+				strings_temp.push_back(std::move(name_full));
+				ret.push_back({strings_temp.back().c_str(),TargetCxxCompiler::FileUsage::INCLUDE_EXTRA});
+				}
+				break;
+
 			default:
 				break;
 			}
-		++dependency_list_full.first;
+		++deps.first;
 		}
 	return std::move(ret);
 	}
@@ -150,6 +158,7 @@ static void optionsCollect(Twins<const Dependency*> deps
 	{
 	while(deps.first!=deps.second)
 		{
+	//	printf("%s (%d)\n",deps.first->target()->nameGet(),deps.first->relationGet());
 		switch(deps.first->relationGet())
 			{
 			case Dependency::Relation::INCLUDE:
@@ -165,7 +174,7 @@ static void optionsCollect(Twins<const Dependency*> deps
 			}
 		++deps.first;
 		}
-	putchar('\n');
+//	putchar('\n');
 	}
 
 static std::vector<TargetCxxCompiler::FileInfo> depstringCreateAr(
@@ -230,8 +239,12 @@ void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 		case Type::OBJECT:
 			{
 			auto options_extra=m_options_extra;
-			optionsCollect(dependency_list,options_extra);
-			r_compiler.compileObject(sourceNameGet(),inDirGet(),name_full.c_str(),options_extra);
+			optionsCollect(dependency_list_full,options_extra);
+			std::vector<std::string> strings_temp(dependency_list.second - dependency_list.first);
+			auto depfiles=depstringCreate(strings_temp,target_dir,dependency_list);
+			auto deps_begin=depfiles.data();
+			auto deps_end=deps_begin + depfiles.size();
+			r_compiler.compileObject(sourceNameGet(),inDirGet(),{deps_begin,deps_end},name_full.c_str(),options_extra);
 			}
 			break;
 		case Type::INCLUDE_LIB:
@@ -239,8 +252,7 @@ void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 			break;
 		case Type::APPLICATION:
 			{
-			std::vector<std::string> strings_temp;
-			strings_temp.reserve(dependency_list_full.second - dependency_list_full.first);
+			std::vector<std::string> strings_temp(dependency_list_full.second - dependency_list_full.first);
 			auto depfiles=depstringCreate(strings_temp,target_dir,dependency_list_full);
 			auto deps_begin=depfiles.data();
 			auto deps_end=deps_begin + depfiles.size();
