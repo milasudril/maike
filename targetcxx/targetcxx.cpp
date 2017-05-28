@@ -138,6 +138,8 @@ static std::vector<TargetCxxCompiler::FileInfo> depstringCreate(
 
 			case Dependency::Relation::INCLUDE_GENERATED:
 				{
+			//TODO: If target is application/dll, we should only add includes from main. See
+			//applicationUpToDate
 				auto name_full=dircat(target_dir,deps.first->target()->nameGet());
 				strings_temp.push_back(std::move(name_full));
 				ret.push_back({strings_temp.back().c_str(),TargetCxxCompiler::FileUsage::INCLUDE_EXTRA});
@@ -158,7 +160,6 @@ static void optionsCollect(Twins<const Dependency*> deps
 	{
 	while(deps.first!=deps.second)
 		{
-	//	printf("%s (%d)\n",deps.first->target()->nameGet(),deps.first->relationGet());
 		switch(deps.first->relationGet())
 			{
 			case Dependency::Relation::INCLUDE:
@@ -174,7 +175,6 @@ static void optionsCollect(Twins<const Dependency*> deps
 			}
 		++deps.first;
 		}
-//	putchar('\n');
 	}
 
 static std::vector<TargetCxxCompiler::FileInfo> depstringCreateAr(
@@ -311,6 +311,7 @@ static bool objectUpToDate(Twins<const Dependency*> dependency_list
 		auto dep=dependency_list.first;
 		switch(dep->relationGet())
 			{
+			case Dependency::Relation::INCLUDE_GENERATED:
 			case Dependency::Relation::GENERATED:
 				if( FileUtils::newer(dircat(target_dir,dep->nameGet()).c_str(),target_name_full))
 					{return 0;}
