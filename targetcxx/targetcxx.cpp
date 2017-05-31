@@ -105,6 +105,67 @@ void TargetCxx::dumpDetails(ResourceObject& target) const
 	target.objectSet("cxxoptions",std::move(cxxoptions));
 	}
 
+static constexpr int USE_EXTERNAL=1;
+static constexpr int USE_IMPLEMENTATION=2;
+static constexpr int USE_INCLUDE=4;
+static constexpr int USE_INCLUDE_GENERATED=8;
+static constexpr int USE_GENERATED=16;
+static constexpr int USE_FILE=32;
+static constexpr int USE_LEAF=64;
+static constexpr int USE_INTERNAL=128;
+
+template<class Proc>
+static void dependenciesProcess(const char* target_dir,Twins<const Dependency*> deps
+	,int use_flags,Proc&& proc)
+	{
+	while(deps.first!=deps.second)
+		{
+		const auto rel=deps.first->relationGet();
+		if(rel==Dependency::Relation::EXTERNAL && (use_flags&USE_EXTERNAL) )
+			{
+			auto t=deps.first->target();
+			proc(t->nameGet(),rel);
+			}
+		if(rel==Dependency::Relation::IMPLEMENTATION && (use_flags&USE_IMPLEMENTATION) )
+			{
+			auto name_full=dircat(target_dir,deps.first->target()->nameGet());
+			proc(name_full.c_str(),rel);
+			}
+		if(rel==Dependency::Relation::INCLUDE && (use_flags&USE_INCLUDE))
+			{
+			auto t=deps.first->target();
+			proc(t->nameGet(),rel);
+			}
+		if(rel==Dependency::Relation::INCLUDE_GENERATED && (use_flags&USE_INCLUDE_GENERATED))
+			{
+			auto name_full=dircat(target_dir,deps.first->target()->nameGet());
+			proc(name_full.c_str(),rel);
+			}
+		if(rel==Dependency::Relation::GENERATED && (use_flags&USE_GENERATED))
+			{
+			auto name_full=dircat(target_dir,deps.first->target()->nameGet());
+			proc(name_full.c_str(),rel);
+			}
+		if(rel==Dependency::Relation::FILE && (use_flags&USE_FILE))
+			{
+			auto t=deps.first->target();
+			proc(t->nameGet(),rel);
+			}
+		if(rel==Dependency::Relation::INTERNAL && (use_flags&USE_INTERNAL))
+			{
+			auto t=deps.first->target();
+			proc(t->nameGet(),rel);
+			}	
+		if(rel==Dependency::Relation::LEAF && (use_flags&USE_LEAF))
+			{
+			auto t=deps.first->target();
+			proc(t->nameGet(),rel);
+			}	
+
+		++deps.first;
+		}
+	}
+
 
 
 static std::vector<TargetCxxCompiler::FileInfo> depstringCreate(

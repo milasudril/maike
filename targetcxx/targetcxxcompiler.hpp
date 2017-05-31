@@ -33,7 +33,9 @@ namespace Maike
 
 			TargetCxxCompiler(const TargetCxxOptions&& options,const ParameterSet& params)=delete;
 
-			enum class FileUsage:unsigned int{NORMAL,LIB_INTERNAL,LIB_EXTERNAL,INCLUDE_EXTRA};
+			enum class FileUsage:unsigned int
+				{NORMAL,LIB_INTERNAL,LIB_EXTERNAL,INCLUDE_EXTRA,INCLUDE=INCLUDE_EXTRA};
+
 			struct FileInfo
 				{
 				const char* filename;
