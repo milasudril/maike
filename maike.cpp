@@ -1,10 +1,9 @@
 //@	{
-//@	"targets":[{"name":"maike.o","type":"object"}]
+//@	"targets":[{"name":"maike.o","type":"object","include_targets":["projectinfo.hpp"]}]
 //@	}
 
 #include "maike_base.hpp"
 #include "targetinclude.hpp"
-#include MAIKE_TARGET(projectinfo.hpp)
 #include "targetplaceholder.hpp"
 #include "dependency.hpp"
 #include "session.hpp"

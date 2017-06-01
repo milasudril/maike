@@ -42,6 +42,61 @@ cat << '+xk`BD+)I~>gu?*!4i+CBg<]9k~Q5C:{$nd/.P<W' > '__targets/externals.json'
     ]
 }
 +xk`BD+)I~>gu?*!4i+CBg<]9k~Q5C:{$nd/.P<W
+'python3' '--' 'projectinfo.py' '__targets' '.' '__targets/maikeconfig.json'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/versionnumber.o' 'versionnumber.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/sysvars.o' 'sysvars-linux.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/systemtargetinfo.o' 'systemtargetinfo.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/targetdirectory.o' 'targetdirectory.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/targetdirectoryloader.o' 'targetdirectoryloader.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/expressionevaluator.o' 'expressionevaluator.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/spiderdefault.o' 'spiderdefault.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/dependencygraphdefault.o' 'dependencygraphdefault.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/plugin.o' 'plugin-linuxgnu.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/target_hook_plugin.o' 'target_hook_plugin.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/target_hook_registry.o' 'target_hook_registry.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/target_factorydelegatordefault.o' 'target_factorydelegatordefault.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/targetconfig.o' 'targetconfig.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/targetexternals.o' 'targetexternals.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/session.o' 'session.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/maike.o' 'maike.cpp'
+'ar' 'rcs' '__targets/libmaike.a' '__targets/maike.o' '__targets/session.o' '__targets/targetexternals.o' '__targets/targetconfig.o' '__targets/target_factorydelegatordefault.o' '__targets/target_hook_registry.o' '__targets/target_hook_plugin.o' '__targets/plugin.o' '__targets/dependencygraphdefault.o' '__targets/spiderdefault.o' '__targets/expressionevaluator.o' '__targets/targetdirectoryloader.o' '__targets/targetdirectory.o' '__targets/fileutils.o' '__targets/writebuffer.o' '__targets/stdstream.o' '__targets/fileout.o' '__targets/fileinfo.o' '__targets/directorylister.o' '__targets/systemtargetinfo.o' '__targets/sysvars.o' '__targets/versionnumber.o' '__targets/resourceobjectjansson.o' '__targets/targetbase.o' '__targets/timedscope.o' '__targets/dependency.o' '__targets/pathutils.o' '__targets/filein.o' '__targets/strerror.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
+mkdir -p '__targets/targetoctave'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetoctave' '-o' '__targets/targetoctave/targetoctaveinterpreter.o' 'targetoctave/targetoctaveinterpreter.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetoctave' '-o' '__targets/targetoctave/targetoctaveloader.o' 'targetoctave/targetoctaveloader.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetoctave' '-o' '__targets/targetoctave/targetoctave.o' 'targetoctave/targetoctave.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetoctave' '-o' '__targets/targetoctave/targetoctavefactory.o' 'targetoctave/targetoctavefactory.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetoctave' '-o' '__targets/targetoctave/targetoctavehook.o' 'targetoctave/targetoctavehook.cpp'
+'g++' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetoctave' '-shared' '-o' '__targets/targetoctave.so' 'targetoctave/targetoctavemain.cpp' '__targets/targetoctave/targetoctavehook.o' '__targets/targetoctave/targetoctavefactory.o' '__targets/targetoctave/targetoctave.o' '__targets/fileutils.o' '__targets/directorylister.o' '__targets/targetbase.o' '__targets/timedscope.o' '__targets/dependency.o' '__targets/pathutils.o' '__targets/targetoctave/targetoctaveloader.o' '__targets/filein.o' '__targets/targetoctave/targetoctaveinterpreter.o' '__targets/thread.o' '-lpthread' '__targets/command.o' '__targets/pipe.o' '__targets/writebuffer.o' '__targets/stdstream.o' '__targets/fileout.o' '__targets/strerror.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
+grep -v '^[[:space:]]*//@' 'visibility.hpp' > '__targets/visibility.hpp'
+grep -v '^[[:space:]]*//@' 'exceptionhandler.hpp' > '__targets/exceptionhandler.hpp'
+grep -v '^[[:space:]]*//@' 'twins.hpp' > '__targets/twins.hpp'
+grep -v '^[[:space:]]*//@' 'resourceobject.hpp' > '__targets/resourceobject.hpp'
+grep -v '^[[:space:]]*//@' 'maike_base.hpp' > '__targets/maike_base.hpp'
+grep -v '^[[:space:]]*//@' 'datasource.hpp' > '__targets/datasource.hpp'
+grep -v '^[[:space:]]*//@' 'datasink.hpp' > '__targets/datasink.hpp'
+grep -v '^[[:space:]]*//@' 'graphedgewriter.hpp' > '__targets/graphedgewriter.hpp'
+grep -v '^[[:space:]]*//@' 'errormessage.hpp' > '__targets/errormessage.hpp'
+grep -v '^[[:space:]]*//@' 'targetinclude.hpp' > '__targets/targetinclude.hpp'
+grep -v '^[[:space:]]*//@' 'targetdirunknown.hpp' > '__targets/targetdirunknown.hpp'
+grep -v '^[[:space:]]*//@' 'maike.hpp' > '__targets/maike.hpp'
+'g++' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/heredoctag' 'heredoctag.cpp'
+mkdir -p '__targets/targetpython'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetpython' '-o' '__targets/targetpython/targetpythoninterpreter.o' 'targetpython/targetpythoninterpreter.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetpython' '-o' '__targets/targetpython/targetpythonloader.o' 'targetpython/targetpythonloader.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetpython' '-o' '__targets/targetpython/targetpython.o' 'targetpython/targetpython.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetpython' '-o' '__targets/targetpython/targetpythonfactory.o' 'targetpython/targetpythonfactory.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetpython' '-o' '__targets/targetpython/targetpythonhook.o' 'targetpython/targetpythonhook.cpp'
+'g++' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetpython' '-shared' '-o' '__targets/targetpython.so' 'targetpython/targetpythonmain.cpp' '__targets/targetpython/targetpythonhook.o' '__targets/targetpython/targetpythonfactory.o' '__targets/targetpython/targetpython.o' '__targets/fileutils.o' '__targets/directorylister.o' '__targets/targetbase.o' '__targets/timedscope.o' '__targets/dependency.o' '__targets/pathutils.o' '__targets/targetpython/targetpythonloader.o' '__targets/filein.o' '__targets/targetpython/targetpythoninterpreter.o' '__targets/thread.o' '-lpthread' '__targets/command.o' '__targets/pipe.o' '__targets/writebuffer.o' '__targets/stdstream.o' '__targets/fileout.o' '__targets/strerror.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
+mkdir -p '__targets/targetarchive'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetarchive' '-o' '__targets/targetarchive/taroptions.o' 'targetarchive/taroptions.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetarchive' '-o' '__targets/targetarchive/zipoptions.o' 'targetarchive/zipoptions.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetarchive' '-o' '__targets/targetarchive/targetarchivecompiler.o' 'targetarchive/targetarchivecompiler.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetarchive' '-o' '__targets/targetarchive/targetarchiveloader.o' 'targetarchive/targetarchiveloader.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetarchive' '-o' '__targets/targetarchive/targetarchive.o' 'targetarchive/targetarchive.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetarchive' '-o' '__targets/targetarchive/targetarchivefactory.o' 'targetarchive/targetarchivefactory.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetarchive' '-o' '__targets/targetarchive/targetarchivehook.o' 'targetarchive/targetarchivehook.cpp'
+'g++' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetarchive' '-shared' '-o' '__targets/targetarchive.so' 'targetarchive/targetarchivenmain.cpp' '__targets/targetarchive/targetarchivehook.o' '__targets/targetarchive/targetarchivefactory.o' '__targets/targetarchive/targetarchive.o' '__targets/targetbase.o' '__targets/timedscope.o' '__targets/targetarchive/targetarchiveloader.o' '__targets/dependency.o' '__targets/targetarchive/targetarchivecompiler.o' '__targets/fileutils.o' '__targets/directorylister.o' '__targets/pathutils.o' '__targets/filein.o' '__targets/thread.o' '-lpthread' '__targets/targetarchive/zipoptions.o' '__targets/targetarchive/taroptions.o' '__targets/command.o' '__targets/pipe.o' '__targets/writebuffer.o' '__targets/stdstream.o' '__targets/fileout.o' '__targets/strerror.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
+mkdir -p '__targets/gh-pages'
 cat << '+xk`BD+)I~>gu?*!4i+CBg<]9k~Q5C:{$nd/.P<W' > '__targets/maikeconfig.json'
 {
     "directoryoptions":{
@@ -71,6 +126,7 @@ cat << '+xk`BD+)I~>gu?*!4i+CBg<]9k~Q5C:{$nd/.P<W' > '__targets/maikeconfig.json'
                         "{includedir}",
                         "-DMAIKE_TARGET_DIRECTORY={target_directory}",
                         "-DMAIKE_CURRENT_DIRECTORY={current_directory}",
+                        "{includes_extra}",
                         "-o",
                         "{target}",
                         "{source}",
@@ -94,6 +150,7 @@ cat << '+xk`BD+)I~>gu?*!4i+CBg<]9k~Q5C:{$nd/.P<W' > '__targets/maikeconfig.json'
                         "{includedir}",
                         "-DMAIKE_TARGET_DIRECTORY={target_directory}",
                         "-DMAIKE_CURRENT_DIRECTORY={current_directory}",
+                        "{includes_extra}",
                         "-shared",
                         "-o",
                         "{target}",
@@ -103,6 +160,7 @@ cat << '+xk`BD+)I~>gu?*!4i+CBg<]9k~Q5C:{$nd/.P<W' > '__targets/maikeconfig.json'
                     ],
                     "name":"g++"
                 },
+                "include_format":"-include^",
                 "includedir":[],
                 "includedir_format":"-I^",
                 "includedir_noscan":[],
@@ -134,6 +192,7 @@ cat << '+xk`BD+)I~>gu?*!4i+CBg<]9k~Q5C:{$nd/.P<W' > '__targets/maikeconfig.json'
                         "{includedir}",
                         "-DMAIKE_TARGET_DIRECTORY={target_directory}",
                         "-DMAIKE_CURRENT_DIRECTORY={current_directory}",
+                        "{includes_extra}",
                         "-o",
                         "{target}",
                         "{source}"
@@ -218,6 +277,7 @@ cat << '+xk`BD+)I~>gu?*!4i+CBg<]9k~Q5C:{$nd/.P<W' > '__targets/maikeconfig.json'
                     ],
                     "name":"g++"
                 },
+                "include_format":"",
                 "includedir":[],
                 "includedir_format":"-I^",
                 "includedir_noscan":[],
@@ -530,61 +590,6 @@ cat << '+xk`BD+)I~>gu?*!4i+CBg<]9k~Q5C:{$nd/.P<W' > '__targets/maikeconfig.json'
     }
 }
 +xk`BD+)I~>gu?*!4i+CBg<]9k~Q5C:{$nd/.P<W
-'python3' '--' 'projectinfo.py' '__targets' '.' '__targets/maikeconfig.json'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/versionnumber.o' 'versionnumber.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/sysvars.o' 'sysvars-linux.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/systemtargetinfo.o' 'systemtargetinfo.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/targetdirectory.o' 'targetdirectory.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/targetdirectoryloader.o' 'targetdirectoryloader.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/expressionevaluator.o' 'expressionevaluator.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/spiderdefault.o' 'spiderdefault.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/dependencygraphdefault.o' 'dependencygraphdefault.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/plugin.o' 'plugin-linuxgnu.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/target_hook_plugin.o' 'target_hook_plugin.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/target_hook_registry.o' 'target_hook_registry.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/target_factorydelegatordefault.o' 'target_factorydelegatordefault.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/targetconfig.o' 'targetconfig.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/targetexternals.o' 'targetexternals.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/session.o' 'session.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/maike.o' 'maike.cpp'
-'ar' 'rcs' '__targets/libmaike.a' '__targets/maike.o' '__targets/session.o' '__targets/targetexternals.o' '__targets/targetconfig.o' '__targets/target_factorydelegatordefault.o' '__targets/target_hook_registry.o' '__targets/target_hook_plugin.o' '__targets/plugin.o' '__targets/dependencygraphdefault.o' '__targets/spiderdefault.o' '__targets/expressionevaluator.o' '__targets/targetdirectoryloader.o' '__targets/targetdirectory.o' '__targets/fileutils.o' '__targets/writebuffer.o' '__targets/stdstream.o' '__targets/fileout.o' '__targets/fileinfo.o' '__targets/directorylister.o' '__targets/systemtargetinfo.o' '__targets/sysvars.o' '__targets/versionnumber.o' '__targets/resourceobjectjansson.o' '__targets/targetbase.o' '__targets/timedscope.o' '__targets/dependency.o' '__targets/pathutils.o' '__targets/filein.o' '__targets/strerror.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
-mkdir -p '__targets/targetoctave'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetoctave' '-o' '__targets/targetoctave/targetoctaveinterpreter.o' 'targetoctave/targetoctaveinterpreter.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetoctave' '-o' '__targets/targetoctave/targetoctaveloader.o' 'targetoctave/targetoctaveloader.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetoctave' '-o' '__targets/targetoctave/targetoctave.o' 'targetoctave/targetoctave.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetoctave' '-o' '__targets/targetoctave/targetoctavefactory.o' 'targetoctave/targetoctavefactory.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetoctave' '-o' '__targets/targetoctave/targetoctavehook.o' 'targetoctave/targetoctavehook.cpp'
-'g++' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetoctave' '-shared' '-o' '__targets/targetoctave.so' 'targetoctave/targetoctavemain.cpp' '__targets/targetoctave/targetoctavehook.o' '__targets/targetoctave/targetoctavefactory.o' '__targets/targetoctave/targetoctave.o' '__targets/fileutils.o' '__targets/directorylister.o' '__targets/targetbase.o' '__targets/timedscope.o' '__targets/dependency.o' '__targets/pathutils.o' '__targets/targetoctave/targetoctaveloader.o' '__targets/filein.o' '__targets/targetoctave/targetoctaveinterpreter.o' '__targets/thread.o' '-lpthread' '__targets/command.o' '__targets/pipe.o' '__targets/writebuffer.o' '__targets/stdstream.o' '__targets/fileout.o' '__targets/strerror.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
-grep -v '^[[:space:]]*//@' 'visibility.hpp' > '__targets/visibility.hpp'
-grep -v '^[[:space:]]*//@' 'exceptionhandler.hpp' > '__targets/exceptionhandler.hpp'
-grep -v '^[[:space:]]*//@' 'twins.hpp' > '__targets/twins.hpp'
-grep -v '^[[:space:]]*//@' 'resourceobject.hpp' > '__targets/resourceobject.hpp'
-grep -v '^[[:space:]]*//@' 'maike_base.hpp' > '__targets/maike_base.hpp'
-grep -v '^[[:space:]]*//@' 'datasource.hpp' > '__targets/datasource.hpp'
-grep -v '^[[:space:]]*//@' 'datasink.hpp' > '__targets/datasink.hpp'
-grep -v '^[[:space:]]*//@' 'graphedgewriter.hpp' > '__targets/graphedgewriter.hpp'
-grep -v '^[[:space:]]*//@' 'errormessage.hpp' > '__targets/errormessage.hpp'
-grep -v '^[[:space:]]*//@' 'targetinclude.hpp' > '__targets/targetinclude.hpp'
-grep -v '^[[:space:]]*//@' 'targetdirunknown.hpp' > '__targets/targetdirunknown.hpp'
-grep -v '^[[:space:]]*//@' 'maike.hpp' > '__targets/maike.hpp'
-'g++' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/heredoctag' 'heredoctag.cpp'
-mkdir -p '__targets/targetpython'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetpython' '-o' '__targets/targetpython/targetpythoninterpreter.o' 'targetpython/targetpythoninterpreter.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetpython' '-o' '__targets/targetpython/targetpythonloader.o' 'targetpython/targetpythonloader.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetpython' '-o' '__targets/targetpython/targetpython.o' 'targetpython/targetpython.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetpython' '-o' '__targets/targetpython/targetpythonfactory.o' 'targetpython/targetpythonfactory.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetpython' '-o' '__targets/targetpython/targetpythonhook.o' 'targetpython/targetpythonhook.cpp'
-'g++' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetpython' '-shared' '-o' '__targets/targetpython.so' 'targetpython/targetpythonmain.cpp' '__targets/targetpython/targetpythonhook.o' '__targets/targetpython/targetpythonfactory.o' '__targets/targetpython/targetpython.o' '__targets/fileutils.o' '__targets/directorylister.o' '__targets/targetbase.o' '__targets/timedscope.o' '__targets/dependency.o' '__targets/pathutils.o' '__targets/targetpython/targetpythonloader.o' '__targets/filein.o' '__targets/targetpython/targetpythoninterpreter.o' '__targets/thread.o' '-lpthread' '__targets/command.o' '__targets/pipe.o' '__targets/writebuffer.o' '__targets/stdstream.o' '__targets/fileout.o' '__targets/strerror.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
-mkdir -p '__targets/targetarchive'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetarchive' '-o' '__targets/targetarchive/taroptions.o' 'targetarchive/taroptions.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetarchive' '-o' '__targets/targetarchive/zipoptions.o' 'targetarchive/zipoptions.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetarchive' '-o' '__targets/targetarchive/targetarchivecompiler.o' 'targetarchive/targetarchivecompiler.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetarchive' '-o' '__targets/targetarchive/targetarchiveloader.o' 'targetarchive/targetarchiveloader.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetarchive' '-o' '__targets/targetarchive/targetarchive.o' 'targetarchive/targetarchive.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetarchive' '-o' '__targets/targetarchive/targetarchivefactory.o' 'targetarchive/targetarchivefactory.cpp'
-'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetarchive' '-o' '__targets/targetarchive/targetarchivehook.o' 'targetarchive/targetarchivehook.cpp'
-'g++' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetarchive' '-shared' '-o' '__targets/targetarchive.so' 'targetarchive/targetarchivenmain.cpp' '__targets/targetarchive/targetarchivehook.o' '__targets/targetarchive/targetarchivefactory.o' '__targets/targetarchive/targetarchive.o' '__targets/targetbase.o' '__targets/timedscope.o' '__targets/targetarchive/targetarchiveloader.o' '__targets/dependency.o' '__targets/targetarchive/targetarchivecompiler.o' '__targets/fileutils.o' '__targets/directorylister.o' '__targets/pathutils.o' '__targets/filein.o' '__targets/thread.o' '-lpthread' '__targets/targetarchive/zipoptions.o' '__targets/targetarchive/taroptions.o' '__targets/command.o' '__targets/pipe.o' '__targets/writebuffer.o' '__targets/stdstream.o' '__targets/fileout.o' '__targets/strerror.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
-mkdir -p '__targets/gh-pages'
 grep -v '^[[:space:]]*//@' 'target.hpp' > '__targets/target.hpp'
 grep -v '^[[:space:]]*//@' 'pathutils.hpp' > '__targets/pathutils.hpp'
 grep -v '^[[:space:]]*//@' 'dependency.hpp' > '__targets/dependency.hpp'

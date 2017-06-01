@@ -115,7 +115,7 @@ static constexpr int USE_LEAF=64;
 static constexpr int USE_INTERNAL=128;
 
 template<class Proc>
-static void dependenciesProcess(const char* target_dir,Twins<const Dependency*> deps
+static bool dependenciesProcess(const char* target_dir,Twins<const Dependency*> deps
 	,int use_flags,Proc&& proc)
 	{
 	while(deps.first!=deps.second)
@@ -124,97 +124,56 @@ static void dependenciesProcess(const char* target_dir,Twins<const Dependency*> 
 		if(rel==Dependency::Relation::EXTERNAL && (use_flags&USE_EXTERNAL) )
 			{
 			auto t=deps.first->target();
-			proc(t->nameGet(),rel);
+			if(!proc(t->nameGet(),rel))
+				{return 0;}
 			}
 		if(rel==Dependency::Relation::IMPLEMENTATION && (use_flags&USE_IMPLEMENTATION) )
 			{
 			auto name_full=dircat(target_dir,deps.first->target()->nameGet());
-			proc(name_full.c_str(),rel);
+			if(!proc(name_full.c_str(),rel))
+				{return 0;}
 			}
 		if(rel==Dependency::Relation::INCLUDE && (use_flags&USE_INCLUDE))
 			{
 			auto t=deps.first->target();
-			proc(t->nameGet(),rel);
+			if(!proc(t->nameGet(),rel))
+				{return 0;}
 			}
 		if(rel==Dependency::Relation::INCLUDE_GENERATED && (use_flags&USE_INCLUDE_GENERATED))
 			{
 			auto name_full=dircat(target_dir,deps.first->target()->nameGet());
-			proc(name_full.c_str(),rel);
+			if(!proc(name_full.c_str(),rel))
+				{return 0;}
 			}
 		if(rel==Dependency::Relation::GENERATED && (use_flags&USE_GENERATED))
 			{
 			auto name_full=dircat(target_dir,deps.first->target()->nameGet());
-			proc(name_full.c_str(),rel);
+			if(!proc(name_full.c_str(),rel))
+				{return 0;}
 			}
 		if(rel==Dependency::Relation::FILE && (use_flags&USE_FILE))
 			{
 			auto t=deps.first->target();
-			proc(t->nameGet(),rel);
+			if(!proc(t->nameGet(),rel))
+				{return 0;}
 			}
 		if(rel==Dependency::Relation::INTERNAL && (use_flags&USE_INTERNAL))
 			{
 			auto t=deps.first->target();
-			proc(t->nameGet(),rel);
+			if(!proc(t->nameGet(),rel))
+				{return 0;}
 			}	
 		if(rel==Dependency::Relation::LEAF && (use_flags&USE_LEAF))
 			{
 			auto t=deps.first->target();
-			proc(t->nameGet(),rel);
+			if(!proc(t->nameGet(),rel))
+				{return 0;}
 			}	
 
 		++deps.first;
 		}
+	return 1;
 	}
-
-
-
-static std::vector<TargetCxxCompiler::FileInfo> depstringCreate(
-	 std::vector<std::string>& strings_temp
-	,const char* target_dir
-	,Twins<const Dependency*> deps)
-	{
-	std::vector<TargetCxxCompiler::FileInfo> ret;
-	while(deps.first!=deps.second)
-		{
-		switch(deps.first->relationGet())
-			{
-			case Dependency::Relation::EXTERNAL:
-				{
-				auto t=deps.first->target();
-				ret.push_back({t->nameGet(),TargetCxxCompiler::FileUsage::LIB_EXTERNAL});
-				}
-				break;
-
-			case Dependency::Relation::IMPLEMENTATION:
-				{
-				auto target_rel=dynamic_cast<const TargetCxx*>(deps.first->target());
-				if(target_rel && target_rel->typeGet()!=TargetCxx::Type::INCLUDE)
-					{
-					auto name_full=dircat(target_dir,target_rel->nameGet());
-					strings_temp.push_back(std::move(name_full));
-					ret.push_back({strings_temp.back().c_str(),TargetCxxCompiler::FileUsage::NORMAL});
-					}
-				}
-				break;
-
-			case Dependency::Relation::INCLUDE_GENERATED:
-				{
-			//TODO: If target is application/dll, we should only add includes from main. See
-			//applicationUpToDate
-				auto name_full=dircat(target_dir,deps.first->target()->nameGet());
-				strings_temp.push_back(std::move(name_full));
-				ret.push_back({strings_temp.back().c_str(),TargetCxxCompiler::FileUsage::INCLUDE_EXTRA});
-				}
-				break;
-
-			default:
-				break;
-			}
-		++deps.first;
-		}
-	return std::move(ret);
-	}
-
 
 static void optionsCollect(Twins<const Dependency*> deps
 	,TargetCxxOptions& options_out)
@@ -238,36 +197,6 @@ static void optionsCollect(Twins<const Dependency*> deps
 		}
 	}
 
-static std::vector<TargetCxxCompiler::FileInfo> depstringCreateAr(
-	 std::vector<std::string>& strings_temp
-	,const char* target_dir
-	,Twins<const Dependency*> dependency_list_full)
-	{
-	std::vector<TargetCxxCompiler::FileInfo> ret;
-	while(dependency_list_full.first!=dependency_list_full.second)
-		{
-		switch(dependency_list_full.first->relationGet())
-			{
-			case Dependency::Relation::IMPLEMENTATION:
-				{
-				auto target_rel=dynamic_cast<const TargetCxx*>(dependency_list_full.first->target());
-				if(target_rel && target_rel->typeGet()!=TargetCxx::Type::INCLUDE)
-					{
-					auto name_full=dircat(target_dir,target_rel->nameGet());
-					strings_temp.push_back(std::move(name_full));
-					ret.push_back({strings_temp.back().c_str(),TargetCxxCompiler::FileUsage::NORMAL});
-					}
-				}
-				break;
-
-			default:
-				break;
-			}
-		++dependency_list_full.first;
-		}
-	return std::move(ret);
-	}
-
 static void includeBuild(Twins<const Dependency*> dependency_list
 	,const char* source_name,const char* name,const char* target_dir)
 	{
@@ -281,12 +210,47 @@ static void includeBuild(Twins<const Dependency*> dependency_list
 				auto src=t->sourceNameGet();
 				auto dest=dircat(target_dir,t->nameGet());
 				if(FileUtils::newer(src,dest.c_str()))
-					{FileUtils::copyFilter(src,dest.c_str(),"^[[:space:]]*//@");}
+					{
+				//TODO: We need to add #include for generated include files
+					FileUtils::copyFilter(src,dest.c_str(),"^[[:space:]]*//@");
+					}
 				}
 			}
 		++dependency_list.first;
 		}
+//TODO: We need to add #include for generated include files
 	FileUtils::copyFilter(source_name,name,"^[[:space:]]*//@");
+	}
+
+template<class T,class Container>
+static T& push_back(T&& obj,Container& c)
+	{
+#ifndef NDEBUG
+	auto data_old=c.data();
+#endif
+	c.push_back(std::move(obj));
+	assert(c.data()==data_old);
+	return c.back();
+	}
+
+template<class T,class U>
+T map(U);
+
+template<>
+TargetCxxCompiler::FileUsage map<TargetCxxCompiler::FileUsage,Dependency::Relation>(Dependency::Relation rel)
+	{
+	switch(rel)
+		{
+//NORMAL,LIB_INTERNAL,LIB_EXTERNAL,INCLUDE_EXTRA
+		case Dependency::Relation::IMPLEMENTATION:
+			return TargetCxxCompiler::FileUsage::NORMAL;
+		case Dependency::Relation::EXTERNAL:
+			return TargetCxxCompiler::FileUsage::LIB_EXTERNAL;
+		case Dependency::Relation::INCLUDE_GENERATED:
+			return TargetCxxCompiler::FileUsage::INCLUDE_EXTRA;
+		default:
+			assert(!("Intenal error"));
+		}
 	}
 
 void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
@@ -295,14 +259,27 @@ void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 	{
 	auto name_full=dircat(target_dir,nameGet());
 
+	std::vector<std::string> strings_temp;
+	std::vector<TargetCxxCompiler::FileInfo> depfiles;
+
+	auto depstring_create=[&strings_temp,&depfiles](const char* depname,Dependency::Relation rel)
+		{
+		depfiles.push_back(
+			{
+			 push_back(std::string(depname),strings_temp).c_str()
+			,map<TargetCxxCompiler::FileUsage>(rel)
+			});
+		return 1;
+		};
+
 	switch(m_type)
 		{
 		case Type::OBJECT:
 			{
 			auto options_extra=m_options_extra;
 			optionsCollect(dependency_list_full,options_extra);
-			std::vector<std::string> strings_temp(dependency_list.second - dependency_list.first);
-			auto depfiles=depstringCreate(strings_temp,target_dir,dependency_list);
+			strings_temp.reserve(dependency_list.second - dependency_list.first);
+			dependenciesProcess(target_dir,dependency_list,USE_INCLUDE_GENERATED,depstring_create);
 			auto deps_begin=depfiles.data();
 			auto deps_end=deps_begin + depfiles.size();
 			r_compiler.compileObject(sourceNameGet(),inDirGet(),{deps_begin,deps_end},name_full.c_str(),options_extra);
@@ -313,8 +290,11 @@ void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 			break;
 		case Type::APPLICATION:
 			{
-			std::vector<std::string> strings_temp(dependency_list_full.second - dependency_list_full.first);
-			auto depfiles=depstringCreate(strings_temp,target_dir,dependency_list_full);
+			auto N=(dependency_list_full.second - dependency_list_full.first);
+			N+=(dependency_list.second - dependency_list.first);
+			strings_temp.reserve(N);
+			dependenciesProcess(target_dir,dependency_list,USE_INCLUDE_GENERATED,depstring_create);
+			dependenciesProcess(target_dir,dependency_list_full,USE_EXTERNAL|USE_IMPLEMENTATION,depstring_create);
 			auto deps_begin=depfiles.data();
 			auto deps_end=deps_begin + depfiles.size();
 			std::reverse(deps_begin,deps_end);
@@ -328,12 +308,15 @@ void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 			break;
 		case Type::LIB_DYNAMIC:
 			{
-			std::vector<std::string> strings_temp;
-			strings_temp.reserve(dependency_list_full.second - dependency_list_full.first);
-			auto depfiles=depstringCreate(strings_temp,target_dir,dependency_list_full);
+			auto N=(dependency_list_full.second - dependency_list_full.first);
+			N+=(dependency_list.second - dependency_list.first);
+			strings_temp.reserve(N);
+			dependenciesProcess(target_dir,dependency_list,USE_INCLUDE_GENERATED,depstring_create);
+			dependenciesProcess(target_dir,dependency_list_full,USE_EXTERNAL|USE_IMPLEMENTATION,depstring_create);
 			auto deps_begin=depfiles.data();
 			auto deps_end=deps_begin + depfiles.size();
 			std::reverse(deps_begin,deps_end);
+
 		//	-flto cannot be used with .incbin, and if some module is compiled with
 		//	-flto, so must the application. Therfore do not do this for now
 		//	auto options_extra=m_options_extra;
@@ -343,9 +326,8 @@ void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 			break;
 		case Type::LIB_STATIC:
 			{
-			std::vector<std::string> strings_temp;
 			strings_temp.reserve(dependency_list_full.second - dependency_list_full.first);
-			auto depfiles=depstringCreateAr(strings_temp,target_dir,dependency_list_full);
+			dependenciesProcess(target_dir,dependency_list_full,USE_IMPLEMENTATION,depstring_create);
 			auto deps_begin=depfiles.data();
 			auto deps_end=deps_begin + depfiles.size();
 			std::reverse(deps_begin,deps_end);
@@ -361,119 +343,44 @@ void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 		}
 	}
 
-
-static bool objectUpToDate(Twins<const Dependency*> dependency_list
-	,Twins<const Dependency*> dependency_list_full
-	,const char* target_name_full
-	,const char* target_dir)
-	{
-	while(dependency_list.first!=dependency_list.second)
-		{
-		auto dep=dependency_list.first;
-		switch(dep->relationGet())
-			{
-			case Dependency::Relation::INCLUDE_GENERATED:
-			case Dependency::Relation::GENERATED:
-				if( FileUtils::newer(dircat(target_dir,dep->nameGet()).c_str(),target_name_full))
-					{return 0;}
-				break;
-			default:
-				if(FileUtils::newer(dep->nameGet(),target_name_full))
-					{return 0;}
-			}
-		++dependency_list.first;
-		}
-	return 1;
-	}
-
-static bool includeLibUpToDate(Twins<const Dependency*> dependency_list
-	,Twins<const Dependency*> dependency_list_full
-	,const char* target_name_full
-	,const char* target_dir)
-	{
-	while(dependency_list.first!=dependency_list.second)
-		{
-		auto t=dynamic_cast<const TargetCxx*>(dependency_list.first->target());
-		if(t!=nullptr)
-			{
-			if(t->typeGet()==TargetCxx::Type::INCLUDE)
-				{
-				if(FileUtils::newer(t->sourceNameGet(),dircat(target_dir,t->nameGet()).c_str()))
-					{return 0;}
-				}
-			}
-		++dependency_list.first;
-		}
-	return 1;
-	}
-
-static bool applicationUpToDate(Twins<const Dependency*> dependency_list
-	,Twins<const Dependency*> dependency_list_full
-	,const char* target_name_full
-	,const char* target_dir)
-	{
-	while(dependency_list.first!=dependency_list.second)
-		{
-		auto dep=dependency_list.first;
-		switch(dep->relationGet())
-			{
-			case Dependency::Relation::GENERATED:
-				if( FileUtils::newer(dircat(target_dir,dep->nameGet()).c_str(),target_name_full ))
-					{return 0;}
-				break;
-			case Dependency::Relation::EXTERNAL:
-				break;
-
-			default:
-				if(FileUtils::newer(dep->nameGet(),target_name_full))
-					{return 0;}
-			}
-		++dependency_list.first;
-		}
-
-	while(dependency_list_full.first!=dependency_list_full.second)
-		{
-		auto target_rel=dynamic_cast<const TargetCxx*>(dependency_list_full.first->target());
-		if(target_rel!=nullptr)
-			{
-			if(target_rel->typeGet()!=TargetCxx::Type::INCLUDE)
-				{
-				auto target_rel_name_full=dircat(target_dir,target_rel->nameGet());
-				if(FileUtils::newer(target_rel_name_full.c_str(),target_name_full))
-					{return 0;}
-				}
-			}
-		++dependency_list_full.first;
-		}
-	return 1;
-	}
-
 bool TargetCxx::upToDate(Twins<const Dependency*> dependency_list
 	,Twins<const Dependency*> dependency_list_full
 	,const char* target_dir) const
 	{
 	auto name_full=dircat( target_dir,nameGet() );
+//	printf("%s:\n",name_full.c_str());
+/*	dependenciesProcess(target_dir,dependency_list_full,USE_LEAF
+		,[](const char* name,Dependency::Relation rel)
+			{printf("  %s\n",name); return 1;}
+		);*/
 
 	if(FileUtils::newer(sourceNameGet(),name_full.c_str()))
 		{return 0;}
 
+	auto up_to_date=[&name_full](const char* name,Dependency::Relation rel)
+		{return !FileUtils::newer(name,name_full.c_str());};
+	
 	switch(m_type)
 		{
-		case Type::INCLUDE_LIB:
-			return includeLibUpToDate(dependency_list,dependency_list_full
-				,name_full.c_str(),target_dir);
 		case Type::OBJECT:
-			return objectUpToDate(dependency_list,dependency_list_full
-				,name_full.c_str(),target_dir);
+			return dependenciesProcess(target_dir,dependency_list
+				,USE_INCLUDE_GENERATED|USE_INCLUDE|USE_GENERATED|USE_FILE
+				,up_to_date);
+
+		case Type::INCLUDE_LIB:
+			return dependenciesProcess(target_dir,dependency_list
+				,USE_INCLUDE|USE_INCLUDE_GENERATED,up_to_date);
+
 		case Type::INCLUDE:
 			return 1;
 
 		case Type::LIB_STATIC:
 		case Type::LIB_DYNAMIC:
 		case Type::APPLICATION:
-			return applicationUpToDate(dependency_list,dependency_list_full
-				,name_full.c_str()
-				,target_dir);
+			return dependenciesProcess(target_dir,dependency_list
+				,USE_INCLUDE_GENERATED|USE_INCLUDE|USE_GENERATED|USE_FILE,up_to_date)
+				&& dependenciesProcess(target_dir,dependency_list_full,USE_IMPLEMENTATION,up_to_date);
+
 		default:
 			break;
 		}
