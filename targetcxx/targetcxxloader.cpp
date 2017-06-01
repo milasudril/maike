@@ -244,7 +244,8 @@ bool DependencyCollector::operator()(const Target_FactoryDelegator& delegator,De
 						if(macro[0]=="MAIKE_TARGET")
 							{
 							wb.write(m_file_reader.nameGet()).write(": Warning: Using MAIKE_TARGET in this context is deprecated. "
-								"Support will be removed when #44 is closed.\n");
+								"Add `\"include_targets\":[\"").write(macro[1].c_str())
+								.write("\"]`. See #44 for more information.\n");
 							auto name_dep_full=dircat(r_in_dir,macro[1]);
 							dep_primary=Dependency(name_dep_full.c_str(),delegator.rootGet()
 								,Dependency::Relation::GENERATED);

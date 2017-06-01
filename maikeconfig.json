@@ -7,7 +7,7 @@
             "__targets",
 			".git"
         ],
-        "recursive":0
+        "recursive":1
     },
     "source_files":[
         "."
