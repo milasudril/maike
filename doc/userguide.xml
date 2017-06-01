@@ -416,12 +416,17 @@ except:
 
 <p>A code generator that produces source files defines at least two targets: The source file, and the target generated from the source file. The latter is necessary, since the dependency graph has to be completed before the compilation starts. If the generator emits N files, then there will be 2*N targets defined by that generator.</p>
 
-<p>It is also possible to use generated include files. Since such files do not exists during the scanning phase, it is not possible to include them in a convetional way. Instead, they are included by a special macro:</p>
+<p>It is also possible to use generated include files. Since such files do not exists during the scanning phase, it is not possible to include them in a convetional way. Instead, they are included by adding a special prperty to the target defintion:</p>
 
-<pre><code>#include &lt;makie/targetinclude.hpp&gt; //Needed for the MAIKE_TARGET macro
-#include MAIKE_TARGET(your_generated_file)</code></pre>
+<pre><code>{
+"targets":
+	[{
+	 "name":"message.hpp","type":"include"
+	,"include_targets":["controlcodes.hpp","statuscodes.hpp"]
+	}]
+}</code></pre>
 
-<p>The macro uses two another macros, <code>MAIKE_TARGET_DIRECTORY</code> and <code>MAIKE_CURRENT_DIRECTORY</code>, which are defined by the default compiler command line. If these macros are not defined before using the <code>MAIKE_TARGET</code>, an error is generated. Also notice that the macro requires that the option <code>-iquoate.</code> is used. This is also ensured when using the default options.</p>
+<p>The files mentioned in <code>include_targets</code> are added to the compiler from the command line.</p>
 </section>
 
 <section>
