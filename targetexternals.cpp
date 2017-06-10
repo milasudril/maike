@@ -28,10 +28,12 @@ void TargetExternals::compile(Twins<const Dependency*> dependency_list
 	,Twins<const Dependency*> dependency_list_full
 	,const char* target_dir)
 	{
-	double t;
-	TimedScope timer(t);
-	auto filename=dircat(target_dir,"externals.json");
-	FileUtils::echo(m_data.c_str(),filename.c_str());
+	double t=0;
+		{
+		TimedScope timer(t);
+		auto filename=dircat(target_dir,"externals.json");
+		FileUtils::echo(m_data.c_str(),filename.c_str());
+		}
 	m_compilation_time+=t;
 	}
 
@@ -118,16 +120,18 @@ bool TargetExternals::upToDate(Twins<const Dependency*> dependency_list
 	,Twins<const Dependency*> dependency_list_full
 	,const char* target_dir) const
 	{
-	TimedScope timer(m_compilation_time);
+		{
+		TimedScope timer(m_compilation_time);
+
+		ResourceObjectJansson libs(ResourceObject::Type::ARRAY);
+		ResourceObjectJansson tools(ResourceObject::Type::ARRAY);
+		r_graph.targetsProcess(TargetsExternalDump{libs,tools});
+		ResourceObjectJansson obj(ResourceObject::Type::OBJECT);
+		obj.objectSet("libraries",std::move(libs))
+			.objectSet("tools",std::move(tools));
+		obj.write(StringWriter(m_data));
+		}
 	auto filename=dircat(target_dir,"externals.json");
 	auto data=data_reload(filename.c_str());
-
-	ResourceObjectJansson libs(ResourceObject::Type::ARRAY);
-	ResourceObjectJansson tools(ResourceObject::Type::ARRAY);
-	r_graph.targetsProcess(TargetsExternalDump{libs,tools});
-	ResourceObjectJansson obj(ResourceObject::Type::OBJECT);
-	obj.objectSet("libraries",std::move(libs))
-		.objectSet("tools",std::move(tools));
-	obj.write(StringWriter(m_data));
 	return m_data==data;
 	}
