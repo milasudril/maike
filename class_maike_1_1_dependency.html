@@ -137,39 +137,51 @@ enum <a href="#1a1b670303409ad2240f246e2a2c55d380">Relation</a>
     <table class="fieldtable">
       <tr>
         <th class="fieldname">LEAF</th>
-        <td class="fielddoc"></td>
+        <td class="fielddoc">
+          <p>This is the default relation used for empty dependencies only. </p>
+        </td>
       </tr>
       <tr>
         <th class="fieldname">INTERNAL</th>
-        <td class="fielddoc"></td>
+        <td class="fielddoc">
+          <p>The dependency was synthesized by <a href="namespace_maike.html">Maike</a>. </p>
+        </td>
       </tr>
       <tr>
         <th class="fieldname">INCLUDE</th>
-        <td class="fielddoc"></td>
+        <td class="fielddoc">
+          <p>The dependency was found in a link or an include statement from a <a href="class_maike_1_1_target.html">Target</a>. </p>
+        </td>
+      </tr>
+      <tr>
+        <th class="fieldname">INCLUDE_EXTRA</th>
+        <td class="fielddoc">
+          <p>This is similar to INCLUDE, but the file will passed to the compiler on the command line. </p>
+        </td>
       </tr>
       <tr>
         <th class="fieldname">IMPLEMENTATION</th>
-        <td class="fielddoc"></td>
+        <td class="fielddoc">
+          <p>The secondary <a href="class_maike_1_1_target.html">Target</a> should be used when linking or archiving the primary <a href="class_maike_1_1_target.html">Target</a>. </p>
+        </td>
       </tr>
       <tr>
         <th class="fieldname">EXTERNAL</th>
-        <td class="fielddoc"></td>
-      </tr>
-      <tr>
-        <th class="fieldname">GENERATED</th>
-        <td class="fielddoc"></td>
-      </tr>
-      <tr>
-        <th class="fieldname">FILE</th>
-        <td class="fielddoc"></td>
+        <td class="fielddoc">
+          <p>The secondary <a href="class_maike_1_1_target.html">Target</a> is unknown to <a href="namespace_maike.html">Maike</a></p>
+        </td>
       </tr>
       <tr>
         <th class="fieldname">TOOL</th>
-        <td class="fielddoc"></td>
+        <td class="fielddoc">
+          <p>This relation is similar to EXTERNAL, but is used to annotate that the secondary <a href="class_maike_1_1_target.html">Target</a> is a tool </p>
+        </td>
       </tr>
       <tr>
-        <th class="fieldname">INCLUDE_GENERATED</th>
-        <td class="fielddoc"></td>
+        <th class="fieldname">MISC</th>
+        <td class="fielddoc">
+          <p>Any other kind of relation. </p>
+        </td>
       </tr>
     </table>
   </section><section>
