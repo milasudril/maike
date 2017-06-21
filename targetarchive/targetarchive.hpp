@@ -46,6 +46,9 @@ namespace Maike
 			const char* rootGet() const noexcept
 				{return m_root.c_str();}
 
+			bool generated() const noexcept
+				{return 1;}
+
 		private:
 			const TargetArchiveCompiler& r_compiler;
 

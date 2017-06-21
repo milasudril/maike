@@ -85,7 +85,7 @@ namespace Maike
 
 			const char* descriptionGet() const noexcept
 				{return m_description.c_str();}
-
+			
 
 		private:
 			virtual void compileImpl(Twins<const Dependency*> dependency_list

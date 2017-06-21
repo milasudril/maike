@@ -55,6 +55,8 @@ namespace Maike
 
 			virtual const char* descriptionGet() const noexcept=0;
 
+			virtual bool generated() const noexcept=0;
+
 		protected:
 			~Target()=default;
 		private:

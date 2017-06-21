@@ -96,6 +96,22 @@ TargetCxx::TargetCxx(const ResourceObject& obj,const TargetCxxCompiler& compiler
 		}
 	}
 
+bool TargetCxx::generated() const noexcept
+	{
+	switch(m_type)
+		{
+		case Type::OBJECT:
+		case Type::APPLICATION:
+		case Type::LIB_DYNAMIC:
+		case Type::LIB_STATIC:
+		case Type::INCLUDE_LIB:
+			return 1;
+		case Type::INCLUDE:
+			return 0;
+		}
+	return 0;
+	}
+
 void TargetCxx::dumpDetails(ResourceObject& target) const
 	{
 	target.objectSet("type",target.create(type(typeGet())));

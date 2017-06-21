@@ -30,6 +30,9 @@ namespace Maike
 			Dependency::Relation relation() const noexcept
 				{return m_relation;}
 
+			bool generated() const noexcept
+				{return 0;}
+
 		private:
 			TargetPlaceholder(const char* name,const char* name_src,const char* root,size_t id
 				,Dependency::Relation rel):

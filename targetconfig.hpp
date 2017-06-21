@@ -72,6 +72,9 @@ namespace Maike
 			const char* descriptionGet() const noexcept
 				{return "File containing effective configuration";}
 
+			bool generated() const noexcept
+				{return 1;}
+
 		private:
 			explicit TargetConfig(const ResourceObject& config,size_t id);
 			virtual ~TargetConfig()

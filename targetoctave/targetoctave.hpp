@@ -35,6 +35,9 @@ namespace Maike
 
 			void dumpDetails(ResourceObject& target) const;
 
+			bool generated() const noexcept
+				{return 1;}
+
 		private:
 			const TargetOctaveInterpreter& r_intpret;
 

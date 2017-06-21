@@ -28,6 +28,9 @@ namespace Maike
 
 			void destroy() noexcept;
 
+			bool generated() const noexcept
+				{return 1;}
+
 		private:
 			explicit TargetDirectory(const char* name,const char* in_dir
 				,const char* root,size_t id):TargetBase(name,name,in_dir,root,id)

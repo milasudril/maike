@@ -76,6 +76,9 @@ namespace Maike
 			const char* descriptionGet() const noexcept
 				{return "File containing all external targets";}
 
+			bool generated() const noexcept
+				{return 1;}
+
 		private:
 			explicit TargetExternals(const DependencyGraph& graph,size_t id);
 			virtual ~TargetExternals()
