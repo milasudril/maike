@@ -65,24 +65,12 @@ bool TargetPython::upToDate(Twins<const Dependency*> dependency_list
 	if(dependency_list.first==dependency_list.second)
 		{return m_status;}
 
-	while(dependency_list.first!=dependency_list.second)
-		{
-		switch(dependency_list.first->relationGet())
-			{
-		//TODO: Deduce whether or not this target is generated
-			case Dependency::Relation::MISC:
-				{
-				auto name_dep=dircat(target_dir,dependency_list.first->nameGet());
-				if(FileUtils::newer(name_dep.c_str(),name_out.c_str()))
-					{return 0;}
-				}
-				break;
-			default:
-				if(FileUtils::newer(dependency_list.first->nameGet(),name_out.c_str()))
-					{return 0;}
-			}
-		++dependency_list.first;
-		}
+
+	auto up_to_date=[&name_out](const char* name,Dependency::Relation rel)
+		{return !FileUtils::newer(name,name_out.c_str());};
+
+	if(!dependenciesProcess(target_dir,dependency_list,USE_ALL,up_to_date))
+		{return 0;}
 
 	return m_status==0;
 	}
