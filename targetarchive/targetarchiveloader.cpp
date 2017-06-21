@@ -81,12 +81,6 @@ namespace
 		};
 	}
 
-/*static Dependency::Relation dependencyRelation(const char* str)
-	{
-	return strcmp(str,"target")?Dependency::Relation::FILE
-		:Dependency::Relation::GENERATED;
-	}*/
-
 bool DependencyCollector::operator()(const Target_FactoryDelegator& delegator,Dependency& dep_primary
 	,ResourceObject::Reader rc_reader)
 	{
@@ -133,6 +127,7 @@ void TargetArchiveLoader::targetsLoad(const char* name_src,const char* in_dir
 	,Spider& spider,DependencyGraph& graph,Target_FactoryDelegator& factory) const
 	{
 	FileIn source(name_src);
-	factory.targetsCreate(TagExtractor(source),name_src,in_dir
-		,DependencyCollector(name_src,in_dir),graph);
+	TagExtractor extractor(source);
+	DependencyCollector collector(name_src,in_dir);
+	factory.targetsCreate(extractor,name_src,in_dir,collector,graph);
 	}

@@ -193,13 +193,13 @@ static void targetsCreate(const ResourceObject& targets,const char* name_src
 		}
 	}
 
-void Target_FactoryDelegatorDefault::targetsCreate(TagExtractor&& extractor
-	,const char* name_src,const char* in_dir,DependencyCollector&& cb
+void Target_FactoryDelegatorDefault::targetsCreate(TagExtractor& extractor
+	,const char* name_src,const char* in_dir,DependencyCollector& cb
 	,DependencyGraph& graph)
 	{targetsCreateImpl(extractor,name_src,in_dir,cb,graph);}
 
-void Target_FactoryDelegatorDefault::targetsCreate(TagExtractor&& extractor
-	,const char* in_dir,DependencyCollector&& cb,DependencyGraph& graph)
+void Target_FactoryDelegatorDefault::targetsCreate(TagExtractor& extractor
+	,const char* in_dir,DependencyCollector& cb,DependencyGraph& graph)
 	{targetsCreateImpl(extractor,nullptr,in_dir,cb,graph);}
 
 void Target_FactoryDelegatorDefault::targetsCreateImpl(TagExtractor& extractor

@@ -40,8 +40,6 @@ namespace Maike
 
 			Command m_cmd;
 			std::string m_root;
-			int m_status;
-			bool m_static;
 		};
 	}
 

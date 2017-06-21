@@ -250,6 +250,7 @@ void TargetCxxLoader::targetsLoad(const char* name_src,const char* in_dir
 	,Spider& spider,DependencyGraph& graph,Target_FactoryDelegator& factory) const
 	{
 	FileIn source(name_src);
-	factory.targetsCreate(TagExtractor(source),name_src,in_dir
-		,DependencyCollector(name_src,in_dir,spider),graph);
+	TagExtractor extractor(source);
+	DependencyCollector collector(name_src,in_dir,spider);
+	factory.targetsCreate(extractor,name_src,in_dir,collector,graph);
 	}

@@ -17,10 +17,6 @@ namespace Maike
 	class PRIVATE TargetXMLLoader:public Target_Loader
 		{
 		public:
-			explicit TargetXMLLoader(ParameterSetDumpable&& sysvars)=delete;
-
-			explicit TargetXMLLoader(const ParameterSetDumpable& sysvars);
-
 			void targetsLoad(const char* name_src,const char* in_dir
 				,Spider& spider,DependencyGraph& graph
 				,Target_FactoryDelegator& factory) const;
@@ -35,7 +31,6 @@ namespace Maike
 
 		private:
 			Command m_filter;
-			const ParameterSetDumpable& r_sysvars;
 		};
 	}
 

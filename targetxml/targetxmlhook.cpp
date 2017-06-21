@@ -4,8 +4,7 @@
 
 using namespace Maike;
 
-TargetXMLHook::TargetXMLHook(const ParameterSetDumpable& params):
-	m_loader(params)
+TargetXMLHook::TargetXMLHook(const ParameterSetDumpable& params)
 	{
 	}
 

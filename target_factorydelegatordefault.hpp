@@ -33,12 +33,12 @@ namespace Maike
 			Handle<Target> targetCreate(const ResourceObject& obj,const char* in_dir
 				,size_t line_count);
 
-			void targetsCreate(TagExtractor&& extractor,const char* name_src
-				,const char* in_dir,DependencyCollector&& cb
+			void targetsCreate(TagExtractor& extractor,const char* name_src
+				,const char* in_dir,DependencyCollector& cb
 				,DependencyGraph& graph);
 
-			void targetsCreate(TagExtractor&& extractor,const char* in_dir
-				,DependencyCollector&& cb,DependencyGraph& graph);
+			void targetsCreate(TagExtractor& extractor,const char* in_dir
+				,DependencyCollector& cb,DependencyGraph& graph);
 
 			size_t idGet() noexcept
 				{return m_id_gen.idGet();}

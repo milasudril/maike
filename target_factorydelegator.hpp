@@ -38,12 +38,14 @@ namespace Maike
 						,ResourceObject::Reader rc_reader)=0;
 				};
 
-			virtual void targetsCreate(TagExtractor&& extractor,const char* name_src
-				,const char* in_dir,DependencyCollector&& collector
+
+			virtual void targetsCreate(TagExtractor& extractor,const char* name_src
+				,const char* in_dir,DependencyCollector& collector
 				,DependencyGraph& graph)=0;
 
-			virtual void targetsCreate(TagExtractor&& extractor,const char* in_dir
-				,DependencyCollector&& cb,DependencyGraph& graph)=0;
+			virtual void targetsCreate(TagExtractor& extractor,const char* in_dir
+				,DependencyCollector& cb,DependencyGraph& graph)=0;
+
 
 			virtual Target_FactoryDelegator& factoryRegister(const Stringkey& filename_ext
 				,const Target_Factory& factory)=0;
