@@ -237,22 +237,6 @@ bool DependencyCollector::operator()(const Target_FactoryDelegator& delegator,De
 						}
 						break;
 					default:
-						{
-						auto macro=m_cpptok.macroDecode(tok_in.value.c_str());
-						if(macro.size()!=2)
-							{break;}
-						if(macro[0]=="MAIKE_TARGET")
-							{
-							wb.write(m_file_reader.nameGet()).write(": Warning: Using MAIKE_TARGET in this context is deprecated. "
-								"Add `\"include_targets\":[\"").write(macro[1].c_str())
-								.write("\"]`. See #44 for more information.\n");
-							auto name_dep_full=dircat(r_in_dir,macro[1]);
-							dep_primary=Dependency(name_dep_full.c_str(),delegator.rootGet()
-								,Dependency::Relation::GENERATED);
-							m_target_include=1;
-							return 1;
-							}
-						}
 						break;
 					}
 				mode=Mode::NORMAL;

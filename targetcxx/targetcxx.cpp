@@ -109,10 +109,9 @@ static constexpr int USE_EXTERNAL=1;
 static constexpr int USE_IMPLEMENTATION=2;
 static constexpr int USE_INCLUDE=4;
 static constexpr int USE_INCLUDE_GENERATED=8;
-static constexpr int USE_GENERATED=16;
-static constexpr int USE_FILE=32;
-static constexpr int USE_LEAF=64;
-static constexpr int USE_INTERNAL=128;
+static constexpr int USE_MISC=16;
+static constexpr int USE_LEAF=32;
+static constexpr int USE_INTERNAL=64;
 
 template<class Proc>
 static bool dependenciesProcess(const char* target_dir,Twins<const Dependency*> deps
@@ -120,6 +119,7 @@ static bool dependenciesProcess(const char* target_dir,Twins<const Dependency*> 
 	{
 	while(deps.first!=deps.second)
 		{
+	//TODO: Deduce whether or not the secondary target is generated
 		const auto rel=deps.first->relationGet();
 		if(rel==Dependency::Relation::EXTERNAL && (use_flags&USE_EXTERNAL) )
 			{
@@ -145,13 +145,7 @@ static bool dependenciesProcess(const char* target_dir,Twins<const Dependency*> 
 			if(!proc(name_full.c_str(),rel))
 				{return 0;}
 			}
-		if(rel==Dependency::Relation::GENERATED && (use_flags&USE_GENERATED))
-			{
-			auto name_full=dircat(target_dir,deps.first->target()->nameGet());
-			if(!proc(name_full.c_str(),rel))
-				{return 0;}
-			}
-		if(rel==Dependency::Relation::FILE && (use_flags&USE_FILE))
+		if(rel==Dependency::Relation::MISC && (use_flags&USE_MISC))
 			{
 			auto t=deps.first->target();
 			if(!proc(t->nameGet(),rel))
@@ -348,11 +342,6 @@ bool TargetCxx::upToDate(Twins<const Dependency*> dependency_list
 	,const char* target_dir) const
 	{
 	auto name_full=dircat( target_dir,nameGet() );
-//	printf("%s:\n",name_full.c_str());
-/*	dependenciesProcess(target_dir,dependency_list_full,USE_LEAF
-		,[](const char* name,Dependency::Relation rel)
-			{printf("  %s\n",name); return 1;}
-		);*/
 
 	if(FileUtils::newer(sourceNameGet(),name_full.c_str()))
 		{return 0;}
@@ -364,7 +353,7 @@ bool TargetCxx::upToDate(Twins<const Dependency*> dependency_list
 		{
 		case Type::OBJECT:
 			return dependenciesProcess(target_dir,dependency_list
-				,USE_INCLUDE_GENERATED|USE_INCLUDE|USE_GENERATED|USE_FILE
+				,USE_INCLUDE_GENERATED|USE_INCLUDE|USE_MISC
 				,up_to_date);
 
 		case Type::INCLUDE_LIB:
@@ -378,7 +367,7 @@ bool TargetCxx::upToDate(Twins<const Dependency*> dependency_list
 		case Type::LIB_DYNAMIC:
 		case Type::APPLICATION:
 			return dependenciesProcess(target_dir,dependency_list
-				,USE_INCLUDE_GENERATED|USE_INCLUDE|USE_GENERATED|USE_FILE,up_to_date)
+				,USE_INCLUDE_GENERATED|USE_INCLUDE|USE_MISC,up_to_date)
 				&& dependenciesProcess(target_dir,dependency_list_full,USE_IMPLEMENTATION,up_to_date);
 
 		default:

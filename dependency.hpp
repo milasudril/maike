@@ -21,15 +21,14 @@ namespace Maike
 		public:
 			enum class Relation:unsigned int
 				{
-				 LEAF
-				,INTERNAL
-				,INCLUDE
-				,IMPLEMENTATION
-				,EXTERNAL
-				,GENERATED
-				,FILE
-				,TOOL
-				,INCLUDE_GENERATED
+				 LEAF /**<This is the default relation used for empty dependencies only.*/
+				,INTERNAL /**<The dependency was synthesized by Maike.*/
+				,INCLUDE /**<The dependency was found in a link or an include statement from a Target.*/
+				,INCLUDE_GENERATED /**<This is similar to INCLUDE, but the file will be created during compilation of the project.*/
+				,IMPLEMENTATION /**<The secondary Target should be used when linking or archiving the primary Target.*/
+				,EXTERNAL /**<The secondary Target is unknown to Maike*/
+				,TOOL /**<This relation is similar to EXTERNAL, but is used to annotate that the secondary Target is a tool*/
+				,MISC /**<Any other kind of relation.*/
 				};
 
 			Dependency():m_name(nullptr),r_target(nullptr),m_rel(Relation::LEAF)

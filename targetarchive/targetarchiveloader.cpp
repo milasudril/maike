@@ -81,11 +81,11 @@ namespace
 		};
 	}
 
-static Dependency::Relation dependencyRelation(const char* str)
+/*static Dependency::Relation dependencyRelation(const char* str)
 	{
 	return strcmp(str,"target")?Dependency::Relation::FILE
 		:Dependency::Relation::GENERATED;
-	}
+	}*/
 
 bool DependencyCollector::operator()(const Target_FactoryDelegator& delegator,Dependency& dep_primary
 	,ResourceObject::Reader rc_reader)
@@ -113,11 +113,11 @@ bool DependencyCollector::operator()(const Target_FactoryDelegator& delegator,De
 	for(decltype(N) n=0;n<N;++n)
 		{
 		auto obj=contents.objectGet(n);
-		auto from=static_cast<const char*>(obj.objectGet("from"));
+	//	auto from=static_cast<const char*>(obj.objectGet("from"));
 		auto file=static_cast<const char*>(obj.objectGet("file"));
 		auto filename_full=dircat(r_in_dir,file);
 		m_deps_pending.push_back(Dependency(filename_full.c_str(),delegator.rootGet()
-			,dependencyRelation(from)));
+			,Dependency::Relation::MISC));
 		}
 	r_dep_ptr=m_deps_pending.data() + m_deps_pending.size();
 	if(r_dep_ptr!=m_deps_pending.data())

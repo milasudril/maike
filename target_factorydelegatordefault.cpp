@@ -35,7 +35,7 @@ Target& Target_FactoryDelegatorDefault::dependencyResolve(DependencyGraph& graph
 	if(FileUtils::exists(name))
 		{
 		Handle<TargetPlaceholder> target(
-			TargetPlaceholder::create(name,name,rootGet(),idGet(),Dependency::Relation::FILE));
+			TargetPlaceholder::create(name,name,rootGet(),idGet(),Dependency::Relation::MISC));
 		auto ret=target.get();
 		graph.targetRegister(std::move(target));
 		return *ret;

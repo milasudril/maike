@@ -69,7 +69,8 @@ bool TargetOctave::upToDate(Twins<const Dependency*> dependency_list
 		{
 		switch(dependency_list.first->relationGet())
 			{
-			case Dependency::Relation::GENERATED:
+		//TODO: Deduce whether or not this target is generated
+			case Dependency::Relation::MISC:
 				{
 				auto name_dep=dircat(target_dir,dependency_list.first->nameGet());
 				if(FileUtils::newer(name_dep.c_str(),name_out.c_str()))

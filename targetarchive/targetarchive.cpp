@@ -36,11 +36,11 @@ static const char* type(TargetArchive::Type type)
 	return nullptr;
 	}
 
-static Dependency::Relation dependencyRelation(const char* str)
+/*static Dependency::Relation dependencyRelation(const char* str)
 	{
 	return strcmp(str,"target")?Dependency::Relation::FILE
 		:Dependency::Relation::GENERATED;
-	}
+	}*/
 
 TargetArchive::TargetArchive(const ResourceObject& obj
 	,const TargetArchiveCompiler& compiler,const char* name_src
@@ -61,11 +61,11 @@ TargetArchive::TargetArchive(const ResourceObject& obj
 		for(decltype(N) n=0;n<N;++n)
 			{
 			auto obj=contents.objectGet(n);
-			auto from=static_cast<const char*>(obj.objectGet("from"));
+		//	auto from=static_cast<const char*>(obj.objectGet("from"));
 			auto file=static_cast<const char*>(obj.objectGet("file"));
 			auto filename_full=dircat(in_dir,file);
 			dependencyAdd(Dependency(filename_full.c_str(),root
-				,dependencyRelation(from)));
+				,Dependency::Relation::MISC));
 			}
 		}
 	}
@@ -90,7 +90,8 @@ bool TargetArchive::upToDate(Twins<const Dependency*> dependency_list
 		{
 		switch(deps_local.first->relationGet())
 			{
-			case Dependency::Relation::GENERATED:
+		//TODO: generated or not...
+			case Dependency::Relation::MISC:
 				if( FileUtils::newer(dircat(target_dir,deps_local.first->nameGet()).c_str()
 					,name_full.c_str()))
 					{return 0;}
@@ -136,7 +137,8 @@ static std::vector<std::string> filesCollect(Twins<const Dependency*> dependency
 		auto dep=dependency_list.first;
 		switch(dep->relationGet())
 			{
-			case Dependency::Relation::GENERATED:
+		//TODO: generated or not...
+			case Dependency::Relation::MISC:
 				ret.push_back(dircat(target_dir,dep->nameGet()));
 				break;
 

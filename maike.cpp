@@ -286,7 +286,7 @@ namespace
 			int operator()(const DependencyGraph& graph,const Target& target)
 				{
 				auto ptr=dynamic_cast<const TargetPlaceholder*>(&target);
-				if(ptr!=nullptr && ptr->relation()!=Dependency::Relation::FILE)
+				if(ptr!=nullptr && ptr->relation()!=Dependency::Relation::MISC)
 					{r_wb.write(" * ").write(target.nameGet()).write("\n");}
 				return 0;
 				}

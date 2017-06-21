@@ -9,6 +9,8 @@
 #include "exceptionhandler.hpp"
 #include "variant.hpp"
 #include "pathutils.hpp"
+#include "writebuffer.hpp"
+#include "stdstream.hpp"
 #include <cstdlib>
 #include <cstring>
 
@@ -26,15 +28,25 @@ static Dependency::Relation relation(const char* string)
 	if(key==Stringkey("leaf"))
 		{return Dependency::Relation::LEAF;}
 	if(key==Stringkey("generated"))
-		{return Dependency::Relation::GENERATED;}
+		{
+		WriteBuffer(StdStream::error()).write("Warning: The relation `generated` is deprecated. "
+			"Use `misc` instead.");
+		return Dependency::Relation::MISC;
+		}
 	if(key==Stringkey("include_generated"))
 		{return Dependency::Relation::INCLUDE_GENERATED;}
 	if(key==Stringkey("file"))
-		{return Dependency::Relation::FILE;}
+		{
+		WriteBuffer(StdStream::error()).write("Warning: The relation `file` is deprecated. "
+			"Use `misc` instead.");
+		return Dependency::Relation::MISC;
+		}
 	if(key==Stringkey("include"))
 		{return Dependency::Relation::INCLUDE;}
 	if(key==Stringkey("tool"))
 		{return Dependency::Relation::TOOL;}
+	if(key==Stringkey("misc"))
+		{return Dependency::Relation::MISC;}
 
 	exceptionRaise(ErrorMessage("Unknown relation type #0;",{string}));
 	}
@@ -51,12 +63,10 @@ static const char* relation(Dependency::Relation rel)
 			return "internal";
 		case Dependency::Relation::LEAF:
 			return "leaf";
-		case Dependency::Relation::GENERATED:
-			return "generated";
-		case Dependency::Relation::FILE:
-			return "file";
+		case Dependency::Relation::MISC:
+			return "misc";
 		case Dependency::Relation::INCLUDE:
-			return "file";
+			return "include";
 		case Dependency::Relation::TOOL:
 			return "tool";
 		case Dependency::Relation::INCLUDE_GENERATED:
@@ -70,8 +80,7 @@ Dependency::Dependency(const ResourceObject& obj,const char* in_dir,const char* 
 	,m_rel(relation(static_cast<const char*>(obj.objectGet("rel"))))
 	{
 	assert(m_rel!=Relation::INTERNAL && m_rel!=Relation::LEAF);
-	if(m_rel==Relation::IMPLEMENTATION || m_rel==Relation::GENERATED 
-		|| m_rel==Relation::FILE)
+	if(m_rel==Relation::IMPLEMENTATION || m_rel==Relation::MISC)
 		{
 		auto name_temp=rootStrip(dircat(in_dir,static_cast<const char*>(obj.objectGet("ref"))),root);
 		nameSet(name_temp.c_str(),name_temp.size());
