@@ -41,7 +41,7 @@ Target& Target_FactoryDelegatorDefault::dependencyResolve(DependencyGraph& graph
 		return *ret;
 		}
 
-//	It does not. Is it an external dependency?
+//	It is not. Is it an external dependency?
 	if(dependency.relationGet()==Dependency::Relation::EXTERNAL
 		|| dependency.relationGet()==Dependency::Relation::TOOL)
 		{
