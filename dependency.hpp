@@ -135,6 +135,10 @@ namespace Maike
 	static constexpr int USE_LEAF=32;
 	static constexpr int USE_INTERNAL=64;
 	static constexpr int USE_TOOL=128;
+	static constexpr int USE_ALL=USE_EXTERNAL|USE_IMPLEMENTATION
+		|USE_INCLUDE|USE_INCLUDE_EXTRA
+		|USE_MISC|USE_LEAF
+		|USE_INTERNAL|USE_TOOL;
 
 	static std::string name_full_get(const char* target_dir,const Target& t)
 		{

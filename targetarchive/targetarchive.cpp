@@ -36,12 +36,6 @@ static const char* type(TargetArchive::Type type)
 	return nullptr;
 	}
 
-/*static Dependency::Relation dependencyRelation(const char* str)
-	{
-	return strcmp(str,"target")?Dependency::Relation::FILE
-		:Dependency::Relation::GENERATED;
-	}*/
-
 TargetArchive::TargetArchive(const ResourceObject& obj
 	,const TargetArchiveCompiler& compiler,const char* name_src
 	,const char* in_dir,const char* root,size_t id,size_t line_count):
@@ -61,7 +55,6 @@ TargetArchive::TargetArchive(const ResourceObject& obj
 		for(decltype(N) n=0;n<N;++n)
 			{
 			auto obj=contents.objectGet(n);
-		//	auto from=static_cast<const char*>(obj.objectGet("from"));
 			auto file=static_cast<const char*>(obj.objectGet("file"));
 			auto filename_full=dircat(in_dir,file);
 			dependencyAdd(Dependency(filename_full.c_str(),root
@@ -77,6 +70,7 @@ void TargetArchive::dumpDetails(ResourceObject& target) const
 		.objectSet("root",target.create(rootGet()));
 	}
 
+
 bool TargetArchive::upToDate(Twins<const Dependency*> dependency_list
 	,Twins<const Dependency*> dependency_list_full
 	,const char* target_dir) const
@@ -85,24 +79,12 @@ bool TargetArchive::upToDate(Twins<const Dependency*> dependency_list
 	if(FileUtils::newer(sourceNameGet(),name_full.c_str()))
 		{return 0;}
 
-	auto deps_local=dependencies();
-	while(deps_local.first!=deps_local.second)
-		{
-		switch(deps_local.first->relationGet())
-			{
-		//TODO: generated or not...
-			case Dependency::Relation::MISC:
-				if( FileUtils::newer(dircat(target_dir,deps_local.first->nameGet()).c_str()
-					,name_full.c_str()))
-					{return 0;}
-				break;
-			default:
-				if( FileUtils::newer( deps_local.first->nameGet(),name_full.c_str() ) )
-					{return 0;}
-				break;
-			}
-		++deps_local.first;
-		}
+
+	auto up_to_date=[&name_full](const char* name,Dependency::Relation rel)
+		{return !FileUtils::newer(name,name_full.c_str());};
+
+	return dependenciesProcess(target_dir,dependencies(),USE_ALL,up_to_date);
+
 
 #if EMBED_RELATED_COMPLETED
 	while(dependency_list.first!=dependency_list.second)
@@ -132,22 +114,13 @@ static std::vector<std::string> filesCollect(Twins<const Dependency*> dependency
 	,const char* target_dir)
 	{
 	std::vector<std::string> ret;
-	while(dependency_list.first!=dependency_list.second)
+	auto collect=[&ret](const char* name,Dependency::Relation rel)
 		{
-		auto dep=dependency_list.first;
-		switch(dep->relationGet())
-			{
-		//TODO: generated or not...
-			case Dependency::Relation::MISC:
-				ret.push_back(dircat(target_dir,dep->nameGet()));
-				break;
+		ret.push_back(name);
+		return 1;
+		};
+	dependenciesProcess(target_dir,dependency_list,USE_ALL,collect);
 
-			default:
-				ret.push_back(dep->nameGet());
-				break;
-			}
-		++dependency_list.first;
-		}
 	return std::move(ret);
 	}
 
