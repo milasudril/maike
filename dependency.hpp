@@ -24,7 +24,7 @@ namespace Maike
 				 LEAF /**<This is the default relation used for empty dependencies only.*/
 				,INTERNAL /**<The dependency was synthesized by Maike.*/
 				,INCLUDE /**<The dependency was found in a link or an include statement from a Target.*/
-				,INCLUDE_GENERATED /**<This is similar to INCLUDE, but the file will be created during compilation of the project.*/
+				,INCLUDE_EXTRA /**<This is similar to INCLUDE, but the file will passed to the compiler on the command line.*/
 				,IMPLEMENTATION /**<The secondary Target should be used when linking or archiving the primary Target.*/
 				,EXTERNAL /**<The secondary Target is unknown to Maike*/
 				,TOOL /**<This relation is similar to EXTERNAL, but is used to annotate that the secondary Target is a tool*/
@@ -125,6 +125,78 @@ namespace Maike
 			Target* r_target;
 			Relation m_rel;
 		};
+
+
+	static constexpr int USE_EXTERNAL=1;
+	static constexpr int USE_IMPLEMENTATION=2;
+	static constexpr int USE_INCLUDE=4;
+	static constexpr int USE_INCLUDE_EXTRA=8;
+	static constexpr int USE_MISC=16;
+	static constexpr int USE_LEAF=32;
+	static constexpr int USE_INTERNAL=64;
+	static constexpr int USE_TOOL=128;
+
+	template<class Proc>
+	static bool dependenciesProcess(const char* target_dir,Twins<const Dependency*> deps
+		,int use_flags,Proc&& proc)
+		{
+		while(deps.first!=deps.second)
+			{
+		//TODO: Deduce whether or not the secondary target is generated
+			const auto rel=deps.first->relationGet();
+			if(rel==Dependency::Relation::EXTERNAL && (use_flags&USE_EXTERNAL) )
+				{
+				auto t=deps.first->target();
+				if(!proc(t->nameGet(),rel))
+					{return 0;}
+				}
+			if(rel==Dependency::Relation::IMPLEMENTATION && (use_flags&USE_IMPLEMENTATION) )
+				{
+				auto name_full=dircat(target_dir,deps.first->target()->nameGet());
+				if(!proc(name_full.c_str(),rel))
+					{return 0;}
+				}
+			if(rel==Dependency::Relation::INCLUDE && (use_flags&USE_INCLUDE))
+				{
+				auto t=deps.first->target();
+				if(!proc(t->nameGet(),rel))
+					{return 0;}
+				}
+			if(rel==Dependency::Relation::INCLUDE_EXTRA && (use_flags&USE_INCLUDE_EXTRA))
+				{
+				auto name_full=dircat(target_dir,deps.first->target()->nameGet());
+				if(!proc(name_full.c_str(),rel))
+					{return 0;}
+				}
+			if(rel==Dependency::Relation::TOOL && (use_flags&USE_TOOL))
+				{
+				auto name_full=dircat(target_dir,deps.first->target()->nameGet());
+				if(!proc(name_full.c_str(),rel))
+					{return 0;}
+				}
+			if(rel==Dependency::Relation::MISC && (use_flags&USE_MISC))
+				{
+				auto t=deps.first->target();
+				if(!proc(t->nameGet(),rel))
+					{return 0;}
+				}
+			if(rel==Dependency::Relation::INTERNAL && (use_flags&USE_INTERNAL))
+				{
+				auto t=deps.first->target();
+				if(!proc(t->nameGet(),rel))
+					{return 0;}
+				}	
+			if(rel==Dependency::Relation::LEAF && (use_flags&USE_LEAF))
+				{
+				auto t=deps.first->target();
+				if(!proc(t->nameGet(),rel))
+					{return 0;}
+				}	
+
+			++deps.first;
+			}
+		return 1;
+		}
 	}
 
 #endif

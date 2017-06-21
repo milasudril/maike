@@ -34,7 +34,13 @@ static Dependency::Relation relation(const char* string)
 		return Dependency::Relation::MISC;
 		}
 	if(key==Stringkey("include_generated"))
-		{return Dependency::Relation::INCLUDE_GENERATED;}
+		{
+		WriteBuffer(StdStream::error()).write("Warning: The relation `include_generated` is deprecated. "
+			"Use `misc` instead.");
+		return Dependency::Relation::INCLUDE_EXTRA;
+		}
+	if(key==Stringkey("include_extra"))
+		{return Dependency::Relation::INCLUDE_EXTRA;}
 	if(key==Stringkey("file"))
 		{
 		WriteBuffer(StdStream::error()).write("Warning: The relation `file` is deprecated. "
@@ -69,8 +75,8 @@ static const char* relation(Dependency::Relation rel)
 			return "include";
 		case Dependency::Relation::TOOL:
 			return "tool";
-		case Dependency::Relation::INCLUDE_GENERATED:
-			return "include_generated";
+		case Dependency::Relation::INCLUDE_EXTRA:
+			return "include_extra";
 		}
 	return nullptr;
 	}

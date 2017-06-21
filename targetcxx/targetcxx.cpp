@@ -90,7 +90,7 @@ TargetCxx::TargetCxx(const ResourceObject& obj,const TargetCxxCompiler& compiler
 		for(decltype(N) k=0;k<N;++k)
 			{
 			auto dep_name=static_cast<const char*>(itargets.objectGet(k));
-			Dependency dep( dircat(in_dir,dep_name).c_str(),root,Dependency::Relation::INCLUDE_GENERATED );
+			Dependency dep( dircat(in_dir,dep_name).c_str(),root,Dependency::Relation::INCLUDE_EXTRA );
 			dependencyAdd( std::move(dep) );
 			}
 		}
@@ -103,70 +103,6 @@ void TargetCxx::dumpDetails(ResourceObject& target) const
 	auto cxxoptions=target.createObject();
 	m_options_extra.configDump(cxxoptions);
 	target.objectSet("cxxoptions",std::move(cxxoptions));
-	}
-
-static constexpr int USE_EXTERNAL=1;
-static constexpr int USE_IMPLEMENTATION=2;
-static constexpr int USE_INCLUDE=4;
-static constexpr int USE_INCLUDE_GENERATED=8;
-static constexpr int USE_MISC=16;
-static constexpr int USE_LEAF=32;
-static constexpr int USE_INTERNAL=64;
-
-template<class Proc>
-static bool dependenciesProcess(const char* target_dir,Twins<const Dependency*> deps
-	,int use_flags,Proc&& proc)
-	{
-	while(deps.first!=deps.second)
-		{
-	//TODO: Deduce whether or not the secondary target is generated
-		const auto rel=deps.first->relationGet();
-		if(rel==Dependency::Relation::EXTERNAL && (use_flags&USE_EXTERNAL) )
-			{
-			auto t=deps.first->target();
-			if(!proc(t->nameGet(),rel))
-				{return 0;}
-			}
-		if(rel==Dependency::Relation::IMPLEMENTATION && (use_flags&USE_IMPLEMENTATION) )
-			{
-			auto name_full=dircat(target_dir,deps.first->target()->nameGet());
-			if(!proc(name_full.c_str(),rel))
-				{return 0;}
-			}
-		if(rel==Dependency::Relation::INCLUDE && (use_flags&USE_INCLUDE))
-			{
-			auto t=deps.first->target();
-			if(!proc(t->nameGet(),rel))
-				{return 0;}
-			}
-		if(rel==Dependency::Relation::INCLUDE_GENERATED && (use_flags&USE_INCLUDE_GENERATED))
-			{
-			auto name_full=dircat(target_dir,deps.first->target()->nameGet());
-			if(!proc(name_full.c_str(),rel))
-				{return 0;}
-			}
-		if(rel==Dependency::Relation::MISC && (use_flags&USE_MISC))
-			{
-			auto t=deps.first->target();
-			if(!proc(t->nameGet(),rel))
-				{return 0;}
-			}
-		if(rel==Dependency::Relation::INTERNAL && (use_flags&USE_INTERNAL))
-			{
-			auto t=deps.first->target();
-			if(!proc(t->nameGet(),rel))
-				{return 0;}
-			}	
-		if(rel==Dependency::Relation::LEAF && (use_flags&USE_LEAF))
-			{
-			auto t=deps.first->target();
-			if(!proc(t->nameGet(),rel))
-				{return 0;}
-			}	
-
-		++deps.first;
-		}
-	return 1;
 	}
 
 static void optionsCollect(Twins<const Dependency*> deps
@@ -240,7 +176,7 @@ TargetCxxCompiler::FileUsage map<TargetCxxCompiler::FileUsage,Dependency::Relati
 			return TargetCxxCompiler::FileUsage::NORMAL;
 		case Dependency::Relation::EXTERNAL:
 			return TargetCxxCompiler::FileUsage::LIB_EXTERNAL;
-		case Dependency::Relation::INCLUDE_GENERATED:
+		case Dependency::Relation::INCLUDE_EXTRA:
 			return TargetCxxCompiler::FileUsage::INCLUDE_EXTRA;
 		default:
 			assert(!("Intenal error"));
@@ -273,7 +209,7 @@ void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 			auto options_extra=m_options_extra;
 			optionsCollect(dependency_list_full,options_extra);
 			strings_temp.reserve(dependency_list.second - dependency_list.first);
-			dependenciesProcess(target_dir,dependency_list,USE_INCLUDE_GENERATED,depstring_create);
+			dependenciesProcess(target_dir,dependency_list,USE_INCLUDE_EXTRA,depstring_create);
 			auto deps_begin=depfiles.data();
 			auto deps_end=deps_begin + depfiles.size();
 			r_compiler.compileObject(sourceNameGet(),inDirGet(),{deps_begin,deps_end},name_full.c_str(),options_extra);
@@ -287,7 +223,7 @@ void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 			auto N=(dependency_list_full.second - dependency_list_full.first);
 			N+=(dependency_list.second - dependency_list.first);
 			strings_temp.reserve(N);
-			dependenciesProcess(target_dir,dependency_list,USE_INCLUDE_GENERATED,depstring_create);
+			dependenciesProcess(target_dir,dependency_list,USE_INCLUDE_EXTRA,depstring_create);
 			dependenciesProcess(target_dir,dependency_list_full,USE_EXTERNAL|USE_IMPLEMENTATION,depstring_create);
 			auto deps_begin=depfiles.data();
 			auto deps_end=deps_begin + depfiles.size();
@@ -305,7 +241,7 @@ void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 			auto N=(dependency_list_full.second - dependency_list_full.first);
 			N+=(dependency_list.second - dependency_list.first);
 			strings_temp.reserve(N);
-			dependenciesProcess(target_dir,dependency_list,USE_INCLUDE_GENERATED,depstring_create);
+			dependenciesProcess(target_dir,dependency_list,USE_INCLUDE_EXTRA,depstring_create);
 			dependenciesProcess(target_dir,dependency_list_full,USE_EXTERNAL|USE_IMPLEMENTATION,depstring_create);
 			auto deps_begin=depfiles.data();
 			auto deps_end=deps_begin + depfiles.size();
@@ -353,12 +289,12 @@ bool TargetCxx::upToDate(Twins<const Dependency*> dependency_list
 		{
 		case Type::OBJECT:
 			return dependenciesProcess(target_dir,dependency_list
-				,USE_INCLUDE_GENERATED|USE_INCLUDE|USE_MISC
+				,USE_INCLUDE_EXTRA|USE_INCLUDE|USE_MISC
 				,up_to_date);
 
 		case Type::INCLUDE_LIB:
 			return dependenciesProcess(target_dir,dependency_list
-				,USE_INCLUDE|USE_INCLUDE_GENERATED,up_to_date);
+				,USE_INCLUDE|USE_INCLUDE_EXTRA,up_to_date);
 
 		case Type::INCLUDE:
 			return 1;
@@ -367,7 +303,7 @@ bool TargetCxx::upToDate(Twins<const Dependency*> dependency_list
 		case Type::LIB_DYNAMIC:
 		case Type::APPLICATION:
 			return dependenciesProcess(target_dir,dependency_list
-				,USE_INCLUDE_GENERATED|USE_INCLUDE|USE_MISC,up_to_date)
+				,USE_INCLUDE_EXTRA|USE_INCLUDE|USE_MISC,up_to_date)
 				&& dependenciesProcess(target_dir,dependency_list_full,USE_IMPLEMENTATION,up_to_date);
 
 		default:
