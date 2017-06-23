@@ -1,3 +1,4 @@
+mkdir -p '__targets'
 mkdir -p '__targets/targetcxx'
 'g++' '-E' '-dM' '-x' 'c++' '/dev/null'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/stringformat.o' 'stringformat.cpp'
@@ -437,6 +438,7 @@ grep -v '^[[:space:]]*//@' 'target_factorydelegator.hpp' > '__targets/target_fac
 grep -v '^[[:space:]]*//@' 'target_factory.hpp' > '__targets/target_factory.hpp'
 grep -v '^[[:space:]]*//@' 'target_loader.hpp' > '__targets/target_loader.hpp'
 grep -v '^[[:space:]]*//@' 'dependencygraph.hpp' > '__targets/dependencygraph.hpp'
+grep -v '^[[:space:]]*//@' 'dependencybuffer.hpp' > '__targets/dependencybuffer.hpp'
 grep -v '^[[:space:]]*//@' 'libmaikeplug.cpp' > '__targets/maikeplug.hpp'
 mkdir -p '__targets/targetxml'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetxml' '-o' '__targets/targetxml/targetxmlloader.o' 'targetxml/targetxmlloader.cpp'

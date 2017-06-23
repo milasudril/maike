@@ -14,6 +14,7 @@
 #include "resourceobjectjansson.hpp"
 #include "fileinfo.hpp"
 #include "target_loader.hpp"
+#include "dependencybufferdefault.hpp"
 
 
 #include <cstring>
@@ -152,21 +153,18 @@ static bool backrefIs(const char* depname,const ResourceObject& targets,const ch
 	return 0;
 	}
 
-static std::vector<Dependency> dependenciesCollect(
-	Target_FactoryDelegator& delegator
+static void dependenciesCollect(
+	 Target_FactoryDelegator& delegator
 	,Target_FactoryDelegator::DependencyCollector& cb
-	,const ResourceObject& targets,const char* in_dir)
+	,const ResourceObject& targets,const char* in_dir
+	,DependencyBuffer& buffer)
 	{
-	std::vector<Dependency> ret;
+	Dependency dep;
+	while(cb(delegator,dep,ResourceObjectJansson::createImpl))
 		{
-		Dependency dep;
-		while(cb(delegator,dep,ResourceObjectJansson::createImpl))
-			{
-			if(!backrefIs(dep.nameGet(),targets,in_dir,delegator.rootGet()))
-				{ret.push_back(dep);}
-			}
+		if(!backrefIs(dep.nameGet(),targets,in_dir,delegator.rootGet()))
+			{buffer.append(std::move(dep));}
 		}
-	return std::move(ret);
 	}
 
 static void dependenciesAdd(Handle<Target>& target,const std::vector<Dependency>& deps)
@@ -187,31 +185,23 @@ static void targetsCreate(const ResourceObject& targets,const char* name_src
 	,Target_FactoryDelegator::DependencyCollector& cb
 	,DependencyGraph& graph)
 	{
-	auto deps=dependenciesCollect(delegator,cb,targets,in_dir);
+	DependencyBufferDefault deps;
 
-	std::vector<Target*> targets_created;
+	dependenciesCollect(delegator,cb,targets,in_dir,deps);
 	auto N=targets.objectCountGet();
 	for(decltype(N) k=0;k<N;++k)
 		{
 		auto target=targets.objectGet(k);
-		if(target.objectExists("source_name") || name_src==nullptr)
+		auto t=(target.objectExists("source_name") || name_src==nullptr)?
+			 delegator.targetCreate(target,in_dir,0)
+			:delegator.targetCreate(target,name_src,in_dir,line_count);
+		std::for_each(deps.begin(),deps.end(),[&t](const Dependency& dep_in)
 			{
-			auto t=delegator.targetCreate(target,in_dir,0);
-			targets_created.push_back(t.get());
-			dependenciesAdd(t,deps);
-			graph.targetRegister(std::move(t));
-			}
-		else
-			{
-			auto t=delegator.targetCreate(target,name_src,in_dir,line_count);
-			targets_created.push_back(t.get());
-			dependenciesAdd(t,deps);
-			graph.targetRegister(std::move(t));
-			}
+			Dependency dep(dep_in);
+			t->dependencyAdd(std::move(dep));
+			});
+		graph.targetRegister(std::move(t));
 		}
-
-//	std::for_each(targets_created.begin(),targets_created.end(),[](const Target* t)
-//		{printf("%s\n",t->nameGet());});
 	}
 
 void Target_FactoryDelegatorDefault::targetsCreate(TagExtractor& extractor

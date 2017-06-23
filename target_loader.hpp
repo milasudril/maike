@@ -11,7 +11,7 @@ namespace Maike
 	class Spider;
 	class DependencyGraph;
 	class Target_FactoryDelegator;
-	class Target;
+	class DependencyBuffer;
 
 	class PRIVATE Target_Loader
 		{
@@ -22,7 +22,7 @@ namespace Maike
 
 			virtual void dependenciesExtraGet(const char* name_src,const char* in_dir
 				,const char* root,ResourceObject::Reader rc_reader
-				,Target& target) const=0;
+				,DependencyBuffer& buffer) const=0;
 
 
 		protected:

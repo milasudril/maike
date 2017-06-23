@@ -6,13 +6,11 @@
 #include "../filein.hpp"
 #include "../spider.hpp"
 #include "../resourceobject.hpp"
-#include "../handle.hpp"
-#include "../target.hpp"
 #include "../dependency.hpp"
-#include "../dependencygraph.hpp"
 #include "../pathutils.hpp"
 #include "../writebuffer.hpp"
 #include "../stdstream.hpp"
+#include "../dependencybuffer.hpp"
 #include <cstring>
 #include <vector>
 
@@ -149,8 +147,7 @@ TargetCxxLoader::TargetCxxLoader(const TargetCxxOptions& options):
 	{}
 
 void TargetCxxLoader::dependenciesExtraGet(const char* name_src,const char* in_dir
-	,const char* root
-	,ResourceObject::Reader rc_reader,Target& target) const
+	,const char* root,ResourceObject::Reader rc_reader,DependencyBuffer& deps_out) const
 	{
 	FileIn file(name_src);
 	TagExtractor extractor(file);
@@ -162,14 +159,10 @@ void TargetCxxLoader::dependenciesExtraGet(const char* name_src,const char* in_d
 		for(decltype(N) k=0;k<N;++k)
 			{
 			Dependency dep(deps.objectGet(k),in_dir,root);
-			target.dependencyAdd(std::move(dep));
+			deps_out.append(std::move(dep));
 			}
 		}
 	}
-
-void TargetCxxLoader::dependenciesGet(const char* name_src,const char* in_dir
-	,ResourceObject::Reader rc_reader,Target& target) const
-	{}
 
 namespace
 	{
