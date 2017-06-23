@@ -29,6 +29,11 @@ namespace Maike
 
 			void configDump(ResourceObject& config) const;
 
+			void dependenciesExtraGet(const char* name_src,const char* in_dir
+				,const char* root,ResourceObject::Reader rc_reader
+				,Target& target) const
+				{}
+
 		private:
 			Command m_filter;
 		};

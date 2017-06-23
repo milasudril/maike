@@ -148,6 +148,29 @@ TargetCxxLoader::TargetCxxLoader(const TargetCxxOptions& options):
 	r_options(options)
 	{}
 
+void TargetCxxLoader::dependenciesExtraGet(const char* name_src,const char* in_dir
+	,const char* root
+	,ResourceObject::Reader rc_reader,Target& target) const
+	{
+	FileIn file(name_src);
+	TagExtractor extractor(file);
+	auto tags=rc_reader(extractor);
+	if(tags.objectExists("dependencies_extra"))
+		{
+		auto deps=tags.objectGet("dependencies_extra");
+		auto N=deps.objectCountGet();
+		for(decltype(N) k=0;k<N;++k)
+			{
+			Dependency dep(deps.objectGet(k),in_dir,root);
+			target.dependencyAdd(std::move(dep));
+			}
+		}
+	}
+
+void TargetCxxLoader::dependenciesGet(const char* name_src,const char* in_dir
+	,ResourceObject::Reader rc_reader,Target& target) const
+	{}
+
 namespace
 	{
 	class DependencyCollector:public Target_FactoryDelegator::DependencyCollector

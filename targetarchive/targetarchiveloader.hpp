@@ -19,6 +19,11 @@ namespace Maike
 				,Spider& spider,DependencyGraph& graph
 				,Target_FactoryDelegator& factory) const;
 
+			void dependenciesExtraGet(const char* name_src,const char* in_dir
+				,const char* root,ResourceObject::Reader rc_reader
+				,Target& target) const
+				{}
+
 		private:
 		};
 	}
