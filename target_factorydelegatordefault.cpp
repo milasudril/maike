@@ -17,6 +17,7 @@
 #include <cstring>
 
 #include <cstdio>
+#include <algorithm>
 
 using namespace Maike;
 
@@ -173,7 +174,7 @@ static void targetsCreate(const ResourceObject& targets,const char* name_src
 	{
 	auto deps=dependenciesCollect(delegator,cb,targets,in_dir);
 
-
+	std::vector<Target*> targets_created;
 	auto N=targets.objectCountGet();
 	for(decltype(N) k=0;k<N;++k)
 		{
@@ -181,16 +182,21 @@ static void targetsCreate(const ResourceObject& targets,const char* name_src
 		if(target.objectExists("source_name") || name_src==nullptr)
 			{
 			auto t=delegator.targetCreate(target,in_dir,0);
+			targets_created.push_back(t.get());
 			dependenciesAdd(t,deps);
 			graph.targetRegister(std::move(t));
 			}
 		else
 			{
 			auto t=delegator.targetCreate(target,name_src,in_dir,line_count);
+			targets_created.push_back(t.get());
 			dependenciesAdd(t,deps);
 			graph.targetRegister(std::move(t));
 			}
 		}
+
+	std::for_each(targets_created.begin(),targets_created.end(),[](const Target* t)
+		{printf("%s\n",t->nameGet());});
 	}
 
 void Target_FactoryDelegatorDefault::targetsCreate(TagExtractor& extractor
