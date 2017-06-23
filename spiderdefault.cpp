@@ -4,8 +4,8 @@
 
 #include "spiderdefault.hpp"
 #include "directorylister.hpp"
-#include "target_loader.hpp"
 #include "target_factorydelegator.hpp"
+#include "stringkey.hpp"
 
 using namespace Maike;
 
@@ -13,8 +13,6 @@ SpiderDefault::SpiderDefault(Target_FactoryDelegator& target_creator,DependencyG
 	r_target_creator(target_creator),r_targets(targets)
 	{
 	}
-
-
 
 SpiderDefault& SpiderDefault::scanFile(const char* filename,const char* in_dir)
 	{

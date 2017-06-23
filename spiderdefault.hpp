@@ -7,7 +7,6 @@
 #define MAIKE_SPIDERDEFAULT_HPP
 
 #include "spider.hpp"
-#include "stringkey.hpp"
 #include "twins.hpp"
 #include <stack>
 #include <set>
