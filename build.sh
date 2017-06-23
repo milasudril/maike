@@ -1,4 +1,3 @@
-mkdir -p '__targets'
 mkdir -p '__targets/targetcxx'
 'g++' '-E' '-dM' '-x' 'c++' '/dev/null'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/stringformat.o' 'stringformat.cpp'
