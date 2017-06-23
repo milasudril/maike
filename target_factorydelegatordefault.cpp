@@ -1,6 +1,4 @@
-//@	{
-//@	"targets":[{"name":"target_factorydelegatordefault.o","type":"object"
-//@	,"cxxoptions":{"cflags_extra":["Wunused-parameter"]} }]}
+//@	{"targets":[{"name":"target_factorydelegatordefault.o","type":"object"}]}
 
 #include "target_factorydelegatordefault.hpp"
 #include "resourceobject.hpp"
@@ -138,24 +136,6 @@ Handle<Target> Target_FactoryDelegatorDefault::targetCreate(const ResourceObject
 		}
 	return ret;
 	}
-
-/*
-static bool backrefIs(const char* depname,const ResourceObject& targets,const char* in_dir
-	,const char* root)
-	{
-	auto M=targets.objectCountGet();
-	for(decltype(M) l=0;l<M;++l)
-		{
-		auto target=targets.objectGet(l);
-		auto target_name=rootStrip(
-			 dircat(in_dir,static_cast<const char*>(target.objectGet("name")))
-			,root);
-		if(target_name==depname)
-			{return 1;}
-		}
-	return 0;
-	}
-*/
 
 static Stringkey targetLoaderKeyGet(const std::string& filename)
 	{
