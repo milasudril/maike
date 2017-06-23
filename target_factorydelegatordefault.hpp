@@ -63,10 +63,10 @@ namespace Maike
 			Target& dependencyResolve(DependencyGraph& graph
 				,const char* target_from,const Dependency& dep);
 
-			void targetRemoved(DependencyGraph& graph,Target& target)
+			void targetRemoved(DependencyGraph&,Target& target)
 				{m_id_gen.idRelease(target.idGet());}
 
-			void graphCleared(DependencyGraph& graph)
+			void graphCleared(DependencyGraph&)
 				{m_id_gen.reset();}
 
 

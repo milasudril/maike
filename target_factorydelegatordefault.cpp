@@ -1,4 +1,6 @@
-//@	{"targets":[{"name":"target_factorydelegatordefault.o","type":"object"}]}
+//@	{
+//@	"targets":[{"name":"target_factorydelegatordefault.o","type":"object"
+//@	,"cxxoptions":{"cflags_extra":["Wunused-parameter"]} }]}
 
 #include "target_factorydelegatordefault.hpp"
 #include "resourceobject.hpp"
@@ -195,26 +197,22 @@ static void dependenciesCollect(
 	 Target_FactoryDelegator& delegator
 	,const std::map<Stringkey,const Target_Loader*>& loaders
 	,Target_FactoryDelegator::DependencyCollector& cb
-	,const ResourceObject& targets,const char* in_dir
 	,DependencyBuffer& buffer)
 	{
 	Dependency dep_in;
 	while(cb(delegator,dep_in,ResourceObjectJansson::createImpl))
 		{
-	//	if(!backrefIs(dep_in.nameGet(),targets,in_dir,delegator.rootGet()))
 			{
-				{
-				Dependency dep(dep_in);
-				buffer.append(std::move(dep));
-				}
+			Dependency dep(dep_in);
+			buffer.append(std::move(dep));
+			}
 
-			auto loader=targetLoaderGet(targetLoaderKeyGet(dep_in.nameGet()),loaders);
-			if(loader!=nullptr)
-				{
-				auto in_dir_include=dirname(dep_in.nameGet());
-				loader->dependenciesExtraGet(dep_in.nameGet(),in_dir_include.c_str()
-					,delegator.rootGet(),ResourceObjectJansson::createImpl,buffer);
-				}
+		auto loader=targetLoaderGet(targetLoaderKeyGet(dep_in.nameGet()),loaders);
+		if(loader!=nullptr)
+			{
+			auto in_dir_include=dirname(dep_in.nameGet());
+			loader->dependenciesExtraGet(dep_in.nameGet(),in_dir_include.c_str()
+				,delegator.rootGet(),ResourceObjectJansson::createImpl,buffer);
 			}
 		}
 	}
@@ -233,7 +231,7 @@ static void targetsCreate(const ResourceObject& targets,const char* name_src
 	{
 	DependencyBufferDefault deps;
 
-	dependenciesCollect(delegator,loaders,cb,targets,in_dir,deps);
+	dependenciesCollect(delegator,loaders,cb,deps);
 	auto N=targets.objectCountGet();
 	for(decltype(N) k=0;k<N;++k)
 		{
