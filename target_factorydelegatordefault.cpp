@@ -15,11 +15,7 @@
 #include "fileinfo.hpp"
 #include "target_loader.hpp"
 #include "dependencybufferdefault.hpp"
-
-
 #include <cstring>
-
-#include <cstdio>
 #include <algorithm>
 
 using namespace Maike;
