@@ -6,6 +6,7 @@
 #include "dependencybuffer.hpp"
 #include "dependency.hpp"
 #include <vector>
+#include <algorithm>
 
 namespace Maike
 	{
@@ -21,6 +22,16 @@ namespace Maike
 
 			const Dependency* end() const noexcept
 				{return begin() + m_deps.size();}
+
+			void append(const DependencyBuffer& buffer)
+				{
+				std::for_each(buffer.begin(),buffer.end()
+					,[this](const Dependency& dep)
+						{
+						Dependency cp(dep);
+						m_deps.push_back(std::move(cp));
+						});
+				}
 
 		private:
 			std::vector<Dependency> m_deps;

@@ -221,12 +221,14 @@ Session& Session::scanFile(const char* filename)
 void Session::dependenciesClear() noexcept
 	{
 	m_graph.clear();
+	m_delegator.depsExtraCacheClear();
 	graphDirtySet();
 	}
 
 void Session::dependenciesReload() const
 	{
 	m_graph.clear();
+	m_delegator.depsExtraCacheClear();
 	
 		{
 		ResourceObjectJansson config(ResourceObject::Type::OBJECT);

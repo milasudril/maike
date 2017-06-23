@@ -14,6 +14,7 @@ namespace Maike
 			virtual void append(Dependency&& dep)=0;
 			virtual const Dependency* begin() const noexcept=0;
 			virtual const Dependency* end() const noexcept=0;
+			virtual void append(const DependencyBuffer& buffer)=0;
 		};
 	}
 

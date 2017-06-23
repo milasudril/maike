@@ -175,7 +175,8 @@ static void dependenciesCollect(
 	,Spider& spider
 	,const std::map<Stringkey,const Target_Loader*>& loaders
 	,Target_FactoryDelegator::DependencyCollector& cb
-	,DependencyBuffer& buffer)
+	,DependencyBuffer& buffer
+	,std::map<Stringkey,DependencyBufferDefault>& deps_extra_cache)
 	{
 	Dependency dep_in;
 	while(cb(delegator,dep_in,ResourceObjectJansson::createImpl))
@@ -190,8 +191,19 @@ static void dependenciesCollect(
 			{
 			auto in_dir_include=dirname(dep_in.nameGet());
 			spider.scanFile(dep_in.nameGet(),in_dir_include.c_str());
-			loader->dependenciesExtraGet(dep_in.nameGet(),in_dir_include.c_str()
-				,delegator.rootGet(),ResourceObjectJansson::createImpl,buffer);
+
+			auto key=Stringkey(dep_in.nameGet());
+			auto i=deps_extra_cache.find(key);
+			if(i==deps_extra_cache.end())
+				{
+				DependencyBufferDefault buffer_temp;
+				loader->dependenciesExtraGet(dep_in.nameGet(),in_dir_include.c_str()
+					,delegator.rootGet(),ResourceObjectJansson::createImpl,buffer_temp);
+				buffer.append(buffer_temp);
+				deps_extra_cache.insert({std::move(key),std::move(buffer_temp)});
+				}
+			else
+				{buffer.append(i->second);}
 			}
 		}
 	}
@@ -207,11 +219,12 @@ static void targetsCreate(const ResourceObject& targets,const char* name_src
 	,Spider& spider
 	,const std::map<Stringkey,const Target_Loader*>& loaders
 	,Target_FactoryDelegator::DependencyCollector& cb
-	,DependencyGraph& graph)
+	,DependencyGraph& graph
+	,std::map<Stringkey,DependencyBufferDefault>& deps_extra_cache)
 	{
 	DependencyBufferDefault deps;
 
-	dependenciesCollect(delegator,spider,loaders,cb,deps);
+	dependenciesCollect(delegator,spider,loaders,cb,deps,deps_extra_cache);
 	auto N=targets.objectCountGet();
 	for(decltype(N) k=0;k<N;++k)
 		{
@@ -250,7 +263,7 @@ void Target_FactoryDelegatorDefault::targetsCreateImpl(TagExtractor& extractor
 	auto line_count=extractor.linesCountGet();
 
 	if(obj.objectExists("targets"))
-		{::targetsCreate(obj.objectGet("targets"),name_src,in_dir,line_count,*this,spider,m_r_loaders,cb,graph);}
+		{::targetsCreate(obj.objectGet("targets"),name_src,in_dir,line_count,*this,spider,m_r_loaders,cb,graph,m_deps_extra_cache);}
 	else
 		{
 		auto N_cases=obj.objectCountGet();
@@ -266,7 +279,7 @@ void Target_FactoryDelegatorDefault::targetsCreateImpl(TagExtractor& extractor
 				if(static_cast<int64_t>( r_eval.evaluate(expression) ))
 					{
 					::targetsCreate(case_obj.objectGet(1).objectGet("targets")
-						,name_src,in_dir,line_count,*this,spider,m_r_loaders,cb,graph);
+						,name_src,in_dir,line_count,*this,spider,m_r_loaders,cb,graph,m_deps_extra_cache);
 					break;
 					}
 				}
@@ -274,7 +287,7 @@ void Target_FactoryDelegatorDefault::targetsCreateImpl(TagExtractor& extractor
 			if(case_obj.objectExists("targets"))
 				{
 				::targetsCreate(case_obj.objectGet("targets"),name_src,in_dir
-					,line_count,*this,spider,m_r_loaders,cb,graph);
+					,line_count,*this,spider,m_r_loaders,cb,graph,m_deps_extra_cache);
 				break;
 				}
 			}

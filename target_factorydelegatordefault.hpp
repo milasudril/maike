@@ -12,6 +12,7 @@
 #include "visibility.hpp"
 #include "target.hpp"
 #include "stringkey.hpp"
+#include "dependencybufferdefault.hpp"
 #include <map>
 
 namespace Maike
@@ -77,6 +78,9 @@ namespace Maike
 			bool loaderHas(const Stringkey& filename_ext) const noexcept
 				{return m_r_loaders.find(filename_ext)!=m_r_loaders.end();}
 
+			void depsExtraCacheClear() noexcept
+				{m_deps_extra_cache.clear();}
+
 		private:
 			void targetsCreateImpl(TagExtractor& extractor,const char* name_src
 				,const char* in_dir,DependencyCollector& cb
@@ -88,6 +92,7 @@ namespace Maike
 			std::string m_root;
 			std::map<Stringkey,const Target_Factory*> m_r_factories;
 			std::map<Stringkey,const Target_Loader*> m_r_loaders;
+			std::map<Stringkey,DependencyBufferDefault> m_deps_extra_cache;
 			size_t m_id_current;
 		};
 	}
