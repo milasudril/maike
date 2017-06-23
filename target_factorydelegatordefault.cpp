@@ -137,6 +137,7 @@ Handle<Target> Target_FactoryDelegatorDefault::targetCreate(const ResourceObject
 	return ret;
 	}
 
+/*
 static bool backrefIs(const char* depname,const ResourceObject& targets,const char* in_dir
 	,const char* root)
 	{
@@ -152,42 +153,87 @@ static bool backrefIs(const char* depname,const ResourceObject& targets,const ch
 		}
 	return 0;
 	}
+*/
+
+static Stringkey targetLoaderKeyGet(const std::string& filename)
+	{
+	try
+		{
+		switch(FileInfo(filename.c_str()).typeGet())
+			{
+			case FileInfo::Type::FILE:
+				{
+				auto pos=filename.find_last_of('.');
+				if(pos==std::string::npos)
+					{return Stringkey("");}
+				return Stringkey(&filename[pos]);
+				}
+
+			case FileInfo::Type::DIRECTORY:
+				return Stringkey(".");
+
+			default:
+				return Stringkey("");
+			}
+		}
+	catch(...)
+		{return Stringkey("");}
+	}
+
+static const Target_Loader* targetLoaderGet(const Stringkey& key
+	,const std::map<Stringkey,const Target_Loader*>& loaders)
+	{
+	auto i=loaders.find(key);
+	if(i==loaders.end())
+		{
+		return nullptr;
+		}
+	return i->second;
+	}
 
 static void dependenciesCollect(
 	 Target_FactoryDelegator& delegator
+	,const std::map<Stringkey,const Target_Loader*>& loaders
 	,Target_FactoryDelegator::DependencyCollector& cb
 	,const ResourceObject& targets,const char* in_dir
 	,DependencyBuffer& buffer)
 	{
-	Dependency dep;
-	while(cb(delegator,dep,ResourceObjectJansson::createImpl))
+	Dependency dep_in;
+	while(cb(delegator,dep_in,ResourceObjectJansson::createImpl))
 		{
-		if(!backrefIs(dep.nameGet(),targets,in_dir,delegator.rootGet()))
-			{buffer.append(std::move(dep));}
+	//	if(!backrefIs(dep_in.nameGet(),targets,in_dir,delegator.rootGet()))
+			{
+				{
+				Dependency dep(dep_in);
+				buffer.append(std::move(dep));
+				}
+
+			auto loader=targetLoaderGet(targetLoaderKeyGet(dep_in.nameGet()),loaders);
+			if(loader!=nullptr)
+				{
+				auto in_dir_include=dirname(dep_in.nameGet());
+				loader->dependenciesExtraGet(dep_in.nameGet(),in_dir_include.c_str()
+					,delegator.rootGet(),ResourceObjectJansson::createImpl,buffer);
+				}
+			}
 		}
 	}
 
-static void dependenciesAdd(Handle<Target>& target,const std::vector<Dependency>& deps)
+static bool backrefIs(const Target& t,const Dependency& dep)
 	{
-	auto dep_first=deps.data();
-	auto deps_end=dep_first + deps.size();
-	while(dep_first!=deps_end)
-		{
-		Dependency dep(*dep_first);
-		target->dependencyAdd(std::move(dep));
-		++dep_first;
-		}
+	return strcmp(t.nameGet(),dep.nameGet())==0;
 	}
 
 static void targetsCreate(const ResourceObject& targets,const char* name_src
 	,const char* in_dir,size_t line_count
 	,Target_FactoryDelegator& delegator
+	,const std::map<Stringkey,const Target_Loader*>& loaders
 	,Target_FactoryDelegator::DependencyCollector& cb
 	,DependencyGraph& graph)
 	{
 	DependencyBufferDefault deps;
 
-	dependenciesCollect(delegator,cb,targets,in_dir,deps);
+	dependenciesCollect(delegator,loaders,cb,targets,in_dir,deps);
 	auto N=targets.objectCountGet();
 	for(decltype(N) k=0;k<N;++k)
 		{
@@ -197,8 +243,11 @@ static void targetsCreate(const ResourceObject& targets,const char* name_src
 			:delegator.targetCreate(target,name_src,in_dir,line_count);
 		std::for_each(deps.begin(),deps.end(),[&t](const Dependency& dep_in)
 			{
-			Dependency dep(dep_in);
-			t->dependencyAdd(std::move(dep));
+			if(!backrefIs(*t,dep_in))
+				{
+				Dependency dep(dep_in);
+				t->dependencyAdd(std::move(dep));
+				}
 			});
 		graph.targetRegister(std::move(t));
 		}
@@ -221,7 +270,7 @@ void Target_FactoryDelegatorDefault::targetsCreateImpl(TagExtractor& extractor
 	auto line_count=extractor.linesCountGet();
 
 	if(obj.objectExists("targets"))
-		{::targetsCreate(obj.objectGet("targets"),name_src,in_dir,line_count,*this,cb,graph);}
+		{::targetsCreate(obj.objectGet("targets"),name_src,in_dir,line_count,*this,m_r_loaders,cb,graph);}
 	else
 		{
 		auto N_cases=obj.objectCountGet();
@@ -237,7 +286,7 @@ void Target_FactoryDelegatorDefault::targetsCreateImpl(TagExtractor& extractor
 				if(static_cast<int64_t>( r_eval.evaluate(expression) ))
 					{
 					::targetsCreate(case_obj.objectGet(1).objectGet("targets")
-						,name_src,in_dir,line_count,*this,cb,graph);
+						,name_src,in_dir,line_count,*this,m_r_loaders,cb,graph);
 					break;
 					}
 				}
@@ -245,7 +294,7 @@ void Target_FactoryDelegatorDefault::targetsCreateImpl(TagExtractor& extractor
 			if(case_obj.objectExists("targets"))
 				{
 				::targetsCreate(case_obj.objectGet("targets"),name_src,in_dir
-					,line_count,*this,cb,graph);
+					,line_count,*this,m_r_loaders,cb,graph);
 				break;
 				}
 			}
@@ -255,38 +304,6 @@ void Target_FactoryDelegatorDefault::targetsCreateImpl(TagExtractor& extractor
 void Target_FactoryDelegatorDefault::factoriesUnregister() noexcept
 	{
 	m_r_factories.clear();
-	}
-
-
-static const Target_Loader* targetLoaderGet(const Stringkey& key
-	,const std::map<Stringkey,const Target_Loader*>& loaders)
-	{
-	auto i=loaders.find(key);
-	if(i==loaders.end())
-		{
-		return nullptr;
-		}
-	return i->second;
-	}
-
-static Stringkey targetLoaderKeyGet(const std::string& filename)
-	{
-	switch(FileInfo(filename.c_str()).typeGet())
-		{
-		case FileInfo::Type::FILE:
-			{
-			auto pos=filename.find_last_of('.');
-			if(pos==std::string::npos)
-				{return Stringkey("");}
-			return Stringkey(&filename[pos]);
-			}
-
-		case FileInfo::Type::DIRECTORY:
-			return Stringkey(".");
-
-		default:
-			return Stringkey("");
-		}
 	}
 
 void Target_FactoryDelegatorDefault::targetsLoad(const char* filename,const char* in_dir

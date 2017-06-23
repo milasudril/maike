@@ -12,6 +12,8 @@ namespace Maike
 		{
 		public:
 			virtual void append(Dependency&& dep)=0;
+			virtual const Dependency* begin() const noexcept=0;
+			virtual const Dependency* end() const noexcept=0;
 		};
 	}
 

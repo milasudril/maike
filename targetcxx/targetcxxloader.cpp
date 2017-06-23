@@ -234,7 +234,7 @@ bool DependencyCollector::operator()(const Target_FactoryDelegator& delegator,De
 						auto in_dir_include=dirname(name_dep_full);
 						r_spider.scanFile(name_dep_full.c_str(),in_dir_include.c_str());
 
-						FileIn file(name_dep_full.c_str());
+					/*	FileIn file(name_dep_full.c_str());
 						TagExtractor extractor(file);
 						auto tags=rc_reader(extractor);
 						if(tags.objectExists("dependencies_extra"))
@@ -247,7 +247,7 @@ bool DependencyCollector::operator()(const Target_FactoryDelegator& delegator,De
 									,delegator.rootGet());
 								m_deps_pending.push_back(std::move(dep));
 								}
-							}
+							}*/
 						m_mode=Mode::NORMAL;
 						return 1;
 						}
