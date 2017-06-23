@@ -11,6 +11,7 @@
 #include "idgenerator.hpp"
 #include "visibility.hpp"
 #include "target.hpp"
+#include "stringkey.hpp"
 #include <map>
 
 namespace Maike
@@ -27,6 +28,13 @@ namespace Maike
 			Target_FactoryDelegatorDefault& factoryRegister(const Stringkey& filename_ext
 				,const Target_Factory& factory);
 
+			void factoriesUnregister() noexcept;
+
+			Target_FactoryDelegatorDefault& loaderRegister(const Stringkey& filename_ext
+				,const Target_Loader& loader);
+
+			void loadersUnregister() noexcept;
+
 			Handle<Target> targetCreate(const ResourceObject& obj,const char* name_src
 				,const char* in_dir,size_t line_count);
 
@@ -42,8 +50,6 @@ namespace Maike
 
 			size_t idGet() noexcept
 				{return m_id_gen.idGet();}
-
-			void factoriesUnregister() noexcept;
 
 			const char* rootGet() const noexcept
 				{return m_root.c_str();}
@@ -63,6 +69,13 @@ namespace Maike
 			void graphCleared(DependencyGraph& graph)
 				{m_id_gen.reset();}
 
+
+			void targetsLoad(const char* filename,const char* in_dir,Spider& spider
+				,DependencyGraph& targets);
+
+			bool loaderHas(const Stringkey& filename_ext) const noexcept
+				{return m_r_loaders.find(filename_ext)!=m_r_loaders.end();}
+
 		private:
 			void targetsCreateImpl(TagExtractor& extractor,const char* name_src
 				,const char* in_dir,DependencyCollector& cb
@@ -72,6 +85,7 @@ namespace Maike
 			IdGenerator<size_t> m_id_gen;
 			std::string m_root;
 			std::map<Stringkey,const Target_Factory*> m_r_factories;
+			std::map<Stringkey,const Target_Loader*> m_r_loaders;
 			size_t m_id_current;
 		};
 	}

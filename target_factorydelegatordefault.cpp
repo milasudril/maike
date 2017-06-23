@@ -5,7 +5,6 @@
 #include "exceptionhandler.hpp"
 #include "errormessage.hpp"
 #include "variant.hpp"
-#include "stringkey.hpp"
 #include "target_factory.hpp"
 #include "target.hpp"
 #include "expressionevaluator.hpp"
@@ -13,6 +12,9 @@
 #include "fileutils.hpp"
 #include "targetplaceholder.hpp"
 #include "resourceobjectjansson.hpp"
+#include "fileinfo.hpp"
+#include "target_loader.hpp"
+
 
 #include <cstring>
 
@@ -69,6 +71,19 @@ Target_FactoryDelegatorDefault& Target_FactoryDelegatorDefault::factoryRegister(
 	m_r_factories[filename_ext]=&factory;
 	return *this;
 	}
+
+Target_FactoryDelegatorDefault& Target_FactoryDelegatorDefault::loaderRegister(const Stringkey& filename_ext
+	,const Target_Loader& loader)
+	{
+	m_r_loaders[filename_ext]=&loader;
+	return *this;
+	}
+
+void Target_FactoryDelegatorDefault::loadersUnregister() noexcept
+	{
+	m_r_loaders.clear();
+	}
+
 
 Handle<Target> Target_FactoryDelegatorDefault::targetCreate(const ResourceObject& obj
 	,const char* name_src,const char* in_dir,size_t line_count)
@@ -195,8 +210,8 @@ static void targetsCreate(const ResourceObject& targets,const char* name_src
 			}
 		}
 
-	std::for_each(targets_created.begin(),targets_created.end(),[](const Target* t)
-		{printf("%s\n",t->nameGet());});
+//	std::for_each(targets_created.begin(),targets_created.end(),[](const Target* t)
+//		{printf("%s\n",t->nameGet());});
 	}
 
 void Target_FactoryDelegatorDefault::targetsCreate(TagExtractor& extractor
@@ -252,3 +267,42 @@ void Target_FactoryDelegatorDefault::factoriesUnregister() noexcept
 	m_r_factories.clear();
 	}
 
+
+static const Target_Loader* targetLoaderGet(const Stringkey& key
+	,const std::map<Stringkey,const Target_Loader*>& loaders)
+	{
+	auto i=loaders.find(key);
+	if(i==loaders.end())
+		{
+		return nullptr;
+		}
+	return i->second;
+	}
+
+static Stringkey targetLoaderKeyGet(const std::string& filename)
+	{
+	switch(FileInfo(filename.c_str()).typeGet())
+		{
+		case FileInfo::Type::FILE:
+			{
+			auto pos=filename.find_last_of('.');
+			if(pos==std::string::npos)
+				{return Stringkey("");}
+			return Stringkey(&filename[pos]);
+			}
+
+		case FileInfo::Type::DIRECTORY:
+			return Stringkey(".");
+
+		default:
+			return Stringkey("");
+		}
+	}
+
+void Target_FactoryDelegatorDefault::targetsLoad(const char* filename,const char* in_dir
+	,Spider& spider,DependencyGraph& targets)
+	{
+	auto loader=targetLoaderGet(targetLoaderKeyGet(filename),m_r_loaders);
+	if(loader!=nullptr)
+		{loader->targetsLoad(filename,in_dir,spider,targets,*this);}
+	}

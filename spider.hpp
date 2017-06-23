@@ -19,11 +19,6 @@ namespace Maike
 			virtual Spider& scanFile(const char* filename,const char* in_dir)=0;
 			virtual Spider& run()=0;
 
-			virtual Spider& loaderRegister(const Stringkey& filename_ext
-				,const Target_Loader& loader)=0;
-
-			virtual void loadersUnregister() noexcept=0;
-
 		protected:
 			~Spider()=default;
 		};
