@@ -11,13 +11,11 @@
 #include "twins.hpp"
 #include <stack>
 #include <set>
-#include <map>
 #include <string>
 
 namespace Maike
 	{
 	class DependencyGraph;
-	class Target_Loader;
 	class Target_FactoryDelegator;
 
 	class PRIVATE SpiderDefault:public Spider
@@ -31,7 +29,6 @@ namespace Maike
 			SpiderDefault& run();
 
 		private:
-			std::map<Stringkey,const Target_Loader*> m_r_loaders;
 			Target_FactoryDelegator& r_target_creator;
 			DependencyGraph& r_targets;
 
