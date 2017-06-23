@@ -43,10 +43,11 @@ namespace Maike
 
 			void targetsCreate(TagExtractor& extractor,const char* name_src
 				,const char* in_dir,DependencyCollector& cb
+				,Spider& spider
 				,DependencyGraph& graph);
 
 			void targetsCreate(TagExtractor& extractor,const char* in_dir
-				,DependencyCollector& cb,DependencyGraph& graph);
+				,DependencyCollector& cb,Spider& spider,DependencyGraph& graph);
 
 			size_t idGet() noexcept
 				{return m_id_gen.idGet();}
@@ -79,6 +80,7 @@ namespace Maike
 		private:
 			void targetsCreateImpl(TagExtractor& extractor,const char* name_src
 				,const char* in_dir,DependencyCollector& cb
+				,Spider& spider
 				,DependencyGraph& graph);
 
 			const ExpressionEvaluator& r_eval;

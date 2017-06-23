@@ -43,10 +43,11 @@ namespace Maike
 
 			virtual void targetsCreate(TagExtractor& extractor,const char* name_src
 				,const char* in_dir,DependencyCollector& collector
+				,Spider& spider
 				,DependencyGraph& graph)=0;
 
 			virtual void targetsCreate(TagExtractor& extractor,const char* in_dir
-				,DependencyCollector& cb,DependencyGraph& graph)=0;
+				,DependencyCollector& cb,Spider& spider,DependencyGraph& graph)=0;
 
 
 			virtual size_t idGet() noexcept=0;

@@ -169,8 +169,8 @@ namespace
 	class DependencyCollector:public Target_FactoryDelegator::DependencyCollector
 		{
 		public:
-			DependencyCollector(const char* name_source,const char* in_dir,Spider& spider):
-				 m_file_reader(name_source),m_cpptok(m_file_reader),r_in_dir(in_dir),r_spider(spider)
+			DependencyCollector(const char* name_source,const char* in_dir):
+				 m_file_reader(name_source),m_cpptok(m_file_reader),r_in_dir(in_dir)
 				,m_mode(Mode::NORMAL),m_target_include(0)
 				{}
 
@@ -185,7 +185,6 @@ namespace
 			TargetCxxPPTokenizer m_cpptok;
 			std::vector<Dependency> m_deps_pending;
 			const char* r_in_dir;
-			Spider& r_spider;
  			enum class Mode:uint8_t{NORMAL,INCLUDE};
 			Mode m_mode;
 			bool m_target_include;
@@ -231,8 +230,6 @@ bool DependencyCollector::operator()(const Target_FactoryDelegator& delegator,De
 						auto name_dep_full=dircat(r_in_dir,tok_in.value);
 						dep_primary=Dependency(name_dep_full.c_str(),delegator.rootGet()
 							,Dependency::Relation::INCLUDE);
-						auto in_dir_include=dirname(name_dep_full);
-						r_spider.scanFile(name_dep_full.c_str(),in_dir_include.c_str());
 						m_mode=Mode::NORMAL;
 						return 1;
 						}
@@ -252,6 +249,6 @@ void TargetCxxLoader::targetsLoad(const char* name_src,const char* in_dir
 	{
 	FileIn source(name_src);
 	TagExtractor extractor(source);
-	DependencyCollector collector(name_src,in_dir,spider);
-	factory.targetsCreate(extractor,name_src,in_dir,collector,graph);
+	DependencyCollector collector(name_src,in_dir);
+	factory.targetsCreate(extractor,name_src,in_dir,collector,spider,graph);
 	}

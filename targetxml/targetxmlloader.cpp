@@ -144,7 +144,7 @@ void TargetXMLLoader::targetsLoad(const char* name_src,const char* in_dir
 
 	TagExtractor extractor(m_filter,depfile.c_str(),name_src);
 	DependencyCollector collector;
-	factory.targetsCreate(extractor,name_src,in_dir,collector,graph);
+	factory.targetsCreate(extractor,name_src,in_dir,collector,spider,graph);
 	auto ret=extractor.exitStatusGet();
 	if(ret!=0)
 		{exceptionRaise(ErrorMessage("#0;: Failed to load any target definition.",{name_src}));}

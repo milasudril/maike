@@ -143,5 +143,5 @@ void TargetOctaveLoader::targetsLoad(const char* name_src,const char* in_dir
 	FileIn source(name_src);
 	TagExtractor extractor(source);
 	DependencyCollector collector;
-	factory.targetsCreate(extractor,name_src,in_dir,collector,graph);
+	factory.targetsCreate(extractor,name_src,in_dir,collector,spider,graph);
 	}

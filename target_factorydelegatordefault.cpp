@@ -15,6 +15,7 @@
 #include "fileinfo.hpp"
 #include "target_loader.hpp"
 #include "dependencybufferdefault.hpp"
+#include "spider.hpp"
 #include <cstring>
 #include <algorithm>
 
@@ -171,6 +172,7 @@ static const Target_Loader* targetLoaderGet(const Stringkey& key
 
 static void dependenciesCollect(
 	 Target_FactoryDelegator& delegator
+	,Spider& spider
 	,const std::map<Stringkey,const Target_Loader*>& loaders
 	,Target_FactoryDelegator::DependencyCollector& cb
 	,DependencyBuffer& buffer)
@@ -187,6 +189,7 @@ static void dependenciesCollect(
 		if(loader!=nullptr)
 			{
 			auto in_dir_include=dirname(dep_in.nameGet());
+			spider.scanFile(dep_in.nameGet(),in_dir_include.c_str());
 			loader->dependenciesExtraGet(dep_in.nameGet(),in_dir_include.c_str()
 				,delegator.rootGet(),ResourceObjectJansson::createImpl,buffer);
 			}
@@ -201,13 +204,14 @@ static bool backrefIs(const Target& t,const Dependency& dep)
 static void targetsCreate(const ResourceObject& targets,const char* name_src
 	,const char* in_dir,size_t line_count
 	,Target_FactoryDelegator& delegator
+	,Spider& spider
 	,const std::map<Stringkey,const Target_Loader*>& loaders
 	,Target_FactoryDelegator::DependencyCollector& cb
 	,DependencyGraph& graph)
 	{
 	DependencyBufferDefault deps;
 
-	dependenciesCollect(delegator,loaders,cb,deps);
+	dependenciesCollect(delegator,spider,loaders,cb,deps);
 	auto N=targets.objectCountGet();
 	for(decltype(N) k=0;k<N;++k)
 		{
@@ -229,22 +233,24 @@ static void targetsCreate(const ResourceObject& targets,const char* name_src
 
 void Target_FactoryDelegatorDefault::targetsCreate(TagExtractor& extractor
 	,const char* name_src,const char* in_dir,DependencyCollector& cb
+	,Spider& spider
 	,DependencyGraph& graph)
-	{targetsCreateImpl(extractor,name_src,in_dir,cb,graph);}
+	{targetsCreateImpl(extractor,name_src,in_dir,cb,spider,graph);}
 
 void Target_FactoryDelegatorDefault::targetsCreate(TagExtractor& extractor
-	,const char* in_dir,DependencyCollector& cb,DependencyGraph& graph)
-	{targetsCreateImpl(extractor,nullptr,in_dir,cb,graph);}
+	,const char* in_dir,DependencyCollector& cb,Spider& spider,DependencyGraph& graph)
+	{targetsCreateImpl(extractor,nullptr,in_dir,cb,spider,graph);}
 
 void Target_FactoryDelegatorDefault::targetsCreateImpl(TagExtractor& extractor
 	,const char* name_src,const char* in_dir,DependencyCollector& cb
+	,Spider& spider
 	,DependencyGraph& graph)
 	{
 	ResourceObjectJansson obj(extractor);
 	auto line_count=extractor.linesCountGet();
 
 	if(obj.objectExists("targets"))
-		{::targetsCreate(obj.objectGet("targets"),name_src,in_dir,line_count,*this,m_r_loaders,cb,graph);}
+		{::targetsCreate(obj.objectGet("targets"),name_src,in_dir,line_count,*this,spider,m_r_loaders,cb,graph);}
 	else
 		{
 		auto N_cases=obj.objectCountGet();
@@ -260,7 +266,7 @@ void Target_FactoryDelegatorDefault::targetsCreateImpl(TagExtractor& extractor
 				if(static_cast<int64_t>( r_eval.evaluate(expression) ))
 					{
 					::targetsCreate(case_obj.objectGet(1).objectGet("targets")
-						,name_src,in_dir,line_count,*this,m_r_loaders,cb,graph);
+						,name_src,in_dir,line_count,*this,spider,m_r_loaders,cb,graph);
 					break;
 					}
 				}
@@ -268,7 +274,7 @@ void Target_FactoryDelegatorDefault::targetsCreateImpl(TagExtractor& extractor
 			if(case_obj.objectExists("targets"))
 				{
 				::targetsCreate(case_obj.objectGet("targets"),name_src,in_dir
-					,line_count,*this,m_r_loaders,cb,graph);
+					,line_count,*this,spider,m_r_loaders,cb,graph);
 				break;
 				}
 			}

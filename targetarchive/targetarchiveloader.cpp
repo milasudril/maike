@@ -107,7 +107,6 @@ bool DependencyCollector::operator()(const Target_FactoryDelegator& delegator,De
 	for(decltype(N) n=0;n<N;++n)
 		{
 		auto obj=contents.objectGet(n);
-	//	auto from=static_cast<const char*>(obj.objectGet("from"));
 		auto file=static_cast<const char*>(obj.objectGet("file"));
 		auto filename_full=dircat(r_in_dir,file);
 		m_deps_pending.push_back(Dependency(filename_full.c_str(),delegator.rootGet()
@@ -129,5 +128,5 @@ void TargetArchiveLoader::targetsLoad(const char* name_src,const char* in_dir
 	FileIn source(name_src);
 	TagExtractor extractor(source);
 	DependencyCollector collector(name_src,in_dir);
-	factory.targetsCreate(extractor,name_src,in_dir,collector,graph);
+	factory.targetsCreate(extractor,name_src,in_dir,collector,spider,graph);
 	}
