@@ -15,7 +15,7 @@
 
 namespace Maike
 	{
-	class PRIVATE DependencyGraphDefault:public DependencyGraph
+	class PRIVATE DependencyGraphDefault final:public DependencyGraph
 		{
 		public:
 			explicit DependencyGraphDefault(EventHandler& handler):

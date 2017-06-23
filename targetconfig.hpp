@@ -14,7 +14,7 @@
 
 namespace Maike
 	{
-	class PRIVATE TargetConfig:public Target
+	class PRIVATE TargetConfig final:public Target
 		{
 		public:
 			static TargetConfig* create(const ResourceObject& config,size_t id)

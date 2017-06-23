@@ -46,7 +46,7 @@ namespace Maike
 				{return Handle<DataSink>( &m_stdin );}
 
 		private:
-			class PRIVATE Reader:public DataSource
+			class PRIVATE Reader final:public DataSource
 				{
 				public:
 					Reader();
@@ -75,7 +75,7 @@ namespace Maike
 						{close();}
 				};
 
-			class PRIVATE Writer:public DataSink
+			class PRIVATE Writer final:public DataSink
 				{
 				public:
 					Writer();

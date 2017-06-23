@@ -10,7 +10,7 @@
 namespace Maike
 	{
 	class Dependency;
-	class PRIVATE DependencyBufferDefault:public DependencyBuffer
+	class PRIVATE DependencyBufferDefault final:public DependencyBuffer
 		{
 		public:
 			void append(Dependency&& dep)

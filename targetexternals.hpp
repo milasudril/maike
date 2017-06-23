@@ -16,7 +16,7 @@ namespace Maike
 	{
 	class DependencyGraph;
 
-	class PRIVATE TargetExternals:public Target
+	class PRIVATE TargetExternals final:public Target
 		{
 		public:
 			static TargetExternals* create(DependencyGraph&& graph,size_t id)=delete;

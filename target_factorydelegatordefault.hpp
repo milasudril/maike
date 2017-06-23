@@ -17,7 +17,7 @@
 namespace Maike
 	{
 	class ExpressionEvaluator;
-	class PRIVATE Target_FactoryDelegatorDefault:public Target_FactoryDelegator
+	class PRIVATE Target_FactoryDelegatorDefault final:public Target_FactoryDelegator
 		,public DependencyGraph::EventHandler
 		{
 		public:
