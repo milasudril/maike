@@ -43,12 +43,14 @@ namespace Maike
 				,size_t line_count);
 
 			void targetsCreate(TagExtractor& extractor,const char* name_src
-				,const char* in_dir,DependencyCollector& cb
+				,const char* in_dir
+				,const Target_Loader& loader_current
 				,Spider& spider
 				,DependencyGraph& graph);
 
 			void targetsCreate(TagExtractor& extractor,const char* in_dir
-				,DependencyCollector& cb,Spider& spider,DependencyGraph& graph);
+				,const Target_Loader& loader_current
+				,Spider& spider,DependencyGraph& graph);
 
 			size_t idGet() noexcept
 				{return m_id_gen.idGet();}
@@ -83,9 +85,8 @@ namespace Maike
 
 		private:
 			void targetsCreateImpl(TagExtractor& extractor,const char* name_src
-				,const char* in_dir,DependencyCollector& cb
-				,Spider& spider
-				,DependencyGraph& graph);
+				,const char* in_dir,const Target_Loader& loader_current
+				,Spider& spider,DependencyGraph& graph);
 
 			const ExpressionEvaluator& r_eval;
 			IdGenerator<size_t> m_id_gen;

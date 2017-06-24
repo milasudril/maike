@@ -28,7 +28,7 @@ namespace Maike
 				,Twins<const Dependency*> dependency_list_full
 				,const char* target_dir);
 
-			TargetExternals& dependencyAdd(Dependency&& dep)
+			TargetExternals& dependencyAdd(Dependency&&)
 				{return *this;}
 
 			Twins<const Dependency*> dependencies() const noexcept
@@ -64,7 +64,7 @@ namespace Maike
 				,Twins<const Dependency*> dependency_list_full
 				,const char* target_dir) const;
 
-			void dump(ResourceObject& target) const
+			void dump(ResourceObject&) const
 				{}
 
 			size_t lineCountGet() const noexcept

@@ -44,6 +44,7 @@ namespace
 		};
 	}
 
+
 size_t TagExtractor::read(void* buffer,size_t length)
 	{
 	auto buffer_out=reinterpret_cast<uint8_t*>(buffer);
@@ -164,47 +165,17 @@ void TargetCxxLoader::dependenciesExtraGet(const char* name_src,const char* in_d
 		}
 	}
 
-namespace
+void TargetCxxLoader::dependenciesGet(const char* name_src,const char* in_dir
+	,const char* root,ResourceObject::Reader
+	,DependencyBuffer& deps) const
 	{
-	class DependencyCollector:public Target_FactoryDelegator::DependencyCollector
-		{
-		public:
-			DependencyCollector(const char* name_source,const char* in_dir):
-				 m_file_reader(name_source),m_cpptok(m_file_reader),r_in_dir(in_dir)
-				,m_mode(Mode::NORMAL),m_target_include(0)
-				{}
-
-			bool operator()(const Target_FactoryDelegator&,Dependency& dep_primary
-				,ResourceObject::Reader rc_reader);
-
-			bool targetInclude() const noexcept
-				{return m_target_include;}
-
-		private:
-			FileIn m_file_reader;
-			TargetCxxPPTokenizer m_cpptok;
-			std::vector<Dependency> m_deps_pending;
-			const char* r_in_dir;
- 			enum class Mode:uint8_t{NORMAL,INCLUDE};
-			Mode m_mode;
-			bool m_target_include;
-		};
-	}
-
-bool DependencyCollector::operator()(const Target_FactoryDelegator& delegator,Dependency& dep_primary
-	,ResourceObject::Reader rc_reader)
-	{
+	FileIn file(name_src);
 	WriteBuffer wb(StdStream::error());
-
-	if(!m_deps_pending.empty())
-		{
-		dep_primary=std::move(m_deps_pending.back());
-		m_deps_pending.pop_back();
-		return 1;
-		}
+	TargetCxxPPTokenizer cpptok(file);
 	TargetCxxPPTokenizer::Token tok_in;
-	auto mode=m_mode;
-	while(m_cpptok.read(tok_in))
+ 	enum class Mode:uint8_t{NORMAL,INCLUDE};
+	auto mode=Mode::NORMAL;
+	while(cpptok.read(tok_in))
 		{
 		switch(mode)
 			{
@@ -219,6 +190,7 @@ bool DependencyCollector::operator()(const Target_FactoryDelegator& delegator,De
 						break;
 					}
 				break;
+
 			case Mode::INCLUDE:
 				switch(tok_in.type)
 					{
@@ -227,11 +199,8 @@ bool DependencyCollector::operator()(const Target_FactoryDelegator& delegator,De
 						break;
 					case TargetCxxPPTokenizer::Token::Type::STRING:
 						{
-						auto name_dep_full=dircat(r_in_dir,tok_in.value);
-						dep_primary=Dependency(name_dep_full.c_str(),delegator.rootGet()
-							,Dependency::Relation::INCLUDE);
-						m_mode=Mode::NORMAL;
-						return 1;
+						auto name_dep_full=dircat(in_dir,tok_in.value);
+						deps.append( Dependency(name_dep_full.c_str(),root,Dependency::Relation::INCLUDE) );
 						}
 						break;
 					default:
@@ -241,7 +210,6 @@ bool DependencyCollector::operator()(const Target_FactoryDelegator& delegator,De
 				break;
 			}
 		}
-	return 0;
 	}
 
 void TargetCxxLoader::targetsLoad(const char* name_src,const char* in_dir
@@ -249,6 +217,5 @@ void TargetCxxLoader::targetsLoad(const char* name_src,const char* in_dir
 	{
 	FileIn source(name_src);
 	TagExtractor extractor(source);
-	DependencyCollector collector(name_src,in_dir);
-	factory.targetsCreate(extractor,name_src,in_dir,collector,spider,graph);
+	factory.targetsCreate(extractor,name_src,in_dir,*this,spider,graph);
 	}

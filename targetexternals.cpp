@@ -24,8 +24,8 @@ TargetExternals::TargetExternals(const DependencyGraph& graph,size_t id):
 	{
 	}
 
-void TargetExternals::compile(Twins<const Dependency*> dependency_list
-	,Twins<const Dependency*> dependency_list_full
+void TargetExternals::compile(Twins<const Dependency*>
+	,Twins<const Dependency*>
 	,const char* target_dir)
 	{
 	double t=0;
@@ -90,7 +90,7 @@ namespace
 				r_libs(libs),r_tools(tools)
 				{}
 
-			int operator()(const DependencyGraph& graph,const Target& target)
+			int operator()(const DependencyGraph&,const Target& target)
 				{
 				auto ptr=dynamic_cast<const TargetPlaceholder*>(&target);
 				if(ptr!=nullptr)
@@ -116,8 +116,8 @@ namespace
 		};
 	}
 
-bool TargetExternals::upToDate(Twins<const Dependency*> dependency_list
-	,Twins<const Dependency*> dependency_list_full
+bool TargetExternals::upToDate(Twins<const Dependency*>
+	,Twins<const Dependency*>
 	,const char* target_dir) const
 	{
 		{

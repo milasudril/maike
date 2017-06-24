@@ -32,7 +32,7 @@ void TargetXML::dumpDetails(ResourceObject& target) const
 	}
 
 bool TargetXML::upToDate(Twins<const Dependency*> dependency_list
-	,Twins<const Dependency*> dependency_list_full
+	,Twins<const Dependency*>
 	,const char* target_dir) const
 	{
 	auto name_out=dircat(target_dir,nameGet());
@@ -40,7 +40,7 @@ bool TargetXML::upToDate(Twins<const Dependency*> dependency_list
 	if(FileUtils::newer(sourceNameGet(),name_out.c_str()))
 		{return 0;}
 
-	auto up_to_date=[&name_out](const char* name,Dependency::Relation rel)
+	auto up_to_date=[&name_out](const char* name,Dependency::Relation)
 		{return !FileUtils::newer(name,name_out.c_str());};
 
 	return dependenciesProcess(target_dir,dependency_list,USE_ALL,up_to_date);
@@ -74,7 +74,7 @@ namespace
 	}
 
 void TargetXML::compileImpl(Twins<const Dependency*> dependency_list
-	,Twins<const Dependency*> dependency_list_full
+	,Twins<const Dependency*>
 	,const char* target_dir)
 	{
 	std::vector<const char*> args;
@@ -87,7 +87,7 @@ void TargetXML::compileImpl(Twins<const Dependency*> dependency_list
 
 	std::vector<std::string> deps;
 	dependenciesProcess(target_dir,dependency_list,USE_ALL
-		,[&deps](const char* name,Dependency::Relation rel)
+		,[&deps](const char* name,Dependency::Relation)
 			{
 			deps.push_back(std::string(name));
 			return true;

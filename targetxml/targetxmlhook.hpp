@@ -16,10 +16,7 @@ namespace Maike
 	class PRIVATE TargetXMLHook final:public Target_Hook
 		{
 		public:
-			static TargetXMLHook* create(const ParameterSetDumpable& params);
-
-			static TargetXMLHook* create(ParameterSet&& params)=delete;
-
+			static TargetXMLHook* create();
 
 			const TargetXMLFactory& factoryGet() const noexcept
 				{return m_factory;}
@@ -38,8 +35,6 @@ namespace Maike
 		private:
 			TargetXMLLoader m_loader;
 			TargetXMLFactory m_factory;
-
-			explicit TargetXMLHook(const ParameterSetDumpable& params);
 
 			void destroy() noexcept;
 		};

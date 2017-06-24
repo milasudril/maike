@@ -92,8 +92,7 @@ namespace Maike
 				,Twins<const Dependency*> dependency_list_full
 				,const char* target_dir)=0;
 
-			virtual void dumpDetails(ResourceObject& target) const
-				{}
+			virtual void dumpDetails(ResourceObject& target) const=0;
 
 			size_t m_child_counter;
 			size_t m_id;

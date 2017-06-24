@@ -27,6 +27,10 @@ namespace Maike
 				,const char* root,ResourceObject::Reader rc_reader
 				,DependencyBuffer& deps) const;
 
+			void dependenciesGet(const char* name_src,const char* in_dir
+				,const char* root,ResourceObject::Reader rc_reader
+				,DependencyBuffer& deps) const;
+
 		private:
 			const TargetCxxOptions& r_options;
 		};

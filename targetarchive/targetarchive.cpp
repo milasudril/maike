@@ -71,8 +71,8 @@ void TargetArchive::dumpDetails(ResourceObject& target) const
 	}
 
 
-bool TargetArchive::upToDate(Twins<const Dependency*> dependency_list
-	,Twins<const Dependency*> dependency_list_full
+bool TargetArchive::upToDate(Twins<const Dependency*>
+	,Twins<const Dependency*>
 	,const char* target_dir) const
 	{
 	auto name_full=dircat( target_dir,nameGet() );
@@ -80,7 +80,7 @@ bool TargetArchive::upToDate(Twins<const Dependency*> dependency_list
 		{return 0;}
 
 
-	auto up_to_date=[&name_full](const char* name,Dependency::Relation rel)
+	auto up_to_date=[&name_full](const char* name,Dependency::Relation)
 		{return !FileUtils::newer(name,name_full.c_str());};
 
 	return dependenciesProcess(target_dir,dependencies(),USE_ALL,up_to_date);
@@ -114,7 +114,7 @@ static std::vector<std::string> filesCollect(Twins<const Dependency*> dependency
 	,const char* target_dir)
 	{
 	std::vector<std::string> ret;
-	auto collect=[&ret](const char* name,Dependency::Relation rel)
+	auto collect=[&ret](const char* name,Dependency::Relation)
 		{
 		ret.push_back(name);
 		return 1;
@@ -139,8 +139,8 @@ static std::vector<const char*> filesCollect(const std::vector<std::string>& fil
 	return std::move(ret);
 	}
 
-void TargetArchive::compileImpl(Twins<const Dependency*> dependency_list
-	,Twins<const Dependency*> dependency_list_full
+void TargetArchive::compileImpl(Twins<const Dependency*>
+	,Twins<const Dependency*>
 	,const char* target_dir)
 	{
 	auto files_input=filesCollect(dependencies(),target_dir);

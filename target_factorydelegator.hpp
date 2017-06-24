@@ -33,21 +33,15 @@ namespace Maike
 			virtual Handle<Target> targetCreate(const ResourceObject& target
 				,const char* in_dir,size_t line_count)=0;
 
-			class DependencyCollector
-				{
-				public:
-					virtual bool operator()(const Target_FactoryDelegator&,Dependency& dep_primary
-						,ResourceObject::Reader rc_reader)=0;
-				};
-
-
 			virtual void targetsCreate(TagExtractor& extractor,const char* name_src
-				,const char* in_dir,DependencyCollector& collector
+				,const char* in_dir
+				,const Target_Loader& loader_current
 				,Spider& spider
 				,DependencyGraph& graph)=0;
 
 			virtual void targetsCreate(TagExtractor& extractor,const char* in_dir
-				,DependencyCollector& cb,Spider& spider,DependencyGraph& graph)=0;
+				,const Target_Loader& loader_current
+				,Spider& spider,DependencyGraph& graph)=0;
 
 
 			virtual size_t idGet() noexcept=0;

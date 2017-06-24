@@ -17,14 +17,14 @@ namespace Maike
 			virtual void destroy() noexcept
 				{delete this;}
 
-			virtual bool upToDate(Twins<const Dependency*> dependency_list
-				,Twins<const Dependency*> dependency_list_full
-				,const char* target_dir) const
+			virtual bool upToDate(Twins<const Dependency*>
+				,Twins<const Dependency*>
+				,const char*) const
 				{return 1;}
 
-			void compileImpl(Twins<const Dependency*> dependency_list
-				,Twins<const Dependency*> dependency_list_full
-				,const char* target_dir)
+			void compileImpl(Twins<const Dependency*>
+				,Twins<const Dependency*>
+				,const char*)
 				{}
 
 			Dependency::Relation relation() const noexcept
@@ -32,6 +32,8 @@ namespace Maike
 
 			bool generated() const noexcept
 				{return 0;}
+
+			void dumpDetails(ResourceObject&) const{}
 
 		private:
 			TargetPlaceholder(const char* name,const char* name_src,const char* root,size_t id

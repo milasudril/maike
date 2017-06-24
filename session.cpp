@@ -180,7 +180,7 @@ namespace
 		public:
 			BySourceName(const char* filename):r_filename(filename){}
 
-			int operator()(DependencyGraph& graph,Target& target)
+			int operator()(DependencyGraph&,Target& target)
 				{return strcmp(target.sourceNameGet(),r_filename);}
 
 		private:
@@ -192,7 +192,7 @@ namespace
 		public:
 			ByParentDirectory(const char* filename):r_filename(filename){}
 
-			int operator()(DependencyGraph& graph,Target& target)
+			int operator()(DependencyGraph&,Target& target)
 				{return strcmp(target.inDirGet(),r_filename);}
 
 		private:

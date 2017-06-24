@@ -123,17 +123,6 @@ size_t TagExtractor::read(void* buffer,size_t length)
 	return m_stdout->read(buffer,length);
 	}
 
-namespace
-	{
-	class DependencyCollector:public Target_FactoryDelegator::DependencyCollector
-		{
-		public:
-			bool operator()(const Target_FactoryDelegator& delegator,Dependency& dep_primary
-				,ResourceObject::Reader rc_reader)
-				{return 0;}
-		};
-	}
-
 void TargetXMLLoader::targetsLoad(const char* name_src,const char* in_dir
 	,Spider& spider,DependencyGraph& graph,Target_FactoryDelegator& factory) const
 	{
@@ -143,8 +132,7 @@ void TargetXMLLoader::targetsLoad(const char* name_src,const char* in_dir
 		{return;}
 
 	TagExtractor extractor(m_filter,depfile.c_str(),name_src);
-	DependencyCollector collector;
-	factory.targetsCreate(extractor,name_src,in_dir,collector,spider,graph);
+	factory.targetsCreate(extractor,name_src,in_dir,*this,spider,graph);
 	auto ret=extractor.exitStatusGet();
 	if(ret!=0)
 		{exceptionRaise(ErrorMessage("#0;: Failed to load any target definition.",{name_src}));}

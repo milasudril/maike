@@ -24,6 +24,10 @@ namespace Maike
 				,const char* root,ResourceObject::Reader rc_reader
 				,DependencyBuffer& buffer) const=0;
 
+			virtual void dependenciesGet(const char* name_src,const char* in_dir
+				,const char* root,ResourceObject::Reader rc_reader
+				,DependencyBuffer& deps) const=0;
+
 
 		protected:
 			~Target_Loader()=default;

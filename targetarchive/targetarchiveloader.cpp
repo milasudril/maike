@@ -59,6 +59,8 @@ size_t TagExtractor::read(void* buffer,size_t length)
 		}
 	return n_read;
 	}
+/*
+TODO:
 
 namespace
 	{
@@ -121,12 +123,12 @@ bool DependencyCollector::operator()(const Target_FactoryDelegator& delegator,De
 		}
 	return 0;
 	}
+*/
 
 void TargetArchiveLoader::targetsLoad(const char* name_src,const char* in_dir
 	,Spider& spider,DependencyGraph& graph,Target_FactoryDelegator& factory) const
 	{
 	FileIn source(name_src);
 	TagExtractor extractor(source);
-	DependencyCollector collector(name_src,in_dir);
-	factory.targetsCreate(extractor,name_src,in_dir,collector,spider,graph);
+	factory.targetsCreate(extractor,name_src,in_dir,*this,spider,graph);
 	}

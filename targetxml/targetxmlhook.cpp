@@ -4,12 +4,8 @@
 
 using namespace Maike;
 
-TargetXMLHook::TargetXMLHook(const ParameterSetDumpable& params)
-	{
-	}
-
-TargetXMLHook* TargetXMLHook::create(const ParameterSetDumpable& params)
-	{return new TargetXMLHook(params);}
+TargetXMLHook* TargetXMLHook::create()
+	{return new TargetXMLHook();}
 
 void TargetXMLHook::destroy() noexcept
 	{delete this;}
