@@ -5,15 +5,9 @@
 #include "../readbuffer.hpp"
 #include "../filein.hpp"
 #include "../resourceobject.hpp"
-#include "../exceptionhandler.hpp"
-#include "../errormessage.hpp"
-#include "../variant.hpp"
 #include "../target_factorydelegator.hpp"
-#include "../dependencygraph.hpp"
 #include "../dependency.hpp"
 #include "../dependencybuffer.hpp"
-#include <vector>
-#include <cstring>
 
 using namespace Maike;
 
