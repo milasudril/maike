@@ -10,7 +10,6 @@
 
 #include "targetoctaveinterpreter.hpp"
 #include "targetoctaveloader.hpp"
-#include "targetoctavefactory.hpp"
 
 namespace Maike
 	{
@@ -20,10 +19,6 @@ namespace Maike
 			static TargetOctaveHook* create(const ParameterSetDumpable& params);
 
 			static TargetOctaveHook* create(ParameterSet&& params)=delete;
-
-
-			const TargetOctaveFactory& factoryGet() const noexcept
-				{return m_factory;}
 
 			const TargetOctaveLoader& loaderGet() const noexcept
 				{return m_loader;}
@@ -39,7 +34,6 @@ namespace Maike
 		private:
 			TargetOctaveInterpreter m_intpret;
 			TargetOctaveLoader m_loader;
-			TargetOctaveFactory m_factory;
 
 			explicit TargetOctaveHook(const ParameterSetDumpable& params);
 

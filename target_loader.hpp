@@ -5,6 +5,7 @@
 
 #include "visibility.hpp"
 #include "resourceobject.hpp"
+#include "handle.hpp"
 
 namespace Maike
 	{
@@ -12,6 +13,7 @@ namespace Maike
 	class DependencyGraph;
 	class Target_FactoryDelegator;
 	class DependencyBuffer;
+	class Target;
 
 	class PRIVATE Target_Loader
 		{
@@ -27,6 +29,10 @@ namespace Maike
 			virtual void dependenciesGet(const char* name_src,const char* in_dir
 				,const char* root,ResourceObject::Reader rc_reader
 				,DependencyBuffer& deps) const=0;
+
+			virtual Handle<Target> targetCreate(const ResourceObject& obj
+				,const char* name_src,const char* in_dir,const char* root
+				,size_t id,size_t line_count) const=0;
 
 
 		protected:

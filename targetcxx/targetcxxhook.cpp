@@ -5,7 +5,7 @@
 using namespace Maike;
 
 TargetCxxHook::TargetCxxHook(const ParameterSet& params):
-	m_compiler(m_options,params),m_loader(m_options),m_factory(m_compiler)
+	m_compiler(m_options,params),m_loader(m_options,m_compiler)
 	{
 	}
 

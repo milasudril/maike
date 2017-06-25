@@ -25,7 +25,6 @@
 #include "stringformat.hpp"
 #include "spider.hpp"
 #include "target_factorydelegator.hpp"
-#include "target_factory.hpp"
 #include "target_loader.hpp"
 #include "dependencygraph.hpp"
 #include "dependencybuffer.hpp"

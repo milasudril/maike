@@ -9,6 +9,7 @@
 #include "target_loader.hpp"
 #include "stringkey.hpp"
 #include "visibility.hpp"
+#include "target.hpp"
 #include <map>
 #include <string>
 
@@ -49,7 +50,14 @@ namespace Maike
 			void dependenciesGet(const char*,const char*
 				,const char*,ResourceObject::Reader
 				,DependencyBuffer&) const
-				{}			
+				{}
+
+
+			//HACK TargetDirectory should be created in the same way as
+			//other Targets...
+			Handle<Target> targetCreate(const ResourceObject&,const char*
+				,const char*,const char*,size_t,size_t) const
+				{return Handle<Target>(nullptr);}
 
 		private:
 			std::map<Stringkey,std::string> m_ignore;

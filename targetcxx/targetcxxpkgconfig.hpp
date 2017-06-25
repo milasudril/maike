@@ -7,6 +7,7 @@
 #define MAIKE_TARGETCXXPKGCONFIG_HPP
 
 #include "../visibility.hpp"
+#include "../dependency.hpp"
 
 #include <vector>
 #include <string>

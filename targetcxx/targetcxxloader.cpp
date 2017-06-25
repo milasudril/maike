@@ -2,6 +2,7 @@
 
 #include "targetcxxloader.hpp"
 #include "targetcxxpptokenizer.hpp"
+#include "targetcxx.hpp"
 #include "../target_factorydelegator.hpp"
 #include "../filein.hpp"
 #include "../spider.hpp"
@@ -143,9 +144,15 @@ size_t TagExtractor::read(void* buffer,size_t length)
 
 
 
-TargetCxxLoader::TargetCxxLoader(const TargetCxxOptions& options):
-	r_options(options)
+TargetCxxLoader::TargetCxxLoader(const TargetCxxOptions& options
+	,const TargetCxxCompiler& compiler):
+	r_options(options),r_compiler(compiler)
 	{}
+
+Handle<Target> TargetCxxLoader::targetCreate(const ResourceObject& obj
+	,const char* name_src,const char* in_dir,const char* root,size_t id,size_t line_count) const
+	{return Handle<TargetCxx>( TargetCxx::create(obj,r_compiler,name_src,in_dir,root,id,line_count) );}
+
 
 void TargetCxxLoader::dependenciesExtraGet(const char* name_src,const char* in_dir
 	,const char* root,ResourceObject::Reader rc_reader,DependencyBuffer& deps_out) const

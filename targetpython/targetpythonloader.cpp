@@ -1,6 +1,7 @@
 //@	{"targets":[{"name":"targetpythonloader.o","type":"object"}]}
 
 #include "targetpythonloader.hpp"
+#include "targetpython.hpp"
 #include "../readbuffer.hpp"
 #include "../filein.hpp"
 #include "../resourceobject.hpp"
@@ -9,12 +10,20 @@
 #include "../variant.hpp"
 #include "../target_factorydelegator.hpp"
 #include "../dependencygraph.hpp"
-#include "../target.hpp"
 
 using namespace Maike;
 
-TargetPythonLoader::TargetPythonLoader()
+TargetPythonLoader::TargetPythonLoader(const TargetPythonInterpreter& intpret):
+	r_intpret(intpret)
 	{}
+
+Handle<Target> TargetPythonLoader::targetCreate(const ResourceObject& obj
+	,const char* name_src,const char* in_dir,const char* root
+	,size_t id,size_t line_count) const
+	{
+	return Handle<TargetPython>( TargetPython::create(obj,r_intpret,name_src,in_dir,root
+		,id,line_count) );
+	}
 
 
 namespace

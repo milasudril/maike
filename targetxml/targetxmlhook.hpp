@@ -9,7 +9,6 @@
 #include "../target_hook.hpp"
 
 #include "targetxmlloader.hpp"
-#include "targetxmlfactory.hpp"
 
 namespace Maike
 	{
@@ -17,9 +16,6 @@ namespace Maike
 		{
 		public:
 			static TargetXMLHook* create();
-
-			const TargetXMLFactory& factoryGet() const noexcept
-				{return m_factory;}
 
 			const TargetXMLLoader& loaderGet() const noexcept
 				{return m_loader;}
@@ -34,7 +30,6 @@ namespace Maike
 
 		private:
 			TargetXMLLoader m_loader;
-			TargetXMLFactory m_factory;
 
 			void destroy() noexcept;
 		};

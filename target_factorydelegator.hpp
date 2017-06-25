@@ -51,12 +51,6 @@ namespace Maike
 			virtual void targetsLoad(const char* filename,const char* in_dir,Spider& spider
 				,DependencyGraph& targets)=0;
 
-
-			virtual Target_FactoryDelegator& factoryRegister(const Stringkey& filename_ext
-				,const Target_Factory& factory)=0;
-
-			virtual void factoriesUnregister()=0;
-
 			virtual Target_FactoryDelegator& loaderRegister(const Stringkey& filename_ext
 				,const Target_Loader& loader)=0;
 

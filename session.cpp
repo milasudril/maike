@@ -31,7 +31,6 @@ Session& Session::configClear()
 	m_source_files.clear();
 	m_dirloader.configClear();
 	m_delegator.loadersUnregister();
-	m_delegator.factoriesUnregister();
 	m_target_hooks.configClear();
 	graphDirtySet();
 	targetHooksDirtySet();
@@ -263,8 +262,7 @@ namespace
 
 			void operator()(const Stringkey& filename_ext,const Target_Hook& hook)
 				{
-				r_delegator.loaderRegister(filename_ext,hook.loaderGet())
-					.factoryRegister(filename_ext,hook.factoryGet());
+				r_delegator.loaderRegister(filename_ext,hook.loaderGet());
 				}
 		private:
 			Target_FactoryDelegator& r_delegator;

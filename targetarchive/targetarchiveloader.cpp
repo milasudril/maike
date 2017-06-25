@@ -1,6 +1,7 @@
 //@	{"targets":[{"name":"targetarchiveloader.o","type":"object"}]}
 
 #include "targetarchiveloader.hpp"
+#include "targetarchive.hpp"
 #include "../readbuffer.hpp"
 #include "../filein.hpp"
 #include "../resourceobject.hpp"
@@ -9,7 +10,6 @@
 #include "../variant.hpp"
 #include "../target_factorydelegator.hpp"
 #include "../dependencygraph.hpp"
-#include "../target.hpp"
 #include "../dependency.hpp"
 #include "../dependencybuffer.hpp"
 #include <vector>
@@ -17,8 +17,18 @@
 
 using namespace Maike;
 
-TargetArchiveLoader::TargetArchiveLoader()
+TargetArchiveLoader::TargetArchiveLoader(const TargetArchiveCompiler& compiler):
+	r_compiler(compiler)
 	{}
+
+Handle<Target> TargetArchiveLoader::targetCreate(const ResourceObject& obj
+	,const char* name_src,const char* in_dir,const char* root
+	,size_t id,size_t line_count) const
+	{
+	return Handle<TargetArchive>( TargetArchive::create(obj,r_compiler,name_src,in_dir,root
+		,id,line_count) );
+	}
+
 
 namespace
 	{

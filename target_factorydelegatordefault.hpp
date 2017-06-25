@@ -26,11 +26,6 @@ namespace Maike
 
 			Target_FactoryDelegatorDefault(ExpressionEvaluator&& eval)=delete;
 
-			Target_FactoryDelegatorDefault& factoryRegister(const Stringkey& filename_ext
-				,const Target_Factory& factory);
-
-			void factoriesUnregister() noexcept;
-
 			Target_FactoryDelegatorDefault& loaderRegister(const Stringkey& filename_ext
 				,const Target_Loader& loader);
 
@@ -91,7 +86,6 @@ namespace Maike
 			const ExpressionEvaluator& r_eval;
 			IdGenerator<size_t> m_id_gen;
 			std::string m_root;
-			std::map<Stringkey,const Target_Factory*> m_r_factories;
 			std::map<Stringkey,const Target_Loader*> m_r_loaders;
 			std::map<Stringkey,DependencyBufferDefault> m_deps_extra_cache;
 			size_t m_id_current;

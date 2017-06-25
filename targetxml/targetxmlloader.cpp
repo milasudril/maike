@@ -1,6 +1,7 @@
 //@	{"targets":[{"name":"targetxmlloader.o","type":"object"}]}
 
 #include "targetxmlloader.hpp"
+#include "targetxml.hpp"
 #include "../readbuffer.hpp"
 #include "../resourceobject.hpp"
 #include "../exceptionhandler.hpp"
@@ -8,7 +9,6 @@
 #include "../variant.hpp"
 #include "../target_factorydelegator.hpp"
 #include "../dependencygraph.hpp"
-#include "../target.hpp"
 #include "../fileutils.hpp"
 #include "../pipe.hpp"
 #include "../writebuffer.hpp"
@@ -44,6 +44,14 @@ void TargetXMLLoader::configDump(ResourceObject& config) const
 	auto filter=config.createObject();
 	m_filter.configDump(filter);
 	config.objectSet("filter",std::move(filter));
+	}
+
+Handle<Target> TargetXMLLoader::targetCreate(const ResourceObject& obj
+	,const char* name_src,const char* in_dir,const char* root
+	,size_t id,size_t line_count) const
+	{
+	return Handle<TargetXML>( TargetXML::create(obj,name_src,in_dir,root
+		,id,line_count) );
 	}
 
 

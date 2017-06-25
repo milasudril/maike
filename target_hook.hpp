@@ -10,7 +10,6 @@
 
 namespace Maike
 	{
-	class Target_Factory;
 	class Target_Loader;
 	class ResourceObject;
 	class ParameterSetDumpable;
@@ -23,7 +22,6 @@ namespace Maike
 			static void destroy(Target_Hook* self) noexcept
 				{self->destroy();}
 
-			virtual const Target_Factory& factoryGet() const noexcept=0;
 			virtual const Target_Loader& loaderGet() const noexcept=0;
 			virtual void configClear()=0;
 			virtual Target_Hook& configAppendDefault()=0;

@@ -5,7 +5,6 @@
 #include "exceptionhandler.hpp"
 #include "errormessage.hpp"
 #include "variant.hpp"
-#include "target_factory.hpp"
 #include "target.hpp"
 #include "expressionevaluator.hpp"
 #include "dependency.hpp"
@@ -63,13 +62,6 @@ Target_FactoryDelegatorDefault::Target_FactoryDelegatorDefault(const ExpressionE
 	{
 	}
 
-Target_FactoryDelegatorDefault& Target_FactoryDelegatorDefault::factoryRegister(const Stringkey& filename_ext
-	,const Target_Factory& factory)
-	{
-	m_r_factories[filename_ext]=&factory;
-	return *this;
-	}
-
 Target_FactoryDelegatorDefault& Target_FactoryDelegatorDefault::loaderRegister(const Stringkey& filename_ext
 	,const Target_Loader& loader)
 	{
@@ -93,8 +85,8 @@ Handle<Target> Target_FactoryDelegatorDefault::targetCreate(const ResourceObject
 			"without filename extension"
 			,{name_src}));
 		}
-	auto i=m_r_factories.find(Stringkey(suffix));
-	if(i==m_r_factories.end())
+	auto i=m_r_loaders.find(Stringkey(suffix));
+	if(i==m_r_loaders.end())
 		{
 		exceptionRaise(ErrorMessage("#0;: #1; is not associated with any target factory"
 			,{name_src,suffix}));
@@ -304,11 +296,6 @@ void Target_FactoryDelegatorDefault::targetsCreateImpl(TagExtractor& extractor
 				}
 			}
 		}
-	}
-
-void Target_FactoryDelegatorDefault::factoriesUnregister() noexcept
-	{
-	m_r_factories.clear();
 	}
 
 void Target_FactoryDelegatorDefault::targetsLoad(const char* filename,const char* in_dir

@@ -10,7 +10,6 @@
 
 #include "targetpythoninterpreter.hpp"
 #include "targetpythonloader.hpp"
-#include "targetpythonfactory.hpp"
 
 namespace Maike
 	{
@@ -20,10 +19,6 @@ namespace Maike
 			static TargetPythonHook* create(const ParameterSetDumpable& params);
 
 			static TargetPythonHook* create(ParameterSet&& params)=delete;
-
-
-			const TargetPythonFactory& factoryGet() const noexcept
-				{return m_factory;}
 
 			const TargetPythonLoader& loaderGet() const noexcept
 				{return m_loader;}
@@ -39,7 +34,6 @@ namespace Maike
 		private:
 			TargetPythonInterpreter m_intpret;
 			TargetPythonLoader m_loader;
-			TargetPythonFactory m_factory;
 
 			explicit TargetPythonHook(const ParameterSetDumpable& params);
 

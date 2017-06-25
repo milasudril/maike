@@ -11,7 +11,6 @@
 #include "targetcxxcompiler.hpp"
 #include "targetcxxoptions.hpp"
 #include "targetcxxloader.hpp"
-#include "targetcxxfactory.hpp"
 
 #include "../parametersetdumpable.hpp"
 
@@ -23,10 +22,6 @@ namespace Maike
 			static TargetCxxHook* create(const ParameterSet& params);
 
 			static TargetCxxHook* create(ParameterSet&& params)=delete;
-
-
-			const TargetCxxFactory& factoryGet() const noexcept
-				{return m_factory;}
 
 			const TargetCxxLoader& loaderGet() const noexcept
 				{return m_loader;}
@@ -40,7 +35,6 @@ namespace Maike
 			TargetCxxOptions m_options;
 			TargetCxxCompiler m_compiler;
 			TargetCxxLoader m_loader;
-			TargetCxxFactory m_factory;
 
 			explicit TargetCxxHook(const ParameterSet& params);
 
