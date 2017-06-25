@@ -29,11 +29,65 @@
 (<span class="type">const char *</span> <span class="declname">name_src</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type"><a href="class_maike_1_1_spider.html">Spider</a> &amp;</span> <span class="declname">spider</span>,<span class="type"><a href="class_maike_1_1_dependency_graph.html">DependencyGraph</a> &amp;</span> <span class="declname">graph</span>,<span class="type"><a href="class_maike_1_1_target___factory_delegator.html">Target_FactoryDelegator</a> &amp;</span> <span class="declname">factory</span>)</th>
         <td class="memberdesc"></td>
       </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1acd0e1f4104e4b67f32763d718eea380f">dependenciesExtraGet</a>
+(<span class="type">const char *</span> <span class="declname">name_src</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type">const char *</span> <span class="declname">root</span>,<span class="type"><a href="class_maike_1_1_resource_object.html#1a9bdf8c1e6b29a84c27bd50af22f1c8b1">ResourceObject::Reader</a></span> <span class="declname">rc_reader</span>,<span class="type"><a href="class_maike_1_1_dependency_buffer.html">DependencyBuffer</a> &amp;</span> <span class="declname">buffer</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1ac4df7bc7b4a6efc5938125aef7f55658">dependenciesGet</a>
+(<span class="type">const char *</span> <span class="declname">name_src</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type">const char *</span> <span class="declname">root</span>,<span class="type"><a href="class_maike_1_1_resource_object.html#1a9bdf8c1e6b29a84c27bd50af22f1c8b1">ResourceObject::Reader</a></span> <span class="declname">rc_reader</span>,<span class="type"><a href="class_maike_1_1_dependency_buffer.html">DependencyBuffer</a> &amp;</span> <span class="declname">deps</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type"><a href="class_maike_1_1_handle.html">Handle</a>&lt; <a href="class_maike_1_1_target.html">Target</a> &gt;</span> <a href="#1a3535681b17565353834688f7d70898a3">targetCreate</a>
+(<span class="type">const <a href="class_maike_1_1_resource_object.html">ResourceObject</a> &amp;</span> <span class="declname">obj</span>,<span class="type">const char *</span> <span class="declname">name_src</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type">const char *</span> <span class="declname">root</span>,<span class="type">size_t</span> <span class="declname">id</span>,<span class="type">size_t</span> <span class="declname">line_count</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
     </table>
   </section><section>
     <h2 class="memproto" id="1a16d785f7f6ee1b2d4172aa8e2887838d">
 <span class="type">void</span> targetsLoad
 (<span class="type">const char *</span> <span class="declname">name_src</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type"><a href="class_maike_1_1_spider.html">Spider</a> &amp;</span> <span class="declname">spider</span>,<span class="type"><a href="class_maike_1_1_dependency_graph.html">DependencyGraph</a> &amp;</span> <span class="declname">graph</span>,<span class="type"><a href="class_maike_1_1_target___factory_delegator.html">Target_FactoryDelegator</a> &amp;</span> <span class="declname">factory</span>)</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Const</li>
+        <li>Pure virtual</li>
+      </ul>
+    </aside>
+  </section><section>
+    <h2 class="memproto" id="1acd0e1f4104e4b67f32763d718eea380f">
+<span class="type">void</span> dependenciesExtraGet
+(<span class="type">const char *</span> <span class="declname">name_src</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type">const char *</span> <span class="declname">root</span>,<span class="type"><a href="class_maike_1_1_resource_object.html#1a9bdf8c1e6b29a84c27bd50af22f1c8b1">ResourceObject::Reader</a></span> <span class="declname">rc_reader</span>,<span class="type"><a href="class_maike_1_1_dependency_buffer.html">DependencyBuffer</a> &amp;</span> <span class="declname">buffer</span>)</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Const</li>
+        <li>Pure virtual</li>
+      </ul>
+    </aside>
+  </section><section>
+    <h2 class="memproto" id="1ac4df7bc7b4a6efc5938125aef7f55658">
+<span class="type">void</span> dependenciesGet
+(<span class="type">const char *</span> <span class="declname">name_src</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type">const char *</span> <span class="declname">root</span>,<span class="type"><a href="class_maike_1_1_resource_object.html#1a9bdf8c1e6b29a84c27bd50af22f1c8b1">ResourceObject::Reader</a></span> <span class="declname">rc_reader</span>,<span class="type"><a href="class_maike_1_1_dependency_buffer.html">DependencyBuffer</a> &amp;</span> <span class="declname">deps</span>)</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Const</li>
+        <li>Pure virtual</li>
+      </ul>
+    </aside>
+  </section><section>
+    <h2 class="memproto" id="1a3535681b17565353834688f7d70898a3">
+<span class="type"><a href="class_maike_1_1_handle.html">Handle</a>&lt; <a href="class_maike_1_1_target.html">Target</a> &gt;</span> targetCreate
+(<span class="type">const <a href="class_maike_1_1_resource_object.html">ResourceObject</a> &amp;</span> <span class="declname">obj</span>,<span class="type">const char *</span> <span class="declname">name_src</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type">const char *</span> <span class="declname">root</span>,<span class="type">size_t</span> <span class="declname">id</span>,<span class="type">size_t</span> <span class="declname">line_count</span>)</h2>
     <aside>
       <h3>Quick info</h3>
       <p>This member is</p>

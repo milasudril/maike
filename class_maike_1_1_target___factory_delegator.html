@@ -24,11 +24,6 @@
     <p>The following table summarizes all members in this class.</p>
     <table class="memberdecls">
       <tr>
-        <th class="membername">class <a href="class_maike_1_1_target___factory_delegator_1_1_dependency_collector.html">Maike::Target_FactoryDelegator::DependencyCollector</a>
-</th>
-        <td></td>
-      </tr>
-      <tr>
         <th class="membername">class <a href="class_maike_1_1_target___factory_delegator_1_1_tag_extractor.html">Maike::Target_FactoryDelegator::TagExtractor</a>
 </th>
         <td></td>
@@ -47,26 +42,14 @@
       </tr>
       <tr>
         <th class="membername">
-<span class="type">void</span> <a href="#1a306679300c7288ccff21aa7996e6eb3b">targetsCreate</a>
-(<span class="type"><a href="class_maike_1_1_target___factory_delegator_1_1_tag_extractor.html">TagExtractor</a> &amp;&amp;</span> <span class="declname">extractor</span>,<span class="type">const char *</span> <span class="declname">name_src</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type"><a href="class_maike_1_1_target___factory_delegator_1_1_dependency_collector.html">DependencyCollector</a> &amp;&amp;</span> <span class="declname">collector</span>,<span class="type"><a href="class_maike_1_1_dependency_graph.html">DependencyGraph</a> &amp;</span> <span class="declname">graph</span>)</th>
+<span class="type">void</span> <a href="#1a32118d23cb759b5ac900022eaf1c0367">targetsCreate</a>
+(<span class="type"><a href="class_maike_1_1_target___factory_delegator_1_1_tag_extractor.html">TagExtractor</a> &amp;</span> <span class="declname">extractor</span>,<span class="type">const char *</span> <span class="declname">name_src</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type">const <a href="class_maike_1_1_target___loader.html">Target_Loader</a> &amp;</span> <span class="declname">loader_current</span>,<span class="type"><a href="class_maike_1_1_spider.html">Spider</a> &amp;</span> <span class="declname">spider</span>,<span class="type"><a href="class_maike_1_1_dependency_graph.html">DependencyGraph</a> &amp;</span> <span class="declname">graph</span>)</th>
         <td class="memberdesc"></td>
       </tr>
       <tr>
         <th class="membername">
-<span class="type">void</span> <a href="#1af9cd5203ce5da1028fef188eed3f5782">targetsCreate</a>
-(<span class="type"><a href="class_maike_1_1_target___factory_delegator_1_1_tag_extractor.html">TagExtractor</a> &amp;&amp;</span> <span class="declname">extractor</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type"><a href="class_maike_1_1_target___factory_delegator_1_1_dependency_collector.html">DependencyCollector</a> &amp;&amp;</span> <span class="declname">cb</span>,<span class="type"><a href="class_maike_1_1_dependency_graph.html">DependencyGraph</a> &amp;</span> <span class="declname">graph</span>)</th>
-        <td class="memberdesc"></td>
-      </tr>
-      <tr>
-        <th class="membername">
-<span class="type"><a href="class_maike_1_1_target___factory_delegator.html">Target_FactoryDelegator</a> &amp;</span> <a href="#1a3a46bec3c2e3d373f3b0e0c5f6612da9">factoryRegister</a>
-(<span class="type">const <a href="class_maike_1_1_stringkey.html">Stringkey</a> &amp;</span> <span class="declname">filename_ext</span>,<span class="type">const <a href="class_maike_1_1_target___factory.html">Target_Factory</a> &amp;</span> <span class="declname">factory</span>)</th>
-        <td class="memberdesc"></td>
-      </tr>
-      <tr>
-        <th class="membername">
-<span class="type">void</span> <a href="#1ae207caa9f01b4f7a11722a89b11e8889">factoriesUnregister</a>
-()</th>
+<span class="type">void</span> <a href="#1a1d1d004301a44145aea60e09c14ab155">targetsCreate</a>
+(<span class="type"><a href="class_maike_1_1_target___factory_delegator_1_1_tag_extractor.html">TagExtractor</a> &amp;</span> <span class="declname">extractor</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type">const <a href="class_maike_1_1_target___loader.html">Target_Loader</a> &amp;</span> <span class="declname">loader_current</span>,<span class="type"><a href="class_maike_1_1_spider.html">Spider</a> &amp;</span> <span class="declname">spider</span>,<span class="type"><a href="class_maike_1_1_dependency_graph.html">DependencyGraph</a> &amp;</span> <span class="declname">graph</span>)</th>
         <td class="memberdesc"></td>
       </tr>
       <tr>
@@ -78,6 +61,24 @@
       <tr>
         <th class="membername">
 <span class="type">const char *</span> <a href="#1a52dd7ac089c92fbca80ce974ec06cd17">rootGet</a>
+()</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1adc6453f2a3b0908303aee0b869b9de9d">targetsLoad</a>
+(<span class="type">const char *</span> <span class="declname">filename</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type"><a href="class_maike_1_1_spider.html">Spider</a> &amp;</span> <span class="declname">spider</span>,<span class="type"><a href="class_maike_1_1_dependency_graph.html">DependencyGraph</a> &amp;</span> <span class="declname">targets</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type"><a href="class_maike_1_1_target___factory_delegator.html">Target_FactoryDelegator</a> &amp;</span> <a href="#1af50f0c03077e99cd3e8f1c8f6cdad6da">loaderRegister</a>
+(<span class="type">const <a href="class_maike_1_1_stringkey.html">Stringkey</a> &amp;</span> <span class="declname">filename_ext</span>,<span class="type">const <a href="class_maike_1_1_target___loader.html">Target_Loader</a> &amp;</span> <span class="declname">loader</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1a3cf4d9da753ce05768b2f114e97b3aff">loadersUnregister</a>
 ()</th>
         <td class="memberdesc"></td>
       </tr>
@@ -105,9 +106,9 @@
       </ul>
     </aside>
   </section><section>
-    <h2 class="memproto" id="1a306679300c7288ccff21aa7996e6eb3b">
+    <h2 class="memproto" id="1a32118d23cb759b5ac900022eaf1c0367">
 <span class="type">void</span> targetsCreate
-(<span class="type"><a href="class_maike_1_1_target___factory_delegator_1_1_tag_extractor.html">TagExtractor</a> &amp;&amp;</span> <span class="declname">extractor</span>,<span class="type">const char *</span> <span class="declname">name_src</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type"><a href="class_maike_1_1_target___factory_delegator_1_1_dependency_collector.html">DependencyCollector</a> &amp;&amp;</span> <span class="declname">collector</span>,<span class="type"><a href="class_maike_1_1_dependency_graph.html">DependencyGraph</a> &amp;</span> <span class="declname">graph</span>)</h2>
+(<span class="type"><a href="class_maike_1_1_target___factory_delegator_1_1_tag_extractor.html">TagExtractor</a> &amp;</span> <span class="declname">extractor</span>,<span class="type">const char *</span> <span class="declname">name_src</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type">const <a href="class_maike_1_1_target___loader.html">Target_Loader</a> &amp;</span> <span class="declname">loader_current</span>,<span class="type"><a href="class_maike_1_1_spider.html">Spider</a> &amp;</span> <span class="declname">spider</span>,<span class="type"><a href="class_maike_1_1_dependency_graph.html">DependencyGraph</a> &amp;</span> <span class="declname">graph</span>)</h2>
     <aside>
       <h3>Quick info</h3>
       <p>This member is</p>
@@ -116,31 +117,9 @@
       </ul>
     </aside>
   </section><section>
-    <h2 class="memproto" id="1af9cd5203ce5da1028fef188eed3f5782">
+    <h2 class="memproto" id="1a1d1d004301a44145aea60e09c14ab155">
 <span class="type">void</span> targetsCreate
-(<span class="type"><a href="class_maike_1_1_target___factory_delegator_1_1_tag_extractor.html">TagExtractor</a> &amp;&amp;</span> <span class="declname">extractor</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type"><a href="class_maike_1_1_target___factory_delegator_1_1_dependency_collector.html">DependencyCollector</a> &amp;&amp;</span> <span class="declname">cb</span>,<span class="type"><a href="class_maike_1_1_dependency_graph.html">DependencyGraph</a> &amp;</span> <span class="declname">graph</span>)</h2>
-    <aside>
-      <h3>Quick info</h3>
-      <p>This member is</p>
-      <ul>
-        <li>Pure virtual</li>
-      </ul>
-    </aside>
-  </section><section>
-    <h2 class="memproto" id="1a3a46bec3c2e3d373f3b0e0c5f6612da9">
-<span class="type"><a href="class_maike_1_1_target___factory_delegator.html">Target_FactoryDelegator</a> &amp;</span> factoryRegister
-(<span class="type">const <a href="class_maike_1_1_stringkey.html">Stringkey</a> &amp;</span> <span class="declname">filename_ext</span>,<span class="type">const <a href="class_maike_1_1_target___factory.html">Target_Factory</a> &amp;</span> <span class="declname">factory</span>)</h2>
-    <aside>
-      <h3>Quick info</h3>
-      <p>This member is</p>
-      <ul>
-        <li>Pure virtual</li>
-      </ul>
-    </aside>
-  </section><section>
-    <h2 class="memproto" id="1ae207caa9f01b4f7a11722a89b11e8889">
-<span class="type">void</span> factoriesUnregister
-()</h2>
+(<span class="type"><a href="class_maike_1_1_target___factory_delegator_1_1_tag_extractor.html">TagExtractor</a> &amp;</span> <span class="declname">extractor</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type">const <a href="class_maike_1_1_target___loader.html">Target_Loader</a> &amp;</span> <span class="declname">loader_current</span>,<span class="type"><a href="class_maike_1_1_spider.html">Spider</a> &amp;</span> <span class="declname">spider</span>,<span class="type"><a href="class_maike_1_1_dependency_graph.html">DependencyGraph</a> &amp;</span> <span class="declname">graph</span>)</h2>
     <aside>
       <h3>Quick info</h3>
       <p>This member is</p>
@@ -168,6 +147,39 @@
       <p>This member is</p>
       <ul>
         <li>Const</li>
+        <li>Pure virtual</li>
+      </ul>
+    </aside>
+  </section><section>
+    <h2 class="memproto" id="1adc6453f2a3b0908303aee0b869b9de9d">
+<span class="type">void</span> targetsLoad
+(<span class="type">const char *</span> <span class="declname">filename</span>,<span class="type">const char *</span> <span class="declname">in_dir</span>,<span class="type"><a href="class_maike_1_1_spider.html">Spider</a> &amp;</span> <span class="declname">spider</span>,<span class="type"><a href="class_maike_1_1_dependency_graph.html">DependencyGraph</a> &amp;</span> <span class="declname">targets</span>)</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Pure virtual</li>
+      </ul>
+    </aside>
+  </section><section>
+    <h2 class="memproto" id="1af50f0c03077e99cd3e8f1c8f6cdad6da">
+<span class="type"><a href="class_maike_1_1_target___factory_delegator.html">Target_FactoryDelegator</a> &amp;</span> loaderRegister
+(<span class="type">const <a href="class_maike_1_1_stringkey.html">Stringkey</a> &amp;</span> <span class="declname">filename_ext</span>,<span class="type">const <a href="class_maike_1_1_target___loader.html">Target_Loader</a> &amp;</span> <span class="declname">loader</span>)</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Pure virtual</li>
+      </ul>
+    </aside>
+  </section><section>
+    <h2 class="memproto" id="1a3cf4d9da753ce05768b2f114e97b3aff">
+<span class="type">void</span> loadersUnregister
+()</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
         <li>Pure virtual</li>
       </ul>
     </aside>
