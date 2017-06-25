@@ -5,7 +5,6 @@
 #include "targetcxx.hpp"
 #include "../target_factorydelegator.hpp"
 #include "../filein.hpp"
-#include "../spider.hpp"
 #include "../resourceobject.hpp"
 #include "../dependency.hpp"
 #include "../pathutils.hpp"
