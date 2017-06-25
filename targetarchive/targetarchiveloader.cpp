@@ -11,6 +11,7 @@
 #include "../dependencygraph.hpp"
 #include "../target.hpp"
 #include "../dependency.hpp"
+#include "../dependencybuffer.hpp"
 #include <vector>
 #include <cstring>
 
@@ -59,71 +60,30 @@ size_t TagExtractor::read(void* buffer,size_t length)
 		}
 	return n_read;
 	}
-/*
-TODO:
 
-namespace
+void TargetArchiveLoader::dependenciesGet(const char* name_src,const char* in_dir
+	,const char* root,ResourceObject::Reader rc_reader,DependencyBuffer& deps) const
 	{
-	class DependencyCollector:public Target_FactoryDelegator::DependencyCollector
-		{
-		public:
-			DependencyCollector(const char* name_src,const char* in_dir):
-				r_name_src(name_src),r_in_dir(in_dir)
-				{r_dep_ptr=m_deps_pending.data();}
-
-			bool operator()(const Target_FactoryDelegator& delegator,Dependency& dep_primary
-				,ResourceObject::Reader rc_reader);
-
-
-		private:
-			const char* r_name_src;
-			const char* r_in_dir;
-			std::vector<Dependency> m_deps_pending;
-			const Dependency* r_dep_ptr;
-		};
-	}
-
-bool DependencyCollector::operator()(const Target_FactoryDelegator& delegator,Dependency& dep_primary
-	,ResourceObject::Reader rc_reader)
-	{
-	if(r_dep_ptr!=m_deps_pending.data())
-		{
-		--r_dep_ptr;
-		dep_primary=std::move(*r_dep_ptr);
-		return 1;
-		}
-	if(m_deps_pending.size()!=0)
-		{return 0;}
-	
-	FileIn src(r_name_src);
+	FileIn src(name_src);
 	auto rc=rc_reader(src);
 	if(!rc.objectExists("contents"))
-		{return 0;}
+		{return;}
 	
 	auto contents=rc.objectGet("contents");
 	if(contents.typeGet()!=ResourceObject::Type::ARRAY)
-		{return 0;}
+		{return;}
 
 	auto N=contents.objectCountGet();
 
 	for(decltype(N) n=0;n<N;++n)
 		{
 		auto obj=contents.objectGet(n);
+	//TODO: The new system only requires an array of strings, no keys needed anymore
 		auto file=static_cast<const char*>(obj.objectGet("file"));
-		auto filename_full=dircat(r_in_dir,file);
-		m_deps_pending.push_back(Dependency(filename_full.c_str(),delegator.rootGet()
-			,Dependency::Relation::MISC));
+		auto filename_full=dircat(in_dir,file);
+		deps.append(Dependency(filename_full.c_str(),root,Dependency::Relation::MISC));
 		}
-	r_dep_ptr=m_deps_pending.data() + m_deps_pending.size();
-	if(r_dep_ptr!=m_deps_pending.data())
-		{
-		--r_dep_ptr;
-		dep_primary=std::move(*r_dep_ptr);
-		return 1;
-		}
-	return 0;
 	}
-*/
 
 void TargetArchiveLoader::targetsLoad(const char* name_src,const char* in_dir
 	,Spider& spider,DependencyGraph& graph,Target_FactoryDelegator& factory) const
