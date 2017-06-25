@@ -173,7 +173,7 @@ static const Target_Loader* targetLoaderGet(const Stringkey& key
 static void dependenciesCollect(
 	 const char* name_src
 	,const char* in_dir
-	,Target_FactoryDelegator& delegator
+	,const char* root
 	,Spider& spider
 	,const Target_Loader& loader_current
 	,const std::map<Stringkey,const Target_Loader*>& loaders
@@ -182,10 +182,8 @@ static void dependenciesCollect(
 	{
 	Dependency dep_in;
 	DependencyBufferDefault buffer_tmp;
-	loader_current.dependenciesGet(name_src,in_dir,delegator.rootGet()
+	loader_current.dependenciesGet(name_src,in_dir,root
 		,ResourceObjectJansson::createImpl,buffer_tmp);
-
-	const char* root=delegator.rootGet();
 
 	std::for_each(buffer_tmp.begin(),buffer_tmp.end()
 		,[&buffer,&deps_extra_cache,&loaders,&spider,root](const Dependency& dep_in)
@@ -232,8 +230,8 @@ static void targetsCreate(const ResourceObject& targets,const char* name_src
 	,std::map<Stringkey,DependencyBufferDefault>& deps_extra_cache)
 	{
 	DependencyBufferDefault deps;
-	dependenciesCollect(name_src,in_dir,delegator,spider,loader_current,loaders
-		,deps,deps_extra_cache);
+	dependenciesCollect(name_src,in_dir,delegator.rootGet()
+		,spider,loader_current,loaders,deps,deps_extra_cache);
 
 	auto N=targets.objectCountGet();
 	for(decltype(N) k=0;k<N;++k)
