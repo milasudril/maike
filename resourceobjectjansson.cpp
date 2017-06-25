@@ -256,7 +256,7 @@ const ResourceObjectJansson::Vtable ResourceObjectJansson::s_vtable
 	};
 
 
-void ResourceObjectJansson::Iterator::destroyImpl(void* handle)
+void ResourceObjectJansson::Iterator::destroyImpl(void*)
 	{
 //	There is no dtor for iterators
 	}

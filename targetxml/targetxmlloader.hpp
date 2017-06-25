@@ -29,6 +29,20 @@ namespace Maike
 
 			void configDump(ResourceObject& config) const;
 
+			void dependenciesExtraGet(const char*,const char*
+				,const char*,ResourceObject::Reader
+				,DependencyBuffer&) const
+				{}
+
+			void dependenciesGet(const char*,const char*
+				,const char*,ResourceObject::Reader
+				,DependencyBuffer&) const
+				{}
+
+			Handle<Target> targetCreate(const ResourceObject& obj
+				,const char* name_src,const char* in_dir,const char* root	
+				,size_t id,size_t line_count) const;
+
 		private:
 			Command m_filter;
 		};

@@ -1,20 +1,25 @@
 //@	{"targets":[{"name":"targetoctaveloader.o","type":"object"}]}
 
 #include "targetoctaveloader.hpp"
+#include "targetoctave.hpp"
 #include "../readbuffer.hpp"
 #include "../filein.hpp"
 #include "../resourceobject.hpp"
-#include "../exceptionhandler.hpp"
-#include "../errormessage.hpp"
-#include "../variant.hpp"
 #include "../target_factorydelegator.hpp"
-#include "../dependencygraph.hpp"
-#include "../target.hpp"
 
 using namespace Maike;
 
-TargetOctaveLoader::TargetOctaveLoader()
+TargetOctaveLoader::TargetOctaveLoader(const TargetOctaveInterpreter& intpret):
+	r_intpret(intpret)
 	{}
+
+Handle<Target> TargetOctaveLoader::targetCreate(const ResourceObject& obj
+	,const char* name_src,const char* in_dir,const char* root
+	,size_t id,size_t line_count) const
+	{
+	return Handle<TargetOctave>( TargetOctave::create(obj,r_intpret,name_src,in_dir,root
+		,id,line_count) );
+	}
 
 
 namespace
@@ -126,22 +131,10 @@ size_t TagExtractor::read(void* buffer,size_t length)
 	return n_read;
 	}
 
-namespace
-	{
-	class DependencyCollector:public Target_FactoryDelegator::DependencyCollector
-		{
-		public:
-			bool operator()(const Target_FactoryDelegator& delegator,Dependency& dep_primary
-				,ResourceObject::Reader rc_reader)
-				{return 0;}
-		};
-	}
-
 void TargetOctaveLoader::targetsLoad(const char* name_src,const char* in_dir
 	,Spider& spider,DependencyGraph& graph,Target_FactoryDelegator& factory) const
 	{
 	FileIn source(name_src);
 	TagExtractor extractor(source);
-	DependencyCollector collector;
-	factory.targetsCreate(extractor,name_src,in_dir,collector,graph);
+	factory.targetsCreate(extractor,name_src,in_dir,*this,spider,graph);
 	}

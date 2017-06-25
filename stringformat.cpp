@@ -72,7 +72,7 @@ static char* convert(char* result,T value,unsigned int radix) noexcept
 ///Pointer
 
 static size_t format(const Twins<char*>& range,const void* ptr
-	,const Twins<const char*>& argstring) noexcept
+	,const Twins<const char*>&) noexcept
 	{
 	size_t N=range.second-range.first;
 	auto pos=range.first;
@@ -96,7 +96,7 @@ static size_t format(const Twins<char*>& range,const void* ptr
 ///String constant
 
 static size_t format(const Twins<char*>& range,const char* cstr
-	,const Twins<const char*>& argstring) noexcept
+	,const Twins<const char*>&) noexcept
 	{
 	auto ptr=range.first;
 	auto ptr_end=range.second;
@@ -234,7 +234,7 @@ static size_t format(const Twins<char*>& range,char x
 ///Bool
 
 static size_t format(const Twins<char*>& range,bool x
-	,const Twins<const char*>& argstring) noexcept
+	,const Twins<const char*>&) noexcept
 	{
 	auto pos=range.first;
 	size_t N=range.second-range.first;

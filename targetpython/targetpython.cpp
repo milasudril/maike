@@ -54,7 +54,7 @@ void TargetPython::dumpDetails(ResourceObject& target) const
 	}
 
 bool TargetPython::upToDate(Twins<const Dependency*> dependency_list
-	,Twins<const Dependency*> dependency_list_full
+	,Twins<const Dependency*>
 	,const char* target_dir) const
 	{
 	auto name_out=dircat(target_dir,nameGet());
@@ -66,7 +66,7 @@ bool TargetPython::upToDate(Twins<const Dependency*> dependency_list
 		{return m_status;}
 
 
-	auto up_to_date=[&name_out](const char* name,Dependency::Relation rel)
+	auto up_to_date=[&name_out](const char* name,Dependency::Relation)
 		{return !FileUtils::newer(name,name_out.c_str());};
 
 	if(!dependenciesProcess(target_dir,dependency_list,USE_ALL,up_to_date))
@@ -75,8 +75,8 @@ bool TargetPython::upToDate(Twins<const Dependency*> dependency_list
 	return m_status==0;
 	}
 
-void TargetPython::compileImpl(Twins<const Dependency*> dependency_list
-	,Twins<const Dependency*> dependency_list_full
+void TargetPython::compileImpl(Twins<const Dependency*>
+	,Twins<const Dependency*>
 	,const char* target_dir)
 	{
 	auto in_dir=dircat(m_root,inDirGet());

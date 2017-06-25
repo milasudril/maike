@@ -53,8 +53,8 @@ TargetConfig::TargetConfig(const ResourceObject& config,size_t id):
 	config.write(writer);
 	}
 
-void TargetConfig::compile(Twins<const Dependency*> dependency_list
-	,Twins<const Dependency*> dependency_list_full
+void TargetConfig::compile(Twins<const Dependency*>
+	,Twins<const Dependency*>
 	,const char* target_dir)
 	{
 	TimedScope timer(m_compilation_time);
@@ -75,8 +75,8 @@ static std::string data_reload(const char* filename)
 	return std::move(ret);
 	}
 
-bool TargetConfig::upToDate(Twins<const Dependency*> dependency_list
-	,Twins<const Dependency*> dependency_list_full
+bool TargetConfig::upToDate(Twins<const Dependency*>
+	,Twins<const Dependency*>
 	,const char* target_dir) const
 	{
 	auto filename=dircat(target_dir,"maikeconfig.json");

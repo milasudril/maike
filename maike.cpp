@@ -215,7 +215,7 @@ namespace
 			TargetsListAll(WriteBuffer& wb):r_wb(wb)
 				{}
 
-			int operator()(const DependencyGraph& graph,const Target& target)
+			int operator()(const DependencyGraph&,const Target& target)
 				{
 				r_wb.write(" * ").write(target.nameGet());
 				auto description=target.descriptionGet();
@@ -247,7 +247,7 @@ namespace
 			TargetsListLeaf(WriteBuffer& wb):r_wb(wb)
 				{}
 
-			int operator()(const DependencyGraph& graph,const Target& target)
+			int operator()(const DependencyGraph&,const Target& target)
 				{
 				auto x=target.dependenciesInverseGet();
 				if(x.second - x.first==0)
@@ -283,7 +283,7 @@ namespace
 			TargetsListExternal(WriteBuffer& wb):r_wb(wb)
 				{}
 
-			int operator()(const DependencyGraph& graph,const Target& target)
+			int operator()(const DependencyGraph&,const Target& target)
 				{
 				auto ptr=dynamic_cast<const TargetPlaceholder*>(&target);
 				if(ptr!=nullptr && ptr->relation()!=Dependency::Relation::MISC)
@@ -399,7 +399,7 @@ namespace
 				,id_range(maike.targetIdRangeGet())
 				{}
 
-			int operator()(DependencyGraph& graph,Target& target)
+			int operator()(DependencyGraph&,Target& target)
 				{
 				auto x=target.dependenciesInverseGet();
 				if(x.second - x.first==0)
@@ -436,7 +436,7 @@ namespace
 			GraphEdgesWrite(GraphEdgeWriter& writer):r_writer(writer)
 				{}
 
-			int operator()(const DependencyGraph& graph,const Target& target)
+			int operator()(const DependencyGraph&,const Target& target)
 				{
 				auto name_target=target.nameGet();
 				if(strcmp(name_target,".")!=0)
@@ -545,7 +545,7 @@ namespace
 			TargetDumpJSON(ResourceObject& db):r_db(db)
 				{}
 
-			int operator()(const DependencyGraph& graph,const Target& target)
+			int operator()(const DependencyGraph&,const Target& target)
 				{
 				auto target_obj=r_db.createObject();
 				target.dump(target_obj);
@@ -600,7 +600,7 @@ namespace
 			TargetDumpTSV(WriteBuffer& wb):r_wb(wb)
 				{}
 
-			int operator()(const DependencyGraph& graph,const Target& target)
+			int operator()(const DependencyGraph&,const Target& target)
 				{
 				::targetDumpTSV(target,r_wb);
 				return 0;
@@ -654,7 +654,7 @@ namespace
 				,id_range(maike.targetIdRangeGet())
 				{}
 
-			int operator()(DependencyGraph& graph,Target& target)
+			int operator()(DependencyGraph&,Target& target)
 				{
 				auto x=target.dependenciesInverseGet();
 				if(x.second - x.first==0)
@@ -688,7 +688,7 @@ namespace
 				r_target_dir(target_dir),r_target_list(target_list)
 				{}
 
-			int operator()(const DependencyGraph& graph,const Target& target)
+			int operator()(const DependencyGraph&,const Target& target)
 				{
 				r_target_list.insert(Stringkey(dircat(r_target_dir,target.nameGet()).c_str()));
 				return 0;

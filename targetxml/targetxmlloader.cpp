@@ -1,6 +1,7 @@
 //@	{"targets":[{"name":"targetxmlloader.o","type":"object"}]}
 
 #include "targetxmlloader.hpp"
+#include "targetxml.hpp"
 #include "../readbuffer.hpp"
 #include "../resourceobject.hpp"
 #include "../exceptionhandler.hpp"
@@ -8,7 +9,6 @@
 #include "../variant.hpp"
 #include "../target_factorydelegator.hpp"
 #include "../dependencygraph.hpp"
-#include "../target.hpp"
 #include "../fileutils.hpp"
 #include "../pipe.hpp"
 #include "../writebuffer.hpp"
@@ -44,6 +44,14 @@ void TargetXMLLoader::configDump(ResourceObject& config) const
 	auto filter=config.createObject();
 	m_filter.configDump(filter);
 	config.objectSet("filter",std::move(filter));
+	}
+
+Handle<Target> TargetXMLLoader::targetCreate(const ResourceObject& obj
+	,const char* name_src,const char* in_dir,const char* root
+	,size_t id,size_t line_count) const
+	{
+	return Handle<TargetXML>( TargetXML::create(obj,name_src,in_dir,root
+		,id,line_count) );
 	}
 
 
@@ -123,17 +131,6 @@ size_t TagExtractor::read(void* buffer,size_t length)
 	return m_stdout->read(buffer,length);
 	}
 
-namespace
-	{
-	class DependencyCollector:public Target_FactoryDelegator::DependencyCollector
-		{
-		public:
-			bool operator()(const Target_FactoryDelegator& delegator,Dependency& dep_primary
-				,ResourceObject::Reader rc_reader)
-				{return 0;}
-		};
-	}
-
 void TargetXMLLoader::targetsLoad(const char* name_src,const char* in_dir
 	,Spider& spider,DependencyGraph& graph,Target_FactoryDelegator& factory) const
 	{
@@ -143,8 +140,7 @@ void TargetXMLLoader::targetsLoad(const char* name_src,const char* in_dir
 		{return;}
 
 	TagExtractor extractor(m_filter,depfile.c_str(),name_src);
-	DependencyCollector collector;
-	factory.targetsCreate(extractor,name_src,in_dir,collector,graph);
+	factory.targetsCreate(extractor,name_src,in_dir,*this,spider,graph);
 	auto ret=extractor.exitStatusGet();
 	if(ret!=0)
 		{exceptionRaise(ErrorMessage("#0;: Failed to load any target definition.",{name_src}));}

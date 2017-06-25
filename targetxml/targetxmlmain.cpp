@@ -28,7 +28,7 @@ void Maike_Plugin_init(DataSink& standard_output,DataSink& standard_error
 void Maike_Plugin_cleanup()
 	{}
 
-Target_Hook* Maike_Target_Hook_create(const ParameterSetDumpable& params)
+Target_Hook* Maike_Target_Hook_create(const ParameterSetDumpable&)
 	{
-	return TargetXMLHook::create(params);
+	return TargetXMLHook::create();
 	}

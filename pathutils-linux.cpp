@@ -160,7 +160,7 @@ std::string Maike::homedir()
 	ReadBuffer rb(src);
 	std::string field;
 	auto uid=getuid();
-	decltype(uid) uid_from_file;
+	decltype(uid) uid_from_file=0;
 	std::string ret;
 	size_t field_count=0;
 	while(!rb.eof())

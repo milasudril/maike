@@ -17,7 +17,7 @@
 
 namespace Maike
 	{
-	class PRIVATE SystemTargetInfo:public ParameterSetDumpable
+	class PRIVATE SystemTargetInfo final:public ParameterSetDumpable
 		{
 		public:
 			SystemTargetInfo();

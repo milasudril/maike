@@ -2,19 +2,15 @@
 
 #include "targetcxxloader.hpp"
 #include "targetcxxpptokenizer.hpp"
+#include "targetcxx.hpp"
 #include "../target_factorydelegator.hpp"
 #include "../filein.hpp"
-#include "../spider.hpp"
 #include "../resourceobject.hpp"
-#include "../handle.hpp"
-#include "../target.hpp"
 #include "../dependency.hpp"
-#include "../dependencygraph.hpp"
 #include "../pathutils.hpp"
 #include "../writebuffer.hpp"
 #include "../stdstream.hpp"
-#include <cstring>
-#include <vector>
+#include "../dependencybuffer.hpp"
 
 using namespace Maike;
 
@@ -45,6 +41,7 @@ namespace
 				{delete this;}
 		};
 	}
+
 
 size_t TagExtractor::read(void* buffer,size_t length)
 	{
@@ -144,52 +141,45 @@ size_t TagExtractor::read(void* buffer,size_t length)
 
 
 
-TargetCxxLoader::TargetCxxLoader(const TargetCxxOptions& options):
-	r_options(options)
+TargetCxxLoader::TargetCxxLoader(const TargetCxxOptions& options
+	,const TargetCxxCompiler& compiler):
+	r_options(options),r_compiler(compiler)
 	{}
 
-namespace
+Handle<Target> TargetCxxLoader::targetCreate(const ResourceObject& obj
+	,const char* name_src,const char* in_dir,const char* root,size_t id,size_t line_count) const
+	{return Handle<TargetCxx>( TargetCxx::create(obj,r_compiler,name_src,in_dir,root,id,line_count) );}
+
+
+void TargetCxxLoader::dependenciesExtraGet(const char* name_src,const char* in_dir
+	,const char* root,ResourceObject::Reader rc_reader,DependencyBuffer& deps_out) const
 	{
-	class DependencyCollector:public Target_FactoryDelegator::DependencyCollector
+	FileIn file(name_src);
+	TagExtractor extractor(file);
+	auto tags=rc_reader(extractor);
+	if(tags.objectExists("dependencies_extra"))
 		{
-		public:
-			DependencyCollector(const char* name_source,const char* in_dir,Spider& spider):
-				 m_file_reader(name_source),m_cpptok(m_file_reader),r_in_dir(in_dir),r_spider(spider)
-				,m_mode(Mode::NORMAL),m_target_include(0)
-				{}
-
-			bool operator()(const Target_FactoryDelegator&,Dependency& dep_primary
-				,ResourceObject::Reader rc_reader);
-
-			bool targetInclude() const noexcept
-				{return m_target_include;}
-
-		private:
-			FileIn m_file_reader;
-			TargetCxxPPTokenizer m_cpptok;
-			std::vector<Dependency> m_deps_pending;
-			const char* r_in_dir;
-			Spider& r_spider;
- 			enum class Mode:uint8_t{NORMAL,INCLUDE};
-			Mode m_mode;
-			bool m_target_include;
-		};
+		auto deps=tags.objectGet("dependencies_extra");
+		auto N=deps.objectCountGet();
+		for(decltype(N) k=0;k<N;++k)
+			{
+			Dependency dep(deps.objectGet(k),in_dir,root);
+			deps_out.append(std::move(dep));
+			}
+		}
 	}
 
-bool DependencyCollector::operator()(const Target_FactoryDelegator& delegator,Dependency& dep_primary
-	,ResourceObject::Reader rc_reader)
+void TargetCxxLoader::dependenciesGet(const char* name_src,const char* in_dir
+	,const char* root,ResourceObject::Reader
+	,DependencyBuffer& deps) const
 	{
+	FileIn file(name_src);
 	WriteBuffer wb(StdStream::error());
-
-	if(!m_deps_pending.empty())
-		{
-		dep_primary=std::move(m_deps_pending.back());
-		m_deps_pending.pop_back();
-		return 1;
-		}
+	TargetCxxPPTokenizer cpptok(file);
 	TargetCxxPPTokenizer::Token tok_in;
-	auto mode=m_mode;
-	while(m_cpptok.read(tok_in))
+ 	enum class Mode:uint8_t{NORMAL,INCLUDE};
+	auto mode=Mode::NORMAL;
+	while(cpptok.read(tok_in))
 		{
 		switch(mode)
 			{
@@ -204,6 +194,7 @@ bool DependencyCollector::operator()(const Target_FactoryDelegator& delegator,De
 						break;
 					}
 				break;
+
 			case Mode::INCLUDE:
 				switch(tok_in.type)
 					{
@@ -212,28 +203,8 @@ bool DependencyCollector::operator()(const Target_FactoryDelegator& delegator,De
 						break;
 					case TargetCxxPPTokenizer::Token::Type::STRING:
 						{
-						auto name_dep_full=dircat(r_in_dir,tok_in.value);
-						dep_primary=Dependency(name_dep_full.c_str(),delegator.rootGet()
-							,Dependency::Relation::INCLUDE);
-						auto in_dir_include=dirname(name_dep_full);
-						r_spider.scanFile(name_dep_full.c_str(),in_dir_include.c_str());
-
-						FileIn file(name_dep_full.c_str());
-						TagExtractor extractor(file);
-						auto tags=rc_reader(extractor);
-						if(tags.objectExists("dependencies_extra"))
-							{
-							auto deps=tags.objectGet("dependencies_extra");
-							auto N=deps.objectCountGet();
-							for(decltype(N) k=0;k<N;++k)
-								{
-								Dependency dep(deps.objectGet(k),in_dir_include.c_str()
-									,delegator.rootGet());
-								m_deps_pending.push_back(std::move(dep));
-								}
-							}
-						m_mode=Mode::NORMAL;
-						return 1;
+						auto name_dep_full=dircat(in_dir,tok_in.value);
+						deps.append( Dependency(name_dep_full.c_str(),root,Dependency::Relation::INCLUDE) );
 						}
 						break;
 					default:
@@ -243,7 +214,6 @@ bool DependencyCollector::operator()(const Target_FactoryDelegator& delegator,De
 				break;
 			}
 		}
-	return 0;
 	}
 
 void TargetCxxLoader::targetsLoad(const char* name_src,const char* in_dir
@@ -251,6 +221,5 @@ void TargetCxxLoader::targetsLoad(const char* name_src,const char* in_dir
 	{
 	FileIn source(name_src);
 	TagExtractor extractor(source);
-	DependencyCollector collector(name_src,in_dir,spider);
-	factory.targetsCreate(extractor,name_src,in_dir,collector,graph);
+	factory.targetsCreate(extractor,name_src,in_dir,*this,spider,graph);
 	}

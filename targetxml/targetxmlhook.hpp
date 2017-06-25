@@ -9,20 +9,13 @@
 #include "../target_hook.hpp"
 
 #include "targetxmlloader.hpp"
-#include "targetxmlfactory.hpp"
 
 namespace Maike
 	{
 	class PRIVATE TargetXMLHook final:public Target_Hook
 		{
 		public:
-			static TargetXMLHook* create(const ParameterSetDumpable& params);
-
-			static TargetXMLHook* create(ParameterSet&& params)=delete;
-
-
-			const TargetXMLFactory& factoryGet() const noexcept
-				{return m_factory;}
+			static TargetXMLHook* create();
 
 			const TargetXMLLoader& loaderGet() const noexcept
 				{return m_loader;}
@@ -37,9 +30,6 @@ namespace Maike
 
 		private:
 			TargetXMLLoader m_loader;
-			TargetXMLFactory m_factory;
-
-			explicit TargetXMLHook(const ParameterSetDumpable& params);
 
 			void destroy() noexcept;
 		};

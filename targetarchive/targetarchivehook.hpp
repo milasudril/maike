@@ -10,7 +10,6 @@
 
 #include "targetarchivecompiler.hpp"
 #include "targetarchiveloader.hpp"
-#include "targetarchivefactory.hpp"
 
 namespace Maike
 	{
@@ -20,10 +19,6 @@ namespace Maike
 			static TargetArchiveHook* create(const ParameterSetDumpable& params);
 
 			static TargetArchiveHook* create(ParameterSet&& params)=delete;
-
-
-			const TargetArchiveFactory& factoryGet() const noexcept
-				{return m_factory;}
 
 			const TargetArchiveLoader& loaderGet() const noexcept
 				{return m_loader;}
@@ -39,7 +34,6 @@ namespace Maike
 		private:
 			TargetArchiveCompiler m_intpret;
 			TargetArchiveLoader m_loader;
-			TargetArchiveFactory m_factory;
 
 			explicit TargetArchiveHook(const ParameterSetDumpable& params);
 

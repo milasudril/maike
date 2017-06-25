@@ -5,7 +5,7 @@
 using namespace Maike;
 
 TargetOctaveHook::TargetOctaveHook(const ParameterSetDumpable& params):
-	m_intpret(params),m_factory(m_intpret)
+	m_intpret(params),m_loader(m_intpret)
 	{
 	}
 

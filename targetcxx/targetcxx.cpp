@@ -298,7 +298,7 @@ bool TargetCxx::upToDate(Twins<const Dependency*> dependency_list
 	if(FileUtils::newer(sourceNameGet(),name_full.c_str()))
 		{return 0;}
 
-	auto up_to_date=[&name_full](const char* name,Dependency::Relation rel)
+	auto up_to_date=[&name_full](const char* name,Dependency::Relation)
 		{return !FileUtils::newer(name,name_full.c_str());};
 	
 	switch(m_type)

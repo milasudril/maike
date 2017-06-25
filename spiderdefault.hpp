@@ -7,17 +7,14 @@
 #define MAIKE_SPIDERDEFAULT_HPP
 
 #include "spider.hpp"
-#include "stringkey.hpp"
 #include "twins.hpp"
 #include <stack>
 #include <set>
-#include <map>
 #include <string>
 
 namespace Maike
 	{
 	class DependencyGraph;
-	class Target_Loader;
 	class Target_FactoryDelegator;
 
 	class PRIVATE SpiderDefault:public Spider
@@ -30,16 +27,7 @@ namespace Maike
 			SpiderDefault& scanFile(const char* filename,const char* in_dir);
 			SpiderDefault& run();
 
-			SpiderDefault& loaderRegister(const Stringkey& filename_ext
-				,const Target_Loader& loader);
-
-			void loadersUnregister() noexcept;
-
-			bool loaderHas(const Stringkey& filename_ext) const noexcept
-				{return m_r_loaders.find(filename_ext)!=m_r_loaders.end();}
-
 		private:
-			std::map<Stringkey,const Target_Loader*> m_r_loaders;
 			Target_FactoryDelegator& r_target_creator;
 			DependencyGraph& r_targets;
 

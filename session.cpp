@@ -30,8 +30,7 @@ Session& Session::configClear()
 	m_targetinfo.clear();
 	m_source_files.clear();
 	m_dirloader.configClear();
-	m_spider.loadersUnregister();
-	m_delegator.factoriesUnregister();
+	m_delegator.loadersUnregister();
 	m_target_hooks.configClear();
 	graphDirtySet();
 	targetHooksDirtySet();
@@ -180,7 +179,7 @@ namespace
 		public:
 			BySourceName(const char* filename):r_filename(filename){}
 
-			int operator()(DependencyGraph& graph,Target& target)
+			int operator()(DependencyGraph&,Target& target)
 				{return strcmp(target.sourceNameGet(),r_filename);}
 
 		private:
@@ -192,7 +191,7 @@ namespace
 		public:
 			ByParentDirectory(const char* filename):r_filename(filename){}
 
-			int operator()(DependencyGraph& graph,Target& target)
+			int operator()(DependencyGraph&,Target& target)
 				{return strcmp(target.inDirGet(),r_filename);}
 
 		private:
@@ -221,12 +220,14 @@ Session& Session::scanFile(const char* filename)
 void Session::dependenciesClear() noexcept
 	{
 	m_graph.clear();
+	m_delegator.depsExtraCacheClear();
 	graphDirtySet();
 	}
 
 void Session::dependenciesReload() const
 	{
 	m_graph.clear();
+	m_delegator.depsExtraCacheClear();
 	
 		{
 		ResourceObjectJansson config(ResourceObject::Type::OBJECT);
@@ -255,25 +256,23 @@ namespace
 	class TargetHookRegistrator:public Target_Hook_Registry::EnumCallbackFilenameExt
 		{
 		public:
-			explicit TargetHookRegistrator(Spider& spider,Target_FactoryDelegator& delegator) noexcept:
-				r_spider(spider),r_delegator(delegator)
+			explicit TargetHookRegistrator(Target_FactoryDelegator& delegator) noexcept:
+				r_delegator(delegator)
 				{}
 
 			void operator()(const Stringkey& filename_ext,const Target_Hook& hook)
 				{
-				r_spider.loaderRegister(filename_ext,hook.loaderGet());
-				r_delegator.factoryRegister(filename_ext,hook.factoryGet());
+				r_delegator.loaderRegister(filename_ext,hook.loaderGet());
 				}
 		private:
-			Spider& r_spider;
 			Target_FactoryDelegator& r_delegator;
 		};
 	}
 
 void Session::targetHooksRegister() const
 	{
-	m_target_hooks.enumerate(TargetHookRegistrator(m_spider,m_delegator));
-	m_spider.loaderRegister(Stringkey("."),m_dirloader);
+	m_target_hooks.enumerate(TargetHookRegistrator(m_delegator));
+	m_delegator.loaderRegister(Stringkey("."),m_dirloader);
 	targetHooksDirtyClear();
 	}
 
@@ -339,5 +338,5 @@ bool Session::loaderHas(const char* filename) const
 		{return 0;}
 	if(targetHooksDirty())
 		{targetHooksRegister();}
-	return m_spider.loaderHas(Stringkey(filename_ext));
+	return m_delegator.loaderHas(Stringkey(filename_ext));
 	}

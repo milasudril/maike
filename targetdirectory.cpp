@@ -7,8 +7,8 @@
 
 using namespace Maike;
 
-void TargetDirectory::compileImpl(Twins<const Dependency*> dependency_list
-	,Twins<const Dependency*> dependency_list_full
+void TargetDirectory::compileImpl(Twins<const Dependency*>
+	,Twins<const Dependency*>
 	,const char* target_dir)
 	{
 	std::string fullpath=target_dir;
@@ -21,8 +21,8 @@ void TargetDirectory::compileImpl(Twins<const Dependency*> dependency_list
 	FileUtils::mkdir(fullpath.c_str());
 	}
 
-bool TargetDirectory::upToDate(Twins<const Dependency*> dependency_list
-	,Twins<const Dependency*> dependency_list_full
+bool TargetDirectory::upToDate(Twins<const Dependency*>
+	,Twins<const Dependency*>
 	,const char* target_dir) const
 	{
 	std::string fullpath=target_dir;

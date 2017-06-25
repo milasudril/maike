@@ -178,7 +178,7 @@ static std::vector<const char*> commandLineBuild(const char* command
 	}
 
 
-static void sigpipe(int signal,siginfo_t* info, void* context)
+static void sigpipe(int,siginfo_t*,void*)
 	{
 	}
 
