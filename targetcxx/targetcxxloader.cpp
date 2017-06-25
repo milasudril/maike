@@ -11,8 +11,6 @@
 #include "../writebuffer.hpp"
 #include "../stdstream.hpp"
 #include "../dependencybuffer.hpp"
-#include <cstring>
-#include <vector>
 
 using namespace Maike;
 
