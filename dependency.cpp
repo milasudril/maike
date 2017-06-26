@@ -88,6 +88,7 @@ Dependency::Dependency(const ResourceObject& obj,const char* in_dir,const char* 
 	 m_name(nullptr),r_target(nullptr)
 	,m_rel(relation(static_cast<const char*>(obj.objectGet("rel"))))
 	{
+//TODO: Who concatenates in_dir and and ref?
 	assert(m_rel!=Relation::INTERNAL && m_rel!=Relation::LEAF);
 	if(m_rel==Relation::IMPLEMENTATION || m_rel==Relation::MISC)
 		{

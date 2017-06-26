@@ -93,7 +93,6 @@
                         "-Wunused-parameter",
 						"-Werror",
 						"-Wno-error=suggest-final-types",
-						"-O2",
                         "{cflags_extra}",
                         "{iquote}",
                         "{includedir}",
