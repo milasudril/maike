@@ -6,6 +6,7 @@
 #include "../filein.hpp"
 #include "../resourceobject.hpp"
 #include "../target_factorydelegator.hpp"
+#include "../dependencybuffer.hpp"
 
 using namespace Maike;
 
@@ -20,7 +21,6 @@ Handle<Target> TargetOctaveLoader::targetCreate(const ResourceObject& obj
 	return Handle<TargetOctave>( TargetOctave::create(obj,r_intpret,name_src,in_dir,root
 		,id,line_count) );
 	}
-
 
 namespace
 	{
@@ -129,6 +129,26 @@ size_t TagExtractor::read(void* buffer,size_t length)
 		}
 	m_state=state;
 	return n_read;
+	}
+
+
+void TargetOctaveLoader::dependenciesExtraGet(const char* name_src,const char* in_dir
+	,const char* root,ResourceObject::Reader rc_reader
+	,DependencyBuffer& deps_out) const
+	{
+	FileIn src(name_src);
+	TagExtractor extractor(src);
+	auto tags=rc_reader(extractor);
+	if(tags.objectExists("dependencies_extra"))
+		{
+		auto deps=tags.objectGet("dependencies_extra");
+		auto N=deps.objectCountGet();
+		for(decltype(N) k=0;k<N;++k)
+			{
+			Dependency dep(deps.objectGet(k),in_dir,root);
+			deps_out.append(std::move(dep));
+			}
+		}
 	}
 
 void TargetOctaveLoader::targetsLoad(const char* name_src,const char* in_dir
