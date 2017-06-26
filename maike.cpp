@@ -447,9 +447,7 @@ namespace
 						auto name_dep=dep.first->nameGet();
 						if(strcmp(name_dep,".")!=0)
 							{
-							r_writer.edgeWrite(name_target,dep.first->nameGet()
-								,dep.first->relationGet()==Dependency::Relation::IMPLEMENTATION
-									?"red":"blue");
+							r_writer.edgeWrite(name_target,dep.first->nameGet(),dep.first->relationGetStr());
 							}
 						++dep.first;
 						}
@@ -485,9 +483,7 @@ void Maike::graphDump(const Session& maike,GraphEdgeWriter& writer
 				auto name_dep=dep.first->nameGet();
 				if(strcmp(name_dep,".")!=0)
 					{
-					writer.edgeWrite(name_target,name_dep
-						,dep.first->relationGet()==Dependency::Relation::IMPLEMENTATION
-							?"red":"blue");
+					writer.edgeWrite(name_target,name_dep,dep.first->relationGetStr());
 					nodes.push(dep.first->target());
 					}
 				++dep.first;
@@ -516,9 +512,7 @@ void Maike::graphInvDump(const Session& maike,GraphEdgeWriter& writer
 				auto name_dep=dep.first->nameGet();
 				if(strcmp(name_dep,".")!=0)
 					{
-					writer.edgeWrite(name_dep,name_target
-						,dep.first->relationGet()==Dependency::Relation::IMPLEMENTATION
-							?"red":"blue");
+					writer.edgeWrite(name_dep,name_target,dep.first->relationGetStr());
 					nodes.push(dep.first->target());
 					}
 				++dep.first;

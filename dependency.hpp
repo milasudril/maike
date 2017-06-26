@@ -117,6 +117,8 @@ namespace Maike
 
 			void dump(ResourceObject& dependency) const;
 
+			const char* relationGetStr() const;
+
 		private:
 			void nameSet(const char* name);
 			void nameSet(const char* name,size_t size);

@@ -10,10 +10,10 @@ GraphEdgeWriterDOT::GraphEdgeWriterDOT(WriteBuffer& wb):r_wb(wb)
 	r_wb.write("digraph \"G\"\n\t{\n");
 	}
 
-void GraphEdgeWriterDOT::edgeWrite(const char* from,const char* to,const char* color)
+void GraphEdgeWriterDOT::edgeWrite(const char* from,const char* to,const char* label)
 	{
 	r_wb.write("\t\"").write(from).write("\"->\"").write(to)
-		.write("\"[color=\"").write(color).write("\"]\n");
+		.write("\"[label=\"").write(label).write("\"]\n");
 	}
 
 GraphEdgeWriterDOT::~GraphEdgeWriterDOT()

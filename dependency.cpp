@@ -81,6 +81,9 @@ static const char* relation(Dependency::Relation rel)
 	return nullptr;
 	}
 
+const char* Dependency::relationGetStr() const
+	{return relation(relationGet());}
+
 Dependency::Dependency(const ResourceObject& obj,const char* in_dir,const char* root):
 	 m_name(nullptr),r_target(nullptr)
 	,m_rel(relation(static_cast<const char*>(obj.objectGet("rel"))))
