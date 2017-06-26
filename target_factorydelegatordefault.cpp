@@ -162,6 +162,34 @@ static const Target_Loader* targetLoaderGet(const Stringkey& key
 	return i->second;
 	}
 
+static void depsExtraCollect(const Dependency& dep_in
+	,const std::map<Stringkey,const Target_Loader*>& loaders
+	,Spider& spider
+	,std::map<Stringkey,DependencyBufferDefault>& deps_extra_cache
+	,const char* root
+	,DependencyBuffer& buffer)
+	{
+	auto loader=targetLoaderGet(targetLoaderKeyGet(dep_in.nameGet()),loaders);
+	if(loader!=nullptr)
+		{
+		auto in_dir_include=dirname(dep_in.nameGet());
+		spider.scanFile(dep_in.nameGet(),in_dir_include.c_str());
+
+		auto key=Stringkey(dep_in.nameGet());
+		auto i=deps_extra_cache.find(key);
+		if(i==deps_extra_cache.end())
+			{
+			DependencyBufferDefault buffer_temp;
+			loader->dependenciesExtraGet(dep_in.nameGet(),in_dir_include.c_str()
+				,root,ResourceObjectJansson::createImpl,buffer_temp);
+			buffer.append(buffer_temp);
+			deps_extra_cache.insert({std::move(key),std::move(buffer_temp)});
+			}
+		else
+			{buffer.append(i->second);}
+		}
+	}
+
 static void dependenciesCollect(
 	 const char* name_src
 	,const char* in_dir
@@ -178,32 +206,13 @@ static void dependenciesCollect(
 		,ResourceObjectJansson::createImpl,buffer_tmp);
 
 	std::for_each(buffer_tmp.begin(),buffer_tmp.end()
-		,[&buffer,&deps_extra_cache,&loaders,&spider,root](const Dependency& dep_in)
+		,[&loaders,&spider,&deps_extra_cache,root,&buffer](const Dependency& dep_in)
 		{
 			{
 			Dependency dep(dep_in);
 			buffer.append(std::move(dep));
 			}
-
-		auto loader=targetLoaderGet(targetLoaderKeyGet(dep_in.nameGet()),loaders);
-			if(loader!=nullptr)
-			{
-			auto in_dir_include=dirname(dep_in.nameGet());
-			spider.scanFile(dep_in.nameGet(),in_dir_include.c_str());
-
-			auto key=Stringkey(dep_in.nameGet());
-			auto i=deps_extra_cache.find(key);
-			if(i==deps_extra_cache.end())
-				{
-				DependencyBufferDefault buffer_temp;
-				loader->dependenciesExtraGet(dep_in.nameGet(),in_dir_include.c_str()
-					,root,ResourceObjectJansson::createImpl,buffer_temp);
-				buffer.append(buffer_temp);
-				deps_extra_cache.insert({std::move(key),std::move(buffer_temp)});
-				}
-			else
-				{buffer.append(i->second);}
-			}
+		depsExtraCollect(dep_in,loaders,spider,deps_extra_cache,root,buffer);
 		});
 	}
 
@@ -222,7 +231,8 @@ static void targetsCreate(const ResourceObject& targets,const char* name_src
 	,std::map<Stringkey,DependencyBufferDefault>& deps_extra_cache)
 	{
 	DependencyBufferDefault deps;
-	dependenciesCollect(name_src,in_dir,delegator.rootGet()
+	auto root=delegator.rootGet();
+	dependenciesCollect(name_src,in_dir,root
 		,spider,loader_current,loaders,deps,deps_extra_cache);
 
 	auto N=targets.objectCountGet();
@@ -232,7 +242,23 @@ static void targetsCreate(const ResourceObject& targets,const char* name_src
 		auto t=(target.objectExists("source_name") || name_src==nullptr)?
 			 delegator.targetCreate(target,in_dir,0)
 			:delegator.targetCreate(target,name_src,in_dir,line_count);
+
+		DependencyBufferDefault deps_extra;
+		auto deps_target=t->dependencies();
+		std::for_each(deps_target.first,deps_target.second
+			,[&loaders,&spider,&deps_extra_cache,root,&deps_extra](const Dependency& dep_in)
+			{depsExtraCollect(dep_in,loaders,spider,deps_extra_cache,root,deps_extra);});
+
 		std::for_each(deps.begin(),deps.end(),[&t](const Dependency& dep_in)
+			{
+			if(!backrefIs(*t,dep_in))
+				{
+				Dependency dep(dep_in);
+				t->dependencyAdd(std::move(dep));
+				}
+			});
+
+		std::for_each(deps_extra.begin(),deps_extra.end(),[&t](const Dependency& dep_in)
 			{
 			if(!backrefIs(*t,dep_in))
 				{
