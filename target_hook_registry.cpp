@@ -161,6 +161,13 @@ Target_Hook_Registry& Target_Hook_Registry::configAppendDefault()
 		hook_info.filename_exts.insert(std::string(".archive"));
 		hook_info.hook->configAppendDefault();
 		}
+
+		{
+		auto& hook_info=hookCreate("targetxml_default","targetxml");
+		r_filenameext_hook[Stringkey(".xml")]=hook_info.hook.get();
+		hook_info.filename_exts.insert(std::string(".xml"));
+		hook_info.hook->configAppendDefault();
+		}
 	return *this;
 	}
 
