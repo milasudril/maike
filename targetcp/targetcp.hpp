@@ -37,6 +37,8 @@ namespace Maike
 				,const char* in_dir,const char* root,size_t id,size_t line_count);
 
 			~TargetCP() noexcept;
+
+			std::string m_src;
 		};
 	}
 

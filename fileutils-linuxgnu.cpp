@@ -125,7 +125,7 @@ namespace
 				if(m_fd==-1)
 					{
 					exceptionRaise(ErrorMessage("It was not possible to open the file #0;. #1;"
-						,{static_cast<const char*>(Maike::strerror(errno))}));
+						,{file,static_cast<const char*>(Maike::strerror(errno))}));
 					}
 				}
 
@@ -135,7 +135,7 @@ namespace
 				if(m_fd==-1)
 					{
 					exceptionRaise(ErrorMessage("It was not possible to open the file #0;. #1;"
-						,{static_cast<const char*>(Maike::strerror(errno))}));
+						,{file,static_cast<const char*>(Maike::strerror(errno))}));
 					}
 				}
 
@@ -155,6 +155,7 @@ void FileUtils::copy(const char* source,const char* dest)
 	WriteBuffer wb(StdStream::output());
 	wb.write("cp ");
 	escape(wb,source);
+	wb.write(" ");
 	escape(wb,dest);
 	wb.write(static_cast<uint8_t>('\n'));
 
