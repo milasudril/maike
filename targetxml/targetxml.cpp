@@ -84,6 +84,7 @@ void TargetXML::compileImpl(Twins<const Dependency*>
 	auto name_out=dircat(target_dir,nameGet());
 	args.push_back(name_out.c_str());
 	args.push_back(sourceNameGet());
+	args.push_back(inDirGet());
 
 	std::vector<std::string> deps;
 	dependenciesProcess(target_dir,dependencies(),USE_INCLUDE_EXTRA
