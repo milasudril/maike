@@ -89,13 +89,16 @@ Dependency::Dependency(const ResourceObject& obj,const char* in_dir,const char* 
 	,m_rel(relation(static_cast<const char*>(obj.objectGet("rel"))))
 	{
 	assert(m_rel!=Relation::INTERNAL && m_rel!=Relation::LEAF);
-	if(m_rel!=Relation::EXTERNAL)
+
+//	EXTERNAL and TOOL refers to stuff outside the source repo. Thise means that
+//	current directory should not be used in this case.
+	if(m_rel==Relation::EXTERNAL || m_rel==Relation::TOOL)
+		{nameSet(rootStrip(static_cast<const char*>(obj.objectGet("ref")),root).c_str());}
+	else
 		{
 		auto name_temp=rootStrip(dircat(in_dir,static_cast<const char*>(obj.objectGet("ref"))),root);
 		nameSet(name_temp.c_str(),name_temp.size());
-		}
-	else
-		{nameSet(rootStrip(static_cast<const char*>(obj.objectGet("ref")),root).c_str());}
+		}		
 	}
 
 void Dependency::dump(ResourceObject& dependency) const
