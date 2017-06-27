@@ -24,6 +24,11 @@
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Wsuggest-final-types' '-Wunused-parameter' '-Werror' '-Wno-error=suggest-final-types' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetcxx' '-o' '__targets/targetcxx/targetcxxloader.o' 'targetcxx/targetcxxloader.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Wsuggest-final-types' '-Wunused-parameter' '-Werror' '-Wno-error=suggest-final-types' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetcxx' '-o' '__targets/targetcxx/targetcxxhook.o' 'targetcxx/targetcxxhook.cpp'
 'g++' '-g' '-fpic' '-std=c++11' '-Wall' '-Wsuggest-final-types' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetcxx' '-shared' '-o' '__targets/targetcxx.so' 'targetcxx/targetcxxmain.cpp' '__targets/targetcxx/targetcxxhook.o' '__targets/targetcxx/targetcxxloader.o' '__targets/targetcxx/targetcxx.o' '__targets/targetbase.o' '__targets/timedscope.o' '__targets/targetcxx/targetcxxcompiler.o' '__targets/fileutils.o' '__targets/directorylister.o' '__targets/targetcxx/targetcxxpptokenizer.o' '__targets/targetcxx/targetcxxpkgconfig.o' '__targets/thread.o' '-lpthread' '__targets/targetcxx/targetcxxoptions.o' '__targets/command.o' '__targets/pipe.o' '__targets/dependency.o' '__targets/stdstream.o' '__targets/fileout.o' '__targets/writebuffer.o' '__targets/pathutils.o' '__targets/filein.o' '__targets/strerror.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
+mkdir -p '__targets/targetcp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Wsuggest-final-types' '-Wunused-parameter' '-Werror' '-Wno-error=suggest-final-types' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetcp' '-o' '__targets/targetcp/targetcp.o' 'targetcp/targetcp.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Wsuggest-final-types' '-Wunused-parameter' '-Werror' '-Wno-error=suggest-final-types' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetcp' '-o' '__targets/targetcp/targetcploader.o' 'targetcp/targetcploader.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Wsuggest-final-types' '-Wunused-parameter' '-Werror' '-Wno-error=suggest-final-types' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetcp' '-o' '__targets/targetcp/targetcphook.o' 'targetcp/targetcphook.cpp'
+'g++' '-g' '-fpic' '-std=c++11' '-Wall' '-Wsuggest-final-types' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetcp' '-shared' '-o' '__targets/targetcp.so' 'targetcp/targetcpmain.cpp' '__targets/targetcp/targetcphook.o' '__targets/targetcp/targetcploader.o' '__targets/targetcp/targetcp.o' '__targets/fileutils.o' '__targets/directorylister.o' '__targets/targetbase.o' '__targets/timedscope.o' '__targets/dependency.o' '__targets/pathutils.o' '__targets/filein.o' '__targets/command.o' '__targets/pipe.o' '__targets/writebuffer.o' '__targets/stdstream.o' '__targets/fileout.o' '__targets/strerror.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Wsuggest-final-types' '-Wunused-parameter' '-Werror' '-Wno-error=suggest-final-types' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/fileinfo.o' 'fileinfo-linuxgnu.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Wsuggest-final-types' '-Wunused-parameter' '-Werror' '-Wno-error=suggest-final-types' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/resourceobjectjansson.o' 'resourceobjectjansson.cpp'
 'g++' '-g' '-fpic' '-std=c++11' '-Wall' '-Wsuggest-final-types' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/wand2maike' 'wand2maike.cpp' '__targets/resourceobjectjansson.o' '-ljansson' '__targets/fileinfo.o' '__targets/fileutils.o' '__targets/directorylister.o' '__targets/pathutils.o' '__targets/filein.o' '__targets/writebuffer.o' '__targets/stdstream.o' '__targets/fileout.o' '__targets/strerror.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
@@ -230,6 +235,14 @@ cat << '+xk`BD+)I~>gu?*!4i+CBg<]9k~Q5C:{$nd/.P<W' > '__targets/maikeconfig.json'
             "plugin":"targetcxx"
         },
         {
+            "config":{},
+            "filename_exts":[
+                ".cp"
+            ],
+            "name":"targetcp_default",
+            "plugin":"targetcp"
+        },
+        {
             "config":{
                 "command":{
                     "args":[
@@ -291,6 +304,22 @@ cat << '+xk`BD+)I~>gu?*!4i+CBg<]9k~Q5C:{$nd/.P<W' > '__targets/maikeconfig.json'
             ],
             "name":"targetarchive_default",
             "plugin":"targetarchive"
+        },
+        {
+            "config":{
+                "filter":{
+                    "args":[
+                        "{depfile}",
+                        "{source}"
+                    ],
+                    "name":"xsltproc"
+                }
+            },
+            "filename_exts":[
+                ".xml"
+            ],
+            "name":"targetxml_default",
+            "plugin":"targetxml"
         },
         {
             "config":{
