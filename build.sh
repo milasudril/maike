@@ -44,6 +44,12 @@ cat << '+xk`BD+)I~>gu?*!4i+CBg<]9k~Q5C:{$nd/.P<W' > '__targets/externals.json'
     ]
 }
 +xk`BD+)I~>gu?*!4i+CBg<]9k~Q5C:{$nd/.P<W
+mkdir -p '__targets/targetbash'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Wsuggest-final-types' '-Wunused-parameter' '-Werror' '-Wno-error=suggest-final-types' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetbash' '-o' '__targets/targetbash/targetbashinterpreter.o' 'targetbash/targetbashinterpreter.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Wsuggest-final-types' '-Wunused-parameter' '-Werror' '-Wno-error=suggest-final-types' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetbash' '-o' '__targets/targetbash/targetbash.o' 'targetbash/targetbash.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Wsuggest-final-types' '-Wunused-parameter' '-Werror' '-Wno-error=suggest-final-types' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetbash' '-o' '__targets/targetbash/targetbashloader.o' 'targetbash/targetbashloader.cpp'
+'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Wsuggest-final-types' '-Wunused-parameter' '-Werror' '-Wno-error=suggest-final-types' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetbash' '-o' '__targets/targetbash/targetbashhook.o' 'targetbash/targetbashhook.cpp'
+'g++' '-g' '-fpic' '-std=c++11' '-Wall' '-Wsuggest-final-types' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=targetbash' '-shared' '-o' '__targets/targetbash.so' 'targetbash/targetbashmain.cpp' '__targets/targetbash/targetbashhook.o' '__targets/targetbash/targetbashloader.o' '__targets/targetbash/targetbash.o' '__targets/fileutils.o' '__targets/directorylister.o' '__targets/targetbase.o' '__targets/timedscope.o' '__targets/dependency.o' '__targets/pathutils.o' '__targets/filein.o' '__targets/targetbash/targetbashinterpreter.o' '__targets/thread.o' '-lpthread' '__targets/command.o' '__targets/pipe.o' '__targets/writebuffer.o' '__targets/stdstream.o' '__targets/fileout.o' '__targets/strerror.o' '__targets/exceptionhandler.o' '__targets/errormessage.o' '__targets/stringformat.o'
 'python3' '--' 'projectinfo.py' '__targets' '.' '__targets/maikeconfig.json'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Wsuggest-final-types' '-Wunused-parameter' '-Werror' '-Wno-error=suggest-final-types' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/versionnumber.o' 'versionnumber.cpp'
 'g++' '-c' '-g' '-fpic' '-std=c++11' '-Wall' '-Wsuggest-final-types' '-Wunused-parameter' '-Werror' '-Wno-error=suggest-final-types' '-iquote.' '-DMAIKE_TARGET_DIRECTORY=__targets' '-DMAIKE_CURRENT_DIRECTORY=.' '-o' '__targets/sysvars.o' 'sysvars-linux.cpp'
@@ -304,6 +310,22 @@ cat << '+xk`BD+)I~>gu?*!4i+CBg<]9k~Q5C:{$nd/.P<W' > '__targets/maikeconfig.json'
             ],
             "name":"targetarchive_default",
             "plugin":"targetarchive"
+        },
+        {
+            "config":{
+                "command":{
+                    "args":[
+                        "{script}",
+                        "{args}"
+                    ],
+                    "name":"bash"
+                }
+            },
+            "filename_exts":[
+                ".sh"
+            ],
+            "name":"targetbash_default",
+            "plugin":"targetbash"
         },
         {
             "config":{
