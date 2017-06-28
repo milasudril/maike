@@ -43,7 +43,7 @@ bool TargetXML::upToDate(Twins<const Dependency*>
 	auto up_to_date=[&name_out](const char* name,Dependency::Relation)
 		{return !FileUtils::newer(name,name_out.c_str());};
 
-	return dependenciesProcess(target_dir,dependencies(),USE_INCLUDE_EXTRA,up_to_date);
+	return dependenciesProcess(target_dir,dependencies(),USE_ALL,up_to_date);
 	}
 
 

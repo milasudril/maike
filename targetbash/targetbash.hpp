@@ -1,25 +1,26 @@
 //@	{
-//@	 "targets":[{"name":"targetpython.hpp","type":"include"}]
-//@	,"dependencies_extra":[{"ref":"targetpython.o","rel":"implementation"}]
+//@	 "targets":[{"name":"targetbash.hpp","type":"include"}]
+//@	,"dependencies_extra":[{"ref":"targetbash.o","rel":"implementation"}]
 //@	}
 
-#ifndef MAIKE_TARGETPYTHON_HPP
-#define MAIKE_TARGETPYTHON_HPP
+#ifndef MAIKE_TARGETBASH_HPP
+#define MAIKE_TARGETBASH_HPP
 
 #include "../targetbase.hpp"
 
 namespace Maike
 	{
-	class TargetPythonInterpreter;
-	class PRIVATE TargetPython final : public Maike::TargetBase
+	class TargetBashInterpreter;
+
+	class PRIVATE TargetBash final : public Maike::TargetBase
 		{
 		public:
-			static TargetPython* create(const ResourceObject& obj
-				,const TargetPythonInterpreter& compiler,const char* name_src
+			static TargetBash* create(const ResourceObject& obj
+				,const TargetBashInterpreter& compiler,const char* name_src
 				,const char* in_dir,const char* root,size_t id,size_t line_count);
 
-			static TargetPython* create(const ResourceObject& obj
-				,TargetPythonInterpreter&& compiler,const char* name_src
+			static TargetBash* create(const ResourceObject& obj
+				,TargetBashInterpreter&& compiler,const char* name_src
 				,const char* in_dir,const char* root,size_t id
 				,size_t line_count)=delete;
 
@@ -39,18 +40,18 @@ namespace Maike
 				{return 1;}
 
 		private:
-			const TargetPythonInterpreter& r_intpret;
+			const TargetBashInterpreter& r_intpret;
 
-			TargetPython(const ResourceObject& obj
-				,const TargetPythonInterpreter& intpret,const char* name_src
+			TargetBash(const ResourceObject& obj
+				,const TargetBashInterpreter& intpret,const char* name_src
 				,const char* in_dir,const char* root,size_t id,size_t line_count);
 
-			TargetPython(const ResourceObject& obj
-				,TargetPythonInterpreter&& intpret,const char* name_src
+			TargetBash(const ResourceObject& obj
+				,TargetBashInterpreter&& intpret,const char* name_src
 				,const char* in_dir,const char* root,size_t id
 				,size_t line_count)=delete;
 
-			~TargetPython() noexcept;
+			~TargetBash() noexcept;
 
 			std::vector<std::string> m_args;
 			std::string m_root;
