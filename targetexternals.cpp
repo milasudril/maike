@@ -120,9 +120,14 @@ bool TargetExternals::upToDate(Twins<const Dependency*>
 	,Twins<const Dependency*>
 	,const char* target_dir) const
 	{
+//	If there is content in m_data, we have been here before, but then we
+//	must also have written the string content in compile. Since the graph
+//	does not change during compilation, this target must be up to date.
+	if(m_data.size()!=0) 
+		{return 1;}
+
 		{
 		TimedScope timer(m_compilation_time);
-
 		ResourceObjectJansson libs(ResourceObject::Type::ARRAY);
 		ResourceObjectJansson tools(ResourceObject::Type::ARRAY);
 		r_graph.targetsProcess(TargetsExternalDump{libs,tools});
