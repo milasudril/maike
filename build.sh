@@ -449,7 +449,7 @@ cat << '+xk`BD+)I~>gu?*!4i+CBg<]9k~Q5C:{$nd/.P<W' > '__targets/maikeconfig.json'
         "gnu":563048737669120,
         "gnu_string":"2.23",
         "linux":1125917086711808,
-        "linux_string":"4.4.0-81-lowlatency",
+        "linux_string":"4.4.0-83-lowlatency",
         "nullfile":"/dev/null",
         "posix":200809,
         "project_root":"",
