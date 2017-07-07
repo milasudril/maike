@@ -10,23 +10,28 @@ import subprocess
 import time
 import string
 import json
+import shutil
 
 def write_error(*args, **kwargs):
 	print(*args,file=sys.stderr,**kwargs)
 
 def gitVersionGet():
-	with subprocess.Popen(('git', 'describe','--tags','--dirty','--always')\
-		,stdout=subprocess.PIPE) as git:
-		result=git.stdout.read().decode().strip()
-		git.wait()
-		status=git.returncode
-
-	if status:
+	if shutil.which('git')==None:
 		with open('versioninfo.txt') as versionfile:
 			result=versionfile.read().strip()
 	else:
-		with open('versioninfo.txt','w') as versionfile:
-			versionfile.write(result)
+		with subprocess.Popen(('git', 'describe','--tags','--dirty','--always')\
+			,stdout=subprocess.PIPE) as git:
+			result=git.stdout.read().decode().strip()
+			git.wait()
+			status=git.returncode
+
+		if status:
+			with open('versioninfo.txt') as versionfile:
+				result=versionfile.read().strip()
+		else:
+			with open('versioninfo.txt','w') as versionfile:
+				versionfile.write(result)
 
 	return result
 
