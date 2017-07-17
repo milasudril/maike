@@ -331,3 +331,41 @@ void FileUtils::echo(const char* str,const char* filename)
 		wb.write(str);
 		}
 	}
+
+static bool find_in_pathvar(const char* str,const char* path)
+	{
+	std::string p;
+	while(1)
+		{
+		auto ch_in=*path;
+		switch(ch_in)
+			{
+			case ':':
+				if(FileUtils::exists(dircat(p,str).c_str()))
+					{return 1;}
+				p.clear();
+				break;
+			default:
+				p+=ch_in;
+			}
+		++path;
+		}
+	return 0;
+	}
+
+bool FileUtils::execPossible(const char* str)
+	{
+	if(*str=='/')
+		{return exists(str);}
+
+	auto path=secure_getenv("PATH");
+	if(path==nullptr)
+		{
+		std::vector<char> temp;
+		temp.reserve(confstr(_CS_PATH,NULL,0));
+		confstr(_CS_PATH,temp.data(),temp.capacity()+1);
+		return find_in_pathvar(str,temp.data());
+		}
+
+	return find_in_pathvar(str,path);
+	}
