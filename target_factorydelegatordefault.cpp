@@ -45,6 +45,16 @@ Target& Target_FactoryDelegatorDefault::dependencyResolve(DependencyGraph& graph
 	if(dependency.relationGet()==Dependency::Relation::EXTERNAL
 		|| dependency.relationGet()==Dependency::Relation::TOOL)
 		{
+	//	Check if the tool is available
+		if(dependency.relationGet()==Dependency::Relation::TOOL)
+			{
+			if(!FileUtils::execPossible(name))
+				{
+				exceptionRaise(ErrorMessage("#0;: Dependency #1; is not satisfied"
+					,{target_from,name}));
+				}
+			}
+
 		Handle<TargetPlaceholder> target(
 			TargetPlaceholder::create(name,name,rootGet(),idGet(),dependency.relationGet()));
 		auto ret=target.get();
