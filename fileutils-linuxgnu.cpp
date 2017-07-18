@@ -348,6 +348,7 @@ static bool find_in_pathvar(const char* str,const char* path)
 			case '\0':
 				if(FileUtils::exists(dircat(p,str).c_str()))
 					{return 1;}
+				return 0;
 			default:
 				p+=ch_in;
 			}
