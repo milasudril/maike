@@ -359,14 +359,6 @@ static bool find_in_pathvar(const char* str,const char* path)
 
 bool FileUtils::execPossible(const char* str)
 	{
-	//	Shell stuff
-		{
-		WriteBuffer wb(StdStream::output());
-		wb.write("command -v ");
-		escape(wb,str);
-		wb.write("\n");
-		}
-
 	if(*str=='/')
 		{return exists(str);}
 
