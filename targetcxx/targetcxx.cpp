@@ -94,6 +94,30 @@ TargetCxx::TargetCxx(const ResourceObject& obj,const TargetCxxCompiler& compiler
 			dependencyAdd( std::move(dep) );
 			}
 		}
+
+	auto& cxxoptions=r_compiler.optionsGet();
+	switch(m_type)
+		{
+	//	Assume that the complete toolchain is installed if the compiler is
+	//	installed. This means that we do not need to check for the preprocessor
+	//	or the assembler.
+		case Type::OBJECT:
+			dependencyAdd(Dependency(cxxoptions.objcompileGet().nameGet(),root,Dependency::Relation::TOOL));
+			break;
+		case Type::APPLICATION:
+			dependencyAdd(Dependency(cxxoptions.appcompileGet().nameGet(),root,Dependency::Relation::TOOL));
+			break;
+		case Type::LIB_DYNAMIC:
+			dependencyAdd(Dependency(cxxoptions.dllcompileGet().nameGet(),root,Dependency::Relation::TOOL));
+			break;
+		case Type::LIB_STATIC:
+			dependencyAdd(Dependency(cxxoptions.libcompileGet().nameGet(),root,Dependency::Relation::TOOL));
+			break;
+		case Type::INCLUDE_LIB:
+			break;
+		case Type::INCLUDE:
+			break;
+		}
 	}
 
 bool TargetCxx::generated() const noexcept
