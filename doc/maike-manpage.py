@@ -30,6 +30,21 @@ $options
 .SH ENVIRONMENT
 .B $name
 does not use any environment variables itself other that \\fBPATH\\fR. Notice however, that programs invoked by $name, may be affected by different environment variables.
+.SH FILES
+Unless the option \\fB--configclean\\fR is used, $name loads its configuration from the following files
+.PP
+ 1. \\fIprefix\\fR/share/maike/maikefonfig.json
+ 2. ~/.config/maike/maikeconfig.json
+ 3. \\fBPWD\\fR
+.PP
+Hook plugins are loaded from any of the following directories:
+.PP
+ 1. The directory where $name is located. Usually \\fB/usr/bin\\fR
+ 2. /usr/local/lib/maike
+ 3. /usr/lib/maike
+ 4. ~/lib/maike
+ 5. \\fBPWD\\fR
+
 .SH BUGS
 .IP \(bu 4
 Currently, $name only support single-threaded compilation.
