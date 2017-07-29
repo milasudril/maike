@@ -1,18 +1,22 @@
 all:
 	./bootstrap
 
-bootstrap: clean
-	maike > ./bootstrap
-	chmod u+x ./bootstrap
-	cp ./bootstrap ./build.sh
+bootstrap: reset
+	echo "#!/bin/bash" > bootstrap
+	maike > bootstrap
+	chmod u+x bootstrap
+	cp bootstrap build.sh
 
 archive: bootstrap archive.sh
 	./archive.sh __targets
 
-clean:
+reset:
 	rm -rf __targets
 	rm -f ./bootstrap
 	rm -f ./build.sh
+
+deb:	archive
+	./debpack.sh
 
 DESTDIR?=""
 .PHONY: install
