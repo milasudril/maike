@@ -13,3 +13,8 @@ clean:
 	rm -rf __targets
 	rm -f ./bootstrap
 	rm -f ./build.sh
+
+DESTDIR?=""
+.PHONY: install
+install:
+	./install $(DESTDIR)/usr

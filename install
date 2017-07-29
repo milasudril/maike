@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -eo pipefail
+prefix="$1"
+
+./install.sh "$prefix"
