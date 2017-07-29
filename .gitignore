@@ -10,3 +10,4 @@ __targets
 gh-pages
 __doc
 .uninstall.sh
+versioninfo-in.txt

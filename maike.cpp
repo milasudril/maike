@@ -31,8 +31,8 @@ using namespace Maike;
 void Maike::versionPrint(DataSink& sink)
 	{
 	WriteBuffer wb(sink);
-	wb.write(ProjectInfo::name()).write(" version ").write(ProjectInfo::version())
-		.write("\nThis Maike was compiled on ").write(ProjectInfo::timestamp())
+	wb.write(ProjectInfo::name()).write(" version ").write(ProjectInfo::revision())
+		.write("\nThis Maike was compiled on ").write(ProjectInfo::compilationDate())
 		.write("\n");
 	}
 
@@ -40,7 +40,7 @@ void Maike::about(DataSink& sink)
 	{
 	versionPrint(sink);
 	WriteBuffer wb(sink);
-	wb.write("Copyright (C) ").write(ProjectInfo::yearString()).write(" ")
+	wb.write("Copyright (C) ").write(ProjectInfo::years()).write(" ")
 		.write(ProjectInfo::author()).write("\n\n")
 		.write(ProjectInfo::legalBrief()).write("\n");
 	}
