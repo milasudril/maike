@@ -28,21 +28,19 @@
 
 <p>The latest release version can be found at <a href="https://github.com/milasudril/maike/releases/latest">the github release page</a>. The git repository may contain features not present in the release version, but may require an up-to-date version of Maike in order to be compiled. The release package always contains a build script that can be used for bootstrapping.</p>
 
-<p>Before compiling maike, make sure that appropriate <code>libjansson</code> development files are available on the system. If Maike is not available, or the installed version is to old, run the script <code>build.sh</code> within the source directory.</p>
-
-<pre><code>./build.sh</code></pre>
+<p>Before compiling maike, make sure that appropriate <code>libjansson</code> development files are available on the system. Also Maike requires <code>ronn</code>, a tool that creates troff from markdown. If Maike is not available, or the installed version is to old, run  <code>make</code> within the source directory.</p>
 
 <p>Otherwise, just run your installed version of Maike from the source directory.</p>
 
-<pre><code>maike</code></pre>
+<pre class="code">maike</pre>
 
 <p>If the compilation succeeded, the Maike executable should be present in the newly created <code>__targets</code> directory. In order to use it, copy it to a directory mentioned in your <code>PATH</code> variable. For example</p>
 
-<pre><code>cp __targets/maike ~/bin/maike</code></pre>
+<pre class="code">cp __targets/maike ~/bin/maike</pre>
 
 <p>It is <em>very</em> likely that you need the additional target hooks. These reside inside two shared objects (dll:s)</p>
 
-<pre><code>cp __targets/*.so ~/bin/maike</code></pre>
+<pre class="code">cp __targets/*.so ~/bin/maike</pre>
 
 <p>Alternately, a complete installation can be done by running the supplied install script.</p>
 
@@ -55,6 +53,12 @@
 <p>To uninstall Maike</p>
 
 	<pre class="code">./uninstall.sh</pre>
+	
+<p>It is also possible to generate a debian package. To do so, run</p>
+
+<pre class="code">make deb</pre>
+
+<p>and follow the instructions.</p>
 
 </section>
 

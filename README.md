@@ -15,9 +15,9 @@ The source for the latest Maike can be obtained by cloning the git repository.
 
 The latest release version can be found at [the github release page][1]. The git repository may contain features not present in the release version, but may require an up-to-date version of Maike in order to be compiled. The release package always contains a build script that can be used for bootstrapping.
 
-Before compiling maike, make sure that appropriate `libjansson` development files are available on the system. If Maike is not available, or the installed version is to old, run the script `build.sh` within the source directory.
+Before compiling maike, make sure that appropriate `libjansson` development files are available on the system. Also install `ronn`, a tool that creates troff from markdown. If Maike is not available, or the installed version is to old, run the script `make` within the source directory.
 
-	./build.sh
+	make
 
 Otherwise, just run your installed version of Maike from the source directory.
 
