@@ -39,7 +39,7 @@ control=string.Template('''Source: $name_lower
 Section: $debian_section
 Priority: optional
 Maintainer: $packager_name <$packager_email>
-Build-Depends: debhelper (>=9)
+Build-Depends: debhelper (>=9),$build_deps
 Standards-Version: 3.9.6
 Homepage: $homepage
 Vcs-Git: $vcs
