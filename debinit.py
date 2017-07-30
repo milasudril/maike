@@ -189,7 +189,7 @@ try:
 	projinfo['package_version']='-1a1'
 	projinfo['package_distro_release']='xenial'
 	projinfo['build_deps']=''
-	projinfo['package_recommends]'=''
+	projinfo['package_recommends']=''
 	projinfo['license_short']=' '+'\n .\n '.join(projinfo['license_short'].split('\n\n'))
 
 	deps=load_json('externals.json')
