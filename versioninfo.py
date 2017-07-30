@@ -11,34 +11,6 @@ import subprocess
 import shutil
 import os
 
-def modified_time(filename):
-	try:
-		return (os.path.getmtime(filename),True)
-	except (KeyboardInterrupt, SystemExit):
-		raise
-	except:
-		return (0,False)
-
-def newer(file_a,file_b):
-	mod_a=modified_time(file_a)
-	mod_b=modified_time(file_b)
-	if mod_a[1]==False and mod_b[1]==False:
-		raise OSError('Error: None of the files %s, and %s are accessible.'%(file_a,file_b))
-
-	if not mod_a[1]:
-		return False
-
-	if not mod_b[1]:
-		return True
-
-	return mod_a[0] > mod_b[0]
-
-def newer_than_all(file_a, files):
-	for file in files:
-		if newer(file,file_a):
-			return False
-	return True
-
 def git_changes():
 	with subprocess.Popen(('git', 'status','--porcelain'),stdout=subprocess.PIPE) \
 		as git:
@@ -50,7 +22,7 @@ def git_changes():
 def get_revision():
 	if shutil.which('git')==None:
 		with open('versioninfo.txt') as versionfile:
-			return versionfile.read().decode().strip()
+			return versionfile.read().strip()
 
 	else:
 		with subprocess.Popen(('git', 'describe','--tags','--dirty','--always') \

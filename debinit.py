@@ -40,7 +40,7 @@ Section: $debian_section
 Priority: optional
 Maintainer: $packager_name <$packager_email>
 Build-Depends: debhelper (>=9),$build_deps
-Standards-Version: 3.9.6
+Standards-Version: 3.9.7
 Homepage: $homepage
 Vcs-Git: $vcs
 
@@ -124,7 +124,7 @@ def package_guess(kind,name):
 	
 def get_dep(kind,name):
 	guess=package_guess(kind,name)
-	res=input('    Enter the name of the package containing the %s `%s` (%s):'%(kind,name,guess)).strip()
+	res=input('    Enter the name of the package containing the %s `%s` (%s): '%(kind,name,guess)).strip()
 	if res=='*':
 		return ''
 	if not res:
@@ -134,7 +134,7 @@ def get_dep(kind,name):
 	return res
 		
 def get_build_deps(projinfo,deps):
-	print('\nBuild dependencies (%s):\n',projinfo['build_deps'])
+	print('\nBuild dependencies (%s):\n'%projinfo['build_deps'])
 	build_deps=[]
 	for tool in deps['tools']:
 		dep=get_dep('tool',tool)
@@ -157,7 +157,7 @@ try:
 	projinfo['packager_name']='John Doe'
 	projinfo['packager_email']='john.doe@example.com'
 	projinfo['package_distro']='Ubuntu'
-	projinfo['package_distro_suffix']=''
+	projinfo['package_distro_suffix']='-1a1'
 	projinfo['package_distro_release']='xenial'
 	projinfo['build_deps']=''
 	projinfo['license_short']=' '+'\n .\n '.join(projinfo['license_short'].split('\n\n'))
