@@ -71,7 +71,7 @@ def get_revision():
 			result=versionfile.read().decode().strip()
 	else:
 		with subprocess.Popen(('git', 'describe','--tags','--dirty','--always') \
-			,stdout=subprocess.PIPE) as git:
+			,stdout=subprocess.PIPE,stderr=subprocess.DEVNULL) as git:
 			result=git.stdout.read().decode().strip()
 			git.wait()
 			status=git.returncode
@@ -95,12 +95,58 @@ def get(projinfo,caption,key):
 	if res=='*':
 		projinfo[key]=''
 	if not res:
-		print(projinfo[key])
+		print('    '+projinfo[key])
 		return
 	projinfo[key]=res
-	print(projinfo[key])
-
+	print('    '+projinfo[key])
 	
+def dpkg_search(filename):
+	if filename==None:
+		return ''
+	if shutil.which('dpkg')==None:
+		return ''
+	
+	with subprocess.Popen(('dpkg', '--search',filename) \
+		,stdout=subprocess.PIPE,stderr=subprocess.DEVNULL) as dpkg:
+		result=dpkg.stdout.read().decode().split('\n')
+		dpkg.wait()
+		status=dpkg.returncode
+		if status:
+			return ''
+		return result[0].split(':')[0].strip()
+	
+	
+	
+def package_guess(kind,name):
+	if kind=='dev files for':
+		return dpkg_search(name+'.h')
+	return dpkg_search(shutil.which(name))
+	
+def get_dep(kind,name):
+	guess=package_guess(kind,name)
+	res=input('    Enter the name of the package containing the %s `%s` (%s):'%(kind,name,guess)).strip()
+	if res=='*':
+		return ''
+	if not res:
+		print('      '+guess)
+		return guess
+	print('      '+res)
+	return res
+		
+def get_build_deps(projinfo,deps):
+	print('\nBuild dependencies (%s):\n',projinfo['build_deps'])
+	build_deps=[]
+	for tool in deps['tools']:
+		dep=get_dep('tool',tool)
+		if dep!='':
+			build_deps.append(dep)
+			
+	for lib in deps['libraries']:
+		dep=get_dep('dev files for',lib)
+		if dep!='':
+			build_deps.append(dep)
+	projinfo['build_deps']=','.join(build_deps)
+
 try:
 	projinfo=load_json('projectinfo.json')
 	projinfo['version']=get_revision()
@@ -116,19 +162,21 @@ try:
 	projinfo['build_deps']=''
 	projinfo['license_short']=' '+'\n .\n '.join(projinfo['license_short'].split('\n\n'))
 
-	print('''Before creating filling the debian directory, I need some publishing information for this package. Leave blank to keep the default value. To answer with blank enter *.\n''')
-		
-	get(projinfo,' > Your name (%s): ','packager_name')
-	get(projinfo,' > Your e-mail (%s): ','packager_email')
-	get(projinfo,' > Target distribution (%s): ','package_distro')
-	get(projinfo,' > Target distribution suffix (%s): ','package_distro_suffix')
-	get(projinfo,' > Target distribution release (%s): ','package_distro_release')
-
 	deps=load_json('externals.json')
+	print('''\nBefore creating the debian directory, I need some information about this package. Leave blank to keep the default value. To answer with blank enter *.\n''')
+		
+	get(projinfo,'  Your name (%s): ','packager_name')
+	get(projinfo,'  Your e-mail (%s): ','packager_email')
+	get(projinfo,'  Target distribution (%s): ','package_distro')
+	get(projinfo,'  Target distribution suffix (%s): ','package_distro_suffix')
+	get(projinfo,'  Target distribution release (%s): ','package_distro_release')
+	get_build_deps(projinfo,deps)
 	
-	print(deps)
-
-	sys.exit(0)
+	print('''\nThis is the packaging information I have got:\n''')
+	for k in ['packager_name','packager_email','package_distro'\
+		,'package_distro_suffix','package_distro_release','build_deps']:
+		print('  %s: %s'%(k,projinfo[k]))
+	input('\nPress enter to build the package')
 
 	try:
 		shutil.rmtree('debian')
