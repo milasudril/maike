@@ -106,14 +106,25 @@ def dpkg_search(filename):
 	if shutil.which('dpkg')==None:
 		return ''
 	
-	with subprocess.Popen(('dpkg', '--search',filename) \
+	with subprocess.Popen(('dpkg-query', '--search',filename) \
 		,stdout=subprocess.PIPE,stderr=subprocess.DEVNULL) as dpkg:
 		result=dpkg.stdout.read().decode().split('\n')
 		dpkg.wait()
 		status=dpkg.returncode
 		if status:
 			return ''
-		return result[0].split(':')[0].strip()
+		
+	package=result[0].split(':')[0].strip()
+	
+	with subprocess.Popen(('dpkg-query', '--showformat','${Version}','--show',package) \
+		,stdout=subprocess.PIPE,stderr=subprocess.DEVNULL) as dpkg:
+		version=dpkg.stdout.read().decode().strip()
+		dpkg.wait()
+		status=dpkg.returncode
+		if status:
+			return package
+	
+	return package+' (>='+version+')'
 	
 	
 	
