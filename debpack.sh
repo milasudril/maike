@@ -21,19 +21,17 @@ tar -xf "$dir"/maike_"$version".orig.tar.gz
 cd maike-src
 ./debinit.py
 
-bold="\\033[1m"
-normal="\\033[0"
-echo -e "Do you want to push the package to a PPA? (Yes or \033[1mNo\033[0m) "
 method=""
+echo -e -n "Do you want to push the package to a PPA? (Yes or \033[1mNo\033[0m) "
 read method
 if [[ "$method" == "Yes" ]]; then
 	bzr init
 	bzr add debian/*
 	bzr commit -m"Created a debian package"
 	bzr builddeb -S
-	cd ../build-area
-	read -p "Enter your Launchpad username" username
+	read -p "Enter your Launchpad username: " username
 	bzr push lp:~$username/+junk/maike-package
+	cd ../buid-area
 	dput ppa:$username/maike maike_*.changes
 else
 	debuild -us -uc
