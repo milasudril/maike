@@ -28,7 +28,7 @@ method=""
 read method
 if [[ "$method" == "Yes" ]]; then
 	bzr init
-	bzr add debian/source/format
+	bzr add debian/*
 	bzr commit -m"Created a debian package"
 	bzr builddeb -S
 	cd ../build-area
