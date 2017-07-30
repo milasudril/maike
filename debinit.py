@@ -11,7 +11,7 @@ import email.utils
 import readline
 import stat
 
-changelog=string.Template('''$name_lower ($version$package_distro_suffix) $package_distro_release; urgency=low
+changelog=string.Template('''$name_lower ($version$package_version) $package_distro_release; urgency=low
 
   * Packaged for $package_distro
   
@@ -134,7 +134,7 @@ def get_dep(kind,name):
 	return res
 		
 def get_build_deps(projinfo,deps):
-	print('\nBuild dependencies (currently %s)\n. I will guess the corresponding packages based on the database of installed packages. Before accepting the guess, *make sure that it REALLY is correct*. If it is not, type the name of the correct package.'%projinfo['build_deps'])
+	print('\nBuild dependencies (currently %s)\n. I will guess the corresponding packages based on the database of installed packages. Before accepting the guess, *make sure that it REALLY is correct*. If it is not, enter the name of the correct package.\n'%projinfo['build_deps'])
 	build_deps=[]
 	for tool in deps['tools']:
 		dep=get_dep('tool',tool)
@@ -157,7 +157,7 @@ try:
 	projinfo['packager_name']='John Doe'
 	projinfo['packager_email']='john.doe@example.com'
 	projinfo['package_distro']='Ubuntu'
-	projinfo['package_distro_suffix']='-1a1'
+	projinfo['package_version']='-1a1'
 	projinfo['package_distro_release']='xenial'
 	projinfo['build_deps']=''
 	projinfo['license_short']=' '+'\n .\n '.join(projinfo['license_short'].split('\n\n'))
@@ -168,13 +168,13 @@ try:
 	get(projinfo,'  Your name (%s): ','packager_name')
 	get(projinfo,'  Your e-mail (%s): ','packager_email')
 	get(projinfo,'  Target distribution (%s): ','package_distro')
-	get(projinfo,'  Target distribution suffix (%s): ','package_distro_suffix')
+	get(projinfo,'  Package version suffix (%s): ','package_version')
 	get(projinfo,'  Target distribution release (%s): ','package_distro_release')
 	get_build_deps(projinfo,deps)
 	
 	print('''\nThis is the packaging information I have got:\n''')
 	for k in ['packager_name','packager_email','package_distro'\
-		,'package_distro_suffix','package_distro_release','build_deps']:
+		,'package_version','package_distro_release','build_deps']:
 		print('  %s: %s'%(k,projinfo[k]))
 	input('\nPress enter to build the package')
 
