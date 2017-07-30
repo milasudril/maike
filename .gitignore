@@ -10,3 +10,7 @@ __targets
 gh-pages
 __doc
 .uninstall.sh
+versioninfo-in.txt
+bootstrap
+build.sh
+externals.json

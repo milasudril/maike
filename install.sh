@@ -59,9 +59,9 @@ transaction 'cp __targets/*.hpp "$PREFIX"/include/maike' \
 	'rm "$PREFIX"/include/maike/*.hpp'
 transaction 'mkdir -p "$PREFIX"/lib' \
 	'rmdir "$PREFIX"/lib'
-transaction 'cp __targets/libmaike.so "$PREFIX/lib"'\
+transaction 'cp __targets/libmaike.so "$PREFIX/lib/libmaike.so"'\
 	'rm "$PREFIX"/lib/libmaike.so'
-transaction 'cp __targets/libmaikeplug.a "$PREFIX/lib"'\
+transaction 'cp __targets/libmaikeplug.a "$PREFIX/lib/libmaikeplug.a"'\
 	'rm "$PREFIX"/lib/libmaikeplug.a'
 transaction 'mkdir -p "$PREFIX/lib/maike"' \
 	'rmdir "$PREFIX"/lib/maike'
@@ -69,8 +69,13 @@ transaction 'cp __targets/target*.so "$PREFIX/lib/maike"' \
 	'rm "$PREFIX"/lib/maike/target*.so'
 transaction 'mkdir -p "$PREFIX/bin"' \
 	'rmdir "$PREFIX"/bin'
-transaction 'cp __targets/maike "$PREFIX/bin"' \
+transaction 'cp __targets/maike "$PREFIX/bin/maike"' \
 	'rm "$PREFIX"/bin/maike'
+
+transaction 'mkdir -p "$PREFIX/share/man/man1"' \
+	'rmdir "$PREFIX/share/man/man1"'
+transaction 'cp __targets/doc/maike.man1 "$PREFIX/share/man/man1/maike.1"' \
+	'rm "$PREFIX/share/man/man1/maike.man1"'
 
 if [ "$(id -u)" == "0" ]; then
 	chmod -R o+r "$PREFIX"/include
@@ -80,11 +85,11 @@ if [ "$(id -u)" == "0" ]; then
 	chmod -R o+r "$PREFIX"/lib/maike
 fi
 
-
 uninstall_cmds > .uninstall.sh
 chmod u+x .uninstall.sh
 
 echo "Maike has now been installed"
+
 
 if ! [[ "$PATH" == ?(*:)"$PREFIX/bin"?(:*) ]];then
 	echo " * Remember to add $PREFIX/bin to the PATH variable before using Maike"
