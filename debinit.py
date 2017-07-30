@@ -11,7 +11,7 @@ import email.utils
 import readline
 import stat
 
-changelog=string.Template('''$name_lower ($version-$package_distro_suffix) $package_distro_release; urgency=low
+changelog=string.Template('''$name_lower ($version$package_distro_suffix) $package_distro_release; urgency=low
 
   * Packaged for $package_distro
   
@@ -62,6 +62,9 @@ source_format='''3.0 (quilt)
 '''
 
 
+def write_error(*args, **kwargs):
+    print(*args,file=sys.stderr,**kwargs)
+
 def get_revision():
 	if shutil.which('git')==None:
 		with open('versioninfo-in.txt') as versionfile:
@@ -89,44 +92,60 @@ def write_file(filename,content):
 		
 def get(projinfo,caption,key):
 	res=input(caption%projinfo[key]).strip()
+	if res=='*':
+		projinfo[key]=''
 	if not res:
+		print(projinfo[key])
 		return
 	projinfo[key]=res
-	print(projinfo[key])	
+	print(projinfo[key])
 
-
-projinfo=load_json('projectinfo.json')
-projinfo['version']=get_revision()
-projinfo['name_lower']=projinfo['name'].lower()
-now=time.time();
-projinfo['package_date']=email.utils.formatdate(now)
-projinfo['package_year']=time.strftime('%Y',time.gmtime(now))
-projinfo['packager_name']='John Doe'
-projinfo['packager_email']='john.doe@example.com'
-projinfo['package_distro']='Ubuntu'
-projinfo['package_distro_suffix']='0ubuntu1'
-projinfo['package_distro_release']='xenial'
-projinfo['license_short']=' '+'\n .\n '.join(projinfo['license_short'].split('\n\n'))
-
-get(projinfo,'Your name (%s): ','packager_name')
-get(projinfo,'Your e-mail (%s): ','packager_email')
-get(projinfo,'Target distribution (%s): ','package_distro')
-get(projinfo,'Target distribution suffix (%s): ','package_distro_suffix')
-get(projinfo,'Target distribution release (%s): ','package_distro_release')
-
+	
 try:
-	shutil.rmtree('debian')
-except:
-	pass
+	projinfo=load_json('projectinfo.json')
+	projinfo['version']=get_revision()
+	projinfo['name_lower']=projinfo['name'].lower()
+	now=time.time();
+	projinfo['package_date']=email.utils.formatdate(now)
+	projinfo['package_year']=time.strftime('%Y',time.gmtime(now))
+	projinfo['packager_name']='John Doe'
+	projinfo['packager_email']='john.doe@example.com'
+	projinfo['package_distro']='Ubuntu'
+	projinfo['package_distro_suffix']=''
+	projinfo['package_distro_release']='xenial'
+	projinfo['build_deps']=''
+	projinfo['license_short']=' '+'\n .\n '.join(projinfo['license_short'].split('\n\n'))
 
-os.mkdir('debian')
+	print('''Before creating filling the debian directory, I need some publishing information for this package. Leave blank to keep the default value. To answer with blank enter *.\n''')
+		
+	get(projinfo,' > Your name (%s): ','packager_name')
+	get(projinfo,' > Your e-mail (%s): ','packager_email')
+	get(projinfo,' > Target distribution (%s): ','package_distro')
+	get(projinfo,' > Target distribution suffix (%s): ','package_distro_suffix')
+	get(projinfo,' > Target distribution release (%s): ','package_distro_release')
 
-write_file('debian/compat',compat)
-write_file('debian/copyright',copyright.substitute(projinfo))
-write_file('debian/changelog',changelog.substitute(projinfo))
-write_file('debian/control',control.substitute(projinfo))
-write_file('debian/rules',rules)
-st = os.stat('debian/rules') #debian/ruls should be executable
-os.chmod('debian/rules', st.st_mode | stat.S_IEXEC)
-os.mkdir('debian/source')
-write_file('debian/source/format',source_format)
+	deps=load_json('externals.json')
+	
+	print(deps)
+
+	sys.exit(0)
+
+	try:
+		shutil.rmtree('debian')
+	except:
+		pass
+
+	os.mkdir('debian')
+
+	write_file('debian/compat',compat)
+	write_file('debian/copyright',copyright.substitute(projinfo))
+	write_file('debian/changelog',changelog.substitute(projinfo))
+	write_file('debian/control',control.substitute(projinfo))
+	write_file('debian/rules',rules)
+	st = os.stat('debian/rules') #debian/ruls should be executable
+	os.chmod('debian/rules', st.st_mode | stat.S_IEXEC)
+	os.mkdir('debian/source')
+	write_file('debian/source/format',source_format)
+except Exception:
+	write_error('%s:%d: error: %s\n'%(sys.argv[0],sys.exc_info()[2].tb_lineno,sys.exc_info()[1]))
+	sys.exit(-1)

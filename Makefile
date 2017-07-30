@@ -16,7 +16,7 @@ reset:
 	rm -f ./build.sh
 
 deb:	archive
-	./debpack.sh
+	./debpack.sh __targets
 
 DESTDIR?=""
 .PHONY: install

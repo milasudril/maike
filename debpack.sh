@@ -14,7 +14,8 @@ trap 'abort' 0
 
 version=`cat versioninfo-in.txt`
 dir=`mktemp -d`
-cp __targets/maike-src.tar.gz "$dir"/maike_"$version".orig.tar.gz
+dir_target="$1"
+cp "$dir_target"/maike-src.tar.gz "$dir"/maike_"$version".orig.tar.gz
 pushd .
 cd "$dir"
 tar -xf "$dir"/maike_"$version".orig.tar.gz

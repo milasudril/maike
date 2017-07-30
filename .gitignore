@@ -13,3 +13,4 @@ __doc
 versioninfo-in.txt
 bootstrap
 build.sh
+externals.json
