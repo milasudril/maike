@@ -38,7 +38,7 @@ else
 	echo "A package has been created in the parent directory. You can test build the source package by using pbuilder-dist on the file maike_*.dsc"
 fi
 
-#popd
-#cp "$dir"/* .. || :
-#rm -r "$dir"
+popd
+cp "$dir"/* .. || :
+rm -r "$dir"
 trap : 0
