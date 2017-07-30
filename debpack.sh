@@ -27,6 +27,7 @@ echo -e "Do you want to push the package to a PPA? (Yes or \033[1mNo\033[0m) "
 method=""
 read method
 if [[ "$method" == "Yes" ]]; then
+	bzr init
 	bzr add debian/source/format
 	bzr commit -m"Created a debian package"
 	bzr builddeb -S
