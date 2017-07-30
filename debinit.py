@@ -47,6 +47,7 @@ Vcs-Git: $vcs
 Package: $name_lower
 Architecture: any
 Depends: $${shlibs:Depends}, $${misc:Depends}
+Recommends: $package_recommends
 Description: $description
  $description_long''')
 
@@ -172,7 +173,7 @@ def get_distinfo(projinfo):
 				projinfo['package_distro']=val
 			if key=='DISTRIB_CODENAME':
 				projinfo['package_distro_release']=val
-		
+				
 
 
 try:
@@ -188,6 +189,7 @@ try:
 	projinfo['package_version']='-1a1'
 	projinfo['package_distro_release']='xenial'
 	projinfo['build_deps']=''
+	projinfo['package_recommends]'=''
 	projinfo['license_short']=' '+'\n .\n '.join(projinfo['license_short'].split('\n\n'))
 
 	deps=load_json('externals.json')
@@ -199,13 +201,15 @@ try:
 	get(projinfo,'  Package version suffix (%s): ','package_version')
 	get(projinfo,'  Target distribution release (%s): ','package_distro_release')
 	get_build_deps(projinfo,deps)
+	get(projinfo,'  Recommended packages (%s): ','package_recommends')
+
 	
 	changefield=1
 	while changefield!=0:
 		print('''\nThis is the packaging information I have got:\n''')
 		index=1
 		for k in ['packager_name','packager_email','package_distro'\
-			,'package_version','package_distro_release','build_deps']:
+			,'package_version','package_distro_release','build_deps','package_recommends']:
 			print('%d.  %s: %s'%(index,k,projinfo[k]))
 			index=index+1
 		
@@ -219,6 +223,8 @@ try:
 		if changefield==4: get(projinfo,'  Package version suffix (%s): ','package_version')
 		if changefield==5: get(projinfo,'  Target distribution release (%s): ','package_distro_release')
 		if changefield==6: get_build_deps(projinfo,deps)
+		if changefield==7: get(projinfo,'  Recommended packages (%s): ','package_recommends')
+
 
 	try:
 		shutil.rmtree('debian')
