@@ -48,6 +48,7 @@ Hook plugins are loaded from any of the following directories:
 Maike predefines the following targets and as such, these cannot be defined by any file in a project:
 .IP \(bu 4
 \\fBmaikeconfig.json\\fR \-\- contains the complete build configuration
+.IP \(bu 4
 \\fBexternals.json\\fR \-\- contains all external dependencies (tools and libraries) used to compile the project
 
 .SH BUGS
@@ -57,7 +58,7 @@ Currently, $name only support single-threaded compilation.
 Invoking $name from a script extension may result in a corrupted build, and an infinite process creation.
 .SH SEE ALSO
 .IP \(bu 4
-\\fBbash\\fR(1), \\fBg++\\fR(1), \\fBoctave-cli\\fR(1), \\fBpkg-config\\fR(1), \\fBpython3\\fR(1)
+\\fBbash\\fR(1), \\fBdot\\fR(1), \\fBg++\\fR(1), \\fBoctave-cli\\fR(1), \\fBpkg-config\\fR(1), \\fBpython3\\fR(1), \\fBxdot\\fR(1), \\fBxsltproc\\fR(1)
 .IP \(bu 4
 Maike user's guide available at https://milasudril.github.io/maike
 ''')
