@@ -145,7 +145,7 @@ def get_dep(kind,name):
 	return res
 		
 def get_build_deps(projinfo,deps):
-	print('\nBuild dependencies (currently %s)\n. I will guess the corresponding packages based on the database of installed packages. Before accepting the guess, *make sure that it REALLY is correct*. If it is not, enter the name of the correct package.\n'%projinfo['build_deps'])
+	print('\nBuild dependencies (currently %s)\n. I will guess the corresponding packages based on the database of installed packages. Before accepting a guess, *make sure that it REALLY is correct*. If it is not, enter the name of the correct package.\n'%projinfo['build_deps'])
 	build_deps=[]
 	for tool in deps['tools']:
 		dep=get_dep('tool',tool)
@@ -156,7 +156,24 @@ def get_build_deps(projinfo,deps):
 		dep=get_dep('dev files for',lib)
 		if dep!='':
 			build_deps.append(dep)
+	
+	dep=input('Other dependency (leave blank to complete this step): ').strip()
+	while dep!='':
+		build_deps.append(dep)
+		dep=input('Other dependency (leave blank to complete this step): ').strip()
+			
 	projinfo['build_deps']=','.join(build_deps)
+
+def get_distinfo(projinfo):
+	with open('/etc/lsb-release') as lsb_release:
+		for line in lsb_release:
+			(key,val)=line.partition('=')[::2]
+			if key=='DISTRIB_ID':
+				projinfo['package_distro']=val
+			if key=='DISTRIB_CODENAME':
+				projinfo['package_distro_release']=val
+		
+
 
 try:
 	projinfo=load_json('projectinfo.json')
@@ -183,11 +200,25 @@ try:
 	get(projinfo,'  Target distribution release (%s): ','package_distro_release')
 	get_build_deps(projinfo,deps)
 	
-	print('''\nThis is the packaging information I have got:\n''')
-	for k in ['packager_name','packager_email','package_distro'\
-		,'package_version','package_distro_release','build_deps']:
-		print('  %s: %s'%(k,projinfo[k]))
-	input('\nPress enter to build the package')
+	changefield=1
+	while changefield!=0:
+		print('''\nThis is the packaging information I have got:\n''')
+		index=1
+		for k in ['packager_name','packager_email','package_distro'\
+			,'package_version','package_distro_release','build_deps']:
+			print('%d.  %s: %s'%(index,k,projinfo[k]))
+			index=index+1
+		
+		change=input('\nDo you want to change any field? Enter 0 or leave blank to continue. ')
+		if change=='':
+			break
+		changefield=int(change)
+		if changefield==1: get(projinfo,'  Your name (%s): ','packager_name')
+		if changefield==2: get(projinfo,'  Your e-mail (%s): ','packager_email')
+		if changefield==3: get(projinfo,'  Target distribution (%s): ','package_distro')
+		if changefield==4: get(projinfo,'  Package version suffix (%s): ','package_version')
+		if changefield==5: get(projinfo,'  Target distribution release (%s): ','package_distro_release')
+		if changefield==6: get_build_deps(projinfo,deps)
 
 	try:
 		shutil.rmtree('debian')

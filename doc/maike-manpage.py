@@ -44,6 +44,11 @@ Hook plugins are loaded from any of the following directories:
  3. /usr/lib/maike
  4. ~/lib/maike
  5. \\fBPWD\\fR
+.PP
+Maike predefines the following targets and as such, these cannot be defined by any file in a project:
+.IP \(bu 4
+\fBmaikeconfig.json\fR \-\- contains the complete build configuration
+\fBexternals.json\fR \-\- contains all external dependencies (tools and libraries) used to compile the project
 
 .SH BUGS
 .IP \(bu 4
@@ -54,7 +59,7 @@ Invoking $name from a script extension may result in a corrupted build, and an i
 .IP \(bu 4
 \\fBbash\\fR(1), \\fBg++\\fR(1), \\fBoctave-cli\\fR(1), \\fBpython3\\fR(1)
 .IP \(bu 4
-Maike user's guide availible at https://milasudril.github.io/maike
+Maike user's guide available at https://milasudril.github.io/maike
 ''')
 
 
