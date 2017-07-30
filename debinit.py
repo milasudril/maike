@@ -134,7 +134,7 @@ def get_dep(kind,name):
 	return res
 		
 def get_build_deps(projinfo,deps):
-	print('\nBuild dependencies (%s):\n'%projinfo['build_deps'])
+	print('\nBuild dependencies (currently %s)\n. I will guess the corresponding packages based on the database of installed packages. Before accepting the guess, *make sure that it REALLY is correct*. If it is not, type the name of the correct package.'%projinfo['build_deps'])
 	build_deps=[]
 	for tool in deps['tools']:
 		dep=get_dep('tool',tool)
