@@ -63,6 +63,7 @@ static const char* type(TargetCxx::Type type)
 void TargetCxx::pkgconfig(const ResourceObject& pkgconfig_libs)
 	{
 	auto cmd=(r_compiler.optionsGet()|m_options_extra).pkgconfigGet();
+	dependencyAdd(Dependency(cmd.nameGet(),Dependency::Relation::TOOL));
 	auto N=pkgconfig_libs.objectCountGet();
 	for(decltype(N) k=0;k<N;++k)
 		{

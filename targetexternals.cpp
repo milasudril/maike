@@ -22,6 +22,7 @@ TargetExternals::TargetExternals(const DependencyGraph& graph,size_t id):
 	,m_compilation_time(std::numeric_limits<double>::quiet_NaN())
 	,r_graph(graph)
 	{
+	dependencyAdd(Dependency("maike",Dependency::Relation::TOOL));
 	}
 
 void TargetExternals::compile(Twins<const Dependency*>
