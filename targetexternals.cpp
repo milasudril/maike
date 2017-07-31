@@ -18,11 +18,11 @@ using namespace Maike;
 
 TargetExternals::TargetExternals(const DependencyGraph& graph,size_t id):
 	m_id(id)
-	,m_dep(".",Dependency::Relation::INTERNAL)
 	,m_compilation_time(std::numeric_limits<double>::quiet_NaN())
 	,r_graph(graph)
 	{
-	dependencyAdd(Dependency("maike",Dependency::Relation::TOOL));
+	m_dep[0]=Dependency(".",Dependency::Relation::INTERNAL);
+	m_dep[1]=Dependency("maike",Dependency::Relation::TOOL);
 	}
 
 void TargetExternals::compile(Twins<const Dependency*>
