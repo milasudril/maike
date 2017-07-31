@@ -21,7 +21,7 @@ def git_changes():
 
 def get_revision():
 	if shutil.which('git')==None:
-		with open('versioninfo.txt') as versionfile:
+		with open('versioninfo-in.txt') as versionfile:
 			return versionfile.read().strip()
 
 	else:
