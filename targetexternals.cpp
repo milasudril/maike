@@ -1,5 +1,5 @@
 //@	{
-//@	 "targets":[{"name":"targetexternals.o","type":"object","dependencies":[{"ref":"foobar","rel":"runtime"}]}]
+//@	 "targets":[{"name":"targetexternals.o","type":"object"}]
 //@	}
 
 #include "targetexternals.hpp"
