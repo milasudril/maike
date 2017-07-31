@@ -43,7 +43,8 @@ Target& Target_FactoryDelegatorDefault::dependencyResolve(DependencyGraph& graph
 
 //	It is not. Is it an external dependency?
 	if(dependency.relationGet()==Dependency::Relation::EXTERNAL
-		|| dependency.relationGet()==Dependency::Relation::TOOL)
+		|| dependency.relationGet()==Dependency::Relation::TOOL
+		|| dependency.relationGet()==Dependency::Relation::RUNTIME)
 		{
 	//	Check if the tool is available
 		if(dependency.relationGet()==Dependency::Relation::TOOL)
