@@ -46,7 +46,7 @@ Vcs-Git: $vcs
 
 Package: $name_lower
 Architecture: any
-Depends: $${shlibs:Depends}, $${misc:Depends}
+Depends: $${shlibs:Depends}, $${misc:Depends}, $runtime_deps
 Recommends: $package_recommends
 Description: $description
  $description_long''')
@@ -145,25 +145,32 @@ def get_dep(kind,name):
 	print('      '+res)
 	return res
 		
-def get_build_deps(projinfo,deps):
-	print('\nBuild dependencies (currently %s)\n. I will guess the corresponding packages based on the database of installed packages. Before accepting a guess, *make sure that it REALLY is correct*. If it is not, enter the name of the correct package.\n'%projinfo['build_deps'])
-	build_deps=[]
-	for tool in deps['tools']:
-		dep=get_dep('tool',tool)
-		if dep!='':
-			build_deps.append(dep)
-			
-	for lib in deps['libraries']:
-		dep=get_dep('dev files for',lib)
-		if dep!='':
-			build_deps.append(dep)
+def get_deps(projinfo,caption,deps,key):
+	print('\n%s (currently %s)\n. I will guess the corresponding packages based on the database of installed packages. Before accepting a guess, *make sure that it REALLY is correct*. If it is not, enter the name of the correct package.\n'%(caption,projinfo[key]))
+	
+	deps_out=[]
+	if key=='build_deps':
+		for tool in deps['tools']:
+			dep=get_dep('tool',tool)
+			if dep!='':
+				deps_out.append(dep)
+				
+		for lib in deps['libraries']:
+			dep=get_dep('dev files for',lib)
+			if dep!='':
+				deps_out.append(dep)
+	else:
+		for lib in deps['runtime_deps']:
+			dep=get_dep('dev files for',lib)
+			if dep!='':
+				deps_out.append(dep)
 	
 	dep=input('Other dependency (leave blank to complete this step): ').strip()
 	while dep!='':
-		build_deps.append(dep)
+		deps_out.append(dep)
 		dep=input('Other dependency (leave blank to complete this step): ').strip()
 			
-	projinfo['build_deps']=','.join(build_deps)
+	projinfo[key]=','.join(deps_out)
 
 def get_distinfo(projinfo):
 	with open('/etc/lsb-release') as lsb_release:
@@ -189,6 +196,7 @@ try:
 	projinfo['package_version']='-1a1'
 	projinfo['package_distro_release']='xenial'
 	projinfo['build_deps']=''
+	projinfo['runtime_deps']=''
 	projinfo['package_recommends']=''
 	projinfo['license_short']=' '+'\n .\n '.join(projinfo['license_short'].split('\n\n'))
 
@@ -200,7 +208,8 @@ try:
 	get(projinfo,'  Target distribution (%s): ','package_distro')
 	get(projinfo,'  Package version suffix (%s): ','package_version')
 	get(projinfo,'  Target distribution release (%s): ','package_distro_release')
-	get_build_deps(projinfo,deps)
+	get_deps(projinfo,'Build dependencies',deps,'build_deps')
+	get_deps(projinfo,'Runtime dependencies',deps,'runtime_deps')
 	get(projinfo,'  Recommended packages (%s): ','package_recommends')
 
 	
@@ -208,8 +217,8 @@ try:
 	while changefield!=0:
 		print('''\nThis is the packaging information I have got:\n''')
 		index=1
-		for k in ['packager_name','packager_email','package_distro'\
-			,'package_version','package_distro_release','build_deps','package_recommends']:
+		for k in ['packager_name','packager_email','package_distro','package_version'\
+			,'package_distro_release','build_deps','runtime_deps','package_recommends']:
 			print('%d.  %s: %s'%(index,k,projinfo[k]))
 			index=index+1
 		
@@ -222,8 +231,9 @@ try:
 		if changefield==3: get(projinfo,'  Target distribution (%s): ','package_distro')
 		if changefield==4: get(projinfo,'  Package version suffix (%s): ','package_version')
 		if changefield==5: get(projinfo,'  Target distribution release (%s): ','package_distro_release')
-		if changefield==6: get_build_deps(projinfo,deps)
-		if changefield==7: get(projinfo,'  Recommended packages (%s): ','package_recommends')
+		if changefield==6: get_deps(projinfo,'Build dependencies',deps,'build_deps')
+		if changefield==7: get_deps(projinfo,'Runtime dependencies',deps,'runtime_deps')
+		if changefield==8: get(projinfo,'  Recommended packages (%s): ','package_recommends')
 
 
 	try:
