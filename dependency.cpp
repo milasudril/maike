@@ -54,7 +54,7 @@ static Dependency::Relation relation(const char* string)
 	if(key==Stringkey("misc"))
 		{return Dependency::Relation::MISC;}
 	if(key==Stringkey("runtime"))
-		{return Dependency::Relation::MISC;}
+		{return Dependency::Relation::RUNTIME;}
 
 	exceptionRaise(ErrorMessage("Unknown relation type #0;",{string}));
 	}
