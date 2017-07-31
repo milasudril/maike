@@ -3,7 +3,7 @@ all:
 
 bootstrap: reset
 	echo "#!/bin/bash" > bootstrap
-	maike > bootstrap
+	maike >> bootstrap
 	chmod u+x bootstrap
 	cp bootstrap build.sh
 
