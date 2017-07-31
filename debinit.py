@@ -10,11 +10,12 @@ import subprocess
 import email.utils
 import readline
 import stat
+from pathlib import Path
 
 changelog=string.Template('''$name_lower ($version$package_version) $package_distro_release; urgency=low
 
   * Packaged for $package_distro
-  
+
  -- $packager_name <$packager_email>  $package_date''')
 
 
@@ -86,11 +87,11 @@ def get_revision():
 def load_json(filename):
 	with open(filename,encoding='utf-8') as input:
 		return json.load(input)
-	
+
 def write_file(filename,content):
 	with open(filename,'wb') as f:
 		f.write(content.encode('utf-8'))
-		
+
 def get(projinfo,caption,key):
 	res=input(caption%projinfo[key]).strip()
 	if res=='*':
@@ -100,23 +101,26 @@ def get(projinfo,caption,key):
 		return
 	projinfo[key]=res
 	print('    '+projinfo[key])
-	
-def dpkg_search(filename):
+
+def dpkg_search(filename,vercache):
 	if filename==None:
-		return ''
+		return ('','')
 	if shutil.which('dpkg')==None:
-		return ''
-	
+		return ('','')
+
 	with subprocess.Popen(('dpkg-query', '--search',filename) \
 		,stdout=subprocess.PIPE,stderr=subprocess.DEVNULL) as dpkg:
 		result=dpkg.stdout.read().decode().split('\n')
 		dpkg.wait()
 		status=dpkg.returncode
 		if status:
-			return ''
-		
+			return ('','')
+
 	package=result[0].split(':')[0].strip()
-	
+	version=vercache.get(package,'')
+	if version!='':
+		return (package,version)
+
 	with subprocess.Popen(('dpkg-query', '--showformat','${Version}','--show',package) \
 		,stdout=subprocess.PIPE,stderr=subprocess.DEVNULL) as dpkg:
 		version=dpkg.stdout.read().decode().strip()
@@ -124,53 +128,68 @@ def dpkg_search(filename):
 		status=dpkg.returncode
 		if status:
 			return package
-	
-	return package+' (>='+version+')'
-	
-	
-	
-def package_guess(kind,name):
+	vercache[package]=version
+	return (package,version)
+
+
+
+def package_guess(kind,name,vercache):
 	if kind=='dev files for':
-		return dpkg_search(name+'.h')
-	return dpkg_search(shutil.which(name))
-	
-def get_dep(kind,name):
-	guess=package_guess(kind,name)
-	res=input('    Enter the name of the package containing the %s `%s` (%s): '%(kind,name,guess)).strip()
+		res=dpkg_search('*/'+name.replace('-','*')+'*.pc',vercache)
+		if res[0]=='':
+			return dpkg_search('*/'+name+'.h*',vercache)
+		return res
+	return dpkg_search(str(Path(shutil.which(name)).resolve()),vercache)
+
+def get_dep(kind,name,vercache):
+	guess=package_guess(kind,name,vercache)
+	readline.add_history('%s|%s'%(guess[0],guess[1]))
+	res=input('    Enter the name of the package containing the %s `%s` (%s|%s): '\
+		%(kind,name,guess[0],guess[1])).strip()
 	if res=='*':
-		return ''
+		return ('','')
 	if not res:
-		print('      '+guess)
+		print('      '+'|'.join(guess))
 		return guess
-	print('      '+res)
-	return res
-		
-def get_deps(projinfo,caption,deps,key):
+	parts=res.split('|')
+	parts[0]=parts[0].strip()
+	parts[1]=parts[1].strip()
+	vercache[parts[0]]=parts[1]
+	print('      '+'|'.join(parts))
+	return parts
+
+def get_deps(projinfo,caption,deps,key,vercache):
 	print('\n\n  %s (currently %s)\n\nI will guess the corresponding packages based on the database of installed packages. Before accepting a guess, *make sure that it REALLY is correct*. If it is not, enter the name of the correct package.\n'%(caption,projinfo[key]))
-	
-	deps_out=[]
+
+	deps_out=dict()
 	if key=='build_deps':
-		for tool in deps['tools']:
-			dep=get_dep('tool',tool)
-			if dep!='':
-				deps_out.append(dep)
-				
-		for lib in deps['libraries']:
-			dep=get_dep('dev files for',lib)
-			if dep!='':
-				deps_out.append(dep)
+		for tool in sorted( deps['tools'] ):
+			dep=get_dep('tool',tool,vercache)
+			if dep[0]!='':
+				deps_out[dep[0]]=dep[1]
+
+		for lib in sorted( deps['libraries'] ):
+			dep=get_dep('dev files for',lib,vercache)
+			if dep[0]!='':
+				deps_out[dep[0]]=dep[1]
 	else:
-		for lib in deps['runtime_deps']:
-			dep=get_dep('dev files for',lib)
-			if dep!='':
-				deps_out.append(dep)
-	
-	dep=input('    Other dependency (leave blank to complete this step): ').strip()
+		for lib in sorted( deps['runtime_deps'] ):
+			dep=get_dep('dev files for',lib,vercache)
+			if dep[0]!='':
+				deps_out[dep[0]]=dep[1]
+
+	dep=input('    Other dependency (leave blank to complete this step): ')
 	while dep!='':
-		deps_out.append(dep)
-		dep=input('    Other dependency (leave blank to complete this step): ').strip()
-			
-	projinfo[key]=','.join(deps_out)
+		dep_pair=dep.split('|')
+		dep_pair[0]=dep_pair[0].strip()
+		dep_pair[1]=dep_pair[1].strip()
+		deps_out[dep_pair[0]]=dep_pair[1]
+		dep=input('    Other dependency (leave blank to complete this step): ')
+
+	dep_strings=[]
+	for package,version in sorted( deps_out.items() ) :
+		dep_strings.append('%s (>=%s)'%(package,version))
+	projinfo[key]=','.join(dep_strings)
 
 def get_distinfo(projinfo):
 	with open('/etc/lsb-release') as lsb_release:
@@ -180,7 +199,7 @@ def get_distinfo(projinfo):
 				projinfo['package_distro']=val
 			if key=='DISTRIB_CODENAME':
 				projinfo['package_distro_release']=val
-				
+
 
 
 try:
@@ -200,19 +219,20 @@ try:
 	projinfo['package_recommends']=''
 	projinfo['license_short']=' '+'\n .\n '.join(projinfo['license_short'].split('\n\n'))
 
-	deps=load_json('externals.json')
+	deps=load_json('externals-in.json')
 	print('''\nBefore creating the debian directory, I need some information about this package. Leave blank to keep the default value. To answer with blank enter *.\n''')
-		
+
 	get(projinfo,'  Your name (%s): ','packager_name')
 	get(projinfo,'  Your e-mail (%s): ','packager_email')
 	get(projinfo,'  Target distribution (%s): ','package_distro')
 	get(projinfo,'  Package version suffix (%s): ','package_version')
 	get(projinfo,'  Target distribution release (%s): ','package_distro_release')
-	get_deps(projinfo,'Build dependencies',deps,'build_deps')
-	get_deps(projinfo,'Runtime dependencies',deps,'runtime_deps')
+	vercache=dict()
+	get_deps(projinfo,'Build dependencies',deps,'build_deps',vercache)
+	get_deps(projinfo,'Runtime dependencies',deps,'runtime_deps',vercache)
 	get(projinfo,'  Recommended packages (%s): ','package_recommends')
 
-	
+
 	changefield=1
 	while changefield!=0:
 		print('''\nThis is the packaging information I have got:\n''')
@@ -221,7 +241,7 @@ try:
 			,'package_distro_release','build_deps','runtime_deps','package_recommends']:
 			print('%d.  %s: %s'%(index,k,projinfo[k]))
 			index=index+1
-		
+
 		change=input('\nDo you want to change any field? Enter 0 or leave blank to continue. ')
 		if change=='':
 			break
@@ -231,8 +251,8 @@ try:
 		if changefield==3: get(projinfo,'  Target distribution (%s): ','package_distro')
 		if changefield==4: get(projinfo,'  Package version suffix (%s): ','package_version')
 		if changefield==5: get(projinfo,'  Target distribution release (%s): ','package_distro_release')
-		if changefield==6: get_deps(projinfo,'Build dependencies',deps,'build_deps')
-		if changefield==7: get_deps(projinfo,'Runtime dependencies',deps,'runtime_deps')
+		if changefield==6: get_deps(projinfo,'Build dependencies',deps,'build_deps',vercache)
+		if changefield==7: get_deps(projinfo,'Runtime dependencies',deps,'runtime_deps',vercache)
 		if changefield==8: get(projinfo,'  Recommended packages (%s): ','package_recommends')
 
 
