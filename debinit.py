@@ -146,7 +146,7 @@ def get_dep(kind,name):
 	return res
 		
 def get_deps(projinfo,caption,deps,key):
-	print('\n%s (currently %s)\n. I will guess the corresponding packages based on the database of installed packages. Before accepting a guess, *make sure that it REALLY is correct*. If it is not, enter the name of the correct package.\n'%(caption,projinfo[key]))
+	print('\n\n  %s (currently %s)\n\nI will guess the corresponding packages based on the database of installed packages. Before accepting a guess, *make sure that it REALLY is correct*. If it is not, enter the name of the correct package.\n'%(caption,projinfo[key]))
 	
 	deps_out=[]
 	if key=='build_deps':
@@ -165,10 +165,10 @@ def get_deps(projinfo,caption,deps,key):
 			if dep!='':
 				deps_out.append(dep)
 	
-	dep=input('Other dependency (leave blank to complete this step): ').strip()
+	dep=input('    Other dependency (leave blank to complete this step): ').strip()
 	while dep!='':
 		deps_out.append(dep)
-		dep=input('Other dependency (leave blank to complete this step): ').strip()
+		dep=input('    Other dependency (leave blank to complete this step): ').strip()
 			
 	projinfo[key]=','.join(deps_out)
 
