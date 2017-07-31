@@ -29,6 +29,7 @@ namespace Maike
 				,EXTERNAL /**<The secondary Target is unknown to Maike*/
 				,TOOL /**<This relation is similar to EXTERNAL, but is used to annotate that the secondary Target is a tool*/
 				,MISC /**<Any other kind of relation.*/
+				,RUNTIME /**<This relation is oly present at runtime, not during compilation.*/
 				};
 
 			Dependency():m_name(nullptr),r_target(nullptr),m_rel(Relation::LEAF)

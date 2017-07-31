@@ -53,6 +53,8 @@ static Dependency::Relation relation(const char* string)
 		{return Dependency::Relation::TOOL;}
 	if(key==Stringkey("misc"))
 		{return Dependency::Relation::MISC;}
+	if(key==Stringkey("runtime"))
+		{return Dependency::Relation::MISC;}
 
 	exceptionRaise(ErrorMessage("Unknown relation type #0;",{string}));
 	}
@@ -77,6 +79,8 @@ static const char* relation(Dependency::Relation rel)
 			return "tool";
 		case Dependency::Relation::INCLUDE_EXTRA:
 			return "include_extra";
+		case Dependency::Relation::RUNTIME:
+			return "runtime";
 		}
 	return nullptr;
 	}
@@ -90,9 +94,9 @@ Dependency::Dependency(const ResourceObject& obj,const char* in_dir,const char* 
 	{
 	assert(m_rel!=Relation::INTERNAL && m_rel!=Relation::LEAF);
 
-//	EXTERNAL and TOOL refers to stuff outside the source repo. Thise means that
+//	EXTERNAL, TOOL, and RUNTIME refers to stuff outside the source repo. This means that
 //	current directory should not be used in this case.
-	if(m_rel==Relation::EXTERNAL || m_rel==Relation::TOOL)
+	if(m_rel==Relation::EXTERNAL || m_rel==Relation::TOOL || m_rel==Relation::RUNTIME)
 		{nameSet(rootStrip(static_cast<const char*>(obj.objectGet("ref")),root).c_str());}
 	else
 		{
