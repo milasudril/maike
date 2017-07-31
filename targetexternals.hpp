@@ -32,10 +32,10 @@ namespace Maike
 				{return *this;}
 
 			Twins<const Dependency*> dependencies() const noexcept
-				{return {m_dep,m_dep + 2};}
+				{return {&m_dep,&m_dep + 1};}
 
 			Twins<Dependency*> dependencies() noexcept
-				{return {m_dep,m_dep + 2};}
+				{return {&m_dep,&m_dep + 1};}
 
 			TargetExternals& dependencyInverseAdd(Dependency&& dep)
 				{
@@ -86,7 +86,7 @@ namespace Maike
 			void destroy() noexcept
 				{delete this;}
 			size_t m_id;
-			Dependency m_dep[2];
+			Dependency m_dep;
 			std::vector<Dependency> m_deps_inverse;
 			mutable double m_compilation_time;
 			const DependencyGraph& r_graph;

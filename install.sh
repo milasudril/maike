@@ -75,7 +75,7 @@ transaction 'cp __targets/maike "$PREFIX/bin/maike"' \
 transaction 'mkdir -p "$PREFIX/share/man/man1"' \
 	'rmdir "$PREFIX/share/man/man1"'
 transaction 'cp __targets/doc/maike.man1 "$PREFIX/share/man/man1/maike.1"' \
-	'rm "$PREFIX/share/man/man1/maike.man1"'
+	'rm "$PREFIX/share/man/man1/maike.1"'
 
 if [ "$(id -u)" == "0" ]; then
 	chmod -R o+r "$PREFIX"/include

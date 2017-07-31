@@ -49,7 +49,6 @@ TargetConfig::TargetConfig(const ResourceObject& config,size_t id):
 	,m_dep(".",Dependency::Relation::INTERNAL)
 	,m_compilation_time(std::numeric_limits<double>::quiet_NaN())
 	{
-	dependencyAdd(Dependency("maike",Dependency::Relation::TOOL));
 	StringWriter writer(m_content);
 	config.write(writer);
 	}
