@@ -3,6 +3,7 @@ all:
 
 bootstrap: reset
 	echo "#!/bin/bash" > bootstrap
+	echo "set -eo pipefail" >> bootstrap
 	maike >> bootstrap
 	chmod u+x bootstrap
 	cp bootstrap build.sh
