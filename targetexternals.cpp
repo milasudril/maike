@@ -86,8 +86,9 @@ namespace
 	class TargetsExternalDump:public DependencyGraph::TargetProcessorConst
 		{
 		public:
-			TargetsExternalDump(ResourceObject& libs,ResourceObject& tools,ResourceObject& rt):
-				r_libs(libs),r_tools(tools),r_rt(rt)
+			TargetsExternalDump(ResourceObject& libs,ResourceObject& tools,ResourceObject& rt
+				,ResourceObject& rc):
+				r_libs(libs),r_tools(tools),r_rt(rt),r_rc(rc)
 				{}
 
 			int operator()(const DependencyGraph&,const Target& target)
@@ -106,6 +107,9 @@ namespace
 						case Dependency::Relation::RUNTIME:
 							r_rt.objectAppend(r_rt.create(ptr->nameGet()));
 							break;
+						case Dependency::Relation::EXTERNAL_RESOURCE:
+							r_rc.objectAppend(r_rc.create(ptr->nameGet()));
+							break;
 						default:
 							break;
 						}					
@@ -117,6 +121,7 @@ namespace
 			ResourceObject& r_libs;
 			ResourceObject& r_tools;
 			ResourceObject& r_rt;
+			ResourceObject& r_rc;
 		};
 	}
 
@@ -135,11 +140,13 @@ bool TargetExternals::upToDate(Twins<const Dependency*>
 		ResourceObjectJansson libs(ResourceObject::Type::ARRAY);
 		ResourceObjectJansson tools(ResourceObject::Type::ARRAY);
 		ResourceObjectJansson rt(ResourceObject::Type::ARRAY);
-		r_graph.targetsProcess(TargetsExternalDump{libs,tools,rt});
+		ResourceObjectJansson rc(ResourceObject::Type::ARRAY);
+		r_graph.targetsProcess(TargetsExternalDump{libs,tools,rt,rc});
 		ResourceObjectJansson obj(ResourceObject::Type::OBJECT);
 		obj.objectSet("libraries",std::move(libs))
 			.objectSet("tools",std::move(tools))
-			.objectSet("runtime_deps",std::move(rt));
+			.objectSet("runtime_deps",std::move(rt))
+			.objectSet("resources",std::move(rc));
 		obj.write(StringWriter(m_data));
 		}
 	auto filename=dircat(target_dir,"externals.json");
