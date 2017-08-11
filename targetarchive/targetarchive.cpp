@@ -119,7 +119,7 @@ static std::vector<std::string> filesCollect(Twins<const Dependency*> dependency
 		ret.push_back(name);
 		return 1;
 		};
-	dependenciesProcess(target_dir,dependency_list,USE_ALL,collect);
+	dependenciesProcess(target_dir,dependency_list,USE_ALL&(~USE_INTERNAL),collect);
 
 	return std::move(ret);
 	}
