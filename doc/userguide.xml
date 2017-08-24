@@ -337,19 +337,23 @@ int main(int argc,char** argv)
 
 <h3>Per-target compiler options</h3>
 
-<p>In addition to global compiler options, it is possible to use additional options for different targets. For a C++ target, the attribute <code>cxxoptions</code> is added to the target definition. Example:</p>
+<p>In addition to global compiler options, it is possible to use additional options for different targets. For a C++ target, the attribute <code>cxxoptions</code> or <code>cxxoptions_local</code> can be added to the target definition. Example:</p>
 
 <pre><code>//@ {
 //@ "targets":
 //@     [{
 //@     "name":"fast_computation.o","type":"object"
-//@     ,"cxxoptions":
+//@     ,"cxxoptions_local":
 //@         {"cflags_extra":["ffast-math"]}
+//@		,"cxxoptions":
+//@         {"cflags_extra":["march=native"]}
 //@     }]
 //@ }
 
 ...
 </code></pre>
+
+<p>The difference between these two options is their scope: <code>cxxoptions</code> will affect all related translation units (including the linking command), and <code>cxxoptions_local</code> will only affect the current translation unit.</p>
 
 <h2 id="targetpython">Using Python scripts as code generators</h2>
 
