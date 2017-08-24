@@ -25,7 +25,9 @@ namespace Maike
 			PkgConfigRequest(const Command& cmd,const char* libname
 				,const char* context);
 
-			const PkgConfigRequest& optionsPush(TargetCxxOptions& options) const;
+			const PkgConfigRequest& optionsPush(TargetCxxOptions& options
+				,TargetCxxOptions& options_local) const;
+
 			const PkgConfigRequest& dependenciesPush(Target& t) const;
 
 		private:

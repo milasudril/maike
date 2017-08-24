@@ -168,10 +168,11 @@ PkgConfigRequest::PkgConfigRequest(const Command& cmd,const char* libname
 	}
 
 
-const PkgConfigRequest& PkgConfigRequest::optionsPush(TargetCxxOptions& options) const
+const PkgConfigRequest& PkgConfigRequest::optionsPush(TargetCxxOptions& options
+	,TargetCxxOptions& options_local) const
 	{
-	std::for_each(m_incdir.begin(),m_incdir.end(),[&options](const std::string& dir)
-		{options.includedirNoscanAppend(dir.c_str());});
+	std::for_each(m_incdir.begin(),m_incdir.end(),[&options_local](const std::string& dir)
+		{options_local.includedirNoscanAppend(dir.c_str());});
 	std::for_each(m_cflags.begin(),m_cflags.end(),[&options](const std::string& flag)
 		{options.cflagsExtraAppend(flag.c_str());});
 	std::for_each(m_libdir.begin(),m_libdir.end(),[&options](const std::string& dir)

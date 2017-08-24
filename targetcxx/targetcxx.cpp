@@ -68,7 +68,7 @@ void TargetCxx::pkgconfig(const ResourceObject& pkgconfig_libs)
 	for(decltype(N) k=0;k<N;++k)
 		{
 		r_compiler.pkgconfigAsk(static_cast<const char*>(pkgconfig_libs.objectGet(k)),sourceNameGet())
-			.optionsPush(m_options_extra).dependenciesPush(*this);
+			.optionsPush(m_options_extra,m_options_extra_local).dependenciesPush(*this);
 		}
 	}
 
@@ -83,7 +83,7 @@ TargetCxx::TargetCxx(const ResourceObject& obj,const TargetCxxCompiler& compiler
 	if(obj.objectExists("cxxoptions"))
 		{m_options_extra=TargetCxxOptions(obj.objectGet("cxxoptions"));}
 	if(obj.objectExists("cxxoptions_local"))
-		{m_options_extra=TargetCxxOptions(obj.objectGet("cxxoptions_local"));}
+		{m_options_extra_local=TargetCxxOptions(obj.objectGet("cxxoptions_local"));}
 	if(obj.objectExists("pkgconfig_libs"))
 		{pkgconfig(obj.objectGet("pkgconfig_libs"));}
 	if(obj.objectExists("include_targets"))
@@ -164,8 +164,9 @@ static void optionsCollect(Twins<const Dependency*> deps
 		{
 		switch(deps.first->relationGet())
 			{
-			case Dependency::Relation::IMPLEMENTATION:
 			case Dependency::Relation::INCLUDE:
+			case Dependency::Relation::INCLUDE_EXTRA:
+			case Dependency::Relation::IMPLEMENTATION:
 				{
 				auto target_rel=dynamic_cast<const TargetCxx*>(deps.first->target());
 				if(target_rel)
@@ -261,6 +262,7 @@ void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 			{
 			auto options_extra=m_options_extra;
 			optionsCollect(dependency_list_full,options_extra);
+			options_extra.configAppend(m_options_extra_local);
 			strings_temp.reserve(dependency_list.second - dependency_list.first);
 			dependenciesProcess(target_dir,dependency_list,USE_INCLUDE_EXTRA,depstring_create);
 			auto deps_begin=depfiles.data();
@@ -281,11 +283,9 @@ void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 			auto deps_begin=depfiles.data();
 			auto deps_end=deps_begin + depfiles.size();
 			std::reverse(deps_begin,deps_end);
-
-		//	-flto cannot be used with .incbin, and if some module is compiled with
-		//	-flto, so must the application. Therfore do not do this for now
 			auto options_extra=m_options_extra;
 			optionsCollect(dependency_list_full,options_extra);
+			options_extra.configAppend(m_options_extra_local);
 			r_compiler.compileApplication(sourceNameGet(),inDirGet(),{deps_begin,deps_end},name_full.c_str(),options_extra);
 			}
 			break;
@@ -300,10 +300,10 @@ void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 			auto deps_end=deps_begin + depfiles.size();
 			std::reverse(deps_begin,deps_end);
 
-		//	-flto cannot be used with .incbin, and if some module is compiled with
-		//	-flto, so must the application. Therfore do not do this for now
 			auto options_extra=m_options_extra;
 			optionsCollect(dependency_list_full,options_extra);
+			options_extra.configAppend(m_options_extra_local);
+
 			r_compiler.compileDll(sourceNameGet(),inDirGet(),{deps_begin,deps_end},name_full.c_str(),options_extra);
 			}
 			break;
