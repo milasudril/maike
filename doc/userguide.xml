@@ -345,7 +345,7 @@ int main(int argc,char** argv)
 //@     "name":"fast_computation.o","type":"object"
 //@     ,"cxxoptions_local":
 //@         {"cflags_extra":["ffast-math"]}
-//@		,"cxxoptions":
+//@     ,"cxxoptions":
 //@         {"cflags_extra":["march=native"]}
 //@     }]
 //@ }
