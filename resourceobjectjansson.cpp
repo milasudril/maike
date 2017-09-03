@@ -15,11 +15,28 @@
 
 #include <jansson.h>
 
+#include <unistd.h>
+
 using namespace Maike;
 
 static size_t loadCallback(void* buffer, size_t length,void* eventhandler)
 	{
-	return reinterpret_cast<DataSource*>(eventhandler)->read(buffer,length);
+	auto eh=reinterpret_cast<std::pair<DataSource*,bool>*>(eventhandler);
+	const auto ret=eh->first->read(buffer,length);
+	
+	auto ptr=reinterpret_cast<const char*>( buffer );
+	auto N=ret;
+	while(N)
+		{
+		if(!eh->second)
+			{
+			auto ch_in=*ptr;
+			eh->second=!(ch_in>='\0' && ch_in<=' ');
+			}
+		++ptr;
+		--N;
+		}
+	return ret;
 	}
 
 static int storeCallback(const char* buffer,size_t size,void* eventhandler)
@@ -35,10 +52,11 @@ ResourceObjectJansson::ResourceObjectJansson(DataSource& readhandler)
 	:ResourceObject(s_vtable)
 	{
 	json_error_t status;
-	m_handle=json_load_callback(loadCallback,&readhandler,0,&status);
+	std::pair<DataSource*,bool> read_callback{&readhandler,false};
+	m_handle=json_load_callback(loadCallback,&read_callback,0,&status);
 	if(m_handle==nullptr)
 		{
-		if(status.position!=0)
+		if(read_callback.second)
 			{
 			exceptionRaise(ErrorMessage("#0;:#1;: error: #2;."
 				,{readhandler.nameGet(),status.line,status.text}));
