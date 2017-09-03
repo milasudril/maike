@@ -63,7 +63,12 @@ size_t TagExtractor::read(void* buffer,size_t length)
 			{
 			case State::NEWLINE:
 				if(ch_in=='\n')
-					{++m_lines;}
+					{
+					++m_lines;
+					*buffer_out=ch_in;
+					++n_read;
+					++buffer_out;
+					}
 				if(!(ch_in<=' '))
 					{
 					switch(ch_in)
@@ -89,6 +94,9 @@ size_t TagExtractor::read(void* buffer,size_t length)
 					case '\n':
 						state=State::NEWLINE;
 						++m_lines;
+						*buffer_out=ch_in;
+						++buffer_out;
+						++n_read;
 						break;
 					default:
 						state=State::CODE;
@@ -121,6 +129,9 @@ size_t TagExtractor::read(void* buffer,size_t length)
 						break;
 					case '\n':
 						++m_lines;
+						*buffer_out=ch_in;
+						++n_read;
+						++buffer_out;
 						state=State::NEWLINE;
 						break;
 					}
