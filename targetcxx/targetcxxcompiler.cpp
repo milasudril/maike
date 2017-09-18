@@ -140,20 +140,34 @@ typedef ParameterSetMapFixed<
 	,Stringkey("target_directory")
 	,Stringkey("includes_extra")> CompilerParameters;
 
-static const char* cxxNameGet(unsigned long long int cxxversion)
+static const char* cxxNameGet(unsigned long long int cxxversion,const char* mode)
 	{
-	if(cxxversion < 201103L)
-		{return "c++03";}
-	if(cxxversion < 201402L)
-		{return "c++11";}
-	return "c++14";
+	if(strcmp(mode,"c++")==0 || strcmp(mode,"C++")==0)
+		{
+		if(cxxversion < 201103L)
+			{return "c++03";}
+		if(cxxversion < 201402L)
+			{return "c++11";}
+		return "c++14";
+		}
+	else
+	if(strcmp(mode,"C")==0 || strcmp(mode,"v")==0)
+		{
+		if(cxxversion < 199901)
+			{return "c89";}
+		if(cxxversion < 201102)
+			{return "c99";}
+		return "c11";
+		}
+	exceptionRaise(ErrorMessage("The current language (#0;) is not supported.",{mode}));
+		
 	}
 
 static std::string
-cxxVersionString(const char* stdprefix,unsigned long long int cxxversion)
+cxxVersionString(const char* stdprefix,unsigned long long int cxxversion,const char* mode)
 	{
 	std::string ret(stdprefix);
-	ret+=cxxNameGet(cxxversion);
+	ret+=cxxNameGet(cxxversion,mode);
 	return ret;
 	}
 
@@ -271,12 +285,14 @@ void TargetCxxCompiler::execute(const Command& cmd
 	if(cxxversion_min > cxxversionDefaultGet(options_result.modeGet()))
 		{
 		cxxparams.get<Stringkey("cxxversion")>()
-			.push_back(cxxVersionString(options_result.stdprefixGet(),cxxversion_min));
+			.push_back(cxxVersionString(options_result.stdprefixGet(),cxxversion_min
+				,options_result.modeGet()));
 		}
 	if(cxxversion_max < cxxversionDefaultGet(options_result.modeGet()))
 		{
 		cxxparams.get<Stringkey("cxxversion")>()
-			.push_back(cxxVersionString(options_result.stdprefixGet(),cxxversion_max));
+			.push_back(cxxVersionString(options_result.stdprefixGet(),cxxversion_max
+				,options_result.modeGet()));
 		}
 
 
