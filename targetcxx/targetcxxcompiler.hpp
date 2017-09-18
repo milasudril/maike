@@ -57,7 +57,7 @@ namespace Maike
 			const TargetCxxOptions& optionsGet() const noexcept
 				{return r_options;}
 
-			unsigned long long int cxxversionDefaultGet() const;
+			unsigned long long int cxxversionDefaultGet(const char* mode) const;
 
 			const PkgConfigRequest& pkgconfigAsk(const char* library,const char* context) const;
 

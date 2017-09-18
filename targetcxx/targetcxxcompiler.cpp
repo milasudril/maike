@@ -15,6 +15,7 @@
 #include "../parametersetmapfixed.hpp"
 #include "../stdstream.hpp"
 #include "../writebuffer.hpp"
+#include <cstring>
 
 using namespace Maike;
 
@@ -45,8 +46,18 @@ namespace
 			DataSource* r_src;
 		};
 	}
+	
+static const char* macroGet(const char* mode)
+	{
+	if(strcmp(mode,"c++")==0 || strcmp(mode,"C++")==0)
+		{return "__cplusplus";}
+	else
+	if(strcmp(mode,"C")==0 || strcmp(mode,"v")==0)
+		{return "__STDC_VERSION__";}
+	exceptionRaise(ErrorMessage("The current language (#0;) is not supported.",{mode}));
+	}
 
-static unsigned long long int cxxversionDefaultGet(Pipe& versionget)
+static unsigned long long int cxxversionDefaultGet(Pipe& versionget,const char* mode)
 	{
 	auto standard_error=versionget.stderrCapture();
 	Thread<ReadCallback> stderr_reader(ReadCallback{standard_error.get()});
@@ -56,6 +67,7 @@ static unsigned long long int cxxversionDefaultGet(Pipe& versionget)
 	TargetCxxPPTokenizer::Token tok;
 	enum class Mode:unsigned int{NORMAL,DEFINE,DONE};
 	auto state=Mode::NORMAL;
+	auto look_for=macroGet(mode);
 	while(cxxtok.read(tok))
 		{
 		switch(state)
@@ -72,7 +84,7 @@ static unsigned long long int cxxversionDefaultGet(Pipe& versionget)
 					}
 				break;
 			case Mode::DEFINE:
-				if(tok.value=="__cplusplus")
+				if(tok.value==look_for)
 					{state=Mode::DONE;}
 				else
 					{state=Mode::NORMAL;}
@@ -87,18 +99,25 @@ static unsigned long long int cxxversionDefaultGet(Pipe& versionget)
 
 
 static unsigned long long int cxxversionDefaultGet(const Command& versionquery
-	,Twins<const ParameterSet* const*> paramset)
+	,Twins<const ParameterSet* const*> paramset,const char* mode)
 	{
 	auto versionget=versionquery.execute(Pipe::REDIRECT_STDOUT|Pipe::REDIRECT_STDERR
 		,paramset);
 
-	auto ret=cxxversionDefaultGet(versionget);
+	auto ret=cxxversionDefaultGet(versionget,mode);
 	auto status=versionget.exitStatusGet();
 	if(status!=0)
 		{
 		exceptionRaise(ErrorMessage("It was not possible to determine the "
 			"default C++ version. The compiler returned status code #0;",{status}));
 		}
+	
+	if(ret==0)
+		{
+		exceptionRaise(ErrorMessage("The current language (#0;) appears to be "
+			"unsupported by the chosen compiler.",{mode}));
+		}
+	
 	return ret;
 	}
 
@@ -138,13 +157,13 @@ cxxVersionString(const char* stdprefix,unsigned long long int cxxversion)
 	return ret;
 	}
 
-unsigned long long int TargetCxxCompiler::cxxversionDefaultGet() const
+unsigned long long int TargetCxxCompiler::cxxversionDefaultGet(const char* mode) const
 	{
 	if(m_cxxversion_default==0)
 		{
 		auto p=&r_paramset;
 		m_cxxversion_default=::cxxversionDefaultGet(r_options.versionqueryGet()
-			,{p, p + 1});
+			,{p, p + 1},mode);
 		}
 	return m_cxxversion_default;
 	}
@@ -248,12 +267,13 @@ void TargetCxxCompiler::execute(const Command& cmd
 	auto options_result=r_options|options_extra;
 	auto cxxversion_min=options_result.cxxversionMinGet();
 	auto cxxversion_max=options_result.cxxversionMaxGet();
-	if(cxxversion_min > cxxversionDefaultGet())
+
+	if(cxxversion_min > cxxversionDefaultGet(options_result.modeGet()))
 		{
 		cxxparams.get<Stringkey("cxxversion")>()
 			.push_back(cxxVersionString(options_result.stdprefixGet(),cxxversion_min));
 		}
-	if(cxxversion_max < cxxversionDefaultGet())
+	if(cxxversion_max < cxxversionDefaultGet(options_result.modeGet()))
 		{
 		cxxparams.get<Stringkey("cxxversion")>()
 			.push_back(cxxVersionString(options_result.stdprefixGet(),cxxversion_max));
