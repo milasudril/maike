@@ -133,6 +133,9 @@ TargetCxxOptions& TargetCxxOptions::configAppend(const ResourceObject& cxxoption
 
 	if(cxxoptions.objectExists("include_format"))
 		{m_include_format=std::string(static_cast<const char*>(cxxoptions.objectGet("include_format")));}
+	
+	if(cxxoptions.objectExists("mode"))
+		{m_mode=std::string(static_cast<const char*>(cxxoptions.objectGet("mode")));}
 
 
 	if(cxxoptions.objectExists("objcompile"))
@@ -231,6 +234,9 @@ TargetCxxOptions& TargetCxxOptions::configAppend(const TargetCxxOptions& cxxopti
 
 	if(cxxoptions.m_include_format.size()!=0)
 		{m_include_format=cxxoptions.m_include_format;}
+		
+	if(cxxoptions.m_mode.size()!=0)
+		{m_mode=cxxoptions.m_mode;}
 
 
 	if(cxxoptions.m_objcompile)
@@ -269,12 +275,13 @@ void TargetCxxOptions::configClear()
 	m_cxxversion_max=std::numeric_limits<decltype(m_cxxversion_max)>::max();
 	m_iquote.clear();
 	m_iquote_dup.clear();
+	m_mode.clear();
 	}
 
 TargetCxxOptions& TargetCxxOptions::configAppendDefault()
 	{
 	m_cxxversion_min=__cplusplus;
-	m_cxxversion_max=std::numeric_limits<decltype(m_cxxversion_max)>::max();;
+	m_cxxversion_max=std::numeric_limits<decltype(m_cxxversion_max)>::max();
 
 	m_includedir_format=std::string("-I^");
 	m_libdir_format=std::string("-L^");
@@ -338,6 +345,7 @@ TargetCxxOptions& TargetCxxOptions::configAppendDefault()
 	m_pkgconfig.argumentAppend("{action}").argumentAppend("{libname}");
 
 	iquoteAppend(".");
+	m_mode=std::string("c++");
 
 	return *this;
 	}
@@ -389,7 +397,8 @@ void TargetCxxOptions::configDump(ResourceObject& cxxoptions) const
 		.objectSet("cxxversion_min",cxxoptions.create(static_cast<long long int>(m_cxxversion_min)))
 		.objectSet("cflags_format",cxxoptions.create(m_cflags_format.c_str()))
 		.objectSet("iquote_format",cxxoptions.create(m_iquote_format.c_str()))
-		.objectSet("include_format",cxxoptions.create(m_include_format.c_str()));
+		.objectSet("include_format",cxxoptions.create(m_include_format.c_str()))
+		.objectSet("mode",cxxoptions.create(m_mode.c_str()));
 
 		{
 		auto includedir=cxxoptions.createArray();

@@ -139,6 +139,9 @@ namespace Maike
 
 			const char* includeFormatGet() const noexcept
 				{return m_include_format.c_str();}
+				
+			const char* modeGet() const noexcept
+				{return m_mode.c_str();}
 
 		private:
 			std::vector< std::string > m_includedir;
@@ -167,6 +170,7 @@ namespace Maike
 			unsigned long long int m_cxxversion_max;
 
 			std::string m_stdprefix;
+			std::string m_mode;
 
 			Command m_appcompile;
 			Command m_dllcompile;
