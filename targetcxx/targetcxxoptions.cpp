@@ -133,7 +133,7 @@ TargetCxxOptions& TargetCxxOptions::configAppend(const ResourceObject& cxxoption
 
 	if(cxxoptions.objectExists("include_format"))
 		{m_include_format=std::string(static_cast<const char*>(cxxoptions.objectGet("include_format")));}
-	
+
 	if(cxxoptions.objectExists("mode"))
 		{m_mode=std::string(static_cast<const char*>(cxxoptions.objectGet("mode")));}
 
@@ -234,7 +234,7 @@ TargetCxxOptions& TargetCxxOptions::configAppend(const TargetCxxOptions& cxxopti
 
 	if(cxxoptions.m_include_format.size()!=0)
 		{m_include_format=cxxoptions.m_include_format;}
-		
+
 	if(cxxoptions.m_mode.size()!=0)
 		{m_mode=cxxoptions.m_mode;}
 
@@ -275,7 +275,7 @@ void TargetCxxOptions::configClear()
 	m_cxxversion_max=std::numeric_limits<decltype(m_cxxversion_max)>::max();
 	m_iquote.clear();
 	m_iquote_dup.clear();
-	m_mode.clear();
+	m_mode=std::string("c++");
 	}
 
 TargetCxxOptions& TargetCxxOptions::configAppendDefault()
