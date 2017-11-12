@@ -7,7 +7,7 @@
 ,"vcs":"https://github.com/milasudril/maike.git"
 ,"main_executable":"maike"
 ,"icon":""
-,"legal_brief":"Maike comes with ABSOLUTELY NO WARRANTY; for details see section 15 and 16 in the GNU General Public License version 3. Anja is free software, and you are welcome to redistribute it under the terms of the GNU General Public License, either version 3, or at your option, any later version."
+,"legal_brief":"Maike comes with ABSOLUTELY NO WARRANTY; for details see section 15 and 16 in the GNU General Public License version 3. Maike is free software, and you are welcome to redistribute it under the terms of the GNU General Public License, either version 3, or at your option, any later version."
 
 ,"description":"Build system based on scanning of source files"
 
