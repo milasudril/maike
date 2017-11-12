@@ -144,7 +144,7 @@ namespace Maike
 		|USE_MISC|USE_LEAF
 		|USE_INTERNAL|USE_TOOL;
 
-	static std::string name_full_get(const char* target_dir,const Target& t)
+	inline std::string name_full_get(const char* target_dir,const Target& t)
 		{
 		if(t.generated())
 			{return dircat(target_dir,t.nameGet());}
