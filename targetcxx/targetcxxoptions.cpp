@@ -237,6 +237,8 @@ TargetCxxOptions& TargetCxxOptions::configAppend(const TargetCxxOptions& cxxopti
 
 	if(cxxoptions.m_mode.size()!=0)
 		{m_mode=cxxoptions.m_mode;}
+	if(m_mode.size()==0)
+		{m_mode=std::string("c++");} //make sure there is a valid mode set. #63
 
 
 	if(cxxoptions.m_objcompile)
@@ -275,7 +277,7 @@ void TargetCxxOptions::configClear()
 	m_cxxversion_max=std::numeric_limits<decltype(m_cxxversion_max)>::max();
 	m_iquote.clear();
 	m_iquote_dup.clear();
-	m_mode=std::string("c++");
+	m_mode.clear(); //we must clear mode #65
 	}
 
 TargetCxxOptions& TargetCxxOptions::configAppendDefault()
