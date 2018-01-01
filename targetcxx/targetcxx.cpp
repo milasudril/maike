@@ -106,12 +106,15 @@ TargetCxx::TargetCxx(const ResourceObject& obj,const TargetCxxCompiler& compiler
 	//	or the assembler.
 		case Type::OBJECT:
 			dependencyAdd(Dependency(cxxoptions.objcompileGet().nameGet(),root,Dependency::Relation::TOOL));
+			m_options_extra_local.modeSet(cxxoptions.modeGet());
 			break;
 		case Type::APPLICATION:
 			dependencyAdd(Dependency(cxxoptions.appcompileGet().nameGet(),root,Dependency::Relation::TOOL));
+			m_options_extra_local.modeSet(cxxoptions.modeGet());
 			break;
 		case Type::LIB_DYNAMIC:
 			dependencyAdd(Dependency(cxxoptions.dllcompileGet().nameGet(),root,Dependency::Relation::TOOL));
+			m_options_extra_local.modeSet(cxxoptions.modeGet());
 			break;
 		case Type::LIB_STATIC:
 			dependencyAdd(Dependency(cxxoptions.libcompileGet().nameGet(),root,Dependency::Relation::TOOL));
@@ -142,19 +145,19 @@ bool TargetCxx::generated() const noexcept
 void TargetCxx::dumpDetails(ResourceObject& target) const
 	{
 	target.objectSet("type",target.create(type(typeGet())));
-		
+
 		{
 		auto cxxoptions=target.createObject();
 		m_options_extra.configDump(cxxoptions);
 		target.objectSet("cxxoptions",std::move(cxxoptions));
 		}
-		
+
 		{
 		auto cxxoptions=target.createObject();
 		m_options_extra_local.configDump(cxxoptions);
 		target.objectSet("cxxoptions_local",std::move(cxxoptions));
 		}
-	
+
 	}
 
 static void optionsCollect(Twins<const Dependency*> deps
@@ -337,7 +340,7 @@ bool TargetCxx::upToDate(Twins<const Dependency*> dependency_list
 
 	auto up_to_date=[&name_full](const char* name,Dependency::Relation)
 		{return !FileUtils::newer(name,name_full.c_str());};
-	
+
 	switch(m_type)
 		{
 		case Type::OBJECT:

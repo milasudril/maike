@@ -139,9 +139,15 @@ namespace Maike
 
 			const char* includeFormatGet() const noexcept
 				{return m_include_format.c_str();}
-				
+
 			const char* modeGet() const noexcept
 				{return m_mode.c_str();}
+
+			TargetCxxOptions& modeSet(const char* mode)
+				{
+				m_mode=mode;
+				return *this;
+				}
 
 		private:
 			std::vector< std::string > m_includedir;
