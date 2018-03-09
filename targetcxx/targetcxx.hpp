@@ -56,6 +56,7 @@ namespace Maike
 				,size_t line_count)=delete;
 
 			Type m_type;
+			bool m_autorun;
 			const TargetCxxCompiler& r_compiler;
 			TargetCxxOptions m_options_extra;
 			TargetCxxOptions m_options_extra_local;

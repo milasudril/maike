@@ -76,7 +76,7 @@ TargetCxx::TargetCxx(const ResourceObject& obj,const TargetCxxCompiler& compiler
 	,const char* name_src,const char* in_dir,const char* root,size_t id
 	,size_t line_count):
 	TargetBase(obj,name_src,in_dir,root,id,line_count)
-	,r_compiler(compiler)
+	,m_autorun(0),r_compiler(compiler)
 	{
 	m_type=type(name_src,static_cast<const char*>( obj.objectGet("type") ));
 
@@ -96,6 +96,13 @@ TargetCxx::TargetCxx(const ResourceObject& obj,const TargetCxxCompiler& compiler
 			Dependency dep( dircat(in_dir,dep_name).c_str(),root,Dependency::Relation::INCLUDE_EXTRA );
 			dependencyAdd( std::move(dep) );
 			}
+		}
+
+	if(obj.objectExists("autorun"))
+		{
+		if(!(m_type==Type::APPLICATION || m_type==Type::LIB_DYNAMIC))
+			{exceptionRaise(ErrorMessage{"#0;: Only applications and dynamic libraries can have the autorun flag",{name_src}});}
+		m_autorun=static_cast<long long int>(obj.objectGet("autorun"));
 		}
 
 	auto& cxxoptions=r_compiler.optionsGet();
@@ -156,6 +163,11 @@ void TargetCxx::dumpDetails(ResourceObject& target) const
 		auto cxxoptions=target.createObject();
 		m_options_extra_local.configDump(cxxoptions);
 		target.objectSet("cxxoptions_local",std::move(cxxoptions));
+		}
+
+	if(m_type==Type::APPLICATION || m_type==Type::LIB_DYNAMIC)
+		{
+		target.objectSet("autorun",target.create(static_cast<long long int>(m_autorun)));
 		}
 
 	}
