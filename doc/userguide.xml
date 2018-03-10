@@ -53,7 +53,7 @@
 <p>To uninstall Maike</p>
 
 	<pre class="code">./uninstall.sh</pre>
-	
+
 <p>It is also possible to generate a debian package. To do so, run</p>
 
 <pre class="code">make deb</pre>
@@ -302,6 +302,9 @@ int main(int argc,char** argv)
 </code></pre>
 
 <p>In the case <code>Qt5Widgets</code> cannot be found by pkg-config, Maike will report an error before any compilation starts.</p>
+
+<h3>Running an application or a shared library automatically</h3>
+<p>Maike can be told to launch an application or a shared library directly after compilation. To do so, add the <code>autorun</code> option to the target option. If a launcher has been specified (<code>autorun_launcher</code> in <code>cxxoptions</code>), that application will be used as host. Notice that this is required in order do run a shared library, or when the application is not a native application.</p>
 
 <h3>Conditional target selection</h3>
 
