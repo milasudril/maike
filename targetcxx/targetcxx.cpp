@@ -11,6 +11,7 @@
 #include "../fileutils.hpp"
 #include "../pathutils.hpp"
 #include "../writebuffer.hpp"
+#include "../readbuffer.hpp"
 #include "../stdstream.hpp"
 #include <algorithm>
 
@@ -302,6 +303,22 @@ void TargetCxx::compileImpl(Twins<const Dependency*> dependency_list
 			optionsCollect(dependency_list_full,options_extra);
 			options_extra.configAppend(m_options_extra_local);
 			r_compiler.compileApplication(sourceNameGet(),inDirGet(),{deps_begin,deps_end},name_full.c_str(),options_extra);
+			if(m_autorun)
+				{
+				Command cmd;
+				auto app=cmd.nameSet(name_full.c_str()).execute(Pipe::REDIRECT_STDERR);
+				auto stream=app.stderrCapture();
+				ReadBuffer rb(*stream.get());
+				WriteBuffer wb(StdStream::error());
+				while(!rb.eof())
+					{wb.write(rb.byteRead());}
+				auto res=app.exitStatusGet();
+				if(res!=0)
+					{
+					exceptionRaise(ErrorMessage("#0;: Program #1; failed with status code #2;. ",
+						{sourceNameGet(),name_full.c_str(),res}));
+					}
+				}
 			}
 			break;
 		case Type::LIB_DYNAMIC:
