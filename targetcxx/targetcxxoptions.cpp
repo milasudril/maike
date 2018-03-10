@@ -156,6 +156,9 @@ TargetCxxOptions& TargetCxxOptions::configAppend(const ResourceObject& cxxoption
 	if(cxxoptions.objectExists("pkgconfig"))
 		{m_pkgconfig=Command(cxxoptions.objectGet("pkgconfig"));}
 
+	if(cxxoptions.objectExists("autorun_launcher"))
+		{m_autorun_launcher=Command(cxxoptions.objectGet("autorun_launcher"));}
+
 	return *this;
 	}
 
@@ -259,6 +262,9 @@ TargetCxxOptions& TargetCxxOptions::configAppend(const TargetCxxOptions& cxxopti
 	if(cxxoptions.m_pkgconfig)
 		{m_pkgconfig=cxxoptions.m_pkgconfig;}
 
+	if(cxxoptions.m_autorun_launcher)
+		{m_autorun_launcher=cxxoptions.m_autorun_launcher;}
+
 	return *this;
 	}
 
@@ -273,6 +279,10 @@ void TargetCxxOptions::configClear()
 	m_cflags_extra.clear();
 	m_cflags_extra_dup.clear();
 	m_objcompile.nameSet("").argumentsClear();
+	m_autorun_launcher.nameSet("").argumentsClear();
+	m_dllcompile.nameSet("").argumentsClear();
+	m_appcompile.nameSet("").argumentsClear();
+	m_libcompile.nameSet("").argumentsClear();
 	m_cxxversion_min=0;
 	m_cxxversion_max=std::numeric_limits<decltype(m_cxxversion_max)>::max();
 	m_iquote.clear();
@@ -388,6 +398,12 @@ void TargetCxxOptions::configDump(ResourceObject& cxxoptions) const
 		auto pkgconfig=cxxoptions.createObject();
 		m_pkgconfig.configDump(pkgconfig);
 		cxxoptions.objectSet("pkgconfig",std::move(pkgconfig));
+		}
+
+		{
+		auto autorun_launcher=cxxoptions.createObject();
+		m_autorun_launcher.configDump(autorun_launcher);
+		cxxoptions.objectSet("autorun_launcher",std::move(autorun_launcher));
 		}
 
 	cxxoptions.objectSet("libdir_format",cxxoptions.create(m_libdir_format.c_str()))

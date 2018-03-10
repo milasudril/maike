@@ -42,6 +42,9 @@ namespace Maike
 			const Command& libcompileGet() const noexcept
 				{return m_libcompile;}
 
+			const Command& autorunLauncherGet() const noexcept
+				{return m_autorun_launcher;}
+
 
 			unsigned long long int cxxversionMinGet() const noexcept
 				{return m_cxxversion_min;}
@@ -184,6 +187,7 @@ namespace Maike
 			Command m_objcompile;
 			Command m_versionquery;
 			Command m_pkgconfig;
+			Command m_autorun_launcher;
 		};
 
 	inline TargetCxxOptions operator|(TargetCxxOptions a,const TargetCxxOptions& b)

@@ -54,6 +54,10 @@ namespace Maike
 			void compileLibrary(const char* source,const char* in_dir,Twins<const FileInfo*> dependencies
 				,const char* dest,const TargetCxxOptions& options_extra) const;
 
+			void runTargetApp(const char* source,const char* in_dir,const char* target, const TargetCxxOptions& options_extra) const;
+
+			void runTargetDll(const char* source,const char* in_dir,const char* target, const TargetCxxOptions& options_extra) const;
+
 			const TargetCxxOptions& optionsGet() const noexcept
 				{return r_options;}
 

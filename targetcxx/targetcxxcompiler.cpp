@@ -46,7 +46,7 @@ namespace
 			DataSource* r_src;
 		};
 	}
-	
+
 static const char* macroGet(const char* mode)
 	{
 	if(strcmp(mode,"c++")==0 || strcmp(mode,"C++")==0)
@@ -111,13 +111,13 @@ static unsigned long long int cxxversionDefaultGet(const Command& versionquery
 		exceptionRaise(ErrorMessage("It was not possible to determine the "
 			"default C++ version. The compiler returned status code #0;",{status}));
 		}
-	
+
 	if(ret==0)
 		{
 		exceptionRaise(ErrorMessage("The current language (#0;) appears to be "
 			"unsupported by the chosen compiler.",{mode}));
 		}
-	
+
 	return ret;
 	}
 
@@ -160,7 +160,7 @@ static const char* cxxNameGet(unsigned long long int cxxversion,const char* mode
 		return "c11";
 		}
 	exceptionRaise(ErrorMessage("The current language (#0;) is not supported.",{mode}));
-		
+
 	}
 
 static std::string
@@ -272,7 +272,7 @@ void TargetCxxCompiler::execute(const Command& cmd
 
 	std::string root;
 	r_paramset->parameterGet(Stringkey("project_root"),StringGet(root));
-	
+
 	cxxparams.get<Stringkey("target")>().push_back(dest);
 	cxxparams.get<Stringkey("source")>().push_back(source);
 	cxxparams.get<Stringkey("current_directory")>().push_back(dircat(root,in_dir));
@@ -322,7 +322,7 @@ void TargetCxxCompiler::execute(const Command& cmd
 			argvBuild(cxxparams.get<Stringkey("libdir")>()
 				,options_result.libdirGet(),options_result.libdirFormatGet());
 			}
-		
+
 		auto& includes=cxxparams.get<Stringkey("includes_extra")>();
 		ptr=dependencies.first;
 		do
@@ -391,3 +391,60 @@ const PkgConfigRequest& TargetCxxCompiler::pkgconfigAsk(const char* library,cons
 	return ip.first->second;
 	}
 
+
+static void runTarget(const Command& cmd, const char* source_name, const char* in_dir, const char* appname, const ParameterSet& paramset)
+	{
+	CompilerParameters cxxparams;
+	std::string target_dir;
+	paramset.parameterGet(Stringkey("target_directory"),StringGet(target_dir));
+
+	std::string root;
+	paramset.parameterGet(Stringkey("project_root"),StringGet(root));
+
+	cxxparams.get<Stringkey("target")>().push_back(appname);
+	cxxparams.get<Stringkey("source")>().push_back(source_name);
+	cxxparams.get<Stringkey("current_directory")>().push_back(dircat(root,in_dir));
+	cxxparams.get<Stringkey("target_directory")>().push_back(dircat(root,target_dir));
+
+
+	const ParameterSet* paramset_full[]={&paramset,&cxxparams};
+
+	auto app=cmd.execute(Pipe::REDIRECT_STDERR,{paramset_full,paramset_full + 2 });
+
+	auto stream=app.stderrCapture();
+	ReadBuffer rb(*stream.get());
+	WriteBuffer wb(StdStream::error());
+	while(!rb.eof())
+		{wb.write(rb.byteRead());}
+	auto res=app.exitStatusGet();
+	if(res!=0)
+		{
+		exceptionRaise(ErrorMessage("#0;: Program #1; failed with status code #2;. ",
+			{source_name,appname,res}));
+		}
+	}
+
+void TargetCxxCompiler::runTargetApp(const char* source_name, const char* in_dir, const char* appname, const TargetCxxOptions& options_extra) const
+	{
+	auto options=r_options;
+	options.configAppend(options_extra);
+	auto cmd=options.autorunLauncherGet();
+	if(!cmd)
+		{cmd.nameSet(appname);}
+
+	runTarget(cmd, source_name, in_dir, appname, *r_paramset);
+	}
+
+void TargetCxxCompiler::runTargetDll(const char* source_name, const char* in_dir, const char* appname, const TargetCxxOptions& options_extra) const
+	{
+	auto options=r_options;
+	options.configAppend(options_extra);
+	auto cmd=options.autorunLauncherGet();
+
+	if(!cmd)
+		{
+		exceptionRaise(ErrorMessage("#0;: It is not possible to run a shared library without a launcher.",
+			{source_name}));
+		}
+	runTarget(cmd, source_name, in_dir, appname, *r_paramset);
+	}

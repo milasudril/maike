@@ -52,6 +52,9 @@ namespace Maike
 				return *this;
 				}
 
+			size_t argumentsCount() const noexcept
+				{return m_args.size();}
+
 		private:
 			std::string m_name;
 			std::vector< std::string > m_args;
