@@ -383,7 +383,7 @@ bool TargetCxx::upToDate(Twins<const Dependency*> dependency_list
 		{
 		case Type::OBJECT:
 			return dependenciesProcess(target_dir,dependency_list
-				,USE_INCLUDE_EXTRA|USE_INCLUDE|USE_MISC
+				,USE_INCLUDE_EXTRA|USE_INCLUDE|USE_MISC|USE_TOOL
 				,up_to_date);
 
 		case Type::INCLUDE_LIB:
@@ -397,7 +397,7 @@ bool TargetCxx::upToDate(Twins<const Dependency*> dependency_list
 		case Type::LIB_DYNAMIC:
 		case Type::APPLICATION:
 			return dependenciesProcess(target_dir,dependency_list
-				,USE_INCLUDE_EXTRA|USE_INCLUDE|USE_MISC,up_to_date)
+				,USE_INCLUDE_EXTRA|USE_INCLUDE|USE_MISC|USE_TOOL,up_to_date)
 				&& dependenciesProcess(target_dir,dependency_list_full,USE_IMPLEMENTATION,up_to_date);
 
 		default:
