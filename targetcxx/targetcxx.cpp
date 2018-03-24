@@ -73,6 +73,18 @@ void TargetCxx::pkgconfig(const ResourceObject& pkgconfig_libs)
 		}
 	}
 
+
+static const char* chooseFistNonEmpty(const char* a)
+	{return a;}
+
+template<class ... Args>
+static const char* chooseFistNonEmpty(const char* a,Args... vals)
+	{
+	if(*a=='\0')
+		{return chooseFistNonEmpty(vals...);}
+	return a;
+	}
+
 TargetCxx::TargetCxx(const ResourceObject& obj,const TargetCxxCompiler& compiler
 	,const char* name_src,const char* in_dir,const char* root,size_t id
 	,size_t line_count):
@@ -104,9 +116,19 @@ TargetCxx::TargetCxx(const ResourceObject& obj,const TargetCxxCompiler& compiler
 		if(!(m_type==Type::APPLICATION || m_type==Type::LIB_DYNAMIC))
 			{exceptionRaise(ErrorMessage{"#0;: Only applications and dynamic libraries can have the autorun flag",{name_src}});}
 		m_autorun=static_cast<long long int>(obj.objectGet("autorun"));
+
+		if(m_autorun)
+			{
+			if(m_options_extra_local.autorunLauncherGet())
+				{dependencyAdd(Dependency(m_options_extra_local.autorunLauncherGet().nameGet(),root,Dependency::Relation::TOOL));}
+			else
+			if(r_compiler.optionsGet().autorunLauncherGet())
+				{dependencyAdd(Dependency(r_compiler.optionsGet().autorunLauncherGet().nameGet(),root,Dependency::Relation::TOOL));}
+			}
 		}
 
 	auto& cxxoptions=r_compiler.optionsGet();
+	printf("%s\n",chooseFistNonEmpty(m_options_extra_local.modeGet(), cxxoptions.modeGet(), "blah"));
 	switch(m_type)
 		{
 	//	Assume that the complete toolchain is installed if the compiler is
