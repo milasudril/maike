@@ -85,6 +85,46 @@ static const char* chooseFirstNonEmpty(const char* a,Args... vals)
 	return a;
 	}
 
+static Dependency makeDependencyOnCompiler(const TargetCxxOptions& options_extra_local
+	,const TargetCxxOptions& options_extra
+	,const TargetCxxOptions& optionsCompiler
+	,TargetCxx::Type targetType
+	,const char* root)
+	{
+	const char* depname="";
+	switch(targetType)
+		{
+	//	Assume that the complete toolchain is installed if the compiler is
+	//	installed. This means that we do not need to check for the preprocessor
+	//	or the assembler.
+		case TargetCxx::Type::OBJECT:
+			depname=chooseFirstNonEmpty(options_extra_local.objcompileGet().nameGet()
+				,options_extra.objcompileGet().nameGet()
+				,optionsCompiler.objcompileGet().nameGet());
+			break;
+		case TargetCxx::Type::APPLICATION:
+			depname=chooseFirstNonEmpty(options_extra_local.appcompileGet().nameGet()
+				,options_extra.appcompileGet().nameGet()
+				,optionsCompiler.appcompileGet().nameGet());
+			break;
+		case TargetCxx::Type::LIB_DYNAMIC:
+			depname=chooseFirstNonEmpty(options_extra_local.dllcompileGet().nameGet()
+				,options_extra.dllcompileGet().nameGet()
+				,optionsCompiler.dllcompileGet().nameGet());
+			break;
+		case TargetCxx::Type::LIB_STATIC:
+			depname=chooseFirstNonEmpty(options_extra_local.libcompileGet().nameGet()
+				,options_extra.libcompileGet().nameGet()
+				,optionsCompiler.libcompileGet().nameGet());
+			break;
+		case TargetCxx::Type::INCLUDE_LIB:
+			break;
+		case TargetCxx::Type::INCLUDE:
+			break;
+		}
+	return Dependency(depname,root,Dependency::Relation::TOOL);
+	}
+
 TargetCxx::TargetCxx(const ResourceObject& obj,const TargetCxxCompiler& compiler
 	,const char* name_src,const char* in_dir,const char* root,size_t id
 	,size_t line_count):
@@ -127,32 +167,11 @@ TargetCxx::TargetCxx(const ResourceObject& obj,const TargetCxxCompiler& compiler
 			}
 		}
 
-	auto& cxxoptions=r_compiler.optionsGet();
-	switch(m_type)
-		{
-	//	Assume that the complete toolchain is installed if the compiler is
-	//	installed. This means that we do not need to check for the preprocessor
-	//	or the assembler.
-		case Type::OBJECT:
-			dependencyAdd(Dependency(cxxoptions.objcompileGet().nameGet(),root,Dependency::Relation::TOOL));
-			m_options_extra_local.modeSet(cxxoptions.modeGet());
-			break;
-		case Type::APPLICATION:
-			dependencyAdd(Dependency(cxxoptions.appcompileGet().nameGet(),root,Dependency::Relation::TOOL));
-			m_options_extra_local.modeSet(cxxoptions.modeGet());
-			break;
-		case Type::LIB_DYNAMIC:
-			dependencyAdd(Dependency(cxxoptions.dllcompileGet().nameGet(),root,Dependency::Relation::TOOL));
-			m_options_extra_local.modeSet(cxxoptions.modeGet());
-			break;
-		case Type::LIB_STATIC:
-			dependencyAdd(Dependency(cxxoptions.libcompileGet().nameGet(),root,Dependency::Relation::TOOL));
-			break;
-		case Type::INCLUDE_LIB:
-			break;
-		case Type::INCLUDE:
-			break;
-		}
+	if(*m_options_extra_local.modeGet()=='\0');
+		{m_options_extra_local.modeSet(optionsCompiler.modeGet());}
+
+	if(m_type!=Type::INCLUDE && m_type!=Type::INCLUDE_LIB)
+		{dependencyAdd(makeDependencyOnCompiler(m_options_extra_local,m_options_extra,optionsCompiler,m_type,root));}
 	}
 
 bool TargetCxx::generated() const noexcept
