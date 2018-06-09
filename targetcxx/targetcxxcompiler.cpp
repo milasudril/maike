@@ -52,7 +52,7 @@ static const char* macroGet(const char* mode)
 	if(strcmp(mode,"c++")==0 || strcmp(mode,"C++")==0)
 		{return "__cplusplus";}
 	else
-	if(strcmp(mode,"C")==0 || strcmp(mode,"v")==0)
+	if(strcmp(mode,"C")==0 || strcmp(mode,"c")==0)
 		{return "__STDC_VERSION__";}
 	exceptionRaise(ErrorMessage("The current language (#0;) is not supported.",{mode}));
 	}
