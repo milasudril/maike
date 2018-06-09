@@ -167,7 +167,7 @@ TargetCxx::TargetCxx(const ResourceObject& obj,const TargetCxxCompiler& compiler
 			}
 		}
 
-	if(*m_options_extra_local.modeGet()=='\0');
+	if(*m_options_extra_local.modeGet()=='\0')
 		{m_options_extra_local.modeSet(optionsCompiler.modeGet());}
 
 	if(m_type!=Type::INCLUDE && m_type!=Type::INCLUDE_LIB)

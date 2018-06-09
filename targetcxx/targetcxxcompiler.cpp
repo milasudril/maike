@@ -148,10 +148,12 @@ static const char* cxxNameGet(unsigned long long int cxxversion,const char* mode
 			{return "c++03";}
 		if(cxxversion < 201402L)
 			{return "c++11";}
+		if(cxxversion > 201402L)
+			{return "c++17";}
 		return "c++14";
 		}
 	else
-	if(strcmp(mode,"C")==0 || strcmp(mode,"v")==0)
+	if(strcmp(mode,"C")==0 || strcmp(mode,"c")==0)
 		{
 		if(cxxversion < 199901)
 			{return "c89";}
