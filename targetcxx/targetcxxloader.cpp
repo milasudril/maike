@@ -11,6 +11,7 @@
 #include "../writebuffer.hpp"
 #include "../stdstream.hpp"
 #include "../dependencybuffer.hpp"
+#include "../fileutils.hpp"
 
 using namespace Maike;
 
@@ -179,6 +180,27 @@ void TargetCxxLoader::dependenciesExtraGet(const char* name_src,const char* in_d
 			}
 		}
 	}
+	
+namespace
+	{
+	std::string resolveInclude(const std::string& filename,Twins<const std::string*> paths,const char** in_dir)
+		{
+		if(in_dir!=nullptr)
+			{
+			auto name_dep_full=dircat(*in_dir, filename);
+			if(FileUtils::exists(name_dep_full.c_str()))
+				{return std::move(name_dep_full);}
+			}
+		
+		std::string name_dep_full;
+		std::find_if(paths.first, paths.second, [filename, &name_dep_full](const std::string& str)
+			{
+			name_dep_full=dircat(str,filename);
+			return FileUtils::exists(name_dep_full.c_str());
+			});
+		return std::move(name_dep_full);
+		}
+	}
 
 void TargetCxxLoader::dependenciesGet(const char* name_src,const char* in_dir
 	,const char* root,ResourceObject::Reader
@@ -214,7 +236,7 @@ void TargetCxxLoader::dependenciesGet(const char* name_src,const char* in_dir
 						break;
 					case TargetCxxPPTokenizer::Token::Type::STRING:
 						{
-						auto name_dep_full=dircat(in_dir,tok_in.value);
+						auto name_dep_full=resolveInclude(tok_in.value,r_options.iquoteGet(),&in_dir);
 						deps.append( Dependency(name_dep_full.c_str(),root,Dependency::Relation::INCLUDE) );
 						}
 						break;
