@@ -2,11 +2,7 @@ all:
 	./bootstrap
 
 bootstrap: reset
-	echo "#!/bin/bash" > bootstrap
-	echo "set -eo pipefail" >> bootstrap
-	maike >> bootstrap
-	chmod u+x bootstrap
-	cp bootstrap build.sh
+	./make_bootstrap.sh
 
 archive: bootstrap archive.sh
 	./archive.sh __targets
