@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cat << EOF > bootstrap
+cat << 'EOF' > bootstrap
 #!/bin/bash
 set -eo pipefail
 
