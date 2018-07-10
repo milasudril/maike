@@ -292,7 +292,7 @@ void TargetCxxOptions::configClear()
 
 TargetCxxOptions& TargetCxxOptions::configAppendDefault()
 	{
-	m_cxxversion_min=__cplusplus;
+	m_cxxversion_min=0;  // Cannot be set to __cplusplus #75
 	m_cxxversion_max=std::numeric_limits<decltype(m_cxxversion_max)>::max();
 
 	m_includedir_format=std::string("-I^");
