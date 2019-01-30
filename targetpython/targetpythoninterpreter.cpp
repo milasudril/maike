@@ -70,11 +70,15 @@ int TargetPythonInterpreter::run(const char* script,Twins<const char* const*> ar
 	dataProcess(pipe);
 
 	auto ret=pipe.exitStatusGet();
-	if(ret>1)
+	if(ret.killedWas())
 		{
-		exceptionRaise(ErrorMessage("#0;: Script failed",{script}));
+		exceptionRaise(ErrorMessage("#0;: The shell was killed with signal #1;", {script, ret.errorCodeGet()}));
 		}
-	return ret;
+	if(ret.errorCodeGet()>1)
+		{
+		exceptionRaise(ErrorMessage("#0;: Script failed with status code #1;", {script, ret.errorCodeGet()}));
+		}
+	return ret.errorCodeGet();
 	}
 
 void TargetPythonInterpreter::configClear()

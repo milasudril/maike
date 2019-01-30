@@ -15,6 +15,32 @@
 
 namespace Maike
 	{
+	class ProcessExitStatus
+		{
+		public:
+			enum class TerminationMode : int {EXITED, KILLED};
+
+			explicit ProcessExitStatus(TerminationMode mode, int error_code):
+				m_term_mode{mode}, m_error_code{error_code}
+				{}
+
+			int errorCodeGet() const noexcept
+				{return m_error_code;}
+
+			bool killedWas() const noexcept
+				{return m_term_mode==TerminationMode::KILLED;}
+
+		private:
+			TerminationMode m_term_mode;
+			int m_error_code;
+		};
+
+	inline bool processSucceeded(const ProcessExitStatus& result)
+		{return !result.killedWas() && result.errorCodeGet()==0;}
+
+	inline bool processFailed(const ProcessExitStatus& result)
+		{return !processSucceeded(result);}
+
 	class PRIVATE Pipe
 		{
 		public:
@@ -22,6 +48,8 @@ namespace Maike
 			static constexpr unsigned int REDIRECT_STDOUT=2;
 			static constexpr unsigned int REDIRECT_STDERR=4;
 			static constexpr unsigned int ECHO_OFF=8;
+
+			enum class TerminationMode : int{EXITED, KILLED};
 
 			Pipe(const Pipe& rhs)=delete;
 			Pipe& operator=(const Pipe& rhs)=delete;
@@ -34,7 +62,7 @@ namespace Maike
 
 			~Pipe() noexcept;
 
-			int exitStatusGet() noexcept;
+			ProcessExitStatus exitStatusGet() noexcept;
 
 			Handle<DataSource> stdoutCapture() noexcept
 				{return Handle<DataSource>( &m_stdout );}

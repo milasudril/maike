@@ -116,7 +116,7 @@ typedef ParameterSetMapFixed<
 	,Stringkey("libname")> PkgConfigParams;
 
 template<class ItemSink>
-PRIVATE int pipeExecute(const Command& cmd,const PkgConfigParams& params
+PRIVATE ProcessExitStatus pipeExecute(const Command& cmd,const PkgConfigParams& params
 	,const char* delim_seq,const ItemSink& sink)
 	{
 	const ParameterSet* paramsets[]={&params};
@@ -133,24 +133,24 @@ PkgConfigRequest::PkgConfigRequest(const Command& cmd,const char* libname
 	params.get<Stringkey("libname")>().push_back(std::string(libname));
 
 	params.get<Stringkey("action")>().push_back(std::string("--cflags-only-I"));
-	if(pipeExecute(cmd,params," -I",[this](const char* str)
-		{m_incdir.push_back(std::string(str));})!=0)
+	if(processFailed(pipeExecute(cmd,params," -I",[this](const char* str)
+		{m_incdir.push_back(std::string(str));})))
 		{
 		exceptionRaise(ErrorMessage("#0;: It was not possible to find information about "
 			"the library #1;",{context,libname}));
 		}
 
 	params.get<Stringkey("action")>()[0]=std::string("--cflags-only-other");
-	if(pipeExecute(cmd,params," -",[this](const char* str)
-		{m_cflags.push_back(std::string(str));})!=0)
+	if(processFailed(pipeExecute(cmd,params," -",[this](const char* str)
+		{m_cflags.push_back(std::string(str));})))
 		{
 		exceptionRaise(ErrorMessage("#0;: It was not possible to find information about "
 			"the library #1;",{context,libname}));
 		}
 
 	params.get<Stringkey("action")>()[0]=std::string("--libs-only-L");
-	if(pipeExecute(cmd,params," -L",[this](const char* str)
-		{m_libdir.push_back(std::string(str));})!=0)
+	if(processFailed(pipeExecute(cmd,params," -L",[this](const char* str)
+		{m_libdir.push_back(std::string(str));})))
 		{
 		exceptionRaise(ErrorMessage("#0;: It was not possible to find information about "
 			"the library #1;",{context,libname}));
@@ -158,8 +158,8 @@ PkgConfigRequest::PkgConfigRequest(const Command& cmd,const char* libname
 
 	params.get<Stringkey("action")>()[0]=std::string("--libs-only-l");
 	std::vector<Dependency> depnames;
-	if(pipeExecute(cmd,params," -l",[this](const char* str)
-		{m_deps.push_back(Dependency(str,"",Dependency::Relation::EXTERNAL));})!=0)
+	if(processFailed(pipeExecute(cmd,params," -l",[this](const char* str)
+		{m_deps.push_back(Dependency(str,"",Dependency::Relation::EXTERNAL));})))
 		{
 		exceptionRaise(ErrorMessage("#0;: It was not possible to find information about "
 			"the library #1;",{context,libname}));

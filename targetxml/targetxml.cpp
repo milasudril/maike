@@ -36,7 +36,7 @@ bool TargetXML::upToDate(Twins<const Dependency*>
 	,const char* target_dir) const
 	{
 	auto name_out=dircat(target_dir,nameGet());
-	
+
 	if(FileUtils::newer(sourceNameGet(),name_out.c_str()))
 		{return 0;}
 
@@ -103,9 +103,12 @@ void TargetXML::compileImpl(Twins<const Dependency*>
 	Thread<ReadCallback> stderr_reader(ReadCallback{standard_error.get()});
 
 	auto ret=pipe.exitStatusGet();
-	if(ret!=0)
+	if(processFailed(ret))
 		{
-		exceptionRaise(ErrorMessage("#0;: Compilation failed with status #1;.",{sourceNameGet(),ret}));
+		if(ret.killedWas())
+			{exceptionRaise(ErrorMessage("#0;: The compiler was killed with signal #1;",{sourceNameGet(),ret.errorCodeGet()}));}
+		else
+			{exceptionRaise(ErrorMessage("#0;: The compiler returned status code #1;",{sourceNameGet(),ret.errorCodeGet()}));}
 		}
 	}
 

@@ -124,14 +124,16 @@ namespace
 				}
 
 
-			int exitStatusGet() noexcept
+			ProcessExitStatus exitStatusGet() noexcept
 				{
 				if(m_pid!=0)
 					{
-					waitpid(m_pid,&m_status,0);
+					waitpid(static_cast<int>(m_pid),&m_status,0);
 					m_pid=0;
 					}
-				return WEXITSTATUS(m_status);
+				return WIFEXITED(m_status)?
+					  ProcessExitStatus{ProcessExitStatus::TerminationMode::EXITED, WEXITSTATUS(m_status)}
+					: ProcessExitStatus{ProcessExitStatus::TerminationMode::KILLED, WTERMSIG(m_status)};
 				}
 
 
@@ -286,7 +288,7 @@ Pipe::~Pipe() noexcept
 	exitStatusGet();
 	}
 
-int Pipe::exitStatusGet() noexcept
+ProcessExitStatus Pipe::exitStatusGet() noexcept
 	{
 	m_stdin.close();
 	m_stdout.close();
@@ -296,7 +298,9 @@ int Pipe::exitStatusGet() noexcept
 		waitpid(static_cast<int>(m_pid),&m_status,0);
 		m_pid=0;
 		}
-	return WEXITSTATUS(m_status);
+	return WIFEXITED(m_status)?
+			  ProcessExitStatus{ProcessExitStatus::TerminationMode::EXITED, WEXITSTATUS(m_status)}
+			: ProcessExitStatus{ProcessExitStatus::TerminationMode::KILLED, WTERMSIG(m_status)};
 	}
 
 

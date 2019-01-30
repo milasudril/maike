@@ -9,7 +9,7 @@ for k in "$@"; do
 			shift
 			;;
 		*)
-			echo Uknown options "$k"
+			echo Unknown options "$k"
 			exit -1
 	esac
 done;
@@ -42,7 +42,7 @@ fi
 ' 0
 
 trap 'do_cleanup
-exit 1' SIGINT SIGTERM 
+exit 1' SIGINT SIGTERM
 
 function transaction ()
 	{

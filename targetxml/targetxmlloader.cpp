@@ -111,7 +111,7 @@ namespace
 			size_t linesCountGet() const noexcept
 				{return 1;}
 
-			int exitStatusGet() noexcept
+			ProcessExitStatus exitStatusGet() noexcept
 				{return m_pipe.exitStatusGet();}
 
 		private:
@@ -141,6 +141,6 @@ void TargetXMLLoader::targetsLoad(const char* name_src,const char* in_dir
 	TagExtractor extractor(m_filter,depfile.c_str(),name_src);
 	factory.targetsCreate(extractor,name_src,in_dir,*this,spider,graph);
 	auto ret=extractor.exitStatusGet();
-	if(ret!=0)
+	if(processFailed(ret))
 		{exceptionRaise(ErrorMessage("#0;: Failed to load any target definition.",{name_src}));}
 	}

@@ -164,10 +164,19 @@ int TargetArchiveCompiler::tar(Twins<const char* const*> files,const char* name
 	dataProcess(pipe,files);
 
 	auto ret=pipe.exitStatusGet();
-	if(ret!=0)
+	if(processFailed(ret))
 		{
-		exceptionRaise(ErrorMessage("It was not possible to create #0;. The archiver returned status code #1;"
-			,{name,ret}));
+		FileUtils::remove(params.get<Stringkey("target")>().front().c_str());
+		if(ret.killedWas())
+			{
+			exceptionRaise(ErrorMessage("It was not possible to create #0;. The archiver was killed with signal #1;"
+				,{name,ret.errorCodeGet()}));
+			}
+		else
+			{
+			exceptionRaise(ErrorMessage("It was not possible to create #0;. The archiver returned status code #1;"
+				,{name,ret.errorCodeGet()}));
+			}
 		}
 	return 0;
 	}
@@ -179,7 +188,7 @@ int TargetArchiveCompiler::zip(Twins<const char* const*> files,const char* name
 	params.get<Stringkey("target")>().push_back(dircat(target_dir,name));
 
 	FileUtils::remove(params.get<Stringkey("target")>().front().c_str());
-	
+
 	const ParameterSet* paramset_tot[]={&r_sysvars,&params};
 		{
 		auto pipe=m_zip.createGet().execute(
@@ -188,24 +197,41 @@ int TargetArchiveCompiler::zip(Twins<const char* const*> files,const char* name
 
 		dataProcess(pipe,files);
 		auto ret=pipe.exitStatusGet();
-		if(ret!=0)
+		if(processFailed(ret))
 			{
-			exceptionRaise(ErrorMessage("It was not possible to create #0;. The archiver returned status code #1;"
-				,{name,ret}));
+			FileUtils::remove(params.get<Stringkey("target")>().front().c_str());
+			if(ret.killedWas())
+				{
+				exceptionRaise(ErrorMessage("It was not possible to create #0;. The archiver was killed with signal #1;"
+					,{name,ret.errorCodeGet()}));
+				}
+			else
+				{
+				exceptionRaise(ErrorMessage("It was not possible to create #0;. The archiver returned status code #1;"
+					,{name,ret.errorCodeGet()}));
+				}
 			}
 		}
 		{
 		auto pipe=m_zip.renameGet().execute(
 			 Pipe::REDIRECT_STDERR|Pipe::REDIRECT_STDIN|Pipe::REDIRECT_STDOUT
 			,{paramset_tot,paramset_tot + 2});
-		
+
 		dataProcess(pipe,files,target_dir,root);
 		auto ret=pipe.exitStatusGet();
-		if(ret!=0)
+		if(processFailed(ret))
 			{
 			FileUtils::remove(params.get<Stringkey("target")>().front().c_str());
-			exceptionRaise(ErrorMessage("It was not possible to create #0;. The archiver returned status code #1;"
-				,{name,ret}));
+			if(ret.killedWas())
+				{
+				exceptionRaise(ErrorMessage("It was not possible to create #0;. The archiver was killed with signal #1;"
+					,{name,ret.errorCodeGet()}));
+				}
+			else
+				{
+				exceptionRaise(ErrorMessage("It was not possible to create #0;. The archiver returned status code #1;"
+					,{name,ret.errorCodeGet()}));
+				}
 			}
 		}
 

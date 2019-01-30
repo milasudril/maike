@@ -106,10 +106,18 @@ static unsigned long long int cxxversionDefaultGet(const Command& versionquery
 
 	auto ret=cxxversionDefaultGet(versionget,mode);
 	auto status=versionget.exitStatusGet();
-	if(status!=0)
+	if(processFailed(status))
 		{
-		exceptionRaise(ErrorMessage("It was not possible to determine the "
-			"default C++ version. The compiler returned status code #0;",{status}));
+		if(status.killedWas())
+			{
+			exceptionRaise(ErrorMessage("It was not possible to determine the "
+				"default C++ version. The compiler was killed with signal #0;",{status.errorCodeGet()}));
+			}
+		else
+			{
+			exceptionRaise(ErrorMessage("It was not possible to determine the "
+				"default C++ version. The compiler returned status code #0;",{status.errorCodeGet()}));
+			}
 		}
 
 	if(ret==0)
@@ -346,10 +354,18 @@ void TargetCxxCompiler::execute(const Command& cmd
 	while(!rb.eof())
 		{wb.write(rb.byteRead());}
 	auto res=compiler.exitStatusGet();
-	if(res!=0)
+	if(processFailed(res))
 		{
-		exceptionRaise(ErrorMessage("#0;: It was not possible to generate #1;. "
-			"The compiler returned status code #2;",{source,dest,res}));
+		if(res.killedWas())
+			{
+			exceptionRaise(ErrorMessage("#0;: It was not possible to generate #1;. "
+				"The compiler was killed with signal #2;",{source,dest,res.errorCodeGet()}));
+			}
+		else
+			{
+			exceptionRaise(ErrorMessage("#0;: It was not possible to generate #1;. "
+				"The compiler returned status code #2;",{source,dest,res.errorCodeGet()}));
+			}
 		}
 	}
 
@@ -419,10 +435,18 @@ static void runTarget(const Command& cmd, const char* source_name, const char* i
 	while(!rb.eof())
 		{wb.write(rb.byteRead());}
 	auto res=app.exitStatusGet();
-	if(res!=0)
+	if(processFailed(res))
 		{
-		exceptionRaise(ErrorMessage("#0;: Program #1; failed with status code #2;. ",
-			{source_name,appname,res}));
+		if(res.killedWas())
+			{
+			exceptionRaise(ErrorMessage("#0;: Program #1; was killed with signal #2;. ",
+				{source_name,appname,res.errorCodeGet()}));
+			}
+		else
+			{
+			exceptionRaise(ErrorMessage("#0;: Program #1; failed with status code #2;. ",
+				{source_name,appname,res.errorCodeGet()}));
+			}
 		}
 	}
 
