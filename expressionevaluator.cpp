@@ -8,6 +8,7 @@
 #include "exceptionhandler.hpp"
 #include "twins.hpp"
 #include "versionnumber.hpp"
+#include "fileutils.hpp"
 #include <string>
 #include <stack>
 #include <vector>
@@ -345,7 +346,14 @@ namespace
 				{exceptionRaise(ErrorMessage("Expression error: 'version' expects a string.",{}));}
 			return static_cast<int64_t>(version(static_cast<const char*>(ptr[0])));
 			}
-
+		else
+		if(cmd.name==Stringkey("file_exists"))
+			{
+			auto ptr=cmd.args.data();
+			if(ptr->typeGet()!=Variant::STRING)
+				{exceptionRaise(ErrorMessage("Expression error: 'file_exists' expects a string.",{}));}
+			return static_cast<int64_t>(FileUtils::exists(static_cast<const char*>(ptr[0])));
+			}
 		exceptionRaise(ErrorMessage("Expression error: Unknown function.",{}));
 		}
 	};
