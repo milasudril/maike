@@ -106,9 +106,9 @@ void TargetXML::compileImpl(Twins<const Dependency*>
 	if(processFailed(ret))
 		{
 		if(ret.killedWas())
-			{exceptionRaise(ErrorMessage("#0;: The compiler was killed with signal #1;",{sourceNameGet(),ret.errorCodeGet()}));}
+			{exceptionRaise(ErrorMessage("#0;: The compiler was killed with signal #1;.",{sourceNameGet(),ret.errorCodeGet()}));}
 		else
-			{exceptionRaise(ErrorMessage("#0;: The compiler returned status code #1;",{sourceNameGet(),ret.errorCodeGet()}));}
+			{exceptionRaise(ErrorMessage("#0;: The compiler returned status code #1;.",{sourceNameGet(),ret.errorCodeGet()}));}
 		}
 	}
 

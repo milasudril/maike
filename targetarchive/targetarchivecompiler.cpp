@@ -169,12 +169,12 @@ int TargetArchiveCompiler::tar(Twins<const char* const*> files,const char* name
 		FileUtils::remove(params.get<Stringkey("target")>().front().c_str());
 		if(ret.killedWas())
 			{
-			exceptionRaise(ErrorMessage("It was not possible to create #0;. The archiver was killed with signal #1;"
+			exceptionRaise(ErrorMessage("It was not possible to create #0;. The archiver was killed with signal #1;."
 				,{name,ret.errorCodeGet()}));
 			}
 		else
 			{
-			exceptionRaise(ErrorMessage("It was not possible to create #0;. The archiver returned status code #1;"
+			exceptionRaise(ErrorMessage("It was not possible to create #0;. The archiver returned status code #1;."
 				,{name,ret.errorCodeGet()}));
 			}
 		}

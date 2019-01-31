@@ -72,11 +72,11 @@ int TargetOctaveInterpreter::run(const char* script,Twins<const char* const*> ar
 	auto ret=pipe.exitStatusGet();
 	if(ret.killedWas())
 		{
-		exceptionRaise(ErrorMessage("#0;: The shell was killed with signal #1;", {script, ret.errorCodeGet()}));
+		exceptionRaise(ErrorMessage("#0;: The interpreter was killed with signal #1;.", {script, ret.errorCodeGet()}));
 		}
 	if(ret.errorCodeGet()>1)
 		{
-		exceptionRaise(ErrorMessage("#0;: Script failed with status code #1;", {script, ret.errorCodeGet()}));
+		exceptionRaise(ErrorMessage("#0;: Script failed with status code #1;.", {script, ret.errorCodeGet()}));
 		}
 	return ret.errorCodeGet();
 	}

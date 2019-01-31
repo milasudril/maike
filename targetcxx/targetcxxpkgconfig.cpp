@@ -137,7 +137,7 @@ PkgConfigRequest::PkgConfigRequest(const Command& cmd,const char* libname
 		{m_incdir.push_back(std::string(str));})))
 		{
 		exceptionRaise(ErrorMessage("#0;: It was not possible to find information about "
-			"the library #1;",{context,libname}));
+			"the library #1;.",{context,libname}));
 		}
 
 	params.get<Stringkey("action")>()[0]=std::string("--cflags-only-other");
@@ -145,7 +145,7 @@ PkgConfigRequest::PkgConfigRequest(const Command& cmd,const char* libname
 		{m_cflags.push_back(std::string(str));})))
 		{
 		exceptionRaise(ErrorMessage("#0;: It was not possible to find information about "
-			"the library #1;",{context,libname}));
+			"the library #1;.",{context,libname}));
 		}
 
 	params.get<Stringkey("action")>()[0]=std::string("--libs-only-L");
@@ -153,7 +153,7 @@ PkgConfigRequest::PkgConfigRequest(const Command& cmd,const char* libname
 		{m_libdir.push_back(std::string(str));})))
 		{
 		exceptionRaise(ErrorMessage("#0;: It was not possible to find information about "
-			"the library #1;",{context,libname}));
+			"the library #1;.",{context,libname}));
 		}
 
 	params.get<Stringkey("action")>()[0]=std::string("--libs-only-l");
@@ -162,7 +162,7 @@ PkgConfigRequest::PkgConfigRequest(const Command& cmd,const char* libname
 		{m_deps.push_back(Dependency(str,"",Dependency::Relation::EXTERNAL));})))
 		{
 		exceptionRaise(ErrorMessage("#0;: It was not possible to find information about "
-			"the library #1;",{context,libname}));
+			"the library #1;.",{context,libname}));
 		}
 	std::reverse(m_deps.data(),m_deps.data() + m_deps.size());
 	}
