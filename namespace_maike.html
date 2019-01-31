@@ -114,6 +114,11 @@
         <td></td>
       </tr>
       <tr>
+        <th class="membername">class <a href="class_maike_1_1_process_exit_status.html">Maike::ProcessExitStatus</a>
+</th>
+        <td></td>
+      </tr>
+      <tr>
         <th class="membername">class <a href="struct_maike_1_1_project_info.html">Maike::ProjectInfo</a>
 </th>
         <td></td>
@@ -217,8 +222,8 @@
         <th class="membername">
 <span class="templatestring">
 template&lt;<span class="type">class Proc</span>&gt;
-</span><span class="type">bool</span> <a href="#1afa1276180533802dfeaffb1e82b44bf9">dependenciesProcess</a>
-(<span class="type">const char *</span> <span class="declname">target_dir</span>,<span class="type"><a href="class_maike_1_1_twins.html">Twins</a>&lt; const <a href="class_maike_1_1_dependency.html">Dependency</a> * &gt;</span> <span class="declname">deps</span>,<span class="type">int</span> <span class="declname">use_flags</span>,<span class="type">Proc &amp;&amp;</span> <span class="declname">proc</span>)</th>
+</span><span class="type">bool</span> <a href="#1a1a1910792cd4e81d6004d2e5765ce517">dependenciesProcess</a>
+(<span class="type">const char *</span> <span class="declname">target_dir</span>,<span class="type"><a href="class_maike_1_1_twins.html">Twins</a>&lt; const <a href="class_maike_1_1_dependency.html">Dependency</a> *&gt;</span> <span class="declname">deps</span>,<span class="type">int</span> <span class="declname">use_flags</span>,<span class="type">Proc &amp;&amp;</span> <span class="declname">proc</span>)</th>
         <td class="memberdesc"></td>
       </tr>
       <tr>
@@ -344,8 +349,8 @@ template&lt;<span class="type">class Proc</span>&gt;
       </tr>
       <tr>
         <th class="membername">
-<span class="type">void</span> <a href="#1a9e05c04d5be76c0903d9d52af09114e6">hookRegister</a>
-(<span class="type">Session &amp;</span> <span class="declname">maike</span>,<span class="type">const char *</span> <span class="declname">name_plugin</span>,<span class="type"><a href="class_maike_1_1_twins.html">Twins</a>&lt; const char *const * &gt;</span> <span class="declname">filename_exts</span>)</th>
+<span class="type">void</span> <a href="#1a6ab6b55d45c2711cf9189eaa7d557a18">hookRegister</a>
+(<span class="type">Session &amp;</span> <span class="declname">maike</span>,<span class="type">const char *</span> <span class="declname">name_plugin</span>,<span class="type"><a href="class_maike_1_1_twins.html">Twins</a>&lt; const char *const *&gt;</span> <span class="declname">filename_exts</span>)</th>
         <td class="memberdesc"></td>
       </tr>
       <tr>
@@ -620,14 +625,26 @@ template&lt;<span class="type">class T</span>,<span class="type">size_t</span> <
       </tr>
       <tr>
         <th class="membername">
-<span class="type">void</span> <a href="#1aed07eacc8c125c4140f8bafe04825e24">format</a>
-(<span class="type">const <a href="class_maike_1_1_twins.html">Twins</a>&lt; char * &gt; &amp;</span> <span class="declname">buffer</span>,<span class="type">const char *</span> <span class="declname">format_string</span>,<span class="type">const <a href="class_maike_1_1_twins.html">Twins</a>&lt; const <a href="class_maike_1_1_variant.html">Variant</a> * &gt; &amp;</span> <span class="declname">args</span>)</th>
+<span class="type">bool</span> <a href="#1ace59938afd83172c2e8424f59569c3d6">processSucceeded</a>
+(<span class="type">const <a href="class_maike_1_1_process_exit_status.html">ProcessExitStatus</a> &amp;</span> <span class="declname">result</span>)</th>
         <td class="memberdesc"></td>
       </tr>
       <tr>
         <th class="membername">
-<span class="type">void</span> <a href="#1ad424a1b0afade8609aace6163e7cb142">format</a>
-(<span class="type">const <a href="class_maike_1_1_twins.html">Twins</a>&lt; char * &gt; &amp;</span> <span class="declname">buffer</span>,<span class="type">const char *</span> <span class="declname">format_string</span>,<span class="type">const std::initializer_list&lt; <a href="class_maike_1_1_variant.html">Variant</a> &gt; &amp;</span> <span class="declname">args</span>)</th>
+<span class="type">bool</span> <a href="#1aadafd93e517f09e5c51c696d77011798">processFailed</a>
+(<span class="type">const <a href="class_maike_1_1_process_exit_status.html">ProcessExitStatus</a> &amp;</span> <span class="declname">result</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1a4e5b6fb33e701cb4c28ff488bb0e769c">format</a>
+(<span class="type">const <a href="class_maike_1_1_twins.html">Twins</a>&lt; char *&gt; &amp;</span> <span class="declname">buffer</span>,<span class="type">const char *</span> <span class="declname">format_string</span>,<span class="type">const <a href="class_maike_1_1_twins.html">Twins</a>&lt; const <a href="class_maike_1_1_variant.html">Variant</a> *&gt; &amp;</span> <span class="declname">args</span>)</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
+<span class="type">void</span> <a href="#1ac77f5a2452490ff4a0fbd30101c4b344">format</a>
+(<span class="type">const <a href="class_maike_1_1_twins.html">Twins</a>&lt; char *&gt; &amp;</span> <span class="declname">buffer</span>,<span class="type">const char *</span> <span class="declname">format_string</span>,<span class="type">const std::initializer_list&lt; <a href="class_maike_1_1_variant.html">Variant</a> &gt; &amp;</span> <span class="declname">args</span>)</th>
         <td class="memberdesc"></td>
       </tr>
       <tr>
@@ -668,11 +685,11 @@ template&lt;<span class="type">class T</span>&gt;
       </ul>
     </aside>
   </section><section>
-    <h2 class="memproto" id="1afa1276180533802dfeaffb1e82b44bf9">
+    <h2 class="memproto" id="1a1a1910792cd4e81d6004d2e5765ce517">
 <span class="templatestring">
 template&lt;<span class="type">class Proc</span>&gt;
 </span><span class="type">bool</span> dependenciesProcess
-(<span class="type">const char *</span> <span class="declname">target_dir</span>,<span class="type"><a href="class_maike_1_1_twins.html">Twins</a>&lt; const <a href="class_maike_1_1_dependency.html">Dependency</a> * &gt;</span> <span class="declname">deps</span>,<span class="type">int</span> <span class="declname">use_flags</span>,<span class="type">Proc &amp;&amp;</span> <span class="declname">proc</span>)</h2>
+(<span class="type">const char *</span> <span class="declname">target_dir</span>,<span class="type"><a href="class_maike_1_1_twins.html">Twins</a>&lt; const <a href="class_maike_1_1_dependency.html">Dependency</a> *&gt;</span> <span class="declname">deps</span>,<span class="type">int</span> <span class="declname">use_flags</span>,<span class="type">Proc &amp;&amp;</span> <span class="declname">proc</span>)</h2>
     <aside>
       <h3>Quick info</h3>
       <p>This member is</p>
@@ -781,9 +798,9 @@ template&lt;<span class="type">class Proc</span>&gt;
 <span class="type">void</span> configAppend
 (<span class="type">Session &amp;</span> <span class="declname">maike</span>,<span class="type">const <a href="class_maike_1_1_resource_object.html">ResourceObject</a> &amp;</span> <span class="declname">obj</span>)</h2>
   </section><section>
-    <h2 class="memproto" id="1a9e05c04d5be76c0903d9d52af09114e6">
+    <h2 class="memproto" id="1a6ab6b55d45c2711cf9189eaa7d557a18">
 <span class="type">void</span> hookRegister
-(<span class="type">Session &amp;</span> <span class="declname">maike</span>,<span class="type">const char *</span> <span class="declname">name_plugin</span>,<span class="type"><a href="class_maike_1_1_twins.html">Twins</a>&lt; const char *const * &gt;</span> <span class="declname">filename_exts</span>)</h2>
+(<span class="type">Session &amp;</span> <span class="declname">maike</span>,<span class="type">const char *</span> <span class="declname">name_plugin</span>,<span class="type"><a href="class_maike_1_1_twins.html">Twins</a>&lt; const char *const *&gt;</span> <span class="declname">filename_exts</span>)</h2>
   </section><section>
     <h2 class="memproto" id="1ab5d56b05d5067d25aa3e76c209a6b5a1">
 <span class="type">void</span> hookConfigAppend
@@ -1016,13 +1033,35 @@ template&lt;<span class="type">class T</span>,<span class="type">size_t</span> <
 <span class="type">std::string</span> configdirUser
 ()</h2>
   </section><section>
-    <h2 class="memproto" id="1aed07eacc8c125c4140f8bafe04825e24">
-<span class="type">void</span> format
-(<span class="type">const <a href="class_maike_1_1_twins.html">Twins</a>&lt; char * &gt; &amp;</span> <span class="declname">buffer</span>,<span class="type">const char *</span> <span class="declname">format_string</span>,<span class="type">const <a href="class_maike_1_1_twins.html">Twins</a>&lt; const <a href="class_maike_1_1_variant.html">Variant</a> * &gt; &amp;</span> <span class="declname">args</span>)</h2>
+    <h2 class="memproto" id="1ace59938afd83172c2e8424f59569c3d6">
+<span class="type">bool</span> processSucceeded
+(<span class="type">const <a href="class_maike_1_1_process_exit_status.html">ProcessExitStatus</a> &amp;</span> <span class="declname">result</span>)</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Inline</li>
+      </ul>
+    </aside>
   </section><section>
-    <h2 class="memproto" id="1ad424a1b0afade8609aace6163e7cb142">
+    <h2 class="memproto" id="1aadafd93e517f09e5c51c696d77011798">
+<span class="type">bool</span> processFailed
+(<span class="type">const <a href="class_maike_1_1_process_exit_status.html">ProcessExitStatus</a> &amp;</span> <span class="declname">result</span>)</h2>
+    <aside>
+      <h3>Quick info</h3>
+      <p>This member is</p>
+      <ul>
+        <li>Inline</li>
+      </ul>
+    </aside>
+  </section><section>
+    <h2 class="memproto" id="1a4e5b6fb33e701cb4c28ff488bb0e769c">
 <span class="type">void</span> format
-(<span class="type">const <a href="class_maike_1_1_twins.html">Twins</a>&lt; char * &gt; &amp;</span> <span class="declname">buffer</span>,<span class="type">const char *</span> <span class="declname">format_string</span>,<span class="type">const std::initializer_list&lt; <a href="class_maike_1_1_variant.html">Variant</a> &gt; &amp;</span> <span class="declname">args</span>)</h2>
+(<span class="type">const <a href="class_maike_1_1_twins.html">Twins</a>&lt; char *&gt; &amp;</span> <span class="declname">buffer</span>,<span class="type">const char *</span> <span class="declname">format_string</span>,<span class="type">const <a href="class_maike_1_1_twins.html">Twins</a>&lt; const <a href="class_maike_1_1_variant.html">Variant</a> *&gt; &amp;</span> <span class="declname">args</span>)</h2>
+  </section><section>
+    <h2 class="memproto" id="1ac77f5a2452490ff4a0fbd30101c4b344">
+<span class="type">void</span> format
+(<span class="type">const <a href="class_maike_1_1_twins.html">Twins</a>&lt; char *&gt; &amp;</span> <span class="declname">buffer</span>,<span class="type">const char *</span> <span class="declname">format_string</span>,<span class="type">const std::initializer_list&lt; <a href="class_maike_1_1_variant.html">Variant</a> &gt; &amp;</span> <span class="declname">args</span>)</h2>
     <aside>
       <h3>Quick info</h3>
       <p>This member is</p>
@@ -1036,6 +1075,6 @@ template&lt;<span class="type">class T</span>,<span class="type">size_t</span> <
 template&lt;<span class="type">class T</span>&gt;
 </span><span class="type">constexpr T</span> msb
 ()</h2>
-  </section></main><footer><address>Torbjörn Rathsman 2016</address></footer>
+  </section></main><footer><address>Torbjörn Rathsman 2016-2019</address></footer>
 </body>
 </html>

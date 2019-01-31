@@ -34,6 +34,12 @@
       </tr>
       <tr>
         <th class="membername">
+enum <a href="#1a8073d77f25efd4f167663e771fb0aa93">TerminationMode</a>
+</th>
+        <td class="memberdesc"></td>
+      </tr>
+      <tr>
+        <th class="membername">
 <span class="type"></span> <a href="#1a049aeac31b0a005294df7ebb7e27794b">Pipe</a>
 (<span class="type">const <a href="class_maike_1_1_pipe.html">Pipe</a> &amp;</span> <span class="declname">rhs</span>)</th>
         <td class="memberdesc"></td>
@@ -58,8 +64,8 @@
       </tr>
       <tr>
         <th class="membername">
-<span class="type"></span> <a href="#1a4d6fed7ab86597a19e33db90525a492d">Pipe</a>
-(<span class="type">const char *</span> <span class="declname">command</span>,<span class="type"><a href="class_maike_1_1_twins.html">Twins</a>&lt; const char *const * &gt;</span> <span class="declname">args</span>,<span class="type">unsigned int</span> <span class="declname">flags</span>)</th>
+<span class="type"></span> <a href="#1a0a362041d04b7925f37a3b6fac561994">Pipe</a>
+(<span class="type">const char *</span> <span class="declname">command</span>,<span class="type"><a href="class_maike_1_1_twins.html">Twins</a>&lt; const char *const *&gt;</span> <span class="declname">args</span>,<span class="type">unsigned int</span> <span class="declname">flags</span>)</th>
         <td class="memberdesc"></td>
       </tr>
       <tr>
@@ -70,7 +76,7 @@
       </tr>
       <tr>
         <th class="membername">
-<span class="type">int</span> <a href="#1a9adf1dbbd3eab65df6e316458779dc2c">exitStatusGet</a>
+<span class="type"><a href="class_maike_1_1_process_exit_status.html">ProcessExitStatus</a></span> <a href="#1a85a3b728688aafd7882f4d7243ac0057">exitStatusGet</a>
 ()</th>
         <td class="memberdesc"></td>
       </tr>
@@ -94,6 +100,19 @@
       </tr>
     </table>
   </section><section>
+    <h2 class="memproto" id="1a8073d77f25efd4f167663e771fb0aa93"> TerminationMode</h2>
+    <p>The following table summarizes all possible enum values</p>
+    <table class="fieldtable">
+      <tr>
+        <th class="fieldname">EXITED</th>
+        <td class="fielddoc"></td>
+      </tr>
+      <tr>
+        <th class="fieldname">KILLED</th>
+        <td class="fielddoc"></td>
+      </tr>
+    </table>
+  </section><section>
     <h2 class="memproto" id="1a049aeac31b0a005294df7ebb7e27794b">
 <span class="type"></span> Pipe
 (<span class="type">const <a href="class_maike_1_1_pipe.html">Pipe</a> &amp;</span> <span class="declname">rhs</span>)</h2>
@@ -110,16 +129,16 @@
 <span class="type"><a href="class_maike_1_1_pipe.html">Pipe</a> &amp;</span> operator=
 (<span class="type"><a href="class_maike_1_1_pipe.html">Pipe</a> &amp;&amp;</span> <span class="declname">pipe</span>)</h2>
   </section><section>
-    <h2 class="memproto" id="1a4d6fed7ab86597a19e33db90525a492d">
+    <h2 class="memproto" id="1a0a362041d04b7925f37a3b6fac561994">
 <span class="type"></span> Pipe
-(<span class="type">const char *</span> <span class="declname">command</span>,<span class="type"><a href="class_maike_1_1_twins.html">Twins</a>&lt; const char *const * &gt;</span> <span class="declname">args</span>,<span class="type">unsigned int</span> <span class="declname">flags</span>)</h2>
+(<span class="type">const char *</span> <span class="declname">command</span>,<span class="type"><a href="class_maike_1_1_twins.html">Twins</a>&lt; const char *const *&gt;</span> <span class="declname">args</span>,<span class="type">unsigned int</span> <span class="declname">flags</span>)</h2>
   </section><section>
     <h2 class="memproto" id="1abeafe0c2eb3f319d71b64613ae4e050d">
 <span class="type"></span> ~Pipe
 ()</h2>
   </section><section>
-    <h2 class="memproto" id="1a9adf1dbbd3eab65df6e316458779dc2c">
-<span class="type">int</span> exitStatusGet
+    <h2 class="memproto" id="1a85a3b728688aafd7882f4d7243ac0057">
+<span class="type"><a href="class_maike_1_1_process_exit_status.html">ProcessExitStatus</a></span> exitStatusGet
 ()</h2>
   </section><section>
     <h2 class="memproto" id="1a141650fd92831bebc068b42715a84c74">
@@ -154,6 +173,6 @@
         <li>Inline</li>
       </ul>
     </aside>
-  </section></main><footer><address>Torbjörn Rathsman 2016</address></footer>
+  </section></main><footer><address>Torbjörn Rathsman 2016-2019</address></footer>
 </body>
 </html>
