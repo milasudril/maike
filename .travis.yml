@@ -1,18 +1,17 @@
 dist: xenial
 before_install:
   - sudo apt-get update
-  - sudo apt-get install -y python3 make g++
+  - sudo apt-get install -y python3 make g++ libjansson-dev ruby-ronn
 language: minimal
 script:
-  - | \
-    wget https://github.com/milasudril/maike/releases/download/0.22.0/maike-src.tar.gz  \
-    tar -xf maike-src.tar.gz \
-    cd maike-src \
-    make \
-    sudo ./install --prefix=/usr/local \
-    cd .. \
-    rm -r maike-src \
-    make bootstrap \
-    sudo ./install --prefix=/usr/local \
-    rm -r __targets \
+  - |
+    wget https://github.com/milasudril/maike/releases/download/0.22.0/maike-src.tar.gz
+    tar -xf maike-src.tar.gz
+    cd maike-src
+    make
+    sudo ./install /usr/local
+    cd ..
+    sudo rm -rf maike-src
+    make bootstrap
+    sudo ./install /usr/local
     make bootstrap
