@@ -1,0 +1,4 @@
+dist: xenial
+install: ibjansson-dev make g++ python3
+language: minimal
+script: Makefile
