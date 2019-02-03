@@ -12,7 +12,6 @@ script:
     sudo ./install /usr/local
     cd ..
     sudo rm -rf maike-src
-    make
+    make bootstrap
     sudo ./install /usr/local
-    rm -rf __targets
-    make
+    make bootstrap
