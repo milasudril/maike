@@ -9,10 +9,10 @@ script:
     tar -xf maike-src.tar.gz
     cd maike-src
     make
-    sudo ./install --prefix=/usr/local
+    sudo ./install /usr/local
     cd ..
     rm -r maike-src
     make
-    sudo ./install --prefix=/usr/local
+    sudo ./install /usr/local
     rm -r __targets
     make
