@@ -3,7 +3,6 @@ before_install:
   - sudo apt-get update
   - sudo apt-get install -y python3 make g++
 language: minimal
-be
 script:
   - |
     wget https://github.com/milasudril/maike/releases/download/0.22.0/maike-src.tar.gz
