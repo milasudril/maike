@@ -11,8 +11,8 @@ script:
     make
     sudo ./install /usr/local
     cd ..
-    rm -r maike-src
+    sudo rm -rf maike-src
     make
     sudo ./install /usr/local
-    rm -r __targets
+    rm -rf __targets
     make
