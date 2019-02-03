@@ -1,7 +1,7 @@
 dist: xenial
 before_install:
   - sudo apt-get update
-  - sudo apt-get install -y python3 make g++
+  - sudo apt-get install -y python3 make g++ libjansson-dev
 language: minimal
 script:
   - |
@@ -12,7 +12,7 @@ script:
     sudo ./install --prefix=/usr/local
     cd ..
     rm -r maike-src
-    make bootstrap
+    make
     sudo ./install --prefix=/usr/local
     rm -r __targets
-    make bootstrap
+    make
