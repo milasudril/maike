@@ -3,4 +3,15 @@ before_install:
   - sudo apt-get update
   - sudo apt-get install -y python3 make g++
 language: minimal
-script: make
+script: >
+  wget https://github.com/milasudril/maike/releases/download/0.22.0/maike-src.tar.gz
+  tar -xf maike-src.tar.gz
+  cd maike-src
+  make
+  sudo ./install --prefix=/usr/local
+  cd ..
+  rm -r maike-src
+  make bootstrap
+  sudo ./install --prefix=/usr/local
+  rm -r __targets
+  make bootstrap
