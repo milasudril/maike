@@ -181,6 +181,13 @@ Target_Hook_Registry& Target_Hook_Registry::configAppendDefault()
 		hook_info.filename_exts.insert(std::string(".cp"));
 		hook_info.hook->configAppendDefault();
 		}
+
+		{
+		auto& hook_info=hookCreate("targettrivial_default","targettrivial");
+		r_filenameext_hook[Stringkey(".*")]=hook_info.hook.get();
+		hook_info.filename_exts.insert(std::string(".*"));
+		hook_info.hook->configAppendDefault();
+		}
 	return *this;
 	}
 
