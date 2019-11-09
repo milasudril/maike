@@ -9,6 +9,7 @@
 #include "../target_hook.hpp"
 
 #include "targettrivialloader.hpp"
+#include "targettrivialoptions.hpp"
 
 namespace Maike
 	{
@@ -24,11 +25,12 @@ namespace Maike
 
 			TargetTrivialHook& configAppendDefault();
 
-			TargetTrivialHook& configAppend(const ResourceObject& pythonoptions);
+			TargetTrivialHook& configAppend(const ResourceObject& opts);
 
-			void configDump(ResourceObject& pythonoptions) const;
+			void configDump(ResourceObject& opts) const;
 
 		private:
+			TargetTrivialOptions m_opts;
 			TargetTrivialLoader m_loader;
 
 			void destroy() noexcept;

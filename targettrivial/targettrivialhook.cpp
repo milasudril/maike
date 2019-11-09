@@ -11,14 +11,21 @@ void TargetTrivialHook::destroy() noexcept
 	{delete this;}
 
 void TargetTrivialHook::configClear()
-	{}
+	{
+	m_opts.configClear();
+	}
 
 
 TargetTrivialHook& TargetTrivialHook::configAppendDefault()
 	{return *this;}
 
-TargetTrivialHook& TargetTrivialHook::configAppend(const ResourceObject&)
-	{return *this;}
+TargetTrivialHook& TargetTrivialHook::configAppend(const ResourceObject& opts)
+	{
+	m_opts.configAppend(opts);
+	return *this;
+	}
 
-void TargetTrivialHook::configDump(ResourceObject&) const
-	{}
+void TargetTrivialHook::configDump(ResourceObject& opts) const
+	{
+	m_opts.configDump(opts);
+	}
