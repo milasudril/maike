@@ -93,6 +93,7 @@ namespace Maike
 
 			explicit Dependency(const ResourceObject& obj,const char* in_dir,const char* root);
 
+			explicit Dependency(const ResourceObject& obj);
 
 			const char* nameGet() const noexcept
 				{
@@ -199,13 +200,13 @@ namespace Maike
 				auto t=deps.first->target();
 				if(!proc(t->nameGet(),rel))
 					{return 0;}
-				}	
+				}
 			if(rel==Dependency::Relation::LEAF && (use_flags&USE_LEAF))
 				{
 				auto name_full=name_full_get(target_dir,*deps.first->target());
 				if(!proc(name_full.c_str(),rel))
 					{return 0;}
-				}	
+				}
 
 			++deps.first;
 			}

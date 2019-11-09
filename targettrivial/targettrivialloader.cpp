@@ -25,6 +25,9 @@ void TargetTrivialLoader::targetsLoad(const char* name_src,const char* in_dir
 	Handle<TargetTrivial> target{TargetTrivial::create(r_opts.commandGet(), targetname.c_str(), name_src,in_dir,factory.rootGet(),factory.idGet())};
 
 	target->dependencyAdd(Dependency{r_opts.commandGet().nameGet(), Dependency::Relation::TOOL});
+	auto deps=r_opts.dependenciesGet();
+	std::for_each(deps.first,deps.second,[&target](const Dependency& item)
+		{target->dependencyAdd(Dependency{item});});
 
 	graph.targetRegister(target);
 	}

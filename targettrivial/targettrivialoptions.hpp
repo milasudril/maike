@@ -7,6 +7,7 @@
 #define MAIKE_TARGETTRIVIALOPTIONS_HPP
 
 #include "../command.hpp"
+#include "../dependency.hpp"
 #include <string>
 
 namespace Maike
@@ -26,6 +27,14 @@ namespace Maike
 			const char* filenameExtGet() const noexcept
 				{return m_filename_ext.c_str();}
 
+			Twins<const Dependency*> dependenciesGet() const noexcept
+				{
+				return
+					{
+					 m_deps.data()
+					,m_deps.data() + m_deps.size()
+					};
+				}
 
 			void configClear();
 			TargetTrivialOptions& configAppendDefault();
@@ -36,6 +45,7 @@ namespace Maike
 
 		private:
 			std::string m_filename_ext;
+			std::vector<Dependency> m_deps;
 			Command m_build_cmd;
 		};
 	}

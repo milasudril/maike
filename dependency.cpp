@@ -107,8 +107,16 @@ Dependency::Dependency(const ResourceObject& obj,const char* in_dir,const char* 
 		{
 		auto name_temp=rootStrip(dircat(in_dir,static_cast<const char*>(obj.objectGet("ref"))),root);
 		nameSet(name_temp.c_str(),name_temp.size());
-		}		
+		}
 	}
+
+Dependency::Dependency(const ResourceObject& obj):
+	 m_name(nullptr), r_target(nullptr)
+	,m_rel(relation(static_cast<const char*>(obj.objectGet("rel"))))
+	{
+	nameSet(static_cast<const char*>(obj.objectGet("ref")));
+	}
+
 
 void Dependency::dump(ResourceObject& dependency) const
 	{

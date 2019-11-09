@@ -28,7 +28,6 @@ bool TargetTrivial::upToDate(Twins<const Dependency*>
 	,Twins<const Dependency*>
 	,const char* target_dir) const
 	{
-	printf(">>> Checking status\n");
 	auto name_out=dircat(target_dir,nameGet());
 
 	if(FileUtils::newer(sourceNameGet(),name_out.c_str()))
