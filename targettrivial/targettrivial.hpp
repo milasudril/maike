@@ -30,7 +30,7 @@ namespace Maike
 			void dumpDetails(ResourceObject& target) const;
 
 			bool generated() const noexcept
-				{return 0;}
+				{return 1;}
 
 		private:
 			TargetTrivial(const Command& cmd,const char* name,const char* name_src
