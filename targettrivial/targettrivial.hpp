@@ -14,8 +14,8 @@ namespace Maike
 	class PRIVATE TargetTrivial final : public Maike::TargetBase
 		{
 		public:
-			static TargetTrivial* create(const ResourceObject& obj,const char* name_src
-				,const char* in_dir,const char* root,size_t id,size_t line_count);
+			static TargetTrivial* create(const Command& cmd, const char* name,const char* name_src
+				,const char* in_dir,const char* root,size_t id);
 
 			bool upToDate(Twins<const Dependency*> dependency_list
 				,Twins<const Dependency*> dependency_list_full
@@ -30,15 +30,15 @@ namespace Maike
 			void dumpDetails(ResourceObject& target) const;
 
 			bool generated() const noexcept
-				{return 1;}
+				{return 0;}
 
 		private:
-			TargetTrivial(const ResourceObject& obj,const char* name_src
-				,const char* in_dir,const char* root,size_t id,size_t line_count);
+			TargetTrivial(const Command& cmd,const char* name,const char* name_src
+				,const char* in_dir,const char* root,size_t id);
 
 			~TargetTrivial() noexcept;
 
-			std::string m_src;
+			const Command& r_cmd;
 		};
 	}
 

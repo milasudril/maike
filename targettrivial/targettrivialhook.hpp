@@ -34,6 +34,8 @@ namespace Maike
 			TargetTrivialLoader m_loader;
 
 			void destroy() noexcept;
+
+			TargetTrivialHook();
 		};
 	}
 

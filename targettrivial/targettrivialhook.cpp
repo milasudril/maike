@@ -4,6 +4,10 @@
 
 using namespace Maike;
 
+Maike::TargetTrivialHook::TargetTrivialHook():
+	m_loader{m_opts}
+	{}
+
 TargetTrivialHook* TargetTrivialHook::create()
 	{return new TargetTrivialHook();}
 

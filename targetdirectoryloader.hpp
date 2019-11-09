@@ -52,9 +52,6 @@ namespace Maike
 				,DependencyBuffer&) const
 				{}
 
-
-			//HACK TargetDirectory should be created in the same way as
-			//other Targets...
 			Handle<Target> targetCreate(const ResourceObject&,const char*
 				,const char*,const char*,size_t,size_t) const
 				{return Handle<Target>(nullptr);}

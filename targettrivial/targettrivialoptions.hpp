@@ -20,7 +20,7 @@ namespace Maike
 
 			explicit TargetTrivialOptions(const ResourceObject& options);
 
-			const Command& buildCommandGet() const noexcept
+			const Command& commandGet() const noexcept
 				{return m_build_cmd;}
 
 			const char* filenameExtGet() const noexcept
