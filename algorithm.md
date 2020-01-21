@@ -4,10 +4,11 @@
 
 Build pipeline:
 
- * Dependency collection<Dependency scan dependencies>
- * Dependency collection<Compilation dependencies>
- * Dependency collection<Linking dependencies>
- * Dependency collection<Execution dependencies>
+ * Dependency collection&lt;Dependency scan dependencies&gt;
+ * Dependency collection&lt;Compilation dependencies&gt;
+ * Dependency collection&lt;Linking dependencies&gt;
+ * Dependency collection&lt;Execution dependencies&gt;
+
  * Source filename
  * Final target names
 
