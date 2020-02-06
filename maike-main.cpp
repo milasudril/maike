@@ -139,7 +139,7 @@ static std::vector<const char*> stringsExtract(const std::vector<std::string>& s
 		ret.push_back(ptr->c_str());
 		++ptr;
 		}
-	return std::move(ret);
+	return ret;
 	}
 
 static void hooksLoad(Session& maike,const std::vector<std::string>& hook_strings)
@@ -168,7 +168,7 @@ static Twins<std::string> hookConfigExtract(const char* hook_str)
 				switch(ch_in)
 					{
 					case '\0':
-						return std::move(ret);
+						return ret;
 					case ':':
 						++state;
 						break;
@@ -180,7 +180,7 @@ static Twins<std::string> hookConfigExtract(const char* hook_str)
 				ret.second+='{';
 				ret.second+=hook_str;
 				ret.second+='}';
-				return std::move(ret);
+				return ret;
 			}
 		++hook_str;
 		}

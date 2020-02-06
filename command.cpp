@@ -32,7 +32,7 @@ static std::vector<const char*> cstr(Twins<const std::string*> strings)
 		ret.push_back(strings.first->c_str());
 		++strings.first;
 		}
-	return std::move(ret);
+	return ret;
 	}
 
 Pipe Command::execute(unsigned int redirection) const

@@ -189,7 +189,7 @@ namespace
 			{
 			auto name_dep_full=dircat(*in_dir, filename);
 			if(FileUtils::exists(name_dep_full.c_str()))
-				{return std::move(name_dep_full);}
+				{return name_dep_full;}
 			}
 		
 		std::string name_dep_full;
@@ -198,7 +198,7 @@ namespace
 			name_dep_full=dircat(str,filename);
 			return FileUtils::exists(name_dep_full.c_str());
 			});
-		return std::move(name_dep_full);
+		return name_dep_full;
 		}
 	}
 

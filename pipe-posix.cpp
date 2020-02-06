@@ -176,7 +176,7 @@ static std::vector<const char*> commandLineBuild(const char* command
 		++args.first;
 		}
 	args_out.push_back(nullptr);
-	return std::move(args_out);
+	return args_out;
 	}
 
 

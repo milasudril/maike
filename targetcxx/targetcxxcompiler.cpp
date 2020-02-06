@@ -205,7 +205,7 @@ static std::string placeholderSubstitute(const char* string_template
 				ret+=substitute;
 				break;
 			case '\0':
-				return std::move(ret);
+				return ret;
 			default:
 				ret+=ch_in;
 			}

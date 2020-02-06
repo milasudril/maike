@@ -23,7 +23,7 @@ std::vector<std::string> TargetCxxPPTokenizer::macroDecode(const char* str)
 					{
 					case '\0':
 						ret.push_back(tok_current);
-						return std::move(ret);
+						return ret;
 					case '(':
 						ret.push_back(tok_current);
 						tok_current.clear();
@@ -42,7 +42,7 @@ std::vector<std::string> TargetCxxPPTokenizer::macroDecode(const char* str)
 						break;
 					case ')':
 						ret.push_back(tok_current);
-						return std::move(ret);
+						return ret;
 					default:
 						tok_current+=ch_in;
 					}

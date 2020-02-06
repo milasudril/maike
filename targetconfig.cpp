@@ -72,7 +72,7 @@ static std::string data_reload(const char* filename)
 		}
 	catch(...)
 		{}
-	return std::move(ret);
+	return ret;
 	}
 
 bool TargetConfig::upToDate(Twins<const Dependency*>

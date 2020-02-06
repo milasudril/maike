@@ -121,7 +121,7 @@ static std::vector<std::string> filesCollect(Twins<const Dependency*> dependency
 		};
 	dependenciesProcess(target_dir,dependency_list,USE_ALL&(~USE_INTERNAL),collect);
 
-	return std::move(ret);
+	return ret;
 	}
 
 static std::vector<const char*> filesCollect(std::vector<std::string>&& files)=delete;
@@ -136,7 +136,7 @@ static std::vector<const char*> filesCollect(const std::vector<std::string>& fil
 		ret.push_back(ptr->c_str());
 		++ptr;
 		}
-	return std::move(ret);
+	return ret;
 	}
 
 void TargetArchive::compileImpl(Twins<const Dependency*>

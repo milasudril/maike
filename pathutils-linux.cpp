@@ -53,7 +53,7 @@ PRIVATE std::string Maike::directoryNormalize(const char* str)
 							{ret.erase(ret.find_last_of('/'))+='/';}
 						}
 					if(ch_in=='\0')
-						{return std::move(ret);}
+						{return ret;}
 					}
 				else
 				if(elem_current==".")
@@ -64,7 +64,7 @@ PRIVATE std::string Maike::directoryNormalize(const char* str)
 							{return std::string(".");}
 						auto pos=ret.find_last_of('/');
 						if(pos==std::string::npos)
-							{return std::move(ret);}
+							{return ret;}
 						return ret.substr(0,pos);
 						}
 					}
@@ -72,7 +72,7 @@ PRIVATE std::string Maike::directoryNormalize(const char* str)
 					{
 					ret.append(elem_current);
 					if(ch_in=='\0')
-						{return ret.size()?std::move(ret):std::string(".");}
+						{return ret.size()?ret:std::string(".");}
 					ret+='/';
 					up_more=0;
 					}
@@ -116,7 +116,7 @@ PRIVATE std::string Maike::rootStrip(const char* path,const char* root)
 		++ptr;
 		++root;
 		}
-	return ret.size()?std::move(ret):std::string(".");
+	return ret.size()?ret:std::string(".");
 	}
 
 std::string Maike::exename()
@@ -136,7 +136,8 @@ std::string Maike::exename()
 			}
 		}
 	ret.resize(n);
-	return std::move(ret);
+	return ret
+;
 	}
 
 std::string Maike::getcwd()
@@ -151,7 +152,7 @@ std::string Maike::getcwd()
 		N<<=1;
 		}
 	ret.resize(strlen(ret.c_str()));
-	return std::move(ret);
+	return ret;
 	}
 
 std::string Maike::homedir()
@@ -185,7 +186,7 @@ std::string Maike::homedir()
 				break;
 			case '\n':
 				if(uid_from_file==uid)
-					{return std::move(ret);}
+					{return ret;}
 				field_count=0;
 				break;
 			default:
