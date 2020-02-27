@@ -22,13 +22,18 @@ namespace Maike
 	class SourceFile
 	{
 		public:
-			explicit SourceFile(Path&& src, std::stack<Path>& paths_to_visist);
+			explicit SourceFile(Path&& src);
 
 			bool targetsUpToDate();
 
 			void compileTargets()
 			{
 				m_compiler(m_name, m_used_files, m_output_files);
+			}
+
+			Path const& name() const
+			{
+				return m_name;
 			}
 
 		private:
