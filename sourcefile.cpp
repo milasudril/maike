@@ -4,13 +4,14 @@
 
 namespace fs = std::experimental::filesystem;
 
-Maike::SourceFile::SourceFile(Path&& src)
+Maike::SourceFile::SourceFile(Path&& src, std::stack<Path>& paths_to_visist)
 {
+	printf("%s\n", src.c_str());
 	if(is_directory(src))
 	{
 		auto i = fs::directory_iterator(src);
-		std::for_each(begin(i), end(i), [](auto const& item){
-			printf("%s\n", item.path().c_str());
+		std::for_each(begin(i), end(i), [&paths_to_visist](auto const& item){
+			paths_to_visist.push(item.path());
 		});
 	}
 }

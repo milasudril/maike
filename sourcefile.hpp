@@ -9,6 +9,7 @@
 #include <experimental/filesystem>
 #include <vector>
 #include <functional>
+#include <stack>
 
 namespace Maike
 {
@@ -21,7 +22,7 @@ namespace Maike
 	class SourceFile
 	{
 		public:
-			explicit SourceFile(Path&& src);
+			explicit SourceFile(Path&& src, std::stack<Path>& paths_to_visist);
 
 			bool targetsUpToDate();
 
