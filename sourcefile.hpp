@@ -6,29 +6,33 @@
 #ifndef MAIKE_SOURCEFILE_HPP
 #define MAIKE_SOURCEFILE_HPP
 
+#include "compiler.hpp"
+
 #include <experimental/filesystem>
 #include <vector>
-#include <functional>
-#include <stack>
 
 namespace Maike
 {
 	using Path = std::experimental::filesystem::path;
 
-	using Compiler = std::function<void(Path const& src,
-	                                     std::vector<Path const*> used_files,
-	                                     std::vector<Path const*> output_files)>;
-
 	class SourceFile
 	{
 		public:
-			explicit SourceFile(Path&& src);
+			explicit SourceFile(Path&& src,
+			                    std::vector<Path const*>&& used_files,
+			                    std::vector<Path const*>&& output_files,
+			                    Compiler&& compiler):
+			                    m_name{std::move(src)},
+			                    m_used_files{std::move(used_files)}
+			                    m_output_files{std::move(output_files)},
+			                    m_compiler{std::move(compiler)}
+			                    {}
 
 			bool targetsUpToDate();
 
-			void compileTargets()
+			decltype(auto) compileTargets(CompilationLog& log)
 			{
-				m_compiler(m_name, m_used_files, m_output_files);
+				return m_compiler.run(m_name, m_used_files, m_output_files, log);
 			}
 
 			Path const& name() const
