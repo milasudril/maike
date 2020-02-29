@@ -22,14 +22,14 @@ namespace Maike
 		public:
 			explicit SourceFile(fs::path&& src,
 			                    std::vector<Dependency>&& used_files,
-			                    std::vector<fs::path>&& output_files,
+			                    std::vector<fs::path>&& targets,
 			                    Compiler&& compiler);
 
 			bool targetsUpToDate();
 
 			decltype(auto) compileTargets(CompilationLog&)
 			{
-			// TODO:	return m_compiler.run(m_name, m_used_files, m_output_files, log);
+			// TODO:	return m_compiler.run(m_name, m_used_files, m_targets, log);
 				return 0;
 			}
 
@@ -38,15 +38,15 @@ namespace Maike
 				return m_name;
 			}
 
-			std::vector<fs::path> outputFiles() const
+			std::vector<fs::path> targets() const
 			{
-				return m_output_files;
+				return m_targets;
 			}
 
 		private:
 			fs::path m_name;
 			std::vector<Dependency> m_used_files;
-			std::vector<fs::path> m_output_files;
+			std::vector<fs::path> m_targets;
 			Compiler m_compiler;
 	};
 }
