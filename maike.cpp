@@ -14,12 +14,27 @@ decltype(auto) pop(T& stack)
 
 namespace fs = std::experimental::filesystem;
 
+template<class SetOfSoursFiles>
+void toposort(SetOfSoursFiles const& src)
+{
+	std::for_each(std::begin(src), std::end(src),[](auto const& node) {
+		if(!visited(ndoe))
+		{
+			detail::visist(node);
+		}
+	}
+}
+
+
 int main()
 {
-	std::stack<Maike::Path> paths_to_visit;
+	std::map<Path, SourceFile> src_files;
+
 	std::vector<std::regex> ignore;
 	ignore.push_back(std::regex{"/\\..*", std::regex_constants::basic});
 	ignore.push_back(std::regex{"/__*.*", std::regex_constants::basic});
+
+	std::stack<Maike::Path> paths_to_visit;
 	paths_to_visit.push(Maike::Path{"."});
 	while(!paths_to_visit.empty())
 	{

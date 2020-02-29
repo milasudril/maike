@@ -6,7 +6,7 @@
 #define MAIKE_COMPILER_HPP
 
 #include "path.hpp"
-#include "configuration.hpp"
+#include "data_store.hpp"
 #include "compilation_log.hpp"
 
 #include <vector>
