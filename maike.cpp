@@ -20,8 +20,8 @@ class MkDir
                      std::vector<Maike::fs::path const*> const&,
                      Maike::CompilationLog&) const
                      {return 0;}
-		Maike::DataStore settings() const {return Maike::DataStore{};}
-		void settings(Maike::DataStore const&){}
+		Maike::ConfigStore settings() const {return Maike::ConfigStore{};}
+		void settings(Maike::ConfigStore const&){}
 };
 
 struct SourceFileByName

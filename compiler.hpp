@@ -6,7 +6,7 @@
 #define MAIKE_COMPILER_HPP
 
 #include "fs.hpp"
-#include "data_store.hpp"
+#include "config_store.hpp"
 #include "compilation_log.hpp"
 
 #include <vector>
@@ -33,12 +33,12 @@ namespace Maike
 				return m_handle->run(src, used_files, output_files, log);
 			}
 
-            DataStore settings() const
+            ConfigStore settings() const
             {
 				return m_handle->settings();
             }
 
-            Compiler& settings(DataStore const& cfg)
+            Compiler& settings(ConfigStore const& cfg)
             {
 				m_handle->settings(cfg);
 				return *this;
@@ -53,9 +53,9 @@ namespace Maike
                                     std::vector<fs::path const*> const& output_files,
                                     CompilationLog& log) const = 0;
 
-					virtual DataStore settings() const = 0;
+					virtual ConfigStore settings() const = 0;
 
-					virtual void settings(DataStore const& cfg) = 0;
+					virtual void settings(ConfigStore const& cfg) = 0;
 
 					virtual ~AbstractCompiler() {}
 			};
@@ -72,10 +72,10 @@ namespace Maike
                                     CompilationLog& log) const override
 					{ return m_obj.run(src, used_files, output_files, log); }
 
-					DataStore settings() const
+					ConfigStore settings() const
 					{ return m_obj.settings(); }
 
-					void settings(DataStore const& cfg)
+					void settings(ConfigStore const& cfg)
 					{ (void)m_obj.settings(cfg); }
 
 					~CompilerImpl() override = default;
