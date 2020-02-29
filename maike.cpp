@@ -59,13 +59,18 @@ void visitChildren(Maike::SourceFile const& src_file, std::stack<Maike::fs::path
 
 int main()
 {
+	// Config stuff
 	std::vector<std::regex> input_filters;
 	input_filters.push_back(std::regex{"/\\..*", std::regex_constants::basic});
 	input_filters.push_back(std::regex{"/__*.*", std::regex_constants::basic});
 
 	Maike::fs::path target_dir{"__targets_new"};
+
+
+	// Current state
 	std::set<Maike::SourceFile, SourceFileByName> sources;
 	std::set<Maike::fs::path> loaded_targets;
+
 
 	auto skip = [](auto const& path, auto const& regex_list){
 		return std::any_of(std::begin(regex_list), std::end(regex_list), [&path](auto const& regex){
@@ -73,6 +78,7 @@ int main()
 		});
 	};
 
+	// Loader
 	std::stack<Maike::fs::path> paths_to_visit;
 	paths_to_visit.push(Maike::fs::path{"."});
 	while(!paths_to_visit.empty())
