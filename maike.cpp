@@ -24,6 +24,15 @@ class MkDir
 		void settings(Maike::DataStore const&){}
 };
 
+struct SourceFileByName
+{
+
+	bool operator()(Maike::SourceFile const& a, Maike::SourceFile const& b)
+	{
+		return a.name() < b.name();
+	}
+};
+
 int main()
 {
 	std::vector<std::regex> input_filters;
@@ -31,6 +40,7 @@ int main()
 	input_filters.push_back(std::regex{"/__*.*", std::regex_constants::basic});
 
 	Maike::fs::path output_dir{"__targets_new"};
+	std::set<Maike::SourceFile, SourceFileByName> sources;
 
 	auto skip = [](auto const& path, auto const& regex_list){
 		return std::any_of(std::begin(regex_list), std::end(regex_list), [&path](auto const& regex){
@@ -51,15 +61,15 @@ int main()
 		deps.push_back(Maike::Dependency{path.parent_path(), Maike::Dependency::Resolver::InternalLookup});
 		if(is_directory(path))
 		{
-			Maike::SourceFile src{std::move(path),
-			                      std::move(deps),
-			                      std::vector<Maike::fs::path>{output_dir/path},
-			                      Maike::Compiler{MkDir{}}};
-
-			auto i = Maike::fs::directory_iterator{src.name()};
+			auto i = Maike::fs::directory_iterator{path};
 			std::for_each(begin(i), end(i), [&paths_to_visit](auto const& item){
 				paths_to_visit.push(item.path());
 			});
+
+			sources.insert(Maike::SourceFile{std::move(path),
+			                      std::move(deps),
+			                      std::vector<Maike::fs::path>{output_dir/path},
+			                      Maike::Compiler{MkDir{}}});
 		}
 		else
 		{
