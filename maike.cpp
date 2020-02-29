@@ -32,7 +32,7 @@ int main()
 		if(skip(path, input_filters))
 		{ continue; }
 
-		printf("%s\n", path.c_str());
+		printf("%s %s\n", path.parent_path().c_str(), path.c_str());
 		if(is_directory(path))
 		{
 			auto i = Maike::fs::directory_iterator{path};
