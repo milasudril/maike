@@ -26,7 +26,6 @@ class MkDir
 
 struct SourceFileByName
 {
-
 	bool operator()(Maike::SourceFile const& a, Maike::SourceFile const& b)
 	{
 		return a.name() < b.name();
@@ -56,7 +55,6 @@ int main()
 		if(skip(path, input_filters))
 		{ continue; }
 
-		printf("%s %s\n", path.parent_path().c_str(), path.c_str());
 		std::vector<Maike::Dependency> deps;
 		deps.push_back(Maike::Dependency{path.parent_path(), Maike::Dependency::Resolver::InternalLookup});
 		if(is_directory(path))
@@ -75,4 +73,14 @@ int main()
 		{
 		}
 	}
+
+	std::for_each(std::begin(sources), std::end(sources), [](auto const& item) {
+		printf("%s ->", item.name().c_str());
+		auto const& output = item.outputFiles();
+		std::for_each(std::begin(output), std::end(output), [](auto const& item)
+		{
+			printf(" %s", item.c_str());
+		});
+		putchar('\n');
+	});
 }

@@ -38,6 +38,11 @@ namespace Maike
 				return m_name;
 			}
 
+			std::vector<fs::path> outputFiles() const
+			{
+				return m_output_files;
+			}
+
 		private:
 			fs::path m_name;
 			std::vector<Dependency> m_used_files;
