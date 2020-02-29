@@ -1,5 +1,6 @@
 //@	{
 //@	 "targets":[{"name":"command.hpp","type":"include"}]
+//@	 ,"dependencies_extra":[{"ref":"command.o","rel":"implementation"}]
 //@	 }
 
 #ifndef MAIKE_COMMAND_HPP
@@ -15,6 +16,19 @@ namespace Maike
 			class Result
 			{
 				public:
+					Result& signo(int s)
+					{
+						m_signo = s;
+						return *this;
+					}
+
+					Result& exitStatus(int status)
+					{
+						m_signo = -1;
+						m_exit_status = status;
+						return *this;
+					}
+
 					int signo() const
 					{ return m_signo;}
 
@@ -29,9 +43,9 @@ namespace Maike
 					int m_exit_status;
 			};
 
-			using StdIn = std::integral_constant<0>;
-			using StdOut = std::integral_constant<1>;
-			using StdErr = std::integral_constant<2>;
+			using StdIn = std::integral_constant<int, 0>;
+			using StdOut = std::integral_constant<int, 1>;
+			using StdErr = std::integral_constant<int, 2>;
 
 			template<class IoRedirector>
 			Result execp(IoRedirector&& io_redir) const
@@ -50,7 +64,7 @@ namespace Maike
 			}
 
 			explicit Command(fs::path&& executable, std::vector<std::string>&& args):
-			m_executable{std::move(executable}, m_args{std::move(args)}
+			m_executable{std::move(executable)}, m_args{std::move(args)}
 			{}
 
 		private:
