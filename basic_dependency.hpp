@@ -15,8 +15,8 @@ namespace Maike
 		public:
 			enum class Resolver:int{InternalLookup, None};
 
-			explicit BasicDependency(fs::path&& path, Resolver res_method):
-			m_name{std::move(path)}, m_res_method{res_method}
+			explicit BasicDependency(fs::path const& path, Resolver res_method):
+			m_name{path}, m_res_method{res_method}
 			{
 			}
 

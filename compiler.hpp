@@ -57,7 +57,7 @@ namespace Maike
 
 					virtual void settings(DataStore const& cfg) = 0;
 
-					virtual ~AbstractCompiler() = 0;
+					virtual ~AbstractCompiler() {}
 			};
 
 			template<class T>
@@ -76,7 +76,7 @@ namespace Maike
 					{ return m_obj.settings(); }
 
 					void settings(DataStore const& cfg)
-					{ (void*)m_obj.settings(cfg); }
+					{ (void)m_obj.settings(cfg); }
 
 					~CompilerImpl() override = default;
 
