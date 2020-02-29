@@ -1,33 +1,32 @@
 //@	{
-//@	 "targets":[{"name":"dependency.hpp","type":"include"}]
+//@	 "targets":[{"name":"basic_dependency.hpp","type":"include"}]
 //@	 }
 
-#ifndef MAIKE_DEPENDENCY_HPP
-#define MAIKE_DEPENDENCY_HPP
+#ifndef MAIKE_BASICDEPENDENCY_HPP
+#define MAIKE_BASICDEPENDENCY_HPP
 
-#include "fs.hpp"
+#include "./fs.hpp"
 
 namespace Maike
 {
-	class SourceFile;
-
-	class Dependency
+	template<class SrcFile>
+	class BasicDependency
 	{
 		public:
 			enum class Resolver:int{InternalLookup, None};
 
-			explicit Dependency(fs::path&& path, Resolver res_method):
+			explicit BasicDependency(fs::path&& path, Resolver res_method):
 			m_name{std::move(path)}, m_res_method{res_method}
 			{
 			}
 
 			fs::path const& name() const
 			{
-				return r_srcfile != nullptr? r_srcfile.name() : m_name;
+				return r_srcfile == nullptr? m_name : r_srcfile->name();
 			}
 
 			template<class SrcFileSet>
-			Dependency& resolve(SrcFileSet const& source_files)
+			BasicDependency& resolve(SrcFileSet const& source_files)
 			{
 				switch(m_res_method)
 				{
@@ -46,16 +45,15 @@ namespace Maike
 				return *this;
 			}
 
-			SourceFile const* sourceFile() const
+			SrcFile const* sourceFile() const
 			{
 				return r_srcfile;
 			}
 
 		private:
 			fs::path m_name;
-			SourceFile const* r_srcfile;
+			SrcFile const* r_srcfile;
 			Resolver m_res_method;
-
 	};
 }
 

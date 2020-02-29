@@ -6,25 +6,31 @@
 #ifndef MAIKE_SOURCEFILE_HPP
 #define MAIKE_SOURCEFILE_HPP
 
-#include "compiler.hpp"
-#include "fs.hpp"
+#include "./basic_dependency.hpp"
+#include "./compiler.hpp"
+#include "./fs.hpp"
 #include <vector>
 
 namespace Maike
 {
+	class SourceFile;
+
+	using Dependency = BasicDependency<SourceFile>;
+
 	class SourceFile
 	{
 		public:
 			explicit SourceFile(fs::path&& src,
-			                    std::vector<fs::path const*>&& used_files,
-			                    std::vector<fs::path const*>&& output_files,
+			                    std::vector<Dependency>&& used_files,
+			                    std::vector<fs::path>&& output_files,
 			                    Compiler&& compiler);
 
 			bool targetsUpToDate();
 
-			decltype(auto) compileTargets(CompilationLog& log)
+			decltype(auto) compileTargets(CompilationLog&)
 			{
-				return m_compiler.run(m_name, m_used_files, m_output_files, log);
+			// TODO:	return m_compiler.run(m_name, m_used_files, m_output_files, log);
+				return 0;
 			}
 
 			fs::path const& name() const
@@ -34,8 +40,8 @@ namespace Maike
 
 		private:
 			fs::path m_name;
-			std::vector<fs::path const*> m_used_files;
-			std::vector<fs::path const*> m_output_files;
+			std::vector<Dependency> m_used_files;
+			std::vector<fs::path> m_output_files;
 			Compiler m_compiler;
 	};
 }

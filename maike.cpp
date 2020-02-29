@@ -1,6 +1,6 @@
 //@	 {"targets":[{"name":"maike_next","type":"application"}]}
 
-#include "sourcefile.hpp"
+#include "./sourcefile.hpp"
 #include <set>
 #include <regex>
 
