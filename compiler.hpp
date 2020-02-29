@@ -25,9 +25,9 @@ namespace Maike
 			{
 			}
 
-			int run(Path const& src,
-                     std::vector<Path const*> const& used_files,
-                     std::vector<Path const*> const& output_files,
+			int run(fs::path const& src,
+                     std::vector<fs::path const*> const& used_files,
+                     std::vector<fs::path const*> const& output_files,
                      CompilationLog& log) const
 			{
 				return m_handle->run(src, used_files, output_files, log);
@@ -48,9 +48,9 @@ namespace Maike
 			class AbstractCompiler
 			{
 				public:
-					virtual int run(Path const& src,
-                                    std::vector<Path const*> const& used_files,
-                                    std::vector<Path const*> const& output_files,
+					virtual int run(fs::path const& src,
+                                    std::vector<fs::path const*> const& used_files,
+                                    std::vector<fs::path const*> const& output_files,
                                     CompilationLog& log) const = 0;
 
 					virtual DataStore settings() const = 0;
@@ -66,9 +66,9 @@ namespace Maike
 				public:
 					explicit CompilerImpl(T&& obj):m_obj{std::move(obj)}{};
 
-					int run(Path const& src,
-                                    std::vector<Path const*> const& used_files,
-                                    std::vector<Path const*> const& output_files,
+					int run(fs::path const& src,
+                                    std::vector<fs::path const*> const& used_files,
+                                    std::vector<fs::path const*> const& output_files,
                                     CompilationLog& log) const override
 					{ return m_obj.run(src, used_files, output_files, log); }
 

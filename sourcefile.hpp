@@ -15,9 +15,9 @@ namespace Maike
 	class SourceFile
 	{
 		public:
-			explicit SourceFile(Path&& src,
-			                    std::vector<Path const*>&& used_files,
-			                    std::vector<Path const*>&& output_files,
+			explicit SourceFile(fs::path&& src,
+			                    std::vector<fs::path const*>&& used_files,
+			                    std::vector<fs::path const*>&& output_files,
 			                    Compiler&& compiler);
 
 			bool targetsUpToDate();
@@ -27,15 +27,15 @@ namespace Maike
 				return m_compiler.run(m_name, m_used_files, m_output_files, log);
 			}
 
-			Path const& name() const
+			fs::path const& name() const
 			{
 				return m_name;
 			}
 
 		private:
-			Path m_name;
-			std::vector<Path const*> m_used_files;
-			std::vector<Path const*> m_output_files;
+			fs::path m_name;
+			std::vector<fs::path const*> m_used_files;
+			std::vector<fs::path const*> m_output_files;
 			Compiler m_compiler;
 	};
 }

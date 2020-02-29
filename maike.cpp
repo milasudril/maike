@@ -12,44 +12,32 @@ decltype(auto) pop(T& stack)
 	return ret;
 }
 
-namespace fs = std::experimental::filesystem;
-
-template<class SetOfSoursFiles>
-void toposort(SetOfSoursFiles const& src)
-{
-	std::for_each(std::begin(src), std::end(src),[](auto const& node) {
-		if(!visited(ndoe))
-		{
-			detail::visist(node);
-		}
-	}
-}
-
-
 int main()
 {
-	std::map<Path, SourceFile> src_files;
+	std::vector<std::regex> input_filters;
+	input_filters.push_back(std::regex{"/\\..*", std::regex_constants::basic});
+	input_filters.push_back(std::regex{"/__*.*", std::regex_constants::basic});
 
-	std::vector<std::regex> ignore;
-	ignore.push_back(std::regex{"/\\..*", std::regex_constants::basic});
-	ignore.push_back(std::regex{"/__*.*", std::regex_constants::basic});
+	auto skip = [](auto const& path, auto const& regex_list){
+		return std::any_of(std::begin(regex_list), std::end(regex_list), [&path](auto const& regex){
+			return regex_search(path.c_str(), regex);
+		});
+	};
 
-	std::stack<Maike::Path> paths_to_visit;
-	paths_to_visit.push(Maike::Path{"."});
+	std::stack<Maike::fs::path> paths_to_visit;
+	paths_to_visit.push(Maike::fs::path{"."});
 	while(!paths_to_visit.empty())
 	{
-		Maike::SourceFile test{pop(paths_to_visit)};
+		auto path = pop(paths_to_visit);
+		if(skip(path, input_filters))
+		{ continue; }
 
-		if(is_directory(test.name()))
+		printf("%s\n", path.c_str());
+		if(is_directory(path))
 		{
-			auto i = fs::directory_iterator(test.name());
-			std::for_each(begin(i), end(i), [&paths_to_visit, &ignore](auto const& item) {
-				if(std::none_of(std::begin(ignore), std::end(ignore), [&item](auto const& regex){
-					return regex_search(item.path().c_str(), regex);
-				}))
-				{
-					paths_to_visit.push(item.path());
-				}
+			auto i = Maike::fs::directory_iterator{path};
+			std::for_each(begin(i), end(i), [&paths_to_visit](auto const& item){
+				paths_to_visit.push(item.path());
 			});
 		}
 	}

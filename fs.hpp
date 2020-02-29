@@ -10,7 +10,7 @@
 
 namespace Maike
 {
-	using Path = std::experimental::filesystem::path;
+	namespace fs = std::experimental::filesystem;
 }
 
 #endif
