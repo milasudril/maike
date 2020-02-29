@@ -7,6 +7,7 @@
 #define MAIKE_COMMAND_HPP
 
 #include "./fs.hpp"
+#include <cstddef>
 
 namespace Maike
 {
@@ -51,13 +52,13 @@ namespace Maike
 			Result execp(IoRedirector&& io_redir) const
 			{
 				return execp(&io_redir,
-				            [](void* io_redirector, uint8_t* buffer, size_t buffer_size) {
+				            [](void* io_redirector, std::byte* buffer, size_t buffer_size) {
 					             auto& self = *reinterpret_cast<IoRedirector*>(io_redirector);
-					             self(buffer, buffer_size, StdIn{});
-				            }, [](void* io_redirector, uint8_t const* buffer, size_t buffer_size){
+					             return self(buffer, buffer_size, StdIn{});
+				            }, [](void* io_redirector, std::byte const* buffer, size_t buffer_size){
 					             auto& self = *reinterpret_cast<IoRedirector*>(io_redirector);
 					             self(buffer, buffer_size, StdOut{});
-				            }, [](void* io_redirector, uint8_t const* buffer, size_t buffer_size){
+				            }, [](void* io_redirector, std::byte const* buffer, size_t buffer_size){
 					             auto& self = *reinterpret_cast<IoRedirector*>(io_redirector);
 					             self(buffer, buffer_size, StdErr{});
 				            });
@@ -68,8 +69,8 @@ namespace Maike
 			{}
 
 		private:
-			using Writer = void(*)(void* io_redirector, uint8_t* buffer, size_t buffer_size);
-			using Reader = void(*)(void* io_redirector, uint8_t const* buffer, size_t buffer_size);
+			using Writer = size_t(*)(void* io_redirector, std::byte* buffer, size_t buffer_size);
+			using Reader = void(*)(void* io_redirector, std::byte const* buffer, size_t buffer_size);
 			Result execp(void* io_redirector,
 			             Writer stdin_writer,
 			             Reader stdout_reader,
