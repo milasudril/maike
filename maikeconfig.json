@@ -20,6 +20,8 @@
                         "-fpic",
                         "{cxxversion}",
                         "-Wall",
+                        "-Wextra",
+                        "-Werror",
                         "{cflags_extra}",
                         "{iquote}",
                         "{includedir}",
