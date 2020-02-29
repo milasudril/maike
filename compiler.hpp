@@ -5,7 +5,7 @@
 #ifndef MAIKE_COMPILER_HPP
 #define MAIKE_COMPILER_HPP
 
-#include "path.hpp"
+#include "fs.hpp"
 #include "data_store.hpp"
 #include "compilation_log.hpp"
 
@@ -17,8 +17,11 @@ namespace Maike
 	class Compiler
 	{
 		public:
+			Compiler(Compiler&&) = default;
+			Compiler& operator=(Compiler&&) = default;
+
 			template<class Obj>
-			explicit Compiler(Obj&& obj):m_handle{std::make_unique<CompilerImpl<Obj>>{std::forward<Obj>(obj)}}
+			explicit Compiler(Obj&& obj):m_handle{std::make_unique<CompilerImpl<Obj>>(std::forward<Obj>(obj))}
 			{
 			}
 
@@ -27,7 +30,7 @@ namespace Maike
                      std::vector<Path const*> const& output_files,
                      CompilationLog& log) const
 			{
-				m_handle->run(src, used_files, output_files, log);
+				return m_handle->run(src, used_files, output_files, log);
 			}
 
             DataStore settings() const
@@ -75,7 +78,7 @@ namespace Maike
 					void settings(DataStore const& cfg)
 					{ (void*)m_obj.settings(cfg); }
 
-					~AbstractCompiler() override = default;
+					~CompilerImpl() override = default;
 
 				private:
 					T m_obj;

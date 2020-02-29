@@ -1,30 +1,14 @@
-//@	 {"targets":[{"name":"sourcefile.o","type":"object","dependencies":[{"ref":"stdc++fs", "rel":"external"}]}]}
+//@	 {"targets":[{"name":"sourcefile.o","type":"object"}]}
 
 #include "./sourcefile.hpp"
 
-namespace
-{
-	std::string getExtension(Maike::Path const& path)
-	{
-		auto filename = path.filename().c_str();
-		while(true)
-		{
-			auto ch_in = *filename;
-			if(ch_in == 0)
-			{
-				return "";
-			}
-			if(ch_in == '.')
-			{
-				return filename;
-			}
-			++filename;
-		}
-	}
-}
+Maike::SourceFile::SourceFile(Path&& src,
+                              std::vector<Path const*>&& used_files,
+                              std::vector<Path const*>&& output_files,
+                              Compiler&& compiler):
+m_name{std::move(src)},
+m_used_files{std::move(used_files)},
+m_output_files{std::move(output_files)},
+m_compiler{std::move(compiler)}
+{}
 
-Maike::SourceFile::SourceFile(Path&& src):
-m_name{std::move(src)}
-{
-	printf("%s  %s\n", m_name.c_str(), getExtension(m_name).c_str());
-}
