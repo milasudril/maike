@@ -16,50 +16,48 @@
 #include <vector>
 
 namespace Maike
+{
+	class PRIVATE SystemTargetInfo final: public ParameterSetDumpable
 	{
-	class PRIVATE SystemTargetInfo final:public ParameterSetDumpable
+	public:
+		SystemTargetInfo();
+		~SystemTargetInfo() noexcept;
+
+		void parameterGet(const Stringkey& key, ParameterProcessor&& proc) const;
+
+		Variant variableGet(const Stringkey& key) const noexcept;
+
+		void variableSet(const char* key, const char* str)
 		{
-		public:
-			SystemTargetInfo();
-			~SystemTargetInfo() noexcept;
+			auto key_hash = Stringkey(key);
+			m_varnames[key_hash] = std::string(key);
+			auto i = replace(m_strings, {key_hash, std::string(str)});
+			replace(m_sysvars, {key_hash, Variant(i->second.c_str())});
+		}
 
-			void parameterGet(const Stringkey& key
-				,ParameterProcessor&& proc) const;
+		template<class T>
+		void variableSet(const char* key, const T& value)
+		{
+			auto key_hash = Stringkey(key);
+			m_varnames[key_hash] = std::string(key);
+			replace(m_sysvars, {key_hash, Variant(value)});
+		}
 
-			Variant variableGet(const Stringkey& key) const noexcept;
+		void clear();
 
-			void variableSet(const char* key,const char* str)
-				{
-				auto key_hash=Stringkey(key);
-				m_varnames[key_hash]=std::string(key);
-				auto i=replace(m_strings,{key_hash,std::string(str)});
-				replace(m_sysvars,{key_hash,Variant(i->second.c_str())});
-				}
+		SystemTargetInfo& configAppend(const ResourceObject& targetinfo);
+		void configDump(ResourceObject& targetinfo) const;
+		ResourceObject configDump() const;
 
-			template<class T>
-			void variableSet(const char* key,const T& value)
-				{
-				auto key_hash=Stringkey(key);
-				m_varnames[key_hash]=std::string(key);
-				replace(m_sysvars,{key_hash,Variant(value)});
-				}
+		SystemTargetInfo& sysvarsLoad();
+		SystemTargetInfo& configAppendDefault();
 
-			void clear();
+	private:
+		std::map<Stringkey, Variant> m_sysvars;
+		std::map<Stringkey, std::string> m_strings;
+		std::map<Stringkey, std::string> m_varnames;
+	};
 
-			SystemTargetInfo& configAppend(const ResourceObject& targetinfo);
-			void configDump(ResourceObject& targetinfo) const;
-			ResourceObject configDump() const;
-
-			SystemTargetInfo& sysvarsLoad();
-			SystemTargetInfo& configAppendDefault();
-
-		private:
-			std::map<Stringkey,Variant> m_sysvars;
-			std::map<Stringkey,std::string> m_strings;
-			std::map<Stringkey,std::string> m_varnames;
-		};
-
-	}
+}
 
 #endif // MAIKE_SYSTEMINFO_HPP
-

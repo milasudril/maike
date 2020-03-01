@@ -5,20 +5,30 @@
 using namespace Maike;
 
 TargetCPHook* TargetCPHook::create()
-	{return new TargetCPHook();}
+{
+	return new TargetCPHook();
+}
 
 void TargetCPHook::destroy() noexcept
-	{delete this;}
+{
+	delete this;
+}
 
 void TargetCPHook::configClear()
-	{}
+{
+}
 
 
 TargetCPHook& TargetCPHook::configAppendDefault()
-	{return *this;}
+{
+	return *this;
+}
 
 TargetCPHook& TargetCPHook::configAppend(const ResourceObject&)
-	{return *this;}
+{
+	return *this;
+}
 
 void TargetCPHook::configDump(ResourceObject&) const
-	{}
+{
+}

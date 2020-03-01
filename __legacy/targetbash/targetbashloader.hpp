@@ -9,36 +9,43 @@
 #include "../target_loader.hpp"
 
 namespace Maike
-	{
+{
 	class TargetBashInterpreter;
 
-	class PRIVATE TargetBashLoader:public Target_Loader
+	class PRIVATE TargetBashLoader: public Target_Loader
+	{
+	public:
+		void targetsLoad(const char* name_src,
+		                 const char* in_dir,
+		                 Spider& spider,
+		                 DependencyGraph& graph,
+		                 Target_FactoryDelegator& factory) const;
+
+		void dependenciesExtraGet(const char* name_src,
+		                          const char* in_dir,
+		                          const char* root,
+		                          ResourceObject::Reader rc_reader,
+		                          DependencyBuffer& deps) const;
+
+		void dependenciesGet(
+		   const char*, const char*, const char*, ResourceObject::Reader, DependencyBuffer&) const
 		{
-		public:
-			void targetsLoad(const char* name_src,const char* in_dir
-				,Spider& spider,DependencyGraph& graph
-				,Target_FactoryDelegator& factory) const;
+		}
 
-			void dependenciesExtraGet(const char* name_src,const char* in_dir
-				,const char* root,ResourceObject::Reader rc_reader
-				,DependencyBuffer& deps) const;
+		explicit TargetBashLoader(const TargetBashInterpreter& intptret);
 
-			void dependenciesGet(const char*,const char*
-				,const char*,ResourceObject::Reader
-				,DependencyBuffer&) const
-				{}	
+		TargetBashLoader(TargetBashInterpreter&&) = delete;
 
-			explicit TargetBashLoader(const TargetBashInterpreter& intptret);
+		Handle<Target> targetCreate(const ResourceObject& obj,
+		                            const char* name_src,
+		                            const char* in_dir,
+		                            const char* root,
+		                            size_t id,
+		                            size_t line_count) const;
 
-			TargetBashLoader(TargetBashInterpreter&&)=delete;
-
-			Handle<Target> targetCreate(const ResourceObject& obj
-				,const char* name_src,const char* in_dir,const char* root	
-				,size_t id,size_t line_count) const;
-
-		private:
-			const TargetBashInterpreter& r_intpret;
-		};
-	}
+	private:
+		const TargetBashInterpreter& r_intpret;
+	};
+}
 
 #endif

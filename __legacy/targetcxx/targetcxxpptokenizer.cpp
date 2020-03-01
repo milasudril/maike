@@ -8,238 +8,203 @@ using namespace Maike;
 
 
 std::vector<std::string> TargetCxxPPTokenizer::macroDecode(const char* str)
-	{
+{
 	std::string tok_current;
 	std::vector<std::string> ret;
-	enum class State:unsigned int{NAME,ARGUMENT};
-	auto state_current=State::NAME;
+	enum class State : unsigned int
+	{
+		NAME,
+		ARGUMENT
+	};
+	auto state_current = State::NAME;
 	while(true)
-		{
-		auto ch_in=*str;
+	{
+		auto ch_in = *str;
 		switch(state_current)
-			{
+		{
 			case State::NAME:
 				switch(ch_in)
-					{
-					case '\0':
-						ret.push_back(tok_current);
-						return std::move(ret);
+				{
+					case '\0': ret.push_back(tok_current); return std::move(ret);
 					case '(':
 						ret.push_back(tok_current);
 						tok_current.clear();
-						state_current=State::ARGUMENT;
+						state_current = State::ARGUMENT;
 						break;
-					default:
-						tok_current+=ch_in;
-					}
+					default: tok_current += ch_in;
+				}
 				break;
 			case State::ARGUMENT:
 				switch(ch_in)
-					{
+				{
 					case ',':
 						ret.push_back(tok_current);
 						tok_current.clear();
 						break;
-					case ')':
-						ret.push_back(tok_current);
-						return std::move(ret);
-					default:
-						tok_current+=ch_in;
-					}
+					case ')': ret.push_back(tok_current); return std::move(ret);
+					default: tok_current += ch_in;
+				}
 				break;
-			}
-		++str;
 		}
+		++str;
 	}
+}
 
 bool TargetCxxPPTokenizer::read(Token& token)
-	{
+{
 	WriteBuffer wb(StdStream::error());
-	if(m_reader.eof())
-		{
-		return 0;
-		}
-	auto state=m_state;
+	if(m_reader.eof()) { return 0; }
+	auto state = m_state;
 	token.value.clear();
 	do
-		{
-		auto ch_in=m_reader.byteRead();
+	{
+		auto ch_in = m_reader.byteRead();
 		switch(state)
-			{
+		{
 			case State::NEWLINE:
-				if(!(ch_in<=' '))
-					{
+				if(!(ch_in <= ' '))
+				{
 					switch(ch_in)
-						{
-						case '#':
-							state=State::PREPROCESSOR_BEGIN;
-							break;
-						case '/':
-							state=State::COMMENT_0;
-							break;
-						default:
-							state=State::JUNK;
-						}
+					{
+						case '#': state = State::PREPROCESSOR_BEGIN; break;
+						case '/': state = State::COMMENT_0; break;
+						default: state = State::JUNK;
 					}
+				}
 				break;
 
 			case State::COMMENT_0:
 				switch(ch_in)
-					{
-					case '/':
-						state=State::COMMENT_1;
-						break;
-					case '*':
-						state=State::COMMENT_2;
-						break;
-					default:
-						state=State::JUNK;
-					}
+				{
+					case '/': state = State::COMMENT_1; break;
+					case '*': state = State::COMMENT_2; break;
+					default: state = State::JUNK;
+				}
 				break;
 
 			case State::COMMENT_1:
 				switch(ch_in)
-					{
+				{
 					case '\r':
-					case '\n':
-						state=State::NEWLINE;
-						break;
-					}
+					case '\n': state = State::NEWLINE; break;
+				}
 				break;
 
 			case State::COMMENT_2:
 				switch(ch_in)
-					{
-					case '*':
-						state=State::COMMENT_3;
-						break;
-					}
+				{
+					case '*': state = State::COMMENT_3; break;
+				}
 				break;
 
 			case State::COMMENT_3:
 				switch(ch_in)
-					{
-					case '/':
-						state=State::NEWLINE;
-						break;
-					default:
-						state=State::COMMENT_2;
-					}
+				{
+					case '/': state = State::NEWLINE; break;
+					default: state = State::COMMENT_2;
+				}
 				break;
 
 			case State::PREPROCESSOR_BEGIN:
 				switch(ch_in)
-					{
+				{
 					case '\r':
 					case '\n':
 						wb.write(m_reader.nameGet()).write(": Newline afer #\n");
-						state=State::NEWLINE;
+						state = State::NEWLINE;
 						break;
 
 					default:
-						if( !(ch_in<=' ') )
-							{
-							token.value+=(ch_in);
-							token.type=Token::Type::DIRECTIVE;
-							state=State::PREPROCESSOR;
-							}
-					}
+						if(!(ch_in <= ' '))
+						{
+							token.value += (ch_in);
+							token.type = Token::Type::DIRECTIVE;
+							state = State::PREPROCESSOR;
+						}
+				}
 				break;
 
 			case State::PREPROCESSOR:
 				switch(ch_in)
-					{
+				{
 					case '\r':
-					case '\n':
-						state=State::NEWLINE;
-						goto done;
+					case '\n': state = State::NEWLINE; goto done;
 
 					default:
-						if(ch_in<=' ')
-							{
-							state=State::PREPROCESSOR_NEXT;
+						if(ch_in <= ' ')
+						{
+							state = State::PREPROCESSOR_NEXT;
 							goto done;
-							}
-						token.value+=(ch_in);
-					}
+						}
+						token.value += (ch_in);
+				}
 				break;
 
 			case State::PREPROCESSOR_NEXT:
 				switch(ch_in)
-					{
+				{
 					case '\r':
-					case '\n':
-						state=State::NEWLINE;
-						break;
+					case '\n': state = State::NEWLINE; break;
 					case '"':
-						state=State::STRING;
-						token.type=Token::Type::STRING;
+						state = State::STRING;
+						token.type = Token::Type::STRING;
 						break;
 
 					case '<':
-						state=State::SYSINCLUDE;
-						token.type=Token::Type::SYSINCLUDE;
+						state = State::SYSINCLUDE;
+						token.type = Token::Type::SYSINCLUDE;
 						break;
 
 					default:
-						if( !(ch_in<=' ') )
-							{
-							token.value+=(ch_in);
-							token.type=Token::Type::OTHER;
-							state=State::PREPROCESSOR;
-							}
-					}
+						if(!(ch_in <= ' '))
+						{
+							token.value += (ch_in);
+							token.type = Token::Type::OTHER;
+							state = State::PREPROCESSOR;
+						}
+				}
 				break;
 
 			case State::STRING:
 				switch(ch_in)
-					{
-					case '"':
-						state=State::PREPROCESSOR_NEXT;
-						goto done;
+				{
+					case '"': state = State::PREPROCESSOR_NEXT; goto done;
 
 					case '\r':
 					case '\n':
 						wb.write(m_reader.nameGet()).write(": Newline in string\n");
-						state=State::NEWLINE;
+						state = State::NEWLINE;
 						goto done;
 
-					default:
-						token.value+=(ch_in);
-					}
+					default: token.value += (ch_in);
+				}
 				break;
 
 			case State::SYSINCLUDE:
 				switch(ch_in)
-					{
-					case '>':
-						state=State::PREPROCESSOR_NEXT;
-						goto done;
+				{
+					case '>': state = State::PREPROCESSOR_NEXT; goto done;
 
 					case '\r':
 					case '\n':
 						wb.write(m_reader.nameGet()).write(": Newline in string\n");
-						state=State::NEWLINE;
+						state = State::NEWLINE;
 						goto done;
 
-					default:
-						token.value+=(ch_in);
-					}
+					default: token.value += (ch_in);
+				}
 				break;
 
 			case State::JUNK:
 				switch(ch_in)
-					{
+				{
 					case '\r':
-					case '\n':
-						state=State::NEWLINE;
-						break;
-					}
+					case '\n': state = State::NEWLINE; break;
+				}
 				break;
-			}
 		}
-	while(!m_reader.eof());
+	} while(!m_reader.eof());
 done:
-	m_state=state;
-	return token.value.length()!=0;
-	}
+	m_state = state;
+	return token.value.length() != 0;
+}

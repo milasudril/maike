@@ -17,72 +17,67 @@
 using namespace Maike;
 
 FileOut::FileOut(const char* filename)
+{
+	static_assert(sizeof(m_handle) >= sizeof(int), "Handle is too small");
+	m_handle = open(filename, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+	if(m_handle == -1)
 	{
-	static_assert(sizeof(m_handle)>=sizeof(int),"Handle is too small");
-	m_handle=open(filename,O_WRONLY|O_CREAT|O_TRUNC,S_IRUSR|S_IWUSR);
-	if(m_handle==-1)
-		{
-		exceptionRaise(ErrorMessage("It was not possible to create the file #0;. #1;"
-			,{filename,static_cast<const char*>(strerror(errno))}));
-		}
+		exceptionRaise(ErrorMessage("It was not possible to create the file #0;. #1;",
+		                            {filename, static_cast<const char*>(strerror(errno))}));
 	}
+}
 
-FileOut::FileOut(FileOut&& file):m_handle(file.m_handle)
-	{
-	file.m_handle=-1;
-	}
+FileOut::FileOut(FileOut&& file): m_handle(file.m_handle)
+{
+	file.m_handle = -1;
+}
 
 FileOut& FileOut::operator=(FileOut&& file)
-	{
-	std::swap(m_handle,file.m_handle);
+{
+	std::swap(m_handle, file.m_handle);
 	return *this;
-	}
+}
 
-FileOut::FileOut():m_handle(STDOUT_FILENO)
-	{}
+FileOut::FileOut(): m_handle(STDOUT_FILENO)
+{
+}
 
 
 FileOut::FileOut(StdStream stream)
-	{
+{
 	switch(stream)
-		{
-		case StdStream::OUTPUT:
-			m_handle=STDOUT_FILENO;
-			break;
-		case StdStream::ERROR:
-			m_handle=STDERR_FILENO;
-			break;
-		}
+	{
+		case StdStream::OUTPUT: m_handle = STDOUT_FILENO; break;
+		case StdStream::ERROR: m_handle = STDERR_FILENO; break;
 	}
+}
 
 FileOut::~FileOut() noexcept
+{
+	if(m_handle != STDOUT_FILENO && m_handle != STDERR_FILENO && m_handle != -1)
 	{
-	if(m_handle!=STDOUT_FILENO && m_handle!=STDERR_FILENO && m_handle!=-1)
-		{
 		fsync(static_cast<int>(m_handle));
 		close(static_cast<int>(m_handle));
-		}
 	}
+}
 
-size_t FileOut::write(const void* buffer,size_t count)
+size_t FileOut::write(const void* buffer, size_t count)
+{
+	if(count == 0) { return 0; }
+	auto bytes = reinterpret_cast<const uint8_t*>(buffer);
+	size_t n = 0;
+	while(n != count)
 	{
-	if(count==0)
-		{return 0;}
-	auto bytes=reinterpret_cast<const uint8_t*>(buffer);
-	size_t n=0;
-	while(n!=count)
+		auto res = ::write(static_cast<int>(m_handle), bytes, count - n);
+		if(res == -1)
 		{
-		auto res=::write(static_cast<int>(m_handle),bytes,count - n);
-		if(res==-1)
-			{
-			if(errno==ENOSPC)
-				{return n;}
-			if(!( errno==EINTR || errno==EAGAIN || errno==EWOULDBLOCK))
-				{exceptionRaise(ErrorMessage("I/O error",{}));}
-			n=0;
-			}
-		n+=res;
-		bytes+=res;
+			if(errno == ENOSPC) { return n; }
+			if(!(errno == EINTR || errno == EAGAIN || errno == EWOULDBLOCK))
+			{ exceptionRaise(ErrorMessage("I/O error", {})); }
+			n = 0;
 		}
-	return n;
+		n += res;
+		bytes += res;
 	}
+	return n;
+}

@@ -6,45 +6,56 @@
 #include "targetbase.hpp"
 
 namespace Maike
+{
+	class PRIVATE TargetPlaceholder final: public Maike::TargetBase
 	{
-	class PRIVATE TargetPlaceholder final:public Maike::TargetBase
+	public:
+		static TargetPlaceholder* create(
+		   const char* name, const char* name_src, const char* root, size_t id, Dependency::Relation rel)
 		{
-		public:
-			static TargetPlaceholder* create(const char* name,const char* name_src
-				,const char* root,size_t id,Dependency::Relation rel)
-				{return new TargetPlaceholder(name,name_src,root,id,rel);}
+			return new TargetPlaceholder(name, name_src, root, id, rel);
+		}
 
-			virtual void destroy() noexcept
-				{delete this;}
+		virtual void destroy() noexcept
+		{
+			delete this;
+		}
 
-			virtual bool upToDate(Twins<const Dependency*>
-				,Twins<const Dependency*>
-				,const char*) const
-				{return 1;}
+		virtual bool upToDate(Twins<const Dependency*>, Twins<const Dependency*>, const char*) const
+		{
+			return 1;
+		}
 
-			void compileImpl(Twins<const Dependency*>
-				,Twins<const Dependency*>
-				,const char*)
-				{}
+		void compileImpl(Twins<const Dependency*>, Twins<const Dependency*>, const char*)
+		{
+		}
 
-			Dependency::Relation relation() const noexcept
-				{return m_relation;}
+		Dependency::Relation relation() const noexcept
+		{
+			return m_relation;
+		}
 
-			bool generated() const noexcept
-				{return 0;}
+		bool generated() const noexcept
+		{
+			return 0;
+		}
 
-			void dumpDetails(ResourceObject&) const{}
+		void dumpDetails(ResourceObject&) const
+		{
+		}
 
-		private:
-			TargetPlaceholder(const char* name,const char* name_src,const char* root,size_t id
-				,Dependency::Relation rel):
-				TargetBase(name,name_src,"",root,id),m_relation(rel)
-				{}
+	private:
+		TargetPlaceholder(
+		   const char* name, const char* name_src, const char* root, size_t id, Dependency::Relation rel):
+		   TargetBase(name, name_src, "", root, id),
+		   m_relation(rel)
+		{
+		}
 
-			~TargetPlaceholder()=default;
+		~TargetPlaceholder() = default;
 
-			Dependency::Relation m_relation;
-		};
-	}
+		Dependency::Relation m_relation;
+	};
+}
 
 #endif

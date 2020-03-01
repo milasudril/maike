@@ -5,31 +5,39 @@
 using namespace Maike;
 
 TargetCxxHook::TargetCxxHook(const ParameterSet& params):
-	m_compiler(m_options,params),m_loader(m_options,m_compiler)
-	{}
+   m_compiler(m_options, params),
+   m_loader(m_options, m_compiler)
+{
+}
 
 TargetCxxHook* TargetCxxHook::create(const ParameterSet& params)
-	{return new TargetCxxHook(params);}
+{
+	return new TargetCxxHook(params);
+}
 
 void TargetCxxHook::destroy() noexcept
-	{delete this;}
+{
+	delete this;
+}
 
 void TargetCxxHook::configClear()
-	{m_options.configClear();}
+{
+	m_options.configClear();
+}
 
 TargetCxxHook& TargetCxxHook::configAppendDefault()
-	{
+{
 	m_options.configAppendDefault();
 	return *this;
-	}
+}
 
 TargetCxxHook& TargetCxxHook::configAppend(const ResourceObject& cxxoptions)
-	{
+{
 	m_options.configAppend(cxxoptions);
 	return *this;
-	}
+}
 
 void TargetCxxHook::configDump(ResourceObject& cxxoptions) const
-	{
+{
 	m_options.configDump(cxxoptions);
-	}
+}

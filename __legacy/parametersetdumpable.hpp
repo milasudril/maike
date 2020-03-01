@@ -6,14 +6,14 @@
 #include "parameterset.hpp"
 
 namespace Maike
-	{
+{
 	class ResourceObject;
-	class PRIVATE ParameterSetDumpable:public ParameterSet
-		{
-		public:
-			virtual void configDump(ResourceObject& targetinfo) const=0;
-			virtual ResourceObject configDump() const=0;
-		};
-	}
+	class PRIVATE ParameterSetDumpable: public ParameterSet
+	{
+	public:
+		virtual void configDump(ResourceObject& targetinfo) const = 0;
+		virtual ResourceObject configDump() const = 0;
+	};
+}
 
 #endif

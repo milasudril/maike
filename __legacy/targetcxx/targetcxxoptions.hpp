@@ -14,184 +14,199 @@
 #include <set>
 
 namespace Maike
-	{
+{
 	class ResourceObject;
 
 	class PRIVATE TargetCxxOptions
+	{
+	public:
+		TargetCxxOptions();
+
+		TargetCxxOptions(const ResourceObject& options);
+
+		const Command& versionqueryGet() const noexcept
 		{
-		public:
-			TargetCxxOptions();
+			return m_versionquery;
+		}
 
-			TargetCxxOptions(const ResourceObject& options);
+		const Command& objcompileGet() const noexcept
+		{
+			return m_objcompile;
+		}
 
-			const Command& versionqueryGet() const noexcept
-				{return m_versionquery;}
+		const Command& appcompileGet() const noexcept
+		{
+			return m_appcompile;
+		}
 
-			const Command& objcompileGet() const noexcept
-				{return m_objcompile;}
+		const Command& dllcompileGet() const noexcept
+		{
+			return m_dllcompile;
+		}
 
-			const Command& appcompileGet() const noexcept
-				{return m_appcompile;}
+		const Command& pkgconfigGet() const noexcept
+		{
+			return m_pkgconfig;
+		}
 
-			const Command& dllcompileGet() const noexcept
-				{return m_dllcompile;}
+		const Command& libcompileGet() const noexcept
+		{
+			return m_libcompile;
+		}
 
-			const Command& pkgconfigGet() const noexcept
-				{return m_pkgconfig;}
-
-			const Command& libcompileGet() const noexcept
-				{return m_libcompile;}
-
-			const Command& autorunLauncherGet() const noexcept
-				{return m_autorun_launcher;}
-
-
-			unsigned long long int cxxversionMinGet() const noexcept
-				{return m_cxxversion_min;}
-
-			unsigned long long int cxxversionMaxGet() const noexcept
-				{return m_cxxversion_max;}
-
-			const char* stdprefixGet() const noexcept
-				{return m_stdprefix.c_str();}
-
-			const char* libextFormatGet() const noexcept
-				{return m_libext_format.c_str();}
-
-			const char* libintFormatGet() const noexcept
-				{return m_libext_format.c_str();}
+		const Command& autorunLauncherGet() const noexcept
+		{
+			return m_autorun_launcher;
+		}
 
 
+		unsigned long long int cxxversionMinGet() const noexcept
+		{
+			return m_cxxversion_min;
+		}
 
-			void configClear();
-			TargetCxxOptions& configAppendDefault();
-			TargetCxxOptions& configAppend(const ResourceObject& cxxoptions);
-			TargetCxxOptions& configAppend(const TargetCxxOptions& options);
+		unsigned long long int cxxversionMaxGet() const noexcept
+		{
+			return m_cxxversion_max;
+		}
 
-			void configDump(ResourceObject& cxxoptions) const;
+		const char* stdprefixGet() const noexcept
+		{
+			return m_stdprefix.c_str();
+		}
 
-			Twins<const std::string*> includedirGet() const noexcept
-				{
-				return
-					{
-					 m_includedir.data()
-					,m_includedir.data() + m_includedir.size()
-					};
-				}
+		const char* libextFormatGet() const noexcept
+		{
+			return m_libext_format.c_str();
+		}
 
-			Twins<const std::string*> includedirNoscanGet() const noexcept
-				{
-				return
-					{
-					 m_includedir_noscan.data()
-					,m_includedir_noscan.data() + m_includedir_noscan.size()
-					};
-				}
-
-			TargetCxxOptions& includedirNoscanAppend(const char* dir);
-
-			const char* includedirFormatGet() const noexcept
-				{return m_includedir_format.c_str();}
+		const char* libintFormatGet() const noexcept
+		{
+			return m_libext_format.c_str();
+		}
 
 
+		void configClear();
+		TargetCxxOptions& configAppendDefault();
+		TargetCxxOptions& configAppend(const ResourceObject& cxxoptions);
+		TargetCxxOptions& configAppend(const TargetCxxOptions& options);
 
-			Twins<const std::string*> libdirGet() const noexcept
-				{
-				return
-					{
-					 m_libdir.data()
-					,m_libdir.data() + m_libdir.size()
-					};
-				}
+		void configDump(ResourceObject& cxxoptions) const;
 
-			TargetCxxOptions& libdirAppend(const char* libdir);
+		Twins<const std::string*> includedirGet() const noexcept
+		{
+			return {m_includedir.data(), m_includedir.data() + m_includedir.size()};
+		}
 
-			const char* libdirFormatGet() const noexcept
-				{return m_libdir_format.c_str();}
+		Twins<const std::string*> includedirNoscanGet() const noexcept
+		{
+			return {m_includedir_noscan.data(), m_includedir_noscan.data() + m_includedir_noscan.size()};
+		}
 
+		TargetCxxOptions& includedirNoscanAppend(const char* dir);
 
-
-			Twins<const std::string*> cflagsExtraGet() const noexcept
-				{
-				return
-					{
-					 m_cflags_extra.data()
-					,m_cflags_extra.data() + m_cflags_extra.size()
-					};
-				}
-
-			TargetCxxOptions& cflagsExtraAppend(const char* flagname);
-
-			const char* cflagsFormatGet() const noexcept
-				{return m_cflags_format.c_str();}
+		const char* includedirFormatGet() const noexcept
+		{
+			return m_includedir_format.c_str();
+		}
 
 
-			Twins<const std::string*> iquoteGet() const noexcept
-				{
-				return
-					{
-					 m_iquote.data()
-					,m_iquote.data() + m_iquote.size()
-					};
-				}
+		Twins<const std::string*> libdirGet() const noexcept
+		{
+			return {m_libdir.data(), m_libdir.data() + m_libdir.size()};
+		}
 
-			TargetCxxOptions& iquoteAppend(const char* dir);
+		TargetCxxOptions& libdirAppend(const char* libdir);
 
-			const char* iquoteFormatGet() const noexcept
-				{return m_iquote_format.c_str();}
+		const char* libdirFormatGet() const noexcept
+		{
+			return m_libdir_format.c_str();
+		}
 
-			const char* includeFormatGet() const noexcept
-				{return m_include_format.c_str();}
 
-			const char* modeGet() const noexcept
-				{return m_mode.c_str();}
+		Twins<const std::string*> cflagsExtraGet() const noexcept
+		{
+			return {m_cflags_extra.data(), m_cflags_extra.data() + m_cflags_extra.size()};
+		}
 
-			TargetCxxOptions& modeSet(const char* mode)
-				{
-				m_mode=mode;
-				return *this;
-				}
+		TargetCxxOptions& cflagsExtraAppend(const char* flagname);
 
-		private:
-			std::vector< std::string > m_includedir;
-			std::set<Stringkey> m_includedir_dup;
-			std::vector< std::string > m_includedir_noscan;
-			std::set<Stringkey> m_includedir_noscan_dup;
-			std::vector< std::string > m_libdir;
-			std::set<Stringkey> m_libdir_dup;
-			std::vector< std::string > m_iquote;
-			std::set<Stringkey> m_iquote_dup;
+		const char* cflagsFormatGet() const noexcept
+		{
+			return m_cflags_format.c_str();
+		}
 
-			std::string m_platform_suffix;
 
-			std::string m_includedir_format;
-			std::string m_libdir_format;
-			std::string m_libext_format;
-			std::string m_libint_format;
-			std::string m_iquote_format;
-			std::string m_include_format;
+		Twins<const std::string*> iquoteGet() const noexcept
+		{
+			return {m_iquote.data(), m_iquote.data() + m_iquote.size()};
+		}
 
-			std::string m_cflags_format;
-			std::vector< std::string > m_cflags_extra;
-			std::set<Stringkey> m_cflags_extra_dup;
+		TargetCxxOptions& iquoteAppend(const char* dir);
 
-			unsigned long long int m_cxxversion_min;
-			unsigned long long int m_cxxversion_max;
+		const char* iquoteFormatGet() const noexcept
+		{
+			return m_iquote_format.c_str();
+		}
 
-			std::string m_stdprefix;
-			std::string m_mode;
+		const char* includeFormatGet() const noexcept
+		{
+			return m_include_format.c_str();
+		}
 
-			Command m_appcompile;
-			Command m_dllcompile;
-			Command m_libcompile;
-			Command m_objcompile;
-			Command m_versionquery;
-			Command m_pkgconfig;
-			Command m_autorun_launcher;
-		};
+		const char* modeGet() const noexcept
+		{
+			return m_mode.c_str();
+		}
 
-	inline TargetCxxOptions operator|(TargetCxxOptions a,const TargetCxxOptions& b)
-		{return a.configAppend(b);}
+		TargetCxxOptions& modeSet(const char* mode)
+		{
+			m_mode = mode;
+			return *this;
+		}
+
+	private:
+		std::vector<std::string> m_includedir;
+		std::set<Stringkey> m_includedir_dup;
+		std::vector<std::string> m_includedir_noscan;
+		std::set<Stringkey> m_includedir_noscan_dup;
+		std::vector<std::string> m_libdir;
+		std::set<Stringkey> m_libdir_dup;
+		std::vector<std::string> m_iquote;
+		std::set<Stringkey> m_iquote_dup;
+
+		std::string m_platform_suffix;
+
+		std::string m_includedir_format;
+		std::string m_libdir_format;
+		std::string m_libext_format;
+		std::string m_libint_format;
+		std::string m_iquote_format;
+		std::string m_include_format;
+
+		std::string m_cflags_format;
+		std::vector<std::string> m_cflags_extra;
+		std::set<Stringkey> m_cflags_extra_dup;
+
+		unsigned long long int m_cxxversion_min;
+		unsigned long long int m_cxxversion_max;
+
+		std::string m_stdprefix;
+		std::string m_mode;
+
+		Command m_appcompile;
+		Command m_dllcompile;
+		Command m_libcompile;
+		Command m_objcompile;
+		Command m_versionquery;
+		Command m_pkgconfig;
+		Command m_autorun_launcher;
+	};
+
+	inline TargetCxxOptions operator|(TargetCxxOptions a, const TargetCxxOptions& b)
+	{
+		return a.configAppend(b);
 	}
+}
 
 #endif

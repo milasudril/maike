@@ -11,43 +11,43 @@
 #include <string>
 
 namespace Maike
-	{
+{
 	class ResourceObject;
 
 	class PRIVATE TargetTrivialOptions
+	{
+	public:
+		TargetTrivialOptions();
+
+		explicit TargetTrivialOptions(const ResourceObject& options);
+
+		const Command& commandGet() const noexcept
 		{
-		public:
-			TargetTrivialOptions();
+			return m_build_cmd;
+		}
 
-			explicit TargetTrivialOptions(const ResourceObject& options);
+		const char* filenameExtGet() const noexcept
+		{
+			return m_filename_ext.c_str();
+		}
 
-			const Command& commandGet() const noexcept
-				{return m_build_cmd;}
+		Twins<const Dependency*> dependenciesGet() const noexcept
+		{
+			return {m_deps.data(), m_deps.data() + m_deps.size()};
+		}
 
-			const char* filenameExtGet() const noexcept
-				{return m_filename_ext.c_str();}
+		void configClear();
+		TargetTrivialOptions& configAppendDefault();
+		TargetTrivialOptions& configAppend(const ResourceObject& options);
+		TargetTrivialOptions& configAppend(const TargetTrivialOptions& options);
 
-			Twins<const Dependency*> dependenciesGet() const noexcept
-				{
-				return
-					{
-					 m_deps.data()
-					,m_deps.data() + m_deps.size()
-					};
-				}
+		void configDump(ResourceObject& options) const;
 
-			void configClear();
-			TargetTrivialOptions& configAppendDefault();
-			TargetTrivialOptions& configAppend(const ResourceObject& options);
-			TargetTrivialOptions& configAppend(const TargetTrivialOptions& options);
-
-			void configDump(ResourceObject& options) const;
-
-		private:
-			std::string m_filename_ext;
-			std::vector<Dependency> m_deps;
-			Command m_build_cmd;
-		};
-	}
+	private:
+		std::string m_filename_ext;
+		std::vector<Dependency> m_deps;
+		Command m_build_cmd;
+	};
+}
 
 #endif

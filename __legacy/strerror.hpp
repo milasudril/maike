@@ -10,7 +10,7 @@
 #include <cstddef>
 
 namespace Maike
-	{
+{
 #if _WIN32 || _WIN64
 	typedef unsigned int ErrCode;
 #else
@@ -18,17 +18,19 @@ namespace Maike
 #endif
 
 	class PRIVATE strerror
+	{
+	public:
+		explicit strerror(ErrCode errcode) noexcept;
+
+		operator const char*() const noexcept
 		{
-		public:
-			explicit strerror(ErrCode errcode) noexcept;
+			return buffer;
+		}
 
-			operator const char*() const noexcept
-				{return buffer;}
-
-		private:
-			static constexpr size_t N=256;
-			char buffer[N];
-		};
-	}
+	private:
+		static constexpr size_t N = 256;
+		char buffer[N];
+	};
+}
 
 #endif

@@ -11,24 +11,28 @@
 #include <cstddef>
 
 namespace Maike
-	{
+{
 	class Variant;
 	class PRIVATE ErrorMessage
+	{
+	public:
+		explicit ErrorMessage(const char* format_string,
+		                      const std::initializer_list<Variant>& args) noexcept;
+
+		static constexpr size_t length()
 		{
-		public:
-			explicit ErrorMessage(const char* format_string
-				,const std::initializer_list<Variant>& args) noexcept;
+			return N;
+		}
 
-			static constexpr size_t length()
-				{return N;}
+		const char* messageGet() const noexcept
+		{
+			return m_buffer;
+		}
 
-			const char* messageGet() const noexcept
-				{return m_buffer;}
-
-		private:
-			static constexpr size_t N=1024;
-			char m_buffer[N];
-		};
-	}
+	private:
+		static constexpr size_t N = 1024;
+		char m_buffer[N];
+	};
+}
 
 #endif

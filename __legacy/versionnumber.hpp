@@ -10,8 +10,8 @@
 #include <cstdint>
 
 namespace Maike
-	{
+{
 	PRIVATE int64_t version(const char* version_string) noexcept;
-	}
+}
 
 #endif

@@ -19,35 +19,35 @@ namespace Maike
 
 	class SourceFile
 	{
-		public:
-			explicit SourceFile(fs::path&& src,
-			                    std::vector<Dependency>&& used_files,
-			                    std::vector<fs::path>&& targets,
-			                    Compiler&& compiler);
+	public:
+		explicit SourceFile(fs::path&& src,
+		                    std::vector<Dependency>&& used_files,
+		                    std::vector<fs::path>&& targets,
+		                    Compiler&& compiler);
 
-			bool targetsUpToDate();
+		bool targetsUpToDate();
 
-			decltype(auto) compileTargets(CompilationLog&)
-			{
+		decltype(auto) compileTargets(CompilationLog&)
+		{
 			// TODO:	return m_compiler.run(m_name, m_used_files, m_targets, log);
-				return 0;
-			}
+			return 0;
+		}
 
-			fs::path const& name() const
-			{
-				return m_name;
-			}
+		fs::path const& name() const
+		{
+			return m_name;
+		}
 
-			std::vector<fs::path> targets() const
-			{
-				return m_targets;
-			}
+		std::vector<fs::path> targets() const
+		{
+			return m_targets;
+		}
 
-		private:
-			fs::path m_name;
-			std::vector<Dependency> m_used_files;
-			std::vector<fs::path> m_targets;
-			Compiler m_compiler;
+	private:
+		fs::path m_name;
+		std::vector<Dependency> m_used_files;
+		std::vector<fs::path> m_targets;
+		Compiler m_compiler;
 	};
 }
 

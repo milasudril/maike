@@ -12,48 +12,49 @@ namespace Maike
 	template<class SrcFile>
 	class BasicDependency
 	{
-		public:
-			enum class Resolver:int{InternalLookup, None};
+	public:
+		enum class Resolver : int
+		{
+			InternalLookup,
+			None
+		};
 
-			explicit BasicDependency(fs::path const& path, Resolver res_method):
-			m_name{path}, m_res_method{res_method}
-			{
-			}
+		explicit BasicDependency(fs::path const& path, Resolver res_method):
+		   m_name{path},
+		   m_res_method{res_method}
+		{
+		}
 
-			fs::path const& name() const
-			{
-				return r_srcfile == nullptr? m_name : r_srcfile->name();
-			}
+		fs::path const& name() const
+		{
+			return r_srcfile == nullptr ? m_name : r_srcfile->name();
+		}
 
-			template<class SrcFileSet>
-			BasicDependency& resolve(SrcFileSet const& source_files)
+		template<class SrcFileSet>
+		BasicDependency& resolve(SrcFileSet const& source_files)
+		{
+			switch(m_res_method)
 			{
-				switch(m_res_method)
+				case Resolver::InternalLookup:
 				{
-					case Resolver::InternalLookup:
-						{
-							auto i = source_files.find(m_name);
-							if( i != source_files.end())
-							{
-								r_srcfile = &(*i);
-							}
-						}
-						break;
-					case Resolver::None:
-						break;
+					auto i = source_files.find(m_name);
+					if(i != source_files.end()) { r_srcfile = &(*i); }
 				}
-				return *this;
+				break;
+				case Resolver::None: break;
 			}
+			return *this;
+		}
 
-			SrcFile const* sourceFile() const
-			{
-				return r_srcfile;
-			}
+		SrcFile const* sourceFile() const
+		{
+			return r_srcfile;
+		}
 
-		private:
-			fs::path m_name;
-			SrcFile const* r_srcfile;
-			Resolver m_res_method;
+	private:
+		fs::path m_name;
+		SrcFile const* r_srcfile;
+		Resolver m_res_method;
 	};
 }
 

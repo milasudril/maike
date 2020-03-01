@@ -10,31 +10,33 @@
 #include <utility>
 
 namespace Maike
-    {
-    class PRIVATE DirectoryLister
-        {
-        public:
-			DirectoryLister(const DirectoryLister&)=delete;
-			DirectoryLister& operator=(const DirectoryLister&)=delete;
+{
+	class PRIVATE DirectoryLister
+	{
+	public:
+		DirectoryLister(const DirectoryLister&) = delete;
+		DirectoryLister& operator=(const DirectoryLister&) = delete;
 
-			DirectoryLister(DirectoryLister&& dir) noexcept:m_impl(dir.m_impl)
-				{dir.m_impl=nullptr;}
+		DirectoryLister(DirectoryLister&& dir) noexcept: m_impl(dir.m_impl)
+		{
+			dir.m_impl = nullptr;
+		}
 
-			DirectoryLister& operator=(DirectoryLister&& dir) noexcept
-				{
-				std::swap(dir.m_impl,m_impl);
-				return *this;
-				}
+		DirectoryLister& operator=(DirectoryLister&& dir) noexcept
+		{
+			std::swap(dir.m_impl, m_impl);
+			return *this;
+		}
 
-            explicit DirectoryLister(const char* dirname);
-            ~DirectoryLister() noexcept;
+		explicit DirectoryLister(const char* dirname);
+		~DirectoryLister() noexcept;
 
-            const char* read();
+		const char* read();
 
-        private:
-            struct Impl;
-            Impl* m_impl;
-        };
-    }
+	private:
+		struct Impl;
+		Impl* m_impl;
+	};
+}
 
 #endif

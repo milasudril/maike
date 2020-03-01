@@ -10,30 +10,36 @@
 #include "../command.hpp"
 
 namespace Maike
-	{
+{
 	class ResourceObject;
 
 	class PRIVATE Zipoptions
+	{
+	public:
+		Zipoptions() noexcept
 		{
-		public:
-			Zipoptions() noexcept{}
+		}
 
-			Zipoptions(const ResourceObject& options);
+		Zipoptions(const ResourceObject& options);
 
-			const Command& createGet() const noexcept
-				{return m_create;}
+		const Command& createGet() const noexcept
+		{
+			return m_create;
+		}
 
-			const Command& renameGet() const noexcept
-				{return m_rename;}
+		const Command& renameGet() const noexcept
+		{
+			return m_rename;
+		}
 
-			Zipoptions& configAppendDefault();
-			Zipoptions& configAppend(const ResourceObject& options);
-			void configDump(ResourceObject& options) const;
+		Zipoptions& configAppendDefault();
+		Zipoptions& configAppend(const ResourceObject& options);
+		void configDump(ResourceObject& options) const;
 
-		private:
-			Command m_create;
-			Command m_rename;
-		};
-	}
+	private:
+		Command m_create;
+		Command m_rename;
+	};
+}
 
 #endif

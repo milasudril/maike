@@ -13,99 +13,118 @@
 #include <string>
 
 namespace Maike
-	{
+{
 	class Dependency;
 	class ResourceObject;
 
-	class PRIVATE TargetBase:public Target
+	class PRIVATE TargetBase: public Target
+	{
+	public:
+		explicit TargetBase(
+		   const char* name, const char* name_src, const char* in_dir, const char* root, size_t id);
+
+		explicit TargetBase(const ResourceObject& obj,
+		                    const char* name_src,
+		                    const char* in_dir,
+		                    const char* root,
+		                    size_t id,
+		                    size_t line_count);
+
+		TargetBase& childCounterIncrement() noexcept
 		{
-		public:
-			explicit TargetBase(const char* name,const char* name_src,const char* in_dir
-				,const char* root,size_t id);
+			++m_child_counter;
+			return *this;
+		}
 
-			explicit TargetBase(const ResourceObject& obj,const char* name_src
-				,const char* in_dir,const char* root,size_t id,size_t line_count);
+		size_t childCounterGet() const noexcept
+		{
+			return m_child_counter;
+		}
 
-			TargetBase& childCounterIncrement() noexcept
-				{
-				++m_child_counter;
-				return *this;
-				}
+		TargetBase& dependencyAdd(Dependency&& dep);
 
-			size_t childCounterGet() const noexcept
-				{return m_child_counter;}
-
-			TargetBase& dependencyAdd(Dependency&& dep);
-
-			Twins<const Dependency*> dependencies() const noexcept
-				{
-				auto ptr=m_dependencies.data();
-				return {ptr,ptr + m_dependencies.size()};
-				}
+		Twins<const Dependency*> dependencies() const noexcept
+		{
+			auto ptr = m_dependencies.data();
+			return {ptr, ptr + m_dependencies.size()};
+		}
 
 
-			Twins<Dependency*> dependencies() noexcept
-				{
-				auto ptr=m_dependencies.data();
-				return {ptr,ptr + m_dependencies.size()};
-				}
+		Twins<Dependency*> dependencies() noexcept
+		{
+			auto ptr = m_dependencies.data();
+			return {ptr, ptr + m_dependencies.size()};
+		}
 
 
-			TargetBase& dependencyInverseAdd(Dependency&& dep);
+		TargetBase& dependencyInverseAdd(Dependency&& dep);
 
-			Twins<const Dependency*> dependenciesInverseGet() const noexcept
-				{
-				auto ptr=m_deps_inverse.data();
-				return {ptr,ptr + m_deps_inverse.size()};
-				}
+		Twins<const Dependency*> dependenciesInverseGet() const noexcept
+		{
+			auto ptr = m_deps_inverse.data();
+			return {ptr, ptr + m_deps_inverse.size()};
+		}
 
-			size_t idGet() const noexcept
-				{return m_id;}
+		size_t idGet() const noexcept
+		{
+			return m_id;
+		}
 
-			const char* nameGet() const noexcept
-				{return m_name.c_str();}
+		const char* nameGet() const noexcept
+		{
+			return m_name.c_str();
+		}
 
-			const char* sourceNameGet() const noexcept
-				{return m_source_name.c_str();}
+		const char* sourceNameGet() const noexcept
+		{
+			return m_source_name.c_str();
+		}
 
-			const char* inDirGet() const noexcept
-				{return m_in_dir.c_str();}
+		const char* inDirGet() const noexcept
+		{
+			return m_in_dir.c_str();
+		}
 
-			void dump(ResourceObject& target) const;
+		void dump(ResourceObject& target) const;
 
-			void compile(Twins<const Dependency*> dependency_list
-				,Twins<const Dependency*> dependency_list_full
-				,const char* target_dir);
+		void compile(Twins<const Dependency*> dependency_list,
+		             Twins<const Dependency*> dependency_list_full,
+		             const char* target_dir);
 
-			double compilationTimeGet() const noexcept
-				{return m_compilation_time;}
+		double compilationTimeGet() const noexcept
+		{
+			return m_compilation_time;
+		}
 
-			size_t lineCountGet() const noexcept
-				{return m_loc;}
+		size_t lineCountGet() const noexcept
+		{
+			return m_loc;
+		}
 
-			const char* descriptionGet() const noexcept
-				{return m_description.c_str();}
-			
+		const char* descriptionGet() const noexcept
+		{
+			return m_description.c_str();
+		}
 
-		private:
-			virtual void compileImpl(Twins<const Dependency*> dependency_list
-				,Twins<const Dependency*> dependency_list_full
-				,const char* target_dir)=0;
 
-			virtual void dumpDetails(ResourceObject& target) const=0;
+	private:
+		virtual void compileImpl(Twins<const Dependency*> dependency_list,
+		                         Twins<const Dependency*> dependency_list_full,
+		                         const char* target_dir) = 0;
 
-			size_t m_child_counter;
-			size_t m_id;
-			std::string m_name;
-			std::string m_source_name;
-			std::string m_in_dir;
-			std::string m_description;
-			std::vector<Dependency> m_dependencies;
-			std::vector<Dependency> m_deps_inverse;
-			double m_compilation_time;
-			size_t m_loc;
-		};
-	}
+		virtual void dumpDetails(ResourceObject& target) const = 0;
+
+		size_t m_child_counter;
+		size_t m_id;
+		std::string m_name;
+		std::string m_source_name;
+		std::string m_in_dir;
+		std::string m_description;
+		std::vector<Dependency> m_dependencies;
+		std::vector<Dependency> m_deps_inverse;
+		double m_compilation_time;
+		size_t m_loc;
+	};
+}
 
 #endif
-

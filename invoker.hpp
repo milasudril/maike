@@ -11,14 +11,14 @@ namespace Maike
 {
 	class Invoker
 	{
-		public:
-			int mkdir(fs::path const& dir);
-			int writeToFile(std::string const& str, fs::path const& file);
-			int copy(fs::path const& src, fs::path const& dest);
+	public:
+		int mkdir(fs::path const& dir);
+		int writeToFile(std::string const& str, fs::path const& file);
+		int copy(fs::path const& src, fs::path const& dest);
 
-			CmdResult execp(Command const& cmd);
+		CmdResult execp(Command const& cmd);
 
-		private:
+	private:
 	};
 }
 

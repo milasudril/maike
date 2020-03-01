@@ -13,29 +13,28 @@
 #include <string>
 
 namespace Maike
-	{
+{
 	class Command;
 	class Target;
 	class TargetCxxOptions;
 	class Dependency;
 
 	class PRIVATE PkgConfigRequest
-		{
-		public:
-			PkgConfigRequest(const Command& cmd,const char* libname
-				,const char* context);
+	{
+	public:
+		PkgConfigRequest(const Command& cmd, const char* libname, const char* context);
 
-			const PkgConfigRequest& optionsPush(TargetCxxOptions& options
-				,TargetCxxOptions& options_local) const;
+		const PkgConfigRequest& optionsPush(TargetCxxOptions& options,
+		                                    TargetCxxOptions& options_local) const;
 
-			const PkgConfigRequest& dependenciesPush(Target& t) const;
+		const PkgConfigRequest& dependenciesPush(Target& t) const;
 
-		private:
-			std::vector<std::string> m_incdir;
-			std::vector<std::string> m_cflags;
-			std::vector<std::string> m_libdir;
-			std::vector<Dependency> m_deps;
-		};
-	}
+	private:
+		std::vector<std::string> m_incdir;
+		std::vector<std::string> m_cflags;
+		std::vector<std::string> m_libdir;
+		std::vector<Dependency> m_deps;
+	};
+}
 
 #endif

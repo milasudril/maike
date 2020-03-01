@@ -7,13 +7,13 @@
 #define MAIKE_MAIKEINFO_HPP
 
 namespace Maike
-	{
-//TODO There should be some kind of version object
+{
+	//	TODO There should be some kind of version object
 	namespace Info
-		{
+	{
 		extern const char* VERSION;
 		extern const char* TIMESTAMP;
-		}
 	}
+}
 
 #endif

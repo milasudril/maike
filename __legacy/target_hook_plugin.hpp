@@ -11,32 +11,33 @@
 #include "handle.hpp"
 
 namespace Maike
+{
+	class PRIVATE Target_Hook_Plugin: private Plugin
 	{
-	class PRIVATE Target_Hook_Plugin:private Plugin
+	public:
+		Target_Hook_Plugin(const char* filename);
+
+		Target_Hook_Plugin(Target_Hook_Plugin&&) = default;
+		Target_Hook_Plugin& operator=(Target_Hook_Plugin&&) = default;
+
+		~Target_Hook_Plugin()
 		{
-		public:
-			Target_Hook_Plugin(const char* filename);
+			if(!dead()) { m_cleanup(); }
+		}
 
-			Target_Hook_Plugin(Target_Hook_Plugin&&)=default;
-			Target_Hook_Plugin& operator=(Target_Hook_Plugin&&)=default;
+		Handle<Target_Hook> create(const Maike::ParameterSetDumpable& params)
+		{
+			return Handle<Target_Hook>(m_hook_create(params));
+		}
 
-			~Target_Hook_Plugin()
-				{
-				if(!dead())
-					{m_cleanup();}
-				}
+		using Plugin::nameFullGet;
+		using Plugin::nameGet;
 
-			Handle<Target_Hook> create(const Maike::ParameterSetDumpable& params)
-				{return Handle<Target_Hook>( m_hook_create(params) );}
-
-			using Plugin::nameGet;
-			using Plugin::nameFullGet;
-
-		private:
-			decltype(&Maike_Plugin_cleanup) m_cleanup;
-			decltype(&Maike_Plugin_init) m_init;
-			decltype(&Maike_Target_Hook_create) m_hook_create;
-		};
-	}
+	private:
+		decltype(&Maike_Plugin_cleanup) m_cleanup;
+		decltype(&Maike_Plugin_init) m_init;
+		decltype(&Maike_Target_Hook_create) m_hook_create;
+	};
+}
 
 #endif

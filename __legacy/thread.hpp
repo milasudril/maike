@@ -11,42 +11,50 @@
 #include <utility>
 
 namespace Maike
-	{
+{
 	class PRIVATE ThreadBase
-		{
-		public:
-			virtual void run()=0;
+	{
+	public:
+		virtual void run() = 0;
 
-		protected:
-			ThreadBase();
-			~ThreadBase() noexcept;
+	protected:
+		ThreadBase();
+		~ThreadBase() noexcept;
 
-			void start();
-			void synchronize() noexcept;
+		void start();
+		void synchronize() noexcept;
 
-		private:
-			intptr_t m_handle;
-		};
+	private:
+		intptr_t m_handle;
+	};
 
 	template<class Runner>
-	class PRIVATE Thread:private ThreadBase
+	class PRIVATE Thread: private ThreadBase
+	{
+	public:
+		explicit Thread(const Runner& runner): m_runner(runner)
 		{
-		public:
-			explicit Thread(const Runner& runner):m_runner(runner)
-				{start();}
+			start();
+		}
 
-			explicit Thread(Runner&& runner):m_runner(std::move(runner))
-				{start();}
+		explicit Thread(Runner&& runner): m_runner(std::move(runner))
+		{
+			start();
+		}
 
-			~Thread() noexcept
-				{synchronize();}
+		~Thread() noexcept
+		{
+			synchronize();
+		}
 
-		private:
-			void run()
-				{m_runner();}
+	private:
+		void run()
+		{
+			m_runner();
+		}
 
-			Runner m_runner;
-		};
-	}
+		Runner m_runner;
+	};
+}
 
 #endif

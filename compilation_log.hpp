@@ -9,8 +9,8 @@ namespace Maike
 {
 	class CompilationLog
 	{
-		public:
-		private:
+	public:
+	private:
 	};
 }
 

@@ -11,12 +11,12 @@
 #include <string>
 
 namespace Maike
-	{
+{
 	class Stringkey;
 	class Variant;
-	PRIVATE void sysvarsLoad(std::map<Stringkey,Variant>& variables
-		,std::map<Stringkey,std::string>& strings
-		,std::map<Stringkey,std::string>& varnames);
-	}
+	PRIVATE void sysvarsLoad(std::map<Stringkey, Variant>& variables,
+	                         std::map<Stringkey, std::string>& strings,
+	                         std::map<Stringkey, std::string>& varnames);
+}
 
 #endif

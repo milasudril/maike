@@ -8,26 +8,26 @@
 #include <cassert>
 
 namespace Maike
-	{
+{
 	template<class T>
-	class PRIVATE Handle:public std::unique_ptr<T,void (*)(typename T::Base*)>
+	class PRIVATE Handle: public std::unique_ptr<T, void (*)(typename T::Base*)>
+	{
+	public:
+		typedef std::unique_ptr<T, void (*)(typename T::Base*)> Base;
+
+		explicit Handle(T* handle):
+		   std::unique_ptr<T, void (*)(typename T::Base*)>(handle, T::Base::destroy)
 		{
-		public:
-			typedef std::unique_ptr<T,void (*)(typename T::Base*)> Base;
+			assert(Base::get() != nullptr);
+		}
 
-			explicit Handle(T* handle):
-			std::unique_ptr<T,void(*)(typename T::Base*)>(handle,T::Base::destroy)
-				{
-				assert(Base::get()!=nullptr);
-				}
-
-			operator Handle<typename T::Base>() noexcept
-				{
-				auto ptr=Base::release();
-				assert(ptr!=nullptr);
-				return Handle<typename T::Base>(ptr);
-				}
-		};
-	}
+		operator Handle<typename T::Base>() noexcept
+		{
+			auto ptr = Base::release();
+			assert(ptr != nullptr);
+			return Handle<typename T::Base>(ptr);
+		}
+	};
+}
 
 #endif

@@ -9,16 +9,16 @@
 #include "visibility.hpp"
 
 namespace Maike
-	{
+{
 	class PRIVATE TimedScope
-		{
-		public:
-			TimedScope(double& T) noexcept;
-			~TimedScope() noexcept;
+	{
+	public:
+		TimedScope(double& T) noexcept;
+		~TimedScope() noexcept;
 
-		private:
-			double& r_T;
-		};
-	}
+	private:
+		double& r_T;
+	};
+}
 
 #endif

@@ -9,35 +9,34 @@
 #include "../command.hpp"
 
 namespace Maike
-	{
+{
 	class ResourceObject;
 	class ParameterSetDumpable;
 	class PRIVATE TargetBashInterpreter
-		{
-		public:
-			explicit TargetBashInterpreter(const ParameterSetDumpable& sysvars);
+	{
+	public:
+		explicit TargetBashInterpreter(const ParameterSetDumpable& sysvars);
 
-			explicit TargetBashInterpreter(ParameterSetDumpable&& sysvars)=delete;
+		explicit TargetBashInterpreter(ParameterSetDumpable&& sysvars) = delete;
 
-			TargetBashInterpreter(const ResourceObject& pythonoptions
-				,ParameterSet&& sysvars)=delete;
+		TargetBashInterpreter(const ResourceObject& pythonoptions, ParameterSet&& sysvars) = delete;
 
-			int run(const char* script,Twins<const char* const*> args) const;
+		int run(const char* script, Twins<const char* const*> args) const;
 
-			void configClear();
+		void configClear();
 
-			TargetBashInterpreter& configAppendDefault();
+		TargetBashInterpreter& configAppendDefault();
 
-			TargetBashInterpreter& configAppend(const ResourceObject& pythonoptions);
+		TargetBashInterpreter& configAppend(const ResourceObject& pythonoptions);
 
-			void configDump(ResourceObject& pythonoptions) const;
+		void configDump(ResourceObject& pythonoptions) const;
 
-			const char* executable() const noexcept;
+		const char* executable() const noexcept;
 
-		private:
-			Command m_interpreter;
-			const ParameterSetDumpable& r_sysvars;
-		};
-	}
+	private:
+		Command m_interpreter;
+		const ParameterSetDumpable& r_sysvars;
+	};
+}
 
 #endif

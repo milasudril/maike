@@ -10,39 +10,42 @@
 #include "zipoptions.hpp"
 
 namespace Maike
-	{
+{
 	class ResourceObject;
 	class ParameterSetDumpable;
 	class PRIVATE TargetArchiveCompiler
-		{
-		public:
-			explicit TargetArchiveCompiler(const ParameterSetDumpable& sysvars);
+	{
+	public:
+		explicit TargetArchiveCompiler(const ParameterSetDumpable& sysvars);
 
-			explicit TargetArchiveCompiler(ParameterSetDumpable&& sysvars)=delete;
+		explicit TargetArchiveCompiler(ParameterSetDumpable&& sysvars) = delete;
 
-			TargetArchiveCompiler(const ResourceObject& archiveoptions
-				,ParameterSet&& sysvars)=delete;
+		TargetArchiveCompiler(const ResourceObject& archiveoptions, ParameterSet&& sysvars) = delete;
 
-			int tar(Twins<const char* const*> files,const char* name
-				,const char* target_dir,const char* root
-				,const char* compressor) const;
+		int tar(Twins<const char* const*> files,
+		        const char* name,
+		        const char* target_dir,
+		        const char* root,
+		        const char* compressor) const;
 
-			int zip(Twins<const char* const*> files,const char* name
-				,const char* target_dir,const char* root) const;
+		int zip(Twins<const char* const*> files,
+		        const char* name,
+		        const char* target_dir,
+		        const char* root) const;
 
-			void configClear();
+		void configClear();
 
-			TargetArchiveCompiler& configAppendDefault();
+		TargetArchiveCompiler& configAppendDefault();
 
-			TargetArchiveCompiler& configAppend(const ResourceObject& archiveoptions);
+		TargetArchiveCompiler& configAppend(const ResourceObject& archiveoptions);
 
-			void configDump(ResourceObject& archiveoptions) const;
+		void configDump(ResourceObject& archiveoptions) const;
 
-		private:
-			Taroptions m_tar;
-			Zipoptions m_zip;
-			const ParameterSetDumpable& r_sysvars;
-		};
-	}
+	private:
+		Taroptions m_tar;
+		Zipoptions m_zip;
+		const ParameterSetDumpable& r_sysvars;
+	};
+}
 
 #endif

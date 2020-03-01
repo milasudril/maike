@@ -12,33 +12,35 @@
 #include "targetoctaveloader.hpp"
 
 namespace Maike
+{
+	class PRIVATE TargetOctaveHook final: public Target_Hook
 	{
-	class PRIVATE TargetOctaveHook final:public Target_Hook
+	public:
+		static TargetOctaveHook* create(const ParameterSetDumpable& params);
+
+		static TargetOctaveHook* create(ParameterSet&& params) = delete;
+
+		const TargetOctaveLoader& loaderGet() const noexcept
 		{
-		public:
-			static TargetOctaveHook* create(const ParameterSetDumpable& params);
+			return m_loader;
+		}
 
-			static TargetOctaveHook* create(ParameterSet&& params)=delete;
+		void configClear();
 
-			const TargetOctaveLoader& loaderGet() const noexcept
-				{return m_loader;}
+		TargetOctaveHook& configAppendDefault();
 
-			void configClear();
+		TargetOctaveHook& configAppend(const ResourceObject& octaveoptions);
 
-			TargetOctaveHook& configAppendDefault();
+		void configDump(ResourceObject& octaveoptions) const;
 
-			TargetOctaveHook& configAppend(const ResourceObject& octaveoptions);
+	private:
+		TargetOctaveInterpreter m_intpret;
+		TargetOctaveLoader m_loader;
 
-			void configDump(ResourceObject& octaveoptions) const;
+		explicit TargetOctaveHook(const ParameterSetDumpable& params);
 
-		private:
-			TargetOctaveInterpreter m_intpret;
-			TargetOctaveLoader m_loader;
-
-			explicit TargetOctaveHook(const ParameterSetDumpable& params);
-
-			void destroy() noexcept;
-		};
-	}
+		void destroy() noexcept;
+	};
+}
 
 #endif

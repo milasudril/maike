@@ -9,8 +9,8 @@ namespace Maike
 {
 	class ConfigStore
 	{
-		public:
-		private:
+	public:
+	private:
 	};
 }
 

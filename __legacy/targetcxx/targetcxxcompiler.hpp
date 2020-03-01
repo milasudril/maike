@@ -15,7 +15,7 @@
 #include <map>
 
 namespace Maike
-	{
+{
 	class Dependency;
 	class Target;
 	class TargetCxxOptions;
@@ -23,60 +23,87 @@ namespace Maike
 	class Command;
 
 	class PRIVATE TargetCxxCompiler
+	{
+	public:
+		explicit TargetCxxCompiler(const TargetCxxOptions& options, const ParameterSet& sysvars);
+
+		TargetCxxCompiler(const TargetCxxOptions& options, ParameterSet&& params) = delete;
+
+		TargetCxxCompiler(TargetCxxOptions&& options, ParameterSet&& params) = delete;
+
+		TargetCxxCompiler(const TargetCxxOptions&& options, const ParameterSet& params) = delete;
+
+		enum class FileUsage : unsigned int
 		{
-		public:
-			explicit TargetCxxCompiler(const TargetCxxOptions& options,const ParameterSet& sysvars);
-
-			TargetCxxCompiler(const TargetCxxOptions& options,ParameterSet&& params)=delete;
-
-			TargetCxxCompiler(TargetCxxOptions&& options,ParameterSet&& params)=delete;
-
-			TargetCxxCompiler(const TargetCxxOptions&& options,const ParameterSet& params)=delete;
-
-			enum class FileUsage:unsigned int
-				{NORMAL,LIB_INTERNAL,LIB_EXTERNAL,INCLUDE_EXTRA,INCLUDE=INCLUDE_EXTRA};
-
-			struct FileInfo
-				{
-				const char* filename;
-				FileUsage usage;
-				};
-
-			void compileObject(const char* source,const char* in_dir,Twins<const FileInfo*> dependencies
-				,const char* dest,const TargetCxxOptions& options_extra) const;
-
-			void compileApplication(const char* source,const char* in_dir,Twins<const FileInfo*> dependencies
-				,const char* dest,const TargetCxxOptions& options_extra) const;
-
-			void compileDll(const char* source,const char* in_dir,Twins<const FileInfo*> dependencies
-				,const char* dest,const TargetCxxOptions& options_extra) const;
-
-			void compileLibrary(const char* source,const char* in_dir,Twins<const FileInfo*> dependencies
-				,const char* dest,const TargetCxxOptions& options_extra) const;
-
-			void runTargetApp(const char* source,const char* in_dir,const char* target, const TargetCxxOptions& options_extra) const;
-
-			void runTargetDll(const char* source,const char* in_dir,const char* target, const TargetCxxOptions& options_extra) const;
-
-			const TargetCxxOptions& optionsGet() const noexcept
-				{return r_options;}
-
-			unsigned long long int cxxversionDefaultGet(const char* mode) const;
-
-			const PkgConfigRequest& pkgconfigAsk(const char* library,const char* context) const;
-
-		private:
-			const TargetCxxOptions& r_options;
-			const ParameterSet* r_paramset;
-			mutable unsigned long long int m_cxxversion_default;
-			mutable std::map<Stringkey,PkgConfigRequest> m_pkgconfig_cache;
-
-			void execute(const Command& cmd,const char* source
-				,const char* in_dir
-				,Twins<const FileInfo*> dependencies
-				,const char* dest,const TargetCxxOptions& options_extra) const;
+			NORMAL,
+			LIB_INTERNAL,
+			LIB_EXTERNAL,
+			INCLUDE_EXTRA,
+			INCLUDE = INCLUDE_EXTRA
 		};
-	}
+
+		struct FileInfo
+		{
+			const char* filename;
+			FileUsage usage;
+		};
+
+		void compileObject(const char* source,
+		                   const char* in_dir,
+		                   Twins<const FileInfo*> dependencies,
+		                   const char* dest,
+		                   const TargetCxxOptions& options_extra) const;
+
+		void compileApplication(const char* source,
+		                        const char* in_dir,
+		                        Twins<const FileInfo*> dependencies,
+		                        const char* dest,
+		                        const TargetCxxOptions& options_extra) const;
+
+		void compileDll(const char* source,
+		                const char* in_dir,
+		                Twins<const FileInfo*> dependencies,
+		                const char* dest,
+		                const TargetCxxOptions& options_extra) const;
+
+		void compileLibrary(const char* source,
+		                    const char* in_dir,
+		                    Twins<const FileInfo*> dependencies,
+		                    const char* dest,
+		                    const TargetCxxOptions& options_extra) const;
+
+		void runTargetApp(const char* source,
+		                  const char* in_dir,
+		                  const char* target,
+		                  const TargetCxxOptions& options_extra) const;
+
+		void runTargetDll(const char* source,
+		                  const char* in_dir,
+		                  const char* target,
+		                  const TargetCxxOptions& options_extra) const;
+
+		const TargetCxxOptions& optionsGet() const noexcept
+		{
+			return r_options;
+		}
+
+		unsigned long long int cxxversionDefaultGet(const char* mode) const;
+
+		const PkgConfigRequest& pkgconfigAsk(const char* library, const char* context) const;
+
+	private:
+		const TargetCxxOptions& r_options;
+		const ParameterSet* r_paramset;
+		mutable unsigned long long int m_cxxversion_default;
+		mutable std::map<Stringkey, PkgConfigRequest> m_pkgconfig_cache;
+
+		void execute(const Command& cmd,
+		             const char* source,
+		             const char* in_dir,
+		             Twins<const FileInfo*> dependencies,
+		             const char* dest,
+		             const TargetCxxOptions& options_extra) const;
+	};
+}
 
 #endif
-

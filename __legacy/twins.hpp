@@ -9,13 +9,12 @@
 #include <utility>
 
 namespace Maike
-	{
+{
 	template<class T>
-	struct PRIVATE Twins:public std::pair<T,T>
-		{
-		using std::pair<T,T>::pair;
-		};
-	}
+	struct PRIVATE Twins: public std::pair<T, T>
+	{
+		using std::pair<T, T>::pair;
+	};
+}
 
 #endif
-

@@ -11,24 +11,28 @@
 #include <string>
 
 namespace Maike
+{
+	class PRIVATE FileIn final: public DataSource
 	{
-	class PRIVATE FileIn final:public DataSource
+	public:
+		explicit FileIn(const char* filename);
+		~FileIn() noexcept;
+
+		size_t read(void* buffer, size_t count);
+
+		const char* nameGet() const noexcept
 		{
-		public:
-			explicit FileIn(const char* filename);
-			~FileIn() noexcept;
+			return m_name.c_str();
+		}
 
-			size_t read(void* buffer,size_t count);
-
-			const char* nameGet() const noexcept
-				{return m_name.c_str();}
-
-		private:
-			std::string m_name;
-			intptr_t m_handle;
-			void destroy()
-				{delete this;}
-		};
-	}
+	private:
+		std::string m_name;
+		intptr_t m_handle;
+		void destroy()
+		{
+			delete this;
+		}
+	};
+}
 
 #endif

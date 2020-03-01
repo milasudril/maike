@@ -9,33 +9,37 @@
 #include <algorithm>
 
 namespace Maike
-	{
+{
 	class Dependency;
-	class PRIVATE DependencyBufferDefault final:public DependencyBuffer
+	class PRIVATE DependencyBufferDefault final: public DependencyBuffer
+	{
+	public:
+		void append(Dependency&& dep)
 		{
-		public:
-			void append(Dependency&& dep)
-				{m_deps.push_back(std::move(dep));}
+			m_deps.push_back(std::move(dep));
+		}
 
-			const Dependency* begin() const noexcept
-				{return m_deps.data();}
+		const Dependency* begin() const noexcept
+		{
+			return m_deps.data();
+		}
 
-			const Dependency* end() const noexcept
-				{return begin() + m_deps.size();}
+		const Dependency* end() const noexcept
+		{
+			return begin() + m_deps.size();
+		}
 
-			void append(const DependencyBuffer& buffer)
-				{
-				std::for_each(buffer.begin(),buffer.end()
-					,[this](const Dependency& dep)
-						{
-						Dependency cp(dep);
-						m_deps.push_back(std::move(cp));
-						});
-				}
+		void append(const DependencyBuffer& buffer)
+		{
+			std::for_each(buffer.begin(), buffer.end(), [this](const Dependency& dep) {
+				Dependency cp(dep);
+				m_deps.push_back(std::move(cp));
+			});
+		}
 
-		private:
-			std::vector<Dependency> m_deps;
-		};
-	}
+	private:
+		std::vector<Dependency> m_deps;
+	};
+}
 
 #endif

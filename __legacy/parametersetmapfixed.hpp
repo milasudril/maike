@@ -12,41 +12,42 @@
 #include <string>
 
 namespace Maike
+{
+	template<Stringkey::HashValue... args>
+	class PRIVATE ParameterSetMapFixed:
+	   public ParameterSet,
+	   private MapFixed<Stringkey::HashValue, std::vector<std::string>, args...>
 	{
-	template<Stringkey::HashValue ... args>
-	class PRIVATE ParameterSetMapFixed : public ParameterSet
-		,private MapFixed<Stringkey::HashValue,std::vector<std::string>,args...>
+	public:
+		typedef MapFixed<Stringkey::HashValue, std::vector<std::string>, args...> BaseType;
+
+		using BaseType::operator[];
+		using BaseType::end;
+		using BaseType::find;
+		using BaseType::get;
+		using BaseType::length;
+		using BaseType::size;
+
+		void parameterGet(const Stringkey& key, ParameterProcessor&& proc) const;
+	};
+
+	template<Stringkey::HashValue... args>
+	PRIVATE void ParameterSetMapFixed<args...>::parameterGet(const Stringkey& key,
+	                                                         ParameterProcessor&& proc) const
+	{
+		auto i = find(key);
+		if(i != end())
 		{
-		public:
-			typedef MapFixed<Stringkey::HashValue,std::vector<std::string>,args...> BaseType;
-
-			using BaseType::operator[];
-			using BaseType::get;
-			using BaseType::find;
-			using BaseType::size;
-			using BaseType::length;
-			using BaseType::end;
-
-			void parameterGet(const Stringkey& key,ParameterProcessor&& proc) const;
-		};
-
-	template<Stringkey::HashValue ... args>
-	PRIVATE void ParameterSetMapFixed<args...>::parameterGet(const Stringkey& key
-		,ParameterProcessor&& proc) const
-		{
-		auto i=find(key);
-		if(i!=end())
+			auto& v = (*this)[i];
+			auto ptr = v.data();
+			auto ptr_end = ptr + v.size();
+			while(ptr != ptr_end)
 			{
-			auto& v=(*this)[i];
-			auto ptr=v.data();
-			auto ptr_end=ptr + v.size();
-			while(ptr!=ptr_end)
-				{
 				proc(ptr->c_str());
 				++ptr;
-				}
 			}
 		}
 	}
+}
 
 #endif

@@ -12,33 +12,35 @@
 #include "targetarchiveloader.hpp"
 
 namespace Maike
+{
+	class PRIVATE TargetArchiveHook final: public Target_Hook
 	{
-	class PRIVATE TargetArchiveHook final:public Target_Hook
+	public:
+		static TargetArchiveHook* create(const ParameterSetDumpable& params);
+
+		static TargetArchiveHook* create(ParameterSet&& params) = delete;
+
+		const TargetArchiveLoader& loaderGet() const noexcept
 		{
-		public:
-			static TargetArchiveHook* create(const ParameterSetDumpable& params);
+			return m_loader;
+		}
 
-			static TargetArchiveHook* create(ParameterSet&& params)=delete;
+		void configClear();
 
-			const TargetArchiveLoader& loaderGet() const noexcept
-				{return m_loader;}
+		TargetArchiveHook& configAppendDefault();
 
-			void configClear();
+		TargetArchiveHook& configAppend(const ResourceObject& archiveoptions);
 
-			TargetArchiveHook& configAppendDefault();
+		void configDump(ResourceObject& archiveoptions) const;
 
-			TargetArchiveHook& configAppend(const ResourceObject& archiveoptions);
+	private:
+		TargetArchiveCompiler m_intpret;
+		TargetArchiveLoader m_loader;
 
-			void configDump(ResourceObject& archiveoptions) const;
+		explicit TargetArchiveHook(const ParameterSetDumpable& params);
 
-		private:
-			TargetArchiveCompiler m_intpret;
-			TargetArchiveLoader m_loader;
-
-			explicit TargetArchiveHook(const ParameterSetDumpable& params);
-
-			void destroy() noexcept;
-		};
-	}
+		void destroy() noexcept;
+	};
+}
 
 #endif

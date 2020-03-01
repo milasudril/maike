@@ -10,17 +10,18 @@
 #include "visibility.hpp"
 
 namespace Maike
-	{
+{
 	class WriteBuffer;
-	class PRIVATE GraphEdgeWriterDOT:public GraphEdgeWriter
-		{
-		public:
-			GraphEdgeWriterDOT(WriteBuffer& wb);
-			void edgeWrite(const char* from,const char* to,const char* label);
-			~GraphEdgeWriterDOT();
-		private:
-			WriteBuffer& r_wb;
-		};
-	}
+	class PRIVATE GraphEdgeWriterDOT: public GraphEdgeWriter
+	{
+	public:
+		GraphEdgeWriterDOT(WriteBuffer& wb);
+		void edgeWrite(const char* from, const char* to, const char* label);
+		~GraphEdgeWriterDOT();
+
+	private:
+		WriteBuffer& r_wb;
+	};
+}
 
 #endif

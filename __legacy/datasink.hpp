@@ -10,24 +10,25 @@
 #include <memory>
 
 namespace Maike
-	{
+{
 	class PRIVATE DataSink
+	{
+	public:
+		typedef DataSink Base;
+
+		static void destroy(DataSink* self) noexcept
 		{
-		public:
-			typedef DataSink Base;
+			self->destroy();
+		}
 
-			static void destroy(DataSink* self) noexcept
-				{self->destroy();}
+		virtual size_t write(const void* buffer, size_t n) = 0;
 
-			virtual size_t write(const void* buffer,size_t n)=0;
+	protected:
+		~DataSink() = default;
 
-		protected:
-			~DataSink()=default;
-
-		private:
-
-			virtual void destroy()=0;
-		};
+	private:
+		virtual void destroy() = 0;
 	};
+};
 
 #endif

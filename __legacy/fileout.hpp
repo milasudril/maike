@@ -10,28 +10,34 @@
 #include "visibility.hpp"
 
 namespace Maike
+{
+	class PRIVATE FileOut final: public DataSink
 	{
-	class PRIVATE FileOut final:public DataSink
+	public:
+		FileOut& operator=(const FileOut&) = delete;
+		FileOut(const FileOut&) = delete;
+		FileOut(FileOut&& file);
+		FileOut& operator=(FileOut&& file);
+		explicit FileOut(const char* filename);
+		FileOut();
+
+		enum class StdStream : unsigned int
 		{
-		public:
-			FileOut& operator=(const FileOut&)=delete;
-			FileOut(const FileOut& )=delete;
-			FileOut(FileOut&& file);
-			FileOut& operator=(FileOut&& file);
-			explicit FileOut(const char* filename);
-			FileOut();
-
-			enum class StdStream:unsigned int{OUTPUT,ERROR};
-			FileOut(StdStream stream);
-			~FileOut() noexcept;
-
-			size_t write(const void* buffer,size_t count);
-
-		private:
-			intptr_t m_handle;
-			void destroy()
-				{delete this;}
+			OUTPUT,
+			ERROR
 		};
-	}
+		FileOut(StdStream stream);
+		~FileOut() noexcept;
+
+		size_t write(const void* buffer, size_t count);
+
+	private:
+		intptr_t m_handle;
+		void destroy()
+		{
+			delete this;
+		}
+	};
+}
 
 #endif

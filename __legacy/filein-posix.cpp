@@ -16,41 +16,39 @@
 
 using namespace Maike;
 
-FileIn::FileIn(const char* filename):m_name(filename)
+FileIn::FileIn(const char* filename): m_name(filename)
+{
+	static_assert(sizeof(m_handle) >= sizeof(int), "Handle is too small");
+	m_handle = open(filename, O_RDONLY);
+	if(m_handle == -1)
 	{
-	static_assert(sizeof(m_handle)>=sizeof(int),"Handle is too small");
-	m_handle=open(filename,O_RDONLY);
-	if(m_handle==-1)
-		{
-		exceptionRaise(ErrorMessage("It was not possible to open the file #0;. #1;"
-			,{filename,static_cast<const char*>(strerror(errno))}));
-		}
+		exceptionRaise(ErrorMessage("It was not possible to open the file #0;. #1;",
+		                            {filename, static_cast<const char*>(strerror(errno))}));
 	}
+}
 
 FileIn::~FileIn() noexcept
-	{
+{
 	fsync(static_cast<int>(m_handle));
 	close(static_cast<int>(m_handle));
-	}
+}
 
-size_t FileIn::read(void* buffer,size_t count)
+size_t FileIn::read(void* buffer, size_t count)
+{
+	auto pos = reinterpret_cast<uint8_t*>(buffer);
+	size_t n_read = 0;
+	while(n_read != count)
 	{
-	auto pos=reinterpret_cast<uint8_t*>(buffer);
-	size_t n_read=0;
-	while(n_read!=count)
+		auto n = ::read(static_cast<int>(m_handle), pos, count - n_read);
+		if(n == 0) { return n_read; }
+		if(n == -1)
 		{
-		auto n=::read(static_cast<int>(m_handle),pos,count-n_read);
-		if(n==0)
-			{return n_read;}
-		if(n==-1)
-			{
-			if(!( errno==EINTR || errno==EAGAIN || errno==EWOULDBLOCK))
-				{exceptionRaise( ErrorMessage("I/O error",{}) );}
-			n=0;
-			}
-		pos+=n;
-		n_read+=n;
+			if(!(errno == EINTR || errno == EAGAIN || errno == EWOULDBLOCK))
+			{ exceptionRaise(ErrorMessage("I/O error", {})); }
+			n = 0;
 		}
-	return n_read;
+		pos += n;
+		n_read += n;
 	}
-
+	return n_read;
+}

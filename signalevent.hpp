@@ -9,10 +9,15 @@ namespace Maike
 	class SignalEvent
 	{
 	public:
-		enum class State:int{Cleared, Signaled};
+		enum class State : int
+		{
+			Cleared,
+			Signaled
+		};
 
-		explicit SignalEvent(State state):m_state{state}
-		{}
+		explicit SignalEvent(State state): m_state{state}
+		{
+		}
 
 		SignalEvent& signal()
 		{
@@ -32,7 +37,7 @@ namespace Maike
 		void wait() const
 		{
 			std::unique_lock<std::mutex> lock{m_mtx};
-			m_cv.wait(lock, [this](){return m_state == State::Signaled;});
+			m_cv.wait(lock, [this]() { return m_state == State::Signaled; });
 		}
 
 	private:

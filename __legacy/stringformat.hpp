@@ -12,14 +12,17 @@
 #include <cstddef>
 
 namespace Maike
+{
+	PRIVATE void
+	format(const Twins<char*>& buffer, const char* format_string, const Twins<const Variant*>& args);
+
+	inline void format(const Twins<char*>& buffer,
+	                   const char* format_string,
+	                   const std::initializer_list<Variant>& args)
 	{
-	PRIVATE void format(const Twins<char*>& buffer,const char* format_string
-		,const Twins<const Variant*>& args);
-
-	inline void format(const Twins<char*>& buffer,const char* format_string
-		,const std::initializer_list<Variant>& args)
-		{format(buffer,format_string,Twins<const Variant*>(args.begin(),args.end()));}
-
+		format(buffer, format_string, Twins<const Variant*>(args.begin(), args.end()));
 	}
+
+}
 
 #endif

@@ -10,42 +10,47 @@
 #include "../command.hpp"
 
 namespace Maike
-	{
+{
 	class ResourceObject;
 	class ParameterSetDumpable;
 
-	class PRIVATE TargetXMLLoader:public Target_Loader
+	class PRIVATE TargetXMLLoader: public Target_Loader
+	{
+	public:
+		void targetsLoad(const char* name_src,
+		                 const char* in_dir,
+		                 Spider& spider,
+		                 DependencyGraph& graph,
+		                 Target_FactoryDelegator& factory) const;
+
+		void configClear();
+
+		TargetXMLLoader& configAppendDefault();
+
+		TargetXMLLoader& configAppend(const ResourceObject& config);
+
+		void configDump(ResourceObject& config) const;
+
+		void dependenciesExtraGet(
+		   const char*, const char*, const char*, ResourceObject::Reader, DependencyBuffer&) const
 		{
-		public:
-			void targetsLoad(const char* name_src,const char* in_dir
-				,Spider& spider,DependencyGraph& graph
-				,Target_FactoryDelegator& factory) const;
+		}
 
-			void configClear();
+		void dependenciesGet(
+		   const char*, const char*, const char*, ResourceObject::Reader, DependencyBuffer&) const
+		{
+		}
 
-			TargetXMLLoader& configAppendDefault();
+		Handle<Target> targetCreate(const ResourceObject& obj,
+		                            const char* name_src,
+		                            const char* in_dir,
+		                            const char* root,
+		                            size_t id,
+		                            size_t line_count) const;
 
-			TargetXMLLoader& configAppend(const ResourceObject& config);
-
-			void configDump(ResourceObject& config) const;
-
-			void dependenciesExtraGet(const char*,const char*
-				,const char*,ResourceObject::Reader
-				,DependencyBuffer&) const
-				{}
-
-			void dependenciesGet(const char*,const char*
-				,const char*,ResourceObject::Reader
-				,DependencyBuffer&) const
-				{}
-
-			Handle<Target> targetCreate(const ResourceObject& obj
-				,const char* name_src,const char* in_dir,const char* root	
-				,size_t id,size_t line_count) const;
-
-		private:
-			Command m_filter;
-		};
-	}
+	private:
+		Command m_filter;
+	};
+}
 
 #endif

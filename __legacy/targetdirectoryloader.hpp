@@ -14,53 +14,59 @@
 #include <string>
 
 namespace Maike
-	{
+{
 	class ResourceObject;
-	class PRIVATE TargetDirectoryLoader:public Target_Loader
+	class PRIVATE TargetDirectoryLoader: public Target_Loader
+	{
+	public:
+		TargetDirectoryLoader();
+
+		void targetsLoad(const char* name_src,
+		                 const char* in_dir,
+		                 Spider& spider,
+		                 DependencyGraph& graph,
+		                 Target_FactoryDelegator& factory) const;
+
+		TargetDirectoryLoader& pathReject(const char* name);
+		TargetDirectoryLoader& pathAccept(const char* name);
+		TargetDirectoryLoader& pathFullReject(const char* name);
+		TargetDirectoryLoader& pathFullAccept(const char* name);
+		TargetDirectoryLoader& recursiveSet(bool recursive) noexcept
 		{
-		public:
-			TargetDirectoryLoader();
+			m_recursive = recursive;
+			return *this;
+		}
+		bool recursiveGet() const noexcept
+		{
+			return m_recursive;
+		}
 
-			void targetsLoad(const char* name_src,const char* in_dir
-				,Spider& spider,DependencyGraph& graph
-				,Target_FactoryDelegator& factory) const;
+		void configClear();
+		TargetDirectoryLoader& configAppendDefault();
+		TargetDirectoryLoader& configAppend(const ResourceObject& directoryoptions);
+		void configDump(ResourceObject& directoryoptions) const;
 
-			TargetDirectoryLoader& pathReject(const char* name);
-			TargetDirectoryLoader& pathAccept(const char* name);
-			TargetDirectoryLoader& pathFullReject(const char* name);
-			TargetDirectoryLoader& pathFullAccept(const char* name);
-			TargetDirectoryLoader& recursiveSet(bool recursive) noexcept
-				{
-				m_recursive=recursive;
-				return *this;
-				}
-			bool recursiveGet() const noexcept
-				{return m_recursive;}
+		void dependenciesExtraGet(
+		   const char*, const char*, const char*, ResourceObject::Reader, DependencyBuffer&) const
+		{
+		}
 
-			void configClear();
-			TargetDirectoryLoader& configAppendDefault();
-			TargetDirectoryLoader& configAppend(const ResourceObject& directoryoptions);
-			void configDump(ResourceObject& directoryoptions) const;
+		void dependenciesGet(
+		   const char*, const char*, const char*, ResourceObject::Reader, DependencyBuffer&) const
+		{
+		}
 
-			void dependenciesExtraGet(const char*,const char*
-				,const char*,ResourceObject::Reader
-				,DependencyBuffer&) const
-				{}
+		Handle<Target>
+		targetCreate(const ResourceObject&, const char*, const char*, const char*, size_t, size_t) const
+		{
+			return Handle<Target>(nullptr);
+		}
 
-			void dependenciesGet(const char*,const char*
-				,const char*,ResourceObject::Reader
-				,DependencyBuffer&) const
-				{}
-
-			Handle<Target> targetCreate(const ResourceObject&,const char*
-				,const char*,const char*,size_t,size_t) const
-				{return Handle<Target>(nullptr);}
-
-		private:
-			std::map<Stringkey,std::string> m_ignore;
-			std::map<Stringkey,std::string> m_ignore_fullname;
-			bool m_recursive;
-		};
-	}
+	private:
+		std::map<Stringkey, std::string> m_ignore;
+		std::map<Stringkey, std::string> m_ignore_fullname;
+		bool m_recursive;
+	};
+}
 
 #endif

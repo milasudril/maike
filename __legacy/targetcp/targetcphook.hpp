@@ -11,28 +11,30 @@
 #include "targetcploader.hpp"
 
 namespace Maike
+{
+	class PRIVATE TargetCPHook final: public Target_Hook
 	{
-	class PRIVATE TargetCPHook final:public Target_Hook
+	public:
+		static TargetCPHook* create();
+
+		const TargetCPLoader& loaderGet() const noexcept
 		{
-		public:
-			static TargetCPHook* create();
+			return m_loader;
+		}
 
-			const TargetCPLoader& loaderGet() const noexcept
-				{return m_loader;}
+		void configClear();
 
-			void configClear();
+		TargetCPHook& configAppendDefault();
 
-			TargetCPHook& configAppendDefault();
+		TargetCPHook& configAppend(const ResourceObject& pythonoptions);
 
-			TargetCPHook& configAppend(const ResourceObject& pythonoptions);
+		void configDump(ResourceObject& pythonoptions) const;
 
-			void configDump(ResourceObject& pythonoptions) const;
+	private:
+		TargetCPLoader m_loader;
 
-		private:
-			TargetCPLoader m_loader;
-
-			void destroy() noexcept;
-		};
-	}
+		void destroy() noexcept;
+	};
+}
 
 #endif

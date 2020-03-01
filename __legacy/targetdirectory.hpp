@@ -9,36 +9,39 @@
 #include "targetbase.hpp"
 
 namespace Maike
-	{
+{
 	class TargetDirectoryCompiler;
 
-	class PRIVATE TargetDirectory final:public TargetBase
+	class PRIVATE TargetDirectory final: public TargetBase
+	{
+	public:
+		static TargetDirectory* create(const char* name, const char* in_dir, const char* root, size_t id);
+
+		void compileImpl(Twins<const Dependency*> dependency_list,
+		                 Twins<const Dependency*> dependency_list_full,
+		                 const char* target_dir);
+
+		bool upToDate(Twins<const Dependency*> dependency_list,
+		              Twins<const Dependency*> dependency_list_full,
+		              const char* target_dir) const;
+
+		void destroy() noexcept;
+
+		bool generated() const noexcept
 		{
-		public:
-			static TargetDirectory* create(const char* name,const char* in_dir
-				,const char* root,size_t id);
+			return 1;
+		}
 
-			void compileImpl(Twins<const Dependency*> dependency_list
-				,Twins<const Dependency*> dependency_list_full
-				,const char* target_dir);
+		void dumpDetails(ResourceObject&) const
+		{
+		}
 
-			bool upToDate(Twins<const Dependency*> dependency_list
-				,Twins<const Dependency*> dependency_list_full
-				,const char* target_dir) const;
-
-			void destroy() noexcept;
-
-			bool generated() const noexcept
-				{return 1;}
-
-			void dumpDetails(ResourceObject&) const
-				{}
-
-		private:
-			explicit TargetDirectory(const char* name,const char* in_dir
-				,const char* root,size_t id):TargetBase(name,name,in_dir,root,id)
-				{}
-		};
-	}
+	private:
+		explicit TargetDirectory(const char* name, const char* in_dir, const char* root, size_t id):
+		   TargetBase(name, name, in_dir, root, id)
+		{
+		}
+	};
+}
 
 #endif

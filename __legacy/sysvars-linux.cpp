@@ -29,220 +29,217 @@
 
 using namespace Maike;
 
-static void trim(std::string & str)
+static void trim(std::string& str)
+{
+	while(str.length() > 0 && (str.back() >= '\0' && str.back() <= ' '))
 	{
-	while (str.length () > 0 && (str.back()>='\0' && str.back()<=' '))
-		{str.erase (str.length ()-1, 1);}
+		str.erase(str.length() - 1, 1);
 	}
+}
 
-static void cpuinfoLoad(std::map<Stringkey,std::string>& info)
-	{
+static void cpuinfoLoad(std::map<Stringkey, std::string>& info)
+{
 	FileIn source("/proc/cpuinfo");
 	ReadBuffer rb(source);
-	enum class State:unsigned int{KEY,VALUE};
-	auto state=State::KEY;
+	enum class State : unsigned int
+	{
+		KEY,
+		VALUE
+	};
+	auto state = State::KEY;
 	std::string buffer;
 	Stringkey key("");
 	while(!rb.eof())
-		{
-		char ch_in=rb.byteRead();
+	{
+		char ch_in = rb.byteRead();
 		switch(state)
-			{
+		{
 			case State::KEY:
 				switch(ch_in)
-					{
+				{
 					case ':':
-						state=State::VALUE;
+						state = State::VALUE;
 						trim(buffer);
-						key=Stringkey(buffer.c_str());
+						key = Stringkey(buffer.c_str());
 						buffer.clear();
 						break;
-					case '\n':
-						return; //Stop after reading one node
+					case '\n': return; //	Stop after reading one node
 					default:
-						if(ch_in>='\0' && ch_in<=' ')
-							{
-							if(buffer.length()>0)
-								{buffer+=ch_in;}
-							}
+						if(ch_in >= '\0' && ch_in <= ' ')
+						{
+							if(buffer.length() > 0) { buffer += ch_in; }
+						}
 						else
-							{buffer+=ch_in;}
-					}
+						{
+							buffer += ch_in;
+						}
+				}
 				break;
 
 			case State::VALUE:
 				switch(ch_in)
-					{
+				{
 					case '\n':
 						trim(buffer);
-						info[key]=buffer;
+						info[key] = buffer;
 						buffer.clear();
-						state=State::KEY;
+						state = State::KEY;
 						break;
 					default:
-						if(ch_in>='\0' && ch_in<=' ')
-							{
-							if(buffer.length()>0)
-								{buffer+=ch_in;}
-							}
+						if(ch_in >= '\0' && ch_in <= ' ')
+						{
+							if(buffer.length() > 0) { buffer += ch_in; }
+						}
 						else
-							{buffer+=ch_in;}
-					}
+						{
+							buffer += ch_in;
+						}
+				}
 				break;
-			}
 		}
 	}
+}
 
 
-
-static void flagsLoad(const std::map<Stringkey,std::string>& cpuinfo
-	,std::map<Stringkey,Variant>& variables
-	,std::map<Stringkey,std::string>& varnames)
-	{
-	auto x=cpuinfo.end();
-#if __x86_64 || __x86_64__ || __amd64 || __amd64__ || _M_X64 || _M_AMD64 \
-	|| __i386__ || i386 || __i386 || __IA32__ || _M_IX86 || __X86__ || _X86_ \
-	|| __386 || __INTEL__
-	x=cpuinfo.find(Stringkey("flags"));
-#elif __arm__ || __thumb__ || __TARGET_ARCH_ARM || __TARGET_ARCH_THUMB || _ARM \
-	|| _M_ARM || _M_ARMT || __arm
-	x=cpuinfo.find(Stringkey("features"));
+static void flagsLoad(const std::map<Stringkey, std::string>& cpuinfo,
+                      std::map<Stringkey, Variant>& variables,
+                      std::map<Stringkey, std::string>& varnames)
+{
+	auto x = cpuinfo.end();
+#if __x86_64 || __x86_64__ || __amd64 || __amd64__ || _M_X64 || _M_AMD64 || __i386__ || i386 \
+   || __i386 || __IA32__ || _M_IX86 || __X86__ || _X86_ || __386 || __INTEL__
+	x = cpuinfo.find(Stringkey("flags"));
+#elif __arm__ || __thumb__ || __TARGET_ARCH_ARM || __TARGET_ARCH_THUMB || _ARM || _M_ARM \
+   || _M_ARMT || __arm
+	x = cpuinfo.find(Stringkey("features"));
 #endif
-	if(x!=cpuinfo.end())
-		{
-		auto ptr=x->second.c_str();
+	if(x != cpuinfo.end())
+	{
+		auto ptr = x->second.c_str();
 		std::string buffer("cpufeature_");
 		while(true)
-			{
-			auto ch_in=*ptr;
+		{
+			auto ch_in = *ptr;
 			switch(ch_in)
-				{
+			{
 				case ' ':
-					replace(variables,{Stringkey(buffer.c_str()),1});
-					varnames[Stringkey(buffer.c_str())]=buffer;
-					buffer=std::string("cpufeature_");
+					replace(variables, {Stringkey(buffer.c_str()), 1});
+					varnames[Stringkey(buffer.c_str())] = buffer;
+					buffer = std::string("cpufeature_");
 					break;
 				case '\0':
-					replace(variables,{Stringkey(buffer.c_str()),1});
-					varnames[Stringkey(buffer.c_str())]=buffer;
+					replace(variables, {Stringkey(buffer.c_str()), 1});
+					varnames[Stringkey(buffer.c_str())] = buffer;
 					return;
-				default:
-					buffer+=ch_in;
-				}
+				default: buffer += ch_in;
+			}
 			++ptr;
-			}
 		}
-
 	}
+}
 
-static void cpuinfoSet(const std::map<Stringkey,std::string>& cpuinfo
-	,std::map<Stringkey,Variant>& variables
-	,std::map<Stringkey,std::string>& varnames)
+static void cpuinfoSet(const std::map<Stringkey, std::string>& cpuinfo,
+                       std::map<Stringkey, Variant>& variables,
+                       std::map<Stringkey, std::string>& varnames)
+{
+	const std::pair<const char*, Stringkey> keymap[] = {
+	   {"cpu_cache_size", Stringkey("cache size")},
+	   {"cpu_cache_flushsize", Stringkey("clflush size")},
+	   {"cpu_cache_alignment", Stringkey("cache_alignment")}};
+
+	auto N_keys = sizeof(keymap) / sizeof(Twins<Stringkey>);
+	while(N_keys != 0)
 	{
-	const std::pair<const char*,Stringkey> keymap[]=
-		{
-			 {"cpu_cache_size",Stringkey("cache size")}
-			,{"cpu_cache_flushsize",Stringkey("clflush size")}
-			,{"cpu_cache_alignment",Stringkey("cache_alignment")}
-		};
-
-	auto N_keys=sizeof(keymap)/sizeof(Twins<Stringkey>);
-	while(N_keys!=0)
-		{
 		--N_keys;
-		auto find=keymap[N_keys].second;
-		auto i=cpuinfo.find(find);
-		if(i!=cpuinfo.end())
-			{
-			replace(variables,{Stringkey(keymap[N_keys].first)
-				,static_cast<int64_t>(atoll(i->second.c_str()))});
-			varnames[Stringkey(keymap[N_keys].first)]=std::string(keymap[N_keys].first);
-			}
+		auto find = keymap[N_keys].second;
+		auto i = cpuinfo.find(find);
+		if(i != cpuinfo.end())
+		{
+			replace(variables,
+			        {Stringkey(keymap[N_keys].first), static_cast<int64_t>(atoll(i->second.c_str()))});
+			varnames[Stringkey(keymap[N_keys].first)] = std::string(keymap[N_keys].first);
 		}
 	}
+}
 
 
-static void cpuinfoSet(const std::map<Stringkey,std::string>& cpuinfo
-	,std::map<Stringkey,Variant>& variables
-	,std::map<Stringkey,std::string>& strings
-	,std::map<Stringkey,std::string>& varnames)
+static void cpuinfoSet(const std::map<Stringkey, std::string>& cpuinfo,
+                       std::map<Stringkey, Variant>& variables,
+                       std::map<Stringkey, std::string>& strings,
+                       std::map<Stringkey, std::string>& varnames)
+{
+	const std::pair<const char*, Stringkey> keymap[] = {{"cpu_vendor", Stringkey("vendor_id")}};
+
+	auto N_keys = sizeof(keymap) / sizeof(Twins<Stringkey>);
+	while(N_keys != 0)
 	{
-	const std::pair<const char*,Stringkey> keymap[]=
-		{
-			 {"cpu_vendor",Stringkey("vendor_id")}
-		};
-
-	auto N_keys=sizeof(keymap)/sizeof(Twins<Stringkey>);
-	while(N_keys!=0)
-		{
 		--N_keys;
-		auto find=keymap[N_keys].second;
-		auto i=cpuinfo.find(find);
-		if(i!=cpuinfo.end())
-			{
-			auto k=replace(strings,{Stringkey(keymap[N_keys].first),i->second});
-			replace(variables,{Stringkey(keymap[N_keys].first),k->second.c_str()});
-			varnames[Stringkey(keymap[N_keys].first)]=std::string(keymap[N_keys].first);
-			}
+		auto find = keymap[N_keys].second;
+		auto i = cpuinfo.find(find);
+		if(i != cpuinfo.end())
+		{
+			auto k = replace(strings, {Stringkey(keymap[N_keys].first), i->second});
+			replace(variables, {Stringkey(keymap[N_keys].first), k->second.c_str()});
+			varnames[Stringkey(keymap[N_keys].first)] = std::string(keymap[N_keys].first);
 		}
 	}
+}
 
-void Maike::sysvarsLoad(std::map<Stringkey, Variant>& variables
-	,std::map<Stringkey,std::string>& strings
-	,std::map<Stringkey,std::string>& varnames)
-	{
+void Maike::sysvarsLoad(std::map<Stringkey, Variant>& variables,
+                        std::map<Stringkey, std::string>& strings,
+                        std::map<Stringkey, std::string>& varnames)
+{
 	utsname sysname;
 	uname(&sysname);
-	auto ver=version(sysname.release);
-	replace(variables,{Stringkey("linux"), ver});
-	varnames[Stringkey("linux")]=std::string("linux");
-		{
-		auto i=replace(strings,{Stringkey("linux_string"),sysname.release});
-		replace(variables,{Stringkey("linux_string"),i->second.c_str()});
-		varnames[Stringkey("linux_string")]=std::string("linux_string");
-		}
+	auto ver = version(sysname.release);
+	replace(variables, {Stringkey("linux"), ver});
+	varnames[Stringkey("linux")] = std::string("linux");
+	{
+		auto i = replace(strings, {Stringkey("linux_string"), sysname.release});
+		replace(variables, {Stringkey("linux_string"), i->second.c_str()});
+		varnames[Stringkey("linux_string")] = std::string("linux_string");
+	}
 
 #if __ANDROID__
-	replace(variables,{Stringkey("android"),__ANDROID_API__});
-	varnames[Stringkey("android")]=std::string("android");
+	replace(variables, {Stringkey("android"), __ANDROID_API__});
+	varnames[Stringkey("android")] = std::string("android");
 #elif __gnu_linux__
-	ver=version(gnu_get_libc_version());
-	replace(variables,{Stringkey("gnu"),ver});
-	varnames[Stringkey("gnu")]=std::string("gnu");
-		{
-		auto i=replace(strings,{Stringkey("gnu_string"),gnu_get_libc_version()});
-		replace(variables,{Stringkey("gnu_string"),i->second.c_str()});
-		varnames[Stringkey("gnu_string")]=std::string("gnu_string");
-		}
+	ver = version(gnu_get_libc_version());
+	replace(variables, {Stringkey("gnu"), ver});
+	varnames[Stringkey("gnu")] = std::string("gnu");
+	{
+		auto i = replace(strings, {Stringkey("gnu_string"), gnu_get_libc_version()});
+		replace(variables, {Stringkey("gnu_string"), i->second.c_str()});
+		varnames[Stringkey("gnu_string")] = std::string("gnu_string");
+	}
 #endif
 
 #ifdef __unix__
-	replace(variables,{Stringkey("posix"),static_cast<int64_t>(_POSIX_VERSION)});
-	varnames[Stringkey("posix")]=std::string("posix");
+	replace(variables, {Stringkey("posix"), static_cast<int64_t>(_POSIX_VERSION)});
+	varnames[Stringkey("posix")] = std::string("posix");
 #endif
 
-	replace(variables,{Stringkey("nullfile"),"/dev/null"});
-	varnames[Stringkey("nullfile")]=std::string("nullfile");
+	replace(variables, {Stringkey("nullfile"), "/dev/null"});
+	varnames[Stringkey("nullfile")] = std::string("nullfile");
 
-	std::map<Stringkey,std::string> cpuinfo;
+	std::map<Stringkey, std::string> cpuinfo;
 	cpuinfoLoad(cpuinfo);
 #if __x86_64 || __x86_64__ || __amd64 || __amd64__ || _M_X64 || _M_AMD64
-	replace(variables,{Stringkey("wordsize"),64});
-	varnames[Stringkey("wordsize")]=std::string("wordsize");
-	replace(variables,{Stringkey("x86_64"),1});
-	varnames[Stringkey("x86_64")]=std::string("x86_64");
-	replace(variables,{Stringkey("architecture"),"x86_64"});
-	varnames[Stringkey("architecture")]=std::string("architecture");
-#elif __i386__ || i386 || __i386 || __IA32__ || _M_IX86 || __X86__ || _X86_ \
-	|| __386 || __INTEL__
-	replace(variables,{Stringkey("wordsize"),32});
-	varnames[Stringkey("wordsize")]=std::string("wordsize");
-	replace(variables,{Stringkey("i386"),1});
-	varnames[Stringkey("i386")]=std::string("i386");
-	replace(variables,{Stringkey("architecture"),"i386"});
-	varnames[Stringkey("architecture")]=std::string("architecture");
+	replace(variables, {Stringkey("wordsize"), 64});
+	varnames[Stringkey("wordsize")] = std::string("wordsize");
+	replace(variables, {Stringkey("x86_64"), 1});
+	varnames[Stringkey("x86_64")] = std::string("x86_64");
+	replace(variables, {Stringkey("architecture"), "x86_64"});
+	varnames[Stringkey("architecture")] = std::string("architecture");
+#elif __i386__ || i386 || __i386 || __IA32__ || _M_IX86 || __X86__ || _X86_ || __386 || __INTEL__
+	replace(variables, {Stringkey("wordsize"), 32});
+	varnames[Stringkey("wordsize")] = std::string("wordsize");
+	replace(variables, {Stringkey("i386"), 1});
+	varnames[Stringkey("i386")] = std::string("i386");
+	replace(variables, {Stringkey("architecture"), "i386"});
+	varnames[Stringkey("architecture")] = std::string("architecture");
 #endif
-	flagsLoad(cpuinfo,variables,varnames);
-	cpuinfoSet(cpuinfo,variables,strings,varnames);
-	cpuinfoSet(cpuinfo,variables,varnames);
-	}
+	flagsLoad(cpuinfo, variables, varnames);
+	cpuinfoSet(cpuinfo, variables, strings, varnames);
+	cpuinfoSet(cpuinfo, variables, varnames);
+}

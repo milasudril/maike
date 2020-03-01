@@ -11,28 +11,30 @@
 #include "targetxmlloader.hpp"
 
 namespace Maike
+{
+	class PRIVATE TargetXMLHook final: public Target_Hook
 	{
-	class PRIVATE TargetXMLHook final:public Target_Hook
+	public:
+		static TargetXMLHook* create();
+
+		const TargetXMLLoader& loaderGet() const noexcept
 		{
-		public:
-			static TargetXMLHook* create();
+			return m_loader;
+		}
 
-			const TargetXMLLoader& loaderGet() const noexcept
-				{return m_loader;}
+		void configClear();
 
-			void configClear();
+		TargetXMLHook& configAppendDefault();
 
-			TargetXMLHook& configAppendDefault();
+		TargetXMLHook& configAppend(const ResourceObject& pythonoptions);
 
-			TargetXMLHook& configAppend(const ResourceObject& pythonoptions);
+		void configDump(ResourceObject& pythonoptions) const;
 
-			void configDump(ResourceObject& pythonoptions) const;
+	private:
+		TargetXMLLoader m_loader;
 
-		private:
-			TargetXMLLoader m_loader;
-
-			void destroy() noexcept;
-		};
-	}
+		void destroy() noexcept;
+	};
+}
 
 #endif

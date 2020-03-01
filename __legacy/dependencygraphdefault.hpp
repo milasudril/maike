@@ -14,35 +14,37 @@
 #include <map>
 
 namespace Maike
+{
+	class PRIVATE DependencyGraphDefault final: public DependencyGraph
 	{
-	class PRIVATE DependencyGraphDefault final:public DependencyGraph
+	public:
+		explicit DependencyGraphDefault(EventHandler& handler): r_handler(handler), m_patch_needed(0)
 		{
-		public:
-			explicit DependencyGraphDefault(EventHandler& handler):
-				r_handler(handler),m_patch_needed(0)
-				{}
+		}
 
-			DependencyGraphDefault& targetRegister(Handle<Target>&& target);
-			DependencyGraphDefault& targetsPatch();
-			void targetsProcess(TargetProcessorConst&& proc) const;
-			DependencyGraphDefault& targetsProcess(TargetProcessor&& proc);
-			DependencyGraphDefault& targetsRemove(TargetProcessor&& condition);
-			Target* targetFind(const Stringkey& key);
-			const Target* targetFind(const Stringkey& key) const;
+		DependencyGraphDefault& targetRegister(Handle<Target>&& target);
+		DependencyGraphDefault& targetsPatch();
+		void targetsProcess(TargetProcessorConst&& proc) const;
+		DependencyGraphDefault& targetsProcess(TargetProcessor&& proc);
+		DependencyGraphDefault& targetsRemove(TargetProcessor&& condition);
+		Target* targetFind(const Stringkey& key);
+		const Target* targetFind(const Stringkey& key) const;
 
-			const Twins<size_t>& idRangeGet() const;
+		const Twins<size_t>& idRangeGet() const;
 
-			DependencyGraphDefault& clear() noexcept;
+		DependencyGraphDefault& clear() noexcept;
 
-			size_t targetsCountGet() const noexcept
-				{return m_targets.size();}
+		size_t targetsCountGet() const noexcept
+		{
+			return m_targets.size();
+		}
 
-		private:
-			EventHandler& r_handler;
-			std::map< Stringkey,Handle<Target> > m_targets;
-			Twins<size_t> m_id_range;
-			bool m_patch_needed;
-		};
-	}
+	private:
+		EventHandler& r_handler;
+		std::map<Stringkey, Handle<Target>> m_targets;
+		Twins<size_t> m_id_range;
+		bool m_patch_needed;
+	};
+}
 
 #endif

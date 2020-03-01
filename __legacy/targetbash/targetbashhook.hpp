@@ -12,33 +12,35 @@
 #include "targetbashloader.hpp"
 
 namespace Maike
+{
+	class PRIVATE TargetBashHook final: public Target_Hook
 	{
-	class PRIVATE TargetBashHook final:public Target_Hook
+	public:
+		static TargetBashHook* create(const ParameterSetDumpable& params);
+
+		static TargetBashHook* create(ParameterSet&& params) = delete;
+
+		const TargetBashLoader& loaderGet() const noexcept
 		{
-		public:
-			static TargetBashHook* create(const ParameterSetDumpable& params);
+			return m_loader;
+		}
 
-			static TargetBashHook* create(ParameterSet&& params)=delete;
+		void configClear();
 
-			const TargetBashLoader& loaderGet() const noexcept
-				{return m_loader;}
+		TargetBashHook& configAppendDefault();
 
-			void configClear();
+		TargetBashHook& configAppend(const ResourceObject& options);
 
-			TargetBashHook& configAppendDefault();
+		void configDump(ResourceObject& options) const;
 
-			TargetBashHook& configAppend(const ResourceObject& options);
+	private:
+		TargetBashInterpreter m_intpret;
+		TargetBashLoader m_loader;
 
-			void configDump(ResourceObject& options) const;
+		explicit TargetBashHook(const ParameterSetDumpable& params);
 
-		private:
-			TargetBashInterpreter m_intpret;
-			TargetBashLoader m_loader;
-
-			explicit TargetBashHook(const ParameterSetDumpable& params);
-
-			void destroy() noexcept;
-		};
-	}
+		void destroy() noexcept;
+	};
+}
 
 #endif

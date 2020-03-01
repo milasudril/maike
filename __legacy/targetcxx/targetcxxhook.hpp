@@ -15,31 +15,33 @@
 #include "../parametersetdumpable.hpp"
 
 namespace Maike
+{
+	class PRIVATE TargetCxxHook final: public Target_Hook
 	{
-	class PRIVATE TargetCxxHook final:public Target_Hook
+	public:
+		static TargetCxxHook* create(const ParameterSet& params);
+
+		static TargetCxxHook* create(ParameterSet&& params) = delete;
+
+		const TargetCxxLoader& loaderGet() const noexcept
 		{
-		public:
-			static TargetCxxHook* create(const ParameterSet& params);
+			return m_loader;
+		}
 
-			static TargetCxxHook* create(ParameterSet&& params)=delete;
+		void configClear();
+		TargetCxxHook& configAppendDefault();
+		TargetCxxHook& configAppend(const ResourceObject& cxxoptions);
+		void configDump(ResourceObject& cxxoptions) const;
 
-			const TargetCxxLoader& loaderGet() const noexcept
-				{return m_loader;}
+	private:
+		TargetCxxOptions m_options;
+		TargetCxxCompiler m_compiler;
+		TargetCxxLoader m_loader;
 
-			void configClear();
-			TargetCxxHook& configAppendDefault();
-			TargetCxxHook& configAppend(const ResourceObject& cxxoptions);
-			void configDump(ResourceObject& cxxoptions) const;
+		explicit TargetCxxHook(const ParameterSet& params);
 
-		private:
-			TargetCxxOptions m_options;
-			TargetCxxCompiler m_compiler;
-			TargetCxxLoader m_loader;
-
-			explicit TargetCxxHook(const ParameterSet& params);
-
-			void destroy() noexcept;
-		};
-	}
+		void destroy() noexcept;
+	};
+}
 
 #endif

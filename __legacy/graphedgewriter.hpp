@@ -6,14 +6,15 @@
 #include "visibility.hpp"
 
 namespace Maike
-	{
+{
 	class PRIVATE GraphEdgeWriter
-		{
-		public:
-			virtual void edgeWrite(const char* from,const char* to,const char* label)=0;
-		protected:
-			~GraphEdgeWriter()=default;
-		};
-	}
+	{
+	public:
+		virtual void edgeWrite(const char* from, const char* to, const char* label) = 0;
+
+	protected:
+		~GraphEdgeWriter() = default;
+	};
+}
 
 #endif

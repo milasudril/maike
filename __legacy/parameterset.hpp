@@ -7,23 +7,22 @@
 #include "twins.hpp"
 
 namespace Maike
-	{
+{
 	class Stringkey;
 	class PRIVATE ParameterSet
+	{
+	public:
+		class ParameterProcessor
 		{
 		public:
-			class ParameterProcessor
-				{
-				public:
-					virtual void operator()(const char* element)=0;
-				};
-
-			virtual void parameterGet(const Stringkey& key
-				,ParameterProcessor&& proc) const=0;
-
-		protected:
-			~ParameterSet()=default;
+			virtual void operator()(const char* element) = 0;
 		};
-	}
+
+		virtual void parameterGet(const Stringkey& key, ParameterProcessor&& proc) const = 0;
+
+	protected:
+		~ParameterSet() = default;
+	};
+}
 
 #endif

@@ -9,36 +9,43 @@
 #include "../target_loader.hpp"
 
 namespace Maike
-	{
+{
 	class TargetPythonInterpreter;
 
-	class PRIVATE TargetPythonLoader:public Target_Loader
+	class PRIVATE TargetPythonLoader: public Target_Loader
+	{
+	public:
+		void targetsLoad(const char* name_src,
+		                 const char* in_dir,
+		                 Spider& spider,
+		                 DependencyGraph& graph,
+		                 Target_FactoryDelegator& factory) const;
+
+		void dependenciesExtraGet(const char* name_src,
+		                          const char* in_dir,
+		                          const char* root,
+		                          ResourceObject::Reader rc_reader,
+		                          DependencyBuffer& deps) const;
+
+		void dependenciesGet(
+		   const char*, const char*, const char*, ResourceObject::Reader, DependencyBuffer&) const
 		{
-		public:
-			void targetsLoad(const char* name_src,const char* in_dir
-				,Spider& spider,DependencyGraph& graph
-				,Target_FactoryDelegator& factory) const;
+		}
 
-			void dependenciesExtraGet(const char* name_src,const char* in_dir
-				,const char* root,ResourceObject::Reader rc_reader
-				,DependencyBuffer& deps) const;
+		explicit TargetPythonLoader(const TargetPythonInterpreter& intptret);
 
-			void dependenciesGet(const char*,const char*
-				,const char*,ResourceObject::Reader
-				,DependencyBuffer&) const
-				{}	
+		TargetPythonLoader(TargetPythonInterpreter&&) = delete;
 
-			explicit TargetPythonLoader(const TargetPythonInterpreter& intptret);
+		Handle<Target> targetCreate(const ResourceObject& obj,
+		                            const char* name_src,
+		                            const char* in_dir,
+		                            const char* root,
+		                            size_t id,
+		                            size_t line_count) const;
 
-			TargetPythonLoader(TargetPythonInterpreter&&)=delete;
-
-			Handle<Target> targetCreate(const ResourceObject& obj
-				,const char* name_src,const char* in_dir,const char* root	
-				,size_t id,size_t line_count) const;
-
-		private:
-			const TargetPythonInterpreter& r_intpret;
-		};
-	}
+	private:
+		const TargetPythonInterpreter& r_intpret;
+	};
+}
 
 #endif

@@ -12,31 +12,33 @@
 #include "targettrivialoptions.hpp"
 
 namespace Maike
+{
+	class PRIVATE TargetTrivialHook final: public Target_Hook
 	{
-	class PRIVATE TargetTrivialHook final:public Target_Hook
+	public:
+		static TargetTrivialHook* create();
+
+		const TargetTrivialLoader& loaderGet() const noexcept
 		{
-		public:
-			static TargetTrivialHook* create();
+			return m_loader;
+		}
 
-			const TargetTrivialLoader& loaderGet() const noexcept
-				{return m_loader;}
+		void configClear();
 
-			void configClear();
+		TargetTrivialHook& configAppendDefault();
 
-			TargetTrivialHook& configAppendDefault();
+		TargetTrivialHook& configAppend(const ResourceObject& opts);
 
-			TargetTrivialHook& configAppend(const ResourceObject& opts);
+		void configDump(ResourceObject& opts) const;
 
-			void configDump(ResourceObject& opts) const;
+	private:
+		TargetTrivialOptions m_opts;
+		TargetTrivialLoader m_loader;
 
-		private:
-			TargetTrivialOptions m_opts;
-			TargetTrivialLoader m_loader;
+		void destroy() noexcept;
 
-			void destroy() noexcept;
-
-			TargetTrivialHook();
-		};
-	}
+		TargetTrivialHook();
+	};
+}
 
 #endif

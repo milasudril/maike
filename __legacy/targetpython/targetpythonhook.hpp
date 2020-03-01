@@ -12,33 +12,35 @@
 #include "targetpythonloader.hpp"
 
 namespace Maike
+{
+	class PRIVATE TargetPythonHook final: public Target_Hook
 	{
-	class PRIVATE TargetPythonHook final:public Target_Hook
+	public:
+		static TargetPythonHook* create(const ParameterSetDumpable& params);
+
+		static TargetPythonHook* create(ParameterSet&& params) = delete;
+
+		const TargetPythonLoader& loaderGet() const noexcept
 		{
-		public:
-			static TargetPythonHook* create(const ParameterSetDumpable& params);
+			return m_loader;
+		}
 
-			static TargetPythonHook* create(ParameterSet&& params)=delete;
+		void configClear();
 
-			const TargetPythonLoader& loaderGet() const noexcept
-				{return m_loader;}
+		TargetPythonHook& configAppendDefault();
 
-			void configClear();
+		TargetPythonHook& configAppend(const ResourceObject& pythonoptions);
 
-			TargetPythonHook& configAppendDefault();
+		void configDump(ResourceObject& pythonoptions) const;
 
-			TargetPythonHook& configAppend(const ResourceObject& pythonoptions);
+	private:
+		TargetPythonInterpreter m_intpret;
+		TargetPythonLoader m_loader;
 
-			void configDump(ResourceObject& pythonoptions) const;
+		explicit TargetPythonHook(const ParameterSetDumpable& params);
 
-		private:
-			TargetPythonInterpreter m_intpret;
-			TargetPythonLoader m_loader;
-
-			explicit TargetPythonHook(const ParameterSetDumpable& params);
-
-			void destroy() noexcept;
-		};
-	}
+		void destroy() noexcept;
+	};
+}
 
 #endif
