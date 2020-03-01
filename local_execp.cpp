@@ -1,9 +1,10 @@
 //@	{
 //@	 "targets":
-//@	 	[{"name":"command.o","type":"object", "dependencies":[{"ref":"pthread", "rel":"external"}]}]
+//@	 	[{"name":"local_execp.o","type":"object", "dependencies":
+//@			[{"ref":"pthread", "rel":"external"}]}]
 //@	}
 
-#include "./command.hpp"
+#include "./local_execp.hpp"
 
 #include <sys/types.h>
 #include <unistd.h>
@@ -102,10 +103,7 @@ namespace
 		int m_write_end;
 	};
 
-	using Writer = size_t (*)(void* io_redirector, std::byte* buffer, size_t buffer_size);
-	using Reader = void (*)(void* io_redirector, std::byte const* buffer, size_t buffer_size);
-
-	void write(void* io_redirector, int fd, Writer writer)
+	void write(void* io_redirector, int fd, Maike::IoRedirector::Writer writer)
 	{
 		constexpr size_t BufferSize = 4096;
 		std::array<std::byte, BufferSize> buffer;
@@ -117,7 +115,7 @@ namespace
 		}
 	}
 
-	void read(void* io_redirector, int fd, Reader reader)
+	void read(void* io_redirector, int fd, Maike::IoRedirector::Reader reader)
 	{
 		constexpr ssize_t BufferSize = 4096;
 		std::array<std::byte, BufferSize> buffer;
@@ -130,19 +128,13 @@ namespace
 	}
 
 
-	Maike::Command::Result communicateWith(pid_t pid,
-	                                       void* io_redirector,
-	                                       int stdin,
-	                                       Writer stdin_writer,
-	                                       int stdout,
-	                                       Reader stdout_reader,
-	                                       int stderr,
-	                                       Reader stderr_reader)
+	Maike::ExecResult communicateWith(
+	   pid_t pid, Maike::IoRedirector const& io_redirector, int stdin, int stdout, int stderr)
 	{
 		signal(SIGPIPE, SIG_IGN);
-		std::thread stdout_proc{read, io_redirector, stdout, stdout_reader};
-		std::thread stderr_proc{read, io_redirector, stderr, stderr_reader};
-		write(io_redirector, stdin, stdin_writer);
+		std::thread stderr_proc{read, io_redirector.handle(), stderr, io_redirector.stderr()};
+		std::thread stdout_proc{read, io_redirector.handle(), stdout, io_redirector.stdout()};
+		write(io_redirector.handle(), stdin, io_redirector.stdin());
 
 		int status;
 		if(::waitpid(pid, &status, 0) == -1) { abort(); }
@@ -150,10 +142,10 @@ namespace
 		stdout_proc.join();
 		stderr_proc.join();
 
-		if(WIFEXITED(status)) { return Maike::Command::Result{}.exitStatus(WEXITSTATUS(status)); }
+		if(WIFEXITED(status)) { return Maike::ExecResult{}.exitStatus(WEXITSTATUS(status)); }
 		else if(WIFSIGNALED(status))
 		{
-			return Maike::Command::Result{}.signo(WTERMSIG(status));
+			return Maike::ExecResult{}.signo(WTERMSIG(status));
 		}
 
 		abort();
@@ -162,15 +154,14 @@ namespace
 
 std::mutex exec_mutex;
 
-Maike::Command::Result Maike::Command::execp(void* io_redirector,
-                                             Writer stdin_writer,
-                                             Reader stdout_reader,
-                                             Reader stderr_reader) const
+Maike::ExecResult Maike::execp(fs::path const& executable,
+                               std::vector<std::string> const& args,
+                               IoRedirector const& io_redirector)
 {
 	std::vector<char const*> cmd_args;
-	cmd_args.push_back(m_executable.c_str());
-	std::transform(std::begin(m_args),
-	               std::end(m_args),
+	cmd_args.push_back(executable.c_str());
+	std::transform(std::begin(args),
+	               std::end(args),
 	               std::back_inserter(cmd_args),
 	               [](auto const& item) { return item.c_str(); });
 	cmd_args.push_back(nullptr);
@@ -199,7 +190,7 @@ Maike::Command::Result Maike::Command::execp(void* io_redirector,
 			stdout.moveWriteEndTo(STDOUT_FILENO);
 			stderr.moveWriteEndTo(STDERR_FILENO);
 			auto fd_exec_err = exec_err.closeWriteEndOnExec();
-			if(execvp(m_executable.c_str(), const_cast<char* const*>(cmd_args.data())) == -1)
+			if(execvp(executable.c_str(), const_cast<char* const*>(cmd_args.data())) == -1)
 			{
 				lock.unlock();
 				uint32_t val = errno;
@@ -227,12 +218,5 @@ Maike::Command::Result Maike::Command::execp(void* io_redirector,
 	stdout.closeWriteEnd();
 	stderr.closeWriteEnd();
 
-	return communicateWith(pid,
-	                       io_redirector,
-	                       stdin.writeEnd(),
-	                       stdin_writer,
-	                       stdout.readEnd(),
-	                       stdout_reader,
-	                       stderr.readEnd(),
-	                       stderr_reader);
+	return communicateWith(pid, io_redirector, stdin.writeEnd(), stdout.readEnd(), stderr.readEnd());
 }

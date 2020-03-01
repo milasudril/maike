@@ -1,10 +1,10 @@
 //@	{
-//@	 "targets":[{"name":"command.test","type":"application", "autorun":1}]
+//@	 "targets":[{"name":"local_execp.test","type":"application", "autorun":1}]
 //@	 }
 
 #undef NDEBUG
 
-#include "./command.hpp"
+#include "./local_execp.hpp"
 
 #include <cassert>
 #include <cstring>
@@ -22,7 +22,7 @@ namespace
 			m_stdin_bytes_left = m_stdin.size();
 		}
 
-		size_t operator()(std::byte* buffer, size_t n, Maike::Command::StdIn)
+		size_t operator()(std::byte* buffer, size_t n, Maike::IoRedirector::StdIn)
 		{
 			auto const n_copy = std::min(n, m_stdin_bytes_left);
 			if(n_copy == 0) { return n_copy; }
@@ -33,7 +33,7 @@ namespace
 			return n_copy;
 		}
 
-		void operator()(std::byte const* buffer, size_t n, Maike::Command::StdOut)
+		void operator()(std::byte const* buffer, size_t n, Maike::IoRedirector::StdOut)
 		{
 			while(n)
 			{
@@ -43,7 +43,7 @@ namespace
 			}
 		}
 
-		void operator()(std::byte const* buffer, size_t n, Maike::Command::StdErr)
+		void operator()(std::byte const* buffer, size_t n, Maike::IoRedirector::StdErr)
 		{
 			while(n)
 			{
@@ -77,31 +77,21 @@ namespace
 
 namespace Testcases
 {
-	void maikeCommandCreate()
+	void maikeLocalExcepTestArgs()
 	{
-		std::vector<std::string> const command_args{"foo", "arg1"};
-		Maike::fs::path const exe{"bash"};
+		IoRedirectorTest redir{"The text here does not matter"};
 
-		Maike::Command cmd{exe, command_args};
-
-		assert(cmd.executable() == exe);
-		assert(cmd.args() == command_args);
-
-		IoRedirectorTest redir{"Hello, World"};
-
-		auto status = cmd.execp(redir);
-		if(status.returnedFromMain())
-		{
-			if(status.exitStatus() > 0) { assert(redir.stderr().size() > 0); }
-		}
+		auto status = Maike::execp("bash", {"-c", "echo Hello, World"}, redir);
+		assert(status.returnedFromMain());
+		assert(status.exitStatus() == 0);
+		assert(redir.stdout() == "Hello, World\n");
 	}
 
-	void maikeCommandNonExistingExe()
+	void maikeLocalExcepNonExistingExe()
 	{
 		try
 		{
-			Maike::Command cmd{"This file does not exsit", {}};
-			(void)cmd.execp(IoRedirectorTest{""});
+			(void)Maike::execp("This file does not exsit", {}, IoRedirectorTest{""});
 			abort();
 		}
 		catch(...)
@@ -109,18 +99,14 @@ namespace Testcases
 		}
 	}
 
-	void maikeCommandTestPipesAndExitStatus()
+	void maikeLocalExcepTestPipesAndExitStatus()
 	{
-		Maike::fs::path const exe{"bash"};
-
-		Maike::Command cmd{"bash", {}};
-
 		IoRedirectorTest redir{R"bash(echo "This is some text written to stdout"
 echo "This is some text written to stderr" 1>&2
 exit 123
 )bash"};
 
-		auto status = cmd.execp(redir);
+		auto status = Maike::execp("bash", {}, redir);
 		assert(status.returnedFromMain());
 		assert(status.exitStatus() == 123);
 
@@ -128,14 +114,14 @@ exit 123
 		assert(redir.stdout() == "This is some text written to stdout\n");
 	}
 
-	void maikeCommandTestPipesAndExitStatusMt5Times()
+	void maikeLocalExcepTestPipesAndExitStatusMt5Times()
 	{
 		for(int k = 0; k < 5; ++k)
 		{
 			std::vector<std::thread> threads;
 			for(int k = 0; k < 16; ++k)
 			{
-				threads.emplace_back(maikeCommandTestPipesAndExitStatus);
+				threads.emplace_back(maikeLocalExcepTestPipesAndExitStatus);
 			}
 			std::for_each(std::begin(threads), std::end(threads), [](auto& x) { x.join(); });
 			putc('*', stderr);
@@ -146,8 +132,8 @@ exit 123
 
 int main()
 {
-	Testcases::maikeCommandCreate();
-	Testcases::maikeCommandNonExistingExe();
-	Testcases::maikeCommandTestPipesAndExitStatus();
-	Testcases::maikeCommandTestPipesAndExitStatusMt5Times();
+	Testcases::maikeLocalExcepTestArgs();
+	Testcases::maikeLocalExcepNonExistingExe();
+	Testcases::maikeLocalExcepTestPipesAndExitStatus();
+	Testcases::maikeLocalExcepTestPipesAndExitStatusMt5Times();
 }
