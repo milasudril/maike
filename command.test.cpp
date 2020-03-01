@@ -16,13 +16,19 @@ namespace
 	public:
 		explicit IoRedirectorTest(std::string&& stdin): m_stdin{std::move(stdin)}
 		{
-			m_stdin_ptr = m_stdin.data();
+			m_stdin_read_ptr = m_stdin.data();
+			m_stdin_bytes_left = m_stdin.size();
 		}
 
 		size_t operator()(std::byte* buffer, size_t n, Maike::Command::StdIn)
 		{
-			auto n_copy = std::min(n, static_cast<size_t>(m_stdin_ptr - m_stdin.data()));
-			memcpy(buffer, m_stdin_ptr, n_copy);
+			auto const n_copy = std::min(n, m_stdin_bytes_left);
+			if(n_copy == 0)
+			{return n_copy;}
+
+			memcpy(buffer, m_stdin_read_ptr, n_copy);
+			m_stdin_read_ptr += n_copy;
+			m_stdin_bytes_left -= n_copy;
 			return n_copy;
 		}
 
@@ -53,13 +59,14 @@ namespace
 
 		std::string const& stdout() const
 		{
-			return m_stderr;
+			return m_stdout;
 		}
 
 
 	private:
 		std::string m_stdin;
-		char const* m_stdin_ptr;
+		char const* m_stdin_read_ptr;
+		size_t m_stdin_bytes_left;
 
 		std::string m_stdout;
 
@@ -98,7 +105,25 @@ namespace Testcases
 			abort();
 		} catch(...)
 		{}
+	}
 
+	void maikeCommandTestPipesAndExitStatus()
+	{
+		Maike::fs::path const exe{"bash"};
+
+		Maike::Command cmd{"bash", {}};
+
+		IoRedirectorTest redir{R"bash(echo "This is some text written to stdout"
+echo "This is some text written to stderr" 1>&2
+exit 123
+)bash"};
+
+		auto status = cmd.execp(redir);
+		assert(status.returnedFromMain());
+		assert(status.exitStatus() == 123);
+
+		assert(redir.stderr() == "This is some text written to stderr\n");
+		assert(redir.stdout() == "This is some text written to stdout\n");
 	}
 }
 
@@ -106,4 +131,5 @@ int main()
 {
 	Testcases::maikeCommandCreate();
 	Testcases::maikeCommandNonExistingExe();
+	Testcases::maikeCommandTestPipesAndExitStatus();
 }

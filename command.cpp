@@ -111,7 +111,7 @@ namespace
 		while(true)
 		{
 			auto n = writer(io_redirector, buffer.data(), BufferSize);
-			::write(fd, buffer.data(), std::min(n, BufferSize));
+			if(::write(fd, buffer.data(), std::min(n, BufferSize)) == -1) { return; }
 			if(n != BufferSize) { return; }
 		}
 	}
@@ -138,9 +138,10 @@ namespace
 	                                       int stderr,
 	                                       Reader stderr_reader)
 	{
-		write(io_redirector, stdin, stdin_writer);
+		signal(SIGPIPE, SIG_IGN);
 		std::thread stdout_proc{read, io_redirector, stdout, stdout_reader};
 		std::thread stderr_proc{read, io_redirector, stderr, stderr_reader};
+		write(io_redirector, stdin, stdin_writer);
 
 		int status;
 		if(::waitpid(pid, &status, 0) == -1) { abort(); }
