@@ -25,8 +25,7 @@ namespace
 		size_t operator()(std::byte* buffer, size_t n, Maike::Command::StdIn)
 		{
 			auto const n_copy = std::min(n, m_stdin_bytes_left);
-			if(n_copy == 0)
-			{return n_copy;}
+			if(n_copy == 0) { return n_copy; }
 
 			memcpy(buffer, m_stdin_read_ptr, n_copy);
 			m_stdin_read_ptr += n_copy;
@@ -90,11 +89,10 @@ namespace Testcases
 
 		IoRedirectorTest redir{"Hello, World"};
 
-		auto status =cmd.execp(redir);
+		auto status = cmd.execp(redir);
 		if(status.returnedFromMain())
 		{
-			if(status.exitStatus() > 0)
-			{ assert(redir.stderr().size() > 0); }
+			if(status.exitStatus() > 0) { assert(redir.stderr().size() > 0); }
 		}
 	}
 
@@ -102,11 +100,13 @@ namespace Testcases
 	{
 		try
 		{
-			Maike::Command cmd{"This file does not exsit",{}};
+			Maike::Command cmd{"This file does not exsit", {}};
 			(void)cmd.execp(IoRedirectorTest{""});
 			abort();
-		} catch(...)
-		{}
+		}
+		catch(...)
+		{
+		}
 	}
 
 	void maikeCommandTestPipesAndExitStatus()
@@ -133,13 +133,11 @@ exit 123
 		for(int k = 0; k < 5; ++k)
 		{
 			std::vector<std::thread> threads;
-			for(int k = 0; k < 16;++k)
+			for(int k = 0; k < 16; ++k)
 			{
 				threads.emplace_back(maikeCommandTestPipesAndExitStatus);
 			}
-			std::for_each(std::begin(threads), std::end(threads), [](auto& x) {
-				x.join();
-			});
+			std::for_each(std::begin(threads), std::end(threads), [](auto& x) { x.join(); });
 			putc('*', stderr);
 		}
 		putc('\n', stderr);
