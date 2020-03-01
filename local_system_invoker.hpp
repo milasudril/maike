@@ -25,7 +25,7 @@ namespace Maike
 
 		void saveBuffer(std::byte const* buffer, size_t n, fs::path const& file) const;
 
-		void copy(fs::path const& src, fs::path const& dest) const
+		void copyFile(fs::path const& src, fs::path const& dest) const
 		{
 			std::error_code ec;
 			if(!copy_file(src, dest, ec)) { throw std::runtime_error{"Failed to copy file"}; }
