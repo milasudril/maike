@@ -18,22 +18,21 @@ namespace Maike
 	public:
 		void mkdir(fs::path const& dir) const
 		{
-			if(mkdir(dir.c_str(), S_IRUSR | S_IWUSR | S_IXUSR) == -1)
+			if(::mkdir(dir.c_str(), S_IRUSR | S_IWUSR | S_IXUSR) == -1)
 			{ throw std::runtime_error{"Failed to create directory"}; }
 		}
 
-		int writeToFile(std::string const& str, fs::path const& file) const;
+		void saveBuffer(std::byte const* buffer, size_t n, fs::path const& file) const;
 
 		void copy(fs::path const& src, fs::path const& dest) const
 		{
-			std::error_code sc;
+			std::error_code ec;
 			if(!copy_file(src, dest, ec)) { throw std::runtime_error{"Failed to copy file"}; }
 		}
 
-		template<class IoRedirector>
-		decltype(auto) execp(Command const& cmd, IoRedirector&& redir) const
+		decltype(auto) execp(fs::path const& executable, std::vector<std::string> const& args, IoRedirector const& redir) const
 		{
-			return cmd.execp(redir);
+			return Maike::execp(executable, args, redir);
 		}
 
 	private:
