@@ -71,20 +71,18 @@ namespace Testcases
 {
 	void maikeCommandCreate()
 	{
-		try
+		Maike::Command cmd{"bash", {"foo", "arg1"}};
+
+		assert(cmd.executable() == "bash");
+		assert((cmd.args() == std::vector<std::string>{"foo", "arg1"}));
+
+		IoRedirectorTest redir{"Hello, World"};
+
+		auto status =cmd.execp(redir);
+		if(status.returnedFromMain())
 		{
-			Maike::Command cmd{"bash", {"foo", "arg1"}};
-
-			assert(cmd.executable() == "bash");
-			assert((cmd.args() == std::vector<std::string>{"foo", "arg1"}));
-
-			IoRedirectorTest redir{"Hello, World"};
-			cmd.execp(redir);
-
-			printf(">>> %s\n", redir.stderr().c_str());
-		}
-		catch(...)
-		{
+			if(status.exitStatus() > 0)
+			{ assert(redir.stderr().size() > 0); }
 		}
 	}
 }

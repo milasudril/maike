@@ -1,7 +1,7 @@
 //@	{
 //@	 "targets":
 //@	 	[{"name":"command.o","type":"object", "dependencies":[{"ref":"pthread", "rel":"external"}]}]
-//@	 }
+//@	}
 
 #include "./command.hpp"
 
