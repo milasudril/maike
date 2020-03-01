@@ -1,5 +1,6 @@
 //@	{
-//@	 "targets":[{"name":"local_system_invoker.hpp","type":"include"}]
+//@	  "targets":[{"name":"local_system_invoker.hpp","type":"include"}]
+//@	 ,"dependencies_extra":[{"ref":"local_system_invoker.o","rel":"implementation"}]
 //@	 }
 
 #ifndef MAIKE_LOCALSYSTEMINVOKER_HPP
@@ -30,7 +31,9 @@ namespace Maike
 			if(!copy_file(src, dest, ec)) { throw std::runtime_error{"Failed to copy file"}; }
 		}
 
-		decltype(auto) execp(fs::path const& executable, std::vector<std::string> const& args, IoRedirector const& redir) const
+		decltype(auto) execp(fs::path const& executable,
+		                     std::vector<std::string> const& args,
+		                     IoRedirector const& redir) const
 		{
 			return Maike::execp(executable, args, redir);
 		}
