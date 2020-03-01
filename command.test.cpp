@@ -88,9 +88,22 @@ namespace Testcases
 			{ assert(redir.stderr().size() > 0); }
 		}
 	}
+
+	void maikeCommandNonExistingExe()
+	{
+		try
+		{
+			Maike::Command cmd{"This file does not exsit",{}};
+			(void)cmd.execp(IoRedirectorTest{""});
+			abort();
+		} catch(...)
+		{}
+
+	}
 }
 
 int main()
 {
 	Testcases::maikeCommandCreate();
+	Testcases::maikeCommandNonExistingExe();
 }

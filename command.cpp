@@ -47,12 +47,14 @@ namespace
 		void moveReadEndTo(int target)
 		{
 			::dup2(m_read_end, target);
+			closeReadEnd();
 			m_read_end = -1;
 		}
 
 		void moveWriteEndTo(int target)
 		{
 			::dup2(m_write_end, target);
+			closeWriteEnd();
 			m_write_end = -1;
 		}
 
@@ -197,6 +199,9 @@ Maike::Command::Result Maike::Command::execp(void* io_redirector,
 				uint32_t val = errno;
 				::write(fd_exec_err, &val, sizeof(errno));
 				::close(fd_exec_err);
+				close(STDOUT_FILENO);
+				close(STDERR_FILENO);
+				close(STDIN_FILENO);
 				_exit(-1);
 			}
 			break;
