@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <thread>
 #include <cstddef>
+#include <mutex>
 
 namespace
 {
@@ -159,6 +160,8 @@ namespace
 	}
 };
 
+std::mutex exec_mutex;
+
 Maike::Command::Result Maike::Command::execp(void* io_redirector,
                                              Writer stdin_writer,
                                              Reader stdout_reader,
@@ -172,11 +175,12 @@ Maike::Command::Result Maike::Command::execp(void* io_redirector,
 	               [](auto const& item) { return item.c_str(); });
 	cmd_args.push_back(nullptr);
 
-	Pipe exec_err;
+	Pipe stdin;
 	Pipe stdout;
 	Pipe stderr;
-	Pipe stdin;
+	Pipe exec_err;
 
+	std::unique_lock lock{exec_mutex};
 	auto pid = ::fork();
 	constexpr decltype(pid) ForkFailed = -1;
 	constexpr decltype(pid) Child = 0;
@@ -186,29 +190,31 @@ Maike::Command::Result Maike::Command::execp(void* io_redirector,
 		case ForkFailed: throw std::runtime_error{"Fork failed"};
 
 		case Child:
-			exec_err.closeReadEnd();
+			stdin.closeWriteEnd();
 			stdout.closeReadEnd();
 			stderr.closeReadEnd();
-			stdin.closeWriteEnd();
+			exec_err.closeReadEnd();
 
+			stdin.moveReadEndTo(STDIN_FILENO);
 			stdout.moveWriteEndTo(STDOUT_FILENO);
 			stderr.moveWriteEndTo(STDERR_FILENO);
-			stdin.moveReadEndTo(STDIN_FILENO);
 			auto fd_exec_err = exec_err.closeWriteEndOnExec();
 			if(execvp(m_executable.c_str(), const_cast<char* const*>(cmd_args.data())) == -1)
 			{
+				lock.unlock();
 				uint32_t val = errno;
 				::write(fd_exec_err, &val, sizeof(errno));
 				::close(fd_exec_err);
+				close(STDIN_FILENO);
 				close(STDOUT_FILENO);
 				close(STDERR_FILENO);
-				close(STDIN_FILENO);
 				_exit(-1);
 			}
 			break;
 	}
 
 	exec_err.closeWriteEnd();
+	lock.unlock();
 	uint32_t val{};
 	if(auto n = exec_err.read(&val, sizeof(val)); n == sizeof(val))
 	{
@@ -216,9 +222,10 @@ Maike::Command::Result Maike::Command::execp(void* io_redirector,
 		throw std::runtime_error{"Exec failed"};
 	}
 	errno = val;
+
+	stdin.closeReadEnd();
 	stdout.closeWriteEnd();
 	stderr.closeWriteEnd();
-	stdin.closeReadEnd();
 
 	return communicateWith(pid,
 	                       io_redirector,

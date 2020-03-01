@@ -8,6 +8,8 @@
 
 #include <cassert>
 #include <cstring>
+#include <thread>
+#include <algorithm>
 
 namespace
 {
@@ -125,6 +127,23 @@ exit 123
 		assert(redir.stderr() == "This is some text written to stderr\n");
 		assert(redir.stdout() == "This is some text written to stdout\n");
 	}
+
+	void maikeCommandTestPipesAndExitStatusMt5Times()
+	{
+		for(int k = 0; k < 5; ++k)
+		{
+			std::vector<std::thread> threads;
+			for(int k = 0; k < 16;++k)
+			{
+				threads.emplace_back(maikeCommandTestPipesAndExitStatus);
+			}
+			std::for_each(std::begin(threads), std::end(threads), [](auto& x) {
+				x.join();
+			});
+			putc('*', stderr);
+		}
+		putc('\n', stderr);
+	}
 }
 
 int main()
@@ -132,4 +151,5 @@ int main()
 	Testcases::maikeCommandCreate();
 	Testcases::maikeCommandNonExistingExe();
 	Testcases::maikeCommandTestPipesAndExitStatus();
+	Testcases::maikeCommandTestPipesAndExitStatusMt5Times();
 }
