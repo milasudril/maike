@@ -1,9 +1,12 @@
-//@	 {"targets":[{"name":"sourcefile.o","type":"object"}]}
+//@	 {"targets":[{"name":"source_file.o","type":"object"}]}
 
-#include "./sourcefile.hpp"
+#include "./source_file.hpp"
+
+#include <algorithm>
 
 Maike::SourceFile::SourceFile(fs::path&& src,
                               std::vector<Dependency>&& used_files,
+                              fs::path const& target_dir,
                               std::vector<fs::path>&& targets,
                               Compiler&& compiler):
    m_name{std::move(src)},
@@ -11,4 +14,7 @@ Maike::SourceFile::SourceFile(fs::path&& src,
    m_targets{std::move(targets)},
    m_compiler{std::move(compiler)}
 {
+	std::for_each(std::begin(m_targets), std::end(m_targets), [&target_dir](auto& item) {
+		item = target_dir / item;
+	});
 }

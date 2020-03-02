@@ -1,6 +1,7 @@
 //@	 {"targets":[{"name":"maike_next","type":"application"}]}
 
-#include "./sourcefile.hpp"
+#include "./source_file.hpp"
+#include "./dependency_graph.hpp"
 #include <set>
 #include <regex>
 
@@ -22,10 +23,12 @@ public:
 	{
 		return 0;
 	}
+
 	Maike::ConfigStore settings() const
 	{
 		return Maike::ConfigStore{};
 	}
+
 	void settings(Maike::ConfigStore const&)
 	{
 	}
@@ -48,9 +51,9 @@ std::optional<Maike::SourceFile> loadSourceFile(Maike::fs::path&& path,
 
 	if(is_directory(path))
 	{
-		targets.push_back(target_dir / path);
+		targets.push_back(path);
 		return Maike::SourceFile{
-		   std::move(path), std::move(deps), std::move(targets), Maike::Compiler{MkDir{}}};
+		   std::move(path), std::move(deps), target_dir, std::move(targets), Maike::Compiler{MkDir{}}};
 	}
 
 	return std::optional<Maike::SourceFile>{};
@@ -77,9 +80,7 @@ int main()
 
 
 	// Current state
-	std::set<Maike::SourceFile, SourceFileByName> sources;
-	std::set<Maike::fs::path> loaded_targets;
-
+	Maike::DependencyGraph dep_graph;
 
 	auto skip = [](auto const& path, auto const& regex_list) {
 		return std::any_of(std::begin(regex_list), std::end(regex_list), [&path](auto const& regex) {
@@ -95,20 +96,23 @@ int main()
 		auto path = pop(paths_to_visit);
 		if(skip(path, input_filters)) { continue; }
 
+		if(dep_graph.find(path) != nullptr) { continue; }
+
 		if(auto src_file = loadSourceFile(std::move(path), target_dir); src_file.has_value())
 		{
 			auto const& targets = src_file->targets();
-			std::for_each(std::begin(targets), std::end(targets), [&loaded_targets](auto const& item) {
-				auto i = loaded_targets.insert(item);
-				if(!i.second) { throw std::runtime_error{"Target has already been defined"}; }
-			});
+			if(std::any_of(std::begin(targets), std::end(targets), [&dep_graph](auto const& item) {
+				return dep_graph.find(item) != nullptr;
+				}))
+			{
+				throw std::runtime_error{"Target has already been defined"};
+			}
 
-			visitChildren(*src_file, paths_to_visit);
-			sources.insert(std::move(*src_file));
+			visitChildren(dep_graph.insert(std::move(*src_file)), paths_to_visit);
 		}
 	}
 
-	std::for_each(std::begin(sources), std::end(sources), [](auto const& item) {
+	dep_graph.visitItems([](auto const& item) {
 		printf("%s ->", item.name().c_str());
 		auto const& targets = item.targets();
 		std::for_each(

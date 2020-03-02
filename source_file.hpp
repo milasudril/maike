@@ -1,6 +1,6 @@
 //@	{
-//@	 "targets":[{"name":"sourcefile.hpp","type":"include"}]
-//@	 ,"dependencies_extra":[{"ref":"sourcefile.o","rel":"implementation"}]
+//@	 "targets":[{"name":"source_file.hpp","type":"include"}]
+//@	 ,"dependencies_extra":[{"ref":"source_file.o","rel":"implementation"}]
 //@	 }
 
 #ifndef MAIKE_SOURCEFILE_HPP
@@ -22,6 +22,7 @@ namespace Maike
 	public:
 		explicit SourceFile(fs::path&& src,
 		                    std::vector<Dependency>&& used_files,
+		                    fs::path const& target_dir,
 		                    std::vector<fs::path>&& targets,
 		                    Compiler&& compiler);
 
