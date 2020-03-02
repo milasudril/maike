@@ -9,10 +9,10 @@
 Maike::SourceFile const& Maike::DependencyGraph::insert(SourceFile&& src_file)
 {
 	// TODO:
-	//	auto const& targets = src_file.targets();
-	//	std::for_each(std::begin(targets), std::end(targets), [this](auto const& item) {
-	//		m_sources.insert(item);
-	//	});
+	auto const& targets = src_file.targets();
+	std::for_each(std::begin(targets), std::end(targets), [this](auto const& item) {
+		m_sources.insert(SourceFile{item});
+	});
 
 	return *m_sources.insert(std::move(src_file)).first;
 }
