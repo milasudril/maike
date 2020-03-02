@@ -68,11 +68,10 @@ namespace Testcases
 	void maikeLocalSystemInvokerSaveBufferSucceeded()
 	{
 		Maike::LocalSystemInvoker invoker;
-		auto path = Maike::fs::path{XSTR(MAIKE_TARGET_DIRECTORY)} / XSTR(MAIKE_CURRENT_DIRECTORY) / "__local_system_invoker_test.txt";
+		auto path = Maike::fs::path{XSTR(MAIKE_TARGET_DIRECTORY)} / XSTR(MAIKE_CURRENT_DIRECTORY)
+		            / "__local_system_invoker_test.txt";
 		auto now = std::to_string(::time(nullptr));
-		invoker.saveBuffer(reinterpret_cast<std::byte const*>(now.data()),
-		                   now.size(),
-		                   path);
+		invoker.saveBuffer(reinterpret_cast<std::byte const*>(now.data()), now.size(), path);
 
 		std::unique_ptr<FILE, FileDeleter> output{fopen(path.c_str(), "rb")};
 		auto handle = output.get();

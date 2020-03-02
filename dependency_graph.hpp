@@ -15,41 +15,41 @@ namespace Maike
 {
 	class DependencyGraph
 	{
-		public:
-			Maike::SourceFile const& insert(SourceFile&& src_file);
+	public:
+		Maike::SourceFile const& insert(SourceFile&& src_file);
 
-			Maike::SourceFile const* find(SourceFile const& src_file) const;
+		Maike::SourceFile const* find(SourceFile const& src_file) const;
 
-			Maike::SourceFile const* find(fs::path const& path) const;
+		Maike::SourceFile const* find(fs::path const& path) const;
 
-			template<class Visitor>
-			void visitItems(Visitor&& v) const
+		template<class Visitor>
+		void visitItems(Visitor&& v) const
+		{
+			std::for_each(std::begin(m_sources), std::end(m_sources), std::forward<Visitor>(v));
+		}
+
+	private:
+		struct SourceFileByName
+		{
+			using is_transparent = void;
+
+			bool operator()(SourceFile const& a, SourceFile const& b) const
 			{
-				std::for_each(std::begin(m_sources), std::end(m_sources), std::forward<Visitor>(v));
+				return a.name() < b.name();
 			}
 
-		private:
-			struct SourceFileByName
+			bool operator()(SourceFile const& a, fs::path const& b) const
 			{
-				using is_transparent = void;
+				return a.name() < b;
+			}
 
-				bool operator()(SourceFile const& a, SourceFile const& b) const
-				{
-					return a.name() < b.name();
-				}
+			bool operator()(fs::path const& a, SourceFile const& b) const
+			{
+				return a < b.name();
+			}
+		};
 
-				bool operator()(SourceFile const& a, fs::path const& b) const
-				{
-					return a.name() < b;
-				}
-
-				bool operator()(fs::path const& a, SourceFile const& b) const
-				{
-					return a < b.name();
-				}
-			};
-
-			std::set<Maike::SourceFile, SourceFileByName> m_sources;
+		std::set<Maike::SourceFile, SourceFileByName> m_sources;
 	};
 }
 

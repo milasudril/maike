@@ -20,6 +20,11 @@ namespace Maike
 	class SourceFile
 	{
 	public:
+		/**
+		 * Allows to create a node without a source file to be scanned.
+		 */
+		explicit SourceFile(fs::path const& src);
+
 		explicit SourceFile(fs::path&& src,
 		                    std::vector<Dependency>&& used_files,
 		                    fs::path const& target_dir,
@@ -39,7 +44,7 @@ namespace Maike
 			return m_name;
 		}
 
-		std::vector<fs::path> targets() const
+		std::vector<fs::path> const& targets() const
 		{
 			return m_targets;
 		}

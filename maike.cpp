@@ -102,11 +102,9 @@ int main()
 		{
 			auto const& targets = src_file->targets();
 			if(std::any_of(std::begin(targets), std::end(targets), [&dep_graph](auto const& item) {
-				return dep_graph.find(item) != nullptr;
-				}))
-			{
-				throw std::runtime_error{"Target has already been defined"};
-			}
+				   return dep_graph.find(item) != nullptr;
+			   }))
+			{ throw std::runtime_error{"Target has already been defined"}; }
 
 			visitChildren(dep_graph.insert(std::move(*src_file)), paths_to_visit);
 		}

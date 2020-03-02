@@ -20,6 +20,8 @@ namespace Maike
 		Compiler(Compiler&&) = default;
 		Compiler& operator=(Compiler&&) = default;
 
+		Compiler(): m_handle{std::make_unique<NullCompiler>()} {};
+
 		template<class Obj>
 		explicit Compiler(Obj&& obj):
 		   m_handle{std::make_unique<CompilerImpl<Obj>>(std::forward<Obj>(obj))}
@@ -63,6 +65,29 @@ namespace Maike
 			}
 		};
 
+		class NullCompiler: public AbstractCompiler
+		{
+		public:
+			int run(fs::path const&,
+			        std::vector<fs::path const*> const&,
+			        std::vector<fs::path const*> const&,
+			        CompilationLog&) const override
+			{
+				return 0;
+			}
+
+			ConfigStore settings() const override
+			{
+				return ConfigStore{};
+			}
+
+			void settings(ConfigStore const&) override
+			{
+			}
+
+			~NullCompiler() override = default;
+		};
+
 		template<class T>
 		class CompilerImpl: public AbstractCompiler
 		{
@@ -77,12 +102,12 @@ namespace Maike
 				return m_obj.run(src, used_files, output_files, log);
 			}
 
-			ConfigStore settings() const
+			ConfigStore settings() const override
 			{
 				return m_obj.settings();
 			}
 
-			void settings(ConfigStore const& cfg)
+			void settings(ConfigStore const& cfg) override
 			{
 				(void)m_obj.settings(cfg);
 			}

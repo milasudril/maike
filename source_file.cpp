@@ -18,3 +18,7 @@ Maike::SourceFile::SourceFile(fs::path&& src,
 		item = target_dir / item;
 	});
 }
+
+Maike::SourceFile::SourceFile(fs::path const& src): m_name{src}
+{
+}
