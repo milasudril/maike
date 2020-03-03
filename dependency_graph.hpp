@@ -6,9 +6,9 @@
 #ifndef MAIKE_DEPENDENCYGRAPH_HPP
 #define MAIKE_DEPENDENCYGRAPH_HPP
 
-#include "./source_file.hpp"
+#include "./source_file_info.hpp"
 
-#include <set>
+#include <map>
 #include <algorithm>
 
 namespace Maike
@@ -16,40 +16,21 @@ namespace Maike
 	class DependencyGraph
 	{
 	public:
-		Maike::SourceFile const& insert(SourceFile&& src_file);
+		std::pair<Maike::fs::path const, Maike::SourceFileInfo> const&
+		insert(fs::path&& src_file_name, SourceFileInfo&& src_file_info);
 
-		Maike::SourceFile const* find(SourceFile const& src_file) const;
-
-		Maike::SourceFile const* find(fs::path const& path) const;
+		SourceFileInfo const* find(fs::path const& src_file) const;
 
 		template<class Visitor>
 		void visitItems(Visitor&& v) const
 		{
-			std::for_each(std::begin(m_sources), std::end(m_sources), std::forward<Visitor>(v));
+			std::for_each(std::begin(m_sources), std::end(m_sources), [&v](auto const& item) {
+				v(item.first, item.second);
+			});
 		}
 
 	private:
-		struct SourceFileByName
-		{
-			using is_transparent = void;
-
-			bool operator()(SourceFile const& a, SourceFile const& b) const
-			{
-				return a.name() < b.name();
-			}
-
-			bool operator()(SourceFile const& a, fs::path const& b) const
-			{
-				return a.name() < b;
-			}
-
-			bool operator()(fs::path const& a, SourceFile const& b) const
-			{
-				return a < b.name();
-			}
-		};
-
-		std::set<Maike::SourceFile, SourceFileByName> m_sources;
+		std::map<fs::path, Maike::SourceFileInfo> m_sources;
 	};
 }
 

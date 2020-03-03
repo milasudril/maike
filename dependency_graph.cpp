@@ -6,26 +6,20 @@
 
 #include <algorithm>
 
-Maike::SourceFile const& Maike::DependencyGraph::insert(SourceFile&& src_file)
+std::pair<Maike::fs::path const, Maike::SourceFileInfo> const&
+Maike::DependencyGraph::insert(fs::path&& src_file_name, SourceFileInfo&& src_file_info)
 {
-	// TODO:
-	auto const& targets = src_file.targets();
+	auto const& targets = src_file_info.targets();
 	std::for_each(std::begin(targets), std::end(targets), [this](auto const& item) {
-		m_sources.insert(SourceFile{item});
+		m_sources.insert(std::make_pair(item, SourceFileInfo{}));
 	});
 
-	return *m_sources.insert(std::move(src_file)).first;
+	return *m_sources.insert(std::make_pair(std::move(src_file_name), std::move(src_file_info))).first;
 }
 
 
-Maike::SourceFile const* Maike::DependencyGraph::find(SourceFile const& src_file) const
+Maike::SourceFileInfo const* Maike::DependencyGraph::find(fs::path const& src_file) const
 {
 	auto i = m_sources.find(src_file);
-	return i == m_sources.end() ? nullptr : &(*i);
-}
-
-Maike::SourceFile const* Maike::DependencyGraph::find(fs::path const& src_file) const
-{
-	auto i = m_sources.find(src_file);
-	return i == m_sources.end() ? nullptr : &(*i);
+	return i == m_sources.end() ? nullptr : &(i->second);
 }
