@@ -16,16 +16,25 @@ namespace Maike
 	class DependencyGraph
 	{
 	public:
-		std::pair<Maike::fs::path const, Maike::SourceFileInfo> const&
-		insert(fs::path&& src_file_name, SourceFileInfo&& src_file_info);
+		SourceFile<false> insert(fs::path&& src_file_name, SourceFileInfo&& src_file_info);
 
-		SourceFileInfo const* find(fs::path const& src_file) const;
+		Maike::SourceFile<true> find(fs::path const& src_file) const;
+
+		Maike::SourceFile<false> find(fs::path const& src_file);
 
 		template<class Visitor>
 		void visitItems(Visitor&& v) const
 		{
 			std::for_each(std::begin(m_sources), std::end(m_sources), [&v](auto const& item) {
-				v(item.first, item.second);
+				v(SourceFile<true>{item.first, item.second});
+			});
+		}
+
+		template<class Visitor>
+		void visitItems(Visitor&& v)
+		{
+			std::for_each(std::begin(m_sources), std::end(m_sources), [&v](auto& item) {
+				v(SourceFile<false>{item.first, item.second});
 			});
 		}
 

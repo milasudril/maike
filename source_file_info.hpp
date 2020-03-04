@@ -50,6 +50,53 @@ namespace Maike
 		std::vector<fs::path> m_targets;
 		Compiler m_compiler;
 	};
+
+	template<bool IsConst>
+	class SourceFile
+	{
+	public:
+		using WrappedSourceFileInfo = std::conditional_t<IsConst, std::add_const_t<SourceFileInfo>, SourceFileInfo>;
+
+		SourceFile():r_name{nullptr}, r_info{nullptr} {}
+
+		explicit SourceFile(fs::path const&& name, WrappedSourceFileInfo& info) = delete;
+
+		explicit SourceFile(fs::path const& name, WrappedSourceFileInfo& info): r_name{&name}, r_info{&info}
+		{
+		}
+
+		bool valid() const
+		{ return r_name != nullptr; }
+
+		fs::path const& name() const
+		{
+			return *r_name;
+		}
+
+		bool targetsUpToDate() const;
+
+		int compile();
+
+		std::vector<Dependency> const& usedFiles() const
+		{
+			return r_info->usedFiles();
+		}
+
+		std::vector<fs::path> const& targets() const
+		{
+			return r_info->targets();
+		}
+
+		Compiler const& compiler() const
+		{
+			return r_info->compiler();
+		}
+
+	private:
+		fs::path const* r_name;
+		WrappedSourceFileInfo* r_info;
+	};
+
 }
 
 #endif

@@ -50,12 +50,12 @@ std::optional<Maike::SourceFileInfo> loadSourceFile(Maike::fs::path const& path,
 	return std::optional<Maike::SourceFileInfo>{};
 }
 
-void visitChildren(std::pair<Maike::fs::path const, Maike::SourceFileInfo> const& src_file,
+void visitChildren(Maike::SourceFile<false> src_file,
                    std::stack<Maike::fs::path>& paths_to_visit)
 {
-	if(is_directory(src_file.first))
+	if(is_directory(src_file.name()))
 	{
-		auto i = Maike::fs::directory_iterator{src_file.first};
+		auto i = Maike::fs::directory_iterator{src_file.name()};
 		std::for_each(
 		   begin(i), end(i), [&paths_to_visit](auto const& item) { paths_to_visit.push(item.path()); });
 	}
@@ -88,13 +88,13 @@ int main()
 		auto src_file_name = pop(paths_to_visit);
 		if(skip(src_file_name, input_filters)) { continue; }
 
-		if(dep_graph.find(src_file_name) != nullptr) { continue; }
+		if(!dep_graph.find(src_file_name).valid()) { continue; }
 
 		if(auto src_file_info = loadSourceFile(src_file_name, target_dir); src_file_info.has_value())
 		{
 			auto const& targets = src_file_info->targets();
 			if(std::any_of(std::begin(targets), std::end(targets), [&dep_graph](auto const& item) {
-				   return dep_graph.find(item) != nullptr;
+				   return dep_graph.find(item).valid();
 			   }))
 			{ throw std::runtime_error{"Target has already been defined"}; }
 
@@ -103,9 +103,9 @@ int main()
 		}
 	}
 
-	dep_graph.visitItems([](auto const& src_file_name, auto const& src_file_info) {
-		printf("%s ->", src_file_name.c_str());
-		auto const& targets = src_file_info.targets();
+	dep_graph.visitItems([](auto item) {
+		printf("%s ->", item.name().c_str());
+		auto const& targets = item.targets();
 		std::for_each(
 		   std::begin(targets), std::end(targets), [](auto const& item) { printf(" %s", item.c_str()); });
 		putchar('\n');
