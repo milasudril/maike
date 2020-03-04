@@ -104,6 +104,10 @@ namespace Maike
 		WrappedSourceFileInfo* r_info;
 	};
 
+
+	SourceFile(fs::path const& name, SourceFileInfo& info) -> SourceFile<NonConstTag>;
+
+	SourceFile(fs::path const& name, SourceFileInfo const& info) -> SourceFile<ConstTag>;
 }
 
 #endif

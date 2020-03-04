@@ -26,7 +26,7 @@ namespace Maike
 		void visitItems(Visitor&& v) const
 		{
 			std::for_each(std::begin(m_sources), std::end(m_sources), [&v](auto const& item) {
-				v(SourceFile<ConstTag>{item.first, item.second});
+				v(SourceFile{item.first, item.second});
 			});
 		}
 
@@ -34,7 +34,7 @@ namespace Maike
 		void visitItems(Visitor&& v)
 		{
 			std::for_each(std::begin(m_sources), std::end(m_sources), [&v](auto& item) {
-				v(SourceFile<NonConstTag>{item.first, item.second});
+				v(SourceFile{item.first, item.second});
 			});
 		}
 
