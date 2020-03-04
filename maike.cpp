@@ -50,7 +50,7 @@ std::optional<Maike::SourceFileInfo> loadSourceFile(Maike::fs::path const& path,
 	return std::optional<Maike::SourceFileInfo>{};
 }
 
-void visitChildren(Maike::SourceFile<Maike::NonConstTag> src_file,
+void visitChildren(Maike::SourceFile<Maike::ConstTag> src_file,
                    std::stack<Maike::fs::path>& paths_to_visit)
 {
 	if(is_directory(src_file.name()))

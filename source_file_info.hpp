@@ -68,6 +68,8 @@ namespace Maike
 
 		explicit SourceFile(fs::path const&& name, WrappedSourceFileInfo& info) = delete;
 
+		explicit SourceFile(fs::path const&& name, SourceFileInfo const&& info) = delete;
+
 		explicit SourceFile(fs::path const& name, WrappedSourceFileInfo& info): r_name{&name}, r_info{&info}
 		{
 		}
@@ -97,6 +99,11 @@ namespace Maike
 		Compiler const& compiler() const
 		{
 			return r_info->compiler();
+		}
+
+		operator SourceFile<ConstTag>() const
+		{
+			return SourceFile<ConstTag>{*r_name, *r_info};
 		}
 
 	private:
