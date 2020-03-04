@@ -16,17 +16,17 @@ namespace Maike
 	class DependencyGraph
 	{
 	public:
-		SourceFile<false> insert(fs::path&& src_file_name, SourceFileInfo&& src_file_info);
+		SourceFile<NonConstTag> insert(fs::path&& src_file_name, SourceFileInfo&& src_file_info);
 
-		Maike::SourceFile<true> find(fs::path const& src_file) const;
+		Maike::SourceFile<ConstTag> find(fs::path const& src_file) const;
 
-		Maike::SourceFile<false> find(fs::path const& src_file);
+		Maike::SourceFile<NonConstTag> find(fs::path const& src_file);
 
 		template<class Visitor>
 		void visitItems(Visitor&& v) const
 		{
 			std::for_each(std::begin(m_sources), std::end(m_sources), [&v](auto const& item) {
-				v(SourceFile<true>{item.first, item.second});
+				v(SourceFile<ConstTag>{item.first, item.second});
 			});
 		}
 
@@ -34,7 +34,7 @@ namespace Maike
 		void visitItems(Visitor&& v)
 		{
 			std::for_each(std::begin(m_sources), std::end(m_sources), [&v](auto& item) {
-				v(SourceFile<false>{item.first, item.second});
+				v(SourceFile<NonConstTag>{item.first, item.second});
 			});
 		}
 

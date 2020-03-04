@@ -51,10 +51,17 @@ namespace Maike
 		Compiler m_compiler;
 	};
 
-	template<bool IsConst>
+	class ConstTag{};
+	class NonConstTag{};
+
+	template<class Tag>
 	class SourceFile
 	{
 	public:
+		static_assert(std::is_same_v<Tag, ConstTag> || std::is_same_v<Tag, NonConstTag>);
+
+		static constexpr auto IsConst = std::is_same_v<Tag, ConstTag>;
+
 		using WrappedSourceFileInfo = std::conditional_t<IsConst, std::add_const_t<SourceFileInfo>, SourceFileInfo>;
 
 		SourceFile():r_name{nullptr}, r_info{nullptr} {}

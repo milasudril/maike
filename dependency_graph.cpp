@@ -6,7 +6,7 @@
 
 #include <algorithm>
 
-Maike::SourceFile<false>
+Maike::SourceFile<Maike::NonConstTag>
 Maike::DependencyGraph::insert(fs::path&& src_file_name, SourceFileInfo&& src_file_info)
 {
 	auto const& targets = src_file_info.targets();
@@ -16,18 +16,18 @@ Maike::DependencyGraph::insert(fs::path&& src_file_name, SourceFileInfo&& src_fi
 
 	auto i = m_sources.insert(std::make_pair(std::move(src_file_name), std::move(src_file_info)));
 
-	return SourceFile<false>{i.first->first, i.first->second};
+	return SourceFile<NonConstTag>{i.first->first, i.first->second};
 }
 
 
-Maike::SourceFile<true> Maike::DependencyGraph::find(fs::path const& src_file) const
+Maike::SourceFile<Maike::ConstTag> Maike::DependencyGraph::find(fs::path const& src_file) const
 {
 	auto i = m_sources.find(src_file);
-	return i == m_sources.end() ? SourceFile<true>{} : SourceFile<true>{i->first, i->second};
+	return i == m_sources.end() ? SourceFile<ConstTag>{} : SourceFile<ConstTag>{i->first, i->second};
 }
 
-Maike::SourceFile<false> Maike::DependencyGraph::find(fs::path const& src_file)
+Maike::SourceFile<Maike::NonConstTag> Maike::DependencyGraph::find(fs::path const& src_file)
 {
 	auto i = m_sources.find(src_file);
-	return i == m_sources.end() ? SourceFile<false>{} : SourceFile<false>{i->first, i->second};
+	return i == m_sources.end() ? SourceFile<NonConstTag>{} : SourceFile<NonConstTag>{i->first, i->second};
 }
