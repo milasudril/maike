@@ -36,8 +36,11 @@ public:
 std::optional<Maike::SourceFileInfo> loadSourceFile(Maike::fs::path const& path,
                                                     const Maike::fs::path& target_dir)
 {
-	std::vector<Maike::Dependency> deps{
-	   Maike::Dependency{path.parent_path(), Maike::Dependency::Resolver::InternalLookup}};
+	std::vector<Maike::Dependency> deps;
+	if(!path.parent_path().empty())
+	{
+		deps.push_back(Maike::Dependency{path.parent_path(), Maike::Dependency::Resolver::InternalLookup});
+	}
 	std::vector<Maike::fs::path> targets;
 
 	if(is_directory(path))
@@ -88,13 +91,13 @@ int main()
 		auto src_file_name = pop(paths_to_visit);
 		if(skip(src_file_name, input_filters)) { continue; }
 
-		if(dep_graph.find(src_file_name).valid()) { continue; }
+		if(dep_graph.find(src_file_name) != nullptr) { continue; }
 
 		if(auto src_file_info = loadSourceFile(src_file_name, target_dir); src_file_info.has_value())
 		{
 			auto const& targets = src_file_info->targets();
 			if(std::any_of(std::begin(targets), std::end(targets), [&dep_graph](auto const& item) {
-				   return dep_graph.find(item).valid();
+				   return dep_graph.find(item) != nullptr;
 			   }))
 			{ throw std::runtime_error{"Target has already been defined"}; }
 
@@ -103,11 +106,19 @@ int main()
 		}
 	}
 
-	dep_graph.visitItems([](auto item) {
-		printf("%s ->", item.name().c_str());
-		auto const& targets = item.targets();
-		std::for_each(
-		   std::begin(targets), std::end(targets), [](auto const& item) { printf(" %s", item.c_str()); });
-		putchar('\n');
+	dep_graph.visitItems([&dep_graph](auto node) {
+		auto deps = node.usedFilesCopy();
+		std::for_each(std::begin(deps), std::end(deps), [&dep_graph](auto& edge) {
+			edge.resolve(dep_graph);
+		});
+		node.usedFiles(std::move(deps));
+	});
+
+	dep_graph.visitItems([](auto node) {
+		auto const& deps = node.usedFiles();
+		std::for_each(std::begin(deps), std::end(deps), [&node](auto const& edge) {
+			printf("\"%s (%p)\" -> \"%s\" (%p)\n", node.name().c_str(), node.fileInfo(),
+				edge.name().c_str(), edge.sourceFile());
+		});
 	});
 }

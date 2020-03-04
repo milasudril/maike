@@ -21,13 +21,15 @@ namespace Maike
 
 		explicit BasicDependency(fs::path const& path, Resolver res_method):
 		   m_name{path},
+		   r_srcfile{nullptr},
 		   m_res_method{res_method}
+
 		{
 		}
 
 		fs::path const& name() const
 		{
-			return r_srcfile == nullptr ? m_name : r_srcfile->name();
+			return m_name;
 		}
 
 		template<class SrcFileSet>
@@ -37,8 +39,7 @@ namespace Maike
 			{
 				case Resolver::InternalLookup:
 				{
-					auto i = source_files.find(m_name);
-					if(i != source_files.end()) { r_srcfile = &(*i); }
+					r_srcfile = source_files.find(m_name);
 				}
 				break;
 				case Resolver::None: break;

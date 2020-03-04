@@ -18,9 +18,9 @@ namespace Maike
 	public:
 		SourceFile<NonConstTag> insert(fs::path&& src_file_name, SourceFileInfo&& src_file_info);
 
-		Maike::SourceFile<ConstTag> find(fs::path const& src_file) const;
+		Maike::SourceFileInfo const* find(fs::path const& src_file) const;
 
-		Maike::SourceFile<NonConstTag> find(fs::path const& src_file);
+		Maike::SourceFileInfo* find(fs::path const& src_file);
 
 		template<class Visitor>
 		void visitItems(Visitor&& v) const

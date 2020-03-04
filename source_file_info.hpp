@@ -30,9 +30,20 @@ namespace Maike
 		                        std::vector<fs::path>&& targets,
 		                        Compiler&& compiler);
 
+		std::vector<Dependency> usedFilesCopy() const
+		{
+			return m_used_files;
+		}
+
 		std::vector<Dependency> const& usedFiles() const
 		{
 			return m_used_files;
+		}
+
+		SourceFileInfo& usedFiles(std::vector<Dependency>&& used_files)
+		{
+			m_used_files = std::move(used_files);
+			return *this;
 		}
 
 		std::vector<fs::path> const& targets() const
@@ -86,9 +97,20 @@ namespace Maike
 
 		int compile();
 
+		std::vector<Dependency> usedFilesCopy() const
+		{
+			return r_info->usedFilesCopy();
+		}
+
 		std::vector<Dependency> const& usedFiles() const
 		{
 			return r_info->usedFiles();
+		}
+
+		SourceFile& usedFiles(std::vector<Dependency>&& used_files)
+		{
+			r_info->usedFiles(std::move(used_files));
+			return *this;
 		}
 
 		std::vector<fs::path> const& targets() const
@@ -104,6 +126,11 @@ namespace Maike
 		operator SourceFile<ConstTag>() const
 		{
 			return SourceFile<ConstTag>{*r_name, *r_info};
+		}
+
+		SourceFileInfo const* fileInfo() const
+		{
+			return r_info;
 		}
 
 	private:
