@@ -88,7 +88,7 @@ int main()
 		auto src_file_name = pop(paths_to_visit);
 		if(skip(src_file_name, input_filters)) { continue; }
 
-		if(!dep_graph.find(src_file_name).valid()) { continue; }
+		if(dep_graph.find(src_file_name).valid()) { continue; }
 
 		if(auto src_file_info = loadSourceFile(src_file_name, target_dir); src_file_info.has_value())
 		{
