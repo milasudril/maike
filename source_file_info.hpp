@@ -62,8 +62,12 @@ namespace Maike
 		Compiler m_compiler;
 	};
 
-	class ConstTag{};
-	class NonConstTag{};
+	class ConstTag
+	{
+	};
+	class NonConstTag
+	{
+	};
 
 	template<class Tag>
 	class SourceFile
@@ -73,20 +77,27 @@ namespace Maike
 
 		static constexpr auto IsConst = std::is_same_v<Tag, ConstTag>;
 
-		using WrappedSourceFileInfo = std::conditional_t<IsConst, std::add_const_t<SourceFileInfo>, SourceFileInfo>;
+		using WrappedSourceFileInfo =
+		   std::conditional_t<IsConst, std::add_const_t<SourceFileInfo>, SourceFileInfo>;
 
-		SourceFile():r_name{nullptr}, r_info{nullptr} {}
+		SourceFile(): r_name{nullptr}, r_info{nullptr}
+		{
+		}
 
 		explicit SourceFile(fs::path const&& name, WrappedSourceFileInfo& info) = delete;
 
 		explicit SourceFile(fs::path const&& name, SourceFileInfo const&& info) = delete;
 
-		explicit SourceFile(fs::path const& name, WrappedSourceFileInfo& info): r_name{&name}, r_info{&info}
+		explicit SourceFile(fs::path const& name, WrappedSourceFileInfo& info):
+		   r_name{&name},
+		   r_info{&info}
 		{
 		}
 
 		bool valid() const
-		{ return r_name != nullptr; }
+		{
+			return r_name != nullptr;
+		}
 
 		fs::path const& name() const
 		{
@@ -139,9 +150,9 @@ namespace Maike
 	};
 
 
-	SourceFile(fs::path const& name, SourceFileInfo& info) -> SourceFile<NonConstTag>;
+	SourceFile(fs::path const& name, SourceFileInfo& info)->SourceFile<NonConstTag>;
 
-	SourceFile(fs::path const& name, SourceFileInfo const& info) -> SourceFile<ConstTag>;
+	SourceFile(fs::path const& name, SourceFileInfo const& info)->SourceFile<ConstTag>;
 }
 
 #endif

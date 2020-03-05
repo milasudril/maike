@@ -6,8 +6,8 @@
 
 #include <algorithm>
 
-Maike::SourceFile<Maike::NonConstTag>
-Maike::DependencyGraph::insert(fs::path&& src_file_name, SourceFileInfo&& src_file_info)
+Maike::SourceFile<Maike::NonConstTag> Maike::DependencyGraph::insert(fs::path&& src_file_name,
+                                                                     SourceFileInfo&& src_file_info)
 {
 	auto const& targets = src_file_info.targets();
 	std::for_each(std::begin(targets), std::end(targets), [this](auto const& item) {

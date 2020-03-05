@@ -39,7 +39,8 @@ std::optional<Maike::SourceFileInfo> loadSourceFile(Maike::fs::path const& path,
 	std::vector<Maike::Dependency> deps;
 	if(!path.parent_path().empty())
 	{
-		deps.push_back(Maike::Dependency{path.parent_path(), Maike::Dependency::Resolver::InternalLookup});
+		deps.push_back(
+		   Maike::Dependency{path.parent_path(), Maike::Dependency::Resolver::InternalLookup});
 	}
 	std::vector<Maike::fs::path> targets;
 
@@ -108,17 +109,19 @@ int main()
 
 	dep_graph.visitItems([&dep_graph](auto node) {
 		auto deps = node.usedFilesCopy();
-		std::for_each(std::begin(deps), std::end(deps), [&dep_graph](auto& edge) {
-			edge.resolve(dep_graph);
-		});
+		std::for_each(
+		   std::begin(deps), std::end(deps), [&dep_graph](auto& edge) { edge.resolve(dep_graph); });
 		node.usedFiles(std::move(deps));
 	});
 
 	dep_graph.visitItems([](auto node) {
 		auto const& deps = node.usedFiles();
 		std::for_each(std::begin(deps), std::end(deps), [&node](auto const& edge) {
-			printf("\"%s (%p)\" -> \"%s\" (%p)\n", node.name().c_str(), node.fileInfo(),
-				edge.name().c_str(), edge.sourceFile());
+			printf("\"%s (%p)\" -> \"%s\" (%p)\n",
+			       node.name().c_str(),
+			       node.fileInfo(),
+			       edge.name().c_str(),
+			       edge.sourceFile());
 		});
 	});
 }
