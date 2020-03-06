@@ -4,9 +4,11 @@
 		"paths_reject": [
 			"..",
 			".",
-			"__targets"
+			"__targets",
+			"__legacy",
+			".git"			
 		],
-		"recursive": 0
+		"recursive": 1
 	},
 	"source_files": [
 		"."

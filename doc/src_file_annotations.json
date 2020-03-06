@@ -1,0 +1,21 @@
+{
+	"source_file":
+	{
+		"$one_of":
+		{
+			"targets":"@$string",
+			"target":"$string"
+		},
+		"$one_of":
+		{
+			"copyright":"copyright_entry",
+			"copyrights":"@copyright_entry"
+		}
+	},
+	"copyright_entry":
+	{
+		"year":"$int",
+		"name":"$string"
+	},
+	"licence_name":"$string"
+}
