@@ -28,10 +28,12 @@ namespace Maike
 		{
 			return m_args;
 		}
-		
-		template<class Invoker, class IoRedirector>
-		auto execp(Invoker const& invoker, IoRedirector&& redir)
-		{ return invoker.execp(m_executable, m_args, redir);}
+
+		template<class Invoker, class IoRedirectorType>
+		auto execp(Invoker const& invoker, IoRedirectorType&& redir)
+		{
+			return execp(invoker, m_executable, m_args, redir);
+		}
 
 	private:
 		fs::path m_executable;

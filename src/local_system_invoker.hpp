@@ -40,6 +40,15 @@ namespace Maike
 
 	private:
 	};
+
+	template<class IoRedirectorType>
+	decltype(auto) execp(LocalSystemInvoker const& invoker,
+	                     fs::path const& exe,
+	                     std::vector<std::string> const& args,
+	                     IoRedirectorType&& redir)
+	{
+		return invoker.execp(exe, args, IoRedirector{redir});
+	}
 }
 
 #endif
