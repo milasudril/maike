@@ -12,7 +12,7 @@ namespace Testcases
 		Maike::VcsInvoker::Config cfg;
 
 		assert((cfg.getRevision() == Maike::Command{"git", {"rev-parse", "HEAD"}}));
-		assert((cfg.getVersionTag() == Maike::Command{"git", {"describe"}}));
+		assert((cfg.getVersionTag() == Maike::Command{"git", {"describe", "--dirty"}}));
 		assert((cfg.getBranch() == Maike::Command{"git", {"rev-parse", "--abbrev-ref", "HEAD"}}));
 	}
 

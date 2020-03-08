@@ -1,7 +1,13 @@
 //@	 {"targets":[{"name":"maike_next","type":"application"}]}
 
 #include "./dependency_graph.hpp"
-#include <set>
+
+#include "./build_info.hpp"
+#include "./stringutils.hpp"
+#include "./local_system_invoker.hpp"
+#include "src/vcs_invoker/config.hpp"
+#include "src/vcs_invoker/get_state_variables.hpp"
+
 #include <regex>
 
 template<class T>
@@ -73,10 +79,25 @@ int main()
 	input_filters.push_back(std::regex{"/__*.*", std::regex_constants::basic});
 
 	Maike::fs::path target_dir{"__targets_new"};
+	Maike::VcsInvoker::Config vcs;
 
+	Maike::LocalSystemInvoker invoker;
 
 	// Current state
 	Maike::DependencyGraph dep_graph;
+	Maike::BuildInfo bi{Maike::VcsState{getStateVariables(vcs, invoker)}};
+
+	printf(">>>      Start time: %s\n"
+	       "                 Id: %s\n"
+	       "       VCS revision: %s\n"
+	       "    VCS version tag: %s\n"
+	       "         VCS branch: %s\n"
+	       , Maike::toString(bi.startTime()).c_str()
+	       , toString(bi.buildId()).c_str()
+	       , bi.vcsState().revision().c_str()
+	       , bi.vcsState().versionTag().c_str()
+	       , bi.vcsState().branch().c_str());
+
 
 	auto skip = [](auto const& path, auto const& regex_list) {
 		return std::any_of(std::begin(regex_list), std::end(regex_list), [&path](auto const& regex) {
