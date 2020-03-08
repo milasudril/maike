@@ -11,6 +11,8 @@ namespace Maike
 	class VcsState
 	{
 	public:
+		VcsState() = default;
+
 		template<class Source>
 		explicit VcsState(Source const& src,
 		                  std::enable_if_t<!std::is_same_v<Source, VcsState>, int> = 0):
