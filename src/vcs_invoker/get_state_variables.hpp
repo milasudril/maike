@@ -13,7 +13,8 @@ namespace Maike::VcsInvoker
 	{
 		MemIoRedirector redir{nullptr, 0};
 		cfg.getRevision().invoke(invoker, redir);
-		return redir.stdout();
+	//	FIXME:	return redir.stdout();
+		return "";
 	}
 }
 

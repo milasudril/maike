@@ -10,18 +10,6 @@
 
 namespace Maike
 {
-	namespace Command_detail
-	{
-		template<class Invoker, class IoRedirectorType>
-		decltype(auto) execpTrampoline(Invoker const& invoker,
-		                               fs::path const& exe,
-		                               std::vector<std::string> const& args,
-		                               IoRedirectorType&& redir)
-		{
-			return execp(invoker, exe, args, std::forward<IoRedirectorType>(redir));
-		}
-	}
-
 	class Command
 	{
 	public:
@@ -42,10 +30,9 @@ namespace Maike
 		}
 
 		template<class Invoker, class IoRedirectorType>
-		decltype(auto) execp(Invoker const& invoker, IoRedirectorType&& redir)
+		decltype(auto) invoke(Invoker const& invoker, IoRedirectorType&& redir)
 		{
-			return Command_detail::execpTrampoline(
-			   invoker, m_executable, m_args, std::forward<IoRedirectorType>(redir));
+			return execp(invoker, m_executable, m_args, std::forward<IoRedirectorType>(redir));
 		}
 
 	private:

@@ -42,7 +42,7 @@ namespace Testcases
 		Maike::Command cmd{"foobar", {"bulle", "kaka"}};
 		TestInvoker invoker;
 		TestIoRedirector redir;
-		auto res = cmd.execp(invoker, redir);
+		auto res = cmd.invoke(invoker, redir);
 		assert(res == 123);
 		assert(redir.exe == cmd.executable());
 		assert(redir.args == cmd.args());
