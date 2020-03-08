@@ -26,13 +26,13 @@ namespace Maike
 			return m_vcs_state;
 		}
 
-		std::chrono::system_clock startTime() const
+		auto startTime() const
 		{
 			return m_start_time;
 		}
 
 	private:
-		std::chrono::system_clock m_start_time;
+		std::chrono::time_point<std::chrono::system_clock> m_start_time;
 		VcsState m_vcs_state;
 	};
 }

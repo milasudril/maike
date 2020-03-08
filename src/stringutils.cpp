@@ -1,14 +1,22 @@
-//@	 {"targets":[{"name":"stringutils.o","type":"object"}]}
+//@	 {"targets":[{"name":"stringutils.test","type":"application", "autorun":1}]}
+
+#undef NDEBUG
 
 #include "./stringutils.hpp"
 
-#include <algorithm>
+#include <cassert>
 
-std::string Maike::toString(std::vector<std::byte> const& data)
+namespace Testcases
 {
-	std::string ret;
-	std::transform(std::begin(data), std::end(data), std::back_inserter(ret), [](std::byte val) {
-		return static_cast<char>(val); // TODO: What about ascii nul?
-	});
-	return ret;
+	void maikeStringutilsToStringSysTime()
+	{
+		auto const val = std::chrono::system_clock::from_time_t(0);
+		auto const str = Maike::toString(val);
+		assert(str == "1970-01-01 0:00:00 UTC");
+	}
+}
+
+int main()
+{
+	Testcases::maikeStringutilsToStringSysTime();
 }
