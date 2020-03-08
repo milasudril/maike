@@ -32,35 +32,46 @@ namespace Maike::VcsInvoker
 		cfg.getBranch().invoke(invoker, redir);
 		return toString(redir.stdout());
 	}
-	
+
 	template<class Invoker>
 	class StateVarsFetcher
 	{
 	public:
-		template<class ... Other>
+		template<class... Other>
 		explicit StateVarsFetcher(Config const&&, Other&&...) = delete;
-		
-		explicit StateVarsFetcher(Config const& cfg, Invoker const& invoker):r_cfg{&cfg}, r_invoker{&invoker}
-		{}
-		
+
+		explicit StateVarsFetcher(Config const& cfg, Invoker const& invoker):
+		   r_cfg{&cfg},
+		   r_invoker{&invoker}
+		{
+		}
+
 		decltype(auto) revision() const
-		{ return getRevision(*r_cfg, *r_invoker);}
-		 
+		{
+			return getRevision(*r_cfg, *r_invoker);
+		}
+
 		decltype(auto) versionTag() const
-		{ return getVersionTag(*r_cfg, *r_invoker);}
-		
+		{
+			return getVersionTag(*r_cfg, *r_invoker);
+		}
+
 		decltype(auto) branch() const
-		{ return getBranch(*r_cfg, *r_invoker); }
-	
+		{
+			return getBranch(*r_cfg, *r_invoker);
+		}
+
 	private:
 		Config const* r_cfg;
 		Invoker const* r_invoker;
 	};
-	
+
 	template<class Invoker>
 	StateVarsFetcher<Invoker> getStateVariables(Config const& cfg, Invoker const& invoker)
-	{ return StateVarsFetcher<Invoker>{cfg, invoker}; }
-	
+	{
+		return StateVarsFetcher<Invoker>{cfg, invoker};
+	}
+
 	template<class Invoker>
 	StateVarsFetcher<Invoker> getStateVariables(Config const&& cfg, Invoker&& invoker) = delete;
 

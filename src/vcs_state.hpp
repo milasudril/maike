@@ -11,27 +11,28 @@ namespace Maike
 	class VcsState
 	{
 	public:
-		template<class Source, std::enable_if_t<!std::is_same_v<Source, VcsState>>>
-		explicit VcsState(Source const& src):
-		 m_revision{src.revision()}
-		,m_version_tag{src.versionTag()}
-		,m_branch{src.branch()}
+		template<class Source>
+		explicit VcsState(Source const& src,
+		                  std::enable_if_t<!std::is_same_v<Source, VcsState>, int> = 0):
+		   m_revision{src.revision()},
+		   m_version_tag{src.versionTag()},
+		   m_branch{src.branch()}
 		{
 		}
-	
+
 		std::string const& revision() const
 		{
-			return *m_revision;
+			return m_revision;
 		}
-		
+
 		std::string const& versionTag() const
 		{
-			return *m_version_tag;
+			return m_version_tag;
 		}
-		
-		std::stirng const& branch() const
+
+		std::string const& branch() const
 		{
-			return *m_branch;
+			return m_branch;
 		}
 
 	private:
