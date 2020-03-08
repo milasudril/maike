@@ -12,7 +12,8 @@ namespace Maike::VcsInvoker
 	std::string getRevision(Config const& cfg, Invoker const& invoker)
 	{
 		MemIoRedirector redir{nullptr, 0};
-		invoker.execp();
+		cfg.getRevision().invoke(invoker, redir);
+		return redir.stdout();
 	}
 }
 
