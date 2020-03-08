@@ -19,6 +19,10 @@ namespace Maike
 	public:
 		BuildId();
 
+		explicit BuildId(std::array<std::byte, 32> const& bytes): m_bytes{bytes}
+		{
+		}
+
 		auto const& bytes() const
 		{
 			return m_bytes;
@@ -33,6 +37,8 @@ namespace Maike
 
 	inline bool operator!=(BuildId const& a, BuildId const& b)
 	{ return !(a == b); }
+
+	std::string toString(BuildId const& id);
 
 	class BuildInfo
 	{
@@ -55,6 +61,11 @@ namespace Maike
 		auto startTime() const
 		{
 			return m_start_time;
+		}
+
+		BuildId const& buildId() const
+		{
+			return m_build_id;
 		}
 
 	private:
