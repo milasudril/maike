@@ -1,4 +1,7 @@
-//@	{"targets":[{"name":"build_info.hpp","type":"include"}]}
+//@	{
+//@	 "targets":[{"name":"build_info.hpp","type":"include"}]
+//@	,"dependencies_extra":[{"ref":"build_info.o", "rel":"implementation"}]
+//@	}
 
 #ifndef MAIKE_BUILDINFO_HPP
 #define MAIKE_BUILDINFO_HPP
@@ -16,7 +19,7 @@ namespace Maike
 	public:
 		BuildId();
 
-		auto bytes() const
+		auto const& bytes() const
 		{
 			return m_bytes;
 		}
@@ -24,6 +27,12 @@ namespace Maike
 	private:
 		std::array<std::byte, 32> m_bytes;
 	};
+
+	inline bool operator==(BuildId const& a, BuildId const& b)
+	{ return a.bytes() == b.bytes();}
+
+	inline bool operator!=(BuildId const& a, BuildId const& b)
+	{ return !(a == b); }
 
 	class BuildInfo
 	{
