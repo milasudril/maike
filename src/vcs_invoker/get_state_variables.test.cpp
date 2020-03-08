@@ -45,10 +45,40 @@ namespace Testcases
 		assert(*invoker.args == get_rev_cmd.args());
 		assert(rev == "This is a test");
 	}
+
+	void maikeVcsGetStateVariablesGetVersionTag()
+	{
+		Maike::VcsInvoker::Config const cfg;
+		Maike::fs::path exe;
+		std::vector<std::string> args;
+		TestInvoker invoker{&exe, &args};
+		auto ver = getVersionTag(cfg, invoker);
+
+		auto& get_ver_tag_cmd = cfg.getVersionTag();
+		assert(*invoker.exe == get_ver_tag_cmd.executable());
+		assert(*invoker.args == get_ver_tag_cmd.args());
+		assert(ver == "This is a test");
+	}
+
+	void maikeVcsGetStateVariablesGetBrnach()
+	{
+		Maike::VcsInvoker::Config const cfg;
+		Maike::fs::path exe;
+		std::vector<std::string> args;
+		TestInvoker invoker{&exe, &args};
+		auto branch = getBranch(cfg, invoker);
+
+		auto& get_branch_cmd = cfg.getBranch();
+		assert(*invoker.exe == get_branch_cmd.executable());
+		assert(*invoker.args == get_branch_cmd.args());
+		assert(branch == "This is a test");
+	}
 }
 
 int main()
 {
 	Testcases::maikeVcsGetStateVariablesGetRevision();
+	Testcases::maikeVcsGetStateVariablesGetVersionTag();
+	Testcases::maikeVcsGetStateVariablesGetBrnach();
 	return 0;
 }

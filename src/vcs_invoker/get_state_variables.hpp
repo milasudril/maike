@@ -16,6 +16,22 @@ namespace Maike::VcsInvoker
 		cfg.getRevision().invoke(invoker, redir);
 		return toString(redir.stdout());
 	}
+
+	template<class Invoker>
+	std::string getVersionTag(Config const& cfg, Invoker const& invoker)
+	{
+		MemIoRedirector redir{nullptr, 0};
+		cfg.getVersionTag().invoke(invoker, redir);
+		return toString(redir.stdout());
+	}
+
+	template<class Invoker>
+	std::string getBranch(Config const& cfg, Invoker const& invoker)
+	{
+		MemIoRedirector redir{nullptr, 0};
+		cfg.getBranch().invoke(invoker, redir);
+		return toString(redir.stdout());
+	}
 }
 
 #endif
