@@ -30,7 +30,7 @@ namespace Maike
 		}
 
 		template<class Invoker, class IoRedirectorType>
-		decltype(auto) invoke(Invoker const& invoker, IoRedirectorType&& redir)
+		decltype(auto) invoke(Invoker const& invoker, IoRedirectorType&& redir) const
 		{
 			return execp(invoker, m_executable, m_args, std::forward<IoRedirectorType>(redir));
 		}
