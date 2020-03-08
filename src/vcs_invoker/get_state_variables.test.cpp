@@ -35,7 +35,7 @@ namespace
 		}
 		else
 		{
-			retval = "This is a test";
+			retval = "       This is a test       ";
 		}
 		redir(reinterpret_cast<std::byte const*>(retval.data()),
 		      retval.size(),

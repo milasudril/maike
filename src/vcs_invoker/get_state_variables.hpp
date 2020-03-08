@@ -14,7 +14,7 @@ namespace Maike::VcsInvoker
 	{
 		MemIoRedirector redir{nullptr, 0};
 		cfg.getRevision().invoke(invoker, redir);
-		return toString(redir.stdout());
+		return trim(toString(redir.stdout()));
 	}
 
 	template<class Invoker>
@@ -22,7 +22,7 @@ namespace Maike::VcsInvoker
 	{
 		MemIoRedirector redir{nullptr, 0};
 		cfg.getVersionTag().invoke(invoker, redir);
-		return toString(redir.stdout());
+		return trim(toString(redir.stdout()));
 	}
 
 	template<class Invoker>
@@ -30,7 +30,7 @@ namespace Maike::VcsInvoker
 	{
 		MemIoRedirector redir{nullptr, 0};
 		cfg.getBranch().invoke(invoker, redir);
-		return toString(redir.stdout());
+		return trim(toString(redir.stdout()));
 	}
 
 	template<class Invoker>

@@ -33,3 +33,19 @@ std::string Maike::toString(std::chrono::time_point<std::chrono::system_clock> t
 
 	return buffer;
 }
+
+std::string Maike::trim(std::string const& src)
+{
+	auto not_whitespace = [](auto ch_in) {
+		return !(ch_in >= 0 && ch_in <= ' ');
+	};
+
+	auto i = std::find_if(std::begin(src), std::end(src), not_whitespace);
+	auto j = std::find_if(std::rbegin(src), std::rend(src), not_whitespace);
+	if(j == std::rend(src) || i == std::end(src))
+	{
+		return std::string{};
+	}
+
+	return std::string{i, j.base()};
+}
