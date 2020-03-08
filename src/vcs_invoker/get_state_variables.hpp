@@ -5,6 +5,7 @@
 
 #include "./config.hpp"
 #include "src/mem_io_redirector.hpp"
+#include "src/stringutils.hpp"
 
 namespace Maike::VcsInvoker
 {
@@ -13,8 +14,7 @@ namespace Maike::VcsInvoker
 	{
 		MemIoRedirector redir{nullptr, 0};
 		cfg.getRevision().invoke(invoker, redir);
-	//	FIXME:	return redir.stdout();
-		return "";
+		return toString(redir.stdout());
 	}
 }
 
