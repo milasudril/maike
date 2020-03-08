@@ -10,6 +10,7 @@ namespace Maike
 	class ConfigStore
 	{
 	public:
+		ConfigStore()=default;
 		ConfigStore(ConfigStore&&);
 		ConfigStore& operator=(ConfigStore&&);
 		~ConfigStore();

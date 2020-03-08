@@ -22,7 +22,18 @@ namespace
 	{
 		*invoker.exe = exe;
 		*invoker.args = args;
-		std::string_view retval{"This is a test"};
+		std::string_view retval;
+		
+		if(exe == "get branch")
+		{ retval = "get branch"; }
+		else
+		if(exe == "get revision")
+		{ retval = "get revision"; }
+		else
+		if(exe == "get version tag")
+		{ retval = "get version tag"; }
+		else
+		{ retval = "This is a test"; }
 		redir(reinterpret_cast<std::byte const*>(retval.data()),
 		      retval.size(),
 		      Maike::IoRedirector::StdOut{});
@@ -73,6 +84,24 @@ namespace Testcases
 		assert(*invoker.args == get_branch_cmd.args());
 		assert(branch == "This is a test");
 	}
+	
+	void maikeVcsGetStateVariablesGetStateVars()
+	{
+		Maike::VcsInvoker::Config cfg;
+		cfg.getBranch(Maike::Command{"get branch", {}})
+			.getRevision(Maike::Command{"get revision", {}})
+			.getVersionTag(Maike::Command{"get version tag", {}});
+		
+		Maike::fs::path exe;
+		std::vector<std::string> args;
+		
+		TestInvoker invoker{&exe, &args};
+		auto res = getStateVariables(cfg, invoker);
+		
+		assert(res.branch() == "get branch");
+		assert(res.revision() == "get revision");
+		assert(res.versionTag() == "get version tag");
+	}
 }
 
 int main()
@@ -80,5 +109,6 @@ int main()
 	Testcases::maikeVcsGetStateVariablesGetRevision();
 	Testcases::maikeVcsGetStateVariablesGetVersionTag();
 	Testcases::maikeVcsGetStateVariablesGetBrnach();
+	Testcases::maikeVcsGetStateVariablesGetStateVars();
 	return 0;
 }
