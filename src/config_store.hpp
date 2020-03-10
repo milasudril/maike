@@ -19,10 +19,20 @@ namespace Maike
 			explicit ConfigObjectRefConst(json_t* handle): m_handle{handle}{}
 
 			template<class T>
-			T get(char const* key) const;
-
-			template<class T>
 			T as() const;
+
+		private:
+			json_t* m_handle;
+	};
+
+	class ConfigObjectCompoundConstRef
+	{
+	public:
+		explicit ConfigObjectCompoundConstRef(json_t* handle): m_handle{handle}{}
+
+		template<class T>
+		T get(char const* key) const
+		{ return ConfigObjectRefConst{json_object_get(m_handle, key)}.template as<T>();}
 
 		private:
 			json_t* m_handle;
@@ -91,21 +101,15 @@ namespace Maike
 	}
 
 	template<>
-	inline ConfigObjectRefConst ConfigObjectRefConst::get<ConfigObjectRefConst>(char const* key) const
+	inline ConfigObjectArrayRefConst ConfigObjectRefConst::as<ConfigObjectArrayRefConst>() const
 	{
-		return ConfigObjectRefConst{json_object_get(m_handle, key)};
+		return ConfigObjectArrayRefConst{m_handle};
 	}
 
 	template<>
-	inline char const* ConfigObjectRefConst::get<char const*>(char const* key) const
+	inline ConfigObjectCompoundConstRef ConfigObjectRefConst::as<ConfigObjectCompoundConstRef>() const
 	{
-		return get<ConfigObjectRefConst>(key).as<char const*>();
-	}
-
-	template<>
-	inline ConfigObjectArrayRefConst ConfigObjectRefConst::get<ConfigObjectArrayRefConst>(char const* key) const
-	{
-		return ConfigObjectArrayRefConst{json_object_get(m_handle, key)};
+		return ConfigObjectCompoundConstRef{m_handle};
 	}
 
 	class ConfigStore

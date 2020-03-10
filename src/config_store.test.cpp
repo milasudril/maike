@@ -77,10 +77,10 @@ namespace Testcases
 })json"}};
 
 		assert(!test.empty());
-		auto ref = test.get();
+		auto ref = test.get().as<Maike::ConfigObjectCompoundConstRef>();
 
 		{
-			auto obj = ref.get<Maike::ConfigObjectRefConst>("an object");
+			auto obj = ref.get<Maike::ConfigObjectCompoundConstRef>("an object");
 			assert(std::string_view{"some value"} == obj.get<char const*>("key"));
 		}
 
