@@ -9,6 +9,8 @@
 #include <cassert>
 #include <string_view>
 #include <cstring>
+#include <vector>
+#include <algorithm>
 
 namespace
 {
@@ -65,7 +67,7 @@ namespace Testcases
 	void maikeConfigStoreCreateFromJson()
 	{
 		Maike::ConfigStore test{StringViewSource{R"json({
-"a config store": {"key": "some value"},
+"an object": {"key": "some value"},
 "an array": ["this", "is", "an", "array"],
 "a string": "This is a string",
 "an integer": 123,
@@ -75,6 +77,20 @@ namespace Testcases
 })json"}};
 
 		assert(!test.empty());
+		auto ref = test.get();
+
+		{
+			auto obj = ref.get<Maike::ConfigObjectRefConst>("an object");
+			assert(std::string_view{"some value"} == obj.get<char const*>("key"));
+		}
+
+		{
+			auto array = ref.get<Maike::ConfigObjectArrayRefConst>("array");
+			std::vector<std::string_view> vals{"this", "is", "an", "array"};
+			assert((std::equal(std::begin(array), std::end(array), std::begin(vals), [](auto a, auto b) {
+				return b == a.template as<char const*>();
+			})));
+		}
 	}
 }
 
