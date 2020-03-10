@@ -71,9 +71,7 @@ namespace Testcases
 "an array": ["this", "is", "an", "array"],
 "a string": "This is a string",
 "an integer": 123,
-"a double": 3.14,
-"a bool": true,
-"a null value": null
+"a double": 3.14
 })json"}};
 
 		assert(!test.empty());
@@ -85,11 +83,26 @@ namespace Testcases
 		}
 
 		{
-			auto array = ref.get<Maike::ConfigObjectArrayRefConst>("array");
+			auto array = ref.get<Maike::ConfigObjectArrayRefConst>("an array");
 			std::vector<std::string_view> vals{"this", "is", "an", "array"};
 			assert((std::equal(std::begin(array), std::end(array), std::begin(vals), [](auto a, auto b) {
 				return b == a.template as<char const*>();
 			})));
+		}
+
+		{
+			auto string = ref.get<char const*>("a string");
+			assert(std::string_view{"This is a string"} == string);
+		}
+
+		{
+			auto integer = ref.get<json_int_t>("an integer");
+			assert(123 == integer);
+		}
+
+		{
+			auto a_double = ref.get<double>("a double");
+			assert(3.14 == a_double);
 		}
 	}
 }

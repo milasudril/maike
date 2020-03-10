@@ -19,7 +19,7 @@ namespace Maike
 			explicit ConfigObjectRefConst(json_t* handle): m_handle{handle}{}
 
 			template<class T>
-			T as() const;
+			T as() const = delete;
 
 		private:
 			json_t* m_handle;
@@ -98,6 +98,18 @@ namespace Maike
 	inline char const* ConfigObjectRefConst::as<char const*>() const
 	{
 		return json_string_value(m_handle);
+	}
+
+	template<>
+	inline json_int_t ConfigObjectRefConst::as<json_int_t>() const
+	{
+		return json_integer_value(m_handle);
+	}
+
+	template<>
+	inline double ConfigObjectRefConst::as<double>() const
+	{
+		return json_real_value(m_handle);
 	}
 
 	template<>
