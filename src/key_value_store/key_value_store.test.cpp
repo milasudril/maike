@@ -11,6 +11,7 @@
 #include <cstring>
 #include <vector>
 #include <algorithm>
+#include <array>
 
 namespace
 {
@@ -41,6 +42,17 @@ namespace
 	char const* name(StringViewSource)
 	{
 		return "<input buffer>";
+	}
+
+	struct TestType {
+		std::string item;
+		long long int count;
+	};
+
+	TestType get(Maike::KeyValueStore::Tag<TestType>, Maike::KeyValueStore::ObjectRefConst obj)
+	{
+		auto compound = obj.as<Maike::KeyValueStore::CompoundRefConst>();
+		return TestType{compound.get<char const*>("item"), compound.get<json_int_t>("count")};
 	}
 }
 
@@ -105,6 +117,31 @@ namespace Testcases
 			assert(3.14 == a_double);
 		}
 	}
+
+	void maikeKeyValueStoreObjectGetHelperBuiltin()
+	{
+		Maike::KeyValueStore::Object test{StringViewSource{R"json([1, 2, 3])json"}};
+		std::array<int, 3> vals{1, 2, 3};
+		auto array = Maike::KeyValueStore::get<Maike::KeyValueStore::ArrayRefConst>(test.get());
+		assert((std::equal(std::begin(array), std::end(array), std::begin(vals), [](auto a, auto b) {
+			return Maike::KeyValueStore::get<json_int_t>(a) == b;
+		})));
+	}
+
+
+	void maikeKeyValueStoreObjectGetHelperAdl()
+	{
+		Maike::KeyValueStore::Object test{StringViewSource{R"json({
+"item": "Foobar",
+"count": 123
+})json"}};
+
+		auto item = test.get();
+
+		TestType obj = get(Maike::KeyValueStore::Tag<TestType>{}, item);
+		assert(obj.item == "Foobar");
+		assert(obj.count == 123);
+	}
 }
 
 int main()
@@ -112,5 +149,8 @@ int main()
 	Testcases::maikeKeyValueStoreObjectCreateEmptySource();
 	Testcases::maikeKeyValueStoreObjectCreateInvalidJson();
 	Testcases::maikeKeyValueStoreObjectCreateFromJson();
+	Testcases::maikeKeyValueStoreObjectGetHelperBuiltin();
+	Testcases::maikeKeyValueStoreObjectGetHelperAdl();
+
 	return 0;
 }

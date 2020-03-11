@@ -124,6 +124,22 @@ namespace Maike::KeyValueStore
 		return ArrayRefConst{m_handle};
 	}
 
+	template<class T>
+	inline T get(ObjectRefConst obj)
+	{
+		return obj.template as<T>();
+	}
+
+	template<class T>
+	struct Tag
+	{};
+
+	template<class T>
+	inline T get(Tag<T>, ObjectRefConst obj)
+	{
+		return get<T>(obj);
+	}
+
 	class DecodeError:public std::runtime_error
 	{
 		public:
