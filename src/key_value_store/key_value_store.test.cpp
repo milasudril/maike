@@ -13,19 +13,29 @@
 #include <algorithm>
 #include <array>
 
+#include <unistd.h>
+
 namespace
 {
-	struct EmptySource{};
+	struct EmptySource
+	{
+	};
 
 	size_t read(EmptySource, std::byte*, size_t)
-	{return 0;}
+	{
+		return 0;
+	}
 
 	char const* name(EmptySource)
-	{return "<input buffer>";}
+	{
+		return "<input buffer>";
+	}
 
 	struct StringViewSource
 	{
-		explicit StringViewSource(std::string_view v):read_ptr{v.data()}, n_bytes_left{v.size()}{}
+		explicit StringViewSource(std::string_view v): read_ptr{v.data()}, n_bytes_left{v.size()}
+		{
+		}
 		char const* read_ptr;
 		size_t n_bytes_left;
 	};
@@ -44,7 +54,8 @@ namespace
 		return "<input buffer>";
 	}
 
-	struct TestType {
+	struct TestType
+	{
 		std::string item;
 		long long int count;
 	};
@@ -53,6 +64,16 @@ namespace
 	{
 		auto compound = obj.as<Maike::KeyValueStore::CompoundRefConst>();
 		return TestType{compound.get<char const*>("item"), compound.get<json_int_t>("count")};
+	}
+
+	struct StringSink
+	{
+		std::string buffer;
+	};
+
+	void write(StringSink& sink, char const* data, size_t N)
+	{
+		sink.buffer.insert(std::end(sink.buffer), data, data + N);
 	}
 }
 
@@ -73,7 +94,8 @@ namespace Testcases
 			abort();
 		}
 		catch(...)
-		{}
+		{
+		}
 	}
 
 	void maikeKeyValueStoreObjectCreateDataAfterJson()
@@ -197,11 +219,74 @@ Here is some junk)json"};
 
 		auto ref = test.get().as<Maike::KeyValueStore::CompoundRefConst>();
 
-		try{(void)ref.get<Maike::KeyValueStore::ArrayRefConst>("an object"); abort();} catch(...){}
-		try{(void)ref.get<char const*>("an array"); abort();} catch(...){}
-		try{(void)ref.get<json_int_t>("a string"); abort();} catch(...){}
-		try{(void)ref.get<double>("an integer"); abort();} catch(...){}
-		try{(void)ref.get<Maike::KeyValueStore::CompoundRefConst>("a double"); abort();} catch(...){}
+		try
+		{
+			(void)ref.get<Maike::KeyValueStore::ArrayRefConst>("an object");
+			abort();
+		}
+		catch(...)
+		{
+		}
+		try
+		{
+			(void)ref.get<char const*>("an array");
+			abort();
+		}
+		catch(...)
+		{
+		}
+		try
+		{
+			(void)ref.get<json_int_t>("a string");
+			abort();
+		}
+		catch(...)
+		{
+		}
+		try
+		{
+			(void)ref.get<double>("an integer");
+			abort();
+		}
+		catch(...)
+		{
+		}
+		try
+		{
+			(void)ref.get<Maike::KeyValueStore::CompoundRefConst>("a double");
+			abort();
+		}
+		catch(...)
+		{
+		}
+	}
+
+	void maikeKeyValueStoreObjectWrite()
+	{
+		Maike::KeyValueStore::Object test{StringViewSource{R"json({
+"an object": {"key": "some value"},
+"an array": ["this", "is", "an", "array"],
+"a string": "This is a string",
+"an integer": 123,
+"a double": 3.14
+})json"}};
+
+		StringSink sink;
+		write(test, sink);
+		assert(sink.buffer == R"json({
+    "a double": 3.1400000000000001,
+    "a string": "This is a string",
+    "an array": [
+        "this",
+        "is",
+        "an",
+        "array"
+    ],
+    "an integer": 123,
+    "an object": {
+        "key": "some value"
+    }
+})json");
 	}
 }
 
@@ -217,6 +302,6 @@ int main()
 	Testcases::maikeKeyValueStoreObjectNonExistingKey();
 	Testcases::maikeKeyValueStoreObjectWrongType();
 
-
+	Testcases::maikeKeyValueStoreObjectWrite();
 	return 0;
 }

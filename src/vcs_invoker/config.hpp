@@ -12,7 +12,7 @@ namespace Maike::VcsInvoker
 	public:
 		Config():
 		   m_get_revision{"git", {"rev-parse", "HEAD"}},
-		   m_get_version_tag{"git", {"describe","--dirty"}},
+		   m_get_version_tag{"git", {"describe", "--dirty"}},
 		   m_get_branch{"git", {"rev-parse", "--abbrev-ref", "HEAD"}}
 		{
 		}

@@ -87,16 +87,17 @@ int main()
 	Maike::DependencyGraph dep_graph;
 	Maike::BuildInfo bi{Maike::VcsState{getStateVariables(vcs, invoker)}};
 
-	printf(">>>      Start time: %s\n"
-	       "                 Id: %s\n"
-	       "       VCS revision: %s\n"
-	       "    VCS version tag: %s\n"
-	       "         VCS branch: %s\n"
-	       , Maike::toString(bi.startTime()).c_str()
-	       , toString(bi.buildId()).c_str()
-	       , bi.vcsState().revision().c_str()
-	       , bi.vcsState().versionTag().c_str()
-	       , bi.vcsState().branch().c_str());
+	printf(
+	   ">>>      Start time: %s\n"
+	   "                 Id: %s\n"
+	   "       VCS revision: %s\n"
+	   "    VCS version tag: %s\n"
+	   "         VCS branch: %s\n",
+	   Maike::toString(bi.startTime()).c_str(),
+	   toString(bi.buildId()).c_str(),
+	   bi.vcsState().revision().c_str(),
+	   bi.vcsState().versionTag().c_str(),
+	   bi.vcsState().branch().c_str());
 
 
 	auto skip = [](auto const& path, auto const& regex_list) {

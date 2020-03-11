@@ -33,10 +33,14 @@ namespace Maike
 	};
 
 	inline bool operator==(BuildId const& a, BuildId const& b)
-	{ return a.bytes() == b.bytes();}
+	{
+		return a.bytes() == b.bytes();
+	}
 
 	inline bool operator!=(BuildId const& a, BuildId const& b)
-	{ return !(a == b); }
+	{
+		return !(a == b);
+	}
 
 	std::string toString(BuildId const& id);
 
