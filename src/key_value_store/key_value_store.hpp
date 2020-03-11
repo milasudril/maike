@@ -29,13 +29,6 @@ namespace Maike::KeyValueStore
 			char const* r_name;
 	};
 
-	class KeyLookupError:public std::runtime_error
-	{
-		public:
-			explicit KeyLookupError(char const* src, char const* key):
-			std::runtime_error{std::string{src} + ": error: `" + key + "` does not exist in the current compound."}
-			{}
-	};
 
 	template<class T>
 	inline T get(ObjectRefConst obj)
@@ -53,6 +46,22 @@ namespace Maike::KeyValueStore
 		return get<T>(obj);
 	}
 
+	class TypeError:public std::runtime_error
+	{
+		public:
+			explicit TypeError(const char* src, const char* type):
+			std::runtime_error{std::string{src} + ": error: `" + type + "` expected."}
+			{}
+	};
+
+	class KeyLookupError:public std::runtime_error
+	{
+		public:
+			explicit KeyLookupError(char const* src, char const* key):
+			std::runtime_error{std::string{src} + ": error: `" + key + "` does not exist in the current compound."}
+			{}
+	};
+
 	namespace detail
 	{
 		template<class T>
@@ -65,7 +74,11 @@ namespace Maike::KeyValueStore
 	class CompoundRefConst
 	{
 	public:
-		explicit CompoundRefConst(json_t* handle, char const* name): r_handle{handle}, r_name{name} {}
+		explicit CompoundRefConst(json_t* handle, char const* name): r_handle{handle}, r_name{name}
+		{
+			if(!json_is_object(handle))
+			{ throw TypeError{name, "Compound"};}
+		}
 
 		template<class T>
 		T get(char const* key) const
@@ -89,7 +102,6 @@ namespace Maike::KeyValueStore
 			{
 				public:
 					using value_type = ObjectRefConst;
-
 
 					explicit const_iterator(json_t* handle, size_t index, char const* name): r_handle{handle}, m_index{index}, r_name{name}
 					{}
@@ -127,7 +139,10 @@ namespace Maike::KeyValueStore
 			};
 
 			explicit ArrayRefConst(json_t* handle, char const* name): r_handle{handle}, r_name{name}
-			{}
+			{
+				if(!json_is_array(handle))
+				{ throw TypeError{name, "Array"};}
+			}
 
 			const_iterator begin() const
 			{ return const_iterator{r_handle, 0, r_name};}
@@ -143,18 +158,24 @@ namespace Maike::KeyValueStore
 	template<>
 	inline char const* ObjectRefConst::as<char const*>() const
 	{
+		if(!json_is_string(r_handle))
+		{ throw TypeError{r_name, "String"};}
 		return json_string_value(r_handle);
 	}
 
 	template<>
 	inline json_int_t ObjectRefConst::as<json_int_t>() const
 	{
+		if(!json_is_integer(r_handle))
+		{ throw TypeError{r_name, "Integer"};}
 		return json_integer_value(r_handle);
 	}
 
 	template<>
 	inline double ObjectRefConst::as<double>() const
 	{
+		if(!json_is_real(r_handle))
+		{ throw TypeError{r_name, "Double"};}
 		return json_real_value(r_handle);
 	}
 

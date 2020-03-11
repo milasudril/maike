@@ -175,6 +175,25 @@ namespace Testcases
 		{
 		}
 	}
+
+	void maikeKeyValueStoreObjectWrongType()
+	{
+		Maike::KeyValueStore::Object test{StringViewSource{R"json({
+"an object": {"key": "some value"},
+"an array": ["this", "is", "an", "array"],
+"a string": "This is a string",
+"an integer": 123,
+"a double": 3.14
+})json"}};
+
+		auto ref = test.get().as<Maike::KeyValueStore::CompoundRefConst>();
+
+		try{(void)ref.get<Maike::KeyValueStore::ArrayRefConst>("an object"); abort();} catch(...){}
+		try{(void)ref.get<char const*>("an array"); abort();} catch(...){}
+		try{(void)ref.get<json_int_t>("a string"); abort();} catch(...){}
+		try{(void)ref.get<double>("an integer"); abort();} catch(...){}
+		try{(void)ref.get<Maike::KeyValueStore::CompoundRefConst>("a double"); abort();} catch(...){}
+	}
 }
 
 int main()
@@ -187,6 +206,8 @@ int main()
 	Testcases::maikeKeyValueStoreObjectGetHelperAdlInner();
 
 	Testcases::maikeKeyValueStoreObjectNonExistingKey();
+	Testcases::maikeKeyValueStoreObjectWrongType();
+
 
 	return 0;
 }
