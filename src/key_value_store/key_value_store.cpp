@@ -1,8 +1,8 @@
 //@	{
-//@	  "targets":[{"name":"config_store.o","type":"object", "pkgconfig_libs":["jansson"]}]
+//@	  "targets":[{"name":"key_value_store.o","type":"object", "pkgconfig_libs":["jansson"]}]
 //@	 }
 
-#include "./config_store.hpp"
+#include "./key_value_store.hpp"
 
 namespace
 {

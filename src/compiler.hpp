@@ -6,7 +6,7 @@
 #define MAIKE_COMPILER_HPP
 
 #include "fs.hpp"
-#include "config_store.hpp"
+#include "key_value_store/key_value_store.hpp"
 #include "compilation_log.hpp"
 
 #include <vector>

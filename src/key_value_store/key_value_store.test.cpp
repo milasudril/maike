@@ -1,10 +1,10 @@
 //@	{
-//@	  "targets":[{"name":"config_store.test","type":"application", "autorun":1}]
+//@	  "targets":[{"name":"key_value_store.test","type":"application", "autorun":1}]
 //@	 }
 
 #undef NDEBUG
 
-#include "./config_store.hpp"
+#include "./key_value_store.hpp"
 
 #include <cassert>
 #include <string_view>

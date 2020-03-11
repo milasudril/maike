@@ -1,10 +1,10 @@
 //@	{
-//@	  "targets":[{"name":"config_store.hpp","type":"include", "pkgconfig_libs":["jansson"]}]
-//@	 ,"dependencies_extra":[{"ref":"config_store.o", "rel":"implementation"}]
+//@	  "targets":[{"name":"key_value_store.hpp","type":"include", "pkgconfig_libs":["jansson"]}]
+//@	 ,"dependencies_extra":[{"ref":"key_value_store.o", "rel":"implementation"}]
 //@	 }
 
-#ifndef MAIKE_CONFIGSTORE_HPP
-#define MAIKE_CONFIGSTORE_HPP
+#ifndef MAIKE_KEYVALUESTORE_HPP
+#define MAIKE_KEYVALUESTORE_HPP
 
 #include <jansson.h>
 
