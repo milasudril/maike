@@ -12,7 +12,7 @@ namespace
 	}
 }
 
-Maike::ConfigStore::DecodeError::DecodeError(std::string_view source, int line, int col, char const* description):
+Maike::KeyValueStore::DecodeError::DecodeError(std::string_view source, int line, int col, char const* description):
 std::runtime_error{formatError(source, line, col, description)}
 {
 }

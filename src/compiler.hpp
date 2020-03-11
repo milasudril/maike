@@ -36,12 +36,12 @@ namespace Maike
 			return m_handle->run(src, used_files, output_files, log);
 		}
 
-		ConfigStore settings() const
+		KeyValueStore::Object settings() const
 		{
 			return m_handle->settings();
 		}
 
-		Compiler& settings(ConfigStore const& cfg)
+		Compiler& settings(KeyValueStore::Object const& cfg)
 		{
 			m_handle->settings(cfg);
 			return *this;
@@ -56,9 +56,9 @@ namespace Maike
 			                std::vector<fs::path const*> const& output_files,
 			                CompilationLog& log) const = 0;
 
-			virtual ConfigStore settings() const = 0;
+			virtual KeyValueStore::Object settings() const = 0;
 
-			virtual void settings(ConfigStore const& cfg) = 0;
+			virtual void settings(KeyValueStore::Object const& cfg) = 0;
 
 			virtual ~AbstractCompiler()
 			{
@@ -76,12 +76,12 @@ namespace Maike
 				return 0;
 			}
 
-			ConfigStore settings() const override
+			KeyValueStore::Object settings() const override
 			{
-				return ConfigStore{};
+				return KeyValueStore::Object{};
 			}
 
-			void settings(ConfigStore const&) override
+			void settings(KeyValueStore::Object const&) override
 			{
 			}
 
@@ -102,12 +102,12 @@ namespace Maike
 				return m_obj.run(src, used_files, output_files, log);
 			}
 
-			ConfigStore settings() const override
+			KeyValueStore::Object settings() const override
 			{
 				return m_obj.settings();
 			}
 
-			void settings(ConfigStore const& cfg) override
+			void settings(KeyValueStore::Object const& cfg) override
 			{
 				(void)m_obj.settings(cfg);
 			}

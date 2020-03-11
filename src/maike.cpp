@@ -29,12 +29,12 @@ public:
 		return 0;
 	}
 
-	Maike::ConfigStore settings() const
+	Maike::KeyValueStore::Object settings() const
 	{
-		return Maike::ConfigStore{};
+		return Maike::KeyValueStore::Object{};
 	}
 
-	void settings(Maike::ConfigStore const&)
+	void settings(Maike::KeyValueStore::Object const&)
 	{
 	}
 };

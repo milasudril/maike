@@ -46,17 +46,17 @@ namespace
 
 namespace Testcases
 {
-	void maikeConfigStoreCreateEmptySource()
+	void maikeKeyValueStoreObjectCreateEmptySource()
 	{
-		Maike::ConfigStore test{EmptySource{}};
+		Maike::KeyValueStore::Object test{EmptySource{}};
 		assert(test.empty());
 	}
 
-	void maikeConfigStoreCreateInvalidJson()
+	void maikeKeyValueStoreObjectCreateInvalidJson()
 	{
 		try
 		{
-			Maike::ConfigStore test{StringViewSource{R"json(
+			Maike::KeyValueStore::Object test{StringViewSource{R"json(
 	{"invalid json": "missing curly brace")json"}};
 			abort();
 		}
@@ -64,9 +64,9 @@ namespace Testcases
 		{}
 	}
 
-	void maikeConfigStoreCreateFromJson()
+	void maikeKeyValueStoreObjectCreateFromJson()
 	{
-		Maike::ConfigStore test{StringViewSource{R"json({
+		Maike::KeyValueStore::Object test{StringViewSource{R"json({
 "an object": {"key": "some value"},
 "an array": ["this", "is", "an", "array"],
 "a string": "This is a string",
@@ -75,15 +75,15 @@ namespace Testcases
 })json"}};
 
 		assert(!test.empty());
-		auto ref = test.get().as<Maike::ConfigObjectCompoundConstRef>();
+		auto ref = test.get().as<Maike::KeyValueStore::CompoundRefConst>();
 
 		{
-			auto obj = ref.get<Maike::ConfigObjectCompoundConstRef>("an object");
+			auto obj = ref.get<Maike::KeyValueStore::CompoundRefConst>("an object");
 			assert(std::string_view{"some value"} == obj.get<char const*>("key"));
 		}
 
 		{
-			auto array = ref.get<Maike::ConfigObjectArrayRefConst>("an array");
+			auto array = ref.get<Maike::KeyValueStore::ArrayRefConst>("an array");
 			std::vector<std::string_view> vals{"this", "is", "an", "array"};
 			assert((std::equal(std::begin(array), std::end(array), std::begin(vals), [](auto a, auto b) {
 				return b == a.template as<char const*>();
@@ -109,8 +109,8 @@ namespace Testcases
 
 int main()
 {
-	Testcases::maikeConfigStoreCreateEmptySource();
-	Testcases::maikeConfigStoreCreateInvalidJson();
-	Testcases::maikeConfigStoreCreateFromJson();
+	Testcases::maikeKeyValueStoreObjectCreateEmptySource();
+	Testcases::maikeKeyValueStoreObjectCreateInvalidJson();
+	Testcases::maikeKeyValueStoreObjectCreateFromJson();
 	return 0;
 }

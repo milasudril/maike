@@ -11,12 +11,12 @@
 #include <stdexcept>
 #include <cstddef>
 
-namespace Maike
+namespace Maike::KeyValueStore
 {
-	class ConfigObjectRefConst
+	class ObjectRefConst
 	{
 		public:
-			explicit ConfigObjectRefConst(json_t* handle): m_handle{handle}{}
+			explicit ObjectRefConst(json_t* handle): m_handle{handle}{}
 
 			template<class T>
 			T as() const = delete;
@@ -25,26 +25,26 @@ namespace Maike
 			json_t* m_handle;
 	};
 
-	class ConfigObjectCompoundConstRef
+	class CompoundRefConst
 	{
 	public:
-		explicit ConfigObjectCompoundConstRef(json_t* handle): m_handle{handle}{}
+		explicit CompoundRefConst(json_t* handle): m_handle{handle}{}
 
 		template<class T>
 		T get(char const* key) const
-		{ return ConfigObjectRefConst{json_object_get(m_handle, key)}.template as<T>();}
+		{ return ObjectRefConst{json_object_get(m_handle, key)}.template as<T>();}
 
 		private:
 			json_t* m_handle;
 	};
 
-	class ConfigObjectArrayRefConst
+	class ArrayRefConst
 	{
 		public:
 			class const_iterator
 			{
 				public:
-					using value_type = ConfigObjectRefConst;
+					using value_type = ObjectRefConst;
 
 
 					explicit const_iterator(json_t* handle, size_t index): m_handle{handle}, m_index{index}
@@ -64,7 +64,7 @@ namespace Maike
 					}
 
 					value_type operator*() const
-					{ return ConfigObjectRefConst{json_array_get(m_handle, m_index)};}
+					{ return ObjectRefConst{json_array_get(m_handle, m_index)};}
 
 					bool operator==(const_iterator other) const
 					{
@@ -81,7 +81,7 @@ namespace Maike
 					size_t m_index;
 			};
 
-			explicit ConfigObjectArrayRefConst(json_t* handle): m_handle{handle}
+			explicit ArrayRefConst(json_t* handle): m_handle{handle}
 			{}
 
 			const_iterator begin() const
@@ -95,55 +95,55 @@ namespace Maike
 	};
 
 	template<>
-	inline char const* ConfigObjectRefConst::as<char const*>() const
+	inline char const* ObjectRefConst::as<char const*>() const
 	{
 		return json_string_value(m_handle);
 	}
 
 	template<>
-	inline json_int_t ConfigObjectRefConst::as<json_int_t>() const
+	inline json_int_t ObjectRefConst::as<json_int_t>() const
 	{
 		return json_integer_value(m_handle);
 	}
 
 	template<>
-	inline double ConfigObjectRefConst::as<double>() const
+	inline double ObjectRefConst::as<double>() const
 	{
 		return json_real_value(m_handle);
 	}
 
 	template<>
-	inline ConfigObjectArrayRefConst ConfigObjectRefConst::as<ConfigObjectArrayRefConst>() const
+	inline CompoundRefConst ObjectRefConst::as<CompoundRefConst>() const
 	{
-		return ConfigObjectArrayRefConst{m_handle};
+		return CompoundRefConst{m_handle};
 	}
 
 	template<>
-	inline ConfigObjectCompoundConstRef ConfigObjectRefConst::as<ConfigObjectCompoundConstRef>() const
+	inline ArrayRefConst ObjectRefConst::as<ArrayRefConst>() const
 	{
-		return ConfigObjectCompoundConstRef{m_handle};
+		return ArrayRefConst{m_handle};
 	}
 
-	class ConfigStore
+	class DecodeError:public std::runtime_error
+	{
+		public:
+			explicit DecodeError(std::string_view source, int line, int col, char const* description);
+	};
+
+	class Object
 	{
 	public:
-		class DecodeError:public std::runtime_error
-		{
-			public:
-				explicit DecodeError(std::string_view source, int line, int col, char const* description);
-		};
-
-		ConfigStore():m_root(nullptr){}
-		ConfigStore(ConfigStore&&);
-		ConfigStore& operator=(ConfigStore&&);
-		~ConfigStore()
+		Object():m_root(nullptr){}
+		Object(Object&&);
+		Object& operator=(Object&&);
+		~Object()
 		{
 			if(m_root != nullptr)
 			{ json_decref(m_root); }
 		}
 
 		template<class Source>
-		ConfigStore(Source&& src)
+		Object(Source&& src)
 		{
 			json_error_t err;
 			m_root = json_load_callback([](void* buffer, size_t bufflen, void* data){
@@ -157,8 +157,8 @@ namespace Maike
 			}
 		}
 
-		ConfigObjectRefConst get() const
-		{ return ConfigObjectRefConst{m_root};}
+		ObjectRefConst get() const
+		{ return ObjectRefConst{m_root};}
 
 		bool empty() const
 		{ return m_root == nullptr;}
