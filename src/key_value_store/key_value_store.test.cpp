@@ -69,11 +69,20 @@ namespace Testcases
 		try
 		{
 			Maike::KeyValueStore::Object test{StringViewSource{R"json(
-	{"invalid json": "missing curly brace")json"}};
+{"invalid json": "missing curly brace")json"}};
 			abort();
 		}
 		catch(...)
 		{}
+	}
+
+	void maikeKeyValueStoreObjectCreateDataAfterJson()
+	{
+		StringViewSource src{R"json(
+{"Key": "value"}
+Here is some junk)json"};
+		Maike::KeyValueStore::Object test{src};
+		assert(*src.read_ptr == ' ');
 	}
 
 	void maikeKeyValueStoreObjectCreateFromJson()
