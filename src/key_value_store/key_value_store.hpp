@@ -29,6 +29,39 @@ namespace Maike::KeyValueStore
 			char const* r_name;
 	};
 
+	class KeyLookupError:public std::runtime_error
+	{
+		public:
+			explicit KeyLookupError(char const* src, char const* key):
+			std::runtime_error{std::string{src} + ": error: `" + key + "` does not exist in the current compound."}
+			{}
+	};
+
+	template<class T>
+	inline T get(ObjectRefConst obj)
+	{
+		return obj.template as<T>();
+	}
+
+	template<class T>
+	struct Tag
+	{};
+
+	template<class T>
+	inline T get(Tag<T>, ObjectRefConst obj)
+	{
+		return get<T>(obj);
+	}
+
+	namespace detail
+	{
+		template<class T>
+		inline T get_adl(Tag<T>, ObjectRefConst obj)
+		{
+			return get(Tag<T>{}, obj);
+		}
+	}
+
 	class CompoundRefConst
 	{
 	public:
@@ -36,7 +69,13 @@ namespace Maike::KeyValueStore
 
 		template<class T>
 		T get(char const* key) const
-		{ return ObjectRefConst{json_object_get(r_handle, key), r_name}.template as<T>();}
+		{
+			auto obj = json_object_get(r_handle, key);
+			if(obj == nullptr)
+			{ throw KeyLookupError{r_name, key}; }
+
+			return detail::get_adl(Tag<T>{}, ObjectRefConst{obj, r_name});
+		}
 
 		private:
 			json_t* r_handle;
@@ -129,22 +168,6 @@ namespace Maike::KeyValueStore
 	inline ArrayRefConst ObjectRefConst::as<ArrayRefConst>() const
 	{
 		return ArrayRefConst{r_handle, r_name};
-	}
-
-	template<class T>
-	inline T get(ObjectRefConst obj)
-	{
-		return obj.template as<T>();
-	}
-
-	template<class T>
-	struct Tag
-	{};
-
-	template<class T>
-	inline T get(Tag<T>, ObjectRefConst obj)
-	{
-		return get<T>(obj);
 	}
 
 	class DecodeError:public std::runtime_error

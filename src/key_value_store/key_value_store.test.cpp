@@ -142,6 +142,39 @@ namespace Testcases
 		assert(obj.item == "Foobar");
 		assert(obj.count == 123);
 	}
+
+	void maikeKeyValueStoreObjectGetHelperAdlInner()
+	{
+		Maike::KeyValueStore::Object test{StringViewSource{R"json({
+"subobject":{
+	"item": "Foobar",
+	"count": 123
+}})json"}};
+
+		auto item = test.get();
+
+		TestType obj = item.as<Maike::KeyValueStore::CompoundRefConst>().get<TestType>("subobject");
+		assert(obj.item == "Foobar");
+		assert(obj.count == 123);
+	}
+
+	void maikeKeyValueStoreObjectNonExistingKey()
+	{
+		Maike::KeyValueStore::Object test{StringViewSource{R"json({
+"item": "Foobar",
+"count": 123
+})json"}};
+
+		auto item = test.get();
+		try
+		{
+			(void)item.as<Maike::KeyValueStore::CompoundRefConst>().get<char const*>("non-existing key");
+			abort();
+		}
+		catch(...)
+		{
+		}
+	}
 }
 
 int main()
@@ -151,6 +184,9 @@ int main()
 	Testcases::maikeKeyValueStoreObjectCreateFromJson();
 	Testcases::maikeKeyValueStoreObjectGetHelperBuiltin();
 	Testcases::maikeKeyValueStoreObjectGetHelperAdl();
+	Testcases::maikeKeyValueStoreObjectGetHelperAdlInner();
+
+	Testcases::maikeKeyValueStoreObjectNonExistingKey();
 
 	return 0;
 }
