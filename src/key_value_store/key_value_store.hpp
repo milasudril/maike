@@ -29,7 +29,9 @@ namespace Maike::KeyValueStore
 		}
 
 		json_t const* handle() const
-		{ return r_handle; }
+		{
+			return r_handle;
+		}
 
 	private:
 		json_t* r_handle;
@@ -206,6 +208,45 @@ namespace Maike::KeyValueStore
 		return ArrayRefConst{r_handle, r_name};
 	}
 
+
+	class ObjectRef
+	{
+	public:
+		explicit ObjectRef(json_t* handle): r_handle{handle}
+		{
+		}
+
+		json_t* handle() const
+		{
+			return r_handle;
+		}
+
+		template<class T>
+		void set(T value);
+
+	private:
+		json_t* r_handle;
+	};
+
+	template<>
+	inline void ObjectRef::set<char const*>(char const* val)
+	{
+		json_string_set(r_handle, val);
+	}
+
+	template<>
+	inline void ObjectRef::set<json_int_t>(json_int_t val)
+	{
+		json_integer_set(r_handle, val);
+	}
+
+	template<>
+	inline void ObjectRef::set<double>(double val)
+	{
+		json_real_set(r_handle, val);
+	}
+
+
 	class DecodeError: public std::runtime_error
 	{
 	public:
@@ -215,11 +256,23 @@ namespace Maike::KeyValueStore
 	class Object
 	{
 	public:
-		Object(): m_root(nullptr)
+		Object(): m_root{json_object()}
 		{
 		}
-		Object(Object&&);
-		Object& operator=(Object&&);
+
+		Object(Object&& other): m_root{other.m_root}
+		{
+			other.m_root = nullptr;
+		}
+
+		Object& operator=(Object&& other)
+		{
+			std::swap(m_root, other.m_root);
+			json_decref(other.m_root);
+			other.m_root = nullptr;
+			return *this;
+		}
+
 		~Object()
 		{
 			if(m_root != nullptr) { json_decref(m_root); }
@@ -248,6 +301,11 @@ namespace Maike::KeyValueStore
 			return ObjectRefConst{m_root, m_name.c_str()};
 		}
 
+		ObjectRef get()
+		{
+			return ObjectRef{m_root};
+		}
+
 		bool empty() const
 		{
 			return m_root == nullptr;
@@ -261,12 +319,16 @@ namespace Maike::KeyValueStore
 	template<class Sink>
 	void write(Object const& obj, Sink&& sink)
 	{
-		json_dump_callback(obj.get().handle(), [](char const* buffer, size_t bufflen, void* data){
-			using SelfT = std::decay_t<Sink>;
-			auto& self = *reinterpret_cast<SelfT*>(data);
-			write(self, buffer, bufflen);
-			return 0;
-		}, &sink, JSON_SORT_KEYS|JSON_INDENT(4));
+		json_dump_callback(
+		   obj.get().handle(),
+		   [](char const* buffer, size_t bufflen, void* data) {
+			   using SelfT = std::decay_t<Sink>;
+			   auto& self = *reinterpret_cast<SelfT*>(data);
+			   write(self, buffer, bufflen);
+			   return 0;
+		   },
+		   &sink,
+		   JSON_SORT_KEYS | JSON_INDENT(4));
 	}
 }
 

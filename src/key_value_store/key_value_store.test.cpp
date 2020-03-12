@@ -118,7 +118,7 @@ Here is some junk)json"};
 })json"}};
 
 		assert(!test.empty());
-		auto ref = test.get().as<Maike::KeyValueStore::CompoundRefConst>();
+		auto ref = std::as_const(test).get().as<Maike::KeyValueStore::CompoundRefConst>();
 
 		{
 			auto obj = ref.get<Maike::KeyValueStore::CompoundRefConst>("an object");
@@ -153,7 +153,8 @@ Here is some junk)json"};
 	{
 		Maike::KeyValueStore::Object test{StringViewSource{R"json([1, 2, 3])json"}};
 		std::array<int, 3> vals{1, 2, 3};
-		auto array = Maike::KeyValueStore::get<Maike::KeyValueStore::ArrayRefConst>(test.get());
+		auto array =
+		   Maike::KeyValueStore::get<Maike::KeyValueStore::ArrayRefConst>(std::as_const(test).get());
 		assert((std::equal(std::begin(array), std::end(array), std::begin(vals), [](auto a, auto b) {
 			return Maike::KeyValueStore::get<json_int_t>(a) == b;
 		})));
@@ -167,7 +168,7 @@ Here is some junk)json"};
 "count": 123
 })json"}};
 
-		auto item = test.get();
+		auto item = std::as_const(test).get();
 
 		TestType obj = get(Maike::KeyValueStore::Tag<TestType>{}, item);
 		assert(obj.item == "Foobar");
@@ -182,7 +183,7 @@ Here is some junk)json"};
 	"count": 123
 }})json"}};
 
-		auto item = test.get();
+		auto item = std::as_const(test).get();
 
 		TestType obj = item.as<Maike::KeyValueStore::CompoundRefConst>().get<TestType>("subobject");
 		assert(obj.item == "Foobar");
@@ -196,7 +197,7 @@ Here is some junk)json"};
 "count": 123
 })json"}};
 
-		auto item = test.get();
+		auto item = std::as_const(test).get();
 		try
 		{
 			(void)item.as<Maike::KeyValueStore::CompoundRefConst>().get<char const*>("non-existing key");
@@ -217,7 +218,7 @@ Here is some junk)json"};
 "a double": 3.14
 })json"}};
 
-		auto ref = test.get().as<Maike::KeyValueStore::CompoundRefConst>();
+		auto ref = std::as_const(test).get().as<Maike::KeyValueStore::CompoundRefConst>();
 
 		try
 		{
