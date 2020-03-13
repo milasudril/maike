@@ -289,6 +289,24 @@ Here is some junk)json"};
     }
 })json");
 	}
+
+	void maikeKeyValueStoreObjectCreateInt()
+	{
+		Maike::KeyValueStore::Object test{123};
+		assert(test.get().as<json_int_t>() == 123);
+	}
+
+	void maikeKeyValueStoreObjectCreateString()
+	{
+		Maike::KeyValueStore::Object test{"Foobar"};
+		assert(std::string_view{"Foobar"} == test.get().as<char const*>());
+	}
+
+	void maikeKeyValueStoreObjectCreateDouble()
+	{
+		Maike::KeyValueStore::Object test{0.125};
+		assert(test.get().as<double>() == 0.125);
+	}
 }
 
 int main()
@@ -304,5 +322,10 @@ int main()
 	Testcases::maikeKeyValueStoreObjectWrongType();
 
 	Testcases::maikeKeyValueStoreObjectWrite();
+
+	Testcases::maikeKeyValueStoreObjectCreateInt();
+	Testcases::maikeKeyValueStoreObjectCreateString();
+	Testcases::maikeKeyValueStoreObjectCreateDouble();
+
 	return 0;
 }

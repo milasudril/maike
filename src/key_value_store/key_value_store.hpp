@@ -10,6 +10,7 @@
 
 #include <stdexcept>
 #include <cstddef>
+#include <type_traits>
 
 namespace Maike::KeyValueStore
 {
@@ -208,45 +209,6 @@ namespace Maike::KeyValueStore
 		return ArrayRefConst{r_handle, r_name};
 	}
 
-
-	class ObjectRef
-	{
-	public:
-		explicit ObjectRef(json_t* handle): r_handle{handle}
-		{
-		}
-
-		json_t* handle() const
-		{
-			return r_handle;
-		}
-
-		template<class T>
-		void set(T value);
-
-	private:
-		json_t* r_handle;
-	};
-
-	template<>
-	inline void ObjectRef::set<char const*>(char const* val)
-	{
-		json_string_set(r_handle, val);
-	}
-
-	template<>
-	inline void ObjectRef::set<json_int_t>(json_int_t val)
-	{
-		json_integer_set(r_handle, val);
-	}
-
-	template<>
-	inline void ObjectRef::set<double>(double val)
-	{
-		json_real_set(r_handle, val);
-	}
-
-
 	class DecodeError: public std::runtime_error
 	{
 	public:
@@ -256,63 +218,73 @@ namespace Maike::KeyValueStore
 	class Object
 	{
 	public:
-		Object(): m_root{json_object()}
+		Object(): m_handle{json_object()}
 		{
 		}
 
-		Object(Object&& other): m_root{other.m_root}
+
+		Object(Object&& other): m_handle{other.m_handle}
 		{
-			other.m_root = nullptr;
+			other.m_handle = nullptr;
 		}
 
 		Object& operator=(Object&& other)
 		{
-			std::swap(m_root, other.m_root);
-			json_decref(other.m_root);
-			other.m_root = nullptr;
+			std::swap(m_handle, other.m_handle);
+			json_decref(other.m_handle);
+			other.m_handle = nullptr;
 			return *this;
 		}
 
 		~Object()
 		{
-			if(m_root != nullptr) { json_decref(m_root); }
+			if(m_handle != nullptr) { json_decref(m_handle); }
 		}
 
+		template<class T>
+		explicit Object(T x, std::enable_if_t<std::is_integral_v<T>, int> = 0):m_handle{json_integer(x)}{}
+
+		explicit Object(char const* str):m_handle{json_string(str)}{}
+
+		explicit Object(double x):m_handle{json_real(x)}{}
+
 		template<class Source>
-		Object(Source&& src)
+		explicit Object(Source&& src, std::enable_if_t<!std::is_integral_v<Source>, int> = 0)
 		{
 			json_error_t err;
-			m_root = json_load_callback(
+			m_handle = json_load_callback(
 			   [](void* buffer, size_t bufflen, void* data) {
 				   using SelfT = std::decay_t<Source>;
 				   auto& self = *reinterpret_cast<SelfT*>(data);
 				   return static_cast<size_t>(read(self, reinterpret_cast<std::byte*>(buffer), bufflen));
 			   },
 			   &src,
-			   JSON_DISABLE_EOF_CHECK,
+			   JSON_DISABLE_EOF_CHECK | JSON_DECODE_ANY,
 			   &err);
-			if(m_root == nullptr && !(err.line == 1 && err.column == 0))
+			if(m_handle == nullptr && !(err.line == 1 && err.column == 0))
 			{ throw DecodeError{name(src), err.line, err.column, err.text}; }
 			m_name = name(src);
 		}
 
 		ObjectRefConst get() const
 		{
-			return ObjectRefConst{m_root, m_name.c_str()};
+			return ObjectRefConst{m_handle, m_name.c_str()};
 		}
 
-		ObjectRef get()
+		template<class T>
+		auto as() const
 		{
-			return ObjectRef{m_root};
+			return get().template as<T>();
 		}
+
 
 		bool empty() const
 		{
-			return m_root == nullptr;
+			return m_handle == nullptr;
 		}
 
 	private:
-		json_t* m_root;
+		json_t* m_handle;
 		std::string m_name;
 	};
 
@@ -328,7 +300,7 @@ namespace Maike::KeyValueStore
 			   return 0;
 		   },
 		   &sink,
-		   JSON_SORT_KEYS | JSON_INDENT(4));
+		   JSON_SORT_KEYS | JSON_ENCODE_ANY | JSON_INDENT(4));
 	}
 }
 
