@@ -242,14 +242,14 @@ namespace Maike::KeyValueStore
 		}
 
 		template<class T>
-		explicit Object(T x, std::enable_if_t<std::is_integral_v<T>, int> = 0):m_handle{json_integer(x)}{}
+		explicit Object(T x, std::enable_if_t<std::is_integral_v<T>, std::integral_constant<int, 0> > = {}):m_handle{json_integer(x)}{}
 
 		explicit Object(char const* str):m_handle{json_string(str)}{}
 
 		explicit Object(double x):m_handle{json_real(x)}{}
 
 		template<class Source>
-		explicit Object(Source&& src, std::enable_if_t<!std::is_integral_v<Source>, int> = 0)
+		explicit Object(Source&& src, std::enable_if_t<!std::is_integral_v<Source>, std::integral_constant<int, 0> > = {})
 		{
 			json_error_t err;
 			m_handle = json_load_callback(
