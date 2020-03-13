@@ -307,6 +307,17 @@ Here is some junk)json"};
 		Maike::KeyValueStore::Object test{0.125};
 		assert(test.get().as<double>() == 0.125);
 	}
+
+	void maikeKeyValueStoreObjectCreateArray()
+	{
+		std::vector<int> vals{1, 2, 3, 4};
+		Maike::KeyValueStore::Object test{std::begin(vals), std::end(vals)};
+
+		auto array = test.as<Maike::KeyValueStore::ArrayRefConst>();
+		assert((std::equal(std::begin(array), std::end(array), std::begin(vals), [](auto a, auto b) {
+			return Maike::KeyValueStore::get<json_int_t>(a) == b;
+		})));
+	}
 }
 
 int main()
@@ -326,6 +337,7 @@ int main()
 	Testcases::maikeKeyValueStoreObjectCreateInt();
 	Testcases::maikeKeyValueStoreObjectCreateString();
 	Testcases::maikeKeyValueStoreObjectCreateDouble();
+	Testcases::maikeKeyValueStoreObjectCreateArray();
 
 	return 0;
 }

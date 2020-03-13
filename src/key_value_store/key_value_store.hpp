@@ -11,6 +11,8 @@
 #include <stdexcept>
 #include <cstddef>
 #include <type_traits>
+#include <algorithm>
+#include <cstdlib>
 
 namespace Maike::KeyValueStore
 {
@@ -242,14 +244,27 @@ namespace Maike::KeyValueStore
 		}
 
 		template<class T>
-		explicit Object(T x, std::enable_if_t<std::is_integral_v<T>, std::integral_constant<int, 0> > = {}):m_handle{json_integer(x)}{}
+		explicit Object(T x, std::enable_if_t<std::is_integral_v<std::decay_t<T>>, std::integral_constant<int, 0> > = {}):m_handle{json_integer(x)}{}
 
 		explicit Object(char const* str):m_handle{json_string(str)}{}
 
 		explicit Object(double x):m_handle{json_real(x)}{}
 
+		template<class Iter>
+		explicit Object(Iter a, Iter b):m_handle{json_array()}
+		{
+			std::for_each(a, b, [h = m_handle](auto const& item) {
+				auto obj = Object{item};
+				if(json_array_append_new(h, obj.m_handle) == -1)
+				{
+					abort();
+				}
+				obj.m_handle = nullptr;
+			});
+		}
+
 		template<class Source>
-		explicit Object(Source&& src, std::enable_if_t<!std::is_integral_v<Source>, std::integral_constant<int, 0> > = {})
+		explicit Object(Source&& src, std::enable_if_t<!std::is_integral_v<std::decay_t<Source>>, std::integral_constant<int, 0> > = {})
 		{
 			json_error_t err;
 			m_handle = json_load_callback(
