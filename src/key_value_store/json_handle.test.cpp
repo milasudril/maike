@@ -105,6 +105,16 @@ namespace Testcases
 Here is some junk)json"};
 		auto val = Maike::KeyValueStore::jsonLoad(src);
 		assert(*src.read_ptr == '\n');
+		assert(src.n_bytes_left == 18);
+	}
+
+	void maikeKeyValueStoreJsonHandleLoadWhitespaceOnly()
+	{
+		StringViewSource src{"                         \n"
+		"                                              \n"
+		"                                              "};
+		auto val = Maike::KeyValueStore::jsonLoad(src);
+		assert(!val.valid());
 	}
 }
 
@@ -114,6 +124,7 @@ int main()
 	Testcases::maikeKeyValueStoreJsonHandleLoadEmpty();
 	Testcases::maikeKeyValueStoreJsonHandleLoadJunk();
 	Testcases::maikeKeyValueStoreJsonHandleLoadDataAfterJson();
+	Testcases::maikeKeyValueStoreJsonHandleLoadWhitespaceOnly();
 
 	return 0;
 }

@@ -4,6 +4,8 @@
 
 #include "./json_handle.hpp"
 
+#include <algorithm>
+
 namespace
 {
 	class DecodeError: public std::runtime_error
@@ -17,7 +19,16 @@ namespace
 	};
 }
 
-Maike::KeyValueStore::JsonHandle Maike::KeyValueStore::detail::jsonLoad(void* obj,
+bool Maike::KeyValueStore::detail::hasNonWhitespace(std::byte const* begin, std::byte const* end)
+{
+	return std::any_of(begin, end, [](auto item)
+	{
+		auto ch_in = static_cast<char>(item);
+		return !(ch_in>=0 && ch_in <=' ');
+	});
+}
+
+Maike::KeyValueStore::JsonHandle Maike::KeyValueStore::detail::jsonLoad(ReadCallbackBase* obj,
                                                                         ReadCallback read_callback,
                                                                         std::string_view src_name)
 {
@@ -25,7 +36,7 @@ Maike::KeyValueStore::JsonHandle Maike::KeyValueStore::detail::jsonLoad(void* ob
 	Maike::KeyValueStore::JsonHandle ret{
 	   json_load_callback(read_callback, obj, JSON_DISABLE_EOF_CHECK | JSON_DECODE_ANY | JSON_REJECT_DUPLICATES, &err)};
 
-	if(!ret.valid() && !(err.line == 1 && err.column == 0))
+	if(!ret.valid() && obj->m_has_data)
 	{ throw DecodeError{src_name, err.line, err.column, err.text}; }
 
 	return ret;

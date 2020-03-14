@@ -56,8 +56,15 @@ namespace Maike::KeyValueStore
 
 	namespace detail
 	{
+		struct ReadCallbackBase
+		{
+			bool m_has_data;
+		};
+
 		using ReadCallback = json_load_callback_t;
-		JsonHandle jsonLoad(void* obj, ReadCallback cb, std::string_view src_name);
+		JsonHandle jsonLoad(ReadCallbackBase* obj, ReadCallback cb, std::string_view src_name);
+
+		bool hasNonWhitespace(std::byte const* begin, std::byte const* end);
 
 		template<class Source>
 		size_t fetch(Source& src, std::byte* buffer, size_t n)
@@ -79,17 +86,28 @@ namespace Maike::KeyValueStore
 			}
 			return n_written;
 		}
+
+		template<class Source>
+		struct ReadCallbackObj:public ReadCallbackBase
+		{
+			Source* r_src;
+		};
 	}
 
 	template<class Source>
 	JsonHandle jsonLoad(Source&& src)
 	{
+		detail::ReadCallbackObj<std::decay_t<Source>> cb{false, &src};
+
 		return detail::jsonLoad(
-		   &src,
+		   &cb,
 		   [](void* buffer, size_t bufflen, void* obj) {
-			   using SelfT = std::decay_t<Source>;
-			   auto& self = *reinterpret_cast<SelfT*>(obj);
-			   return detail::fetch(self, reinterpret_cast<std::byte*>(buffer), bufflen);
+			   auto self = reinterpret_cast<detail::ReadCallbackObj<std::decay_t<Source>>*>(obj);
+			   auto buff_bytes = reinterpret_cast<std::byte*>(buffer);
+			   auto const ret = detail::fetch(*self->r_src, buff_bytes, bufflen);
+			   if(!self->m_has_data)
+			   { self->m_has_data = detail::hasNonWhitespace(buff_bytes, buff_bytes + ret);}
+			   return ret;
 		   },
 		   name(src));
 	}
