@@ -1,5 +1,5 @@
 //@	{
-//@	  "targets":[{"name":"json_handle.test.cpp","type":"application", "autorun": 1}]
+//@	  "targets":[{"name":"json_handle.test","type":"application", "autorun": 1}]
 //@	 }
 
 #undef NDEBUG
@@ -7,10 +7,52 @@
 #include "./json_handle.hpp"
 
 #include <cassert>
+#include <cstring>
+
+namespace
+{
+	struct EmptySource
+	{
+	};
+
+	size_t read(EmptySource, std::byte*, size_t)
+	{
+		return 0;
+	}
+
+	char const* name(EmptySource)
+	{
+		return "<input buffer>";
+	}
+
+	struct StringViewSource
+	{
+		explicit StringViewSource(std::string_view v): read_ptr{v.data()}, n_bytes_left{v.size()}
+		{
+		}
+		char const* read_ptr;
+		size_t n_bytes_left;
+	};
+
+	size_t read(StringViewSource& src, std::byte* buffer, size_t N)
+	{
+		auto const n = std::min(N, src.n_bytes_left);
+		memcpy(buffer, src.read_ptr, n);
+		src.read_ptr += n;
+		src.n_bytes_left -= n;
+		return n;
+	}
+
+	char const* name(StringViewSource)
+	{
+		return "<input buffer>";
+	}
+
+}
 
 namespace Testcases
 {
-	void maikeKeyValueStoreJsonHandleCreate()
+	void maikeKeyValueStoreJsonHandleCreateAndMove()
 	{
 		Maike::KeyValueStore::JsonHandle h1{};
 
@@ -28,10 +70,42 @@ namespace Testcases
 		assert(!h1.valid());
 		assert(other.get() == h2ptr);
 	}
+
+	void maikeKeyValueStoreJsonHandleLoadEmpty()
+	{
+		auto val = Maike::KeyValueStore::jsonLoad(EmptySource{});
+		assert(!val.valid());
+	}
+
+	void maikeKeyValueStoreJsonHandleLoadJunk()
+	{
+		try
+		{
+			auto val = Maike::KeyValueStore::jsonLoad(StringViewSource{R"json(
+{"invalid json": "missing curly brace")json"});
+			abort();
+		}
+		catch(...)
+		{
+		}
+	}
+
+	void maikeKeyValueStoreJsonHandleLoadDataAfterJson()
+	{
+		StringViewSource src{R"json(
+{"Key": "value"}
+Here is some junk)json"};
+		auto val = Maike::KeyValueStore::jsonLoad(src);
+		assert(*src.read_ptr == ' ');
+	}
 }
 
 int main()
 {
-	Testcases::maikeKeyValueStoreJsonHandleCreate();
+	Testcases::maikeKeyValueStoreJsonHandleCreateAndMove();
+	Testcases::maikeKeyValueStoreJsonHandleLoadEmpty();
+	Testcases::maikeKeyValueStoreJsonHandleLoadJunk();
+//	Testcases::maikeKeyValueStoreJsonHandleLoadDataAfterJson();
+
 	return 0;
 }

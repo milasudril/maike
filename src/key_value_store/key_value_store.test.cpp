@@ -110,7 +110,7 @@ namespace Testcases
 {"Key": "value"}
 Here is some junk)json"};
 		Maike::KeyValueStore::Object test{src};
-		assert(*src.read_ptr == ' ');
+		assert(src.n_bytes_left != 0);
 	}
 
 	void maikeKeyValueStoreObjectCreateFromJson()
@@ -330,6 +330,7 @@ int main()
 {
 	Testcases::maikeKeyValueStoreObjectCreateEmptySource();
 	Testcases::maikeKeyValueStoreObjectCreateInvalidJson();
+	//Testcases::maikeKeyValueStoreObjectCreateDataAfterJson();
 	Testcases::maikeKeyValueStoreObjectCreateFromJson();
 	Testcases::maikeKeyValueStoreObjectGetHelperBuiltin();
 	Testcases::maikeKeyValueStoreObjectGetHelperAdl();
