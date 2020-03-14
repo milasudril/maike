@@ -66,6 +66,12 @@ namespace
 		return TestType{compound.get<char const*>("item"), compound.get<json_int_t>("count")};
 	}
 
+	/*	Maike::KeyValueStore::Compound set(TestType const& obj,
+	                                    Maike::KeyValueStore::Tag<Maike::KeyVAlueStore::Compound>)
+	 {
+	  return Maike::KeyValueStore::Compound{}.set("item", obj.item).set("count", obj.count);
+	 }*/
+
 	struct StringSink
 	{
 		std::string buffer;
