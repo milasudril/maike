@@ -7,6 +7,7 @@
 #define MAIKE_KEYVALUESTORE_JSONHANDLE_HPP
 
 #include <jansson.h>
+#include <memory>
 
 namespace Maike::KeyValueStore
 {
@@ -27,8 +28,11 @@ namespace Maike::KeyValueStore
 
 		json_t const* get() const
 		{
-			return m_handle;
+			return m_handle.get();
 		}
+
+		bool valid() const
+		{ return m_handle != nullptr; }
 
 	private:
 		struct JsonDeleter
@@ -40,7 +44,7 @@ namespace Maike::KeyValueStore
 		};
 
 		std::unique_ptr<json_t, JsonDeleter> m_handle;
-	}
+	};
 }
 
 #endif
