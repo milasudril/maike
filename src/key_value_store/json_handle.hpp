@@ -13,6 +13,7 @@
 #include <cstddef>
 #include <stdexcept>
 #include <string_view>
+#include <type_traits>
 
 namespace Maike::KeyValueStore
 {
@@ -57,6 +58,27 @@ namespace Maike::KeyValueStore
 	{
 		using ReadCallback = ssize_t (*)(void* obj, char* buffer, size_t n);
 		JsonHandle jsonLoad(void* obj, ReadCallback cb, std::string_view src_name);
+
+		template<class Source>
+		ssize_t fetch(Source& src, std::byte* buffer, size_t n)
+		{
+			size_t n_written = 0;
+			while(n_written != n)
+			{
+				auto ch_in = getchar(src);
+				static_assert(std::is_same_v<std::decay_t<decltype(ch_in)>, int>);
+				if (ch_in == -1)
+				{ return 0; }
+
+				*buffer = static_cast<std::byte>(ch_in);
+				++buffer;
+				++n_written;
+
+				if(ch_in == '}' || ch_in == ']' || (ch_in>= ' ' && ch_in<=' '))
+				{ return n_written;}
+			}
+			return n_written;
+		}
 	}
 
 	template<class Source>
@@ -67,7 +89,7 @@ namespace Maike::KeyValueStore
 		   [](void* obj, char* buffer, size_t n) {
 			   using SelfT = std::decay_t<Source>;
 			   auto& self = *reinterpret_cast<SelfT*>(obj);
-			   return static_cast<ssize_t>(read(self, reinterpret_cast<std::byte*>(buffer), n));
+			   return detail::fetch(self, reinterpret_cast<std::byte*>(buffer), n);
 		   },
 		   name(src));
 	}

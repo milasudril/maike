@@ -15,9 +15,14 @@ namespace
 	{
 	};
 
-	size_t read(EmptySource, std::byte*, size_t)
+/*	size_t read(EmptySource, std::byte*, size_t)
 	{
 		return 0;
+	}*/
+
+	int getchar(EmptySource)
+	{
+		return -1;
 	}
 
 	char const* name(EmptySource)
@@ -34,17 +39,17 @@ namespace
 		size_t n_bytes_left;
 	};
 
-	size_t read(StringViewSource& src, std::byte* buffer, size_t N)
+	int getchar(StringViewSource& src)
 	{
-		auto const n = std::min(std::min(static_cast<size_t>(1), N), src.n_bytes_left);
-		if (n != 0)
-		{
-			*buffer = static_cast<std::byte>(*src.read_ptr);
-		}
-		src.read_ptr += n;
-		src.n_bytes_left -= n;
-		return n;
+		if(src.n_bytes_left == 0)
+		{ return -1; }
+
+		auto ret = *src.read_ptr;
+		++src.read_ptr;
+		--src.n_bytes_left;
+		return ret;
 	}
+
 
 	char const* name(StringViewSource)
 	{
