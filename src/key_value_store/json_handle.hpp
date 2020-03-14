@@ -56,11 +56,11 @@ namespace Maike::KeyValueStore
 
 	namespace detail
 	{
-		using ReadCallback = ssize_t (*)(void* obj, char* buffer, size_t n);
+		using ReadCallback = json_load_callback_t;
 		JsonHandle jsonLoad(void* obj, ReadCallback cb, std::string_view src_name);
 
 		template<class Source>
-		ssize_t fetch(Source& src, std::byte* buffer, size_t n)
+		size_t fetch(Source& src, std::byte* buffer, size_t n)
 		{
 			size_t n_written = 0;
 			while(n_written != n)
@@ -86,10 +86,10 @@ namespace Maike::KeyValueStore
 	{
 		return detail::jsonLoad(
 		   &src,
-		   [](void* obj, char* buffer, size_t n) {
+		   [](void* buffer, size_t bufflen, void* obj) {
 			   using SelfT = std::decay_t<Source>;
 			   auto& self = *reinterpret_cast<SelfT*>(obj);
-			   return detail::fetch(self, reinterpret_cast<std::byte*>(buffer), n);
+			   return detail::fetch(self, reinterpret_cast<std::byte*>(buffer), bufflen);
 		   },
 		   name(src));
 	}
