@@ -1,5 +1,6 @@
 //@	{
 //@	  "targets":[{"name":"json_handle.hpp","type":"include", "pkgconfig_libs":["jansson"]}]
+//@	 ,"dependencies_extra":[{"ref":"json_handle.o","rel":"implementation"}]
 //@	 }
 
 
@@ -52,42 +53,30 @@ namespace Maike::KeyValueStore
 		std::unique_ptr<json_t, JsonDeleter> m_handle;
 	};
 
-	class DecodeError: public std::runtime_error
+	namespace detail
 	{
-	public:
-		explicit DecodeError(std::string_view source,
-                                               int line,
-                                               int col,
-                                               char const* description):
-   std::runtime_error{std::string{source} + ':' + std::to_string(line) + ':' + std::to_string(col + 1) + ": "
-		       + description + '.'}
-		       {}
-	};
+		using ReadCallback = ssize_t (*)(void* obj, char* buffer, size_t n);
+		JsonHandle jsonLoad(void* obj, ReadCallback cb, std::string_view src_name);
+	}
 
 	template<class Source>
 	JsonHandle jsonLoad(Source&& src)
 	{
-		json_error_t err{};
-		auto handle = json_load_callback(
-		   [](void* buffer, size_t bufflen, void* data) {
-			   using SelfT = std::decay_t<Source>;
-			   auto& self = *reinterpret_cast<SelfT*>(data);
-			   return static_cast<size_t>(read(self, reinterpret_cast<std::byte*>(buffer), bufflen));
-		   },
+		return detail::jsonLoad(
 		   &src,
-		   JSON_DISABLE_EOF_CHECK | JSON_DECODE_ANY,
-		   &err);
-
-		if(handle == nullptr && !(err.line == 1 && err.column == 0))
-		{ throw DecodeError{name(src), err.line, err.column, err.text}; }
-
-		return JsonHandle{handle};
+		   [](void* obj, char* buffer, size_t n) {
+			   using SelfT = std::decay_t<Source>;
+			   auto& self = *reinterpret_cast<SelfT*>(obj);
+			   return static_cast<ssize_t>(read(self, reinterpret_cast<std::byte*>(buffer), n));
+		   },
+		   name(src));
 	}
 
 	template<class Sink>
 	void store(json_t const* handle, Sink&& sink)
 	{
-		json_dump_callback(handle,
+		json_dump_callback(
+		   handle,
 		   [](char const* buffer, size_t bufflen, void* data) {
 			   using SelfT = std::decay_t<Sink>;
 			   auto& self = *reinterpret_cast<SelfT*>(data);

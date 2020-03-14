@@ -36,8 +36,11 @@ namespace
 
 	size_t read(StringViewSource& src, std::byte* buffer, size_t N)
 	{
-		auto const n = std::min(N, src.n_bytes_left);
-		memcpy(buffer, src.read_ptr, n);
+		auto const n = std::min(std::min(static_cast<size_t>(1), N), src.n_bytes_left);
+		if (n != 0)
+		{
+			*buffer = static_cast<std::byte>(*src.read_ptr);
+		}
 		src.read_ptr += n;
 		src.n_bytes_left -= n;
 		return n;
@@ -96,7 +99,7 @@ namespace Testcases
 {"Key": "value"}
 Here is some junk)json"};
 		auto val = Maike::KeyValueStore::jsonLoad(src);
-		assert(*src.read_ptr == ' ');
+		assert(*src.read_ptr == '\n');
 	}
 }
 
@@ -105,7 +108,7 @@ int main()
 	Testcases::maikeKeyValueStoreJsonHandleCreateAndMove();
 	Testcases::maikeKeyValueStoreJsonHandleLoadEmpty();
 	Testcases::maikeKeyValueStoreJsonHandleLoadJunk();
-//	Testcases::maikeKeyValueStoreJsonHandleLoadDataAfterJson();
+	Testcases::maikeKeyValueStoreJsonHandleLoadDataAfterJson();
 
 	return 0;
 }
