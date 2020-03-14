@@ -15,11 +15,6 @@ namespace
 	{
 	};
 
-/*	size_t read(EmptySource, std::byte*, size_t)
-	{
-		return 0;
-	}*/
-
 	int getchar(EmptySource)
 	{
 		return -1;
@@ -54,6 +49,16 @@ namespace
 	char const* name(StringViewSource)
 	{
 		return "<input buffer>";
+	}
+
+	struct Sink
+	{
+		std::string m_value;
+	};
+
+	void write(Sink& sink, char const* buffer, size_t n)
+	{
+		sink.m_value.insert(std::end(sink.m_value), buffer, buffer + n);
 	}
 
 }
@@ -116,6 +121,35 @@ Here is some junk)json"};
 		auto val = Maike::KeyValueStore::jsonLoad(src);
 		assert(!val.valid());
 	}
+
+	void maikeKeyValueStoreJsonHandleLoadStore()
+	{
+		auto val = Maike::KeyValueStore::jsonLoad(StringViewSource{R"json({
+"an object": {"key": "some value"},
+"an array": ["this", "is", "an", "array"],
+"a string": "This is a string",
+"an integer": 123,
+"a double": 3.14
+})json"});
+
+		Sink s;
+		store(val, s);
+
+		assert(R"json({
+    "a double": 3.1400000000000001,
+    "a string": "This is a string",
+    "an array": [
+        "this",
+        "is",
+        "an",
+        "array"
+    ],
+    "an integer": 123,
+    "an object": {
+        "key": "some value"
+    }
+})json" == s.m_value);
+	}
 }
 
 int main()
@@ -125,6 +159,7 @@ int main()
 	Testcases::maikeKeyValueStoreJsonHandleLoadJunk();
 	Testcases::maikeKeyValueStoreJsonHandleLoadDataAfterJson();
 	Testcases::maikeKeyValueStoreJsonHandleLoadWhitespaceOnly();
+	Testcases::maikeKeyValueStoreJsonHandleLoadStore();
 
 	return 0;
 }

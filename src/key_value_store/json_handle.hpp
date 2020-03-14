@@ -126,6 +126,10 @@ namespace Maike::KeyValueStore
 		   &sink,
 		   JSON_SORT_KEYS | JSON_ENCODE_ANY | JSON_INDENT(4));
 	}
+
+	template<class Sink>
+	void store(JsonHandle const& obj, Sink&& sink)
+	{store(obj.get(), std::forward<Sink>(sink));}
 }
 
 #endif
