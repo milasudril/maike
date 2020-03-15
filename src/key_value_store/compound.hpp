@@ -28,20 +28,20 @@ namespace Maike::KeyValueStore
 	public:
 		explicit CompoundRefConst(JsonRefConst ref):m_ref{ref}
 		{
-			validateType<Type::Object>(ref.type(), ref.source());
+			validateType<Type::Compound>(ref.type(), ref.source());
 		}
 
 		template<class T>
 		T get(char const* key) const
 		{
-			auto obj = json_object_get(m_ref.get(), key);
+			auto obj = json_object_get(m_ref.handle(), key);
 			if(obj == nullptr) { throw KeyLookupError{m_ref.source(), key}; }
 			return JsonRefConst{obj, m_ref.source()}.as<T>();
 		}
 
 		size_t size() const
 		{
-			return json_object_size(m_ref.get());
+			return json_object_size(m_ref.handle());
 		}
 
 	private:
@@ -54,7 +54,7 @@ namespace Maike::KeyValueStore
 		template<class Source>
 		explicit Compound(Source&& src): m_handle{jsonLoad(src)}
 		{
-			if(m_handle.valid()) { validateType<Type::Object>(m_handle.type(), name(src)); }
+			if(m_handle.valid()) { validateType<Type::Compound>(m_handle.type(), name(src)); }
 		}
 
 		Compound(): m_handle{json_object()}

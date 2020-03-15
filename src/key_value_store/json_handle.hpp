@@ -20,7 +20,7 @@ namespace Maike::KeyValueStore
 {
 	enum class Type : int
 	{
-		Object = JSON_OBJECT,
+		Compound = JSON_OBJECT,
 		Array = JSON_ARRAY,
 		String = JSON_STRING,
 		Integer = JSON_INTEGER,
@@ -34,7 +34,7 @@ namespace Maike::KeyValueStore
 	{
 		switch(type)
 		{
-			case Type::Object: return "compound";
+			case Type::Compound: return "compound";
 			case Type::Array: return "array";
 			case Type::String: return "string";
 			case Type::Integer: return "integer";
@@ -91,7 +91,7 @@ namespace Maike::KeyValueStore
 			return static_cast<Type>(json_typeof(r_handle));
 		}
 
-		json_t const* get() const
+		json_t const* handle() const
 		{
 			return r_handle;
 		}
@@ -100,7 +100,6 @@ namespace Maike::KeyValueStore
 		{
 			return r_src;
 		}
-
 
 	private:
 		json_t* r_handle;
