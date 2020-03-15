@@ -18,8 +18,7 @@ namespace Maike::KeyValueStore
 			{
 				if(m_handle.valid())
 				{
-					if(m_handle.type() != JsonHandle::Type::Object)
-					{ throw "Type error"; }
+					validateType<JsonHandle::Type::Object>(m_handle.type(), name(src));
 				}
 			}
 

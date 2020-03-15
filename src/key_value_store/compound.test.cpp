@@ -65,6 +65,17 @@ namespace Testcases
 		})json"}};
 		assert(c.size() == 2);
 	}
+
+	void maikeKeyValueStoreCompoundLoadSomethingElse()
+	{
+		try
+		{
+			Maike::KeyValueStore::Compound c{StringViewSource{R"json([1, 2, 3])json"}};
+			abort();
+		} catch(...)
+		{}
+
+	}
 }
 
 int main()
@@ -73,4 +84,5 @@ int main()
 	Testcases::maikeKeyValueStoreCompoundLoadEmpty();
 	Testcases::maikeKeyValueStoreCompoundLoadEmpty2();
 	Testcases::maikeKeyValueStoreCompoundLoad();
+	Testcases::maikeKeyValueStoreCompoundLoadSomethingElse();
 }

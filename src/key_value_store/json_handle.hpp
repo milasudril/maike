@@ -146,6 +146,57 @@ namespace Maike::KeyValueStore
 	template<class Sink>
 	void store(JsonHandle const& obj, Sink&& sink)
 	{store(obj.get(), sink);}
+
+	namespace detail
+	{
+		constexpr std::string_view name(JsonHandle::Type type)
+		{
+			switch(type)
+			{
+				case JsonHandle::Type::Object:
+					return "compound";
+				case JsonHandle::Type::Array:
+					return "array";
+				case JsonHandle::Type::String:
+					return "string";
+				case JsonHandle::Type::Integer:
+					return "integer";
+				case JsonHandle::Type::Float:
+					return "float";
+				case JsonHandle::Type::True:
+					return "true";
+				case JsonHandle::Type::False:
+					return "false";
+				case JsonHandle::Type::Null:
+					return "null";
+				default:
+					return "unknown";
+			}
+		}
+	}
+
+	class TypeError: public std::runtime_error
+	{
+	public:
+		explicit TypeError(JsonHandle::Type expected, JsonHandle::Type got, std::string_view src_name):
+		   std::runtime_error{std::string{src_name}
+			.append(": error: Expected an object of type `")
+			.append(detail::name(expected))
+			.append("`, got `")
+			.append(detail::name(got))
+			.append("`.")}
+		{
+		}
+	};
+
+	template<JsonHandle::Type expected>
+	inline void validateType(JsonHandle::Type got, std::string_view src_name)
+	{
+		if(expected != got)
+		{
+			throw TypeError{expected, got, src_name};
+		}
+	}
 }
 
 #endif
