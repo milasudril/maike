@@ -29,14 +29,17 @@ public:
 		return 0;
 	}
 
-	Maike::KeyValueStore::Object settings() const
+	Maike::KeyValueStore::JsonRefConst settings() const
 	{
-		return Maike::KeyValueStore::Object{};
+		return m_settings.reference();
 	}
 
-	void settings(Maike::KeyValueStore::Object const&)
+	void settings(Maike::KeyValueStore::Compound&&)
 	{
 	}
+
+private:
+	Maike::KeyValueStore::Compound m_settings;
 };
 
 std::optional<Maike::SourceFileInfo> loadSourceFile(Maike::fs::path const& path,

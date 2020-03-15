@@ -93,6 +93,7 @@ namespace Maike::KeyValueStore
 			return std::move(m_handle);
 		}
 
+		// FIXME: Should return CompoundRefConst
 		JsonRefConst reference() const
 		{
 			return m_handle.reference();

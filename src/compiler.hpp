@@ -6,8 +6,8 @@
 #define MAIKE_COMPILER_HPP
 
 #include "fs.hpp"
-#include "key_value_store/key_value_store.hpp"
 #include "compilation_log.hpp"
+#include "key_value_store/compound.hpp"
 
 #include <vector>
 #include <memory>
@@ -36,14 +36,15 @@ namespace Maike
 			return m_handle->run(src, used_files, output_files, log);
 		}
 
-		KeyValueStore::Object settings() const
+		// FIXME: Should return CompoundRefConst
+		Maike::KeyValueStore::JsonRefConst settings() const
 		{
 			return m_handle->settings();
 		}
 
-		Compiler& settings(KeyValueStore::Object const& cfg)
+		Compiler& settings(KeyValueStore::Compound&& cfg)
 		{
-			m_handle->settings(cfg);
+			m_handle->settings(std::move(cfg));
 			return *this;
 		}
 
@@ -56,9 +57,9 @@ namespace Maike
 			                std::vector<fs::path const*> const& output_files,
 			                CompilationLog& log) const = 0;
 
-			virtual KeyValueStore::Object settings() const = 0;
+			virtual Maike::KeyValueStore::JsonRefConst settings() const = 0;
 
-			virtual void settings(KeyValueStore::Object const& cfg) = 0;
+			virtual void settings(KeyValueStore::Compound&& cfg) = 0;
 
 			virtual ~AbstractCompiler()
 			{
@@ -76,16 +77,19 @@ namespace Maike
 				return 0;
 			}
 
-			KeyValueStore::Object settings() const override
+			Maike::KeyValueStore::JsonRefConst settings() const override
 			{
-				return KeyValueStore::Object{};
+				return m_settings.reference();
 			}
 
-			void settings(KeyValueStore::Object const&) override
+			void settings(KeyValueStore::Compound&&) override
 			{
 			}
 
 			~NullCompiler() override = default;
+
+		private:
+			KeyValueStore::Compound m_settings;
 		};
 
 		template<class T>
@@ -102,14 +106,14 @@ namespace Maike
 				return m_obj.run(src, used_files, output_files, log);
 			}
 
-			KeyValueStore::Object settings() const override
+			Maike::KeyValueStore::JsonRefConst settings() const override
 			{
 				return m_obj.settings();
 			}
 
-			void settings(KeyValueStore::Object const& cfg) override
+			void settings(KeyValueStore::Compound&& cfg) override
 			{
-				(void)m_obj.settings(cfg);
+				(void)m_obj.settings(std::move(cfg));
 			}
 
 			~CompilerImpl() override = default;

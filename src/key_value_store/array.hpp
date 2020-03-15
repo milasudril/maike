@@ -134,6 +134,7 @@ namespace Maike::KeyValueStore
 			return ArrayRefConst::const_iterator{handle(), size(), m_handle.source().c_str()};
 		}
 
+		// FIXME: Should return ArrayRefConst
 		JsonRefConst reference() const
 		{
 			return m_handle.reference();
