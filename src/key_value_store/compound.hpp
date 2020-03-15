@@ -14,10 +14,13 @@ namespace Maike::KeyValueStore
 	{
 		public:
 			template<class Source>
-			explicit Compound(Source&& src):m_handle{loadJson(std::forward<Source>(src))}
+			explicit Compound(Source&& src):m_handle{jsonLoad(std::forward<Source>(src))}
 			{
-				if(m_handle.type() != JsonHandle::Type::Object)
-				{ throw "Type error"; }
+				if(m_handle.valid())
+				{
+					if(m_handle.type() != JsonHandle::Type::Object)
+					{ throw "Type error"; }
+				}
 			}
 
 			Compound():m_handle{json_object()}
