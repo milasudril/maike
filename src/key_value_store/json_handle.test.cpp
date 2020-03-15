@@ -36,8 +36,7 @@ namespace
 
 	int getchar(StringViewSource& src)
 	{
-		if(src.n_bytes_left == 0)
-		{ return -1; }
+		if(src.n_bytes_left == 0) { return -1; }
 
 		auto ret = *src.read_ptr;
 		++src.read_ptr;
@@ -115,9 +114,10 @@ Here is some junk)json"};
 
 	void maikeKeyValueStoreJsonHandleLoadWhitespaceOnly()
 	{
-		StringViewSource src{"                         \n"
-		"                                              \n"
-		"                                              "};
+		StringViewSource src{
+		   "                         \n"
+		   "                                              \n"
+		   "                                              "};
 		auto val = Maike::KeyValueStore::jsonLoad(src);
 		assert(!val.valid());
 	}
@@ -176,8 +176,10 @@ Here is some junk)json"};
 			Maike::KeyValueStore::JsonHandle h{"Foobar"};
 			(void)get(Maike::KeyValueStore::Empty<json_int_t>{}, h);
 			abort();
-		} catch( ...)
-		{}
+		}
+		catch(...)
+		{
+		}
 	}
 }
 

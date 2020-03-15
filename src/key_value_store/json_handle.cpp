@@ -21,10 +21,9 @@ namespace
 
 bool Maike::KeyValueStore::detail::hasNonWhitespace(std::byte const* begin, std::byte const* end)
 {
-	return std::any_of(begin, end, [](auto item)
-	{
+	return std::any_of(begin, end, [](auto item) {
 		auto ch_in = static_cast<char>(item);
-		return !(ch_in>=0 && ch_in <=' ');
+		return !(ch_in >= 0 && ch_in <= ' ');
 	});
 }
 
@@ -34,7 +33,9 @@ Maike::KeyValueStore::JsonHandle Maike::KeyValueStore::detail::jsonLoad(ReadCall
 {
 	json_error_t err{};
 	Maike::KeyValueStore::JsonHandle ret{
-	   json_load_callback(read_callback, obj, JSON_DISABLE_EOF_CHECK | JSON_DECODE_ANY | JSON_REJECT_DUPLICATES, &err), src_name};
+	   json_load_callback(
+	      read_callback, obj, JSON_DISABLE_EOF_CHECK | JSON_DECODE_ANY | JSON_REJECT_DUPLICATES, &err),
+	   src_name};
 
 	if(!ret.valid() && obj->m_has_data)
 	{ throw DecodeError{src_name, err.line, err.column, err.text}; }

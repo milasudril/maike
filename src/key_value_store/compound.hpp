@@ -10,42 +10,47 @@
 
 namespace Maike::KeyValueStore
 {
-	class Compound
+	class KeyLookupError: public std::runtime_error
 	{
-		public:
-			template<class Source>
-			explicit Compound(Source&& src):m_handle{jsonLoad(src)}
-			{
-				if(m_handle.valid())
-				{
-					validateType<Type::Object>(m_handle.type(), name(src));
-				}
-			}
-
-			Compound():m_handle{json_object()}
-			{}
-
-			template<class T>
-			Compound& set(char const* key, T value);
-
-			template<class T>
-			T get(char const* key) const;
-
-			size_t size() const
-			{ return json_object_size(m_handle.get());}
-
-		private:
-			JsonHandle m_handle;
+	public:
+		explicit KeyLookupError(std::string const& src, char const* key):
+		   std::runtime_error{src + ": error: `" + key + "` does not exist in the current compound."}
+		{
+		}
 	};
 
-	template<>
-	char const* Compound::get<char const*>(char const* key) const
+	class Compound
 	{
-		auto obj = json_object_get(m_handle.get(), key);
-		validateType<Type::String>(static_cast<Type>(json_typeof(obj)), "");
+	public:
+		template<class Source>
+		explicit Compound(Source&& src): m_handle{jsonLoad(src)}
+		{
+			if(m_handle.valid()) { validateType<Type::Object>(m_handle.type(), name(src)); }
+		}
 
-		return json_string_value(obj);
-	}
+		Compound(): m_handle{json_object()}
+		{
+		}
+
+		template<class T>
+		Compound& set(char const* key, T value);
+
+		template<class T>
+		T get(char const* key) const
+		{
+			auto obj = json_object_get(m_handle.get(), key);
+			if(obj == nullptr) { throw KeyLookupError{m_handle.source(), key}; }
+			return JsonRefConst{obj, m_handle.source().c_str()}.as<T>();
+		}
+
+		size_t size() const
+		{
+			return json_object_size(m_handle.get());
+		}
+
+	private:
+		JsonHandle m_handle;
+	};
 }
 
 #endif

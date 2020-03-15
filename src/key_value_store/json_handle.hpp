@@ -18,7 +18,7 @@
 
 namespace Maike::KeyValueStore
 {
-	enum class Type:int
+	enum class Type : int
 	{
 		Object = JSON_OBJECT,
 		Array = JSON_ARRAY,
@@ -34,24 +34,15 @@ namespace Maike::KeyValueStore
 	{
 		switch(type)
 		{
-			case Type::Object:
-				return "compound";
-			case Type::Array:
-				return "array";
-			case Type::String:
-				return "string";
-			case Type::Integer:
-				return "integer";
-			case Type::Float:
-				return "float";
-			case Type::True:
-				return "true";
-			case Type::False:
-				return "false";
-			case Type::Null:
-				return "null";
-			default:
-				return "unknown";
+			case Type::Object: return "compound";
+			case Type::Array: return "array";
+			case Type::String: return "string";
+			case Type::Integer: return "integer";
+			case Type::Float: return "float";
+			case Type::True: return "true";
+			case Type::False: return "false";
+			case Type::Null: return "null";
+			default: return "unknown";
 		}
 	}
 
@@ -60,11 +51,11 @@ namespace Maike::KeyValueStore
 	public:
 		explicit TypeError(Type expected, Type got, std::string_view src_name):
 		   std::runtime_error{std::string{src_name}
-			.append(": error: Expected an object of type `")
-			.append(name(expected))
-			.append("`, got `")
-			.append(name(got))
-			.append("`.")}
+		                         .append(": error: Expected an object of type `")
+		                         .append(name(expected))
+		                         .append("`, got `")
+		                         .append(name(got))
+		                         .append("`.")}
 		{
 		}
 	};
@@ -72,34 +63,34 @@ namespace Maike::KeyValueStore
 	template<Type expected>
 	inline void validateType(Type got, std::string_view src_name)
 	{
-		if(expected != got)
-		{
-			throw TypeError{expected, got, src_name};
-		}
+		if(expected != got) { throw TypeError{expected, got, src_name}; }
 	}
 
 	template<class T>
 	struct Empty
-	{};
+	{
+	};
 
 	class JsonRefConst
 	{
-		public:
-			explicit JsonRefConst(json_t* handle, char const* src):r_handle{handle}, r_src{src}
-			{
-				assert(handle != nullptr);
-				assert(src != nullptr);
-			}
+	public:
+		explicit JsonRefConst(json_t* handle, char const* src): r_handle{handle}, r_src{src}
+		{
+			assert(handle != nullptr);
+			assert(src != nullptr);
+		}
 
-			template<class T>
-			T as() const;
+		template<class T>
+		T as() const;
 
-			Type type() const
-			{ return static_cast<Type>(json_typeof(r_handle)); }
+		Type type() const
+		{
+			return static_cast<Type>(json_typeof(r_handle));
+		}
 
-		private:
-			json_t* r_handle;
-			char const* r_src;
+	private:
+		json_t* r_handle;
+		char const* r_src;
 	};
 
 	template<>
@@ -125,11 +116,15 @@ namespace Maike::KeyValueStore
 
 	template<class T>
 	inline T get(JsonRefConst ref)
-	{ return ref.as<T>(); }
+	{
+		return ref.as<T>();
+	}
 
 	template<class T>
 	inline T get(Empty<T>, JsonRefConst ref)
-	{ return get<T>(ref); }
+	{
+		return get<T>(ref);
+	}
 
 
 	class JsonHandle
@@ -138,13 +133,23 @@ namespace Maike::KeyValueStore
 		JsonHandle() = default;
 
 		template<class IntegralType>
-		explicit JsonHandle(IntegralType x, std::enable_if_t<std::is_integral_v<IntegralType>, std::true_type> = {}):JsonHandle{json_integer(x)}{}
+		explicit JsonHandle(IntegralType x,
+		                    std::enable_if_t<std::is_integral_v<IntegralType>, std::true_type> = {}):
+		   JsonHandle{json_integer(x)}
+		{
+		}
 
-		explicit JsonHandle(double x):JsonHandle{json_real(x)}{}
+		explicit JsonHandle(double x): JsonHandle{json_real(x)}
+		{
+		}
 
-		explicit JsonHandle(char const* x):JsonHandle{json_string(x)}{}
+		explicit JsonHandle(char const* x): JsonHandle{json_string(x)}
+		{
+		}
 
-		explicit JsonHandle(json_t* handle, std::string_view src="<scratch>"): m_handle{handle}, m_src{src}
+		explicit JsonHandle(json_t* handle, std::string_view src = "<scratch>"):
+		   m_handle{handle},
+		   m_src{src}
 		{
 		}
 
@@ -164,11 +169,20 @@ namespace Maike::KeyValueStore
 		}
 
 		Type type() const
-		{ return static_cast<Type>(json_typeof(m_handle.get()));}
+		{
+			return static_cast<Type>(json_typeof(m_handle.get()));
+		}
 
 		template<class T>
 		T as() const
-		{ return JsonRefConst{const_cast<json_t*>(get()), m_src.c_str()}.as<T>();}
+		{
+			return JsonRefConst{const_cast<json_t*>(get()), m_src.c_str()}.as<T>();
+		}
+
+		std::string const& source() const
+		{
+			return m_src;
+		}
 
 	private:
 		struct JsonDeleter
@@ -185,11 +199,15 @@ namespace Maike::KeyValueStore
 
 	template<class T>
 	inline T get(JsonHandle const& h)
-	{ return h.as<T>(); }
+	{
+		return h.as<T>();
+	}
 
 	template<class T>
 	inline T get(Empty<T>, JsonHandle const& h)
-	{ return get<T>(h); }
+	{
+		return get<T>(h);
+	}
 
 	namespace detail
 	{
@@ -211,21 +229,19 @@ namespace Maike::KeyValueStore
 			{
 				auto ch_in = getchar(src);
 				static_assert(std::is_same_v<std::decay_t<decltype(ch_in)>, int>);
-				if (ch_in == -1)
-				{ return 0; }
+				if(ch_in == -1) { return 0; }
 
 				*buffer = static_cast<std::byte>(ch_in);
 				++buffer;
 				++n_written;
 
-				if(ch_in == '}' || ch_in == ']' || (ch_in>= ' ' && ch_in<=' '))
-				{ return n_written;}
+				if(ch_in == '}' || ch_in == ']' || (ch_in >= ' ' && ch_in <= ' ')) { return n_written; }
 			}
 			return n_written;
 		}
 
 		template<class Source>
-		struct ReadCallbackObj:public ReadCallbackBase
+		struct ReadCallbackObj: public ReadCallbackBase
 		{
 			Source* r_src;
 		};
@@ -243,7 +259,7 @@ namespace Maike::KeyValueStore
 			   auto buff_bytes = reinterpret_cast<std::byte*>(buffer);
 			   auto const ret = detail::fetch(*self->r_src, buff_bytes, bufflen);
 			   if(!self->m_has_data)
-			   { self->m_has_data = detail::hasNonWhitespace(buff_bytes, buff_bytes + ret);}
+			   { self->m_has_data = detail::hasNonWhitespace(buff_bytes, buff_bytes + ret); }
 			   return ret;
 		   },
 		   name(src));
@@ -266,7 +282,9 @@ namespace Maike::KeyValueStore
 
 	template<class Sink>
 	void store(JsonHandle const& obj, Sink&& sink)
-	{store(obj.get(), sink);}
+	{
+		store(obj.get(), sink);
+	}
 }
 
 #endif

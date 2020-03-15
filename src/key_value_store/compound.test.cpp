@@ -19,8 +19,7 @@ struct StringViewSource
 
 int getchar(StringViewSource& src)
 {
-	if(src.n_bytes_left == 0)
-	{ return -1; }
+	if(src.n_bytes_left == 0) { return -1; }
 
 	auto ret = *src.read_ptr;
 	++src.read_ptr;
@@ -64,6 +63,8 @@ namespace Testcases
 		"key 2": 456
 		})json"}};
 		assert(c.size() == 2);
+		assert(c.get<json_int_t>("key 1") == 123);
+		assert(c.get<json_int_t>("key 2") == 456);
 	}
 
 	void maikeKeyValueStoreCompoundLoadSomethingElse()
@@ -72,9 +73,23 @@ namespace Testcases
 		{
 			Maike::KeyValueStore::Compound c{StringViewSource{R"json([1, 2, 3])json"}};
 			abort();
-		} catch(...)
-		{}
+		}
+		catch(...)
+		{
+		}
+	}
 
+	void maikeKeyValueStoreCompoundGetNonExistingKey()
+	{
+		try
+		{
+			Maike::KeyValueStore::Compound c{StringViewSource{R"json({"foo":"bar"})json"}};
+			(void)c.get<char const*>("blah");
+			abort();
+		}
+		catch(...)
+		{
+		}
 	}
 }
 
@@ -85,4 +100,5 @@ int main()
 	Testcases::maikeKeyValueStoreCompoundLoadEmpty2();
 	Testcases::maikeKeyValueStoreCompoundLoad();
 	Testcases::maikeKeyValueStoreCompoundLoadSomethingElse();
+	Testcases::maikeKeyValueStoreCompoundGetNonExistingKey();
 }
