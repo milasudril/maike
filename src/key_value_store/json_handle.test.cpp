@@ -168,6 +168,17 @@ Here is some junk)json"};
 			assert(get(Maike::KeyValueStore::Empty<double>{}, h) == 0.125);
 		}
 	}
+
+	void maikeKeyValueStoreJsonHandleGetValueWrongType()
+	{
+		try
+		{
+			Maike::KeyValueStore::JsonHandle h{"Foobar"};
+			(void)get(Maike::KeyValueStore::Empty<json_int_t>{}, h);
+			abort();
+		} catch( ...)
+		{}
+	}
 }
 
 int main()
@@ -179,6 +190,7 @@ int main()
 	Testcases::maikeKeyValueStoreJsonHandleLoadWhitespaceOnly();
 	Testcases::maikeKeyValueStoreJsonHandleLoadStore();
 	Testcases::maikeKeyValueStoreJsonHandleGetValuesCorrectType();
+	Testcases::maikeKeyValueStoreJsonHandleGetValueWrongType();
 
 	return 0;
 }
