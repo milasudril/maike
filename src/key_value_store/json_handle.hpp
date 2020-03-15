@@ -17,22 +17,69 @@
 
 namespace Maike::KeyValueStore
 {
+	enum class Type:int
+	{
+		Object = JSON_OBJECT,
+		Array = JSON_ARRAY,
+		String = JSON_STRING,
+		Integer = JSON_INTEGER,
+		Float = JSON_REAL,
+		True = JSON_TRUE,
+		False = JSON_FALSE,
+		Null = JSON_NULL
+	};
+
+	constexpr std::string_view name(Type type)
+	{
+		switch(type)
+		{
+			case Type::Object:
+				return "compound";
+			case Type::Array:
+				return "array";
+			case Type::String:
+				return "string";
+			case Type::Integer:
+				return "integer";
+			case Type::Float:
+				return "float";
+			case Type::True:
+				return "true";
+			case Type::False:
+				return "false";
+			case Type::Null:
+				return "null";
+			default:
+				return "unknown";
+		}
+	}
+
+	class TypeError: public std::runtime_error
+	{
+	public:
+		explicit TypeError(Type expected, Type got, std::string_view src_name):
+		   std::runtime_error{std::string{src_name}
+			.append(": error: Expected an object of type `")
+			.append(name(expected))
+			.append("`, got `")
+			.append(name(got))
+			.append("`.")}
+		{
+		}
+	};
+
+	template<Type expected>
+	inline void validateType(Type got, std::string_view src_name)
+	{
+		if(expected != got)
+		{
+			throw TypeError{expected, got, src_name};
+		}
+	}
+
 	class JsonHandle
 	{
 	public:
-
-		enum class Type:int
-		{
-			Object = JSON_OBJECT,
-			Array = JSON_ARRAY,
-			String = JSON_STRING,
-			Integer = JSON_INTEGER,
-			Float = JSON_REAL,
-			True = JSON_TRUE,
-			False = JSON_FALSE,
-			Null = JSON_NULL
-		};
-
 		JsonHandle() = default;
 
 		explicit JsonHandle(json_t* handle): m_handle{handle}
@@ -43,7 +90,6 @@ namespace Maike::KeyValueStore
 		{
 			return m_handle.get();
 		}
-
 
 		json_t const* get() const
 		{
@@ -146,57 +192,6 @@ namespace Maike::KeyValueStore
 	template<class Sink>
 	void store(JsonHandle const& obj, Sink&& sink)
 	{store(obj.get(), sink);}
-
-	namespace detail
-	{
-		constexpr std::string_view name(JsonHandle::Type type)
-		{
-			switch(type)
-			{
-				case JsonHandle::Type::Object:
-					return "compound";
-				case JsonHandle::Type::Array:
-					return "array";
-				case JsonHandle::Type::String:
-					return "string";
-				case JsonHandle::Type::Integer:
-					return "integer";
-				case JsonHandle::Type::Float:
-					return "float";
-				case JsonHandle::Type::True:
-					return "true";
-				case JsonHandle::Type::False:
-					return "false";
-				case JsonHandle::Type::Null:
-					return "null";
-				default:
-					return "unknown";
-			}
-		}
-	}
-
-	class TypeError: public std::runtime_error
-	{
-	public:
-		explicit TypeError(JsonHandle::Type expected, JsonHandle::Type got, std::string_view src_name):
-		   std::runtime_error{std::string{src_name}
-			.append(": error: Expected an object of type `")
-			.append(detail::name(expected))
-			.append("`, got `")
-			.append(detail::name(got))
-			.append("`.")}
-		{
-		}
-	};
-
-	template<JsonHandle::Type expected>
-	inline void validateType(JsonHandle::Type got, std::string_view src_name)
-	{
-		if(expected != got)
-		{
-			throw TypeError{expected, got, src_name};
-		}
-	}
 }
 
 #endif

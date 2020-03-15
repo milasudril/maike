@@ -18,7 +18,7 @@ namespace Maike::KeyValueStore
 			{
 				if(m_handle.valid())
 				{
-					validateType<JsonHandle::Type::Object>(m_handle.type(), name(src));
+					validateType<Type::Object>(m_handle.type(), name(src));
 				}
 			}
 
@@ -42,7 +42,7 @@ namespace Maike::KeyValueStore
 	char const* Compound::get<char const*>(char const* key) const
 	{
 		auto obj = json_object_get(m_handle.get(), key);
-		validateType<JsonHandle::Type::String>(static_cast<JsonHandle::Type>(json_typeof(obj)), "");
+		validateType<Type::String>(static_cast<Type>(json_typeof(obj)), "");
 
 		return json_string_value(obj);
 	}
