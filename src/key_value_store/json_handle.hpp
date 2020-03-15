@@ -145,7 +145,7 @@ namespace Maike::KeyValueStore
 
 	template<class Sink>
 	void store(JsonHandle const& obj, Sink&& sink)
-	{store(obj.get(), std::forward<Sink>(sink));}
+	{store(obj.get(), sink);}
 }
 
 #endif

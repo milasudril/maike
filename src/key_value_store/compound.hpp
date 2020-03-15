@@ -14,7 +14,7 @@ namespace Maike::KeyValueStore
 	{
 		public:
 			template<class Source>
-			explicit Compound(Source&& src):m_handle{jsonLoad(std::forward<Source>(src))}
+			explicit Compound(Source&& src):m_handle{jsonLoad(src)}
 			{
 				if(m_handle.valid())
 				{
