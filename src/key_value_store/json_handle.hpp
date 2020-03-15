@@ -20,6 +20,19 @@ namespace Maike::KeyValueStore
 	class JsonHandle
 	{
 	public:
+
+		enum class Type:int
+		{
+			Object = JSON_OBJECT,
+			Array = JSON_ARRAY,
+			String = JSON_STRING,
+			Integer = JSON_INTEGER,
+			Float = JSON_REAL,
+			True = JSON_TRUE,
+			False = JSON_FALSE,
+			Null = JSON_NULL
+		};
+
 		JsonHandle() = default;
 
 		explicit JsonHandle(json_t* handle): m_handle{handle}
@@ -41,6 +54,9 @@ namespace Maike::KeyValueStore
 		{
 			return m_handle != nullptr;
 		}
+
+		Type type() const
+		{ return static_cast<Type>(json_typeof(m_handle.get()));}
 
 	private:
 		struct JsonDeleter
