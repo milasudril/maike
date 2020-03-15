@@ -19,6 +19,10 @@ namespace Maike::KeyValueStore
 		}
 	};
 
+	class Compound;
+
+	JsonHandle toJson(Compound compound);
+
 	class Compound
 	{
 	public:
@@ -33,7 +37,18 @@ namespace Maike::KeyValueStore
 		}
 
 		template<class T>
-		Compound& set(char const* key, T value);
+		Compound& set(char const* key, T&& value) &
+		{
+			(void)json_object_set_new(m_handle.get(), key, toJson(std::forward<T>(value)).release());
+			return *this;
+		}
+
+		template<class T>
+		Compound&& set(char const* key, T&& value) &&
+		{
+			(void)json_object_set_new(m_handle.get(), key, toJson(std::forward<T>(value)).release());
+			return std::move(*this);
+		}
 
 		template<class T>
 		T get(char const* key) const
@@ -48,9 +63,17 @@ namespace Maike::KeyValueStore
 			return json_object_size(m_handle.get());
 		}
 
+		JsonHandle takeHandle()
+		{
+			return std::move(m_handle);
+		}
+
 	private:
 		JsonHandle m_handle;
 	};
+
+	inline JsonHandle toJson(Compound compound)
+	{ return compound.takeHandle();}
 }
 
 #endif

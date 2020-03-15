@@ -184,6 +184,11 @@ namespace Maike::KeyValueStore
 			return m_src;
 		}
 
+		auto release()
+		{
+			return m_handle.release();
+		}
+
 	private:
 		struct JsonDeleter
 		{
@@ -207,6 +212,12 @@ namespace Maike::KeyValueStore
 	inline T get(Empty<T>, JsonHandle const& h)
 	{
 		return get<T>(h);
+	}
+
+	template<class T>
+	inline JsonHandle toJson(T const& x)
+	{
+		return JsonHandle{x};
 	}
 
 	namespace detail

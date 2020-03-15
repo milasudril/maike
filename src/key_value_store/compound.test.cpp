@@ -91,6 +91,43 @@ namespace Testcases
 		{
 		}
 	}
+
+	void maikeKeyValueStoreCompoundTakeHandle()
+	{
+		Maike::KeyValueStore::Compound c{StringViewSource{R"json({
+		"key 1": 123,
+		"key 2": 456
+		})json"}};
+
+		assert(c.size() == 2);
+
+		auto h = c.takeHandle();
+		assert(c.size() == 0);
+		assert(h.valid());
+	}
+
+
+	void maikeKeyValueStoreCompoundToJson()
+	{
+		Maike::KeyValueStore::Compound c{StringViewSource{R"json({
+		"key 1": 123,
+		"key 2": 456
+		})json"}};
+
+		assert(c.size() == 2);
+
+		auto h = toJson(std::move(c));
+		assert(c.size() == 0);
+		assert(h.valid());
+	}
+
+	void maikeKeyValueStoreCompoundSetValues()
+	{
+		Maike::KeyValueStore::Compound c;
+		c.set("Foo", 123)
+		 .set("Bar", 0.125)
+		 .set("Subobj", Maike::KeyValueStore::Compound{}.set("Kaka", "hej"));
+	}
 }
 
 int main()
@@ -101,4 +138,7 @@ int main()
 	Testcases::maikeKeyValueStoreCompoundLoad();
 	Testcases::maikeKeyValueStoreCompoundLoadSomethingElse();
 	Testcases::maikeKeyValueStoreCompoundGetNonExistingKey();
+	Testcases::maikeKeyValueStoreCompoundTakeHandle();
+	Testcases::maikeKeyValueStoreCompoundToJson();
+	Testcases::maikeKeyValueStoreCompoundSetValues();
 }
