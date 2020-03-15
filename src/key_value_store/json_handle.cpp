@@ -34,7 +34,7 @@ Maike::KeyValueStore::JsonHandle Maike::KeyValueStore::detail::jsonLoad(ReadCall
 {
 	json_error_t err{};
 	Maike::KeyValueStore::JsonHandle ret{
-	   json_load_callback(read_callback, obj, JSON_DISABLE_EOF_CHECK | JSON_DECODE_ANY | JSON_REJECT_DUPLICATES, &err)};
+	   json_load_callback(read_callback, obj, JSON_DISABLE_EOF_CHECK | JSON_DECODE_ANY | JSON_REJECT_DUPLICATES, &err), src_name};
 
 	if(!ret.valid() && obj->m_has_data)
 	{ throw DecodeError{src_name, err.line, err.column, err.text}; }

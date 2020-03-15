@@ -14,6 +14,7 @@
 #include <stdexcept>
 #include <string_view>
 #include <type_traits>
+#include <cassert>
 
 namespace Maike::KeyValueStore
 {
@@ -77,12 +78,73 @@ namespace Maike::KeyValueStore
 		}
 	}
 
+	template<class T>
+	struct Empty
+	{};
+
+	class JsonRefConst
+	{
+		public:
+			explicit JsonRefConst(json_t* handle, char const* src):r_handle{handle}, r_src{src}
+			{
+				assert(handle != nullptr);
+				assert(src != nullptr);
+			}
+
+			template<class T>
+			T as() const;
+
+			Type type() const
+			{ return static_cast<Type>(json_typeof(r_handle)); }
+
+		private:
+			json_t* r_handle;
+			char const* r_src;
+	};
+
+	template<>
+	inline char const* JsonRefConst::as() const
+	{
+		validateType<Type::String>(type(), r_src);
+		return json_string_value(r_handle);
+	}
+
+	template<>
+	inline json_int_t JsonRefConst::as() const
+	{
+		validateType<Type::Integer>(type(), r_src);
+		return json_integer_value(r_handle);
+	}
+
+	template<>
+	inline double JsonRefConst::as() const
+	{
+		validateType<Type::Float>(type(), r_src);
+		return json_real_value(r_handle);
+	}
+
+	template<class T>
+	inline T get(JsonRefConst ref)
+	{ return ref.as<T>(); }
+
+	template<class T>
+	inline T get(Empty<T>, JsonRefConst ref)
+	{ return get<T>(ref); }
+
+
 	class JsonHandle
 	{
 	public:
 		JsonHandle() = default;
 
-		explicit JsonHandle(json_t* handle): m_handle{handle}
+		template<class IntegralType>
+		explicit JsonHandle(IntegralType x, std::enable_if_t<std::is_integral_v<IntegralType>, std::true_type> = {}):JsonHandle{json_integer(x)}{}
+
+		explicit JsonHandle(double x):JsonHandle{json_real(x)}{}
+
+		explicit JsonHandle(char const* x):JsonHandle{json_string(x)}{}
+
+		explicit JsonHandle(json_t* handle, std::string_view src="<scratch>"): m_handle{handle}, m_src{src}
 		{
 		}
 
@@ -104,6 +166,10 @@ namespace Maike::KeyValueStore
 		Type type() const
 		{ return static_cast<Type>(json_typeof(m_handle.get()));}
 
+		template<class T>
+		T as() const
+		{ return JsonRefConst{const_cast<json_t*>(get()), m_src.c_str()}.as<T>();}
+
 	private:
 		struct JsonDeleter
 		{
@@ -114,7 +180,16 @@ namespace Maike::KeyValueStore
 		};
 
 		std::unique_ptr<json_t, JsonDeleter> m_handle;
+		std::string m_src;
 	};
+
+	template<class T>
+	inline T get(JsonHandle const& h)
+	{ return h.as<T>(); }
+
+	template<class T>
+	inline T get(Empty<T>, JsonHandle const& h)
+	{ return get<T>(h); }
 
 	namespace detail
 	{

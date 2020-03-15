@@ -150,6 +150,24 @@ Here is some junk)json"};
     }
 })json" == s.m_value);
 	}
+
+	void maikeKeyValueStoreJsonHandleGetValuesCorrectType()
+	{
+		{
+			Maike::KeyValueStore::JsonHandle h{"Foobar"};
+			assert(std::string_view{get(Maike::KeyValueStore::Empty<char const*>{}, h)} == "Foobar");
+		}
+
+		{
+			Maike::KeyValueStore::JsonHandle h{123};
+			assert(get(Maike::KeyValueStore::Empty<json_int_t>{}, h) == 123);
+		}
+
+		{
+			Maike::KeyValueStore::JsonHandle h{0.125};
+			assert(get(Maike::KeyValueStore::Empty<double>{}, h) == 0.125);
+		}
+	}
 }
 
 int main()
@@ -160,6 +178,7 @@ int main()
 	Testcases::maikeKeyValueStoreJsonHandleLoadDataAfterJson();
 	Testcases::maikeKeyValueStoreJsonHandleLoadWhitespaceOnly();
 	Testcases::maikeKeyValueStoreJsonHandleLoadStore();
+	Testcases::maikeKeyValueStoreJsonHandleGetValuesCorrectType();
 
 	return 0;
 }
