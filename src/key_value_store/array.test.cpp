@@ -9,29 +9,32 @@
 #include <cassert>
 #include <algorithm>
 
-struct StringViewSource
+namespace
 {
-	explicit StringViewSource(std::string_view v): read_ptr{v.data()}, n_bytes_left{v.size()}
+	struct StringViewSource
 	{
+		explicit StringViewSource(std::string_view v): read_ptr{v.data()}, n_bytes_left{v.size()}
+		{
+		}
+		char const* read_ptr;
+		size_t n_bytes_left;
+	};
+
+	int getchar(StringViewSource& src)
+	{
+		if(src.n_bytes_left == 0) { return -1; }
+
+		auto ret = *src.read_ptr;
+		++src.read_ptr;
+		--src.n_bytes_left;
+		return ret;
 	}
-	char const* read_ptr;
-	size_t n_bytes_left;
-};
-
-int getchar(StringViewSource& src)
-{
-	if(src.n_bytes_left == 0) { return -1; }
-
-	auto ret = *src.read_ptr;
-	++src.read_ptr;
-	--src.n_bytes_left;
-	return ret;
-}
 
 
-char const* name(StringViewSource)
-{
-	return "<input buffer>";
+	char const* name(StringViewSource)
+	{
+		return "<input buffer>";
+	}
 }
 
 namespace Testcases
@@ -45,10 +48,7 @@ namespace Testcases
 		array.append(0).append(1).append(2).append(Maike::KeyValueStore::Array{}.append(3).append(4));
 
 		std::for_each(std::begin(array), std::end(array), [k = 0](auto item) mutable {
-			if(k < 3)
-			{
-				assert(Maike::KeyValueStore::get<json_int_t>(item) == k);
-			}
+			if(k < 3) { assert(Maike::KeyValueStore::get<json_int_t>(item) == k); }
 			else
 			{
 				auto array = Maike::KeyValueStore::get<Maike::KeyValueStore::ArrayRefConst>(item);

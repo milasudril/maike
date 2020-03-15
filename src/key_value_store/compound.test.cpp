@@ -8,29 +8,32 @@
 
 #include <cassert>
 
-struct StringViewSource
+namespace
 {
-	explicit StringViewSource(std::string_view v): read_ptr{v.data()}, n_bytes_left{v.size()}
+	struct StringViewSource
 	{
+		explicit StringViewSource(std::string_view v): read_ptr{v.data()}, n_bytes_left{v.size()}
+		{
+		}
+		char const* read_ptr;
+		size_t n_bytes_left;
+	};
+
+	int getchar(StringViewSource& src)
+	{
+		if(src.n_bytes_left == 0) { return -1; }
+
+		auto ret = *src.read_ptr;
+		++src.read_ptr;
+		--src.n_bytes_left;
+		return ret;
 	}
-	char const* read_ptr;
-	size_t n_bytes_left;
-};
-
-int getchar(StringViewSource& src)
-{
-	if(src.n_bytes_left == 0) { return -1; }
-
-	auto ret = *src.read_ptr;
-	++src.read_ptr;
-	--src.n_bytes_left;
-	return ret;
-}
 
 
-char const* name(StringViewSource)
-{
-	return "<input buffer>";
+	char const* name(StringViewSource)
+	{
+		return "<input buffer>";
+	}
 }
 
 
@@ -125,8 +128,8 @@ namespace Testcases
 	{
 		Maike::KeyValueStore::Compound c;
 		c.set("Foo", 123)
-		 .set("Bar", 0.125)
-		 .set("Subobj", Maike::KeyValueStore::Compound{}.set("Kaka", "hej"));
+		   .set("Bar", 0.125)
+		   .set("Subobj", Maike::KeyValueStore::Compound{}.set("Kaka", "hej"));
 
 		assert(c.get<json_int_t>("Foo") == 123);
 		assert(c.get<double>("Bar") == 0.125);
@@ -141,11 +144,12 @@ namespace Testcases
 		{
 			Maike::KeyValueStore::JsonHandle x{123};
 			Maike::KeyValueStore::JsonRefConst y{x.handle(), x.source().c_str()};
-			Maike::KeyValueStore::CompoundRefConst {y};
+			Maike::KeyValueStore::CompoundRefConst{y};
 			abort();
 		}
 		catch(...)
-		{}
+		{
+		}
 	}
 }
 

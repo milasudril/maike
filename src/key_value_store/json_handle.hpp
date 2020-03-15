@@ -74,7 +74,7 @@ namespace Maike::KeyValueStore
 	class JsonRefConst
 	{
 	public:
-		explicit JsonRefConst(json_t* handle, char const* src): r_handle{handle}, r_src{src}
+		explicit JsonRefConst(json_t const* handle, char const* src): r_handle{handle}, r_src{src}
 		{
 			assert(handle != nullptr);
 			assert(src != nullptr);
@@ -102,7 +102,7 @@ namespace Maike::KeyValueStore
 		}
 
 	private:
-		json_t* r_handle;
+		json_t const* r_handle;
 		char const* r_src;
 	};
 
@@ -189,7 +189,7 @@ namespace Maike::KeyValueStore
 		template<class T>
 		T as() const
 		{
-			return JsonRefConst{const_cast<json_t*>(handle()), m_src.c_str()}.as<T>();
+			return reference().as<T>();
 		}
 
 		std::string const& source() const
@@ -200,6 +200,11 @@ namespace Maike::KeyValueStore
 		auto release()
 		{
 			return m_handle.release();
+		}
+
+		JsonRefConst reference() const
+		{
+			return JsonRefConst{handle(), m_src.c_str()};
 		}
 
 	private:
@@ -306,6 +311,12 @@ namespace Maike::KeyValueStore
 
 	template<class Sink>
 	void store(JsonHandle const& obj, Sink&& sink)
+	{
+		store(obj.handle(), sink);
+	}
+
+	template<class Sink>
+	void store(JsonRefConst obj, Sink&& sink)
 	{
 		store(obj.handle(), sink);
 	}

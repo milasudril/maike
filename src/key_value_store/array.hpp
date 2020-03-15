@@ -63,7 +63,7 @@ namespace Maike::KeyValueStore
 			char const* r_name;
 		};
 
-		explicit ArrayRefConst(JsonRefConst ref):m_ref{ref}
+		explicit ArrayRefConst(JsonRefConst ref): m_ref{ref}
 		{
 			validateType<Type::Array>(ref.type(), ref.source());
 		}
@@ -120,25 +120,48 @@ namespace Maike::KeyValueStore
 		}
 
 		size_t size() const
-		{return json_array_size(m_handle.handle());}
+		{
+			return json_array_size(m_handle.handle());
+		}
 
 		auto begin() const
-		{ return ArrayRefConst::const_iterator{m_handle.handle(), 0, m_handle.source().c_str()};}
+		{
+			return ArrayRefConst::const_iterator{handle(), 0, m_handle.source().c_str()};
+		}
 
 		auto end() const
-		{ return ArrayRefConst::const_iterator{m_handle.handle(), size(), m_handle.source().c_str()};}
+		{
+			return ArrayRefConst::const_iterator{handle(), size(), m_handle.source().c_str()};
+		}
 
+		JsonRefConst reference() const
+		{
+			return m_handle.reference();
+		}
+
+		json_t const* handle() const
+		{
+			return m_handle.handle();
+		}
 
 	private:
 		JsonHandle m_handle;
 	};
 
 	inline JsonHandle toJson(Array array)
-	{ return array.takeHandle();}
+	{
+		return array.takeHandle();
+	}
 
 	inline ArrayRefConst fromJson(Empty<ArrayRefConst>, JsonRefConst ref)
 	{
 		return ArrayRefConst{ref};
+	}
+
+	template<class Sink>
+	void store(Array const& obj, Sink&& sink)
+	{
+		store(obj.reference(), sink);
 	}
 }
 

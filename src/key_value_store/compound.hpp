@@ -26,7 +26,7 @@ namespace Maike::KeyValueStore
 	class CompoundRefConst
 	{
 	public:
-		explicit CompoundRefConst(JsonRefConst ref):m_ref{ref}
+		explicit CompoundRefConst(JsonRefConst ref): m_ref{ref}
 		{
 			validateType<Type::Compound>(ref.type(), ref.source());
 		}
@@ -93,16 +93,29 @@ namespace Maike::KeyValueStore
 			return std::move(m_handle);
 		}
 
+		JsonRefConst reference() const
+		{
+			return m_handle.reference();
+		}
+
 	private:
 		JsonHandle m_handle;
 	};
 
 	inline JsonHandle toJson(Compound compound)
-	{ return compound.takeHandle();}
+	{
+		return compound.takeHandle();
+	}
 
 	inline CompoundRefConst fromJson(Empty<CompoundRefConst>, JsonRefConst ref)
 	{
 		return CompoundRefConst{ref};
+	}
+
+	template<class Sink>
+	void store(Compound const& obj, Sink&& sink)
+	{
+		store(obj.reference(), sink);
 	}
 }
 
