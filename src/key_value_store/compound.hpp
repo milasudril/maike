@@ -23,6 +23,31 @@ namespace Maike::KeyValueStore
 
 	JsonHandle toJson(Compound compound);
 
+	class CompoundRefConst
+	{
+	public:
+		explicit CompoundRefConst(JsonRefConst ref):m_ref{ref}
+		{
+			validateType<Type::Object>(ref.type(), ref.source());
+		}
+
+		template<class T>
+		T get(char const* key) const
+		{
+			auto obj = json_object_get(m_ref.get(), key);
+			if(obj == nullptr) { throw KeyLookupError{m_ref.source(), key}; }
+			return JsonRefConst{obj, m_ref.source()}.as<T>();
+		}
+
+		size_t size() const
+		{
+			return json_object_size(m_ref.get());
+		}
+
+	private:
+		JsonRefConst m_ref;
+	};
+
 	class Compound
 	{
 	public:
@@ -39,28 +64,28 @@ namespace Maike::KeyValueStore
 		template<class T>
 		Compound& set(char const* key, T&& value) &
 		{
-			(void)json_object_set_new(m_handle.get(), key, toJson(std::forward<T>(value)).release());
+			(void)json_object_set_new(m_handle.handle(), key, toJson(std::forward<T>(value)).release());
 			return *this;
 		}
 
 		template<class T>
 		Compound&& set(char const* key, T&& value) &&
 		{
-			(void)json_object_set_new(m_handle.get(), key, toJson(std::forward<T>(value)).release());
+			(void)json_object_set_new(m_handle.handle(), key, toJson(std::forward<T>(value)).release());
 			return std::move(*this);
 		}
 
 		template<class T>
 		T get(char const* key) const
 		{
-			auto obj = json_object_get(m_handle.get(), key);
+			auto obj = json_object_get(m_handle.handle(), key);
 			if(obj == nullptr) { throw KeyLookupError{m_handle.source(), key}; }
 			return JsonRefConst{obj, m_handle.source().c_str()}.as<T>();
 		}
 
 		size_t size() const
 		{
-			return json_object_size(m_handle.get());
+			return json_object_size(m_handle.handle());
 		}
 
 		JsonHandle takeHandle()
@@ -74,6 +99,11 @@ namespace Maike::KeyValueStore
 
 	inline JsonHandle toJson(Compound compound)
 	{ return compound.takeHandle();}
+
+	inline CompoundRefConst fromJson(Empty<CompoundRefConst>, JsonRefConst ref)
+	{
+		return CompoundRefConst{ref};
+	}
 }
 
 #endif

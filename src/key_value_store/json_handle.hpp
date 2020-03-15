@@ -81,12 +81,26 @@ namespace Maike::KeyValueStore
 		}
 
 		template<class T>
-		T as() const;
+		T as() const
+		{
+			return fromJson(Empty<T>{}, *this);
+		}
 
 		Type type() const
 		{
 			return static_cast<Type>(json_typeof(r_handle));
 		}
+
+		json_t const* get() const
+		{
+			return r_handle;
+		}
+
+		char const* source() const
+		{
+			return r_src;
+		}
+
 
 	private:
 		json_t* r_handle;
@@ -153,12 +167,12 @@ namespace Maike::KeyValueStore
 		{
 		}
 
-		json_t* get()
+		json_t* handle()
 		{
 			return m_handle.get();
 		}
 
-		json_t const* get() const
+		json_t const* handle() const
 		{
 			return m_handle.get();
 		}
@@ -176,7 +190,7 @@ namespace Maike::KeyValueStore
 		template<class T>
 		T as() const
 		{
-			return JsonRefConst{const_cast<json_t*>(get()), m_src.c_str()}.as<T>();
+			return JsonRefConst{const_cast<json_t*>(handle()), m_src.c_str()}.as<T>();
 		}
 
 		std::string const& source() const
@@ -294,7 +308,7 @@ namespace Maike::KeyValueStore
 	template<class Sink>
 	void store(JsonHandle const& obj, Sink&& sink)
 	{
-		store(obj.get(), sink);
+		store(obj.handle(), sink);
 	}
 }
 

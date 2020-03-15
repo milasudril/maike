@@ -73,14 +73,14 @@ namespace Testcases
 		Maike::KeyValueStore::JsonHandle h2{json_object()};
 		assert(h2.valid());
 
-		auto h2ptr = h2.get();
+		auto h2ptr = h2.handle();
 		h1 = std::move(h2);
 		assert(!h2.valid());
-		assert(h1.get() == h2ptr);
+		assert(h1.handle() == h2ptr);
 
 		Maike::KeyValueStore::JsonHandle other{std::move(h1)};
 		assert(!h1.valid());
-		assert(other.get() == h2ptr);
+		assert(other.handle() == h2ptr);
 	}
 
 	void maikeKeyValueStoreJsonHandleLoadEmpty()

@@ -121,12 +121,31 @@ namespace Testcases
 		assert(h.valid());
 	}
 
-	void maikeKeyValueStoreCompoundSetValues()
+	void maikeKeyValueStoreCompoundSetAndGetValues()
 	{
 		Maike::KeyValueStore::Compound c;
 		c.set("Foo", 123)
 		 .set("Bar", 0.125)
 		 .set("Subobj", Maike::KeyValueStore::Compound{}.set("Kaka", "hej"));
+
+		assert(c.get<json_int_t>("Foo") == 123);
+		assert(c.get<double>("Bar") == 0.125);
+
+		auto subobj = c.get<Maike::KeyValueStore::CompoundRefConst>("Subobj");
+		assert(std::string_view{subobj.get<char const*>("Kaka")} == "hej");
+	}
+
+	void maikeKeyValueStoreCompoundRefConstWrongType()
+	{
+		try
+		{
+			Maike::KeyValueStore::JsonHandle x{123};
+			Maike::KeyValueStore::JsonRefConst y{x.handle(), x.source().c_str()};
+			Maike::KeyValueStore::CompoundRefConst {y};
+			abort();
+		}
+		catch(...)
+		{}
 	}
 }
 
@@ -140,5 +159,6 @@ int main()
 	Testcases::maikeKeyValueStoreCompoundGetNonExistingKey();
 	Testcases::maikeKeyValueStoreCompoundTakeHandle();
 	Testcases::maikeKeyValueStoreCompoundToJson();
-	Testcases::maikeKeyValueStoreCompoundSetValues();
+	Testcases::maikeKeyValueStoreCompoundSetAndGetValues();
+	Testcases::maikeKeyValueStoreCompoundRefConstWrongType();
 }
