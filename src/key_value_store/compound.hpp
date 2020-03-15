@@ -29,7 +29,7 @@ namespace Maike::KeyValueStore
 			Compound& set(char const* key, T value);
 
 			template<class T>
-			T get(char const* key);
+			T get(char const* key) const;
 
 			size_t size() const
 			{ return json_object_size(m_handle.get());}
@@ -37,6 +37,15 @@ namespace Maike::KeyValueStore
 		private:
 			JsonHandle m_handle;
 	};
+
+	template<>
+	char const* Compound::get<char const*>(char const* key) const
+	{
+		auto obj = json_object_get(m_handle.get(), key);
+		validateType<JsonHandle::Type::String>(static_cast<JsonHandle::Type>(json_typeof(obj)), "");
+
+		return json_string_value(obj);
+	}
 }
 
 #endif
