@@ -10,6 +10,8 @@
 
 #include <regex>
 
+#include <unistd.h>
+
 template<class T>
 decltype(auto) pop(T& stack)
 {
@@ -74,6 +76,17 @@ void visitChildren(Maike::SourceFile<Maike::ConstTag> src_file,
 	}
 }
 
+namespace
+{
+	struct BuildInfoSink
+	{};
+
+	void write(BuildInfoSink, char const* buffer, size_t bufflen)
+	{
+		::write(1, buffer, bufflen);
+	}
+}
+
 int main()
 {
 	// Config stuff
@@ -90,12 +103,14 @@ int main()
 	Maike::DependencyGraph dep_graph;
 	Maike::BuildInfo bi{Maike::VcsState{getStateVariables(vcs, invoker)}};
 
+	store(toJson(bi), BuildInfoSink{});
+
 	printf(
-	   ">>>      Start time: %s\n"
-	   "                 Id: %s\n"
-	   "       VCS revision: %s\n"
-	   "    VCS version tag: %s\n"
-	   "         VCS branch: %s\n",
+	   "\n\n#       Start time: %s\n"
+	   "#               Id: %s\n"
+	   "#     VCS revision: %s\n"
+	   "#  VCS version tag: %s\n"
+	   "#       VCS branch: %s\n",
 	   Maike::toString(bi.startTime()).c_str(),
 	   toString(bi.buildId()).c_str(),
 	   bi.vcsState().revision().c_str(),
@@ -139,6 +154,7 @@ int main()
 		node.usedFiles(std::move(deps));
 	});
 
+	/*
 	dep_graph.visitItems([](auto node) {
 		auto const& deps = node.usedFiles();
 		std::for_each(std::begin(deps), std::end(deps), [&node](auto const& edge) {
@@ -148,5 +164,5 @@ int main()
 			       edge.name().c_str(),
 			       edge.sourceFile());
 		});
-	});
+	});*/
 }

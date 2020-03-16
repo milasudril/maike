@@ -3,6 +3,8 @@
 #ifndef MAIKE_VCSSTATE_HPP
 #define MAIKE_VCSSTATE_HPP
 
+#include "key_value_store/compound.hpp"
+
 #include <string>
 #include <type_traits>
 
@@ -42,5 +44,14 @@ namespace Maike
 		std::string m_version_tag;
 		std::string m_branch;
 	};
+
+	inline auto toJson(VcsState const& info)
+	{
+		return KeyValueStore::Compound{}
+			.set("revision", info.revision().c_str())
+			.set("version_tag", info.versionTag().c_str())
+			.set("branch", info.branch().c_str())
+			.takeHandle();
+	}
 }
 #endif

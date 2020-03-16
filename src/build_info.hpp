@@ -8,6 +8,8 @@
 
 #include "./vcs_state.hpp"
 
+#include "key_value_store/compound.hpp"
+
 #include <chrono>
 #include <array>
 #include <cstddef>
@@ -44,6 +46,9 @@ namespace Maike
 
 	std::string toString(BuildId const& id);
 
+	inline auto toJson(BuildId const& id)
+	{return KeyValueStore::JsonHandle{toString(id).c_str()};}
+
 	class BuildInfo
 	{
 	public:
@@ -77,5 +82,14 @@ namespace Maike
 		VcsState m_vcs_state;
 		BuildId m_build_id;
 	};
+
+	inline auto toJson(BuildInfo const& info)
+	{
+		return KeyValueStore::Compound{}
+			.set("start_time", std::chrono::system_clock::to_time_t(info.startTime()))
+			.set("vcs_state", info.vcsState())
+			.set("build_id", info.buildId())
+			.takeHandle();
+	}
 }
 #endif
