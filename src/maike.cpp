@@ -79,7 +79,8 @@ void visitChildren(Maike::SourceFile<Maike::ConstTag> src_file,
 namespace
 {
 	struct BuildInfoSink
-	{};
+	{
+	};
 
 	void write(BuildInfoSink, char const* buffer, size_t bufflen)
 	{
@@ -156,13 +157,13 @@ int main()
 
 	/*
 	dep_graph.visitItems([](auto node) {
-		auto const& deps = node.usedFiles();
-		std::for_each(std::begin(deps), std::end(deps), [&node](auto const& edge) {
-			printf("\"%s (%p)\" -> \"%s\" (%p)\n",
-			       node.name().c_str(),
-			       node.fileInfo(),
-			       edge.name().c_str(),
-			       edge.sourceFile());
-		});
+	 auto const& deps = node.usedFiles();
+	 std::for_each(std::begin(deps), std::end(deps), [&node](auto const& edge) {
+	  printf("\"%s (%p)\" -> \"%s\" (%p)\n",
+	         node.name().c_str(),
+	         node.fileInfo(),
+	         edge.name().c_str(),
+	         edge.sourceFile());
+	 });
 	});*/
 }

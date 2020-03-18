@@ -48,10 +48,10 @@ namespace Maike
 	inline auto toJson(VcsState const& info)
 	{
 		return KeyValueStore::Compound{}
-			.set("revision", info.revision().c_str())
-			.set("version_tag", info.versionTag().c_str())
-			.set("branch", info.branch().c_str())
-			.takeHandle();
+		   .set("revision", info.revision().c_str())
+		   .set("version_tag", info.versionTag().c_str())
+		   .set("branch", info.branch().c_str())
+		   .takeHandle();
 	}
 }
 #endif

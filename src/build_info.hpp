@@ -47,7 +47,9 @@ namespace Maike
 	std::string toString(BuildId const& id);
 
 	inline auto toJson(BuildId const& id)
-	{return KeyValueStore::JsonHandle{toString(id).c_str()};}
+	{
+		return KeyValueStore::JsonHandle{toString(id).c_str()};
+	}
 
 	class BuildInfo
 	{
@@ -86,10 +88,10 @@ namespace Maike
 	inline auto toJson(BuildInfo const& info)
 	{
 		return KeyValueStore::Compound{}
-			.set("start_time", std::chrono::system_clock::to_time_t(info.startTime()))
-			.set("vcs_state", info.vcsState())
-			.set("build_id", info.buildId())
-			.takeHandle();
+		   .set("start_time", std::chrono::system_clock::to_time_t(info.startTime()))
+		   .set("vcs_state", info.vcsState())
+		   .set("build_id", info.buildId())
+		   .takeHandle();
 	}
 }
 #endif
