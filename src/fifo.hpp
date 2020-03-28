@@ -63,6 +63,18 @@ namespace Maike
 		size_t m_bytes_left;
 		ElemType const* r_read_ptr;
 	};
+
+	template<class ElemType>
+	void write(Fifo<ElemType>& fifo, ElemType const* buffer, size_t n)
+	{
+		fifo.write(buffer, n);
+	}
+
+	template<class ElemType>
+	size_t read(Fifo<ElemType>& fifo, ElemType* buffer, size_t n)
+	{
+		return fifo.read(buffer, n);
+	}
 }
 
 #endif
