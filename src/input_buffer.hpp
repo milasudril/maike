@@ -8,7 +8,7 @@
 #include <cstddef>
 #include <array>
 
-namespace Maike::Cxx
+namespace Maike
 {
 	template<class Source, size_t Capacity = 4096>
 	class InputBuffer
@@ -30,7 +30,7 @@ namespace Maike::Cxx
 				}
 				auto ret = *r_read_ptr;
 				++r_read_ptr;
-				return ret;
+				return static_cast<int>(ret);
 			}
 
 		private:
