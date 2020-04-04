@@ -23,7 +23,7 @@ namespace Maike
 	{
 	public:
 		template<class Source>
-		explicit Reader(Source&& src):
+		explicit Reader(Source& src):
 		   r_source{&src},
 		   r_callback{[](void* src, std::byte* buffer, size_t n) {
 			   using Src = std::decay_t<Source>;

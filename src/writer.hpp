@@ -23,7 +23,7 @@ namespace Maike
 	{
 	public:
 		template<class Source>
-		explicit Writer(Source&& src):
+		explicit Writer(Source& src):
 		   r_source{&src},
 		   r_callback{[](void* src, std::byte const* buffer, size_t n) {
 			   using Src = std::decay_t<Source>;

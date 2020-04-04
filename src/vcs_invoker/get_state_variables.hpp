@@ -7,6 +7,8 @@
 #include "src/mem_io_redirector.hpp"
 #include "src/stringutils.hpp"
 
+#include <functional>
+
 namespace Maike::VcsInvoker
 {
 	template<class Invoker>
@@ -37,44 +39,37 @@ namespace Maike::VcsInvoker
 	class StateVarsFetcher
 	{
 	public:
-		template<class... Other>
-		explicit StateVarsFetcher(Config const&&, Other&&...) = delete;
-
-		explicit StateVarsFetcher(Config const& cfg, Invoker const& invoker):
-		   r_cfg{&cfg},
-		   r_invoker{&invoker}
+		explicit StateVarsFetcher(std::reference_wrapper<Config const> cfg, Invoker invoker):
+		   r_cfg{cfg},
+		   m_invoker{std::move(invoker)}
 		{
 		}
 
 		decltype(auto) revision() const
 		{
-			return getRevision(*r_cfg, *r_invoker);
+			return getRevision(r_cfg.get(), m_invoker);
 		}
 
 		decltype(auto) versionTag() const
 		{
-			return getVersionTag(*r_cfg, *r_invoker);
+			return getVersionTag(r_cfg.get(), m_invoker);
 		}
 
 		decltype(auto) branch() const
 		{
-			return getBranch(*r_cfg, *r_invoker);
+			return getBranch(r_cfg.get(), m_invoker);
 		}
 
 	private:
-		Config const* r_cfg;
-		Invoker const* r_invoker;
+		std::reference_wrapper<Config const> r_cfg;
+		Invoker m_invoker;
 	};
 
 	template<class Invoker>
-	StateVarsFetcher<Invoker> getStateVariables(Config const& cfg, Invoker const& invoker)
+	StateVarsFetcher<Invoker> getStateVariables(std::reference_wrapper<Config const> cfg, Invoker invoker)
 	{
-		return StateVarsFetcher<Invoker>{cfg, invoker};
+		return StateVarsFetcher<Invoker>{cfg, std::forward<Invoker>(invoker)};
 	}
-
-	template<class Invoker>
-	StateVarsFetcher<Invoker> getStateVariables(Config const&& cfg, Invoker&& invoker) = delete;
-
 }
 
 #endif

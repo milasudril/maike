@@ -102,7 +102,7 @@ int main()
 
 	// Current state
 	Maike::DependencyGraph dep_graph;
-	Maike::BuildInfo bi{Maike::VcsState{getStateVariables(vcs, invoker)}};
+	Maike::BuildInfo bi{Maike::VcsState{getStateVariables(std::cref(vcs), invoker)}};
 
 	store(toJson(bi), BuildInfoSink{});
 
