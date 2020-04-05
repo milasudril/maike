@@ -43,7 +43,7 @@ namespace Maike
 		size_t (*r_callback)(void* src, std::byte* buffer, size_t n);
 	};
 
-	size_t read(Reader reader, std::byte* buffer, size_t n)
+	inline size_t read(Reader reader, std::byte* buffer, size_t n)
 	{
 		return reader.read(buffer, n);
 	}

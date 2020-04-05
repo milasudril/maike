@@ -15,11 +15,14 @@ namespace
 	class Source
 	{
 	public:
-		Source(std::string_view sv):data{sv}, read_head{data.data()}{}
+		Source(std::string_view sv): data{sv}, read_head{data.data()}
+		{
+		}
 
 		size_t read(std::byte* buffer, size_t N)
 		{
-			auto const n = std::min(N, std::min( data.size() - (read_head - data.data()), static_cast<size_t>(5)));
+			auto const n =
+			   std::min(N, std::min(data.size() - (read_head - data.data()), static_cast<size_t>(5)));
 			memcpy(buffer, read_head, n);
 			read_head += n;
 			return n;
@@ -45,9 +48,8 @@ namespace Testcases
 		while(true)
 		{
 			auto ch_in = test.getchar();
-			if(ch_in == -1)
-			{ break; }
-			output+=ch_in;
+			if(ch_in == -1) { break; }
+			output += ch_in;
 		}
 		assert(output == "Hello, World");
 	}

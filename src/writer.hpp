@@ -43,7 +43,7 @@ namespace Maike
 		void (*r_callback)(void* src, std::byte const* buffer, size_t n);
 	};
 
-	void write(Writer writer, std::byte const* buffer, size_t n)
+	inline void write(Writer writer, std::byte const* buffer, size_t n)
 	{
 		writer.write(buffer, n);
 	}

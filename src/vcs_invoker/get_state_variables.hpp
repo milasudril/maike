@@ -66,7 +66,8 @@ namespace Maike::VcsInvoker
 	};
 
 	template<class Invoker>
-	StateVarsFetcher<Invoker> getStateVariables(std::reference_wrapper<Config const> cfg, Invoker invoker)
+	StateVarsFetcher<Invoker> getStateVariables(std::reference_wrapper<Config const> cfg,
+	                                            Invoker invoker)
 	{
 		return StateVarsFetcher<Invoker>{cfg, std::forward<Invoker>(invoker)};
 	}

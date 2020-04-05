@@ -36,6 +36,22 @@ namespace Testcases
 			buffer.putchar(static_cast<std::byte>(*input));
 			++input;
 		}
+		assert(test.data.size() == strlen(input));
+		test.data.push_back(static_cast<std::byte>(0));
+		assert(strcmp("Hello, World", reinterpret_cast<char const*>(test.data.data())));
+	}
+
+	void maikeOutputBufferWriteLargeBuffer()
+	{
+		Sink test;
+		Maike::OutputBuffer<Sink, 4096> buffer{std::ref(test)};
+		char const* input = "Hello, World";
+		while(*input != 0)
+		{
+			buffer.putchar(static_cast<std::byte>(*input));
+			++input;
+		}
+		assert(test.data.size() == strlen(input));
 		test.data.push_back(static_cast<std::byte>(0));
 		assert(strcmp("Hello, World", reinterpret_cast<char const*>(test.data.data())));
 	}
@@ -44,4 +60,5 @@ namespace Testcases
 int main()
 {
 	Testcases::maikeOutputBufferWrite();
+	Testcases::maikeOutputBufferWriteLargeBuffer();
 }
