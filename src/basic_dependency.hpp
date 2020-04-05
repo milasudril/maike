@@ -52,6 +52,11 @@ namespace Maike
 			return r_srcfile;
 		}
 
+		Resolver resolver() const
+		{
+			return m_res_method;
+		}
+
 	private:
 		fs::path m_name;
 		SrcFile const* r_srcfile;
