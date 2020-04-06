@@ -20,6 +20,7 @@ void Maike::Cxx::SourceReader::run(Reader src, std::vector<Dependency>& deps) co
 		RawStringTag,
 		RawString,
 		RawStringPreEnd,
+		PrePreprocessorDirective,
 		PreprocessorDirective,
 		PreprocessorDirectivePreArg,
 		IncludeProject,
@@ -50,7 +51,7 @@ void Maike::Cxx::SourceReader::run(Reader src, std::vector<Dependency>& deps) co
 						break;
 
 					case '#':
-						state = State::PreprocessorDirective;
+						state = State::PrePreprocessorDirective;
 						preproc_directive.clear();
 						break;
 
@@ -139,14 +140,30 @@ void Maike::Cxx::SourceReader::run(Reader src, std::vector<Dependency>& deps) co
 				}
 				break;
 
-			case State::PreprocessorDirective:
-				if(ch_in >= '\0' && ch_in <= ' ')
-				{
-					state = preproc_directive == "include" ? State::PreprocessorDirectivePreArg : State::SkipLine;
-				}
-				else
+			case State::PrePreprocessorDirective:
+				if(!(ch_in >= '\0' && ch_in <= ' '))
 				{
 					preproc_directive += ch_in;
+					state = State::PreprocessorDirective;
+				}
+				break;
+
+			case State::PreprocessorDirective:
+				switch(ch_in)
+				{
+					case '<':
+						state = preproc_directive == "include" ? State::IncludeSystem : State::SkipLine;
+						break;
+					case '"':
+						state = preproc_directive == "include" ? State::IncludeProject : State::SkipLine;
+						break;
+					default:
+						if(ch_in >= '\0' && ch_in <= ' ') { state = State::PreprocessorDirectivePreArg; }
+						else
+						{
+							preproc_directive += ch_in;
+						}
+						break;
 				}
 				break;
 
@@ -159,7 +176,12 @@ void Maike::Cxx::SourceReader::run(Reader src, std::vector<Dependency>& deps) co
 
 					case '<': state = State::IncludeSystem; break;
 
-					default: state = State::SkipLine; break;
+					default:
+						if(!(ch_in >= '\0' && ch_in <= ' '))
+						{
+							state = State::SkipLine;
+							break;
+						}
 				}
 				break;
 

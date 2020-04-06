@@ -57,6 +57,12 @@ namespace Testcases
 		Source input{
 		   "#include \"foo\"\n"
 		   "#include <bar>\n"
+		   "   #include  \"test1\"\n"
+		   "   #include    <test2>\n"
+		   "   #include\"test3\"\n"
+		   "   #include<test4>\n"
+		   "   #  include\"test5\"\n"
+		   "   #  include<test6>\n"
 		   "\"#include <not_include>\"\n"
 		   "Some intial text #include <not_include>\n"
 		   "R\"raw_string(<not_include>\n"
@@ -76,9 +82,15 @@ namespace Testcases
 
 		Maike::Cxx::SourceReader{}.run(Maike::Reader{input}, deps);
 
-		assert(deps.size() == 2);
+		assert(deps.size() == 8);
 		assert(deps[0].name() == Maike::fs::path{"foo"});
 		assert(deps[1].name() == Maike::fs::path{"bar"});
+		assert(deps[2].name() == Maike::fs::path{"test1"});
+		assert(deps[3].name() == Maike::fs::path{"test2"});
+		assert(deps[4].name() == Maike::fs::path{"test3"});
+		assert(deps[5].name() == Maike::fs::path{"test4"});
+		assert(deps[6].name() == Maike::fs::path{"test5"});
+		assert(deps[7].name() == Maike::fs::path{"test6"});
 		assert(deps[0].resolver() == Maike::Dependency::Resolver::InternalLookup);
 		assert(deps[1].resolver() == Maike::Dependency::Resolver::None);
 	}
