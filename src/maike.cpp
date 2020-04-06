@@ -5,10 +5,17 @@
 #include "./build_info.hpp"
 #include "./stringutils.hpp"
 #include "./local_system_invoker.hpp"
+#include "./input_file.hpp"
+#include "./fifo.hpp"
+
 #include "src/vcs_invoker/config.hpp"
 #include "src/vcs_invoker/get_state_variables.hpp"
 
+#include "src/cxx/tag_filter.hpp"
+#include "src/cxx/source_reader.hpp"
+
 #include <regex>
+#include <future>
 
 #include <unistd.h>
 
@@ -60,6 +67,34 @@ std::optional<Maike::SourceFileInfo> loadSourceFile(Maike::fs::path const& path,
 		targets.push_back(path);
 		return Maike::SourceFileInfo{
 		   std::move(deps), target_dir, std::move(targets), Maike::Compiler{MkDir{}}};
+	}
+
+	auto extension = path.extension();
+	printf("%s\n", path.extension().c_str());
+	if(extension == ".cpp" || extension == ".hpp")
+	{
+		//	TODO:
+		Maike::InputFile input{path};
+		Maike::Fifo<std::byte> tag_fifo;
+		Maike::Fifo<std::byte> src_fifo;
+		auto res = std::async(
+		   std::launch::async,
+		   [](Maike::Fifo<std::byte>& src) {
+			   Maike::Cxx::SourceReader src_reader;
+			   std::vector<Maike::Dependency> ret;
+			   src_reader.run(Maike::Reader{src}, ret);
+			   return ret;
+		   },
+		   std::ref(src_fifo));
+
+		Maike::Cxx::TagFilter filter;
+		filter.run(Maike::Reader{input}, Maike::Writer{tag_fifo}, Maike::Writer{src_fifo});
+		src_fifo.stop();
+		auto deps = res.get();
+		std::for_each(std::begin(deps), std::end(deps), [](auto const& item) {
+			printf("%s ", item.name().c_str());
+		});
+		putchar('\n');
 	}
 
 	return std::optional<Maike::SourceFileInfo>{};
