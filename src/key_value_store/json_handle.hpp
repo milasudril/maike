@@ -258,25 +258,8 @@ namespace Maike::KeyValueStore
 	template<class Source>
 	JsonHandle jsonLoad(Source&& src)
 	{
-		Reader reader{src};
-		return jsonLoad(reader, name(src));
+		return jsonLoad(Reader{src}, name(src));
 	}
-
-/*	{
-		detail::ReadCallbackObj<std::decay_t<Source>> cb{false, &src};
-
-		return detail::jsonLoad(
-		   &cb,
-		   [](void* buffer, size_t bufflen, void* obj) {
-			   auto self = reinterpret_cast<detail::ReadCallbackObj<std::decay_t<Source>>*>(obj);
-			   auto buff_bytes = reinterpret_cast<std::byte*>(buffer);
-			   auto const ret = detail::fetch(*self->r_src, buff_bytes, bufflen);
-			   if(!self->m_has_data)
-			   { self->m_has_data = detail::hasNonWhitespace(buff_bytes, buff_bytes + ret); }
-			   return ret;
-		   },
-		   name(src));
-	}*/
 
 	template<class Sink>
 	void store(json_t const* handle, Sink&& sink)
