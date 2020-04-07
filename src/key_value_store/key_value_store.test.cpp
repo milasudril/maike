@@ -23,16 +23,11 @@ namespace
 
 	size_t read(StringViewSource& src, std::byte* buffer, size_t N)
 	{
-		auto const n =std::min(N, src.n_bytes_left);
+		auto const n = std::min(N, src.n_bytes_left);
 		memcpy(buffer, src.read_ptr, n);
-		src.read_ptr+=n;
-		src.n_bytes_left-=n;
+		src.read_ptr += n;
+		src.n_bytes_left -= n;
 		return n;
-	}
-
-	char const* name(StringViewSource)
-	{
-		return "<string view>";
 	}
 
 	struct StringSink
@@ -76,7 +71,7 @@ namespace Testcases
 		StringSink s;
 		store(c1, s);
 
-		Maike::KeyValueStore::Compound c2{StringViewSource{s.buffer}};
+		Maike::KeyValueStore::Compound c2{StringViewSource{s.buffer}, ""};
 		auto val = c2.get<TestType>("foobar");
 	}
 }

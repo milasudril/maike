@@ -15,11 +15,9 @@ namespace
 	{
 	};
 
-	size_t read(EmptySource, std::byte*, size_t){return 0;}
-
-	char const* name(EmptySource)
+	size_t read(EmptySource, std::byte*, size_t)
 	{
-		return "<empty>";
+		return 0;
 	}
 
 	struct StringViewSource
@@ -34,16 +32,11 @@ namespace
 
 	size_t read(StringViewSource& src, std::byte* buffer, size_t N)
 	{
-		auto const n =std::min(N, src.n_bytes_left);
+		auto const n = std::min(N, src.n_bytes_left);
 		memcpy(buffer, src.read_ptr, n);
-		src.read_ptr+=n;
-		src.n_bytes_left-=n;
+		src.read_ptr += n;
+		src.n_bytes_left -= n;
 		return n;
-	}
-
-	char const* name(StringViewSource)
-	{
-		return "<string view>";
 	}
 
 	struct Sink
@@ -81,7 +74,7 @@ namespace Testcases
 
 	void maikeKeyValueStoreJsonHandleLoadEmpty()
 	{
-		auto val = Maike::KeyValueStore::jsonLoad(EmptySource{});
+		auto val = Maike::KeyValueStore::jsonLoad(EmptySource{}, "");
 		assert(!val.valid());
 	}
 
@@ -90,7 +83,8 @@ namespace Testcases
 		try
 		{
 			auto val = Maike::KeyValueStore::jsonLoad(StringViewSource{R"json(
-{"invalid json": "missing curly brace")json"});
+{"invalid json": "missing curly brace")json"},
+			                                          "");
 			abort();
 		}
 		catch(...)
@@ -103,7 +97,7 @@ namespace Testcases
 		StringViewSource src{R"json(
 {"Key": "value"}
 Here is some junk)json"};
-		auto val = Maike::KeyValueStore::jsonLoad(src);
+		auto val = Maike::KeyValueStore::jsonLoad(src, "");
 		assert(val.valid());
 	}
 
@@ -113,7 +107,7 @@ Here is some junk)json"};
 		   "                         \n"
 		   "                                              \n"
 		   "                                              "};
-		auto val = Maike::KeyValueStore::jsonLoad(src);
+		auto val = Maike::KeyValueStore::jsonLoad(src, "");
 		assert(!val.valid());
 	}
 
@@ -125,7 +119,8 @@ Here is some junk)json"};
 "a string": "This is a string",
 "an integer": 123,
 "a double": 3.14
-})json"});
+})json"},
+		                                          "");
 
 		Sink s;
 		store(val, s);

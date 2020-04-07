@@ -23,16 +23,11 @@ namespace
 
 	size_t read(StringViewSource& src, std::byte* buffer, size_t N)
 	{
-		auto const n =std::min(N, src.n_bytes_left);
+		auto const n = std::min(N, src.n_bytes_left);
 		memcpy(buffer, src.read_ptr, n);
-		src.read_ptr+=n;
-		src.n_bytes_left-=n;
+		src.read_ptr += n;
+		src.n_bytes_left -= n;
 		return n;
-	}
-
-	char const* name(StringViewSource)
-	{
-		return "<string view>";
 	}
 }
 
@@ -48,14 +43,16 @@ namespace Testcases
 	void maikeKeyValueStoreCompoundLoadEmpty()
 	{
 		Maike::KeyValueStore::Compound c{StringViewSource{R"json(
-		)json"}};
+		)json"},
+		                                 ""};
 		assert(c.size() == 0);
 	}
 
 	void maikeKeyValueStoreCompoundLoadEmpty2()
 	{
 		Maike::KeyValueStore::Compound c{StringViewSource{R"json({
-		})json"}};
+		})json"},
+		                                 ""};
 		assert(c.size() == 0);
 	}
 
@@ -64,7 +61,8 @@ namespace Testcases
 		Maike::KeyValueStore::Compound c{StringViewSource{R"json({
 		"key 1": 123,
 		"key 2": 456
-		})json"}};
+		})json"},
+		                                 ""};
 		assert(c.size() == 2);
 		assert(c.get<json_int_t>("key 1") == 123);
 		assert(c.get<json_int_t>("key 2") == 456);
@@ -74,7 +72,7 @@ namespace Testcases
 	{
 		try
 		{
-			Maike::KeyValueStore::Compound c{StringViewSource{R"json([1, 2, 3])json"}};
+			Maike::KeyValueStore::Compound c{StringViewSource{R"json([1, 2, 3])json"}, ""};
 			abort();
 		}
 		catch(...)
@@ -86,7 +84,7 @@ namespace Testcases
 	{
 		try
 		{
-			Maike::KeyValueStore::Compound c{StringViewSource{R"json({"foo":"bar"})json"}};
+			Maike::KeyValueStore::Compound c{StringViewSource{R"json({"foo":"bar"})json"}, ""};
 			(void)c.get<char const*>("blah");
 			abort();
 		}
@@ -100,7 +98,8 @@ namespace Testcases
 		Maike::KeyValueStore::Compound c{StringViewSource{R"json({
 		"key 1": 123,
 		"key 2": 456
-		})json"}};
+		})json"},
+		                                 ""};
 
 		assert(c.size() == 2);
 
@@ -115,7 +114,8 @@ namespace Testcases
 		Maike::KeyValueStore::Compound c{StringViewSource{R"json({
 		"key 1": 123,
 		"key 2": 456
-		})json"}};
+		})json"},
+		                                 ""};
 
 		assert(c.size() == 2);
 

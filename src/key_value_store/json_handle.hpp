@@ -256,9 +256,9 @@ namespace Maike::KeyValueStore
 	JsonHandle jsonLoad(Reader reader, std::string_view src_name);
 
 	template<class Source>
-	JsonHandle jsonLoad(Source&& src)
+	JsonHandle jsonLoad(Source&& src, std::string_view src_name)
 	{
-		return jsonLoad(Reader{src}, name(src));
+		return jsonLoad(Reader{src}, src_name);
 	}
 
 	template<class Sink>

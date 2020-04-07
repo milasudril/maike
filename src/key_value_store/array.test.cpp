@@ -24,16 +24,11 @@ namespace
 
 	size_t read(StringViewSource& src, std::byte* buffer, size_t N)
 	{
-		auto const n =std::min(N, src.n_bytes_left);
+		auto const n = std::min(N, src.n_bytes_left);
 		memcpy(buffer, src.read_ptr, n);
-		src.read_ptr+=n;
-		src.n_bytes_left-=n;
+		src.read_ptr += n;
+		src.n_bytes_left -= n;
 		return n;
-	}
-
-	char const* name(StringViewSource)
-	{
-		return "<string view>";
 	}
 }
 
@@ -75,7 +70,7 @@ namespace Testcases
 
 	void maikeKeyValueStoreArrayLoad()
 	{
-		Maike::KeyValueStore::Array array{StringViewSource{"[1, 2, 3]"}};
+		Maike::KeyValueStore::Array array{StringViewSource{"[1, 2, 3]"}, ""};
 		assert(array.size() == 3);
 	}
 
@@ -83,7 +78,7 @@ namespace Testcases
 	{
 		try
 		{
-			Maike::KeyValueStore::Array array{StringViewSource{"{\"foo\": 1123}"}};
+			Maike::KeyValueStore::Array array{StringViewSource{"{\"foo\": 1123}"}, ""};
 			abort();
 		}
 		catch(...)

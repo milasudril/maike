@@ -51,6 +51,15 @@ private:
 	Maike::KeyValueStore::Compound m_settings;
 };
 
+struct TestSink
+{
+};
+
+void write(TestSink&, char const* buffer, size_t n)
+{
+	write(1, buffer, n);
+}
+
 std::optional<Maike::SourceFileInfo> loadSourceFile(Maike::fs::path const& path,
                                                     const Maike::fs::path& target_dir)
 {
@@ -70,14 +79,14 @@ std::optional<Maike::SourceFileInfo> loadSourceFile(Maike::fs::path const& path,
 	}
 
 	auto extension = path.extension();
-	printf("%s\n", path.extension().c_str());
+	printf("%s\n", path.c_str());
 	if(extension == ".cpp" || extension == ".hpp")
 	{
 		//	TODO:
 		Maike::InputFile input{path};
 		Maike::Fifo<std::byte> tag_fifo;
 		Maike::Fifo<std::byte> src_fifo;
-		auto res = std::async(
+		auto deps_from_src = std::async(
 		   std::launch::async,
 		   [](Maike::Fifo<std::byte>& src) {
 			   Maike::Cxx::SourceReader src_reader;
@@ -87,13 +96,27 @@ std::optional<Maike::SourceFileInfo> loadSourceFile(Maike::fs::path const& path,
 		   },
 		   std::ref(src_fifo));
 
+		auto tags_fut = std::async(
+		   std::launch::async,
+		   [](Maike::Fifo<std::byte>& src, Maike::fs::path const& filename) {
+			   auto const filename_string = filename.string();
+			   return Maike::KeyValueStore::Compound{src, filename_string};
+		   },
+		   std::ref(tag_fifo),
+		   path);
+
 		Maike::Cxx::TagFilter filter;
 		filter.run(Maike::Reader{input}, Maike::Writer{tag_fifo}, Maike::Writer{src_fifo});
 		src_fifo.stop();
-		auto deps = res.get();
+		auto deps = deps_from_src.get();
 		std::for_each(std::begin(deps), std::end(deps), [](auto const& item) {
 			printf("%s ", item.name().c_str());
 		});
+
+		tag_fifo.stop();
+		auto tags = tags_fut.get();
+		store(tags, TestSink{});
+		putchar('\n');
 		putchar('\n');
 	}
 

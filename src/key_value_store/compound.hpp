@@ -52,9 +52,13 @@ namespace Maike::KeyValueStore
 	{
 	public:
 		template<class Source>
-		explicit Compound(Source&& src): m_handle{jsonLoad(src)}
+		explicit Compound(Source&& src, std::string_view src_name): m_handle{jsonLoad(src, src_name)}
 		{
-			if(m_handle.valid()) { validateType<Type::Compound>(m_handle.type(), name(src)); }
+			if(m_handle.valid()) { validateType<Type::Compound>(m_handle.type(), src_name); }
+			else
+			{
+				m_handle = JsonHandle{json_object()};
+			}
 		}
 
 		Compound(): m_handle{json_object()}

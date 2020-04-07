@@ -91,9 +91,9 @@ namespace Maike::KeyValueStore
 	{
 	public:
 		template<class Source>
-		explicit Array(Source&& src): m_handle{jsonLoad(src)}
+		explicit Array(Source&& src, std::string_view src_name): m_handle{jsonLoad(src, src_name)}
 		{
-			if(m_handle.valid()) { validateType<Type::Array>(m_handle.type(), name(src)); }
+			if(m_handle.valid()) { validateType<Type::Array>(m_handle.type(), src_name); }
 		}
 
 		Array(): m_handle{json_array()}

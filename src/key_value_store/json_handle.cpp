@@ -30,53 +30,58 @@ namespace
 
 	class ReadHelper
 	{
-		public:
-			explicit ReadHelper(Maike::Reader reader): m_buffer{reader}, m_has_data{false}{}
+	public:
+		explicit ReadHelper(Maike::Reader reader): m_buffer{reader}, m_has_data{false}
+		{
+		}
 
-			size_t fetch(std::byte* buffer, size_t n)
+		size_t fetch(std::byte* buffer, size_t n)
+		{
+			size_t n_written = 0;
+			auto const buffer_init = buffer;
+			while(n_written != n)
 			{
-				size_t n_written = 0;
-				auto const buffer_init = buffer;
-				while(n_written != n)
-				{
-					auto ch_in = m_buffer.getchar();
-					if(ch_in == -1) { return 0; }
+				auto ch_in = m_buffer.getchar();
+				if(ch_in == -1) { return 0; }
 
-					*buffer = static_cast<std::byte>(ch_in);
-					++buffer;
-					++n_written;
+				*buffer = static_cast<std::byte>(ch_in);
+				++buffer;
+				++n_written;
 
-					if(ch_in == '}' || ch_in == ']' || (ch_in >= ' ' && ch_in <= ' ')) { break; }
-				}
-
-				if(!hasData()) {
-					m_has_data = hasNonWhitespace(buffer_init, buffer);
-				}
-
-				return n_written;
+				if(ch_in == '}' || ch_in == ']' || (ch_in >= ' ' && ch_in <= ' ')) { break; }
 			}
 
-			bool hasData() const
-			{return m_has_data;}
+			if(!hasData()) { m_has_data = hasNonWhitespace(buffer_init, buffer); }
 
-		private:
-			Maike::InputBuffer<Maike::Reader> m_buffer;
-			bool m_has_data;
+			return n_written;
+		}
+
+		bool hasData() const
+		{
+			return m_has_data;
+		}
+
+	private:
+		Maike::InputBuffer<Maike::Reader> m_buffer;
+		bool m_has_data;
 	};
 }
 
 
-
-Maike::KeyValueStore::JsonHandle Maike::KeyValueStore::jsonLoad(Reader reader, std::string_view src_name)
+Maike::KeyValueStore::JsonHandle Maike::KeyValueStore::jsonLoad(Reader reader,
+                                                                std::string_view src_name)
 {
 	json_error_t err{};
 	ReadHelper read_helper{reader};
 	Maike::KeyValueStore::JsonHandle ret{
 	   json_load_callback(
 	      [](void* buffer, size_t buflen, void* data) mutable {
-	        auto reader = reinterpret_cast<ReadHelper*>(data);
-			return reader->fetch(reinterpret_cast<std::byte*>(buffer), buflen);
-	      }, &read_helper, JSON_DISABLE_EOF_CHECK | JSON_DECODE_ANY | JSON_REJECT_DUPLICATES, &err),
+		      auto reader = reinterpret_cast<ReadHelper*>(data);
+		      return reader->fetch(reinterpret_cast<std::byte*>(buffer), buflen);
+	      },
+	      &read_helper,
+	      JSON_DISABLE_EOF_CHECK | JSON_DECODE_ANY | JSON_REJECT_DUPLICATES,
+	      &err),
 	   src_name};
 
 	if(!ret.valid() && read_helper.hasData())
