@@ -22,7 +22,7 @@ namespace Maike
 	class Reader
 	{
 	public:
-		template<class Source>
+		template<class Source, std::enable_if_t<!std::is_same_v<std::decay_t<Source>, Reader>, int> = 0>
 		explicit Reader(Source& src):
 		   r_source{&src},
 		   r_callback{[](void* src, std::byte* buffer, size_t n) {

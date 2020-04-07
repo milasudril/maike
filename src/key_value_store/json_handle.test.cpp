@@ -15,14 +15,11 @@ namespace
 	{
 	};
 
-	int getchar(EmptySource)
-	{
-		return -1;
-	}
+	size_t read(EmptySource, std::byte*, size_t){return 0;}
 
 	char const* name(EmptySource)
 	{
-		return "<input buffer>";
+		return "<empty>";
 	}
 
 	struct StringViewSource
@@ -34,20 +31,19 @@ namespace
 		size_t n_bytes_left;
 	};
 
-	int getchar(StringViewSource& src)
+
+	size_t read(StringViewSource& src, std::byte* buffer, size_t N)
 	{
-		if(src.n_bytes_left == 0) { return -1; }
-
-		auto ret = *src.read_ptr;
-		++src.read_ptr;
-		--src.n_bytes_left;
-		return ret;
+		auto const n =std::min(N, src.n_bytes_left);
+		memcpy(buffer, src.read_ptr, n);
+		src.read_ptr+=n;
+		src.n_bytes_left-=n;
+		return n;
 	}
-
 
 	char const* name(StringViewSource)
 	{
-		return "<input buffer>";
+		return "<string view>";
 	}
 
 	struct Sink
@@ -108,8 +104,7 @@ namespace Testcases
 {"Key": "value"}
 Here is some junk)json"};
 		auto val = Maike::KeyValueStore::jsonLoad(src);
-		assert(*src.read_ptr == '\n');
-		assert(src.n_bytes_left == 18);
+		assert(val.valid());
 	}
 
 	void maikeKeyValueStoreJsonHandleLoadWhitespaceOnly()

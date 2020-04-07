@@ -7,6 +7,7 @@
 #include "./compound.hpp"
 
 #include <cassert>
+#include <cstring>
 
 namespace
 {
@@ -19,21 +20,20 @@ namespace
 		size_t n_bytes_left;
 	};
 
-	int getchar(StringViewSource& src)
-	{
-		if(src.n_bytes_left == 0) { return -1; }
 
-		auto ret = *src.read_ptr;
-		++src.read_ptr;
-		--src.n_bytes_left;
-		return ret;
+	size_t read(StringViewSource& src, std::byte* buffer, size_t N)
+	{
+		auto const n =std::min(N, src.n_bytes_left);
+		memcpy(buffer, src.read_ptr, n);
+		src.read_ptr+=n;
+		src.n_bytes_left-=n;
+		return n;
 	}
 
 	char const* name(StringViewSource)
 	{
-		return "<input buffer>";
+		return "<string view>";
 	}
-
 
 	struct StringSink
 	{

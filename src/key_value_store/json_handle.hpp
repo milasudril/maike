@@ -7,6 +7,8 @@
 #ifndef MAIKE_KEYVALUESTORE_JSONHANDLE_HPP
 #define MAIKE_KEYVALUESTORE_JSONHANDLE_HPP
 
+#include "src/reader.hpp"
+
 #include <jansson.h>
 
 #include <memory>
@@ -246,39 +248,21 @@ namespace Maike::KeyValueStore
 		};
 
 		using ReadCallback = json_load_callback_t;
-		JsonHandle jsonLoad(ReadCallbackBase* obj, ReadCallback cb, std::string_view src_name);
+
 
 		bool hasNonWhitespace(std::byte const* begin, std::byte const* end);
-
-		template<class Source>
-		size_t fetch(Source& src, std::byte* buffer, size_t n)
-		{
-			size_t n_written = 0;
-			while(n_written != n)
-			{
-				auto ch_in = getchar(src);
-				static_assert(std::is_same_v<std::decay_t<decltype(ch_in)>, int>);
-				if(ch_in == -1) { return 0; }
-
-				*buffer = static_cast<std::byte>(ch_in);
-				++buffer;
-				++n_written;
-
-				if(ch_in == '}' || ch_in == ']' || (ch_in >= ' ' && ch_in <= ' ')) { return n_written; }
-			}
-			return n_written;
-		}
-
-		template<class Source>
-		struct ReadCallbackObj: public ReadCallbackBase
-		{
-			Source* r_src;
-		};
 	}
+
+	JsonHandle jsonLoad(Reader reader, std::string_view src_name);
 
 	template<class Source>
 	JsonHandle jsonLoad(Source&& src)
 	{
+		Reader reader{src};
+		return jsonLoad(reader, name(src));
+	}
+
+/*	{
 		detail::ReadCallbackObj<std::decay_t<Source>> cb{false, &src};
 
 		return detail::jsonLoad(
@@ -292,7 +276,7 @@ namespace Maike::KeyValueStore
 			   return ret;
 		   },
 		   name(src));
-	}
+	}*/
 
 	template<class Sink>
 	void store(json_t const* handle, Sink&& sink)

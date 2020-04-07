@@ -8,6 +8,7 @@
 
 #include <cassert>
 #include <algorithm>
+#include <cstring>
 
 namespace
 {
@@ -20,20 +21,19 @@ namespace
 		size_t n_bytes_left;
 	};
 
-	int getchar(StringViewSource& src)
+
+	size_t read(StringViewSource& src, std::byte* buffer, size_t N)
 	{
-		if(src.n_bytes_left == 0) { return -1; }
-
-		auto ret = *src.read_ptr;
-		++src.read_ptr;
-		--src.n_bytes_left;
-		return ret;
+		auto const n =std::min(N, src.n_bytes_left);
+		memcpy(buffer, src.read_ptr, n);
+		src.read_ptr+=n;
+		src.n_bytes_left-=n;
+		return n;
 	}
-
 
 	char const* name(StringViewSource)
 	{
-		return "<input buffer>";
+		return "<string view>";
 	}
 }
 
