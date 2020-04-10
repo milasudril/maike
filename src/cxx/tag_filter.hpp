@@ -6,16 +6,20 @@
 #ifndef MAIKE_CXX_TAGFILTER_HPP
 #define MAIKE_CXX_TAGFILTER_HPP
 
-#include "src/reader.hpp"
-#include "src/writer.hpp"
+#include "src/tag_filter.hpp"
 
 namespace Maike::Cxx
 {
 	class TagFilter
 	{
 	public:
-		void run(Reader src, Writer tag_stream, Writer source_stream) const;
+		void run(Reader input, SourceOutStream source_stream, TagsOutStream tag_stream) const;
 	};
+
+	inline void run(TagFilter const& filter, Reader input, SourceOutStream source_stream, TagsOutStream tag_stream)
+	{
+		filter.run(input, source_stream, tag_stream);
+	}
 }
 
 #endif

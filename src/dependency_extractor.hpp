@@ -26,7 +26,7 @@ namespace Maike
 	{
 		public:
 			template<class Extractor, std::enable_if_t<!std::is_same_v<Extractor, DependencyExtractor>, int> = 0>
-			DependencyExtractor(Extractor const&& extractor) = delete;
+			explicit DependencyExtractor(Extractor const&& extractor) = delete;
 
 			template<class Extractor, std::enable_if_t<!std::is_same_v<Extractor, DependencyExtractor>, int> = 0>
 			explicit DependencyExtractor(Extractor const& extractor):

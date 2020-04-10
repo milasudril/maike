@@ -7,6 +7,12 @@
 #include "./local_system_invoker.hpp"
 #include "./input_file.hpp"
 #include "./fifo.hpp"
+#include "./tag_filter.hpp"
+#include "./reader.hpp"
+#include "./writer.hpp"
+#include "./dependency_extractor.hpp"
+#include "key_value_store/compound.hpp"
+#include "key_value_store/array.hpp"
 
 #include "src/vcs_invoker/config.hpp"
 #include "src/vcs_invoker/get_state_variables.hpp"
@@ -60,6 +66,74 @@ void write(TestSink&, char const* buffer, size_t n)
 	write(1, buffer, n);
 }
 
+/*Maike::SourceFileInfo*/
+void loadSourceFile(Maike::Reader input,
+	Maike::TagFilter filter,
+	Maike::DependencyExtractor deps_extractor)
+{
+	Maike::Fifo<std::byte> src_fifo;
+	auto deps_fut = std::async(std::launch::async, [src_reader = Maike::Reader{src_fifo}, &deps_extractor](){
+			std::vector<Maike::Dependency> ret;
+			deps_extractor.run(src_reader, ret);
+			return ret;
+		});
+
+	Maike::Fifo<std::byte> tags_fifo;
+	auto tags_fut = std::async(std::launch::async, [tags_reader = Maike::Reader{tags_fifo}]() {
+		return Maike::KeyValueStore::Compound{tags_reader, ""};
+	});
+
+	run(filter, input, Maike::SourceOutStream{src_fifo}, Maike::TagsOutStream{tags_fifo});
+	tags_fifo.stop();
+	src_fifo.stop();
+
+	auto deps = deps_fut.get();
+
+	auto tags = tags_fut.get();
+	std::vector<Maike::SourceFileInfo> ret;
+ 	if(auto target = tags.getIf<Maike::KeyValueStore::CompoundRefConst>("target"); target)
+	{
+//		ret.push_back(Maike::SourceFileInfo{*target});
+	}
+
+	if(auto targets = tags.getIf<Maike::KeyValueStore::ArrayRefConst>("targets"); targets)
+	{
+		std::for_each(std::begin(*targets), std::end(*targets), [](auto item) {
+			auto const val = item.template as<Maike::KeyValueStore::CompoundRefConst>();
+			auto const name = val.template get<char const*>("name");
+			printf(">>> %s\n", name);
+		});
+	}
+
+
+
+
+
+#if 0
+	filter.run(Maike::Reader{input}, Maike::Writer{tags_fifo}, Maike::Writer{src_fifo});
+	tags_fifo.stop();
+	src_fifo.stop();
+
+	auto tags = tags_fut.get();
+	std::vector<Maike::SourceFileInfo> ret;
+	if(auto target = tags.getIf<Maike::KeyValueStore::Compound>("target"); target)
+	{
+		ret.push_back(Maike::SourceFileInfo{*target});
+	}
+
+	if(auto targets = tags.getIf<Maike::KeyValueStore::Array>("targets"); targets)
+	{
+		std::copy(std::begin(targets), std::end(targets), std::back_inserter(ret));
+	}
+
+	std::for_each(std::begin(ret), std::end(ret), [deps = deps_fut.get()](auto& item){
+		ret.dependencies(deps);
+	});
+	return ret;
+#endif
+}
+
+
 std::optional<Maike::SourceFileInfo> loadSourceFile(Maike::fs::path const& path,
                                                     const Maike::fs::path& target_dir)
 {
@@ -82,42 +156,10 @@ std::optional<Maike::SourceFileInfo> loadSourceFile(Maike::fs::path const& path,
 	printf("%s\n", path.c_str());
 	if(extension == ".cpp" || extension == ".hpp")
 	{
-		//	TODO:
 		Maike::InputFile input{path};
-		Maike::Fifo<std::byte> tag_fifo;
-		Maike::Fifo<std::byte> src_fifo;
-		auto deps_from_src = std::async(
-		   std::launch::async,
-		   [](Maike::Fifo<std::byte>& src) {
-			   Maike::Cxx::SourceReader src_reader;
-			   std::vector<Maike::Dependency> ret;
-			   src_reader.run(Maike::Reader{src}, ret);
-			   return ret;
-		   },
-		   std::ref(src_fifo));
-
-		auto tags_fut = std::async(
-		   std::launch::async,
-		   [](Maike::Fifo<std::byte>& src, Maike::fs::path const& filename) {
-			   auto const filename_string = filename.string();
-			   return Maike::KeyValueStore::Compound{src, filename_string};
-		   },
-		   std::ref(tag_fifo),
-		   path);
-
 		Maike::Cxx::TagFilter filter;
-		filter.run(Maike::Reader{input}, Maike::Writer{tag_fifo}, Maike::Writer{src_fifo});
-		src_fifo.stop();
-		auto deps = deps_from_src.get();
-		std::for_each(std::begin(deps), std::end(deps), [](auto const& item) {
-			printf("%s ", item.name().c_str());
-		});
-
-		tag_fifo.stop();
-		auto tags = tags_fut.get();
-		store(tags, TestSink{});
-		putchar('\n');
-		putchar('\n');
+		Maike::Cxx::SourceReader src_reader;
+		loadSourceFile(Maike::Reader{input}, Maike::TagFilter{filter}, Maike::DependencyExtractor{src_reader});
 	}
 
 	return std::optional<Maike::SourceFileInfo>{};
@@ -175,6 +217,7 @@ int main()
 	   bi.vcsState().revision().c_str(),
 	   bi.vcsState().versionTag().c_str(),
 	   bi.vcsState().branch().c_str());
+	fflush(stdout);
 
 
 	auto skip = [](auto const& path, auto const& regex_list) {

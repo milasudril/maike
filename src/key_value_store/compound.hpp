@@ -8,6 +8,8 @@
 
 #include "./json_handle.hpp"
 
+#include <optional>
+
 namespace Maike::KeyValueStore
 {
 	class KeyLookupError: public std::runtime_error
@@ -86,6 +88,15 @@ namespace Maike::KeyValueStore
 			if(obj == nullptr) { throw KeyLookupError{m_handle.source(), key}; }
 			return JsonRefConst{obj, m_handle.source().c_str()}.as<T>();
 		}
+
+		template<class T>
+		std::optional<T> getIf(char const* key) const
+		{
+			auto obj = json_object_get(m_handle.handle(), key);
+			if(obj == nullptr) { return std::optional<T>{}; }
+			return JsonRefConst{obj, m_handle.source().c_str()}.as<T>();
+		}
+
 
 		size_t size() const
 		{

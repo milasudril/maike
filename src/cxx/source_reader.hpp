@@ -17,6 +17,9 @@ namespace Maike::Cxx
 	public:
 		void run(Reader src, std::vector<Dependency>& deps) const;
 	};
+
+	inline void run(SourceReader const& src_reader, Reader src, std::vector<Dependency>& deps)
+	{ src_reader.run(src, deps); }
 }
 
 #endif

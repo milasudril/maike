@@ -98,7 +98,7 @@ namespace Testcases
 		Sink tags;
 		Sink source;
 
-		Maike::Cxx::TagFilter{}.run(Maike::Reader{input}, Maike::Writer{tags}, Maike::Writer{source});
+		Maike::Cxx::TagFilter{}.run(Maike::Reader{input}, Maike::SourceOutStream{source}, Maike::TagsOutStream{tags});
 		assert(source.content() == input.content());
 
 		std::string_view tags_expected{

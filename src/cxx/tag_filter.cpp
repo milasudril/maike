@@ -7,7 +7,7 @@
 #include "src/input_buffer.hpp"
 #include "src/output_buffer.hpp"
 
-void Maike::Cxx::TagFilter::run(Reader src, Writer tag_stream, Writer source_stream) const
+void Maike::Cxx::TagFilter::run(Reader src, SourceOutStream source_stream, TagsOutStream tag_stream) const
 {
 	InputBuffer input{src};
 	OutputBuffer tags{tag_stream};
