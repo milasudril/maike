@@ -2,8 +2,8 @@
 //@	  "targets":[{"name":"tag_filter.hpp","type":"include"}]
 //@	 }
 
-#ifndef MAIKE_TAGFILTER_COMPOUND_HPP
-#define MAIKE_TAGFILTER_COMPOUND_HPP
+#ifndef MAIKE_TAGFILTER_HPP
+#define MAIKE_TAGFILTER_HPP
 
 #include "./reader.hpp"
 #include "./writer.hpp"
@@ -51,7 +51,7 @@ namespace Maike
 			void (*r_callback)(void const* filter, Reader input, SourceOutStream source, TagOutStream tags);
 	};
 
-	void run(TagFilter filter, Reader input, SourceOutStream source, TagOutStream tags)
+	inline void run(TagFilter filter, Reader input, SourceOutStream source, TagOutStream tags)
 	{filter.run(input, source, tags);}
 }
 
