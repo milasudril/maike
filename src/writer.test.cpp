@@ -11,6 +11,8 @@
 #include <array>
 #include <cstring>
 
+static_assert(Maike::TaggedWriter<12>::Tag == 12);
+
 namespace
 {
 	struct Sink

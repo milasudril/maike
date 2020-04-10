@@ -22,7 +22,7 @@ namespace Maike
 	class Writer
 	{
 	public:
-		template<class Source>
+		template<class Source, std::enable_if_t<!std::is_same_v<Source, Writer>, int> = 0>
 		explicit Writer(Source& src):
 		   r_source{&src},
 		   r_callback{[](void* src, std::byte const* buffer, size_t n) {
@@ -47,6 +47,13 @@ namespace Maike
 	{
 		writer.write(buffer, n);
 	}
+
+	template<auto Val>
+	struct TaggedWriter:public Writer
+	{
+		static constexpr auto Tag = Val;
+		using Writer::Writer;
+	};
 }
 
 #endif
