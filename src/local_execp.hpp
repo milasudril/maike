@@ -11,6 +11,7 @@
 #include "./io_redirector.hpp"
 
 #include <cstddef>
+#include <vector>
 
 namespace Maike
 {
