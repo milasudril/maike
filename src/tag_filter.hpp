@@ -12,7 +12,11 @@
 
 namespace Maike
 {
-	enum class TagFilterOutput{Source, Tags};
+	enum class TagFilterOutput
+	{
+		Source,
+		Tags
+	};
 
 	using SourceOutStream = TaggedWriter<TagFilterOutput::Source>;
 	using TagsOutStream = TaggedWriter<TagFilterOutput::Tags>;
@@ -28,31 +32,36 @@ namespace Maike
 
 	class TagFilter
 	{
-		public:
-			template<class Filter, std::enable_if_t<!std::is_same_v<std::decay_t<Filter>, TagFilter>, int> = 0>
-			explicit TagFilter(Filter const&& filter) = delete;
+	public:
+		template<class Filter,
+		         std::enable_if_t<!std::is_same_v<std::decay_t<Filter>, TagFilter>, int> = 0>
+		explicit TagFilter(Filter const&& filter) = delete;
 
-			template<class Filter, std::enable_if_t<!std::is_same_v<std::decay_t<Filter>, TagFilter>, int> = 0>
-			explicit TagFilter(Filter const& filter):
-				r_filter{&filter},
-				r_callback{[](void const* filter, Reader input, SourceOutStream source, TagsOutStream tags){
-					auto const& self = *reinterpret_cast<Filter const*>(filter);
-					tag_filter_detail::do_run(self, input, source, tags);
-				}}
-			{}
+		template<class Filter,
+		         std::enable_if_t<!std::is_same_v<std::decay_t<Filter>, TagFilter>, int> = 0>
+		explicit TagFilter(Filter const& filter):
+		   r_filter{&filter},
+		   r_callback{[](void const* filter, Reader input, SourceOutStream source, TagsOutStream tags) {
+			   auto const& self = *reinterpret_cast<Filter const*>(filter);
+			   tag_filter_detail::do_run(self, input, source, tags);
+		   }}
+		{
+		}
 
-			void run(Reader input, SourceOutStream source, TagsOutStream tags) const
-			{
-				r_callback(r_filter, input, source, tags);
-			}
+		void run(Reader input, SourceOutStream source, TagsOutStream tags) const
+		{
+			r_callback(r_filter, input, source, tags);
+		}
 
-		private:
-			void const* r_filter;
-			void (*r_callback)(void const* filter, Reader input, SourceOutStream source, TagsOutStream tags);
+	private:
+		void const* r_filter;
+		void (*r_callback)(void const* filter, Reader input, SourceOutStream source, TagsOutStream tags);
 	};
 
 	inline void run(TagFilter filter, Reader input, SourceOutStream source, TagsOutStream tags)
-	{filter.run(input, source, tags);}
+	{
+		filter.run(input, source, tags);
+	}
 }
 
 #endif

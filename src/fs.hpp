@@ -15,7 +15,7 @@ namespace Maike
 	namespace fs = std::filesystem;
 }
 
-#else 
+#else
 
 #include <experimental/filesystem>
 

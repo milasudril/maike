@@ -16,7 +16,8 @@ namespace Maike::Cxx
 		void run(Reader input, SourceOutStream source_stream, TagsOutStream tag_stream) const;
 	};
 
-	inline void run(TagFilter const& filter, Reader input, SourceOutStream source_stream, TagsOutStream tag_stream)
+	inline void
+	run(TagFilter const& filter, Reader input, SourceOutStream source_stream, TagsOutStream tag_stream)
 	{
 		filter.run(input, source_stream, tag_stream);
 	}

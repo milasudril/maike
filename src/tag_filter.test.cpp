@@ -14,7 +14,8 @@
 namespace
 {
 	struct DummyReader
-	{};
+	{
+	};
 
 	size_t read(DummyReader, std::byte* buffer, size_t n)
 	{
@@ -38,7 +39,10 @@ namespace
 	{
 	};
 
-	void run(TestFilter const&, Maike::Reader reader, Maike::SourceOutStream src, Maike::TagsOutStream tags)
+	void run(TestFilter const&,
+	         Maike::Reader reader,
+	         Maike::SourceOutStream src,
+	         Maike::TagsOutStream tags)
 	{
 		std::array<std::byte, 11> buffer;
 		read(reader, buffer.data(), buffer.size());
@@ -58,19 +62,19 @@ namespace Testcases
 		DummyWriter source;
 		DummyWriter tags;
 
- 		filter.run(Maike::Reader{r}, Maike::SourceOutStream{source}, Maike::TagsOutStream{tags});
+		filter.run(Maike::Reader{r}, Maike::SourceOutStream{source}, Maike::TagsOutStream{tags});
 
- 		std::vector<std::byte> const source_expected{static_cast<std::byte>('H'),
-											static_cast<std::byte>('e'),
-											static_cast<std::byte>('l'),
-											static_cast<std::byte>('l'),
-											static_cast<std::byte>('o')};
+		std::vector<std::byte> const source_expected{static_cast<std::byte>('H'),
+		                                             static_cast<std::byte>('e'),
+		                                             static_cast<std::byte>('l'),
+		                                             static_cast<std::byte>('l'),
+		                                             static_cast<std::byte>('o')};
 
 		std::vector<std::byte> const tags_expected{static_cast<std::byte>('W'),
-									static_cast<std::byte>('o'),
-									static_cast<std::byte>('r'),
-									static_cast<std::byte>('l'),
-									static_cast<std::byte>('d')};
+		                                           static_cast<std::byte>('o'),
+		                                           static_cast<std::byte>('r'),
+		                                           static_cast<std::byte>('l'),
+		                                           static_cast<std::byte>('d')};
 
 		assert(source.output == source_expected);
 		assert(tags.output == tags_expected);

@@ -24,31 +24,36 @@ namespace Maike
 
 	class DependencyExtractor
 	{
-		public:
-			template<class Extractor, std::enable_if_t<!std::is_same_v<Extractor, DependencyExtractor>, int> = 0>
-			explicit DependencyExtractor(Extractor const&& extractor) = delete;
+	public:
+		template<class Extractor,
+		         std::enable_if_t<!std::is_same_v<Extractor, DependencyExtractor>, int> = 0>
+		explicit DependencyExtractor(Extractor const&& extractor) = delete;
 
-			template<class Extractor, std::enable_if_t<!std::is_same_v<Extractor, DependencyExtractor>, int> = 0>
-			explicit DependencyExtractor(Extractor const& extractor):
-				r_extractor{&extractor},
-				r_callback{[](void const* extractor, Reader input, std::vector<Dependency>& deps){
-					auto const& self = *reinterpret_cast<Extractor const*>(extractor);
-					dependency_extractor_detail::do_run(self, input, deps);
-				}}
-			{}
+		template<class Extractor,
+		         std::enable_if_t<!std::is_same_v<Extractor, DependencyExtractor>, int> = 0>
+		explicit DependencyExtractor(Extractor const& extractor):
+		   r_extractor{&extractor},
+		   r_callback{[](void const* extractor, Reader input, std::vector<Dependency>& deps) {
+			   auto const& self = *reinterpret_cast<Extractor const*>(extractor);
+			   dependency_extractor_detail::do_run(self, input, deps);
+		   }}
+		{
+		}
 
-			void run(Reader input, std::vector<Dependency>& deps) const
-			{
-				r_callback(r_extractor, input, deps);
-			}
+		void run(Reader input, std::vector<Dependency>& deps) const
+		{
+			r_callback(r_extractor, input, deps);
+		}
 
-		private:
-			void const* r_extractor;
-			void (*r_callback)(void const* extractor, Reader input, std::vector<Dependency>& deps);
+	private:
+		void const* r_extractor;
+		void (*r_callback)(void const* extractor, Reader input, std::vector<Dependency>& deps);
 	};
 
 	inline void run(DependencyExtractor extractor, Reader input, std::vector<Dependency>& deps)
-	{ extractor.run(input, deps); }
+	{
+		extractor.run(input, deps);
+	}
 }
 
 #endif

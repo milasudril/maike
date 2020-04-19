@@ -23,11 +23,13 @@ namespace
 
 		std::string path;
 		std::copy(std::begin(buffer), std::end(buffer), std::back_inserter(path));
-		output.push_back(Maike::Dependency{Maike::fs::path{path}, Maike::Dependency::Resolver::InternalLookup});
+		output.push_back(
+		   Maike::Dependency{Maike::fs::path{path}, Maike::Dependency::Resolver::InternalLookup});
 	}
 
 	struct DummyReader
-	{};
+	{
+	};
 
 	size_t read(DummyReader, std::byte* buffer, size_t n)
 	{

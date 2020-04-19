@@ -49,7 +49,7 @@ namespace Maike
 	}
 
 	template<auto Val>
-	struct TaggedWriter:public Writer
+	struct TaggedWriter: public Writer
 	{
 		static constexpr auto Tag = Val;
 		using Writer::Writer;
