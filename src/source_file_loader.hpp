@@ -8,12 +8,51 @@
 #include "./compiler.hpp"
 #include "./reader.hpp"
 #include "./tag_filter.hpp"
+#include "./source_file_info.hpp"
 #include "key_value_store/compound.hpp"
 
 #include <type_traits>
+#include <cassert>
 
 namespace Maike
 {
+	namespace source_file_loader_detail
+	{
+		template<class T>
+		struct Tag
+		{
+		};
+
+		struct Vtable
+		{
+			template<class T>
+			Vtable(Tag<T>):
+			   filter_input{[](void const* handle, Reader input, SourceOutStream src, TagsOutStream tags) {
+				   auto const& self = *reinterpret_cast<T const*>(handle);
+				   filterInput(self, input, src, tags);
+			   }},
+			   load_dependencies{[](void const* handle, Reader input) {
+				   auto const& self = *reinterpret_cast<T const*>(handle);
+				   return loadDependencies(self, input);
+			   }},
+			   get_compiler{[](void const* handle, KeyValueStore::CompoundRefConst cfg) {
+				   auto const& self = *reinterpret_cast<T const*>(handle);
+				   return getCompiler(self, cfg);
+			   }},
+			   destroy{[](void* handle) {
+				   auto self = reinterpret_cast<T*>(handle);
+				   delete self;
+			   }}
+			{
+			}
+
+			void (*filter_input)(void const* handle, Reader input, SourceOutStream source, TagsOutStream tags);
+			std::vector<Dependency> (*load_dependencies)(void const* handle, Reader source_stream);
+			Compiler (*get_compiler)(void const* handle, KeyValueStore::CompoundRefConst cfg);
+			void (*destroy)(void* handle);
+		};
+	}
+
 	class SourceFileLoader
 	{
 	public:
@@ -38,73 +77,44 @@ namespace Maike
 			m_vtable.destroy(m_handle);
 		}
 
-		template<class Loader, std::enable_if_t<!std::is_same_v<std::decay_t<Loader>, SourceFileLoader>>>
+		template<class Loader, std::enable_if_t<!std::is_same_v<std::decay_t<Loader>, SourceFileLoader>, int> = 0>
 		explicit SourceFileLoader(Loader&& loader):
 		   m_handle{new Loader(std::forward<Loader>(loader))},
-		   m_vtable{Tag<Loader>{}}
+		   m_vtable{source_file_loader_detail::Tag<Loader>{}}
 		{
 		}
 
-		template<class Loader, std::enable_if_t<!std::is_same_v<std::decay_t<Loader>, SourceFileLoader>>>
+		template<class Loader, std::enable_if_t<!std::is_same_v<std::decay_t<Loader>, SourceFileLoader>, int> = 0>
 		explicit SourceFileLoader(std::unique_ptr<Loader> loader):
 		   m_handle{loader.release()},
-		   m_vtable{Tag<Loader>{}}
+		   m_vtable{source_file_loader_detail::Tag<Loader>{}}
 		{
 		}
 
-		void filter(Reader input, SourceOutStream source, TagsOutStream tags) const
+		void filterInput(Reader input, SourceOutStream source, TagsOutStream tags) const
 		{
-			m_vtable.run_filter(m_handle, input, source, tags);
+			assert(valid());
+			m_vtable.filter_input(m_handle, input, source, tags);
 		}
 
 		std::vector<Dependency> loadDependencies(Reader input) const
 		{
+			assert(valid());
 			return m_vtable.load_dependencies(m_handle, input);
 		}
 
 		Compiler getCompiler(KeyValueStore::CompoundRefConst cfg) const
 		{
+			assert(valid());
 			return m_vtable.get_compiler(m_handle, cfg);
 		}
 
+		bool valid() const
+		{ return m_handle != nullptr;}
+
 	private:
 		void* m_handle;
-
-		template<class T>
-		struct Tag
-		{
-		};
-
-		struct Vtable
-		{
-			template<class T>
-			Vtable(Tag<T>):
-			   run_filter{[](void const* handle, Reader input, SourceOutStream src, TagsOutStream tags) {
-				   auto const& self = *reinterpret_cast<T const*>(handle);
-				   filter(self, input, src, tags);
-			   }},
-			   load_dependencies{[](void const* handle, Reader input) {
-				   auto const& self = *reinterpret_cast<T const*>(handle);
-				   return loadDependencies(self, input);
-			   }},
-			   get_compiler{[](void const* handle, KeyValueStore::CompoundRefConst cfg) {
-				   auto const& self = *reinterpret_cast<T const*>(handle);
-				   return getCompiler(self, cfg);
-			   }},
-			   destroy{[](void* handle) {
-				   auto& self = *reinterpret_cast<T const*>(handle);
-				   delete self;
-			   }}
-			{
-			}
-
-			void (*run_filter)(void const* handle, Reader input, SourceOutStream source, TagsOutStream tags);
-			std::vector<Dependency> (*load_dependencies)(void const* handle, Reader source_stream);
-			Compiler (*get_compiler)(void const* handle, KeyValueStore::CompoundRefConst cfg);
-			void (*destroy)(void* handle);
-		};
-
-		Vtable m_vtable;
+		source_file_loader_detail::Vtable m_vtable;
 	};
 };
 
