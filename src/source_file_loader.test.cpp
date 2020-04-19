@@ -15,7 +15,8 @@ namespace
 
 	struct SourceFileLoaderStub
 	{
-		std::reference_wrapper<CallResult> res;
+		explicit SourceFileLoaderStub(std::reference_wrapper<CallResult> res):m_res{res}{}
+		std::reference_wrapper<CallResult> m_res;
 	};
 
 	void filterInput(SourceFileLoaderStub const&, Maike::Reader, Maike::SourceOutStream, Maike::TagsOutStream)
@@ -43,6 +44,11 @@ namespace Testcases
 
 	void maikeSourceFileLoaderCreateFromUniquePtr()
 	{
+		CallResult res;
+		auto tmp = std::make_unique<SourceFileLoaderStub>(std::ref(res));
+		Maike::SourceFileLoader obj{std::move(tmp)};
+		assert(obj.valid());
+		assert(tmp.get() == nullptr);
 	}
 }
 
