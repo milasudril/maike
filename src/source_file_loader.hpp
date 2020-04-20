@@ -46,7 +46,10 @@ namespace Maike
 			{
 			}
 
-			void (*filter_input)(void const* handle, Reader input, SourceOutStream source, TagsOutStream tags);
+			void (*filter_input)(void const* handle,
+			                     Reader input,
+			                     SourceOutStream source,
+			                     TagsOutStream tags);
 			std::vector<Dependency> (*load_dependencies)(void const* handle, Reader source_stream);
 			Compiler (*get_compiler)(void const* handle, KeyValueStore::CompoundRefConst cfg);
 			void (*destroy)(void* handle);
@@ -77,14 +80,16 @@ namespace Maike
 			m_vtable.destroy(m_handle);
 		}
 
-		template<class Loader, std::enable_if_t<!std::is_same_v<std::decay_t<Loader>, SourceFileLoader>, int> = 0>
+		template<class Loader,
+		         std::enable_if_t<!std::is_same_v<std::decay_t<Loader>, SourceFileLoader>, int> = 0>
 		explicit SourceFileLoader(Loader&& loader):
 		   m_handle{new Loader(std::forward<Loader>(loader))},
 		   m_vtable{source_file_loader_detail::Tag<Loader>{}}
 		{
 		}
 
-		template<class Loader, std::enable_if_t<!std::is_same_v<std::decay_t<Loader>, SourceFileLoader>, int> = 0>
+		template<class Loader,
+		         std::enable_if_t<!std::is_same_v<std::decay_t<Loader>, SourceFileLoader>, int> = 0>
 		explicit SourceFileLoader(std::unique_ptr<Loader> loader):
 		   m_handle{loader.release()},
 		   m_vtable{source_file_loader_detail::Tag<Loader>{}}
@@ -110,7 +115,9 @@ namespace Maike
 		}
 
 		bool valid() const
-		{ return m_handle != nullptr;}
+		{
+			return m_handle != nullptr;
+		}
 
 	private:
 		void* m_handle;

@@ -6,21 +6,30 @@
 
 #include "./source_file_loader.hpp"
 
+#include "src/test_loader/source_file_loader.hpp"
+
 #include <cassert>
 
 namespace
 {
 	class CallResult
-	{};
+	{
+	};
 
 	struct SourceFileLoaderStub
 	{
-		explicit SourceFileLoaderStub(std::reference_wrapper<CallResult> res):m_res{res}{}
+		explicit SourceFileLoaderStub(std::reference_wrapper<CallResult> res): m_res{res}
+		{
+		}
 		std::reference_wrapper<CallResult> m_res;
 	};
 
-	void filterInput(SourceFileLoaderStub const&, Maike::Reader, Maike::SourceOutStream, Maike::TagsOutStream)
-	{}
+	void filterInput(SourceFileLoaderStub const&,
+	                 Maike::Reader,
+	                 Maike::SourceOutStream,
+	                 Maike::TagsOutStream)
+	{
+	}
 
 	std::vector<Maike::Dependency> loadDependencies(SourceFileLoaderStub const&, Maike::Reader)
 	{
