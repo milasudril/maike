@@ -7,6 +7,7 @@
 
 #include <cstddef>
 #include <type_traits>
+#include <cstdint>
 
 namespace Maike
 {
@@ -22,6 +23,8 @@ namespace Maike
 	class Writer
 	{
 	public:
+		Writer():r_callback{[](void*, std::byte const*, size_t){}}{}
+
 		template<class Source, std::enable_if_t<!std::is_same_v<Source, Writer>, int> = 0>
 		explicit Writer(Source& src):
 		   r_source{&src},
@@ -37,6 +40,9 @@ namespace Maike
 		{
 			r_callback(r_source, buffer, n);
 		}
+
+		auto identity() const
+		{ return reinterpret_cast<uintptr_t>(r_source); }
 
 	private:
 		void* r_source;
