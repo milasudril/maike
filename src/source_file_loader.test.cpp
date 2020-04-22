@@ -50,9 +50,10 @@ namespace
 		stub.result.get().tags = tags;
 	}
 
-	std::vector<Maike::Dependency> loadDependencies(SourceFileLoaderStub const&, Maike::Reader)
+	std::vector<Maike::Dependency> loadDependencies(SourceFileLoaderStub const& stub, Maike::Reader input)
 	{
-		return std::vector<Maike::Dependency>{};
+		stub.result.get().input = input;
+		return std::vector{Maike::Dependency{Maike::fs::path{"foo"}, Maike::Dependency::Resolver::None}};
 	}
 
 	Maike::Compiler getCompiler(SourceFileLoaderStub const&, Maike::KeyValueStore::CompoundRefConst)
@@ -94,6 +95,18 @@ namespace Testcases
 		assert(res.source.identity() == reinterpret_cast<uintptr_t>(&source));
 		assert(res.tags.identity() == reinterpret_cast<uintptr_t>(&tags));
 	}
+
+	void maikeSourceFileLoaderLoadDependencies()
+	{
+		CallResult res;
+		Maike::SourceFileLoader obj{SourceFileLoaderStub{res}};
+
+		ReaderStub input;
+		auto deps = obj.loadDependencies(Maike::Reader{input});
+		assert(deps.size() == 1);
+		assert(deps[0].name() == "foo");
+		assert(res.input.identity() == reinterpret_cast<uintptr_t>(&input));
+	}
 }
 
 int main()
@@ -101,4 +114,5 @@ int main()
 	Testcases::maikeSourceFileLoaderCreateFromObject();
 	Testcases::maikeSourceFileLoaderCreateFromUniquePtr();
 	Testcases::maikeSourceFileLoaderRunFilter();
+	Testcases::maikeSourceFileLoaderLoadDependencies();
 }
