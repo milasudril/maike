@@ -23,7 +23,9 @@ namespace Maike
 	class Writer
 	{
 	public:
-		Writer():r_callback{[](void*, std::byte const*, size_t){}}{}
+		Writer(): r_callback{[](void*, std::byte const*, size_t) {}}
+		{
+		}
 
 		template<class Source, std::enable_if_t<!std::is_same_v<Source, Writer>, int> = 0>
 		explicit Writer(Source& src):
@@ -42,7 +44,9 @@ namespace Maike
 		}
 
 		auto identity() const
-		{ return reinterpret_cast<uintptr_t>(r_source); }
+		{
+			return reinterpret_cast<uintptr_t>(r_source);
+		}
 
 	private:
 		void* r_source;

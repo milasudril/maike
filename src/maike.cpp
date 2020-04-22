@@ -45,17 +45,14 @@ public:
 		return 0;
 	}
 
-	Maike::KeyValueStore::JsonRefConst settings() const
+	Maike::KeyValueStore::Compound settings() const
 	{
-		return m_settings.reference();
+		return Maike::KeyValueStore::Compound{};
 	}
 
 	void settings(Maike::KeyValueStore::Compound&&)
 	{
 	}
-
-private:
-	Maike::KeyValueStore::Compound m_settings;
 };
 
 struct TestSink

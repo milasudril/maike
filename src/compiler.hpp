@@ -36,8 +36,7 @@ namespace Maike
 			return m_handle->run(src, used_files, output_files, log);
 		}
 
-		// FIXME: Should return CompoundRefConst
-		Maike::KeyValueStore::JsonRefConst settings() const
+		Maike::KeyValueStore::Compound settings() const
 		{
 			return m_handle->settings();
 		}
@@ -57,7 +56,7 @@ namespace Maike
 			                std::vector<fs::path const*> const& output_files,
 			                CompilationLog& log) const = 0;
 
-			virtual Maike::KeyValueStore::JsonRefConst settings() const = 0;
+			virtual Maike::KeyValueStore::Compound settings() const = 0;
 
 			virtual void settings(KeyValueStore::Compound&& cfg) = 0;
 
@@ -77,9 +76,9 @@ namespace Maike
 				return 0;
 			}
 
-			Maike::KeyValueStore::JsonRefConst settings() const override
+			Maike::KeyValueStore::Compound settings() const override
 			{
-				return m_settings.reference();
+				return KeyValueStore::Compound{};
 			}
 
 			void settings(KeyValueStore::Compound&&) override
@@ -89,7 +88,6 @@ namespace Maike
 			~NullCompiler() override = default;
 
 		private:
-			KeyValueStore::Compound m_settings;
 		};
 
 		template<class T>
@@ -106,7 +104,7 @@ namespace Maike
 				return m_obj.run(src, used_files, output_files, log);
 			}
 
-			Maike::KeyValueStore::JsonRefConst settings() const override
+			Maike::KeyValueStore::Compound settings() const override
 			{
 				return m_obj.settings();
 			}

@@ -109,7 +109,12 @@ namespace Maike::KeyValueStore
 		}
 
 		// FIXME: Should return CompoundRefConst
-		JsonRefConst reference() const
+		auto reference() const
+		{
+			return CompoundRefConst{m_handle.reference()};
+		}
+
+		auto handleReference() const
 		{
 			return m_handle.reference();
 		}
@@ -131,7 +136,7 @@ namespace Maike::KeyValueStore
 	template<class Sink>
 	void store(Compound const& obj, Sink&& sink)
 	{
-		store(obj.reference(), sink);
+		store(obj.handleReference(), sink);
 	}
 }
 

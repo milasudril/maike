@@ -20,16 +20,47 @@ namespace
 	};
 
 	struct ReaderStub
-	{};
+	{
+	};
 
 	size_t read(ReaderStub&, std::byte*, size_t)
-	{ return 0; }
+	{
+		return 0;
+	}
 
 	struct WriterStub
-	{};
+	{
+	};
 
 	void write(WriterStub&, std::byte const*, size_t)
-	{ }
+	{
+	}
+
+	struct CompilerStub
+	{
+		CompilerStub(Maike::KeyValueStore::CompoundRefConst cfg)
+		{
+			m_command = cfg.get<char const*>("command");
+		}
+
+		template<class... Args>
+		int run(Args...) const
+		{
+			return 0;
+		}
+
+		template<class Arg>
+		void settings(Arg&&)
+		{
+		}
+
+		Maike::KeyValueStore::Compound settings() const
+		{
+			return Maike::KeyValueStore::Compound{}.set("command", m_command.c_str());
+		}
+
+		std::string m_command;
+	};
 
 	struct SourceFileLoaderStub
 	{
@@ -50,15 +81,17 @@ namespace
 		stub.result.get().tags = tags;
 	}
 
-	std::vector<Maike::Dependency> loadDependencies(SourceFileLoaderStub const& stub, Maike::Reader input)
+	std::vector<Maike::Dependency> loadDependencies(SourceFileLoaderStub const& stub,
+	                                                Maike::Reader input)
 	{
 		stub.result.get().input = input;
 		return std::vector{Maike::Dependency{Maike::fs::path{"foo"}, Maike::Dependency::Resolver::None}};
 	}
 
-	Maike::Compiler getCompiler(SourceFileLoaderStub const&, Maike::KeyValueStore::CompoundRefConst)
+	Maike::Compiler getCompiler(SourceFileLoaderStub const&,
+	                            Maike::KeyValueStore::CompoundRefConst cfg)
 	{
-		return Maike::Compiler{};
+		return Maike::Compiler{CompilerStub{cfg}};
 	}
 }
 
@@ -107,6 +140,19 @@ namespace Testcases
 		assert(deps[0].name() == "foo");
 		assert(res.input.identity() == reinterpret_cast<uintptr_t>(&input));
 	}
+
+
+	void maikeSourceFileLoaderGetCompiler()
+	{
+		CallResult res;
+		Maike::SourceFileLoader obj{SourceFileLoaderStub{res}};
+
+		Maike::KeyValueStore::Compound test{};
+		test.set("command", "test");
+		auto compiler = obj.getCompiler(test.reference());
+
+		assert(compiler.settings().get<char const*>("command") == std::string{"test"});
+	}
 }
 
 int main()
@@ -115,4 +161,5 @@ int main()
 	Testcases::maikeSourceFileLoaderCreateFromUniquePtr();
 	Testcases::maikeSourceFileLoaderRunFilter();
 	Testcases::maikeSourceFileLoaderLoadDependencies();
+	Testcases::maikeSourceFileLoaderGetCompiler();
 }

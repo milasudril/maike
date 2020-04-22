@@ -23,7 +23,9 @@ namespace Maike
 	class Reader
 	{
 	public:
-		Reader():r_callback{[](void*,std::byte*, size_t){return static_cast<size_t>(0);}}{}
+		Reader(): r_callback{[](void*, std::byte*, size_t) { return static_cast<size_t>(0); }}
+		{
+		}
 
 		template<class Source, std::enable_if_t<!std::is_same_v<std::decay_t<Source>, Reader>, int> = 0>
 		explicit Reader(Source& src):
@@ -42,7 +44,9 @@ namespace Maike
 		}
 
 		auto identity() const
-		{return reinterpret_cast<uintptr_t>(r_source);}
+		{
+			return reinterpret_cast<uintptr_t>(r_source);
+		}
 
 	private:
 		void* r_source;
