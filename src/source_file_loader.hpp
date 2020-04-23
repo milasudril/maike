@@ -31,9 +31,9 @@ namespace Maike
 				   auto const& self = *reinterpret_cast<T const*>(handle);
 				   filterInput(self, input, src, tags);
 			   }},
-			   load_dependencies{[](void const* handle, Reader input) {
+			   get_dependencies{[](void const* handle, Reader input) {
 				   auto const& self = *reinterpret_cast<T const*>(handle);
-				   return loadDependencies(self, input);
+				   return getDependencies(self, input);
 			   }},
 			   get_compiler{[](void const* handle, KeyValueStore::CompoundRefConst cfg) {
 				   auto const& self = *reinterpret_cast<T const*>(handle);
@@ -50,7 +50,7 @@ namespace Maike
 			                     Reader input,
 			                     SourceOutStream source,
 			                     TagsOutStream tags);
-			std::vector<Dependency> (*load_dependencies)(void const* handle, Reader source_stream);
+			std::vector<Dependency> (*get_dependencies)(void const* handle, Reader source_stream);
 			Compiler (*get_compiler)(void const* handle, KeyValueStore::CompoundRefConst cfg);
 			void (*destroy)(void* handle);
 		};
@@ -102,10 +102,10 @@ namespace Maike
 			m_vtable.filter_input(m_handle, input, source, tags);
 		}
 
-		std::vector<Dependency> loadDependencies(Reader input) const
+		std::vector<Dependency> getDependencies(Reader input) const
 		{
 			assert(valid());
-			return m_vtable.load_dependencies(m_handle, input);
+			return m_vtable.get_dependencies(m_handle, input);
 		}
 
 		Compiler getCompiler(KeyValueStore::CompoundRefConst cfg) const

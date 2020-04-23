@@ -1,10 +1,10 @@
 //@	{
-//@	 "targets":[{"name":"tag_filter.test","type":"application", "autorun":1}]
+//@	 "targets":[{"name":"source_file_loader.test","type":"application", "autorun":1}]
 //@	}
 
 #undef NDEBUG
 
-#include "./tag_filter.hpp"
+#include "./source_file_loader.hpp"
 
 #include <cassert>
 #include <string_view>
@@ -75,7 +75,48 @@ namespace
 
 namespace Testcases
 {
-	void maikeCxxTagFilterRun()
+	void maikeCxxSourceFileLoaderGetDependencies()
+	{
+		Source input{
+		   "#include \"foo\"\n"
+		   "#include <bar>\n"
+		   "   #include  \"test1\"\n"
+		   "   #include    <test2>\n"
+		   "   #include\"test3\"\n"
+		   "   #include<test4>\n"
+		   "   #  include\"test5\"\n"
+		   "   #  include<test6>\n"
+		   "\"#include <not_include>\"\n"
+		   "Some intial text #include <not_include>\n"
+		   "R\"raw_string(<not_include>\n"
+		   "<not_include>\n"
+		   ")raw_string\"\n"
+		   "text before string literal R\"raw_string(#include <not_include>\n"
+		   "#include <not_include>\n"
+		   ")raw_string\"\n"
+		   "/*\n"
+		   "#include <not_include>\n"
+		   "*/\n"
+		   "Text before comment block/*\n"
+		   "#include <not_include>\n"
+		   "*/"};
+
+		auto deps = Maike::Cxx::SourceFileLoader{}.getDependencies(Maike::Reader{input});
+
+		assert(deps.size() == 8);
+		assert(deps[0].name() == Maike::fs::path{"foo"});
+		assert(deps[1].name() == Maike::fs::path{"bar"});
+		assert(deps[2].name() == Maike::fs::path{"test1"});
+		assert(deps[3].name() == Maike::fs::path{"test2"});
+		assert(deps[4].name() == Maike::fs::path{"test3"});
+		assert(deps[5].name() == Maike::fs::path{"test4"});
+		assert(deps[6].name() == Maike::fs::path{"test5"});
+		assert(deps[7].name() == Maike::fs::path{"test6"});
+		assert(deps[0].resolver() == Maike::Dependency::Resolver::InternalLookup);
+		assert(deps[1].resolver() == Maike::Dependency::Resolver::None);
+	}
+
+	void maikeCxxSourceFileLoaderFilterInput()
 	{
 		Source input{
 		   "//@This should be a tag 1\n"
@@ -98,7 +139,7 @@ namespace Testcases
 		Sink tags;
 		Sink source;
 
-		Maike::Cxx::TagFilter{}.run(
+		Maike::Cxx::SourceFileLoader{}.filterInput(
 		   Maike::Reader{input}, Maike::SourceOutStream{source}, Maike::TagsOutStream{tags});
 		assert(source.content() == input.content());
 
@@ -133,6 +174,7 @@ namespace Testcases
 
 int main()
 {
-	Testcases::maikeCxxTagFilterRun();
+	Testcases::maikeCxxSourceFileLoaderGetDependencies();
+	Testcases::maikeCxxSourceFileLoaderFilterInput();
 	return 0;
 }

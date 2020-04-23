@@ -18,8 +18,7 @@
 #include "src/vcs_invoker/config.hpp"
 #include "src/vcs_invoker/get_state_variables.hpp"
 
-#include "src/cxx/tag_filter.hpp"
-#include "src/cxx/source_reader.hpp"
+#include "src/cxx/source_file_loader.hpp"
 
 #include <regex>
 #include <future>
@@ -66,16 +65,13 @@ void write(TestSink&, char const* buffer, size_t n)
 
 Maike::SourceFileInfo loadSourceFile(Maike::fs::path const& path,
                                      Maike::Reader input,
-                                     Maike::TagFilter filter,
-                                     Maike::DependencyExtractor deps_extractor,
+                                     Maike::SourceFileLoader const& loader,
                                      Maike::fs::path const& target_dir)
 {
 	Maike::Fifo<std::byte> src_fifo;
 	auto deps_fut =
-	   std::async(std::launch::async, [src_reader = Maike::Reader{src_fifo}, &deps_extractor]() {
-		   std::vector<Maike::Dependency> ret;
-		   deps_extractor.run(src_reader, ret);
-		   return ret;
+	   std::async(std::launch::async, [&loader, input](){
+		return loader.getDependencies(input);
 	   });
 
 	Maike::Fifo<std::byte> tags_fifo;
@@ -86,7 +82,7 @@ Maike::SourceFileInfo loadSourceFile(Maike::fs::path const& path,
 	   },
 	   path.string());
 
-	run(filter, input, Maike::SourceOutStream{src_fifo}, Maike::TagsOutStream{tags_fifo});
+	loader.filterInput(input, Maike::SourceOutStream{src_fifo}, Maike::TagsOutStream{tags_fifo});
 	tags_fifo.stop();
 	src_fifo.stop();
 
@@ -145,12 +141,9 @@ std::optional<Maike::SourceFileInfo> loadSourceFile(Maike::fs::path const& path,
 	if(extension == ".cpp" || extension == ".hpp")
 	{
 		Maike::InputFile input{path};
-		Maike::Cxx::TagFilter filter;
-		Maike::Cxx::SourceReader src_reader;
 		return loadSourceFile(path,
 		                      Maike::Reader{input},
-		                      Maike::TagFilter{filter},
-		                      Maike::DependencyExtractor{src_reader},
+		                      Maike::SourceFileLoader{Maike::Cxx::SourceFileLoader{}},
 		                      target_dir);
 	}
 
