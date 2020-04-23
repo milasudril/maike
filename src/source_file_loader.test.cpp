@@ -82,7 +82,7 @@ namespace
 	}
 
 	std::vector<Maike::Dependency> getDependencies(SourceFileLoaderStub const& stub,
-	                                                Maike::Reader input)
+	                                               Maike::Reader input)
 	{
 		stub.result.get().input = input;
 		return std::vector{Maike::Dependency{Maike::fs::path{"foo"}, Maike::Dependency::Resolver::None}};

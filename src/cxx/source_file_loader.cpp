@@ -219,7 +219,9 @@ std::vector<Maike::Dependency> Maike::Cxx::SourceFileLoader::getDependencies(Rea
 	}
 }
 
-void Maike::Cxx::SourceFileLoader::filterInput(Reader input, SourceOutStream source_stream, TagsOutStream tag_stream) const
+void Maike::Cxx::SourceFileLoader::filterInput(Reader input,
+                                               SourceOutStream source_stream,
+                                               TagsOutStream tag_stream) const
 {
 	InputBuffer input_buff{input};
 	OutputBuffer tags{tag_stream};
@@ -413,4 +415,3 @@ void Maike::Cxx::SourceFileLoader::filterInput(Reader input, SourceOutStream sou
 		}
 	}
 }
-

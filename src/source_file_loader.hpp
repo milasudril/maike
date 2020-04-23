@@ -114,6 +114,12 @@ namespace Maike
 			return m_vtable.get_compiler(m_handle, cfg);
 		}
 
+		Compiler getCompiler() const
+		{
+			KeyValueStore::Compound empty;
+			return getCompiler(empty.reference());
+		}
+
 		bool valid() const
 		{
 			return m_handle != nullptr;

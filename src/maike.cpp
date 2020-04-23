@@ -70,9 +70,7 @@ Maike::SourceFileInfo loadSourceFile(Maike::fs::path const& path,
 {
 	Maike::Fifo<std::byte> src_fifo;
 	auto deps_fut =
-	   std::async(std::launch::async, [&loader, input](){
-		return loader.getDependencies(input);
-	   });
+	   std::async(std::launch::async, [&loader, input]() { return loader.getDependencies(input); });
 
 	Maike::Fifo<std::byte> tags_fifo;
 	auto tags_fut = std::async(
@@ -115,7 +113,11 @@ Maike::SourceFileInfo loadSourceFile(Maike::fs::path const& path,
 		return ret;
 	}(path.parent_path(), tags);
 
-	return Maike::SourceFileInfo{std::move(deps), target_dir, std::move(targets), Maike::Compiler{}};
+	auto compiler = tags.getIf<Maike::KeyValueStore::CompoundRefConst>("compiler");
+	return Maike::SourceFileInfo{std::move(deps),
+	                             target_dir,
+	                             std::move(targets),
+	                             compiler ? loader.getCompiler(*compiler) : loader.getCompiler()};
 }
 
 
