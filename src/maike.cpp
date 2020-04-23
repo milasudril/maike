@@ -54,23 +54,15 @@ public:
 	}
 };
 
-struct TestSink
-{
-};
-
-void write(TestSink&, char const* buffer, size_t n)
-{
-	write(1, buffer, n);
-}
-
-Maike::SourceFileInfo loadSourceFile(Maike::fs::path const& path,
-                                     Maike::Reader input,
+Maike::SourceFileInfo loadSourceFile(std::vector<Maike::Dependency>&& builtin_deps,
+                                     Maike::fs::path const& path,
                                      Maike::SourceFileLoader const& loader,
                                      Maike::fs::path const& target_dir)
 {
 	Maike::Fifo<std::byte> src_fifo;
-	auto deps_fut =
-	   std::async(std::launch::async, [&loader, input]() { return loader.getDependencies(input); });
+	auto deps_fut = std::async(std::launch::async, [&loader, input = Maike::Reader{src_fifo}]() {
+		return loader.getDependencies(input);
+	});
 
 	Maike::Fifo<std::byte> tags_fifo;
 	auto tags_fut = std::async(
@@ -80,18 +72,24 @@ Maike::SourceFileInfo loadSourceFile(Maike::fs::path const& path,
 	   },
 	   path.string());
 
-	loader.filterInput(input, Maike::SourceOutStream{src_fifo}, Maike::TagsOutStream{tags_fifo});
+	Maike::InputFile input{path};
+	loader.filterInput(
+	   Maike::Reader{input}, Maike::SourceOutStream{src_fifo}, Maike::TagsOutStream{tags_fifo});
 	tags_fifo.stop();
 	src_fifo.stop();
 
-	auto deps = [](Maike::fs::path const& src_dir, std::vector<Maike::Dependency>&& deps) {
-		std::for_each(std::begin(deps), std::end(deps), [&src_dir](auto& item) {
-			if(item.resolver() == Maike::Dependency::Resolver::InternalLookup
-			   && item.name().string()[0] == '.')
-			{ item = Maike::Dependency{(src_dir / item.name()).lexically_normal(), item.resolver()}; }
-		});
-		return deps;
-	}(path.parent_path(), deps_fut.get());
+	{
+		auto deps = [](Maike::fs::path const& src_dir, std::vector<Maike::Dependency>&& deps) {
+			std::for_each(std::begin(deps), std::end(deps), [&src_dir](auto& item) {
+				if(item.resolver() == Maike::Dependency::Resolver::InternalLookup
+				   && item.name().string()[0] == '.')
+				{ item = Maike::Dependency{(src_dir / item.name()).lexically_normal(), item.resolver()}; }
+			});
+			return deps;
+		}(path.parent_path(), deps_fut.get());
+
+		builtin_deps.insert(std::end(builtin_deps), std::begin(deps), std::end(deps));
+	};
 	auto tags = tags_fut.get();
 
 	auto targets = [](Maike::fs::path const& src_dir, Maike::KeyValueStore::Compound const& tags) {
@@ -114,7 +112,7 @@ Maike::SourceFileInfo loadSourceFile(Maike::fs::path const& path,
 	}(path.parent_path(), tags);
 
 	auto compiler = tags.getIf<Maike::KeyValueStore::CompoundRefConst>("compiler");
-	return Maike::SourceFileInfo{std::move(deps),
+	return Maike::SourceFileInfo{std::move(builtin_deps),
 	                             target_dir,
 	                             std::move(targets),
 	                             compiler ? loader.getCompiler(*compiler) : loader.getCompiler()};
@@ -142,11 +140,8 @@ std::optional<Maike::SourceFileInfo> loadSourceFile(Maike::fs::path const& path,
 	auto extension = path.extension();
 	if(extension == ".cpp" || extension == ".hpp")
 	{
-		Maike::InputFile input{path};
-		return loadSourceFile(path,
-		                      Maike::Reader{input},
-		                      Maike::SourceFileLoader{Maike::Cxx::SourceFileLoader{}},
-		                      target_dir);
+		return loadSourceFile(
+		   std::move(deps), path, Maike::SourceFileLoader{Maike::Cxx::SourceFileLoader{}}, target_dir);
 	}
 
 	return std::optional<Maike::SourceFileInfo>{};
@@ -163,18 +158,6 @@ void visitChildren(Maike::SourceFile<Maike::ConstTag> src_file,
 	}
 }
 
-namespace
-{
-	struct BuildInfoSink
-	{
-	};
-
-	void write(BuildInfoSink, char const* buffer, size_t bufflen)
-	{
-		::write(1, buffer, bufflen);
-	}
-}
-
 int main()
 {
 	// Config stuff
@@ -185,26 +168,26 @@ int main()
 	Maike::fs::path target_dir{"__targets_new"};
 	Maike::VcsInvoker::Config vcs;
 
-	Maike::LocalSystemInvoker invoker;
+	//	Maike::LocalSystemInvoker invoker;
 
 	// Current state
 	Maike::DependencyGraph dep_graph;
-	Maike::BuildInfo bi{Maike::VcsState{getStateVariables(std::cref(vcs), invoker)}};
+	/*	Maike::BuildInfo bi{Maike::VcsState{getStateVariables(std::cref(vcs), invoker)}};
 
-	store(toJson(bi), BuildInfoSink{});
+	 store(toJson(bi), BuildInfoSink{});
 
-	printf(
-	   "\n\n#       Start time: %s\n"
-	   "#               Id: %s\n"
-	   "#     VCS revision: %s\n"
-	   "#  VCS version tag: %s\n"
-	   "#       VCS branch: %s\n",
-	   Maike::toString(bi.startTime()).c_str(),
-	   toString(bi.buildId()).c_str(),
-	   bi.vcsState().revision().c_str(),
-	   bi.vcsState().versionTag().c_str(),
-	   bi.vcsState().branch().c_str());
-	fflush(stdout);
+	 printf(
+	    "\n\n#       Start time: %s\n"
+	    "#               Id: %s\n"
+	    "#     VCS revision: %s\n"
+	    "#  VCS version tag: %s\n"
+	    "#       VCS branch: %s\n",
+	    Maike::toString(bi.startTime()).c_str(),
+	    toString(bi.buildId()).c_str(),
+	    bi.vcsState().revision().c_str(),
+	    bi.vcsState().versionTag().c_str(),
+	    bi.vcsState().branch().c_str());
+	 fflush(stdout);*/
 
 
 	auto skip = [](auto const& path, auto const& regex_list) {
@@ -252,11 +235,8 @@ int main()
 	dep_graph.visitItems([](auto node) {
 		auto const& deps = node.usedFiles();
 		std::for_each(std::begin(deps), std::end(deps), [&node](auto const& edge) {
-			printf("\"%s (%p)\" -> \"%s\" (%p)\n",
-			       node.name().c_str(),
-			       node.fileInfo(),
-			       edge.name().c_str(),
-			       edge.sourceFile());
+			if(edge.sourceFile() != nullptr)
+			{ printf("\"%s\" -> \"%s\"\n", node.name().c_str(), edge.name().c_str()); }
 		});
 	});
 }
