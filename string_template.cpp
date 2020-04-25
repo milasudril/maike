@@ -13,9 +13,9 @@ namespace
 }
 
 std::string Maike::string_template_detail::substitute(
-   char const* template_string,
+   std::string (*do_lookup)(void const* container, std::string_view key),
    void const* container,
-   std::string (*do_lookup)(void const* container, std::string_view key))
+   char const* template_string)
 {
 	std::string ret;
 	enum class State : int
