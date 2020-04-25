@@ -1,15 +1,8 @@
 //@	{
-//@	  "targets":[{"name":"envcache.o","type":"object"}]
+//@	  "targets":[{"name":"env.o","type":"object"}]
 //@	}
 
-#include "./envcache.hpp"
-
-#include <memory>
-#include <algorithm>
-
-extern "C" char** environ;
-
-Maike::EnvCache Maike::env;
+#include "./env.hpp"
 
 namespace
 {
@@ -22,10 +15,43 @@ namespace
 			++ptr;
 		}
 	}
-
-	std::unique_ptr<char*[]> env_string_ptrs;
-	std::unique_ptr<std::string[]> env_strings;
 }
+
+void Maike::Env::detail::load(void (*do_insert)(void* container,
+                                                std::string_view name,
+                                                std::string_view value),
+                              void* container,
+                              char const* const* env)
+{
+	while(true)
+	{
+		auto str = *env;
+		++env;
+		if(str == nullptr) { return; }
+
+		auto i = get_var_end(str);
+		switch(*i)
+		{
+			case '\0':
+				do_insert(container, std::string_view{str, static_cast<size_t>(i - str)}, std::string_view{""});
+				break;
+
+			case '=':
+				do_insert(container, std::string_view{str, static_cast<size_t>(i - str)}, i + 1);
+				break;
+		}
+	}
+}
+
+#if 0
+#include <memory>
+#include <algorithm>
+
+extern "C" char** environ;
+
+Maike::EnvCache Maike::env;
+
+
 
 void Maike::EnvCache::reload()
 {
@@ -105,3 +131,4 @@ extern "C"
 		return 0;
 	}
 }
+#endif
