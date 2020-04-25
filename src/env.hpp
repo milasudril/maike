@@ -46,16 +46,14 @@ namespace Maike::Env
 		{
 			m_pointers =
 			   std::make_unique<std::unique_ptr<char[]>[]>(container.size() + 1); // Last should be nullptr
-			std::transform(std::begin(container),
-			               std::end(container),
-			               m_pointers.get(),
-			               [](auto const& item) {
-				               auto ret = std::make_unique<char[]>(std::size(item.first) + std::size(item.second) + 2);
-				               auto pos = std::copy(std::begin(item.first), std::end(item.first), ret.get());
-				               *pos = '=';
-				               std::copy(std::begin(item.second), std::end(item.second), pos + 1);
-				               return ret;
-			               });
+			std::transform(
+			   std::begin(container), std::end(container), m_pointers.get(), [](auto const& item) {
+				   auto ret = std::make_unique<char[]>(std::size(item.first) + std::size(item.second) + 2);
+				   auto pos = std::copy(std::begin(item.first), std::end(item.first), ret.get());
+				   *pos = '=';
+				   std::copy(std::begin(item.second), std::end(item.second), pos + 1);
+				   return ret;
+			   });
 		}
 
 		char const* const* get() const

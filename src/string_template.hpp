@@ -21,12 +21,14 @@ namespace Maike
 	std::string substitute(char const* template_string, AssociativeContainer const& container)
 	{
 		return string_template_detail::substitute(
-		    [](void const* container, std::string_view key) {
+		   [](void const* container, std::string_view key) {
 			   auto const& self = *reinterpret_cast<AssociativeContainer const*>(container);
 			   auto const i = self.find(key);
 			   if(i == self.end()) { return std::string{}; }
 			   return i->second;
-		   }, &container, template_string);
+		   },
+		   &container,
+		   template_string);
 	}
 }
 
