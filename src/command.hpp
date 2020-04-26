@@ -21,6 +21,16 @@ namespace Maike
 		{
 		}
 
+		explicit Command(KeyValueStore::CompoundRefConst obj)
+		{
+			m_executable = obj.get<char const*>("executable");
+			auto args_kvs = obj.get<KeyValueStore::ArrayRefConst>("args");
+			m_args.reserve(std::size(args_kvs));
+			std::transform(std::begin(args_kvs), std::end(args_kvs), std::back_inserter(m_args), [](auto const& item) {
+				return item.template as<char const*>();
+			});
+		}
+
 		fs::path const& executable() const
 		{
 			return m_executable;
@@ -59,6 +69,11 @@ namespace Maike
 		   .set("executable", cmd.executable().c_str())
 		   .set("args", KeyValueStore::Array{std::begin(args), std::end(args)})
 		   .takeHandle();
+	}
+
+	inline auto fromJson(KeyValueStore::Empty<Command>, KeyValueStore::JsonRefConst ref)
+	{
+		return Command{ref.as<KeyValueStore::CompoundRefConst>()};
 	}
 }
 

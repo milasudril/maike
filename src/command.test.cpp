@@ -5,6 +5,7 @@
 #include "./command.hpp"
 
 #include <cassert>
+#include <cstring>
 
 namespace
 {
@@ -35,6 +36,21 @@ namespace
 	void write(TestSink& s, char const* buffer, size_t buff_len)
 	{
 		s.buffer.append(buffer, buff_len);
+	}
+
+	struct TestSource
+	{
+		explicit TestSource(char const* buffer):begin{buffer},read_ptr{buffer}{}
+		char const* const begin;
+		char const* read_ptr;
+	};
+
+	size_t read(TestSource& s, std::byte* buffer, size_t N)
+	{
+		auto n = std::min(N, static_cast<size_t>(s.read_ptr - s.begin));
+		memcpy(buffer,s.read_ptr, n);
+		s.read_ptr += n;
+		return n;
 	}
 }
 
@@ -76,6 +92,22 @@ namespace Testcases
     "executable": "foobar"
 })_";
 		assert(sink.buffer == res);
+	}
+
+	void maikeCommandFromJson()
+	{
+		TestSource src{R"_({
+    "args": [
+        "bulle",
+        "kaka"
+    ],
+    "executable": "foobar"
+})_"};
+
+		auto json = Maike::KeyValueStore::jsonLoad(src, "");
+		auto cmd = json.as<Maike::Command>();
+		assert(cmd.executable() == "foobar");
+		assert((cmd.args() == std::vector<std::string>{"bulle", "kaka"}));
 	}
 }
 
