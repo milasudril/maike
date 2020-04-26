@@ -24,13 +24,12 @@ Maike::EnvStore::EnvStore(KeyValueStore::CompoundRefConst obj)
 	});
 }
 
-Maike::EnvStore& Maike::EnvStore::loadEnviron(char const* const* env)
+Maike::EnvStore::EnvStore(char const* const* env)
 {
 	auto tmp = Env::load<Base>(env);
 	std::for_each(std::begin(tmp), std::end(tmp), [this](auto&& item){
 		insert_or_assign(std::move(item.first), std::move(item.second));
 	});
-	return *this;
 }
 
 Maike::KeyValueStore::JsonHandle Maike::toJson(EnvStore const& env)
@@ -45,5 +44,13 @@ Maike::KeyValueStore::JsonHandle Maike::toJson(EnvStore const& env)
 Maike::Env::StringPointers Maike::EnvStore::makeEnviron() const
 {
 	return Env::StringPointers{*this};
+}
+
+Maike::EnvStore& Maike::EnvStore::combine(EnvStore const& other)
+{
+	std::for_each(std::begin(other), std::end(other), [this](auto const& item) {
+		insert_or_assign(item.first, item.second);
+	});
+	return *this;
 }
 

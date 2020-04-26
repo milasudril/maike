@@ -35,7 +35,9 @@ namespace Maike
 
 		explicit EnvStore(KeyValueStore::CompoundRefConst obj);
 
-		EnvStore& loadEnviron(char const* const* env);
+		explicit EnvStore(char const* const* env);
+
+		EnvStore& combine(EnvStore const& other);
 
 		Env::StringPointers makeEnviron() const;
 	};

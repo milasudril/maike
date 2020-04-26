@@ -53,8 +53,7 @@ namespace Testcases
 
 	void maikeEnvStoreLoadEnviron()
 	{
-		Maike::EnvStore env;
-		env.loadEnviron(environ);
+		Maike::EnvStore env{environ};
 		assert(env.find("PATH") != std::end(env));
 	}
 
