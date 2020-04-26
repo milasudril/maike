@@ -58,5 +58,23 @@ namespace Maike::VcsInvoker
 		Command m_get_version_tag;
 		Command m_get_branch;
 	};
+
+	inline auto toJson(Config const& cfg)
+	{
+		return KeyValueStore::Compound{}
+		   .set("get_revision", cfg.getRevision())
+		   .set("get_version_tag", cfg.getVersionTag())
+		   .set("get_branch", cfg.getBranch())
+		   .takeHandle();
+	}
+
+	inline auto fromJson(KeyValueStore::Empty<Config>, KeyValueStore::JsonRefConst ref)
+	{
+		auto obj = ref.as<KeyValueStore::CompoundRefConst>();
+		return Config{}
+			.getRevision(obj.get<Command>("get_revision"))
+			.getVersionTag(obj.get<Command>("get_version_tag"))
+			.getBranch(obj.get<Command>("get_branch"));
+	}
 }
 #endif

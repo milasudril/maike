@@ -40,14 +40,14 @@ namespace
 
 	struct TestSource
 	{
-		explicit TestSource(char const* buffer):begin{buffer},read_ptr{buffer}{}
-		char const* const begin;
+		explicit TestSource(char const* buffer):buffer{buffer},read_ptr{buffer}{}
+		std::string_view buffer;
 		char const* read_ptr;
 	};
 
 	size_t read(TestSource& s, std::byte* buffer, size_t N)
 	{
-		auto n = std::min(N, static_cast<size_t>(s.read_ptr - s.begin));
+		auto n = std::min(N, static_cast<size_t>(s.buffer.end() - s.read_ptr));
 		memcpy(buffer,s.read_ptr, n);
 		s.read_ptr += n;
 		return n;
@@ -116,5 +116,6 @@ int main()
 	Testcases::maikeCommandInitVals();
 	Testcases::maikeCommandExecp();
 	Testcases::maikeCommandToJson();
+	Testcases::maikeCommandFromJson();
 	return 0;
 }
