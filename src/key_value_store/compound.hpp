@@ -33,7 +33,9 @@ namespace Maike::KeyValueStore
 		public:
 			using value_type = std::pair<char const* const, JsonRefConst>;
 
-			explicit const_iterator(json_t const* handle, nullptr_t):r_handle{handle}, r_iter{nullptr}{}
+			explicit const_iterator(json_t const* handle, nullptr_t): r_handle{handle}, r_iter{nullptr}
+			{
+			}
 
 			explicit const_iterator(json_t const* handle, char const* name):
 			   r_handle{handle},
@@ -57,7 +59,8 @@ namespace Maike::KeyValueStore
 
 			value_type operator*() const
 			{
-				return value_type{json_object_iter_key(r_iter), JsonRefConst{json_object_iter_value(r_iter), r_name}};
+				return value_type{json_object_iter_key(r_iter),
+				                  JsonRefConst{json_object_iter_value(r_iter), r_name}};
 			}
 
 			bool operator==(const_iterator other) const

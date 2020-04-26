@@ -103,7 +103,7 @@ namespace Maike::KeyValueStore
 		}
 
 		template<class Iter>
-		explicit Array(Iter a, Iter b):Array{}
+		explicit Array(Iter a, Iter b): Array{}
 		{
 			std::for_each(a, b, [this](auto&& val) {
 				using T = decltype(val);

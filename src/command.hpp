@@ -26,9 +26,10 @@ namespace Maike
 			m_executable = obj.get<char const*>("executable");
 			auto args_kvs = obj.get<KeyValueStore::ArrayRefConst>("args");
 			m_args.reserve(std::size(args_kvs));
-			std::transform(std::begin(args_kvs), std::end(args_kvs), std::back_inserter(m_args), [](auto const& item) {
-				return item.template as<char const*>();
-			});
+			std::transform(std::begin(args_kvs),
+			               std::end(args_kvs),
+			               std::back_inserter(m_args),
+			               [](auto const& item) { return item.template as<char const*>(); });
 		}
 
 		fs::path const& executable() const

@@ -15,21 +15,22 @@
 
 namespace Maike
 {
-	class EnvStore:private std::map<std::string, std::string, std::less<>>
+	class EnvStore: private std::map<std::string, std::string, std::less<>>
 	{
-	using Base = std::map<std::string, std::string, std::less<>>;
+		using Base = std::map<std::string, std::string, std::less<>>;
+
 	public:
 		using Base::begin;
 		using Base::end;
 		using Base::insert;
 		using Base::insert_or_assign;
 		using Base::operator[];
-		using Base::find;
 		using Base::at;
+		using Base::find;
 		using Base::key_type;
 		using Base::mapped_type;
-		using Base::value_type;
 		using Base::size;
+		using Base::value_type;
 
 		EnvStore();
 
@@ -40,6 +41,16 @@ namespace Maike
 		EnvStore& combine(EnvStore const& other);
 
 		Env::StringPointers makeEnviron() const;
+
+		bool operator==(EnvStore const& other) const
+		{
+			return static_cast<Base const&>(*this) == other;
+		}
+
+		bool operator!=(EnvStore const& other) const
+		{
+			return !(*this == other);
+		}
 	};
 
 	KeyValueStore::JsonHandle toJson(EnvStore const& env);

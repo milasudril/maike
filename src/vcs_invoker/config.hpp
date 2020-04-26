@@ -59,6 +59,17 @@ namespace Maike::VcsInvoker
 		Command m_get_branch;
 	};
 
+	inline bool operator==(Config const& a, Config const& b)
+	{
+		return a.getRevision() == b.getRevision() && a.getVersionTag() == b.getVersionTag()
+		       && a.getBranch() == b.getBranch();
+	}
+
+	inline bool operator!=(Config const& a, Config const& b)
+	{
+		return !(a == b);
+	}
+
 	inline auto toJson(Config const& cfg)
 	{
 		return KeyValueStore::Compound{}
@@ -72,9 +83,9 @@ namespace Maike::VcsInvoker
 	{
 		auto obj = ref.as<KeyValueStore::CompoundRefConst>();
 		return Config{}
-			.getRevision(obj.get<Command>("get_revision"))
-			.getVersionTag(obj.get<Command>("get_version_tag"))
-			.getBranch(obj.get<Command>("get_branch"));
+		   .getRevision(obj.get<Command>("get_revision"))
+		   .getVersionTag(obj.get<Command>("get_version_tag"))
+		   .getBranch(obj.get<Command>("get_branch"));
 	}
 }
 #endif

@@ -40,7 +40,9 @@ namespace
 
 	struct TestSource
 	{
-		explicit TestSource(char const* buffer):buffer{buffer},read_ptr{buffer}{}
+		explicit TestSource(char const* buffer): buffer{buffer}, read_ptr{buffer}
+		{
+		}
 		std::string_view buffer;
 		char const* read_ptr;
 	};
@@ -48,7 +50,7 @@ namespace
 	size_t read(TestSource& s, std::byte* buffer, size_t N)
 	{
 		auto n = std::min(N, static_cast<size_t>(s.buffer.end() - s.read_ptr));
-		memcpy(buffer,s.read_ptr, n);
+		memcpy(buffer, s.read_ptr, n);
 		s.read_ptr += n;
 		return n;
 	}
