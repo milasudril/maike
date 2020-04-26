@@ -35,6 +35,13 @@ Maike::InputFilter& Maike::InputFilter::source(std::vector<std::string>&& val)
 	return *this;
 }
 
+bool Maike::InputFilter::match(char const* str) const
+{
+	return std::any_of(std::begin(m_input_filters),
+	                   std::end(m_input_filters),
+	                   [str](auto const& regex) { return regex_search(str, regex); });
+}
+
 Maike::KeyValueStore::JsonHandle Maike::toJson(InputFilter const& cfg)
 {
 	auto const& input_filters = cfg.source();

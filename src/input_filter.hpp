@@ -32,7 +32,7 @@ namespace Maike
 
 		InputFilter& source(std::vector<std::string>&& val);
 
-		bool match(std::string_view view) const;
+		bool match(char const* str) const;
 
 	private:
 		std::vector<std::regex> m_input_filters;
