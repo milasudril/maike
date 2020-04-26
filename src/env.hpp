@@ -29,7 +29,7 @@ namespace Maike::Env
 		   [](void* container, std::string_view name, std::string_view value) {
 			   using Key = typename AssociativeContainer::key_type;
 			   auto& self = *reinterpret_cast<AssociativeContainer*>(container);
-			   self[Key{name}] = value;
+			   self.insert_or_assign(Key{name}, value);
 		   },
 		   &ret,
 		   env);

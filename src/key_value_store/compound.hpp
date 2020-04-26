@@ -28,6 +28,54 @@ namespace Maike::KeyValueStore
 	class CompoundRefConst
 	{
 	public:
+		class const_iterator
+		{
+		public:
+			using value_type = std::pair<char const* const, JsonRefConst>;
+
+			explicit const_iterator(json_t const* handle, nullptr_t):r_handle{handle}, r_iter{nullptr}{}
+
+			explicit const_iterator(json_t const* handle, char const* name):
+			   r_handle{handle},
+			   r_iter{json_object_iter(const_cast<json_t*>(handle))},
+			   r_name{name}
+			{
+			}
+
+			const_iterator& operator++()
+			{
+				r_iter = json_object_iter_next(const_cast<json_t*>(r_handle), r_iter);
+				return *this;
+			}
+
+			const_iterator operator++(int)
+			{
+				auto ret = *this;
+				r_iter = json_object_iter_next(const_cast<json_t*>(r_handle), r_iter);
+				return ret;
+			}
+
+			value_type operator*() const
+			{
+				return value_type{json_object_iter_key(r_iter), JsonRefConst{json_object_iter_value(r_iter), r_name}};
+			}
+
+			bool operator==(const_iterator other) const
+			{
+				return r_handle == other.r_handle && r_iter == other.r_iter;
+			}
+
+			bool operator!=(const_iterator other) const
+			{
+				return !(*this == other);
+			}
+
+		private:
+			json_t const* r_handle;
+			void* r_iter;
+			char const* r_name;
+		};
+
 		explicit CompoundRefConst(JsonRefConst ref): m_ref{ref}
 		{
 			validateType<Type::Compound>(ref.type(), ref.source());
@@ -44,6 +92,16 @@ namespace Maike::KeyValueStore
 		size_t size() const
 		{
 			return json_object_size(m_ref.handle());
+		}
+
+		const_iterator begin() const
+		{
+			return const_iterator{m_ref.handle(), m_ref.source()};
+		}
+
+		const_iterator end() const
+		{
+			return const_iterator{m_ref.handle(), nullptr};
 		}
 
 	private:
