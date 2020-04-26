@@ -8,6 +8,9 @@
 
 #include "./json_handle.hpp"
 
+#include <type_traits>
+#include <algorithm>
+
 namespace Maike::KeyValueStore
 {
 	class Array;
@@ -90,14 +93,22 @@ namespace Maike::KeyValueStore
 	class Array
 	{
 	public:
-		template<class Source>
+		template<class Source, std::enable_if_t<!std::is_same_v<Array, std::decay_t<Source>>, int> = 0>
 		explicit Array(Source&& src, std::string_view src_name): m_handle{jsonLoad(src, src_name)}
 		{
 			if(m_handle.valid()) { validateType<Type::Array>(m_handle.type(), src_name); }
 		}
-
 		Array(): m_handle{json_array()}
 		{
+		}
+
+		template<class Iter>
+		explicit Array(Iter a, Iter b):Array{}
+		{
+			std::for_each(a, b, [this](auto&& val) {
+				using T = decltype(val);
+				append(std::forward<T>(val));
+			});
 		}
 
 		JsonHandle takeHandle()

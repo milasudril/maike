@@ -17,6 +17,7 @@
 #include <string_view>
 #include <type_traits>
 #include <cassert>
+#include <string>
 
 namespace Maike::KeyValueStore
 {
@@ -161,6 +162,8 @@ namespace Maike::KeyValueStore
 		explicit JsonHandle(char const* x): JsonHandle{json_string(x)}
 		{
 		}
+
+		explicit JsonHandle(std::string const& x):JsonHandle{x.c_str()}{}
 
 		explicit JsonHandle(json_t* handle, std::string_view src = "<scratch>"):
 		   m_handle{handle},

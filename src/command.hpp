@@ -4,6 +4,8 @@
 #define MAIKE_COMMAND_HPP
 
 #include "./fs.hpp"
+#include "src/key_value_store/compound.hpp"
+#include "src/key_value_store/array.hpp"
 
 #include <string>
 #include <vector>
@@ -48,6 +50,15 @@ namespace Maike
 	bool operator!=(Command const& a, Command const& b)
 	{
 		return !(a == b);
+	}
+
+	inline auto toJson(Command const& cmd)
+	{
+		auto const& args = cmd.args();
+		return KeyValueStore::Compound{}
+		   .set("executable", cmd.executable().c_str())
+		   .set("args", KeyValueStore::Array{std::begin(args), std::end(args)})
+		   .takeHandle();
 	}
 }
 
