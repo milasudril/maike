@@ -12,18 +12,13 @@
 #include "./writer.hpp"
 #include "./dependency_extractor.hpp"
 #include "./source_file_loader.hpp"
+#include "./config.hpp"
 #include "key_value_store/compound.hpp"
 #include "key_value_store/array.hpp"
 
-#include "src/vcs_invoker/config.hpp"
-#include "src/vcs_invoker/get_state_variables.hpp"
-
 #include "src/cxx/source_file_loader.hpp"
 
-#include <regex>
 #include <future>
-
-#include <unistd.h>
 
 template<class T>
 decltype(auto) pop(T& stack)
@@ -156,13 +151,8 @@ void visitChildren(Maike::SourceFile<Maike::ConstTag> src_file,
 
 int main()
 {
-	// Config stuff
-	std::vector<std::regex> input_filters;
-	input_filters.push_back(std::regex{"/\\..*", std::regex_constants::basic});
-	input_filters.push_back(std::regex{"/__*.*", std::regex_constants::basic});
+	Maike::Config cfg;
 
-	Maike::fs::path target_dir{"__targets_new"};
-	Maike::VcsInvoker::Config vcs;
 
 	//	Maike::LocalSystemInvoker invoker;
 
@@ -185,25 +175,20 @@ int main()
 	    bi.vcsState().branch().c_str());
 	 fflush(stdout);*/
 
-
-	auto skip = [](auto const& path, auto const& regex_list) {
-		return std::any_of(std::begin(regex_list), std::end(regex_list), [&path](auto const& regex) {
-			return regex_search(path.c_str(), regex);
-		});
-	};
-
 	// Loader
 	std::stack<Maike::fs::path> paths_to_visit;
-	paths_to_visit.push(Maike::fs::path{"."});
+	paths_to_visit.push(Maike::fs::path{"."});  // Should be fetched from cfg
 	while(!paths_to_visit.empty())
 	{
-		auto src_file_name = pop(paths_to_visit);
-		if(skip(src_file_name, input_filters)) { continue; }
+		auto src_path = pop(paths_to_visit);
+		if(cfg.inputFilter().match(src_path.filename().c_str()) && src_path != ".") {
+			continue;
+		}
 
-		auto src_file_name_normal = src_file_name.lexically_normal();
-		if(dep_graph.find(src_file_name_normal) != nullptr) { continue; }
+		auto src_path_normal = src_path.lexically_normal();
+		if(dep_graph.find(src_path_normal) != nullptr) { continue; }
 
-		if(auto src_file_info = loadSourceFile(src_file_name_normal);
+		if(auto src_file_info = loadSourceFile(src_path_normal);
 		   src_file_info.has_value())
 		{
 			auto const& targets = src_file_info->targets();
@@ -215,7 +200,7 @@ int main()
 				throw std::runtime_error{std::string{"Target "} + i->string() + " has already been defined."};
 			}
 
-			visitChildren(dep_graph.insert(std::move(src_file_name_normal), std::move(*src_file_info)),
+			visitChildren(dep_graph.insert(std::move(src_path_normal), std::move(*src_file_info)),
 			              paths_to_visit);
 		}
 	}
@@ -226,7 +211,6 @@ int main()
 		   std::begin(deps), std::end(deps), [&dep_graph](auto& edge) { edge.resolve(dep_graph); });
 		node.usedFiles(std::move(deps));
 	});
-
 
 	dep_graph.visitItems([](auto node) {
 		auto const& deps = node.usedFiles();
