@@ -56,8 +56,7 @@ public:
 
 Maike::SourceFileInfo loadSourceFile(std::vector<Maike::Dependency>&& builtin_deps,
                                      Maike::fs::path const& path,
-                                     Maike::SourceFileLoader const& loader,
-                                     Maike::fs::path const& target_dir)
+                                     Maike::SourceFileLoader const& loader)
 {
 	Maike::Fifo<std::byte> src_fifo;
 	auto deps_fut = std::async(std::launch::async, [&loader, input = Maike::Reader{src_fifo}]() {
@@ -113,14 +112,12 @@ Maike::SourceFileInfo loadSourceFile(std::vector<Maike::Dependency>&& builtin_de
 
 	auto compiler = tags.getIf<Maike::KeyValueStore::CompoundRefConst>("compiler");
 	return Maike::SourceFileInfo{std::move(builtin_deps),
-	                             target_dir,
 	                             std::move(targets),
 	                             compiler ? loader.getCompiler(*compiler) : loader.getCompiler()};
 }
 
 
-std::optional<Maike::SourceFileInfo> loadSourceFile(Maike::fs::path const& path,
-                                                    const Maike::fs::path& target_dir)
+std::optional<Maike::SourceFileInfo> loadSourceFile(Maike::fs::path const& path)
 {
 	std::vector<Maike::Dependency> deps;
 	if(!path.parent_path().empty())
@@ -133,15 +130,14 @@ std::optional<Maike::SourceFileInfo> loadSourceFile(Maike::fs::path const& path,
 	{
 		std::vector<Maike::fs::path> targets;
 		targets.push_back(path.lexically_normal());
-		return Maike::SourceFileInfo{
-		   std::move(deps), target_dir, std::move(targets), Maike::Compiler{MkDir{}}};
+		return Maike::SourceFileInfo{std::move(deps), std::move(targets), Maike::Compiler{MkDir{}}};
 	}
 
 	auto extension = path.extension();
 	if(extension == ".cpp" || extension == ".hpp")
 	{
 		return loadSourceFile(
-		   std::move(deps), path, Maike::SourceFileLoader{Maike::Cxx::SourceFileLoader{}}, target_dir);
+		   std::move(deps), path, Maike::SourceFileLoader{Maike::Cxx::SourceFileLoader{}});
 	}
 
 	return std::optional<Maike::SourceFileInfo>{};
@@ -207,7 +203,7 @@ int main()
 		auto src_file_name_normal = src_file_name.lexically_normal();
 		if(dep_graph.find(src_file_name_normal) != nullptr) { continue; }
 
-		if(auto src_file_info = loadSourceFile(src_file_name_normal, target_dir);
+		if(auto src_file_info = loadSourceFile(src_file_name_normal);
 		   src_file_info.has_value())
 		{
 			auto const& targets = src_file_info->targets();

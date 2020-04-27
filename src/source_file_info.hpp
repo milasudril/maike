@@ -26,7 +26,6 @@ namespace Maike
 		explicit SourceFileInfo() = default;
 
 		explicit SourceFileInfo(std::vector<Dependency>&& used_files,
-		                        fs::path const& target_dir,
 		                        std::vector<fs::path>&& targets,
 		                        Compiler&& compiler);
 
