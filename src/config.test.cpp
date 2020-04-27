@@ -65,8 +65,8 @@ namespace Testcases
         "MAIKE_TARGETS": "__targets"
     },
     "input_filter": [
-        "/\\..*",
-        "/__*.*"
+        "^\\.",
+        "^__"
     ],
     "target_dir": "%MAIKE_TARGETS%",
     "vcs_config": {
@@ -109,8 +109,8 @@ namespace Testcases
         "MAIKE_TARGETS": "__targets"
     },
     "input_filter": [
-        "/\\..*",
-        "/__*.*"
+        "xya",
+        "blah"
     ],
     "target_dir": "foobar",
     "vcs_config": {

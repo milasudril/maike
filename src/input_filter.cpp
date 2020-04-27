@@ -6,7 +6,7 @@
 
 Maike::InputFilter::InputFilter()
 {
-	source(std::vector<std::string>{R"_(/\..*)_", R"_(/__*.*)_"});
+	source(std::vector<std::string>{R"_(^\.)_", R"_(^__)_"});
 }
 
 Maike::InputFilter::InputFilter(KeyValueStore::ArrayRefConst obj)
