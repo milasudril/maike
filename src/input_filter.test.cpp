@@ -13,7 +13,7 @@ namespace Testcases
 		assert(f.match("__foobar"));
 		assert(!f.match("foo.bar"));
 		assert(!f.match("foo__bar"));
- 	}
+	}
 }
 
 int main()

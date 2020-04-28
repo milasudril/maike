@@ -49,6 +49,45 @@ public:
 	}
 };
 
+std::vector<Maike::Dependency> fixNames(Maike::fs::path const& prefix,
+                                        std::vector<Maike::Dependency> const& deps)
+{
+	std::vector<Maike::Dependency> ret;
+	ret.reserve(deps.size());
+	std::transform(
+	   std::begin(deps), std::end(deps), std::back_inserter(ret), [&prefix](auto const& item) {
+		   if(item.resolver() == Maike::Dependency::Resolver::InternalLookup)
+		   {
+			   auto const& str = item.name().string();
+			   if(str.size() > 1 && memcmp(str.data(), "./", 2) == 0)
+			   { return Maike::Dependency{(prefix / item.name()).lexically_normal(), item.resolver()}; }
+		   }
+		   return item;
+	   });
+	return ret;
+}
+
+std::vector<Maike::fs::path> getTargets(Maike::fs::path const& src_dir,
+                                        Maike::KeyValueStore::Compound const& tags)
+{
+	std::vector<Maike::fs::path> ret;
+	if(auto target = tags.getIf<Maike::KeyValueStore::CompoundRefConst>("target"); target)
+	{
+		auto const name = target->template get<char const*>("name");
+		ret.push_back(name);
+	}
+
+	if(auto targets = tags.getIf<Maike::KeyValueStore::ArrayRefConst>("targets"); targets)
+	{
+		std::transform(
+		   std::begin(*targets), std::end(*targets), std::back_inserter(ret), [&src_dir](auto item) {
+			   auto const val = item.template as<Maike::KeyValueStore::CompoundRefConst>();
+			   return src_dir / Maike::fs::path{val.template get<char const*>("name")};
+		   });
+	}
+	return ret;
+}
+
 Maike::SourceFileInfo loadSourceFile(std::vector<Maike::Dependency>&& builtin_deps,
                                      Maike::fs::path const& path,
                                      Maike::SourceFileLoader const& loader)
@@ -73,37 +112,12 @@ Maike::SourceFileInfo loadSourceFile(std::vector<Maike::Dependency>&& builtin_de
 	src_fifo.stop();
 
 	{
-		auto deps = [](Maike::fs::path const& src_dir, std::vector<Maike::Dependency>&& deps) {
-			std::for_each(std::begin(deps), std::end(deps), [&src_dir](auto& item) {
-				if(item.resolver() == Maike::Dependency::Resolver::InternalLookup
-				   && item.name().string()[0] == '.')
-				{ item = Maike::Dependency{(src_dir / item.name()).lexically_normal(), item.resolver()}; }
-			});
-			return deps;
-		}(path.parent_path(), deps_fut.get());
-
+		auto deps = fixNames(path.parent_path(), deps_fut.get());
 		builtin_deps.insert(std::end(builtin_deps), std::begin(deps), std::end(deps));
-	};
+	}
+
 	auto tags = tags_fut.get();
-
-	auto targets = [](Maike::fs::path const& src_dir, Maike::KeyValueStore::Compound const& tags) {
-		std::vector<Maike::fs::path> ret;
-		if(auto target = tags.getIf<Maike::KeyValueStore::CompoundRefConst>("target"); target)
-		{
-			auto const name = target->template get<char const*>("name");
-			ret.push_back(name);
-		}
-
-		if(auto targets = tags.getIf<Maike::KeyValueStore::ArrayRefConst>("targets"); targets)
-		{
-			std::transform(
-			   std::begin(*targets), std::end(*targets), std::back_inserter(ret), [&src_dir](auto item) {
-				   auto const val = item.template as<Maike::KeyValueStore::CompoundRefConst>();
-				   return src_dir / Maike::fs::path{val.template get<char const*>("name")};
-			   });
-		}
-		return ret;
-	}(path.parent_path(), tags);
+	auto targets = getTargets(path.parent_path(), tags);
 
 	auto compiler = tags.getIf<Maike::KeyValueStore::CompoundRefConst>("compiler");
 	return Maike::SourceFileInfo{std::move(builtin_deps),
@@ -177,19 +191,16 @@ int main()
 
 	// Loader
 	std::stack<Maike::fs::path> paths_to_visit;
-	paths_to_visit.push(Maike::fs::path{"."});  // Should be fetched from cfg
+	paths_to_visit.push(Maike::fs::path{"."}); // Should be fetched from cfg
 	while(!paths_to_visit.empty())
 	{
 		auto src_path = pop(paths_to_visit);
-		if(cfg.inputFilter().match(src_path.filename().c_str()) && src_path != ".") {
-			continue;
-		}
+		if(cfg.inputFilter().match(src_path.filename().c_str()) && src_path != ".") { continue; }
 
 		auto src_path_normal = src_path.lexically_normal();
 		if(dep_graph.find(src_path_normal) != nullptr) { continue; }
 
-		if(auto src_file_info = loadSourceFile(src_path_normal);
-		   src_file_info.has_value())
+		if(auto src_file_info = loadSourceFile(src_path_normal); src_file_info.has_value())
 		{
 			auto const& targets = src_file_info->targets();
 			auto i = std::find_if(std::begin(targets), std::end(targets), [&dep_graph](auto const& item) {
