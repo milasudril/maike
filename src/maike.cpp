@@ -188,6 +188,27 @@ loadSourceFiles(Maike::InputFilter const& filter,
 	return ret;
 }
 
+void makeSourceFileInfosFromTargets(std::map<Maike::fs::path, Maike::SourceFileInfo>& source_files)
+{
+	std::for_each(std::begin(source_files), std::end(source_files), [&source_files](auto const& item) {
+		auto const& targets = item.second.targets();
+		std::for_each(std::begin(targets), std::end(targets), [&source_files, &item](auto const& target) {
+			if(item.first != target) // For backwards compatiblity with old maike
+			{
+				auto i = source_files.find(target);
+				if(i != std::end(source_files)) { throw std::runtime_error{"Target has already been defined"}; }
+
+				std::vector<Maike::Dependency> deps{
+				   Maike::Dependency{item.first, Maike::Dependency::Resolver::InternalLookup}};
+				Maike::SourceFileInfo src_file;
+				src_file.usedFiles(std::move(deps));
+				// TODO: Should target dir be prepended to target?
+				source_files.insert(i, std::make_pair(target, std::move(src_file)));
+			}
+		});
+	});
+}
+
 void resolveDependencies(std::map<Maike::fs::path, Maike::SourceFileInfo>& source_files)
 {
 	std::for_each(std::begin(source_files), std::end(source_files), [&source_files](auto& item) {
@@ -233,10 +254,12 @@ int main()
 	 fflush(stdout);*/
 
 	auto src_files = loadSourceFiles(cfg.inputFilter());
+	makeSourceFileInfosFromTargets(src_files);
 	resolveDependencies(src_files);
 
 	std::for_each(std::begin(src_files), std::end(src_files), [](auto const& item) {
 		auto const& deps = item.second.usedFiles();
+		printf("\"%s\"\n", item.first.c_str());
 		std::for_each(std::begin(deps), std::end(deps), [&item](auto const& edge) {
 			if(edge.sourceFile() != nullptr)
 			{ printf("\"%s\" -> \"%s\"\n", item.first.c_str(), edge.name().c_str()); }

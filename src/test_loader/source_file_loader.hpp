@@ -9,7 +9,6 @@
 #include "src/key_value_store/compound.hpp"
 #include "src/input_buffer.hpp"
 #include "src/output_buffer.hpp"
-#include "src/source_file_info.hpp"
 
 #include <vector>
 
