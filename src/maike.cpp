@@ -144,8 +144,7 @@ std::optional<Maike::SourceFileInfo> loadSourceFile(Maike::fs::path const& path)
 	return std::optional<Maike::SourceFileInfo>{};
 }
 
-void visitChildren(Maike::fs::path const& src_file,
-                   std::stack<Maike::fs::path>& paths_to_visit)
+void visitChildren(Maike::fs::path const& src_file, std::stack<Maike::fs::path>& paths_to_visit)
 {
 	if(is_directory(src_file))
 	{
@@ -163,8 +162,9 @@ decltype(auto) pop(T& stack)
 	return ret;
 }
 
-std::map<Maike::fs::path, Maike::SourceFileInfo> loadSourceFiles(Maike::InputFilter const& filter,
-	Maike::fs::path const& start_dir = Maike::fs::path{"."})
+std::map<Maike::fs::path, Maike::SourceFileInfo>
+loadSourceFiles(Maike::InputFilter const& filter,
+                Maike::fs::path const& start_dir = Maike::fs::path{"."})
 {
 	std::map<Maike::fs::path, Maike::SourceFileInfo> ret;
 	std::stack<Maike::fs::path> paths_to_visit;
@@ -173,22 +173,36 @@ std::map<Maike::fs::path, Maike::SourceFileInfo> loadSourceFiles(Maike::InputFil
 	while(!paths_to_visit.empty())
 	{
 		auto src_path = pop(paths_to_visit);
-		if(src_path != "." && filter.match(src_path.filename().c_str()))
-		{ continue; }
+		if(src_path != "." && filter.match(src_path.filename().c_str())) { continue; }
 
 		auto src_path_normal = src_path.lexically_normal();
 		auto i = ret.find(src_path_normal);
-		if (i != std::end(ret))
-		{ continue; }
+		if(i != std::end(ret)) { continue; }
 
-		if (auto src_file_info = loadSourceFile(src_path_normal); src_file_info.has_value())
+		if(auto src_file_info = loadSourceFile(src_path_normal); src_file_info.has_value())
 		{
 			auto ins = ret.insert(i, std::make_pair(std::move(src_path_normal), std::move(*src_file_info)));
 			visitChildren(ins->first, paths_to_visit);
 		}
 	}
-
 	return ret;
+}
+
+void resolveDependencies(std::map<Maike::fs::path, Maike::SourceFileInfo>& source_files)
+{
+	std::for_each(std::begin(source_files), std::end(source_files), [&source_files](auto& item) {
+		auto const& deps = item.second.usedFiles();
+		std::vector<Maike::Dependency> deps_resolved;
+		deps_resolved.reserve(deps.size());
+		std::transform(std::begin(deps),
+		               std::end(deps),
+		               std::back_inserter(deps_resolved),
+		               [&source_files](auto const& edge) {
+			               auto tmp = edge;
+			               return tmp.resolve(source_files);
+		               });
+		item.second.usedFiles(std::move(deps_resolved));
+	});
 }
 
 
@@ -218,20 +232,8 @@ int main()
 	    bi.vcsState().branch().c_str());
 	 fflush(stdout);*/
 
-	// Loader
 	auto src_files = loadSourceFiles(cfg.inputFilter());
-
-	std::for_each(std::begin(src_files), std::end(src_files), [&src_files](auto& item) {
-		auto const& deps = item.second.usedFiles();
-		std::vector<Maike::Dependency> deps_resolved;
-		deps_resolved.reserve(deps.size());
-		std::transform(std::begin(deps), std::end(deps), std::back_inserter(deps_resolved),
-			[&src_files](auto const& edge) {
-				auto tmp = edge;
-				return tmp.resolve(src_files);
-		});
-		item.second.usedFiles(std::move(deps_resolved));
-	});
+	resolveDependencies(src_files);
 
 	std::for_each(std::begin(src_files), std::end(src_files), [](auto const& item) {
 		auto const& deps = item.second.usedFiles();

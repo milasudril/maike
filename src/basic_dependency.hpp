@@ -40,7 +40,7 @@ namespace Maike
 				case Resolver::InternalLookup:
 				{
 					auto i = source_files.find(m_name);
-					r_srcfile = i == std::end(source_files)? nullptr : &i->second;
+					r_srcfile = i == std::end(source_files) ? nullptr : &i->second;
 				}
 				break;
 				case Resolver::None: break;
