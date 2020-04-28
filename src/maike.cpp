@@ -20,14 +20,6 @@
 
 #include <future>
 
-template<class T>
-decltype(auto) pop(T& stack)
-{
-	auto ret = std::move(stack.top());
-	stack.pop();
-	return ret;
-}
-
 class MkDir
 {
 public:
@@ -152,16 +144,53 @@ std::optional<Maike::SourceFileInfo> loadSourceFile(Maike::fs::path const& path)
 	return std::optional<Maike::SourceFileInfo>{};
 }
 
-void visitChildren(Maike::SourceFile<Maike::ConstTag> src_file,
+void visitChildren(Maike::fs::path const& src_file,
                    std::stack<Maike::fs::path>& paths_to_visit)
 {
-	if(is_directory(src_file.name()))
+	if(is_directory(src_file))
 	{
-		auto i = Maike::fs::directory_iterator{src_file.name()};
+		auto i = Maike::fs::directory_iterator{src_file};
 		std::for_each(
 		   begin(i), end(i), [&paths_to_visit](auto const& item) { paths_to_visit.push(item.path()); });
 	}
 }
+
+template<class T>
+decltype(auto) pop(T& stack)
+{
+	auto ret = std::move(stack.top());
+	stack.pop();
+	return ret;
+}
+
+std::map<Maike::fs::path, Maike::SourceFileInfo> loadSourceFiles(Maike::InputFilter const& filter,
+	Maike::fs::path const& start_dir = Maike::fs::path{"."})
+{
+	std::map<Maike::fs::path, Maike::SourceFileInfo> ret;
+	std::stack<Maike::fs::path> paths_to_visit;
+	paths_to_visit.push(start_dir);
+
+	while(!paths_to_visit.empty())
+	{
+		auto src_path = pop(paths_to_visit);
+		if(src_path != "." && filter.match(src_path.filename().c_str()))
+		{ continue; }
+
+		auto src_path_normal = src_path.lexically_normal();
+		auto i = ret.find(src_path_normal);
+		if (i != std::end(ret))
+		{ continue; }
+
+		if (auto src_file_info = loadSourceFile(src_path_normal); src_file_info.has_value())
+		{
+			auto ins = ret.insert(i, std::make_pair(std::move(src_path_normal), std::move(*src_file_info)));
+			visitChildren(ins->first, paths_to_visit);
+		}
+	}
+
+	return ret;
+}
+
 
 int main()
 {
@@ -171,7 +200,7 @@ int main()
 	//	Maike::LocalSystemInvoker invoker;
 
 	// Current state
-	Maike::DependencyGraph dep_graph;
+
 	/*	Maike::BuildInfo bi{Maike::VcsState{getStateVariables(std::cref(vcs), invoker)}};
 
 	 store(toJson(bi), BuildInfoSink{});
@@ -190,44 +219,25 @@ int main()
 	 fflush(stdout);*/
 
 	// Loader
-	std::stack<Maike::fs::path> paths_to_visit;
-	paths_to_visit.push(Maike::fs::path{"."}); // Should be fetched from cfg
-	while(!paths_to_visit.empty())
-	{
-		auto src_path = pop(paths_to_visit);
-		if(cfg.inputFilter().match(src_path.filename().c_str()) && src_path != ".") { continue; }
+	auto src_files = loadSourceFiles(cfg.inputFilter());
 
-		auto src_path_normal = src_path.lexically_normal();
-		if(dep_graph.find(src_path_normal) != nullptr) { continue; }
-
-		if(auto src_file_info = loadSourceFile(src_path_normal); src_file_info.has_value())
-		{
-			auto const& targets = src_file_info->targets();
-			auto i = std::find_if(std::begin(targets), std::end(targets), [&dep_graph](auto const& item) {
-				return dep_graph.find(item) != nullptr;
-			});
-			if(i != std::end(targets))
-			{
-				throw std::runtime_error{std::string{"Target "} + i->string() + " has already been defined."};
-			}
-
-			visitChildren(dep_graph.insert(std::move(src_path_normal), std::move(*src_file_info)),
-			              paths_to_visit);
-		}
-	}
-
-	dep_graph.visitItems([&dep_graph](auto node) {
-		auto deps = node.usedFilesCopy();
-		std::for_each(
-		   std::begin(deps), std::end(deps), [&dep_graph](auto& edge) { edge.resolve(dep_graph); });
-		node.usedFiles(std::move(deps));
+	std::for_each(std::begin(src_files), std::end(src_files), [&src_files](auto& item) {
+		auto const& deps = item.second.usedFiles();
+		std::vector<Maike::Dependency> deps_resolved;
+		deps_resolved.reserve(deps.size());
+		std::transform(std::begin(deps), std::end(deps), std::back_inserter(deps_resolved),
+			[&src_files](auto const& edge) {
+				auto tmp = edge;
+				return tmp.resolve(src_files);
+		});
+		item.second.usedFiles(std::move(deps_resolved));
 	});
 
-	dep_graph.visitItems([](auto node) {
-		auto const& deps = node.usedFiles();
-		std::for_each(std::begin(deps), std::end(deps), [&node](auto const& edge) {
+	std::for_each(std::begin(src_files), std::end(src_files), [](auto const& item) {
+		auto const& deps = item.second.usedFiles();
+		std::for_each(std::begin(deps), std::end(deps), [&item](auto const& edge) {
 			if(edge.sourceFile() != nullptr)
-			{ printf("\"%s\" -> \"%s\"\n", node.name().c_str(), edge.name().c_str()); }
+			{ printf("\"%s\" -> \"%s\"\n", item.first.c_str(), edge.name().c_str()); }
 		});
 	});
 }
