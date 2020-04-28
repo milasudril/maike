@@ -1,7 +1,5 @@
 //@	 {"targets":[{"name":"maike_next","type":"application"}]}
 
-#include "./dependency_graph.hpp"
-
 #include "./build_info.hpp"
 #include "./stringutils.hpp"
 #include "./local_system_invoker.hpp"
@@ -10,7 +8,6 @@
 #include "./tag_filter.hpp"
 #include "./reader.hpp"
 #include "./writer.hpp"
-#include "./dependency_extractor.hpp"
 #include "./source_file_loader.hpp"
 #include "./config.hpp"
 #include "key_value_store/compound.hpp"
