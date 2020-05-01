@@ -15,7 +15,13 @@
 
 #include "src/cxx/source_file_loader.hpp"
 
-#include <future>
+#include "./thread_pool.hpp"
+
+#include <forward_list>
+#include <chrono>
+
+Maike::ThreadPool s_threads;
+Maike::ThreadPool s_threads_b;
 
 class MkDir
 {
@@ -81,18 +87,24 @@ Maike::SourceFileInfo loadSourceFile(std::vector<Maike::Dependency>&& builtin_de
                                      Maike::fs::path const& path,
                                      Maike::SourceFileLoader const& loader)
 {
-	Maike::Fifo<std::byte> src_fifo;
-	auto deps_fut = std::async(std::launch::async, [&loader, input = Maike::Reader{src_fifo}]() {
-		return loader.getDependencies(input);
-	});
+	Maike::ThreadPool::TaskResult<std::vector<Maike::Dependency>> deps_task;
+	Maike::ThreadPool::TaskResult<Maike::KeyValueStore::Compound> tags_task;
 
+	Maike::Fifo<std::byte> src_fifo;
 	Maike::Fifo<std::byte> tags_fifo;
-	auto tags_fut = std::async(
-	   std::launch::async,
-	   [tags_reader = Maike::Reader{tags_fifo}](std::string_view src_name) {
-		   return Maike::KeyValueStore::Compound{tags_reader, src_name};
-	   },
-	   path.string());
+
+	s_threads_b
+	   .addTask(
+	      [&loader, input = Maike::Reader{src_fifo}]() {
+		      auto ret = loader.getDependencies(input);
+		      return ret;
+	      },
+	      deps_task)
+	   .addTask(
+	      [tags_reader = Maike::Reader{tags_fifo}, src_name = path.string()]() {
+		      return Maike::KeyValueStore::Compound{tags_reader, src_name};
+	      },
+	      tags_task);
 
 	Maike::InputFile input{path};
 	loader.filterInput(
@@ -101,11 +113,11 @@ Maike::SourceFileInfo loadSourceFile(std::vector<Maike::Dependency>&& builtin_de
 	src_fifo.stop();
 
 	{
-		auto deps = fixNames(path.parent_path(), deps_fut.get());
+		auto deps = fixNames(path.parent_path(), deps_task.take());
 		builtin_deps.insert(std::end(builtin_deps), std::begin(deps), std::end(deps));
 	}
 
-	auto tags = tags_fut.get();
+	auto tags = tags_task.take();
 	auto targets = getTargets(path.parent_path(), tags);
 
 	auto compiler = tags.getIf<Maike::KeyValueStore::CompoundRefConst>("compiler");
@@ -167,21 +179,52 @@ loadSourceFiles(Maike::InputFilter const& filter,
 	std::stack<Maike::fs::path> paths_to_visit;
 	paths_to_visit.push(start_dir);
 
+	auto now = std::chrono::steady_clock::now();
 	while(!paths_to_visit.empty())
 	{
-		auto src_path = pop(paths_to_visit);
-		if(src_path != "." && filter.match(src_path.filename().c_str())) { continue; }
-
-		auto src_path_normal = src_path.lexically_normal();
-		auto i = ret.find(src_path_normal);
-		if(i != std::end(ret)) { continue; }
-
-		if(auto src_file_info = loadSourceFile(src_path_normal); src_file_info.has_value())
+		using TaskResult = Maike::ThreadPool::TaskResult<
+		   std::pair<Maike::fs::path, std::optional<Maike::SourceFileInfo>>>;
+		std::forward_list<TaskResult> results;
+		while(!paths_to_visit.empty())
 		{
-			auto ins = ret.insert(i, std::make_pair(std::move(src_path_normal), std::move(*src_file_info)));
-			visitChildren(ins->first, paths_to_visit);
+			auto src_path = pop(paths_to_visit);
+			if(src_path != "." && filter.match(src_path.filename().c_str())) { continue; }
+
+			auto src_path_normal = src_path.lexically_normal();
+			auto i = ret.find(src_path_normal);
+			if(i != std::end(ret)) { continue; }
+#if 1
+			results.emplace_front();
+			s_threads.addTask(
+			   [src_path_normal]() {
+				   return std::make_pair(src_path_normal, loadSourceFile(src_path_normal));
+			   },
+			   results.front());
+#else
+
+			if(auto src_file_info = loadSourceFile(src_path_normal); src_file_info.has_value())
+			{
+				auto ins = ret.insert(i, std::make_pair(std::move(src_path_normal), std::move(*src_file_info)));
+				visitChildren(ins->first, paths_to_visit);
+			}
+#endif
 		}
+#if 1
+		std::for_each(std::begin(results), std::end(results), [&ret, &paths_to_visit](auto&& item) {
+			auto src_file_info = item.take();
+			if(src_file_info.second)
+			{
+				auto ins =
+				   ret.insert(std::make_pair(std::move(src_file_info.first), std::move(*src_file_info.second)));
+				visitChildren(ins.first->first, paths_to_visit);
+			}
+		});
+#endif
 	}
+
+	printf("Total time: %.7f\n",
+	       std::chrono::duration<double>(std::chrono::steady_clock::now() - now).count());
+
 	return ret;
 }
 
@@ -226,6 +269,7 @@ void resolveDependencies(std::map<Maike::fs::path, Maike::SourceFileInfo>& sourc
 
 int main()
 {
+	Maike::KeyValueStore::init();
 	Maike::Config cfg;
 
 
@@ -251,9 +295,10 @@ int main()
 	 fflush(stdout);*/
 
 	auto src_files = loadSourceFiles(cfg.inputFilter());
+	printf("%zu\n", src_files.size());
 	makeSourceFileInfosFromTargets(src_files);
 	resolveDependencies(src_files);
-
+#if 0
 	std::for_each(std::begin(src_files), std::end(src_files), [](auto const& item) {
 		auto const& deps = item.second.usedFiles();
 		printf("\"%s\"\n", item.first.c_str());
@@ -262,4 +307,5 @@ int main()
 			{ printf("\"%s\" -> \"%s\"\n", item.first.c_str(), edge.name().c_str()); }
 		});
 	});
+#endif
 }

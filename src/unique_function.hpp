@@ -23,20 +23,18 @@ namespace Maike
 		template<class F, std::enable_if_t<!std::is_same_v<std::decay_t<F>, UniqueFunction>, int> = 0>
 		explicit UniqueFunction(F&& obj):
 		   m_data{new std::decay_t<F>{std::forward<F>(obj)}},
-		   r_callback{[](void* f, Args... args) {
-			   auto& self = *reinterpret_cast<F*>(f);
-			   return self(std::forward<Args>(args)...);
-		   }},
-		   r_dtor{[](void* f) noexcept {delete reinterpret_cast<F*>(f);}}
-		{}
+		   r_callback{callback<std::decay_t<F>>},
+		   r_dtor{dtor<std::decay_t<F>>}
+		{
+		}
 
 		UniqueFunction(UniqueFunction const& other) = delete;
 		UniqueFunction& operator=(UniqueFunction const& other) = delete;
 
 		UniqueFunction(UniqueFunction&& other) noexcept:
-		m_data{other.m_data},
-		r_callback{other.r_callback},
-		r_dtor{other.r_dtor}
+		   m_data{other.m_data},
+		   r_callback{other.r_callback},
+		   r_dtor{other.r_dtor}
 		{
 			other.r_dtor = null_dtor;
 		}
@@ -71,7 +69,23 @@ namespace Maike
 		void* m_data;
 		R (*r_callback)(void* data, Args... args);
 		void (*r_dtor)(void* data) noexcept;
-		static void null_dtor(void*) noexcept { }
+
+		static void null_dtor(void*) noexcept
+		{
+		}
+
+		template<class F>
+		static void dtor(void* f) noexcept
+		{
+			delete reinterpret_cast<F*>(f);
+		}
+
+		template<class F>
+		static R callback(void* f, Args... args)
+		{
+			auto& self = *reinterpret_cast<F*>(f);
+			return self(std::forward<Args>(args)...);
+		}
 	};
 }
 #endif

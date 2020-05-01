@@ -89,3 +89,8 @@ Maike::KeyValueStore::JsonHandle Maike::KeyValueStore::jsonLoad(Reader reader,
 
 	return ret;
 }
+
+void Maike::KeyValueStore::init()
+{
+	json_object_seed(0);
+}

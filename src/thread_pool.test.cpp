@@ -22,9 +22,9 @@ namespace Testcases
 		std::vector<int> const a = {1, 2, 3};
 		std::map<char, int> const b = {{'a', 1}, {'b', 2}};
 		std::string const c{"Hello, World"};
-		thread_pool.addTask([&a](){return a;}, res_a)
-			.addTask([&b](){return b;}, res_b)
-			.addTask([&c](){return c;}, res_c);
+		thread_pool.addTask([&a]() { return a; }, res_a)
+		   .addTask([&b]() { return b; }, res_b)
+		   .addTask([&c]() { return c; }, res_c);
 
 		assert(a == res_a.get());
 		assert(b == res_b.get());
@@ -40,12 +40,13 @@ namespace Testcases
 		Maike::ThreadPool::TaskResult<int> res;
 		try
 		{
-			thread_pool.addTask([]()->int{throw std::runtime_error{"Blah"};}, res);
+			thread_pool.addTask([]() -> int { throw std::runtime_error{"Blah"}; }, res);
 			(void)res.take();
 			abort();
 		}
 		catch(...)
-		{}
+		{
+		}
 	}
 }
 

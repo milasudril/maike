@@ -292,6 +292,8 @@ namespace Maike::KeyValueStore
 	{
 		store(obj.handle(), sink);
 	}
+
+	void init();
 }
 
 #endif
