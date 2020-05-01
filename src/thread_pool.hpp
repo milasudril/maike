@@ -28,11 +28,18 @@ namespace Maike
 		class TaskResult
 		{
 			public:
-				T get() const
+				T const& get() const
 				{
 					std::unique_lock<std::mutex> lock{m_mtx};
 					m_cv.wait(lock, [this]() { return m_result.has_value(); });
 					return *m_result;
+				}
+
+				T take()
+				{
+					std::unique_lock<std::mutex> lock{m_mtx};
+					m_cv.wait(lock, [this]() { return m_result.has_value(); });
+					return std::move(*m_result);
 				}
 
 				void set(T&& obj)

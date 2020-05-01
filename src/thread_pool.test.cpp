@@ -11,7 +11,7 @@
 
 namespace Testcases
 {
-	void maikeThreadpool()
+	void maikeThreadpoolRunTasks()
 	{
 		Maike::ThreadPool thread_pool;
 
@@ -29,11 +29,22 @@ namespace Testcases
 		assert(a == res_a.get());
 		assert(b == res_b.get());
 		assert(c == res_c.get());
+
+		auto tmp = res_a.take();
+		assert(a == tmp);
+	}
+
+	void maikeThreadpoolTaskWithException()
+	{
+		Maike::ThreadPool thread_pool;
+
+		Maike::ThreadPool::TaskResult<int> res_a;
 	}
 }
 
 int main()
 {
-	Testcases::maikeThreadpool();
+	Testcases::maikeThreadpoolRunTasks();
+//	Testcases::maikeThreadpoolTaskWithException();
 	return 0;
 }
