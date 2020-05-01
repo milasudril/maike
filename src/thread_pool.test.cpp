@@ -37,14 +37,21 @@ namespace Testcases
 	void maikeThreadpoolTaskWithException()
 	{
 		Maike::ThreadPool thread_pool;
-
-		Maike::ThreadPool::TaskResult<int> res_a;
+		Maike::ThreadPool::TaskResult<int> res;
+		try
+		{
+			thread_pool.addTask([]()->int{throw std::runtime_error{"Blah"};}, res);
+			(void)res.take();
+			abort();
+		}
+		catch(...)
+		{}
 	}
 }
 
 int main()
 {
 	Testcases::maikeThreadpoolRunTasks();
-//	Testcases::maikeThreadpoolTaskWithException();
+	Testcases::maikeThreadpoolTaskWithException();
 	return 0;
 }

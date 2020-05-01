@@ -19,6 +19,7 @@
 				"appcompile": {
 					"args": [
 						"-g",
+						"-O1",
 						"-fpic",
 						"{cxxversion}",
 						"-Wall",
@@ -51,6 +52,7 @@
 				"dllcompile": {
 					"args": [
 						"-g",
+						"-O1",
 						"-fpic",
 						"{cxxversion}",
 						"-Wall",
@@ -93,6 +95,7 @@
 				"objcompile": {
 					"args": [
 						"-c",
+						"-O1",
 						"-g",
 						"-fpic",
 						"{cxxversion}",
