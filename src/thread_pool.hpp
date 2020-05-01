@@ -82,16 +82,31 @@ namespace Maike
 		template<class Function>
 		ThreadPool& addTask(Function&& f, TaskResult<std::result_of_t<std::decay_t<Function>()>>& result)
 		{
-			auto task = UniqueFunction<void()>([do_it = std::move(f), res = std::ref(result)]() mutable {
-				try
-				{
-					res.get().set(do_it());
-				}
-				catch(...)
-				{
-					res.get().set(std::current_exception());
-				}
-			});
+			auto task =
+			   UniqueFunction<void()>([do_it = std::forward<Function>(f), res = std::ref(result)]() mutable {
+				   try
+				   {
+					   res.get().set(do_it());
+				   }
+				   catch(...)
+				   {
+					   res.get().set(std::current_exception());
+				   }
+			   });
+			{
+				std::lock_guard lock{m_mtx};
+				m_tasks.push(std::move(task));
+				m_cv.notify_one();
+			}
+			return *this;
+		}
+
+		template<class Function>
+		ThreadPool& addTask(
+		   Function&& f,
+		   std::enable_if_t<std::is_same_v<std::result_of_t<std::decay_t<Function>()>, void>, int> = 0)
+		{
+			auto task = UniqueFunction<void()>([do_it = std::forward<Function>(f)]() mutable { do_it(); });
 			{
 				std::lock_guard lock{m_mtx};
 				m_tasks.push(std::move(task));

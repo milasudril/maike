@@ -16,6 +16,7 @@
 #include "src/cxx/source_file_loader.hpp"
 
 #include "./thread_pool.hpp"
+#include "./signaling_counter.hpp"
 
 #include <forward_list>
 #include <chrono>
@@ -171,60 +172,75 @@ decltype(auto) pop(T& stack)
 	return ret;
 }
 
+template<class Mutex, class Func, class... Args>
+auto invokeWithMutex(Mutex& mtx, Func&& f, Args&&... args)
+{
+	std::lock_guard lock{mtx};
+	return std::invoke(std::forward<Func>(f), std::forward<Args>(args)...);
+}
+
+void processPath(Maike::fs::path&& src_path,
+                 Maike::InputFilter const& filter,
+                 std::map<Maike::fs::path, Maike::SourceFileInfo>& result,
+                 std::mutex& result_mtx,
+                 Maike::SignalingCounter<size_t>& counter)
+{
+	if(src_path != "." && filter.match(src_path.filename().c_str()))
+	{
+		--counter;
+		return;
+	}
+
+	auto src_path_normal = src_path.lexically_normal();
+	auto i = invokeWithMutex(
+	   result_mtx, [&result](auto const& item) { return result.find(item); }, src_path_normal);
+	if(i != std::end(result))
+	{
+		--counter;
+		return;
+	}
+
+	if(auto src_file_info = loadSourceFile(src_path); src_file_info.has_value())
+	{
+		auto ins = invokeWithMutex(
+		   result_mtx,
+		   [&result](auto&& src_path, auto&& src_file_info) {
+			   return result.insert(std::make_pair(std::move(src_path), std::move(src_file_info)));
+		   },
+		   std::move(src_path),
+		   std::move(*src_file_info));
+
+		if(ins.second && is_directory(ins.first->first))
+		{
+			auto i = Maike::fs::directory_iterator{ins.first->first};
+			std::for_each(begin(i), end(i), [&filter, &result, &result_mtx, &counter](auto&& item) {
+				++counter;
+				s_threads.addTask([src_path = item.path(), &filter, &result, &result_mtx, &counter]() mutable {
+					processPath(std::move(src_path), filter, result, result_mtx, counter);
+				});
+			});
+		}
+	}
+	--counter;
+}
+
+
 std::map<Maike::fs::path, Maike::SourceFileInfo>
 loadSourceFiles(Maike::InputFilter const& filter,
                 Maike::fs::path const& start_dir = Maike::fs::path{"."})
 {
 	std::map<Maike::fs::path, Maike::SourceFileInfo> ret;
-	std::stack<Maike::fs::path> paths_to_visit;
-	paths_to_visit.push(start_dir);
-
+	std::mutex ret_mutex;
+	Maike::SignalingCounter<size_t> tasks_running{0};
 	auto now = std::chrono::steady_clock::now();
-	while(!paths_to_visit.empty())
-	{
-		using TaskResult = Maike::ThreadPool::TaskResult<
-		   std::pair<Maike::fs::path, std::optional<Maike::SourceFileInfo>>>;
-		std::forward_list<TaskResult> results;
-		while(!paths_to_visit.empty())
-		{
-			auto src_path = pop(paths_to_visit);
-			if(src_path != "." && filter.match(src_path.filename().c_str())) { continue; }
-
-			auto src_path_normal = src_path.lexically_normal();
-			auto i = ret.find(src_path_normal);
-			if(i != std::end(ret)) { continue; }
-#if 1
-			results.emplace_front();
-			s_threads.addTask(
-			   [src_path_normal]() {
-				   return std::make_pair(src_path_normal, loadSourceFile(src_path_normal));
-			   },
-			   results.front());
-#else
-
-			if(auto src_file_info = loadSourceFile(src_path_normal); src_file_info.has_value())
-			{
-				auto ins = ret.insert(i, std::make_pair(std::move(src_path_normal), std::move(*src_file_info)));
-				visitChildren(ins->first, paths_to_visit);
-			}
-#endif
-		}
-#if 1
-		std::for_each(std::begin(results), std::end(results), [&ret, &paths_to_visit](auto&& item) {
-			auto src_file_info = item.take();
-			if(src_file_info.second)
-			{
-				auto ins =
-				   ret.insert(std::make_pair(std::move(src_file_info.first), std::move(*src_file_info.second)));
-				visitChildren(ins.first->first, paths_to_visit);
-			}
-		});
-#endif
-	}
-
-	printf("Total time: %.7f\n",
-	       std::chrono::duration<double>(std::chrono::steady_clock::now() - now).count());
-
+	++tasks_running;
+	s_threads.addTask([src_path = start_dir, &filter, &ret, &ret_mutex, &tasks_running]() mutable {
+		processPath(std::move(src_path), filter, ret, ret_mutex, tasks_running);
+	});
+	tasks_running.wait(0);
+	fprintf(stderr,
+	        "Initial scan took %.7f s\n",
+	        std::chrono::duration<double>(std::chrono::steady_clock::now() - now).count());
 	return ret;
 }
 
