@@ -165,7 +165,7 @@ void processPath(Maike::fs::path&& src_path,
                  Maike::InputFilter const& filter,
                  std::map<Maike::fs::path, Maike::SourceFileInfo>& result,
                  std::mutex& result_mtx,
-                 Maike::SignalingCounter<size_t>& counter)
+                 std::unique_lock<Maike::SignalingCounter<size_t>> counter)
 {
 	if(src_path != "." && filter.match(src_path.filename().c_str())) { return; }
 
@@ -193,8 +193,8 @@ void processPath(Maike::fs::path&& src_path,
 				    &filter,
 				    &result,
 				    &result_mtx,
-				    counter_lock = std::unique_lock<Maike::SignalingCounter<size_t>>(counter)]() mutable {
-					   processPath(std::move(src_path), filter, result, result_mtx, *counter_lock.mutex());
+				    counter = std::unique_lock<Maike::SignalingCounter<size_t>>(*counter.mutex())]() mutable {
+					   processPath(std::move(src_path), filter, result, result_mtx, std::move(counter));
 				   });
 			});
 		}
@@ -216,8 +216,8 @@ loadSourceFiles(Maike::InputFilter const& filter,
 	    &filter,
 	    &ret,
 	    &ret_mutex,
-	    counter_lock = std::unique_lock<Maike::SignalingCounter<size_t>>(tasks_running)]() mutable {
-		   processPath(std::move(src_path), filter, ret, ret_mutex, *counter_lock.mutex());
+	    counter = std::unique_lock<Maike::SignalingCounter<size_t>>(tasks_running)]() mutable {
+		   processPath(std::move(src_path), filter, ret, ret_mutex, std::move(counter));
 	   });
 	tasks_running.wait(0);
 	fprintf(stderr,
