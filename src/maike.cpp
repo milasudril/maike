@@ -167,37 +167,44 @@ void processPath(Maike::fs::path&& src_path,
                  std::mutex& result_mtx,
                  std::unique_lock<Maike::SignalingCounter<size_t>> counter)
 {
-	if(src_path != "." && filter.match(src_path.filename().c_str())) { return; }
-
-	auto src_path_normal = src_path.lexically_normal();
-	auto i = invokeWithMutex(
-	   result_mtx, [&result](auto const& item) { return result.find(item); }, src_path_normal);
-	if(i != std::end(result)) { return; }
-
-	if(auto src_file_info = loadSourceFile(src_path); src_file_info.has_value())
+	try
 	{
-		auto ins = invokeWithMutex(
-		   result_mtx,
-		   [&result](auto&& src_path, auto&& src_file_info) {
-			   return result.insert(std::make_pair(std::move(src_path), std::move(src_file_info)));
-		   },
-		   std::move(src_path),
-		   std::move(*src_file_info));
+		if(src_path != "." && filter.match(src_path.filename().c_str())) { return; }
 
-		if(ins.second && is_directory(ins.first->first))
+		auto src_path_normal = src_path.lexically_normal();
+		auto i = invokeWithMutex(
+		result_mtx, [&result](auto const& item) { return result.find(item); }, src_path_normal);
+		if(i != std::end(result)) { return; }
+
+		if(auto src_file_info = loadSourceFile(src_path); src_file_info.has_value())
 		{
-			auto i = Maike::fs::directory_iterator{ins.first->first};
-			std::for_each(begin(i), end(i), [&filter, &result, &result_mtx, &counter](auto&& item) {
-				s_threads.addTask(
-				   [src_path = item.path(),
-				    &filter,
-				    &result,
-				    &result_mtx,
-				    counter = std::unique_lock<Maike::SignalingCounter<size_t>>(*counter.mutex())]() mutable {
-					   processPath(std::move(src_path), filter, result, result_mtx, std::move(counter));
-				   });
-			});
+			auto ins = invokeWithMutex(
+			result_mtx,
+			[&result](auto&& src_path, auto&& src_file_info) {
+				return result.insert(std::make_pair(std::move(src_path), std::move(src_file_info)));
+			},
+			std::move(src_path),
+			std::move(*src_file_info));
+
+			if(ins.second && is_directory(ins.first->first))
+			{
+				auto i = Maike::fs::directory_iterator{ins.first->first};
+				std::for_each(begin(i), end(i), [&filter, &result, &result_mtx, &counter](auto&& item) {
+					s_threads.addTask(
+					[src_path = item.path(),
+						&filter,
+						&result,
+						&result_mtx,
+						counter = std::unique_lock<Maike::SignalingCounter<size_t>>(*counter.mutex())]() mutable {
+						processPath(std::move(src_path), filter, result, result_mtx, std::move(counter));
+					});
+				});
+			}
 		}
+	}
+	catch(std::exception const& err)
+	{
+		fprintf(stderr, "%s\n", err.what());
 	}
 }
 
