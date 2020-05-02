@@ -22,7 +22,6 @@
 #include <chrono>
 
 Maike::ThreadPool s_threads;
-Maike::ThreadPool s_threads_b;
 
 class MkDir
 {
@@ -88,24 +87,8 @@ Maike::SourceFileInfo loadSourceFile(std::vector<Maike::Dependency>&& builtin_de
                                      Maike::fs::path const& path,
                                      Maike::SourceFileLoader const& loader)
 {
-	Maike::ThreadPool::TaskResult<std::vector<Maike::Dependency>> deps_task;
-	Maike::ThreadPool::TaskResult<Maike::KeyValueStore::Compound> tags_task;
-
 	Maike::Fifo<std::byte> src_fifo;
 	Maike::Fifo<std::byte> tags_fifo;
-
-	s_threads_b
-	   .addTask(
-	      [&loader, input = Maike::Reader{src_fifo}]() {
-		      auto ret = loader.getDependencies(input);
-		      return ret;
-	      },
-	      deps_task)
-	   .addTask(
-	      [tags_reader = Maike::Reader{tags_fifo}, src_name = path.string()]() {
-		      return Maike::KeyValueStore::Compound{tags_reader, src_name};
-	      },
-	      tags_task);
 
 	Maike::InputFile input{path};
 	loader.filterInput(
@@ -114,11 +97,12 @@ Maike::SourceFileInfo loadSourceFile(std::vector<Maike::Dependency>&& builtin_de
 	src_fifo.stop();
 
 	{
-		auto deps = fixNames(path.parent_path(), deps_task.take());
+
+		auto deps = fixNames(path.parent_path(), loader.getDependencies(Maike::Reader{src_fifo}) /*deps_task.take()*/);
 		builtin_deps.insert(std::end(builtin_deps), std::begin(deps), std::end(deps));
 	}
 
-	auto tags = tags_task.take();
+	auto tags = Maike::KeyValueStore::Compound{Maike::Reader{tags_fifo}, path.string()} /*tags_task.take()*/;
 	auto targets = getTargets(path.parent_path(), tags);
 
 	auto compiler = tags.getIf<Maike::KeyValueStore::CompoundRefConst>("compiler");
@@ -154,29 +138,26 @@ std::optional<Maike::SourceFileInfo> loadSourceFile(Maike::fs::path const& path)
 	return std::optional<Maike::SourceFileInfo>{};
 }
 
-void visitChildren(Maike::fs::path const& src_file, std::stack<Maike::fs::path>& paths_to_visit)
-{
-	if(is_directory(src_file))
-	{
-		auto i = Maike::fs::directory_iterator{src_file};
-		std::for_each(
-		   begin(i), end(i), [&paths_to_visit](auto const& item) { paths_to_visit.push(item.path()); });
-	}
-}
-
-template<class T>
-decltype(auto) pop(T& stack)
-{
-	auto ret = std::move(stack.top());
-	stack.pop();
-	return ret;
-}
-
 template<class Mutex, class Func, class... Args>
 auto invokeWithMutex(Mutex& mtx, Func&& f, Args&&... args)
 {
 	std::lock_guard lock{mtx};
 	return std::invoke(std::forward<Func>(f), std::forward<Args>(args)...);
+}
+
+namespace Maike
+{
+	class DirectoryScanner
+	{
+		public:
+			void processPath(fs::path&& src_path, InputFilter const& filter);
+
+
+		private:
+			std::map<fs::path, SourceFileInfo> m_source_files;
+			std::mutex m_source_files_mtx;
+			SignalingCounter<size_t> m_counter;
+	};
 }
 
 void processPath(Maike::fs::path&& src_path,
