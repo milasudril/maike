@@ -7,7 +7,7 @@
 
 #include "src/compiler.hpp"
 #include "src/reader.hpp"
-#include "src/tag_filter.hpp"
+#include "src/writer.hpp"
 #include "src/source_file_info.hpp"
 #include "src/key_value_store/compound.hpp"
 
@@ -16,6 +16,15 @@
 
 namespace Maike
 {
+	enum class TagFilterOutput
+	{
+		Source,
+		Tags
+	};
+
+	using SourceOutStream = TaggedWriter<TagFilterOutput::Source>;
+	using TagsOutStream = TaggedWriter<TagFilterOutput::Tags>;
+
 	namespace source_file_loader_detail
 	{
 		template<class T>

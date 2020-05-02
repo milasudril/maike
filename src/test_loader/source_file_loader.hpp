@@ -4,7 +4,6 @@
 
 #include "src/compiler.hpp"
 #include "src/reader.hpp"
-#include "src/tag_filter.hpp"
 #include "src/source_file_info.hpp"
 #include "src/key_value_store/compound.hpp"
 #include "src/input_buffer.hpp"
