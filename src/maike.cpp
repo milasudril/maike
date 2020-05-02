@@ -97,12 +97,13 @@ Maike::SourceFileInfo loadSourceFile(std::vector<Maike::Dependency>&& builtin_de
 	src_fifo.stop();
 
 	{
-
-		auto deps = fixNames(path.parent_path(), loader.getDependencies(Maike::Reader{src_fifo}) /*deps_task.take()*/);
+		auto deps = fixNames(path.parent_path(),
+		                     loader.getDependencies(Maike::Reader{src_fifo}) /*deps_task.take()*/);
 		builtin_deps.insert(std::end(builtin_deps), std::begin(deps), std::end(deps));
 	}
 
-	auto tags = Maike::KeyValueStore::Compound{Maike::Reader{tags_fifo}, path.string()} /*tags_task.take()*/;
+	auto tags =
+	   Maike::KeyValueStore::Compound{Maike::Reader{tags_fifo}, path.string()} /*tags_task.take()*/;
 	auto targets = getTargets(path.parent_path(), tags);
 
 	auto compiler = tags.getIf<Maike::KeyValueStore::CompoundRefConst>("compiler");
@@ -149,14 +150,14 @@ namespace Maike
 {
 	class DirectoryScanner
 	{
-		public:
-			void processPath(fs::path&& src_path, InputFilter const& filter);
+	public:
+		void processPath(fs::path&& src_path, InputFilter const& filter);
 
 
-		private:
-			std::map<fs::path, SourceFileInfo> m_source_files;
-			std::mutex m_source_files_mtx;
-			SignalingCounter<size_t> m_counter;
+	private:
+		std::map<fs::path, SourceFileInfo> m_source_files;
+		std::mutex m_source_files_mtx;
+		SignalingCounter<size_t> m_counter;
 	};
 }
 
@@ -166,20 +167,12 @@ void processPath(Maike::fs::path&& src_path,
                  std::mutex& result_mtx,
                  Maike::SignalingCounter<size_t>& counter)
 {
-	if(src_path != "." && filter.match(src_path.filename().c_str()))
-	{
-		--counter;
-		return;
-	}
+	if(src_path != "." && filter.match(src_path.filename().c_str())) { return; }
 
 	auto src_path_normal = src_path.lexically_normal();
 	auto i = invokeWithMutex(
 	   result_mtx, [&result](auto const& item) { return result.find(item); }, src_path_normal);
-	if(i != std::end(result))
-	{
-		--counter;
-		return;
-	}
+	if(i != std::end(result)) { return; }
 
 	if(auto src_file_info = loadSourceFile(src_path); src_file_info.has_value())
 	{
@@ -195,14 +188,17 @@ void processPath(Maike::fs::path&& src_path,
 		{
 			auto i = Maike::fs::directory_iterator{ins.first->first};
 			std::for_each(begin(i), end(i), [&filter, &result, &result_mtx, &counter](auto&& item) {
-				++counter;
-				s_threads.addTask([src_path = item.path(), &filter, &result, &result_mtx, &counter]() mutable {
-					processPath(std::move(src_path), filter, result, result_mtx, counter);
-				});
+				s_threads.addTask(
+				   [src_path = item.path(),
+				    &filter,
+				    &result,
+				    &result_mtx,
+				    counter_lock = std::unique_lock<Maike::SignalingCounter<size_t>>(counter)]() mutable {
+					   processPath(std::move(src_path), filter, result, result_mtx, *counter_lock.mutex());
+				   });
 			});
 		}
 	}
-	--counter;
 }
 
 
@@ -214,10 +210,15 @@ loadSourceFiles(Maike::InputFilter const& filter,
 	std::mutex ret_mutex;
 	Maike::SignalingCounter<size_t> tasks_running{0};
 	auto now = std::chrono::steady_clock::now();
-	++tasks_running;
-	s_threads.addTask([src_path = start_dir, &filter, &ret, &ret_mutex, &tasks_running]() mutable {
-		processPath(std::move(src_path), filter, ret, ret_mutex, tasks_running);
-	});
+	//	++tasks_running;
+	s_threads.addTask(
+	   [src_path = start_dir,
+	    &filter,
+	    &ret,
+	    &ret_mutex,
+	    counter_lock = std::unique_lock<Maike::SignalingCounter<size_t>>(tasks_running)]() mutable {
+		   processPath(std::move(src_path), filter, ret, ret_mutex, *counter_lock.mutex());
+	   });
 	tasks_running.wait(0);
 	fprintf(stderr,
 	        "Initial scan took %.7f s\n",

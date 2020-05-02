@@ -52,6 +52,16 @@ namespace Maike
 			return !(*this == value);
 		}
 
+		void lock()
+		{
+			++(*this);
+		}
+
+		void unlock()
+		{
+			--(*this);
+		}
+
 	private:
 		mutable std::mutex m_mtx;
 		mutable std::condition_variable m_cv;
