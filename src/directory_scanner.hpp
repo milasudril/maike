@@ -14,16 +14,29 @@
 
 #include <map>
 #include <functional>
+#include <forward_list>
+#include <memory>
 
 namespace Maike
 {
 	class DirectoryScanner
 	{
 	public:
+		class ScanException: public std::exception
+		{
+		public:
+			explicit ScanException(std::forward_list<std::unique_ptr<char const[]>>&& errlog);
+
+			char const* what() const noexcept override
+			{
+				return m_errors.data();
+			}
+
+		private:
+			std::string m_errors;
+		};
+
 		static constexpr unsigned int Recursive = 0x1;
-		static constexpr unsigned int FollowSymlinks = 0x2;
-		static constexpr unsigned int AcceptSockets = 0x4;
-		static constexpr unsigned int AcceptFifos = 0x8;
 
 		explicit DirectoryScanner(ThreadPool& workers,
 		                          std::reference_wrapper<InputFilter const> filter,
@@ -40,6 +53,7 @@ namespace Maike
 		std::map<fs::path, SourceFileInfo> takeResult()
 		{
 			m_counter.wait(0);
+			if(!m_errlog.empty()) { throw ScanException{std::move(m_errlog)}; }
 			return std::move(m_source_files);
 		}
 
@@ -53,6 +67,9 @@ namespace Maike
 		ThreadPool* r_workers;
 
 		void processPath(fs::path&& src_path, std::unique_lock<SignalingCounter<size_t>> counter);
+
+		std::mutex m_errlog_mtx;
+		std::forward_list<std::unique_ptr<char const[]>> m_errlog;
 	};
 }
 

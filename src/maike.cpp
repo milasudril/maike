@@ -48,62 +48,71 @@ void resolveDependencies(std::map<Maike::fs::path, Maike::SourceFileInfo>& sourc
 
 int main()
 {
-	Maike::KeyValueStore::init();
+	try
+	{
+		Maike::KeyValueStore::init();
 
-	Maike::Config cfg;
+		Maike::Config cfg;
 
 
-	//	Maike::LocalSystemInvoker invoker;
+		//	Maike::LocalSystemInvoker invoker;
 
-	// Current state
+		// Current state
 
-	/*	Maike::BuildInfo bi{Maike::VcsState{getStateVariables(std::cref(vcs), invoker)}};
+		/*	Maike::BuildInfo bi{Maike::VcsState{getStateVariables(std::cref(vcs), invoker)}};
 
-	 store(toJson(bi), BuildInfoSink{});
+		store(toJson(bi), BuildInfoSink{});
 
-	 printf(
-	    "\n\n#       Start time: %s\n"
-	    "#               Id: %s\n"
-	    "#     VCS revision: %s\n"
-	    "#  VCS version tag: %s\n"
-	    "#       VCS branch: %s\n",
-	    Maike::toString(bi.startTime()).c_str(),
-	    toString(bi.buildId()).c_str(),
-	    bi.vcsState().revision().c_str(),
-	    bi.vcsState().versionTag().c_str(),
-	    bi.vcsState().branch().c_str());
-	 fflush(stdout);*/
+		printf(
+		 "\n\n#       Start time: %s\n"
+		 "#               Id: %s\n"
+		 "#     VCS revision: %s\n"
+		 "#  VCS version tag: %s\n"
+		 "#       VCS branch: %s\n",
+		 Maike::toString(bi.startTime()).c_str(),
+		 toString(bi.buildId()).c_str(),
+		 bi.vcsState().revision().c_str(),
+		 bi.vcsState().versionTag().c_str(),
+		 bi.vcsState().branch().c_str());
+		fflush(stdout);*/
 
-	Maike::ThreadPool workers;
+		Maike::ThreadPool workers;
 
-	std::map<std::string, Maike::SourceFileLoader> loaders;
-	loaders.insert(
-	   std::make_pair(std::string{".hpp"}, Maike::SourceFileLoader{Maike::Cxx::SourceFileLoader{}}));
-	loaders.insert(
-	   std::make_pair(std::string{".cpp"}, Maike::SourceFileLoader{Maike::Cxx::SourceFileLoader{}}));
+		std::map<std::string, Maike::SourceFileLoader> loaders;
+		loaders.insert(
+		   std::make_pair(std::string{".hpp"}, Maike::SourceFileLoader{Maike::Cxx::SourceFileLoader{}}));
+		loaders.insert(
+		   std::make_pair(std::string{".cpp"}, Maike::SourceFileLoader{Maike::Cxx::SourceFileLoader{}}));
 
-	Maike::SourceFileLoaderDelegator loader_delegator;
-	loader_delegator.loaders(std::move(loaders));
+		Maike::SourceFileLoaderDelegator loader_delegator;
+		loader_delegator.loaders(std::move(loaders));
 
-	Maike::DirectoryScanner scanner{
-	   workers, std::cref(cfg.inputFilter()), std::cref(loader_delegator)};
-	auto now = std::chrono::steady_clock::now();
-	scanner.processPath(Maike::fs::path{"."});
-	auto src_files = scanner.takeResult();
-	fprintf(stderr,
-	        "Initial scan took %.7f s\n",
-	        std::chrono::duration<double>(std::chrono::steady_clock::now() - now).count());
-	printf("%zu\n", src_files.size());
-	makeSourceFileInfosFromTargets(src_files);
-	resolveDependencies(src_files);
+		Maike::DirectoryScanner scanner{
+		   workers, std::cref(cfg.inputFilter()), std::cref(loader_delegator)};
+		auto now = std::chrono::steady_clock::now();
+		scanner.processPath(Maike::fs::path{"."});
+		auto src_files = scanner.takeResult();
+		fprintf(stdout,
+		        "# Processed %zu files in %.7f seconds\n",
+		        src_files.size(),
+		        std::chrono::duration<double>(std::chrono::steady_clock::now() - now).count());
+		makeSourceFileInfosFromTargets(src_files);
+		resolveDependencies(src_files);
+
 #if 0
-	std::for_each(std::begin(src_files), std::end(src_files), [](auto const& item) {
-		auto const& deps = item.second.usedFiles();
-		printf("\"%s\"\n", item.first.c_str());
-		std::for_each(std::begin(deps), std::end(deps), [&item](auto const& edge) {
-			if(edge.sourceFile() != nullptr)
-			{ printf("\"%s\" -> \"%s\"\n", item.first.c_str(), edge.name().c_str()); }
+		std::for_each(std::begin(src_files), std::end(src_files), [](auto const& item) {
+			auto const& deps = item.second.usedFiles();
+			printf("\"%s\"\n", item.first.c_str());
+			std::for_each(std::begin(deps), std::end(deps), [&item](auto const& edge) {
+				if(edge.sourceFile() != nullptr)
+				{ printf("\"%s\" -> \"%s\"\n", item.first.c_str(), edge.name().c_str()); }
+			});
 		});
-	});
 #endif
+	}
+	catch(std::exception const& err)
+	{
+		fprintf(stderr, "%s\n", err.what());
+		return -1;
+	}
 }

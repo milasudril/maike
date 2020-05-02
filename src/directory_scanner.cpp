@@ -27,6 +27,16 @@ Maike::DirectoryScanner& Maike::DirectoryScanner::processPath(fs::path const& sr
 	return *this;
 }
 
+Maike::DirectoryScanner::ScanException::ScanException(
+   std::forward_list<std::unique_ptr<char const[]>>&& errlog)
+{
+	std::for_each(std::begin(errlog), std::end(errlog), [this](auto&& item) {
+		m_errors += item.get();
+		m_errors += '\n';
+	});
+}
+
+
 void Maike::DirectoryScanner::processPath(fs::path&& src_path,
                                           std::unique_lock<SignalingCounter<size_t>> counter)
 {
@@ -67,6 +77,12 @@ void Maike::DirectoryScanner::processPath(fs::path&& src_path,
 	}
 	catch(std::exception const& err)
 	{
-		fprintf(stderr, "%s\n", err.what());
+		char const* msg = err.what();
+		auto l = strlen(msg) + 1;
+		auto ptr = std::make_unique<char[]>(l);
+		memcpy(ptr.get(), msg, l);
+
+		std::lock_guard lock{m_errlog_mtx};
+		m_errlog.push_front(std::move(ptr));
 	}
 }
