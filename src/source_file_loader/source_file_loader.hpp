@@ -5,11 +5,11 @@
 #ifndef MAIKE_SOURCEFILELOADER_HPP
 #define MAIKE_SOURCEFILELOADER_HPP
 
-#include "./compiler.hpp"
-#include "./reader.hpp"
-#include "./tag_filter.hpp"
-#include "./source_file_info.hpp"
-#include "key_value_store/compound.hpp"
+#include "src/compiler.hpp"
+#include "src/reader.hpp"
+#include "src/tag_filter.hpp"
+#include "src/source_file_info.hpp"
+#include "src/key_value_store/compound.hpp"
 
 #include <type_traits>
 #include <cassert>

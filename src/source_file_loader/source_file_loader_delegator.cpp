@@ -4,13 +4,11 @@
 
 #include "./source_file_loader_delegator.hpp"
 
-#include "./fifo.hpp"
-#include "./input_file.hpp"
-#include "./reader.hpp"
-#include "./fs.hpp"
-
-#include "key_value_store/array.hpp"
-#include "key_value_store/compound.hpp"
+#include "src/fifo.hpp"
+#include "src/input_file.hpp"
+#include "src/reader.hpp"
+#include "src/key_value_store/array.hpp"
+#include "src/key_value_store/compound.hpp"
 
 #include <algorithm>
 #include <cstring>

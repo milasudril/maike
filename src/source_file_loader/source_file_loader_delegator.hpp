@@ -6,11 +6,10 @@
 #ifndef MAIKE_SOURCEFILELOADERDELEGATOR_HPP
 #define MAIKE_SOURCEFILELOADERDELEGATOR_HPP
 
-#include "./fs.hpp"
 #include "./source_file_loader.hpp"
-#include "./source_file_info.hpp"
 
-#include "src/cxx/source_file_loader.hpp"
+#include "src/source_file_info.hpp"
+#include "src/fs.hpp"
 
 #include <map>
 #include <optional>
