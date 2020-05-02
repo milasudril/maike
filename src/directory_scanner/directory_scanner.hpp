@@ -6,12 +6,11 @@
 #ifndef MAIKE_DIRECTORYSCANNER_HPP
 #define MAIKE_DIRECTORYSCANNER_HPP
 
-#include "./fs.hpp"
-#include "./input_filter.hpp"
-#include "./signaling_counter.hpp"
-#include "./thread_pool.hpp"
-
-#include "source_file_loader/source_file_loader_delegator.hpp"
+#include "src/fs.hpp"
+#include "src/input_filter.hpp"
+#include "src/signaling_counter.hpp"
+#include "src/thread_pool.hpp"
+#include "src/source_file_loader/source_file_loader_delegator.hpp"
 
 #include <map>
 #include <functional>

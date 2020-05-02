@@ -1,7 +1,7 @@
 //@	 {"targets":[{"name":"maike_next","type":"application"}]}
 
 #include "./config.hpp"
-#include "./directory_scanner.hpp"
+#include "directory_scanner/directory_scanner.hpp"
 
 #include "src/cxx/source_file_loader.hpp"
 
