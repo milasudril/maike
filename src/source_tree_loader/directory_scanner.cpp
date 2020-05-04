@@ -15,7 +15,8 @@ namespace
 	}
 }
 
-Maike::DirectoryScanner& Maike::DirectoryScanner::processPath(fs::path const& src_path)
+Maike::SourceTreeLoader::DirectoryScanner&
+Maike::SourceTreeLoader::DirectoryScanner::processPath(fs::path const& src_path)
 {
 	r_workers->addTask(
 	   [this,
@@ -27,7 +28,7 @@ Maike::DirectoryScanner& Maike::DirectoryScanner::processPath(fs::path const& sr
 	return *this;
 }
 
-Maike::DirectoryScanner::ScanException::ScanException(
+Maike::SourceTreeLoader::DirectoryScanner::ScanException::ScanException(
    std::forward_list<std::unique_ptr<char const[]>>&& errlog)
 {
 	std::for_each(std::begin(errlog), std::end(errlog), [this](auto&& item) {
@@ -37,8 +38,8 @@ Maike::DirectoryScanner::ScanException::ScanException(
 }
 
 
-void Maike::DirectoryScanner::processPath(fs::path&& src_path,
-                                          std::unique_lock<SignalingCounter<size_t>> counter)
+void Maike::SourceTreeLoader::DirectoryScanner::processPath(
+   fs::path&& src_path, std::unique_lock<SignalingCounter<size_t>> counter)
 {
 	try
 	{

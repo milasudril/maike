@@ -78,16 +78,18 @@ int main()
 
 		Maike::ThreadPool workers;
 
-		std::map<std::string, Maike::SourceFileLoader> loaders;
+		std::map<std::string, Maike::SourceTreeLoader::SourceFileLoader> loaders;
 		loaders.insert(
-		   std::make_pair(std::string{".hpp"}, Maike::SourceFileLoader{Maike::Cxx::SourceFileLoader{}}));
+		   std::make_pair(std::string{".hpp"},
+		                  Maike::SourceTreeLoader::SourceFileLoader{Maike::Cxx::SourceFileLoader{}}));
 		loaders.insert(
-		   std::make_pair(std::string{".cpp"}, Maike::SourceFileLoader{Maike::Cxx::SourceFileLoader{}}));
+		   std::make_pair(std::string{".cpp"},
+		                  Maike::SourceTreeLoader::SourceFileLoader{Maike::Cxx::SourceFileLoader{}}));
 
-		Maike::SourceFileLoaderDelegator loader_delegator;
+		Maike::SourceTreeLoader::SourceFileLoaderDelegator loader_delegator;
 		loader_delegator.loaders(std::move(loaders));
 
-		Maike::DirectoryScanner scanner{
+		Maike::SourceTreeLoader::DirectoryScanner scanner{
 		   workers, std::cref(cfg.inputFilter()), std::cref(loader_delegator)};
 		auto now = std::chrono::steady_clock::now();
 		scanner.processPath(Maike::fs::path{"."});

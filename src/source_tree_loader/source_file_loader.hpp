@@ -14,7 +14,7 @@
 #include <type_traits>
 #include <cassert>
 
-namespace Maike
+namespace Maike::SourceTreeLoader
 {
 	enum class TagFilterOutput
 	{

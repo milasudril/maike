@@ -14,7 +14,7 @@
 #include <map>
 #include <optional>
 
-namespace Maike
+namespace Maike::SourceTreeLoader
 {
 	class SourceFileLoaderDelegator
 	{

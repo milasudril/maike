@@ -18,7 +18,7 @@
 #include <forward_list>
 #include <memory>
 
-namespace Maike
+namespace Maike::SourceTreeLoader
 {
 	class DirectoryScanner
 	{

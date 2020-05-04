@@ -15,7 +15,9 @@ namespace Maike::Cxx
 	public:
 		std::vector<Dependency> getDependencies(Reader src) const;
 
-		void filterInput(Reader input, SourceOutStream source_stream, TagsOutStream tag_stream) const;
+		void filterInput(Reader input,
+		                 SourceTreeLoader::SourceOutStream source_stream,
+		                 SourceTreeLoader::TagsOutStream tag_stream) const;
 
 		Compiler getCompiler(KeyValueStore::CompoundRefConst) const
 		{
@@ -30,8 +32,8 @@ namespace Maike::Cxx
 
 	inline auto filterInput(SourceFileLoader const& loader,
 	                        Reader input,
-	                        SourceOutStream source_stream,
-	                        TagsOutStream tag_stream)
+	                        SourceTreeLoader::SourceOutStream source_stream,
+	                        SourceTreeLoader::TagsOutStream tag_stream)
 	{
 		return loader.filterInput(input, source_stream, tag_stream);
 	}
