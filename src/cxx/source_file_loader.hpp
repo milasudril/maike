@@ -6,7 +6,7 @@
 #ifndef MAIKE_CXX_SOURCEFILELOADER_HPP
 #define MAIKE_CXX_SOURCEFILELOADER_HPP
 
-#include "src/source_file_loader/source_file_loader.hpp"
+#include "src/source_tree_loader/source_file_loader.hpp"
 
 namespace Maike::Cxx
 {

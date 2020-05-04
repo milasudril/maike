@@ -6,11 +6,12 @@
 #ifndef MAIKE_DIRECTORYSCANNER_HPP
 #define MAIKE_DIRECTORYSCANNER_HPP
 
+#include "./source_file_loader_delegator.hpp"
+
 #include "src/fs.hpp"
 #include "src/input_filter.hpp"
 #include "src/signaling_counter.hpp"
 #include "src/thread_pool.hpp"
-#include "src/source_file_loader/source_file_loader_delegator.hpp"
 
 #include <map>
 #include <functional>
@@ -62,6 +63,9 @@ namespace Maike
 		std::reference_wrapper<SourceFileLoaderDelegator const> r_loaders;
 
 		std::map<fs::path, SourceFileInfo> m_source_files;
+
+		// TODO: Move these into a policy base class (to make it more efficient in single-threaded
+		//       single-threaded mode)
 		std::mutex m_source_files_mtx;
 		SignalingCounter<size_t> m_counter;
 		ThreadPool* r_workers;

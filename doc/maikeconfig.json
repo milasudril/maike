@@ -7,23 +7,6 @@
 		]
 	},
 	"config": {
-		"cxx": {
-			"compiler": {
-				"args": [
-					"-c",
-					"-std=%cxxversion%",
-					"*-%cflags_common%"
-					"*-%cflags_extra%",
-					"*-iquote%iquote%",
-					"*-I%includedir%",
-					"-DMAIKE_JOB_ID=%jobid%",
-					"-o",
-					"%target%",
-					"%source%"
-				],
-				"executable": "%env:CXX%"
-			}
-		},
 		"env": {
 			"AR": "ar",
 			"AS": "as",
@@ -31,7 +14,24 @@
 			"CXX": "g++",
 			"LD": "ld"
 		},
-		"pkg-config": {},
+		"source_file_loaders": {
+			"cxx": {
+				"compiler": {
+					"args": [
+						"-c",
+						"-std=%cxx:cxxversion%",
+						"*-%cxx:cflags%",
+						"*-iquote%cxx:iquote%",
+						"*-I%cxx:includedir%",
+						"-DMAIKE_JOB_ID=%maike:jobid%",
+						"-o",
+						"%maike:target%",
+						"%maike:source%"
+					],
+					"executable": "%env:CXX%"
+				}
+			}
+		},
 		"source_tree_loader": {
 			"file_info_loaders": {
 				".cpp": "cxx",
@@ -43,28 +43,31 @@
 			],
 			"recursive": true
 		},
-		"vcs": {
-			"get_branch": {
-				"args": [
-					"rev-parse",
-					"--abbrev-ref",
-					"HEAD"
-				],
-				"executable": "git"
-			},
-			"get_revision": {
-				"args": [
-					"rev-parse",
-					"HEAD"
-				],
-				"executable": "git"
-			},
-			"get_version_tag": {
-				"args": [
-					"describe",
-					"--dirty"
-				],
-				"executable": "git"
+		"utils": {
+			"pkg-config": {},
+			"vcs": {
+				"get_branch": {
+					"args": [
+						"rev-parse",
+						"--abbrev-ref",
+						"HEAD"
+					],
+					"executable": "git"
+				},
+				"get_revision": {
+					"args": [
+						"rev-parse",
+						"HEAD"
+					],
+					"executable": "git"
+				},
+				"get_version_tag": {
+					"args": [
+						"describe",
+						"--dirty"
+					],
+					"executable": "git"
+				}
 			}
 		}
 	}
