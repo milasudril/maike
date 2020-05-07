@@ -1,8 +1,8 @@
 //@	 {"targets":[{"name":"maike_next","type":"application"}]}
 
 #include "./config.hpp"
+#include "./cmd_line_options.hpp"
 #include "src/source_tree_loader/directory_scanner.hpp"
-
 #include "src/cxx/source_file_loader.hpp"
 
 #include <chrono>
@@ -46,11 +46,12 @@ void resolveDependencies(std::map<Maike::fs::path, Maike::SourceFileInfo>& sourc
 }
 
 
-int main()
+int main(int argc, char** argv)
 {
 	try
 	{
 		Maike::KeyValueStore::init();
+		Maike::CommandLine cmdline{argc, argv};
 
 		Maike::Config cfg;
 
