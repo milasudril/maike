@@ -36,11 +36,13 @@ void Maike::CmdLineParser::detail::collect_options(char const* const* argv_begin
 
 		if(splitpoint == str_end)
 		{
-		//	setOption(x->index, "");
+			x->converter("", nullptr);
+			//	setOption(x->index, "");
 		}
 		else
 		{
-		//	setOption(x->index, splitpoint + 1);
+			x->converter(splitpoint + 1, nullptr);
+			//	setOption(x->index, splitpoint + 1);
 		}
 	});
 }

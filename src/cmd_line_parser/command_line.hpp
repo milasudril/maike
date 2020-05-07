@@ -12,6 +12,7 @@
 #include <array>
 #include <cstring>
 #include <limits>
+#include <variant>
 
 namespace Maike::CmdLineParser
 {
@@ -32,11 +33,15 @@ namespace Maike::CmdLineParser
 			return vals;
 		}
 
+		using StringToValue = void (*)(char const*, void*);
+
 		struct OptItem
 		{
 			char const* name;
-			int index;
+			int value_index;
+			StringToValue converter;
 		};
+
 
 		class CompareOptItemsByName
 		{
@@ -65,12 +70,21 @@ namespace Maike::CmdLineParser
 			size_t m_str_maxlen;
 		};
 
+		inline std::false_type fromString(Empty<std::false_type>, char const*)
+		{
+			throw std::runtime_error{"Option does not take any value"};
+		}
+
 		template<class EnumType, template<auto> class EnumItemTraits, int K = end(Empty<EnumType>{})>
 		struct GetOptionNames
 		{
 			static constexpr void set(std::array<OptItem, end(Empty<EnumType>{})>& names)
 			{
-				names[K - 1] = {EnumItemTraits<static_cast<EnumType>(K - 1)>::name(), K - 1};
+				using Traits = EnumItemTraits<static_cast<EnumType>(K - 1)>;
+				names[K - 1] = {Traits::name(), K - 1,[](char const* str, void* val){
+					auto self = reinterpret_cast<typename Traits::type*>(val);
+					*self = fromString(Empty<typename Traits::type>{}, str);
+				}};
 				GetOptionNames<EnumType, EnumItemTraits, K - 1>::set(names);
 			}
 		};
