@@ -20,12 +20,27 @@ void Maike::CmdLineParser::detail::collect_options(char const* const* argv_begin
                                                    OptItem const* optitems_end)
 {
 	std::for_each(argv_begin, argv_end, [optitems_begin, optitems_end](auto str) {
-		if(strlen(str) == 0) { return; }
+		auto const l = strlen(str);
+		if(l == 0) { return; }
 
-		auto x = binaryFind(optitems_begin, optitems_end, str, CompareOptItemsByName{});
+		auto const str_end = str + l;
+		auto splitpoint = std::find(str, str_end, '=');
+
+		auto x = binaryFind(optitems_begin,
+		                    optitems_end,
+		                    str,
+		                    CompareOptItemsByName{static_cast<size_t>(splitpoint - str)});
+
 		if(x == optitems_end)
 		{ throw std::runtime_error{std::string{"Invalid command line option "} + str}; }
 
-		printf(">>> %d\n", x->index);
+		if(splitpoint == str_end)
+		{
+		//	setOption(x->index, "");
+		}
+		else
+		{
+		//	setOption(x->index, splitpoint + 1);
+		}
 	});
 }

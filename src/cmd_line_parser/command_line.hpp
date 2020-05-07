@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <array>
 #include <cstring>
+#include <limits>
 
 namespace Maike::CmdLineParser
 {
@@ -37,22 +38,31 @@ namespace Maike::CmdLineParser
 			int index;
 		};
 
-		struct CompareOptItemsByName
+		class CompareOptItemsByName
 		{
+		public:
+			constexpr explicit CompareOptItemsByName(size_t str_maxlen = std::numeric_limits<size_t>::max()):
+			   m_str_maxlen{str_maxlen}
+			{
+			}
+
 			constexpr bool operator()(OptItem const& a, OptItem const& b)
 			{
-				return strcmp(a.name, b.name) < 0;
+				return strncmp(a.name, b.name, m_str_maxlen) < 0;
 			}
 
 			constexpr bool operator()(OptItem const& a, char const* b)
 			{
-				return strcmp(a.name, b) < 0;
+				return strncmp(a.name, b, m_str_maxlen) < 0;
 			}
 
 			constexpr bool operator()(char const* a, OptItem const& b)
 			{
-				return strcmp(a, b.name) < 0;
+				return strncmp(a, b.name, m_str_maxlen) < 0;
 			}
+
+		private:
+			size_t m_str_maxlen;
 		};
 
 		template<class EnumType, template<auto> class EnumItemTraits, int K = end(Empty<EnumType>{})>
