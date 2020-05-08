@@ -34,7 +34,7 @@ namespace Maike::CmdLineParser
 			return vals;
 		}
 
-		using StringToValue = void (*)(void* tuple, char const* str);
+		using StringToValue = uint64_t (*)(void* tuple, char const* str);
 
 		struct OptItem
 		{
@@ -90,11 +90,12 @@ namespace Maike::CmdLineParser
 			{
 				constexpr auto index = K - 1;
 				using Traits = EnumItemTraits<static_cast<EnumType>(index)>;
-				names[index] = {Traits::name(), [](void* tuple, char const* str) {
+				names[index] = {Traits::name(), [](void* tuple, char const* str) -> uint64_t {
 					                using Tuple = TupleFromEnum<EnumType, EnumItemTraits>;
 					                auto self = reinterpret_cast<Tuple*>(tuple);
 					                set<static_cast<EnumType>(index)>(
 					                   *self, fromString(Empty<typename Traits::type>{}, str));
+					                return 1llu << static_cast<uint64_t>(index);
 				                }};
 				GetOptionNames<EnumType, EnumItemTraits, index>::setItem(names);
 			}
@@ -116,7 +117,7 @@ namespace Maike::CmdLineParser
 			return ret;
 		}
 
-		void collect_options(char const* const* argv_begin,
+		uint64_t collect_options(char const* const* argv_begin,
 		                     char const* const* argv_end,
 		                     OptItem const* optitems_begin,
 		                     OptItem const* optitems_end,
@@ -127,21 +128,28 @@ namespace Maike::CmdLineParser
 	class BasicCommandLine
 	{
 	public:
-		explicit BasicCommandLine(int argc, char** argv)
+		explicit BasicCommandLine(int argc, char** argv):m_set_vals{0}
 		{
 			if(argc < 2) { return; }
 
-			detail::collect_options(
+			m_set_vals = detail::collect_options(
 			   argv + 1, argv + argc, std::begin(s_option_names), std::end(s_option_names), &m_data);
 		}
 
 		template<EnumType index>
-		auto const& getopt() const
+		auto const& option() const
 		{
 			return get<index>(m_data);
 		}
 
+		template<EnumType index>
+		bool hasOption() const
+		{
+			return m_set_vals & (1 << static_cast<uint64_t>(index));
+		}
+
 	private:
+		uint64_t m_set_vals;
 		TupleFromEnum<EnumType, EnumItemTraits> m_data;
 		static constexpr auto s_option_names = detail::sort(
 		   detail::get_option_names<EnumType, EnumItemTraits>(), detail::CompareOptItemsByName{});

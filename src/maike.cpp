@@ -53,7 +53,10 @@ int main(int argc, char** argv)
 		Maike::KeyValueStore::init();
 		Maike::CommandLine cmdline{argc, argv};
 
-		printf("%s\n", cmdline.getopt<Maike::CmdLineOption::PrintHelp>().c_str());
+		if(cmdline.hasOption<Maike::CmdLineOption::Help>())
+		{
+			printf("%s\n", cmdline.option<Maike::CmdLineOption::Help>().c_str());
+		}
 
 		Maike::Config cfg;
 

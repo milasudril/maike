@@ -11,9 +11,9 @@ namespace Maike
 {
 	enum class CmdLineOption : int
 	{
-		PrintHelp,
-		PrintVersion,
-		PrintAbout,
+		Help,
+		Version,
+		About,
 		PrintDepGraph,
 		PrintDepGraphInv,
 		ListTargets,
@@ -31,14 +31,14 @@ namespace Maike
 
 	static constexpr auto end(Empty<CmdLineOption>)
 	{
-		return static_cast<int>(CmdLineOption::PrintAbout) + 1;
+		return static_cast<int>(CmdLineOption::About) + 1;
 	}
 
 	template<CmdLineOption opt>
 	struct CmdLineOptionTraits;
 
 	template<>
-	struct CmdLineOptionTraits<CmdLineOption::PrintHelp>
+	struct CmdLineOptionTraits<CmdLineOption::Help>
 	{
 		using type = Maike::fs::path;
 
@@ -64,9 +64,9 @@ namespace Maike
 	};
 
 	template<>
-	struct CmdLineOptionTraits<CmdLineOption::PrintVersion>
+	struct CmdLineOptionTraits<CmdLineOption::Version>
 	{
-		using type = std::false_type;
+		using type = Maike::fs::path;
 
 		static constexpr bool exclusive()
 		{
@@ -90,7 +90,7 @@ namespace Maike
 	};
 
 	template<>
-	struct CmdLineOptionTraits<CmdLineOption::PrintAbout>
+	struct CmdLineOptionTraits<CmdLineOption::About>
 	{
 		using type = std::false_type;
 
