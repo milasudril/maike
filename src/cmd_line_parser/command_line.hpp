@@ -7,6 +7,7 @@
 #define MAIKE_CMDLINEPARSER_COMMANDLINE_HPP
 
 #include "./enum_tuple.hpp"
+#include "src/fs.hpp"
 
 #include <algorithm>
 #include <array>
@@ -33,12 +34,11 @@ namespace Maike::CmdLineParser
 			return vals;
 		}
 
-		using StringToValue = void (*)(char const*, void*);
+		using StringToValue = void (*)(void* tuple, char const* str);
 
 		struct OptItem
 		{
 			char const* name;
-			int value_index;
 			StringToValue converter;
 		};
 
@@ -70,29 +70,40 @@ namespace Maike::CmdLineParser
 			size_t m_str_maxlen;
 		};
 
-		inline std::false_type fromString(Empty<std::false_type>, char const*)
+		inline std::false_type fromString(Empty<std::false_type>, char const* str)
 		{
-			throw std::runtime_error{"Option does not take any value"};
+			if(strlen(str) != 0) { throw std::runtime_error{"Option does not take any value"}; }
+
+			return std::false_type{};
 		}
+
+		inline Maike::fs::path fromString(Empty<Maike::fs::path>, char const* str)
+		{
+			return Maike::fs::path{str};
+		}
+
 
 		template<class EnumType, template<auto> class EnumItemTraits, int K = end(Empty<EnumType>{})>
 		struct GetOptionNames
 		{
-			static constexpr void set(std::array<OptItem, end(Empty<EnumType>{})>& names)
+			static constexpr void setItem(std::array<OptItem, end(Empty<EnumType>{})>& names)
 			{
-				using Traits = EnumItemTraits<static_cast<EnumType>(K - 1)>;
-				names[K - 1] = {Traits::name(), K - 1,[](char const* str, void* val){
-					auto self = reinterpret_cast<typename Traits::type*>(val);
-					*self = fromString(Empty<typename Traits::type>{}, str);
-				}};
-				GetOptionNames<EnumType, EnumItemTraits, K - 1>::set(names);
+				constexpr auto index = K - 1;
+				using Traits = EnumItemTraits<static_cast<EnumType>(index)>;
+				names[index] = {Traits::name(), [](void* tuple, char const* str) {
+					                using Tuple = TupleFromEnum<EnumType, EnumItemTraits>;
+					                auto self = reinterpret_cast<Tuple*>(tuple);
+					                set<static_cast<EnumType>(index)>(
+					                   *self, fromString(Empty<typename Traits::type>{}, str));
+				                }};
+				GetOptionNames<EnumType, EnumItemTraits, index>::setItem(names);
 			}
 		};
 
 		template<class EnumType, template<auto> class EnumItemTraits>
 		struct GetOptionNames<EnumType, EnumItemTraits, 0>
 		{
-			static constexpr void set(std::array<OptItem, end(Empty<EnumType>{})>&)
+			static constexpr void setItem(std::array<OptItem, end(Empty<EnumType>{})>&)
 			{
 			}
 		};
@@ -101,14 +112,15 @@ namespace Maike::CmdLineParser
 		constexpr auto get_option_names()
 		{
 			std::array<OptItem, end(Empty<EnumType>{})> ret{};
-			GetOptionNames<EnumType, EnumItemTraits>::set(ret);
+			GetOptionNames<EnumType, EnumItemTraits>::setItem(ret);
 			return ret;
 		}
 
 		void collect_options(char const* const* argv_begin,
 		                     char const* const* argv_end,
 		                     OptItem const* optitems_begin,
-		                     OptItem const* optitems_end);
+		                     OptItem const* optitems_end,
+		                     void* tuple);
 	}
 
 	template<class EnumType, template<EnumType> class EnumItemTraits>
@@ -120,11 +132,11 @@ namespace Maike::CmdLineParser
 			if(argc < 2) { return; }
 
 			detail::collect_options(
-			   argv + 1, argv + argc, std::begin(s_option_names), std::end(s_option_names));
+			   argv + 1, argv + argc, std::begin(s_option_names), std::end(s_option_names), &m_data);
 		}
 
 		template<EnumType index>
-		auto const& get() const
+		auto const& getopt() const
 		{
 			return get<index>(m_data);
 		}

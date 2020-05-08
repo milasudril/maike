@@ -40,7 +40,7 @@ namespace Maike
 	template<>
 	struct CmdLineOptionTraits<CmdLineOption::PrintHelp>
 	{
-		using type = std::false_type;
+		using type = Maike::fs::path;
 
 		static constexpr bool exclusive()
 		{
