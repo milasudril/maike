@@ -55,6 +55,21 @@ int main(int argc, char** argv)
 
 		if(cmdline.hasOption<Maike::CmdLineOption::Help>())
 		{
+			auto info = cmdline.optionInfo();
+
+			std::for_each(std::begin(info),
+			              std::end(info),
+			              [category = static_cast<char const*>(nullptr)](auto const& item) mutable {
+				              if(category == nullptr || strcmp(category, item.category()) != 0)
+				              {
+					              printf("\n%s\n\n", item.category());
+					              category = item.category();
+				              }
+				              printf("%s  %s\n", item.name(), item.summary());
+			              });
+
+			return 0;
+
 			printf("%s\n", cmdline.option<Maike::CmdLineOption::Help>().c_str());
 		}
 

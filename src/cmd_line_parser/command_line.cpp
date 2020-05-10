@@ -15,10 +15,10 @@ namespace
 }
 
 uint64_t Maike::CmdLineParser::detail::collect_options(char const* const* argv_begin,
-                                                   char const* const* argv_end,
-                                                   OptItem const* optitems_begin,
-                                                   OptItem const* optitems_end,
-                                                   void* tuple)
+                                                       char const* const* argv_end,
+                                                       OptItem const* optitems_begin,
+                                                       OptItem const* optitems_end,
+                                                       void* tuple)
 {
 	uint64_t set_vals;
 	std::for_each(argv_begin, argv_end, [optitems_begin, optitems_end, tuple, &set_vals](auto str) {
@@ -36,7 +36,7 @@ uint64_t Maike::CmdLineParser::detail::collect_options(char const* const* argv_b
 		if(x == optitems_end)
 		{ throw std::runtime_error{std::string{"Invalid command line option "} + str}; }
 
-		set_vals |= x->converter(tuple, splitpoint == str_end? "": splitpoint + 1);
+		set_vals |= x->converter(tuple, splitpoint == str_end ? "" : splitpoint + 1);
 	});
 	return set_vals;
 }

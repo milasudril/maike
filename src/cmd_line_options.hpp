@@ -23,15 +23,17 @@ namespace Maike
 		ConfigFiles,
 		SourceDir,
 		TargetDir,
+		BuildId,
+		StartTime,
 		LogFlags,
 		LogFile,
-		BuildId,
-		StartTime
+		LogFormat,
+		Jobs
 	};
 
 	static constexpr auto end(Empty<CmdLineOption>)
 	{
-		return static_cast<int>(CmdLineOption::About) + 1;
+		return static_cast<int>(CmdLineOption::PrintDepGraph) + 1;
 	}
 
 	template<CmdLineOption opt>
@@ -42,17 +44,17 @@ namespace Maike
 	{
 		using type = Maike::fs::path;
 
-		static constexpr bool exclusive()
+		static constexpr char const* category()
 		{
-			return true;
+			return "Program information";
 		}
 
 		static constexpr char const* summary()
 		{
-			return "Prints this message to stdout and exits";
+			return "Prints this message to stdout and exits, or `filename`, and exits";
 		}
 
-		static constexpr char const* detailedDescription()
+		static constexpr char const* description()
 		{
 			return nullptr;
 		}
@@ -68,17 +70,17 @@ namespace Maike
 	{
 		using type = Maike::fs::path;
 
-		static constexpr bool exclusive()
+		static constexpr char const* category()
 		{
-			return true;
+			return "Program information";
 		}
 
 		static constexpr char const* summary()
 		{
-			return "Prints version information about the program";
+			return "Prints version information about the program to stdout or `filename`, and exists";
 		}
 
-		static constexpr char const* detailedDescription()
+		static constexpr char const* description()
 		{
 			return nullptr;
 		}
@@ -94,6 +96,11 @@ namespace Maike
 	{
 		using type = std::false_type;
 
+		static constexpr char const* category()
+		{
+			return "Program information";
+		}
+
 		static constexpr bool exclusive()
 		{
 			return true;
@@ -101,10 +108,10 @@ namespace Maike
 
 		static constexpr char const* summary()
 		{
-			return "Prints detailed information about the program";
+			return "Prints detailed information about the program to stdout or `filename`, and exits";
 		}
 
-		static constexpr char const* detailedDescription()
+		static constexpr char const* description()
 		{
 			return nullptr;
 		}
@@ -112,6 +119,37 @@ namespace Maike
 		static constexpr char const* name()
 		{
 			return "--about";
+		}
+	};
+
+	template<>
+	struct CmdLineOptionTraits<CmdLineOption::PrintDepGraph>
+	{
+		using type = std::false_type;
+
+		static constexpr char const* category()
+		{
+			return "Database queries";
+		}
+
+		static constexpr bool exclusive()
+		{
+			return true;
+		}
+
+		static constexpr char const* summary()
+		{
+			return "Prints the dependency graph as a dot(1) file to stdout or `filename` and exits";
+		}
+
+		static constexpr char const* description()
+		{
+			return nullptr;
+		}
+
+		static constexpr char const* name()
+		{
+			return "--print-dep-graph";
 		}
 	};
 

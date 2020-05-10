@@ -17,6 +17,62 @@
 
 namespace Maike::CmdLineParser
 {
+	class OptionInfo
+	{
+	public:
+		constexpr OptionInfo():
+		   r_category{nullptr},
+		   r_name{nullptr},
+		   r_type{nullptr},
+		   r_summary{nullptr},
+		   r_description{nullptr}
+		{
+		}
+
+		template<class EnumItemTraits>
+		constexpr explicit OptionInfo(Empty<EnumItemTraits>):
+		   r_category{EnumItemTraits::category()},
+		   r_name{EnumItemTraits::name()},
+		   r_type{nullptr},
+		   r_summary{EnumItemTraits::summary()},
+		   r_description{EnumItemTraits::description()}
+		{
+		}
+
+		constexpr auto category() const
+		{
+			return r_category;
+		}
+
+		constexpr auto name() const
+		{
+			return r_name;
+		}
+
+		constexpr auto type() const
+		{
+			return r_type;
+		}
+
+		constexpr auto summary() const
+		{
+			return r_summary;
+		}
+
+		constexpr auto description() const
+		{
+			return r_description;
+		}
+
+
+	private:
+		char const* r_category;
+		char const* r_name;
+		char const* r_type;
+		char const* r_summary;
+		char const* r_description;
+	};
+
 	namespace detail
 	{
 		template<class T, size_t N, class Compare>
@@ -41,7 +97,6 @@ namespace Maike::CmdLineParser
 			char const* name;
 			StringToValue converter;
 		};
-
 
 		class CompareOptItemsByName
 		{
@@ -117,18 +172,72 @@ namespace Maike::CmdLineParser
 			return ret;
 		}
 
+		template<class EnumType>
+		constexpr bool check_duplicate_names(std::array<OptItem, end(Empty<EnumType>{})> const& vals)
+		{
+			auto name_prev = vals[0].name;
+			for(size_t k = 1; k < vals.size(); ++k)
+			{
+				if(strcmp(vals[k].name, name_prev) == 0) { return true; }
+
+				name_prev = vals[k].name;
+			}
+			return false;
+		}
+
 		uint64_t collect_options(char const* const* argv_begin,
-		                     char const* const* argv_end,
-		                     OptItem const* optitems_begin,
-		                     OptItem const* optitems_end,
-		                     void* tuple);
+		                         char const* const* argv_end,
+		                         OptItem const* optitems_begin,
+		                         OptItem const* optitems_end,
+		                         void* tuple);
+
+		struct CompareOptInfoByCategoryAndName
+		{
+			constexpr bool operator()(OptionInfo const& a, OptionInfo const& b) const
+			{
+				auto const diff = strcmp(a.category(), b.category());
+				if(diff < 0) { return true; }
+
+				if(diff == 0) { return strcmp(a.name(), b.name()) < 0; }
+
+				return false;
+			}
+		};
+
+		template<class EnumType, template<auto> class EnumItemTraits, int K = end(Empty<EnumType>{})>
+		struct GetOptionInfo
+		{
+			static constexpr void setItem(std::array<OptionInfo, end(Empty<EnumType>{})>& names)
+			{
+				constexpr auto index = K - 1;
+				using Traits = EnumItemTraits<static_cast<EnumType>(index)>;
+				names[index] = OptionInfo{Empty<Traits>{}};
+				GetOptionInfo<EnumType, EnumItemTraits, index>::setItem(names);
+			}
+		};
+
+		template<class EnumType, template<auto> class EnumItemTraits>
+		struct GetOptionInfo<EnumType, EnumItemTraits, 0>
+		{
+			static constexpr void setItem(std::array<OptionInfo, end(Empty<EnumType>{})>&)
+			{
+			}
+		};
+
+		template<class EnumType, template<EnumType> class EnumItemTraits>
+		constexpr auto get_option_info()
+		{
+			std::array<OptionInfo, end(Empty<EnumType>{})> ret{};
+			GetOptionInfo<EnumType, EnumItemTraits>::setItem(ret);
+			return ret;
+		}
 	}
 
 	template<class EnumType, template<EnumType> class EnumItemTraits>
 	class BasicCommandLine
 	{
 	public:
-		explicit BasicCommandLine(int argc, char** argv):m_set_vals{0}
+		explicit BasicCommandLine(int argc, char** argv): m_set_vals{0}
 		{
 			if(argc < 2) { return; }
 
@@ -148,11 +257,22 @@ namespace Maike::CmdLineParser
 			return m_set_vals & (1 << static_cast<uint64_t>(index));
 		}
 
+		static constexpr auto optionInfo()
+		{
+			return s_option_info;
+		}
+
 	private:
 		uint64_t m_set_vals;
 		TupleFromEnum<EnumType, EnumItemTraits> m_data;
 		static constexpr auto s_option_names = detail::sort(
 		   detail::get_option_names<EnumType, EnumItemTraits>(), detail::CompareOptItemsByName{});
+
+		static constexpr auto s_option_info =
+		   detail::sort(detail::get_option_info<EnumType, EnumItemTraits>(),
+		                detail::CompareOptInfoByCategoryAndName{});
+
+		static_assert(detail::check_duplicate_names<EnumType>(s_option_names) == false);
 	};
 }
 
