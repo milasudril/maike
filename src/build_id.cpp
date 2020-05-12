@@ -13,6 +13,46 @@ Maike::BuildId::BuildId()
 	               rng = std::random_device{}]() mutable { return static_cast<std::byte>(u(rng)); });
 }
 
+namespace
+{
+	std::byte to_nibble(char ch_in)
+	{
+		if(ch_in >= '0' && ch_in <= '9') { return static_cast<std::byte>(ch_in - '0'); }
+
+		auto ch_in_masked = ch_in & (~0x20);
+		if(ch_in_masked >= 'A' && ch_in_masked <= 'F')
+		{ return static_cast<std::byte>(10 + ch_in_masked - 'A'); }
+
+		throw std::runtime_error{std::string{"Invalid BuildId: `"} + ch_in
+		                         + "` is not a hexadecimal digit"};
+	}
+}
+
+Maike::BuildId::BuildId(char const* cstr): m_bytes{}
+{
+	size_t k = 0;
+	std::byte val;
+	while(true)
+	{
+		auto ch_in = *cstr;
+		if(ch_in == '\0' || k == 64) { return; }
+
+		auto nibble = to_nibble(ch_in);
+
+		if(k % 2 == 1)
+		{
+			val |= nibble;
+			m_bytes[k / 2] = val;
+		}
+		else
+		{
+			val = nibble << 4;
+		}
+		++cstr;
+		++k;
+	}
+}
+
 std::string Maike::toString(BuildId const& id)
 {
 	auto& bytes = id.bytes();

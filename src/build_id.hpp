@@ -17,6 +17,8 @@ namespace Maike
 	public:
 		BuildId();
 
+		explicit BuildId(char const* cstr);
+
 		explicit BuildId(std::array<std::byte, 32> const& bytes): m_bytes{bytes}
 		{
 		}

@@ -364,7 +364,7 @@ namespace Maike
 	template<>
 	struct CmdLineOptionTraits<CmdLineOption::Jobs>
 	{
-	//	using type = ThreadCount;
+		//	using type = ThreadCount;
 
 		static constexpr char const* category()
 		{
@@ -378,7 +378,8 @@ namespace Maike
 
 		static constexpr char const* description()
 		{
-			return "By default, `auto` is used, which is equal to the number of available logical processors in the system.";
+			return "By default, `auto` is used, which is equal to the number of available logical "
+			       "processors in the system.";
 		}
 
 		static constexpr char const* name()
