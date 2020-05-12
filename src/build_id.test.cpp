@@ -1,8 +1,8 @@
-//@	{"targets":[{"name":"build_info.test.cpp","type":"application","autorun":1}]}
+//@	{"targets":[{"name":"build_id.test","type":"application","autorun":1}]}
 
 #undef NDEBUG
 
-#include "./build_info.hpp"
+#include "./build_id.hpp"
 
 #include <cassert>
 #include <algorithm>

@@ -6,6 +6,7 @@
 #ifndef MAIKE_BUILDINFO_HPP
 #define MAIKE_BUILDINFO_HPP
 
+#include "./build_id.hpp"
 #include "./vcs_state.hpp"
 
 #include "key_value_store/compound.hpp"
@@ -16,41 +17,6 @@
 
 namespace Maike
 {
-	class BuildId
-	{
-	public:
-		BuildId();
-
-		explicit BuildId(std::array<std::byte, 32> const& bytes): m_bytes{bytes}
-		{
-		}
-
-		auto const& bytes() const
-		{
-			return m_bytes;
-		}
-
-	private:
-		std::array<std::byte, 32> m_bytes;
-	};
-
-	inline bool operator==(BuildId const& a, BuildId const& b)
-	{
-		return a.bytes() == b.bytes();
-	}
-
-	inline bool operator!=(BuildId const& a, BuildId const& b)
-	{
-		return !(a == b);
-	}
-
-	std::string toString(BuildId const& id);
-
-	inline auto toJson(BuildId const& id)
-	{
-		return KeyValueStore::JsonHandle{toString(id).c_str()};
-	}
-
 	class BuildInfo
 	{
 	public:

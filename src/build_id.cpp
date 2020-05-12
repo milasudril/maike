@@ -1,6 +1,6 @@
-//@	{"targets":[{"name":"build_info.o","type":"object"}]}
+//@	{"targets":[{"name":"build_id.o","type":"object"}]}
 
-#include "./build_info.hpp"
+#include "./build_id.hpp"
 
 #include <algorithm>
 #include <random>
