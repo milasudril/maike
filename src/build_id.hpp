@@ -6,6 +6,7 @@
 #ifndef MAIKE_BUILDID_HPP
 #define MAIKE_BUILDID_HPP
 
+#include "./empty.hpp"
 #include "src/key_value_store/json_handle.hpp"
 
 #include <array>
@@ -47,6 +48,16 @@ namespace Maike
 	inline auto toJson(BuildId const& id)
 	{
 		return KeyValueStore::JsonHandle{toString(id).c_str()};
+	}
+
+	inline auto fromString(Empty<BuildId>, char const* str)
+	{
+		return BuildId{str};
+	}
+
+	constexpr inline char const* typeToString(Empty<BuildId>)
+	{
+		return "BuildId";
 	}
 }
 

@@ -5,8 +5,10 @@
 #ifndef MAIKE_CMDLINEOPTIONS_HPP
 #define MAIKE_CMDLINEOPTIONS_HPP
 
-#include "src/cmd_line_parser/command_line.hpp"
 #include "./fs.hpp"
+#include "./build_id.hpp"
+
+#include "src/cmd_line_parser/command_line.hpp"
 
 #include <vector>
 
@@ -22,21 +24,21 @@ namespace Maike
 		DumpDatabase,
 		ListLeafTargets,
 		ListExternalDeps,
-		Targets,
-		ConfigFiles,
-		SourceDir,
-		TargetDir,
-		Jobs,
+		//		Targets,
+		//		ConfigFiles,
+		//		SourceDir,
+		//		TargetDir,
+		//		Tasks,
 		BuildId,
-		StartTime,
-		LogFlags,
-		LogFile,
-		LogFormat,
+		//		StartTime,
+		//		LogFlags,
+		//		LogFile,
+		//		LogFormat,
 	};
 
 	static constexpr auto end(Empty<CmdLineOption>)
 	{
-		return static_cast<int>(CmdLineOption::ListExternalDeps) + 1;
+		return static_cast<int>(CmdLineOption::BuildId) + 1;
 	}
 
 	template<CmdLineOption opt>
@@ -133,7 +135,7 @@ namespace Maike
 		static constexpr char const* summary()
 		{
 			return "Prints the forward dependency graph as a dot(1) file to stdout or `path`, and "
-			       "exits.";
+			       "exits";
 		}
 
 		static constexpr char const* description()
@@ -215,12 +217,12 @@ namespace Maike
 
 		static constexpr char const* summary()
 		{
-			return "Prints a list of all leaf targets to stdout or `path`, and exits.";
+			return "Prints a list of all leaf targets to stdout or `path`, and exits";
 		}
 
 		static constexpr char const* description()
 		{
-			return "A leaf target is a target that no other target is dependent on.";
+			return "A leaf target is a target that no other target is dependent on";
 		}
 
 		static constexpr char const* name()
@@ -254,6 +256,36 @@ namespace Maike
 		}
 	};
 
+	template<>
+	struct CmdLineOptionTraits<CmdLineOption::BuildId>
+	{
+		using type = BuildId;
+
+		static constexpr char const* category()
+		{
+			return "Job parameters";
+		}
+
+		static constexpr char const* summary()
+		{
+			return "Specifies a fixed build id";
+		}
+
+		static constexpr char const* description()
+		{
+			return "A build id is intendend to uniqely identify a build job. Specifying a build id is "
+			       "useful when the job is part of a larger build process, and the build id has been "
+			       "generated in an earlier stage. A hardcoded build id is also useful when debugging code "
+			       "that depends on the current build id.";
+		}
+
+		static constexpr char const* name()
+		{
+			return "--build-id";
+		}
+	};
+
+#if 0
 	template<>
 	struct CmdLineOptionTraits<CmdLineOption::Targets>
 	{
@@ -387,6 +419,7 @@ namespace Maike
 			return "--jobs";
 		}
 	};
+#endif
 
 	using CommandLine = CmdLineParser::BasicCommandLine<CmdLineOption, CmdLineOptionTraits>;
 }
