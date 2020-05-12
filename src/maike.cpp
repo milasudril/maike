@@ -62,10 +62,10 @@ int main(int argc, char** argv)
 			              [category = static_cast<char const*>(nullptr)](auto const& item) mutable {
 				              if(category == nullptr || strcmp(category, item.category()) != 0)
 				              {
-					              printf("\n%s\n\n", item.category());
+					              printf("\n## %s\n\n", item.category());
 					              category = item.category();
 				              }
-				              printf("%s  %s\n", item.name(), item.summary());
+				              printf("%s[=`%s`]\n    %s\n\n", item.name(), item.type(), item.summary());
 			              });
 
 			return 0;

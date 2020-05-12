@@ -17,6 +17,11 @@
 
 namespace Maike::CmdLineParser
 {
+	constexpr char const* typeToString(Empty<Maike::fs::path>)
+	{
+		return "path";
+	}
+
 	class OptionInfo
 	{
 	public:
@@ -33,7 +38,7 @@ namespace Maike::CmdLineParser
 		constexpr explicit OptionInfo(Empty<EnumItemTraits>):
 		   r_category{EnumItemTraits::category()},
 		   r_name{EnumItemTraits::name()},
-		   r_type{nullptr},
+		   r_type{typeToString(Empty<typename EnumItemTraits::type>{})},
 		   r_summary{EnumItemTraits::summary()},
 		   r_description{EnumItemTraits::description()}
 		{
