@@ -45,34 +45,39 @@ void resolveDependencies(std::map<Maike::fs::path, Maike::SourceFileInfo>& sourc
 	});
 }
 
+void printHelp(Maike::CommandLine const& cmdline)
+{
+	auto info = cmdline.optionInfo();
+
+	std::for_each(std::begin(info),
+					std::end(info),
+					[category = static_cast<char const*>(nullptr)](auto const& item) mutable {
+						if(category == nullptr || strcmp(category, item.category()) != 0)
+						{
+							printf("\n## %s\n\n", item.category());
+							category = item.category();
+						}
+						printf("%s[=`%s`]\n    %s\n\n", item.name(), item.type(), item.summary());
+					});
+}
 
 int main(int argc, char** argv)
 {
 	try
 	{
-		Maike::KeyValueStore::init();
 		Maike::CommandLine cmdline{argc, argv};
-
 		if(cmdline.hasOption<Maike::CmdLineOption::Help>())
 		{
-			auto info = cmdline.optionInfo();
-
-			std::for_each(std::begin(info),
-			              std::end(info),
-			              [category = static_cast<char const*>(nullptr)](auto const& item) mutable {
-				              if(category == nullptr || strcmp(category, item.category()) != 0)
-				              {
-					              printf("\n## %s\n\n", item.category());
-					              category = item.category();
-				              }
-				              printf("%s[=`%s`]\n    %s\n\n", item.name(), item.type(), item.summary());
-			              });
-
+			printHelp(cmdline);
 			return 0;
-
-			printf("%s\n", cmdline.option<Maike::CmdLineOption::Help>().c_str());
 		}
 
+		{
+			printf(">>> %s\n", toString(cmdline.option<Maike::CmdLineOption::BuildId>()).c_str());
+			return 0;
+		}
+
+		Maike::KeyValueStore::init();
 		Maike::Config cfg;
 
 
