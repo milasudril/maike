@@ -7,6 +7,7 @@
 
 #include "./fs.hpp"
 #include "./build_id.hpp"
+#include "./thread_count.hpp"
 
 #include "src/cmd_line_parser/command_line.hpp"
 
@@ -28,9 +29,9 @@ namespace Maike
 		ConfigFiles,
 		SourceDir,
 		TargetDir,
-		//	NumWorkers,
 		BuildId,
 		//	StartTime,
+		NumWorkers,
 		//	DryRun,
 		//	LogFlags,
 		//	LogFile,
@@ -39,7 +40,7 @@ namespace Maike
 
 	static constexpr auto end(Empty<CmdLineOption>)
 	{
-		return static_cast<int>(CmdLineOption::BuildId) + 1;
+		return static_cast<int>(CmdLineOption::NumWorkers) + 1;
 	}
 
 	template<CmdLineOption opt>
@@ -343,7 +344,7 @@ namespace Maike
 
 		static constexpr char const* category()
 		{
-			return "Processing options";
+			return "Job parameters";
 		}
 
 		static constexpr char const* summary()
@@ -374,7 +375,7 @@ namespace Maike
 
 		static constexpr char const* category()
 		{
-			return "Processing options";
+			return "Job parameters";
 		}
 
 		static constexpr char const* summary()
@@ -407,7 +408,7 @@ namespace Maike
 
 		static constexpr char const* category()
 		{
-			return "Processing options";
+			return "Job parameters";
 		}
 
 		static constexpr char const* summary()
@@ -438,7 +439,7 @@ namespace Maike
 
 		static constexpr char const* category()
 		{
-			return "Processing options";
+			return "Job parameters";
 		}
 
 		static constexpr char const* summary()
@@ -457,12 +458,15 @@ namespace Maike
 		}
 	};
 
-#if 0
-
 	template<>
 	struct CmdLineOptionTraits<CmdLineOption::NumWorkers>
 	{
-		//	using type = ThreadCount;
+		using type = ThreadCount;
+
+		static constexpr bool valueRequired()
+		{
+			return true;
+		}
 
 		static constexpr char const* category()
 		{
@@ -471,13 +475,12 @@ namespace Maike
 
 		static constexpr char const* summary()
 		{
-			return "Specifies the maximum number of paralell tasks";
+			return "Specifies the number of worker threads to start";
 		}
 
 		static constexpr char const* description()
 		{
-			return "By default, `auto` is used, which is equal to the number of available logical "
-			       "processors in the system.";
+			return nullptr;
 		}
 
 		static constexpr char const* name()
@@ -485,7 +488,6 @@ namespace Maike
 			return "--num-workers";
 		}
 	};
-#endif
 
 	using CommandLine = CmdLineParser::BasicCommandLine<CmdLineOption, CmdLineOptionTraits>;
 }

@@ -77,6 +77,11 @@ void print(char const* name, Maike::BuildId const& id)
 	printf("%s: %s", name, toString(id).c_str());
 }
 
+void print(char const* name, Maike::ThreadCount count)
+{
+	printf("%s: %s", name, toString(count).c_str());
+}
+
 template<class T>
 void print(char const* name, std::vector<T> const& v)
 {
