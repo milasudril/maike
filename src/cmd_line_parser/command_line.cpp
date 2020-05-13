@@ -63,7 +63,7 @@ uint64_t Maike::CmdLineParser::detail::collect_options(char const* const* argv_b
                                                        OptItem const* optitems_end,
                                                        void* tuple)
 {
-	uint64_t set_vals;
+	uint64_t set_vals{};
 	std::for_each(argv_begin, argv_end, [optitems_begin, optitems_end, tuple, &set_vals](auto str) {
 		auto const l = strlen(str);
 		if(l == 0) { return; }

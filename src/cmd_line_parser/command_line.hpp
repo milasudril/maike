@@ -286,6 +286,16 @@ namespace Maike::CmdLineParser
 			return m_set_vals & (1 << static_cast<uint64_t>(index));
 		}
 
+		template<class Function>
+		void forEachOption(Function&& f)
+		{
+			apply(
+			   [func = std::forward<Function>(f), this](auto tag, auto const& value) mutable {
+				   if(hasOption<tag.value>()) { func(EnumItemTraits<tag.value>::name(), value); }
+			   },
+			   m_data);
+		}
+
 		static constexpr auto optionInfo()
 		{
 			return s_option_info;

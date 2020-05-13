@@ -22,6 +22,11 @@ namespace Maike::CmdLineParser
 		template<class EnumType, template<auto> class T>
 		struct MakeTupleFromEnum<0, EnumType, T>
 		{
+			using type = EnumType;
+			static constexpr auto size()
+			{
+				return end(Empty<EnumType>{});
+			}
 		};
 
 		template<class T>
@@ -50,6 +55,38 @@ namespace Maike::CmdLineParser
 		                                      decltype(EnumType),
 		                                      EnumItemTraits>&>(x)
 		   .m_value = std::forward<T>(val);
+	}
+
+	namespace detail
+	{
+		template<class EnumTuple, int index>
+		struct Call
+		{
+			template<class Func>
+			static void doIt(Func& f, EnumTuple const& e)
+			{
+				constexpr auto i = index - 1;
+				using EnumType = typename EnumTuple::type;
+				constexpr auto enum_val = static_cast<EnumType>(i);
+				f(std::integral_constant<EnumType, enum_val>{}, get<enum_val>(e));
+				Call<EnumTuple, i>::doIt(f, e);
+			}
+		};
+
+		template<class EnumTuple>
+		struct Call<EnumTuple, 0>
+		{
+			template<class T>
+			static void doIt(T&&, EnumTuple const&)
+			{
+			}
+		};
+	}
+
+	template<class Func, class EnumTuple>
+	void apply(Func&& f, EnumTuple const& e)
+	{
+		detail::Call<EnumTuple, end(Empty<typename EnumTuple::type>{})>::doIt(f, e);
 	}
 }
 #endif

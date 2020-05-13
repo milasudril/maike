@@ -61,6 +61,28 @@ void printHelp(Maike::CommandLine const& cmdline)
 	              });
 }
 
+
+void print(char const* name, Maike::fs::path const& path)
+{
+	printf("%s: %s", name, path.c_str());
+}
+
+void print(char const* name, Maike::BuildId const& id)
+{
+	printf("%s: %s", name, toString(id).c_str());
+}
+
+template<class T>
+void print(char const* name, std::vector<T> const& v)
+{
+	printf("%s: ", name);
+	std::for_each(std::begin(v), std::end(v), [](auto const& val) {
+		print(nullptr, val);
+		printf(", ");
+	});
+}
+
+
 int main(int argc, char** argv)
 {
 	try
@@ -72,10 +94,16 @@ int main(int argc, char** argv)
 			return 0;
 		}
 
-		{
-			printf(">>> %s\n", toString(cmdline.option<Maike::CmdLineOption::BuildId>()).c_str());
-			return 0;
-		}
+		cmdline.forEachOption([](char const* name, auto const& val) {
+			print(name, val);
+			putchar('\n');
+		});
+
+
+		/*		{
+		   printf(">>> %s\n", toString(cmdline.option<Maike::CmdLineOption::BuildId>()).c_str());
+		   return 0;
+		  }*/
 
 		Maike::KeyValueStore::init();
 		Maike::Config cfg;
