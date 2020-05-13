@@ -57,7 +57,12 @@ void printHelp(Maike::CommandLine const& cmdline)
 			              printf("\n## %s\n\n", item.category());
 			              category = item.category();
 		              }
-		              printf("%s[=`%s`]\n    %s\n\n", item.name(), item.type(), item.summary());
+		              if(item.valueRequired())
+		              { printf("%s=`%s`\n    %s\n\n", item.name(), item.type(), item.summary()); }
+		              else
+		              {
+			              printf("%s[=`%s`]\n    %s\n\n", item.name(), item.type(), item.summary());
+		              }
 	              });
 }
 

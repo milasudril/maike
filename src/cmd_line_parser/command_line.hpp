@@ -13,7 +13,7 @@
 #include <array>
 #include <cstring>
 #include <limits>
-#include <variant>
+#include <stdexcept>
 
 namespace Maike::CmdLineParser
 {
@@ -66,7 +66,8 @@ namespace Maike::CmdLineParser
 		   r_name{nullptr},
 		   r_type{nullptr},
 		   r_summary{nullptr},
-		   r_description{nullptr}
+		   r_description{nullptr},
+		   m_value_req{false}
 		{
 		}
 
@@ -76,7 +77,8 @@ namespace Maike::CmdLineParser
 		   r_name{EnumItemTraits::name()},
 		   r_type{typeToString(Empty<typename EnumItemTraits::type>{})},
 		   r_summary{EnumItemTraits::summary()},
-		   r_description{EnumItemTraits::description()}
+		   r_description{EnumItemTraits::description()},
+		   m_value_req{EnumItemTraits::valueRequired()}
 		{
 		}
 
@@ -105,6 +107,11 @@ namespace Maike::CmdLineParser
 			return r_description;
 		}
 
+		constexpr auto valueRequired() const
+		{
+			return m_value_req;
+		}
+
 
 	private:
 		char const* r_category;
@@ -112,6 +119,7 @@ namespace Maike::CmdLineParser
 		char const* r_type;
 		char const* r_summary;
 		char const* r_description;
+		bool m_value_req;
 	};
 
 	namespace detail
@@ -174,13 +182,20 @@ namespace Maike::CmdLineParser
 			{
 				constexpr auto index = K - 1;
 				using Traits = EnumItemTraits<static_cast<EnumType>(index)>;
-				names[index] = {Traits::name(), [](void* tuple, char const* str) -> uint64_t {
-					                using Tuple = TupleFromEnum<EnumType, EnumItemTraits>;
-					                auto self = reinterpret_cast<Tuple*>(tuple);
-					                set<static_cast<EnumType>(index)>(
-					                   *self, fromString(Empty<typename Traits::type>{}, str));
-					                return 1llu << static_cast<uint64_t>(index);
-				                }};
+				names[index] = {
+				   Traits::name(), [](void* tuple, char const* str) -> uint64_t {
+					   if constexpr(Traits::valueRequired())
+					   {
+						   if(*str == '\0')
+						   {
+							   throw std::runtime_error{std::string{"Option `"} + Traits::name() + "` requires a value"};
+						   }
+					   }
+					   using Tuple = TupleFromEnum<EnumType, EnumItemTraits>;
+					   auto self = reinterpret_cast<Tuple*>(tuple);
+					   set<static_cast<EnumType>(index)>(*self, fromString(Empty<typename Traits::type>{}, str));
+					   return 1llu << static_cast<uint64_t>(index);
+				   }};
 				GetOptionNames<EnumType, EnumItemTraits, index>::setItem(names);
 			}
 		};
@@ -287,7 +302,7 @@ namespace Maike::CmdLineParser
 		}
 
 		template<class Function>
-		void forEachOption(Function&& f)
+		void forEachOption(Function&& f) const
 		{
 			apply(
 			   [func = std::forward<Function>(f), this](auto tag, auto const& value) mutable {

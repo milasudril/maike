@@ -50,6 +50,11 @@ namespace Maike
 	{
 		using type = fs::path;
 
+		static constexpr bool valueRequired()
+		{
+			return false;
+		}
+
 		static constexpr char const* category()
 		{
 			return "Program information";
@@ -75,6 +80,11 @@ namespace Maike
 	struct CmdLineOptionTraits<CmdLineOption::Version>
 	{
 		using type = fs::path;
+
+		static constexpr bool valueRequired()
+		{
+			return false;
+		}
 
 		static constexpr char const* category()
 		{
@@ -102,6 +112,11 @@ namespace Maike
 	{
 		using type = fs::path;
 
+		static constexpr bool valueRequired()
+		{
+			return false;
+		}
+
 		static constexpr char const* category()
 		{
 			return "Program information";
@@ -127,6 +142,11 @@ namespace Maike
 	struct CmdLineOptionTraits<CmdLineOption::PrintDepGraph>
 	{
 		using type = fs::path;
+
+		static constexpr bool valueRequired()
+		{
+			return false;
+		}
 
 		static constexpr char const* category()
 		{
@@ -157,6 +177,11 @@ namespace Maike
 	{
 		using type = fs::path;
 
+		static constexpr bool valueRequired()
+		{
+			return false;
+		}
+
 		static constexpr char const* category()
 		{
 			return "Database queries";
@@ -185,6 +210,11 @@ namespace Maike
 	{
 		using type = fs::path;
 
+		static constexpr bool valueRequired()
+		{
+			return false;
+		}
+
 		static constexpr char const* category()
 		{
 			return "Database queries";
@@ -210,6 +240,11 @@ namespace Maike
 	struct CmdLineOptionTraits<CmdLineOption::ListLeafTargets>
 	{
 		using type = fs::path;
+
+		static constexpr bool valueRequired()
+		{
+			return false;
+		}
 
 		static constexpr char const* category()
 		{
@@ -237,6 +272,11 @@ namespace Maike
 	{
 		using type = fs::path;
 
+		static constexpr bool valueRequired()
+		{
+			return false;
+		}
+
 		static constexpr char const* category()
 		{
 			return "Database queries";
@@ -261,6 +301,11 @@ namespace Maike
 	struct CmdLineOptionTraits<CmdLineOption::BuildId>
 	{
 		using type = BuildId;
+
+		static constexpr bool valueRequired()
+		{
+			return true;
+		}
 
 		static constexpr char const* category()
 		{
@@ -291,6 +336,11 @@ namespace Maike
 	{
 		using type = std::vector<fs::path>;
 
+		static constexpr bool valueRequired()
+		{
+			return true;
+		}
+
 		static constexpr char const* category()
 		{
 			return "Processing options";
@@ -316,6 +366,11 @@ namespace Maike
 	struct CmdLineOptionTraits<CmdLineOption::ConfigFiles>
 	{
 		using type = std::vector<fs::path>;
+
+		static constexpr bool valueRequired()
+		{
+			return true;
+		}
 
 		static constexpr char const* category()
 		{
@@ -345,6 +400,11 @@ namespace Maike
 	{
 		using type = fs::path;
 
+		static constexpr bool valueRequired()
+		{
+			return true;
+		}
+
 		static constexpr char const* category()
 		{
 			return "Processing options";
@@ -370,6 +430,11 @@ namespace Maike
 	struct CmdLineOptionTraits<CmdLineOption::TargetDir>
 	{
 		using type = fs::path;
+
+		static constexpr bool valueRequired()
+		{
+			return true;
+		}
 
 		static constexpr char const* category()
 		{
