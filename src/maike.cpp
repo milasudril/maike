@@ -140,7 +140,8 @@ int main(int argc, char** argv)
 		 bi.vcsState().branch().c_str());
 		fflush(stdout);*/
 
-		Maike::ThreadPool workers;
+
+		Maike::ThreadPool workers{cmdline.option<Maike::CmdLineOption::NumWorkers>()};
 
 		std::map<std::string, Maike::SourceTreeLoader::SourceFileLoader> loaders;
 		loaders.insert(

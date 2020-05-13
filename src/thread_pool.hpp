@@ -8,6 +8,7 @@
 #define MAIKE_THREADPOOL_HPP
 
 #include "./unique_function.hpp"
+#include "./thread_count.hpp"
 
 #include <pthread.h>
 #include <sys/sysinfo.h>
@@ -77,7 +78,7 @@ namespace Maike
 			}
 		};
 
-		explicit ThreadPool(int m_n_threads = std::max(get_nprocs(), 1));
+		explicit ThreadPool(ThreadCount n_threads = ThreadCount{});
 
 		template<class Function>
 		ThreadPool& addTask(Function&& f, TaskResult<std::result_of_t<std::decay_t<Function>()>>& result)

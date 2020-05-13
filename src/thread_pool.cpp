@@ -4,9 +4,9 @@
 
 #include "./thread_pool.hpp"
 
-Maike::ThreadPool::ThreadPool(int n_threads):
+Maike::ThreadPool::ThreadPool(ThreadCount n_threads):
    m_terminate{false},
-   m_n_threads{n_threads},
+   m_n_threads{n_threads.value()},
    m_threads{std::make_unique<pthread_t[]>(m_n_threads)}
 {
 	std::for_each(m_threads.get(), m_threads.get() + m_n_threads, [this](auto& item) {
