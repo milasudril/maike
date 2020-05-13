@@ -14,6 +14,49 @@ namespace
 	}
 }
 
+std::pair<std::string, char const*> Maike::CmdLineParser::detail::next_array_token(char const* str)
+{
+	std::pair<std::string, char const*> ret;
+	enum class State : int
+	{
+		Normal,
+		Escape
+	};
+	auto state = State::Normal;
+	while(true)
+	{
+		auto ch_in = *str;
+		switch(state)
+		{
+			case State::Normal:
+				switch(ch_in)
+				{
+					case ',': ret.second = str + 1; return ret;
+
+					case '\0': ret.second = str; return ret;
+
+					case '\\': state = State::Escape; break;
+
+					default: ret.first += ch_in; break;
+				}
+				break;
+
+			case State::Escape:
+				switch(ch_in)
+				{
+					case '\0': ret.second = str; return ret;
+
+					default:
+						ret.first += ch_in;
+						state = State::Normal;
+						break;
+				}
+				break;
+		}
+		++str;
+	}
+}
+
 uint64_t Maike::CmdLineParser::detail::collect_options(char const* const* argv_begin,
                                                        char const* const* argv_end,
                                                        OptItem const* optitems_begin,

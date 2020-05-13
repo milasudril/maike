@@ -17,10 +17,46 @@
 
 namespace Maike::CmdLineParser
 {
-	constexpr char const* typeToString(Empty<Maike::fs::path>)
+	constexpr char const* typeToString(Empty<fs::path>)
 	{
 		return "path";
 	}
+
+	inline fs::path fromString(Empty<fs::path>, char const* str)
+	{
+		return Maike::fs::path{str};
+	}
+
+	constexpr char const* typeToString(Empty<std::vector<fs::path>>)
+	{
+		return "paths";
+	}
+
+	namespace detail
+	{
+		std::pair<std::string, char const*> next_array_token(char const* str);
+	}
+
+	template<class T>
+	std::vector<T> fromString(Empty<std::vector<T>>, char const* str)
+	{
+		std::vector<T> ret;
+		while(true)
+		{
+			auto [buffer, termpos] = detail::next_array_token(str);
+			ret.push_back(fromString(Empty<T>{}, buffer.c_str()));
+			if(*termpos == '\0') { return ret; }
+			str = termpos;
+		}
+	}
+
+	inline std::false_type fromString(Empty<std::false_type>, char const* str)
+	{
+		if(strlen(str) != 0) { throw std::runtime_error{"Option does not take any value"}; }
+
+		return std::false_type{};
+	}
+
 
 	class OptionInfo
 	{
@@ -129,18 +165,6 @@ namespace Maike::CmdLineParser
 		private:
 			size_t m_str_maxlen;
 		};
-
-		inline std::false_type fromString(Empty<std::false_type>, char const* str)
-		{
-			if(strlen(str) != 0) { throw std::runtime_error{"Option does not take any value"}; }
-
-			return std::false_type{};
-		}
-
-		inline Maike::fs::path fromString(Empty<Maike::fs::path>, char const* str)
-		{
-			return Maike::fs::path{str};
-		}
 
 
 		template<class EnumType, template<auto> class EnumItemTraits, int K = end(Empty<EnumType>{})>

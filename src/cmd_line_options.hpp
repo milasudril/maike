@@ -24,16 +24,17 @@ namespace Maike
 		DumpDatabase,
 		ListLeafTargets,
 		ListExternalDeps,
-		//		Targets,
-		//		ConfigFiles,
-		//		SourceDir,
-		//		TargetDir,
-		//		Tasks,
+		Targets,
+		ConfigFiles,
+		SourceDir,
+		TargetDir,
+		//	NumWorkers,
 		BuildId,
-		//		StartTime,
-		//		LogFlags,
-		//		LogFile,
-		//		LogFormat,
+		//	StartTime,
+		//	DryRun,
+		//	LogFlags,
+		//	LogFile,
+		//	LogFormat,
 	};
 
 	static constexpr auto end(Empty<CmdLineOption>)
@@ -285,7 +286,6 @@ namespace Maike
 		}
 	};
 
-#if 0
 	template<>
 	struct CmdLineOptionTraits<CmdLineOption::Targets>
 	{
@@ -298,7 +298,7 @@ namespace Maike
 
 		static constexpr char const* summary()
 		{
-			return "Only process the listed targets.";
+			return "Only process the listed targets";
 		}
 
 		static constexpr char const* description()
@@ -324,7 +324,7 @@ namespace Maike
 
 		static constexpr char const* summary()
 		{
-			return "Use project specific settings stored in `paths`.";
+			return "Use project specific settings stored in `paths`";
 		}
 
 		static constexpr char const* description()
@@ -352,12 +352,12 @@ namespace Maike
 
 		static constexpr char const* summary()
 		{
-			return "Process the source tree given by `path`.";
+			return "Process the source tree given by `path`";
 		}
 
 		static constexpr char const* description()
 		{
-			return "By default, current working directory is used.";
+			return "By default, current working directory is used";
 		}
 
 		static constexpr char const* name()
@@ -378,7 +378,7 @@ namespace Maike
 
 		static constexpr char const* summary()
 		{
-			return "Store output files in `path`.";
+			return "Store output files in `path`";
 		}
 
 		static constexpr char const* description()
@@ -392,9 +392,10 @@ namespace Maike
 		}
 	};
 
+#if 0
 
 	template<>
-	struct CmdLineOptionTraits<CmdLineOption::Jobs>
+	struct CmdLineOptionTraits<CmdLineOption::NumWorkers>
 	{
 		//	using type = ThreadCount;
 
@@ -405,7 +406,7 @@ namespace Maike
 
 		static constexpr char const* summary()
 		{
-			return "Specifies the maximum number of paralell jobs.";
+			return "Specifies the maximum number of paralell tasks";
 		}
 
 		static constexpr char const* description()
@@ -416,7 +417,7 @@ namespace Maike
 
 		static constexpr char const* name()
 		{
-			return "--jobs";
+			return "--num-workers";
 		}
 	};
 #endif
