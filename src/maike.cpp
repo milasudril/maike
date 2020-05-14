@@ -97,7 +97,7 @@ int main(int argc, char** argv)
 {
 	try
 	{
-		Maike::CommandLine cmdline{argc, argv};
+		Maike::CommandLine cmdline{argc - 1, argv + 1};
 		if(cmdline.hasOption<Maike::CmdLineOption::Help>())
 		{
 			printHelp(cmdline);

@@ -283,10 +283,10 @@ namespace Maike::CmdLineParser
 	public:
 		explicit BasicCommandLine(int argc, char** argv): m_set_vals{0}
 		{
-			if(argc < 2) { return; }
+			if(argc < 1) { return; }
 
 			m_set_vals = detail::collect_options(
-			   argv + 1, argv + argc, std::begin(s_option_names), std::end(s_option_names), &m_data);
+			   argv, argv + argc, std::begin(s_option_names), std::end(s_option_names), &m_data);
 		}
 
 		template<EnumType index>
