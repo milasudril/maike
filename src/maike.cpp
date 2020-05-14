@@ -5,8 +5,6 @@
 #include "src/source_tree_loader/directory_scanner.hpp"
 #include "src/cxx/source_file_loader.hpp"
 
-#include <chrono>
-
 void makeSourceFileInfosFromTargets(std::map<Maike::fs::path, Maike::SourceFileInfo>& source_files)
 {
 	std::for_each(std::begin(source_files), std::end(source_files), [&source_files](auto const& item) {
@@ -59,17 +57,17 @@ void printHelp(Maike::CommandLine const& cmdline)
 		              }
 		              if(item.type() == nullptr)
 		              {
-						printf("%s\n    %s\n\n", item.name(), item.summary());
-						return;
+			              printf("%s\n    %s\n\n", item.name(), item.summary());
+			              return;
 		              }
 
 		              if(item.valueRequired())
 		              {
-						printf("%s=`%s`\n    %s\n\n", item.name(), item.type(), item.summary());
-						return;
-		              }
-			              printf("%s[=`%s`]\n    %s\n\n", item.name(), item.type(), item.summary());
+			              printf("%s=`%s`\n    %s\n\n", item.name(), item.type(), item.summary());
 			              return;
+		              }
+		              printf("%s[=`%s`]\n    %s\n\n", item.name(), item.type(), item.summary());
+		              return;
 	              });
 }
 
@@ -92,6 +90,23 @@ void print(char const* name, Maike::ThreadCount count)
 void print(char const* name, std::false_type)
 {
 	printf("%s: %s", name, "");
+}
+
+void print(char const* name, Maike::SystemTimeStamp t)
+{
+	auto timeval = std::chrono::system_clock::to_time_t(t.value());
+
+	tm time_decomposed;
+	gmtime_r(&timeval, &time_decomposed);
+
+	printf("%s: %04d-%02d-%02d %d:%02d:%02d UTC",
+	       name,
+	       time_decomposed.tm_year + 1900,
+	       time_decomposed.tm_mon + 1,
+	       time_decomposed.tm_mday,
+	       time_decomposed.tm_hour,
+	       time_decomposed.tm_min,
+	       time_decomposed.tm_sec);
 }
 
 

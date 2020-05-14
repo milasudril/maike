@@ -8,6 +8,7 @@
 #include "./fs.hpp"
 #include "./build_id.hpp"
 #include "./thread_count.hpp"
+#include "./system_time_stamp.hpp"
 
 #include "src/cmd_line_parser/command_line.hpp"
 
@@ -30,7 +31,7 @@ namespace Maike
 		SourceDir,
 		TargetDir,
 		BuildId,
-		//	StartTime,
+		StartTime,
 		NumWorkers,
 		DryRun
 		//	LogFlags,
@@ -518,6 +519,39 @@ namespace Maike
 		static constexpr char const* name()
 		{
 			return "--dry-run";
+		}
+	};
+
+	template<>
+	struct CmdLineOptionTraits<CmdLineOption::StartTime>
+	{
+		using type = SystemTimeStamp;
+
+		static constexpr bool valueRequired()
+		{
+			return true;
+		}
+
+		static constexpr char const* category()
+		{
+			return "Job parameters";
+		}
+
+		static constexpr char const* summary()
+		{
+			return "Specifies a fixed start time";
+		}
+
+		static constexpr char const* description()
+		{
+			return "The start time indicates when the build job was started. Specifying a start time is "
+			       "useful when the job is part of a larger build process, and the main job has been "
+			       "started earlier.";
+		}
+
+		static constexpr char const* name()
+		{
+			return "--start-time";
 		}
 	};
 
