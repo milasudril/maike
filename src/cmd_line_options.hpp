@@ -32,7 +32,7 @@ namespace Maike
 		BuildId,
 		//	StartTime,
 		NumWorkers,
-		//	DryRun,
+		DryRun
 		//	LogFlags,
 		//	LogFile,
 		//	LogFormat,
@@ -40,7 +40,7 @@ namespace Maike
 
 	static constexpr auto end(Empty<CmdLineOption>)
 	{
-		return static_cast<int>(CmdLineOption::NumWorkers) + 1;
+		return static_cast<int>(CmdLineOption::DryRun) + 1;
 	}
 
 	template<CmdLineOption opt>
@@ -486,6 +486,38 @@ namespace Maike
 		static constexpr char const* name()
 		{
 			return "--num-workers";
+		}
+	};
+
+
+	template<>
+	struct CmdLineOptionTraits<CmdLineOption::DryRun>
+	{
+		using type = std::false_type;
+
+		static constexpr bool valueRequired()
+		{
+			return false;
+		}
+
+		static constexpr char const* category()
+		{
+			return "Processing options";
+		}
+
+		static constexpr char const* summary()
+		{
+			return "Only print commands that would be executed, but do not execute them";
+		}
+
+		static constexpr char const* description()
+		{
+			return nullptr;
+		}
+
+		static constexpr char const* name()
+		{
+			return "--dry-run";
 		}
 	};
 

@@ -32,6 +32,11 @@ namespace Maike::CmdLineParser
 		return "paths";
 	}
 
+	constexpr char const* typeToString(Empty<std::false_type>)
+	{
+		return nullptr;
+	}
+
 	namespace detail
 	{
 		std::pair<std::string, char const*> next_array_token(char const* str);

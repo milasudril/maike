@@ -57,12 +57,19 @@ void printHelp(Maike::CommandLine const& cmdline)
 			              printf("\n## %s\n\n", item.category());
 			              category = item.category();
 		              }
-		              if(item.valueRequired())
-		              { printf("%s=`%s`\n    %s\n\n", item.name(), item.type(), item.summary()); }
-		              else
+		              if(item.type() == nullptr)
 		              {
-			              printf("%s[=`%s`]\n    %s\n\n", item.name(), item.type(), item.summary());
+						printf("%s\n    %s\n\n", item.name(), item.summary());
+						return;
 		              }
+
+		              if(item.valueRequired())
+		              {
+						printf("%s=`%s`\n    %s\n\n", item.name(), item.type(), item.summary());
+						return;
+		              }
+			              printf("%s[=`%s`]\n    %s\n\n", item.name(), item.type(), item.summary());
+			              return;
 	              });
 }
 
@@ -81,6 +88,12 @@ void print(char const* name, Maike::ThreadCount count)
 {
 	printf("%s: %s", name, toString(count).c_str());
 }
+
+void print(char const* name, std::false_type)
+{
+	printf("%s: %s", name, "");
+}
+
 
 template<class T>
 void print(char const* name, std::vector<T> const& v)
