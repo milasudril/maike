@@ -41,7 +41,7 @@
 				"^\\.",
 				"^__"
 			],
-			"recursive": true
+			"recursive": 1
 		},
 		"utils": {
 			"pkg-config": {},

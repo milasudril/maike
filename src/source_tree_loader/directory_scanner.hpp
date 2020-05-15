@@ -7,9 +7,9 @@
 #define MAIKE_DIRECTORYSCANNER_HPP
 
 #include "./source_file_loader_delegator.hpp"
+#include "./input_filter.hpp"
 
 #include "src/fs.hpp"
-#include "src/input_filter.hpp"
 #include "src/signaling_counter.hpp"
 #include "src/thread_pool.hpp"
 

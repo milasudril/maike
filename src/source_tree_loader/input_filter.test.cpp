@@ -8,7 +8,7 @@ namespace Testcases
 {
 	void maikeInputFilterDefault()
 	{
-		Maike::InputFilter f;
+		Maike::SourceTreeLoader::InputFilter f;
 		assert(f.match(".foobar"));
 		assert(f.match("__foobar"));
 		assert(!f.match("foo.bar"));

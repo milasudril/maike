@@ -7,11 +7,7 @@
 #include "./env.hpp"
 
 Maike::EnvStore::EnvStore():
-   Base{{"AR", "ar"},
-        {"AS", "as"},
-        {"CC", "cc"},
-        {"CXX", "g++"},
-        {"LD", "ld"}}
+   Base{{"AR", "ar"}, {"AS", "as"}, {"CC", "cc"}, {"CXX", "g++"}, {"LD", "ld"}}
 {
 }
 

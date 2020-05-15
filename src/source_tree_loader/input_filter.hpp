@@ -11,7 +11,7 @@
 #include <regex>
 #include <vector>
 
-namespace Maike
+namespace Maike::SourceTreeLoader
 {
 	class InputFilter
 	{

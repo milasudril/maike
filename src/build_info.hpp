@@ -20,8 +20,7 @@ namespace Maike
 	class BuildInfo
 	{
 	public:
-		explicit BuildInfo(VcsState&& vcs_state):
-		   m_vcs_state{std::move(vcs_state)}
+		explicit BuildInfo(VcsState&& vcs_state): m_vcs_state{std::move(vcs_state)}
 		{
 		}
 

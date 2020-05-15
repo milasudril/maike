@@ -4,12 +4,12 @@
 
 #include "./input_filter.hpp"
 
-Maike::InputFilter::InputFilter()
+Maike::SourceTreeLoader::InputFilter::InputFilter()
 {
 	source(std::vector<std::string>{R"_(^\.)_", R"_(^__)_"});
 }
 
-Maike::InputFilter::InputFilter(KeyValueStore::ArrayRefConst obj)
+Maike::SourceTreeLoader::InputFilter::InputFilter(KeyValueStore::ArrayRefConst obj)
 {
 	std::vector<std::string> input_filters_src;
 	input_filters_src.reserve(obj.size());
@@ -21,7 +21,8 @@ Maike::InputFilter::InputFilter(KeyValueStore::ArrayRefConst obj)
 	source(std::move(input_filters_src));
 }
 
-Maike::InputFilter& Maike::InputFilter::source(std::vector<std::string>&& val)
+Maike::SourceTreeLoader::InputFilter&
+Maike::SourceTreeLoader::InputFilter::source(std::vector<std::string>&& val)
 {
 	std::vector<std::regex> filters_tmp;
 	filters_tmp.reserve(val.size());
@@ -35,14 +36,14 @@ Maike::InputFilter& Maike::InputFilter::source(std::vector<std::string>&& val)
 	return *this;
 }
 
-bool Maike::InputFilter::match(char const* str) const
+bool Maike::SourceTreeLoader::InputFilter::match(char const* str) const
 {
 	return std::any_of(std::begin(m_input_filters),
 	                   std::end(m_input_filters),
 	                   [str](auto const& regex) { return regex_search(str, regex); });
 }
 
-Maike::KeyValueStore::JsonHandle Maike::toJson(InputFilter const& cfg)
+Maike::KeyValueStore::JsonHandle Maike::SourceTreeLoader::toJson(InputFilter const& cfg)
 {
 	auto const& input_filters = cfg.source();
 

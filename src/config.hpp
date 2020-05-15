@@ -6,8 +6,8 @@
 #define MAIKE_CONFIG_HPP
 
 #include "./env_store.hpp"
-#include "./input_filter.hpp"
 #include "src/vcs_invoker/config.hpp"
+#include "src/source_tree_loader/config.hpp"
 
 namespace Maike
 {
@@ -19,7 +19,7 @@ namespace Maike
 		}
 
 		explicit Config(KeyValueStore::CompoundRefConst obj):
-		   m_filter{obj.get<InputFilter>("input_filter")},
+		   m_src_tree_loader_cfg{obj.get<SourceTreeLoader::Config>("source_tree_loader")},
 		   m_env{obj.get<EnvStore>("env")},
 		   m_vcs_config{obj.get<VcsInvoker::Config>("vcs_config")}
 		{
@@ -47,19 +47,19 @@ namespace Maike
 			return *this;
 		}
 
-		InputFilter const& inputFilter() const
+		SourceTreeLoader::Config const& sourceTreeLoaderCfg() const
 		{
-			return m_filter;
+			return m_src_tree_loader_cfg;
 		}
 
-		Config& inputFilter(InputFilter&& val)
+		Config& sourceTreeLoaderCfg(SourceTreeLoader::Config&& val)
 		{
-			m_filter = std::move(val);
+			m_src_tree_loader_cfg = std::move(val);
 			return *this;
 		}
 
 	private:
-		InputFilter m_filter;
+		SourceTreeLoader::Config m_src_tree_loader_cfg;
 		EnvStore m_env;
 		VcsInvoker::Config m_vcs_config;
 	};
@@ -73,8 +73,8 @@ namespace Maike
 	{
 		return KeyValueStore::Compound{}
 		   .set("env", cfg.env())
-		   .set("vcs_config", cfg.vcsConfig())
-		   .set("input_filter", cfg.inputFilter())
+		   .set("vcs", cfg.vcsConfig())
+		   .set("source_tree_loader", cfg.sourceTreeLoaderCfg())
 		   .takeHandle();
 	}
 }

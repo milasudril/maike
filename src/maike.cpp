@@ -185,7 +185,7 @@ int main(int argc, char** argv)
 		loader_delegator.loaders(std::move(loaders));
 
 		Maike::SourceTreeLoader::DirectoryScanner scanner{
-		   workers, std::cref(cfg.inputFilter()), std::cref(loader_delegator)};
+		   workers, std::cref(cfg.sourceTreeLoaderCfg().inputFilter()), std::cref(loader_delegator)};
 		auto now = std::chrono::steady_clock::now();
 		scanner.processPath(Maike::fs::path{"."});
 		auto src_files = scanner.takeResult();
