@@ -46,7 +46,6 @@ namespace Testcases
 		assert(cfg.env() == Maike::EnvStore{});
 		assert(cfg.vcsConfig() == Maike::VcsInvoker::Config{});
 		assert(cfg.inputFilter() == Maike::InputFilter{});
-		assert(cfg.targetDir() == "%MAIKE_TARGETS%");
 	}
 
 	void maikeConfigToJson()
@@ -61,14 +60,12 @@ namespace Testcases
         "AS": "as",
         "CC": "cc",
         "CXX": "g++",
-        "LD": "ld",
-        "MAIKE_TARGETS": "__targets"
+        "LD": "ld"
     },
     "input_filter": [
         "^\\.",
         "^__"
     ],
-    "target_dir": "%MAIKE_TARGETS%",
     "vcs_config": {
         "get_branch": {
             "args": [
@@ -105,14 +102,12 @@ namespace Testcases
         "AS": "as",
         "CC": "cc",
         "CXX": "g++",
-        "LD": "ld",
-        "MAIKE_TARGETS": "__targets"
+        "LD": "ld"
     },
     "input_filter": [
         "xya",
         "blah"
     ],
-    "target_dir": "foobar",
     "vcs_config": {
         "get_branch": {
             "args": [
@@ -145,7 +140,6 @@ namespace Testcases
 		assert(cfg.env() == Maike::EnvStore{});
 		assert(cfg.vcsConfig() == Maike::VcsInvoker::Config{});
 		assert(cfg.inputFilter() == Maike::InputFilter{});
-		assert(cfg.targetDir() == "foobar");
 	}
 }
 

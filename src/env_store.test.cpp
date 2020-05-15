@@ -71,8 +71,7 @@ namespace Testcases
     "AS": "as",
     "CC": "cc",
     "CXX": "g++",
-    "LD": "ld",
-    "MAIKE_TARGETS": "__targets"
+    "LD": "ld"
 })_";
 		assert(sink.buffer == expected);
 	}

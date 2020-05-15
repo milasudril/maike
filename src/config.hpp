@@ -14,13 +14,12 @@ namespace Maike
 	class Config
 	{
 	public:
-		Config(): m_target_dir{"%MAIKE_TARGETS%"}
+		Config()
 		{
 		}
 
 		explicit Config(KeyValueStore::CompoundRefConst obj):
 		   m_filter{obj.get<InputFilter>("input_filter")},
-		   m_target_dir{obj.get<char const*>("target_dir")},
 		   m_env{obj.get<EnvStore>("env")},
 		   m_vcs_config{obj.get<VcsInvoker::Config>("vcs_config")}
 		{
@@ -59,20 +58,8 @@ namespace Maike
 			return *this;
 		}
 
-		std::string const& targetDir() const
-		{
-			return m_target_dir;
-		}
-
-		Config& targetDir(std::string&& target_dir)
-		{
-			m_target_dir = std::move(target_dir);
-			return *this;
-		}
-
 	private:
 		InputFilter m_filter;
-		std::string m_target_dir;
 		EnvStore m_env;
 		VcsInvoker::Config m_vcs_config;
 	};
@@ -88,7 +75,6 @@ namespace Maike
 		   .set("env", cfg.env())
 		   .set("vcs_config", cfg.vcsConfig())
 		   .set("input_filter", cfg.inputFilter())
-		   .set("target_dir", cfg.targetDir())
 		   .takeHandle();
 	}
 }
