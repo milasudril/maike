@@ -7,8 +7,8 @@
 
 #include "./fs.hpp"
 #include "./build_id.hpp"
-#include "./system_time_stamp.hpp"
 
+#include "src/time/system_time_stamp.hpp"
 #include "src/sched/thread_count.hpp"
 #include "src/cmd_line_parser/command_line.hpp"
 

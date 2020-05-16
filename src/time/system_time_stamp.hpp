@@ -6,7 +6,7 @@
 #ifndef MAIKE_SYSTEMTIMESTAMP_HPP
 #define MAIKE_SYSTEMTIMESTAMP_HPP
 
-#include "./empty.hpp"
+#include "src/utils/empty.hpp"
 
 #include <chrono>
 

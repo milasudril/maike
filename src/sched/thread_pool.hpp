@@ -9,7 +9,7 @@
 
 #include "./thread_count.hpp"
 
-#include "src/unique_function.hpp"
+#include "src/utils/unique_function.hpp"
 
 #include <pthread.h>
 #include <sys/sysinfo.h>

@@ -6,10 +6,10 @@
 #define MAIKE_BUILDINFO_HPP
 
 #include "./build_id.hpp"
-#include "./system_time_stamp.hpp"
 #include "./vcs_state.hpp"
 
-#include "key_value_store/compound.hpp"
+#include "src/time/system_time_stamp.hpp"
+#include "src/key_value_store/compound.hpp"
 
 #include <chrono>
 #include <array>

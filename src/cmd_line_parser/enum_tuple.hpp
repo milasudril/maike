@@ -5,7 +5,7 @@
 #ifndef MAIKE_CMDLINEPARSER_ENUMTUPLE_HPP
 #define MAIKE_CMDLINEPARSER_ENUMTUPLE_HPP
 
-#include "src/empty.hpp"
+#include "src/utils/empty.hpp"
 
 #include <utility>
 

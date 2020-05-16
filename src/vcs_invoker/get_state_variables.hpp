@@ -6,7 +6,7 @@
 #include "./config.hpp"
 
 #include "src/io/mem_io_redirector.hpp"
-#include "src/stringutils.hpp"
+#include "src/utils/stringutils.hpp"
 
 #include <functional>
 
