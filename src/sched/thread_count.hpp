@@ -6,7 +6,7 @@
 #ifndef MAIKE_THREADCOUNT_HPP
 #define MAIKE_THREADCOUNT_HPP
 
-#include "./empty.hpp"
+#include "src/empty.hpp"
 
 #include <sys/sysinfo.h>
 

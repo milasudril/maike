@@ -7,8 +7,9 @@
 #ifndef MAIKE_THREADPOOL_HPP
 #define MAIKE_THREADPOOL_HPP
 
-#include "./unique_function.hpp"
 #include "./thread_count.hpp"
+
+#include "src/unique_function.hpp"
 
 #include <pthread.h>
 #include <sys/sysinfo.h>

@@ -10,8 +10,8 @@
 #include "./input_filter.hpp"
 
 #include "src/fs.hpp"
-#include "src/signaling_counter.hpp"
-#include "src/thread_pool.hpp"
+#include "src/sched/signaling_counter.hpp"
+#include "src/sched/thread_pool.hpp"
 
 #include <map>
 #include <functional>
