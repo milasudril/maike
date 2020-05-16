@@ -4,8 +4,8 @@
 
 #include "./source_file_loader.hpp"
 
-#include "src/input_buffer.hpp"
-#include "src/output_buffer.hpp"
+#include "src/io/input_buffer.hpp"
+#include "src/io/output_buffer.hpp"
 
 std::vector<Maike::Dependency> Maike::Cxx::SourceFileLoader::getDependencies(Reader input) const
 {

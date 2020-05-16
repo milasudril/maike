@@ -3,7 +3,8 @@
 #include "./config.hpp"
 #include "./cmd_line_options.hpp"
 #include "./build_info.hpp"
-#include "./input_file.hpp"
+
+#include "src/io/input_file.hpp"
 
 #include "src/source_tree_loader/directory_scanner.hpp"
 #include "src/cxx/source_file_loader.hpp"

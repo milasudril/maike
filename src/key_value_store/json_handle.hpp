@@ -7,7 +7,7 @@
 #ifndef MAIKE_KEYVALUESTORE_JSONHANDLE_HPP
 #define MAIKE_KEYVALUESTORE_JSONHANDLE_HPP
 
-#include "src/reader.hpp"
+#include "src/io/reader.hpp"
 
 #include <jansson.h>
 

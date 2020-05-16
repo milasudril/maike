@@ -4,9 +4,9 @@
 
 #include "./source_file_loader_delegator.hpp"
 
-#include "src/fifo.hpp"
-#include "src/input_file.hpp"
-#include "src/reader.hpp"
+#include "src/io/fifo.hpp"
+#include "src/io/input_file.hpp"
+#include "src/io/reader.hpp"
 #include "src/key_value_store/array.hpp"
 #include "src/key_value_store/compound.hpp"
 

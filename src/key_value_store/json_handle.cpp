@@ -4,7 +4,7 @@
 
 #include "./json_handle.hpp"
 
-#include "src/input_buffer.hpp"
+#include "src/io/input_buffer.hpp"
 
 #include <algorithm>
 

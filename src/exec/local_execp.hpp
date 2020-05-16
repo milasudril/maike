@@ -6,9 +6,10 @@
 #ifndef MAIKE_LOCALEXECP_HPP
 #define MAIKE_LOCALEXECP_HPP
 
-#include "./fs.hpp"
 #include "./exec_result.hpp"
-#include "./io_redirector.hpp"
+
+#include "src/fs.hpp"
+#include "src/io/io_redirector.hpp"
 
 #include <cstddef>
 #include <vector>

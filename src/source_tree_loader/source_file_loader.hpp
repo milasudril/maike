@@ -5,9 +5,9 @@
 #ifndef MAIKE_SOURCEFILELOADER_HPP
 #define MAIKE_SOURCEFILELOADER_HPP
 
+#include "src/io/reader.hpp"
+#include "src/io/writer.hpp"
 #include "src/compiler.hpp"
-#include "src/reader.hpp"
-#include "src/writer.hpp"
 #include "src/source_file_info.hpp"
 #include "src/key_value_store/compound.hpp"
 

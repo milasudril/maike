@@ -4,7 +4,8 @@
 #define MAIKE_VCSINVOKER_GETSTATEVARIABLES_HPP
 
 #include "./config.hpp"
-#include "src/mem_io_redirector.hpp"
+
+#include "src/io/mem_io_redirector.hpp"
 #include "src/stringutils.hpp"
 
 #include <functional>
