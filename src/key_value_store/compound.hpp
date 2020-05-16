@@ -169,7 +169,6 @@ namespace Maike::KeyValueStore
 			return std::move(m_handle);
 		}
 
-		// FIXME: Should return CompoundRefConst
 		auto reference() const
 		{
 			return CompoundRefConst{m_handle.reference()};
@@ -178,6 +177,16 @@ namespace Maike::KeyValueStore
 		auto handleReference() const
 		{
 			return m_handle.reference();
+		}
+
+		auto begin() const
+		{
+			return reference().begin();
+		}
+
+		auto end() const
+		{
+			return reference().end();
 		}
 
 	private:

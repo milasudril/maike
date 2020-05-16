@@ -1,12 +1,5 @@
 {
-	".file": {
-		"content": "maike config file",
-		"version": [
-			1,
-			0
-		]
-	},
-	"config": {
+	"maikeconfig": {
 		"env": {
 			"AR": "ar",
 			"AS": "as",

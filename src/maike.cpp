@@ -3,6 +3,7 @@
 #include "./config.hpp"
 #include "./cmd_line_options.hpp"
 #include "./build_info.hpp"
+#include "./input_file.hpp"
 
 #include "src/source_tree_loader/directory_scanner.hpp"
 #include "src/cxx/source_file_loader.hpp"
@@ -146,8 +147,15 @@ int main(int argc, char** argv)
 		  }*/
 
 		Maike::KeyValueStore::init();
-		Maike::Config cfg;
+		auto cfg_files = cmdline.hasOption<Maike::CmdLineOption::ConfigFiles>() ?
+		                    cmdline.option<Maike::CmdLineOption::ConfigFiles>() :
+		                    std::vector<Maike::fs::path>{"maikeconfig.json"};
 
+
+		Maike::InputFile cfg_file{cfg_files[0]};
+		auto cfg_json = Maike::KeyValueStore::Compound{Maike::Reader{cfg_file}, cfg_files[0].string()};
+
+		Maike::Config cfg{cfg_json.get<Maike::KeyValueStore::CompoundRefConst>("maikeconfig")};
 
 		//	Maike::LocalSystemInvoker invoker;
 
