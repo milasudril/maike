@@ -123,6 +123,15 @@ void print(char const* name, std::vector<T> const& v)
 	});
 }
 
+void write(FILE* stream, void const* buffer, size_t n)
+{
+	fwrite(buffer, 1, n, stream);
+}
+
+void dumpConfig(Maike::Config const& cfg, Maike::fs::path const&)
+{
+	store(Maike::KeyValueStore::Compound{}.set("maikeconfig", cfg).handleReference(), stdout);
+}
 
 int main(int argc, char** argv)
 {
@@ -147,6 +156,7 @@ int main(int argc, char** argv)
 		  }*/
 
 		Maike::KeyValueStore::init();
+
 		auto cfg_files = cmdline.hasOption<Maike::CmdLineOption::ConfigFiles>() ?
 		                    cmdline.option<Maike::CmdLineOption::ConfigFiles>() :
 		                    std::vector<Maike::fs::path>{"maikeconfig.json"};
@@ -156,6 +166,14 @@ int main(int argc, char** argv)
 		auto cfg_json = Maike::KeyValueStore::Compound{Maike::Reader{cfg_file}, cfg_files[0].string()};
 
 		Maike::Config cfg{cfg_json.get<Maike::KeyValueStore::CompoundRefConst>("maikeconfig")};
+
+
+		if(cmdline.hasOption<Maike::CmdLineOption::ConfigDump>())
+		{
+			dumpConfig(cfg, cmdline.option<Maike::CmdLineOption::ConfigDump>());
+			return 0;
+		}
+
 
 		//	Maike::LocalSystemInvoker invoker;
 

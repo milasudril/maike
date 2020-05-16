@@ -21,7 +21,7 @@ namespace Maike
 		explicit Config(KeyValueStore::CompoundRefConst obj):
 		   m_src_tree_loader_cfg{obj.get<SourceTreeLoader::Config>("source_tree_loader")},
 		   m_env{obj.get<EnvStore>("env")}
-//		   m_vcs_config{obj.get<VcsInvoker::Config>("vcs_config")}
+		//		   m_vcs_config{obj.get<VcsInvoker::Config>("vcs_config")}
 		{
 		}
 

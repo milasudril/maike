@@ -15,7 +15,7 @@ namespace Maike::SourceTreeLoader
 	class Config
 	{
 	public:
-		Config(): m_src_file_info_loaders{{".hpp", "cxx"}, {".cpp", "cxx"}}, m_recursive{false}
+		Config(): m_file_info_loaders{{".hpp", "cxx"}, {".cpp", "cxx"}}, m_recursive{false}
 		{
 		}
 
@@ -34,12 +34,12 @@ namespace Maike::SourceTreeLoader
 
 		auto const& fileInfoLoaders() const
 		{
-			return m_src_file_info_loaders;
+			return m_file_info_loaders;
 		}
 
 		Config& fileInfoLoaders(std::map<std::string, std::string>&& loaders)
 		{
-			m_src_file_info_loaders = std::move(loaders);
+			m_file_info_loaders = std::move(loaders);
 			return *this;
 		}
 
@@ -56,7 +56,7 @@ namespace Maike::SourceTreeLoader
 
 	private:
 		InputFilter m_filter;
-		std::map<std::string, std::string> m_src_file_info_loaders;
+		std::map<std::string, std::string> m_file_info_loaders;
 		bool m_recursive;
 	};
 

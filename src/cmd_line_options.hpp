@@ -28,6 +28,7 @@ namespace Maike
 		ListExternalDeps,
 		Targets,
 		ConfigFiles,
+		ConfigDump,
 		SourceDir,
 		TargetDir,
 		BuildId,
@@ -376,7 +377,7 @@ namespace Maike
 
 		static constexpr char const* category()
 		{
-			return "Job parameters";
+			return "Configuration";
 		}
 
 		static constexpr char const* summary()
@@ -394,6 +395,37 @@ namespace Maike
 		static constexpr char const* name()
 		{
 			return "--configfiles";
+		}
+	};
+
+	template<>
+	struct CmdLineOptionTraits<CmdLineOption::ConfigDump>
+	{
+		using type = fs::path;
+
+		static constexpr bool valueRequired()
+		{
+			return false;
+		}
+
+		static constexpr char const* category()
+		{
+			return "Configuration";
+		}
+
+		static constexpr char const* summary()
+		{
+			return "Dump current configuration in JSON format to stdout, or `path`";
+		}
+
+		static constexpr char const* description()
+		{
+			return nullptr;
+		}
+
+		static constexpr char const* name()
+		{
+			return "--configdump";
 		}
 	};
 
