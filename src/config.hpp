@@ -5,7 +5,7 @@
 #ifndef MAIKE_CONFIG_HPP
 #define MAIKE_CONFIG_HPP
 
-#include "./env_store.hpp"
+#include "src/env/env_store.hpp"
 #include "src/vcs_invoker/config.hpp"
 #include "src/source_tree_loader/config.hpp"
 
