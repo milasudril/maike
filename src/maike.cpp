@@ -7,7 +7,7 @@
 #include "src/io/input_file.hpp"
 
 #include "src/source_tree_loader/directory_scanner.hpp"
-#include "src/cxx/source_file_loader.hpp"
+#include "src/source_file_info_loaders/cxx/source_file_loader.hpp"
 
 void makeSourceFileInfosFromTargets(std::map<Maike::fs::path, Maike::SourceFileInfo>& source_files)
 {

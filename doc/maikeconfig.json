@@ -7,7 +7,7 @@
 			"CXX": "g++",
 			"LD": "ld"
 		},
-		"source_file_loaders": {
+		"source_file_info_loaders": {
 			"cxx": {
 				"compiler": {
 					"args": [
