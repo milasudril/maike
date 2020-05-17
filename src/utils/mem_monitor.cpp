@@ -1,6 +1,7 @@
 //@	{
-//@	  "targets":[{"name":"mem_monitor.o","type":"object", "dependencies":[{"ref":"pthread",
-//"rel":"external"}]}]
+//@	  "targets":
+//@		[{"name":"mem_monitor.o","type":"object",
+//@		"dependencies":[{"ref":"pthread", "rel":"external"}]}]
 //@	}
 
 #include "./mem_monitor.hpp"
