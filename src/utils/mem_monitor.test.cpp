@@ -5,6 +5,7 @@
 #undef NDEBUG
 
 #include "./mem_monitor.hpp"
+#include "./unused_result.hpp"
 
 #include <unistd.h>
 #include <sys/wait.h>
@@ -14,7 +15,10 @@
 #include <cstring>
 #include <cassert>
 
+namespace
+{
 void* volatile buffer; // Must be volatile to avoid optimizer to remove memset
+}
 
 namespace Testcases
 {
@@ -42,10 +46,10 @@ namespace Testcases
 
 			auto const mem_avail = monitor.memAvail();
 			auto const size_alloced = mem_avail / 3;
-			(void)write(sock, &size_alloced, sizeof(size_alloced));
+			Maike::unusedResult(write(sock, &size_alloced, sizeof(size_alloced)));
 			auto const wait_for = mem_avail - size_alloced / 3;
 			size_t dummy{};
-			(void)read(sock, &dummy, sizeof(dummy));
+			Maike::unusedResult(read(sock, &dummy, sizeof(dummy)));
 
 			assert(dummy == size_alloced);
 			auto t0 = std::chrono::steady_clock::now();
@@ -76,10 +80,10 @@ int main(int argc, char**)
 		listen(sock, 1);
 		auto fd = accept(sock, nullptr, nullptr);
 		size_t size_alloced{};
-		(void)read(fd, &size_alloced, sizeof(size_alloced));
+		Maike::unusedResult(read(fd, &size_alloced, sizeof(size_alloced)));
 		buffer = malloc(size_alloced);
 		memset(buffer, 0, size_alloced);
-		(void)write(fd, &size_alloced, sizeof(size_alloced));
+		Maike::unusedResult(write(fd, &size_alloced, sizeof(size_alloced)));
 		std::this_thread::sleep_for(std::chrono::seconds{2});
 	}
 	return 0;

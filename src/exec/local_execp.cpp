@@ -6,6 +6,8 @@
 
 #include "./local_execp.hpp"
 
+#include "src/utils/unused_result.hpp"
+
 #include <sys/types.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -194,7 +196,7 @@ Maike::ExecResult Maike::execp(fs::path const& executable,
 			{
 				lock.unlock();
 				uint32_t val = errno;
-				::write(fd_exec_err, &val, sizeof(errno));
+ 				unusedResult(::write(fd_exec_err, &val, sizeof(errno)));
 				::close(fd_exec_err);
 				close(STDIN_FILENO);
 				close(STDOUT_FILENO);

@@ -3,8 +3,8 @@
 //@	 ,"dependencies_extra":[{"ref":"mem_monitor.o", "rel":"implementation"}]
 //@	}
 
-#ifndef MAIKE_MEMMONITOR_HPP
-#define MAIKE_MEMMONITOR_HPP
+#ifndef MAIKE_UTILS_MEMMONITOR_HPP
+#define MAIKE_UTILS_MEMMONITOR_HPP
 
 #include <chrono>
 #include <condition_variable>
