@@ -8,13 +8,6 @@
 
 namespace Testcases
 {
-	void maikeStringutilsToStringSysTime()
-	{
-		auto const val = std::chrono::system_clock::from_time_t(0);
-		auto const str = Maike::toString(val);
-		assert(str == "1970-01-01 0:00:00 UTC");
-	}
-
 	void maikeStringutilsTrim()
 	{
 		assert(Maike::trim("      Foo bar") == "Foo bar");
@@ -26,6 +19,6 @@ namespace Testcases
 
 int main()
 {
-	Testcases::maikeStringutilsToStringSysTime();
 	Testcases::maikeStringutilsTrim();
+	return 0;
 }

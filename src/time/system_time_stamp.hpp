@@ -43,6 +43,5 @@ namespace Maike
 	{
 		return "timestamp";
 	}
-
 }
 #endif
