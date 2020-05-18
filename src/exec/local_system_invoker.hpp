@@ -34,7 +34,7 @@ namespace Maike::Exec
 
 		decltype(auto) execp(fs::path const& executable,
 		                     std::vector<std::string> const& args,
-		                     IoRedirector const& redir) const
+		                     Io::Redirector const& redir) const
 		{
 			return Maike::Exec::execp(executable, args, redir);
 		}
@@ -48,7 +48,7 @@ namespace Maike::Exec
 	                     std::vector<std::string> const& args,
 	                     IoRedirectorType&& redir)
 	{
-		return invoker.execp(exe, args, IoRedirector{redir});
+		return invoker.execp(exe, args, Io::Redirector{redir});
 	}
 }
 

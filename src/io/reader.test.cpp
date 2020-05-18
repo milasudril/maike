@@ -33,7 +33,7 @@ namespace Testcases
 	void maikeReaderReadStuff()
 	{
 		Source src{"Hello, World", 0};
-		Maike::Reader reader{src};
+		Maike::Io::Reader reader{src};
 
 		std::array<std::byte, 12> dest;
 		auto n = read(reader, std::data(dest), 5);

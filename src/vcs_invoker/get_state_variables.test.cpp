@@ -39,7 +39,7 @@ namespace
 		}
 		redir(reinterpret_cast<std::byte const*>(retval.data()),
 		      retval.size(),
-		      Maike::IoRedirector::StdOut{});
+		      Maike::Io::Redirector::StdOut{});
 		return 0;
 	}
 }

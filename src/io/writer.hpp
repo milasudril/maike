@@ -9,7 +9,7 @@
 #include <type_traits>
 #include <cstdint>
 
-namespace Maike
+namespace Maike::Io
 {
 	namespace writer_impl
 	{

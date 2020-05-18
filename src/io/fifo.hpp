@@ -10,7 +10,7 @@
 #include <mutex>
 #include <condition_variable>
 
-namespace Maike
+namespace Maike::Io
 {
 	template<class ElemType>
 	class Fifo

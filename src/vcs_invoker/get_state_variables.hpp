@@ -15,7 +15,7 @@ namespace Maike::VcsInvoker
 	template<class Invoker>
 	std::string getRevision(Config const& cfg, Invoker const& invoker)
 	{
-		MemIoRedirector redir{nullptr, 0};
+		Io::MemRedirector redir{nullptr, 0};
 		cfg.getRevision().invoke(invoker, redir);
 		return trim(toString(redir.stdout()));
 	}
@@ -23,7 +23,7 @@ namespace Maike::VcsInvoker
 	template<class Invoker>
 	std::string getVersionTag(Config const& cfg, Invoker const& invoker)
 	{
-		MemIoRedirector redir{nullptr, 0};
+		Io::MemRedirector redir{nullptr, 0};
 		cfg.getVersionTag().invoke(invoker, redir);
 		return trim(toString(redir.stdout()));
 	}
@@ -31,7 +31,7 @@ namespace Maike::VcsInvoker
 	template<class Invoker>
 	std::string getBranch(Config const& cfg, Invoker const& invoker)
 	{
-		MemIoRedirector redir{nullptr, 0};
+		Io::MemRedirector redir{nullptr, 0};
 		cfg.getBranch().invoke(invoker, redir);
 		return trim(toString(redir.stdout()));
 	}

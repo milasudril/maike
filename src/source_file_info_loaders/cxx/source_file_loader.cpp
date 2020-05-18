@@ -7,9 +7,9 @@
 #include "src/io/input_buffer.hpp"
 #include "src/io/output_buffer.hpp"
 
-std::vector<Maike::Dependency> Cxx::SourceFileLoader::getDependencies(Maike::Reader input) const
+std::vector<Maike::Dependency> Cxx::SourceFileLoader::getDependencies(Maike::Io::Reader input) const
 {
-	Maike::InputBuffer input_buff{input};
+	Maike::Io::InputBuffer input_buff{input};
 	std::vector<Maike::Dependency> deps;
 	enum class State : int
 	{
@@ -220,13 +220,13 @@ std::vector<Maike::Dependency> Cxx::SourceFileLoader::getDependencies(Maike::Rea
 	}
 }
 
-void Cxx::SourceFileLoader::filterInput(Maike::Reader input,
+void Cxx::SourceFileLoader::filterInput(Maike::Io::Reader input,
                                         Maike::SourceTreeLoader::SourceOutStream source_stream,
                                         Maike::SourceTreeLoader::TagsOutStream tag_stream) const
 {
-	Maike::InputBuffer input_buff{input};
-	Maike::OutputBuffer tags{tag_stream};
-	Maike::OutputBuffer source{source_stream};
+	Maike::Io::InputBuffer input_buff{input};
+	Maike::Io::OutputBuffer tags{tag_stream};
+	Maike::Io::OutputBuffer source{source_stream};
 	enum class State : int
 	{
 		Newline,

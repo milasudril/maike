@@ -8,7 +8,7 @@
 #include <cstddef>
 #include <array>
 
-namespace Maike
+namespace Maike::Io
 {
 	template<class Source, size_t Capacity = 4096>
 	class InputBuffer

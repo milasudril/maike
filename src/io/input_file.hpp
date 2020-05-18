@@ -12,7 +12,7 @@
 
 #include <utility>
 
-namespace Maike
+namespace Maike::Io
 {
 	class InputFile
 	{

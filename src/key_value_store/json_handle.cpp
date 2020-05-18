@@ -31,7 +31,7 @@ namespace
 	class ReadHelper
 	{
 	public:
-		explicit ReadHelper(Maike::Reader reader): m_buffer{reader}, m_has_data{false}
+		explicit ReadHelper(Maike::Io::Reader reader): m_buffer{reader}, m_has_data{false}
 		{
 		}
 
@@ -62,13 +62,13 @@ namespace
 		}
 
 	private:
-		Maike::InputBuffer<Maike::Reader> m_buffer;
+		Maike::Io::InputBuffer<Maike::Io::Reader> m_buffer;
 		bool m_has_data;
 	};
 }
 
 
-Maike::KeyValueStore::JsonHandle Maike::KeyValueStore::jsonLoad(Reader reader,
+Maike::KeyValueStore::JsonHandle Maike::KeyValueStore::jsonLoad(Io::Reader reader,
                                                                 std::string_view src_name)
 {
 	json_error_t err{};

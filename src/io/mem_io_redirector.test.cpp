@@ -9,7 +9,7 @@
 
 namespace Testcases
 {
-	void maikeMemIoRedirectorStdin()
+	void maikeIoMemRedirectorStdin()
 	{
 		std::array<std::byte, 16> input{std::byte(0x0),
 		                                std::byte(0x1),
@@ -27,19 +27,19 @@ namespace Testcases
 		                                std::byte(0xd),
 		                                std::byte(0xe),
 		                                std::byte(0xf)};
-		Maike::MemIoRedirector redir{input.data(), input.size()};
+		Maike::Io::MemRedirector redir{input.data(), input.size()};
 
 		std::array<std::byte, 16> output{};
-		auto n = redir(output.data(), 10, Maike::IoRedirector::StdIn{});
+		auto n = redir(output.data(), 10, Maike::Io::Redirector::StdIn{});
 		assert(n == 10);
 		assert(memcmp(input.data(), output.data(), 10) == 0);
 
-		n = redir(output.data() + n, 10, Maike::IoRedirector::StdIn{});
+		n = redir(output.data() + n, 10, Maike::Io::Redirector::StdIn{});
 		assert(n == 6);
 		assert(memcmp(output.data(), input.data(), 16) == 0);
 	}
 
-	void maikeMemIoRedirectorStdoutStderr()
+	void maikeIoMemRedirectorStdoutStderr()
 	{
 		std::array<std::byte, 16> stdout{std::byte(0x0),
 		                                 std::byte(0x1),
@@ -72,18 +72,18 @@ namespace Testcases
 		                                 std::byte(0x1b),
 		                                 std::byte(0x1c)};
 
-		Maike::MemIoRedirector redir{nullptr, 123};
+		Maike::Io::MemRedirector redir{nullptr, 123};
 
-		redir(stdout.data(), 10, Maike::IoRedirector::StdOut{});
+		redir(stdout.data(), 10, Maike::Io::Redirector::StdOut{});
 		assert(redir.stdout().size() == 10);
 		assert(memcmp(redir.stdout().data(), stdout.data(), 10) == 0);
 
-		redir(stderr.data(), 5, Maike::IoRedirector::StdErr{});
+		redir(stderr.data(), 5, Maike::Io::Redirector::StdErr{});
 		assert(redir.stderr().size() == 5);
 		assert(memcmp(redir.stderr().data(), stderr.data(), 5) == 0);
 
-		redir(stdout.data() + 10, 6, Maike::IoRedirector::StdOut{});
-		redir(stderr.data() + 5, 8, Maike::IoRedirector::StdErr{});
+		redir(stdout.data() + 10, 6, Maike::Io::Redirector::StdOut{});
+		redir(stderr.data() + 5, 8, Maike::Io::Redirector::StdErr{});
 
 		assert(redir.stdout().size() == 16);
 		assert(memcmp(redir.stdout().data(), stdout.data(), 16) == 0);
@@ -95,7 +95,7 @@ namespace Testcases
 
 int main()
 {
-	Testcases::maikeMemIoRedirectorStdin();
-	Testcases::maikeMemIoRedirectorStdoutStderr();
+	Testcases::maikeIoMemRedirectorStdin();
+	Testcases::maikeIoMemRedirectorStdoutStderr();
 	return 0;
 }

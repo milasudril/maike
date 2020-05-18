@@ -9,17 +9,16 @@
 #include <cstring>
 #include <vector>
 
-namespace Maike
+namespace Maike::Io
 {
-	class MemIoRedirector
+	class MemRedirector
 	{
 	public:
-		explicit MemIoRedirector(std::byte const* buffer, size_t buffer_size):
-		   m_stdin{buffer, buffer_size}
+		explicit MemRedirector(std::byte const* buffer, size_t buffer_size): m_stdin{buffer, buffer_size}
 		{
 		}
 
-		size_t operator()(std::byte* buffer, size_t n, Maike::IoRedirector::StdIn)
+		size_t operator()(std::byte* buffer, size_t n, Redirector::StdIn)
 		{
 			auto const n_copy = std::min(n, m_stdin.second);
 			if(n_copy == 0) { return n_copy; }
@@ -30,12 +29,12 @@ namespace Maike
 			return n_copy;
 		}
 
-		void operator()(std::byte const* buffer, size_t n, Maike::IoRedirector::StdOut)
+		void operator()(std::byte const* buffer, size_t n, Redirector::StdOut)
 		{
 			m_stdout.insert(std::end(m_stdout), buffer, buffer + n);
 		}
 
-		void operator()(std::byte const* buffer, size_t n, Maike::IoRedirector::StdErr)
+		void operator()(std::byte const* buffer, size_t n, Redirector::StdErr)
 		{
 			m_stderr.insert(std::end(m_stderr), buffer, buffer + n);
 		}

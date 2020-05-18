@@ -11,7 +11,7 @@
 #include <array>
 #include <cstring>
 
-static_assert(Maike::TaggedWriter<12>::Tag == 12);
+static_assert(Maike::Io::TaggedWriter<12>::Tag == 12);
 
 namespace
 {
@@ -31,7 +31,7 @@ namespace Testcases
 	void maikeWriterReadStuff()
 	{
 		Sink dest;
-		Maike::Writer writer{dest};
+		Maike::Io::Writer writer{dest};
 		write(dest, reinterpret_cast<std::byte const*>("Hello"), 5);
 		assert(dest.buffer == "Hello");
 		write(dest, reinterpret_cast<std::byte const*>(", World"), 7);

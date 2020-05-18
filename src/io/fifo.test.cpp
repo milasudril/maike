@@ -27,7 +27,7 @@ namespace Testcases
 		                                                   std::numeric_limits<uint8_t>::max()},
 		                 rng = std::mt19937{}]() mutable { return u(rng); });
 
-		Maike::Fifo<uint8_t> fifo;
+		Maike::Io::Fifo<uint8_t> fifo;
 
 		std::vector<uint8_t> result;
 		result.reserve(NumElems);
@@ -75,7 +75,7 @@ namespace Testcases
 		                                                   std::numeric_limits<uint8_t>::max()},
 		                 rng = std::mt19937{}]() mutable { return u(rng); });
 
-		Maike::Fifo<uint8_t> fifo;
+		Maike::Io::Fifo<uint8_t> fifo;
 
 		std::vector<uint8_t> result;
 		result.reserve(NumElems);

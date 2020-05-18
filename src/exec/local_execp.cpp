@@ -105,7 +105,7 @@ namespace
 		int m_write_end;
 	};
 
-	void write(void* io_redirector, int fd, Maike::IoRedirector::Writer writer)
+	void write(void* io_redirector, int fd, Maike::Io::Redirector::Writer writer)
 	{
 		constexpr size_t BufferSize = 4096;
 		std::array<std::byte, BufferSize> buffer;
@@ -117,7 +117,7 @@ namespace
 		}
 	}
 
-	void read(void* io_redirector, int fd, Maike::IoRedirector::Reader reader)
+	void read(void* io_redirector, int fd, Maike::Io::Redirector::Reader reader)
 	{
 		constexpr ssize_t BufferSize = 4096;
 		std::array<std::byte, BufferSize> buffer;
@@ -131,7 +131,7 @@ namespace
 
 
 	Maike::Exec::Result communicateWith(
-	   pid_t pid, Maike::IoRedirector const& io_redirector, int stdin, int stdout, int stderr)
+	   pid_t pid, Maike::Io::Redirector const& io_redirector, int stdin, int stdout, int stderr)
 	{
 		signal(SIGPIPE, SIG_IGN);
 		std::thread stderr_proc{read, io_redirector.handle(), stderr, io_redirector.stderr()};
@@ -158,7 +158,7 @@ std::mutex exec_mutex;
 
 Maike::Exec::Result Maike::Exec::execp(fs::path const& executable,
                                        std::vector<std::string> const& args,
-                                       IoRedirector const& io_redirector)
+                                       Io::Redirector const& io_redirector)
 {
 	std::vector<char const*> cmd_args;
 	cmd_args.push_back(executable.c_str());

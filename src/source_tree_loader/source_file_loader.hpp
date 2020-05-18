@@ -22,8 +22,8 @@ namespace Maike::SourceTreeLoader
 		Tags
 	};
 
-	using SourceOutStream = TaggedWriter<TagFilterOutput::Source>;
-	using TagsOutStream = TaggedWriter<TagFilterOutput::Tags>;
+	using SourceOutStream = Io::TaggedWriter<TagFilterOutput::Source>;
+	using TagsOutStream = Io::TaggedWriter<TagFilterOutput::Tags>;
 
 	namespace source_file_loader_detail
 	{
@@ -36,11 +36,12 @@ namespace Maike::SourceTreeLoader
 		{
 			template<class T>
 			Vtable(Tag<T>):
-			   filter_input{[](void const* handle, Reader input, SourceOutStream src, TagsOutStream tags) {
-				   auto const& self = *reinterpret_cast<T const*>(handle);
-				   filterInput(self, input, src, tags);
-			   }},
-			   get_dependencies{[](void const* handle, Reader input) {
+			   filter_input{
+			      [](void const* handle, Io::Reader input, SourceOutStream src, TagsOutStream tags) {
+				      auto const& self = *reinterpret_cast<T const*>(handle);
+				      filterInput(self, input, src, tags);
+			      }},
+			   get_dependencies{[](void const* handle, Io::Reader input) {
 				   auto const& self = *reinterpret_cast<T const*>(handle);
 				   return getDependencies(self, input);
 			   }},
@@ -56,10 +57,10 @@ namespace Maike::SourceTreeLoader
 			}
 
 			void (*filter_input)(void const* handle,
-			                     Reader input,
+			                     Io::Reader input,
 			                     SourceOutStream source,
 			                     TagsOutStream tags);
-			std::vector<Dependency> (*get_dependencies)(void const* handle, Reader source_stream);
+			std::vector<Dependency> (*get_dependencies)(void const* handle, Io::Reader source_stream);
 			Compiler (*get_compiler)(void const* handle, KeyValueStore::CompoundRefConst cfg);
 			void (*destroy)(void* handle);
 		};
@@ -105,13 +106,13 @@ namespace Maike::SourceTreeLoader
 		{
 		}
 
-		void filterInput(Reader input, SourceOutStream source, TagsOutStream tags) const
+		void filterInput(Io::Reader input, SourceOutStream source, TagsOutStream tags) const
 		{
 			assert(valid());
 			m_vtable.filter_input(m_handle, input, source, tags);
 		}
 
-		std::vector<Dependency> getDependencies(Reader input) const
+		std::vector<Dependency> getDependencies(Io::Reader input) const
 		{
 			assert(valid());
 			return m_vtable.get_dependencies(m_handle, input);

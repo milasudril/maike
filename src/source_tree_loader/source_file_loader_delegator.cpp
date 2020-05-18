@@ -81,22 +81,22 @@ namespace
 	                                     Maike::fs::path const& path,
 	                                     Maike::SourceTreeLoader::SourceFileLoader const& loader)
 	{
-		Maike::Fifo<std::byte> src_fifo;
-		Maike::Fifo<std::byte> tags_fifo;
+		Maike::Io::Fifo<std::byte> src_fifo;
+		Maike::Io::Fifo<std::byte> tags_fifo;
 
-		Maike::InputFile input{path};
-		loader.filterInput(Maike::Reader{input},
+		Maike::Io::InputFile input{path};
+		loader.filterInput(Maike::Io::Reader{input},
 		                   Maike::SourceTreeLoader::SourceOutStream{src_fifo},
 		                   Maike::SourceTreeLoader::TagsOutStream{tags_fifo});
 		tags_fifo.stop();
 		src_fifo.stop();
 
 		{
-			auto deps = fixNames(path.parent_path(), loader.getDependencies(Maike::Reader{src_fifo}));
+			auto deps = fixNames(path.parent_path(), loader.getDependencies(Maike::Io::Reader{src_fifo}));
 			builtin_deps.insert(std::end(builtin_deps), std::begin(deps), std::end(deps));
 		}
 
-		auto tags = Maike::KeyValueStore::Compound{Maike::Reader{tags_fifo}, path.string()};
+		auto tags = Maike::KeyValueStore::Compound{Maike::Io::Reader{tags_fifo}, path.string()};
 		auto targets = getTargets(path.parent_path(), tags);
 
 		auto compiler = tags.getIf<Maike::KeyValueStore::CompoundRefConst>("compiler");

@@ -13,9 +13,9 @@ namespace Cxx
 	class SourceFileLoader
 	{
 	public:
-		std::vector<Maike::Dependency> getDependencies(Maike::Reader src) const;
+		std::vector<Maike::Dependency> getDependencies(Maike::Io::Reader src) const;
 
-		void filterInput(Maike::Reader input,
+		void filterInput(Maike::Io::Reader input,
 		                 Maike::SourceTreeLoader::SourceOutStream source_stream,
 		                 Maike::SourceTreeLoader::TagsOutStream tag_stream) const;
 
@@ -25,13 +25,13 @@ namespace Cxx
 		}
 	};
 
-	inline auto getDependencies(SourceFileLoader const& loader, Maike::Reader src)
+	inline auto getDependencies(SourceFileLoader const& loader, Maike::Io::Reader src)
 	{
 		return loader.getDependencies(src);
 	}
 
 	inline auto filterInput(SourceFileLoader const& loader,
-	                        Maike::Reader input,
+	                        Maike::Io::Reader input,
 	                        Maike::SourceTreeLoader::SourceOutStream source_stream,
 	                        Maike::SourceTreeLoader::TagsOutStream tag_stream)
 	{

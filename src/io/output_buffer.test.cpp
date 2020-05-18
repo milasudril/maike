@@ -29,7 +29,7 @@ namespace Testcases
 	void maikeOutputBufferWrite()
 	{
 		Sink test;
-		Maike::OutputBuffer<Sink, 4> buffer{std::ref(test)};
+		Maike::Io::OutputBuffer<Sink, 4> buffer{std::ref(test)};
 		char const* input = "Hello, World";
 		while(*input != 0)
 		{
@@ -44,7 +44,7 @@ namespace Testcases
 	void maikeOutputBufferWriteLargeBuffer()
 	{
 		Sink test;
-		Maike::OutputBuffer<Sink, 4096> buffer{std::ref(test)};
+		Maike::Io::OutputBuffer<Sink, 4096> buffer{std::ref(test)};
 		char const* input = "Hello, World";
 		while(*input != 0)
 		{

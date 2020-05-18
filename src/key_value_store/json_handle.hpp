@@ -258,12 +258,12 @@ namespace Maike::KeyValueStore
 		bool hasNonWhitespace(std::byte const* begin, std::byte const* end);
 	}
 
-	JsonHandle jsonLoad(Reader reader, std::string_view src_name);
+	JsonHandle jsonLoad(Io::Reader reader, std::string_view src_name);
 
 	template<class Source>
 	JsonHandle jsonLoad(Source&& src, std::string_view src_name)
 	{
-		return jsonLoad(Reader{src}, src_name);
+		return jsonLoad(Io::Reader{src}, src_name);
 	}
 
 	template<class Sink>

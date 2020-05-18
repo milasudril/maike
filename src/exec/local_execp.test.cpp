@@ -22,7 +22,7 @@ namespace
 			m_stdin_bytes_left = m_stdin.size();
 		}
 
-		size_t operator()(std::byte* buffer, size_t n, Maike::IoRedirector::StdIn)
+		size_t operator()(std::byte* buffer, size_t n, Maike::Io::Redirector::StdIn)
 		{
 			auto const n_copy = std::min(n, m_stdin_bytes_left);
 			if(n_copy == 0) { return n_copy; }
@@ -33,7 +33,7 @@ namespace
 			return n_copy;
 		}
 
-		void operator()(std::byte const* buffer, size_t n, Maike::IoRedirector::StdOut)
+		void operator()(std::byte const* buffer, size_t n, Maike::Io::Redirector::StdOut)
 		{
 			while(n)
 			{
@@ -43,7 +43,7 @@ namespace
 			}
 		}
 
-		void operator()(std::byte const* buffer, size_t n, Maike::IoRedirector::StdErr)
+		void operator()(std::byte const* buffer, size_t n, Maike::Io::Redirector::StdErr)
 		{
 			while(n)
 			{

@@ -8,9 +8,9 @@
 #include <type_traits>
 #include <cstddef>
 
-namespace Maike
+namespace Maike::Io
 {
-	class IoRedirector
+	class Redirector
 	{
 	public:
 		using StdIn = std::integral_constant<int, 0>;
@@ -21,22 +21,22 @@ namespace Maike
 		using Reader = void (*)(void* io_redirector, std::byte const* buffer, size_t buffer_size);
 
 		template<class Callback>
-		explicit IoRedirector(Callback& cb):
+		explicit Redirector(Callback& cb):
 		   r_handle{&cb},
 		   m_stdin{[](void* io_redirector, std::byte* buffer, size_t buffer_size) {
 			   using T = std::decay_t<Callback>;
 			   auto& self = *reinterpret_cast<T*>(io_redirector);
-			   return self(buffer, buffer_size, IoRedirector::StdIn{});
+			   return self(buffer, buffer_size, Redirector::StdIn{});
 		   }},
 		   m_stdout{[](void* io_redirector, std::byte const* buffer, size_t buffer_size) {
 			   using T = std::decay_t<Callback>;
 			   auto& self = *reinterpret_cast<T*>(io_redirector);
-			   self(buffer, buffer_size, IoRedirector::StdOut{});
+			   self(buffer, buffer_size, Redirector::StdOut{});
 		   }},
 		   m_stderr{[](void* io_redirector, std::byte const* buffer, size_t buffer_size) {
 			   using T = std::decay_t<Callback>;
 			   auto& self = *reinterpret_cast<T*>(io_redirector);
-			   self(buffer, buffer_size, IoRedirector::StdErr{});
+			   self(buffer, buffer_size, Redirector::StdErr{});
 		   }}
 		{
 		}

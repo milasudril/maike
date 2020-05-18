@@ -163,8 +163,9 @@ int main(int argc, char** argv)
 		                    std::vector<Maike::fs::path>{"maikeconfig.json"};
 
 
-		Maike::InputFile cfg_file{cfg_files[0]};
-		auto cfg_json = Maike::KeyValueStore::Compound{Maike::Reader{cfg_file}, cfg_files[0].string()};
+		Maike::Io::InputFile cfg_file{cfg_files[0]};
+		auto cfg_json =
+		   Maike::KeyValueStore::Compound{Maike::Io::Reader{cfg_file}, cfg_files[0].string()};
 
 		Maike::Config cfg{cfg_json.get<Maike::KeyValueStore::CompoundRefConst>("maikeconfig")};
 

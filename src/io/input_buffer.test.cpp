@@ -43,7 +43,7 @@ namespace Testcases
 {
 	void maikeInputBufferReadFromSource()
 	{
-		Maike::InputBuffer test{Source{"Hello, World"}};
+		Maike::Io::InputBuffer test{Source{"Hello, World"}};
 		std::string output;
 		while(true)
 		{
