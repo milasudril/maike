@@ -3,8 +3,8 @@
 //@		, "dependencies":[{"ref":"pthread", "rel":"external"}]}]
 //@	}
 
-#ifndef MAIKE_FIFO_HPP
-#define MAIKE_FIFO_HPP
+#ifndef MAIKE_IO_FIFO_HPP
+#define MAIKE_IO_FIFO_HPP
 
 #include <list>
 #include <mutex>

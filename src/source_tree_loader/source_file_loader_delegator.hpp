@@ -3,8 +3,8 @@
 //@	,"dependencies_extra":[{"ref":"source_file_loader_delegator.o","rel":"implementation"}]
 //@	}
 
-#ifndef MAIKE_SOURCEFILELOADERDELEGATOR_HPP
-#define MAIKE_SOURCEFILELOADERDELEGATOR_HPP
+#ifndef MAIKE_SOURCETREELOADER_SOURCEFILELOADERDELEGATOR_HPP
+#define MAIKE_SOURCETREELOADER_SOURCEFILELOADERDELEGATOR_HPP
 
 #include "./source_file_loader.hpp"
 

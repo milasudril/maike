@@ -13,11 +13,11 @@ namespace Testcases
 {
 	void maikeThreadpoolRunTasks()
 	{
-		Maike::ThreadPool thread_pool;
+		Maike::Sched::ThreadPool thread_pool;
 
-		Maike::ThreadPool::TaskResult<std::vector<int>> res_a;
-		Maike::ThreadPool::TaskResult<std::map<char, int>> res_b;
-		Maike::ThreadPool::TaskResult<std::string> res_c;
+		Maike::Sched::ThreadPool::TaskResult<std::vector<int>> res_a;
+		Maike::Sched::ThreadPool::TaskResult<std::map<char, int>> res_b;
+		Maike::Sched::ThreadPool::TaskResult<std::string> res_c;
 
 		std::vector<int> const a = {1, 2, 3};
 		std::map<char, int> const b = {{'a', 1}, {'b', 2}};
@@ -36,8 +36,8 @@ namespace Testcases
 
 	void maikeThreadpoolTaskWithException()
 	{
-		Maike::ThreadPool thread_pool;
-		Maike::ThreadPool::TaskResult<int> res;
+		Maike::Sched::ThreadPool thread_pool;
+		Maike::Sched::ThreadPool::TaskResult<int> res;
 		try
 		{
 			thread_pool.addTask([]() -> int { throw std::runtime_error{"Blah"}; }, res);

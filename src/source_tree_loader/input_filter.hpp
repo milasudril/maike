@@ -3,8 +3,8 @@
 //@	 ,"dependencies_extra":[{"ref":"input_filter.o", "rel":"implementation"}]
 //@	}
 
-#ifndef MAIKE_INPUTFILTER_HPP
-#define MAIKE_INPUTFILTER_HPP
+#ifndef MAIKE_SOURCETREELOADER_INPUTFILTER_HPP
+#define MAIKE_SOURCETREELOADER_INPUTFILTER_HPP
 
 #include "src/key_value_store/array.hpp"
 

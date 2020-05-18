@@ -3,8 +3,8 @@
 //@	  ,"dependencies_extra":[{"ref":"env.o", "rel":"implementation"}]
 //@	}
 
-#ifndef MAIKE_ENV_HPP
-#define MAIKE_ENV_HPP
+#ifndef MAIKE_ENV_ENV_HPP
+#define MAIKE_ENV_ENV_HPP
 
 #include <string_view>
 #include <string>
@@ -58,6 +58,8 @@ namespace Maike::Env
 
 		char const* const* get() const
 		{
+			// HACK: A unique_ptr<T> is binary compatible with T* ...
+			//       Thus, treat T as char const* const* to save some manual resource managment.
 			return reinterpret_cast<char const* const*>(m_pointers.get());
 		}
 

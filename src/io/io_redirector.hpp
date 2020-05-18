@@ -2,8 +2,8 @@
 //@	 "targets":[{"name":"io_redirector.hpp","type":"include"}]
 //@	 }
 
-#ifndef MAIKE_IOREDIRECTOR_HPP
-#define MAIKE_IOREDIRECTOR_HPP
+#ifndef MAIKE_IO_IOREDIRECTOR_HPP
+#define MAIKE_IO_IOREDIRECTOR_HPP
 
 #include <type_traits>
 #include <cstddef>

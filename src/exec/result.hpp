@@ -1,22 +1,22 @@
 //@	{
-//@	 "targets":[{"name":"exec_result.hpp","type":"include"}]
+//@	 "targets":[{"name":"result.hpp","type":"include"}]
 //@	 }
 
-#ifndef MAIKE_EXECRSULT_HPP
-#define MAIKE_EXECRSULT_HPP
+#ifndef MAIKE_EXEC_RESULT_HPP
+#define MAIKE_EXEC_RESULT_HPP
 
-namespace Maike
+namespace Maike::Exec
 {
-	class ExecResult
+	class Result
 	{
 	public:
-		ExecResult& signo(int s)
+		Result& signo(int s)
 		{
 			m_signo = s;
 			return *this;
 		}
 
-		ExecResult& exitStatus(int status)
+		Result& exitStatus(int status)
 		{
 			m_signo = -1;
 			m_exit_status = status;

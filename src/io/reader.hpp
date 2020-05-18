@@ -2,8 +2,8 @@
 //@	 "targets":[{"name":"reader.hpp","type":"include"}]
 //@	}
 
-#ifndef MAIKE_READER_HPP
-#define MAIKE_READER_HPP
+#ifndef MAIKE_IO_READER_HPP
+#define MAIKE_IO_READER_HPP
 
 #include <cstddef>
 #include <type_traits>

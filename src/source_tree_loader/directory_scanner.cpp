@@ -21,7 +21,7 @@ Maike::SourceTreeLoader::DirectoryScanner::processPath(fs::path const& src_path)
 	r_workers->addTask(
 	   [this,
 	    src_path = fs::path{src_path},
-	    counter = std::unique_lock<Maike::SignalingCounter<size_t>>(m_counter)]() mutable {
+	    counter = std::unique_lock<Sched::SignalingCounter<size_t>>(m_counter)]() mutable {
 		   this->processPath(std::move(src_path), std::move(counter));
 	   });
 
@@ -39,7 +39,7 @@ Maike::SourceTreeLoader::DirectoryScanner::ScanException::ScanException(
 
 
 void Maike::SourceTreeLoader::DirectoryScanner::processPath(
-   fs::path&& src_path, std::unique_lock<SignalingCounter<size_t>> counter)
+   fs::path&& src_path, std::unique_lock<Sched::SignalingCounter<size_t>> counter)
 {
 	try
 	{
@@ -69,7 +69,7 @@ void Maike::SourceTreeLoader::DirectoryScanner::processPath(
 					r_workers->addTask(
 					   [this,
 					    src_path = item.path(),
-					    counter = std::unique_lock<Maike::SignalingCounter<size_t>>(*counter.mutex())]() mutable {
+					    counter = std::unique_lock<Sched::SignalingCounter<size_t>>(*counter.mutex())]() mutable {
 						   this->processPath(std::move(src_path), std::move(counter));
 					   });
 				});

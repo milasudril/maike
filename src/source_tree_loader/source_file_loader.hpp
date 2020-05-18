@@ -2,8 +2,8 @@
 //@	  "targets":[{"name":"source_file_loader.hpp","type":"include"}]
 //@	 }
 
-#ifndef MAIKE_SOURCEFILELOADER_HPP
-#define MAIKE_SOURCEFILELOADER_HPP
+#ifndef MAIKE_SOURCETREELOADER_SOURCEFILELOADER_HPP
+#define MAIKE_SOURCETREELOADER_SOURCEFILELOADER_HPP
 
 #include "src/io/reader.hpp"
 #include "src/io/writer.hpp"

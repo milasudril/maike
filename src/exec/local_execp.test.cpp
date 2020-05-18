@@ -81,7 +81,7 @@ namespace Testcases
 	{
 		IoRedirectorTest redir{"The text here does not matter"};
 
-		auto status = Maike::execp("bash", {"-c", "echo Hello, World"}, redir);
+		auto status = Maike::Exec::execp("bash", {"-c", "echo Hello, World"}, redir);
 		assert(status.returnedFromMain());
 		assert(status.exitStatus() == 0);
 		assert(redir.stdout() == "Hello, World\n");
@@ -91,7 +91,7 @@ namespace Testcases
 	{
 		try
 		{
-			(void)Maike::execp("This file does not exsit", {}, IoRedirectorTest{""});
+			(void)Maike::Exec::execp("This file does not exsit", {}, IoRedirectorTest{""});
 			abort();
 		}
 		catch(...)
@@ -106,7 +106,7 @@ echo "This is some text written to stderr" 1>&2
 exit 123
 )bash"};
 
-		auto status = Maike::execp("bash", {}, redir);
+		auto status = Maike::Exec::execp("bash", {}, redir);
 		assert(status.returnedFromMain());
 		assert(status.exitStatus() == 123);
 

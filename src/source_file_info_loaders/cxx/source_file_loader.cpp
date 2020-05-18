@@ -7,10 +7,10 @@
 #include "src/io/input_buffer.hpp"
 #include "src/io/output_buffer.hpp"
 
-std::vector<Maike::Dependency> Maike::Cxx::SourceFileLoader::getDependencies(Reader input) const
+std::vector<Maike::Dependency> Cxx::SourceFileLoader::getDependencies(Maike::Reader input) const
 {
-	InputBuffer input_buff{input};
-	std::vector<Dependency> deps;
+	Maike::InputBuffer input_buff{input};
+	std::vector<Maike::Dependency> deps;
 	enum class State : int
 	{
 		Newline,
@@ -192,8 +192,8 @@ std::vector<Maike::Dependency> Maike::Cxx::SourceFileLoader::getDependencies(Rea
 				{
 					case '"':
 						state = State::SkipLine;
-						deps.push_back(
-						   Dependency{fs::path{std::move(include_path)}, Dependency::Resolver::InternalLookup});
+						deps.push_back(Maike::Dependency{Maike::fs::path{std::move(include_path)},
+						                                 Maike::Dependency::Resolver::InternalLookup});
 						break;
 
 					case '\n': state = State::Newline; break;
@@ -207,7 +207,8 @@ std::vector<Maike::Dependency> Maike::Cxx::SourceFileLoader::getDependencies(Rea
 				{
 					case '>':
 						state = State::SkipLine;
-						deps.push_back(Dependency{fs::path{std::move(include_path)}, Dependency::Resolver::None});
+						deps.push_back(Maike::Dependency{Maike::fs::path{std::move(include_path)},
+						                                 Maike::Dependency::Resolver::None});
 						break;
 
 					case '\n': state = State::Newline; break;
@@ -219,13 +220,13 @@ std::vector<Maike::Dependency> Maike::Cxx::SourceFileLoader::getDependencies(Rea
 	}
 }
 
-void Maike::Cxx::SourceFileLoader::filterInput(Reader input,
-                                               SourceTreeLoader::SourceOutStream source_stream,
-                                               SourceTreeLoader::TagsOutStream tag_stream) const
+void Cxx::SourceFileLoader::filterInput(Maike::Reader input,
+                                        Maike::SourceTreeLoader::SourceOutStream source_stream,
+                                        Maike::SourceTreeLoader::TagsOutStream tag_stream) const
 {
-	InputBuffer input_buff{input};
-	OutputBuffer tags{tag_stream};
-	OutputBuffer source{source_stream};
+	Maike::InputBuffer input_buff{input};
+	Maike::OutputBuffer tags{tag_stream};
+	Maike::OutputBuffer source{source_stream};
 	enum class State : int
 	{
 		Newline,

@@ -3,8 +3,8 @@
 //@	  ,"dependencies_extra":[{"ref":"env_store.o", "rel":"implementation"}]
 //@	}
 
-#ifndef MAIKE_ENVSTORE_HPP
-#define MAIKE_ENVSTORE_HPP
+#ifndef MAIKE_ENV_ENVSTORE_HPP
+#define MAIKE_ENV_ENVSTORE_HPP
 
 #include "./env.hpp"
 
@@ -13,7 +13,7 @@
 #include <map>
 #include <string>
 
-namespace Maike
+namespace Maike // TODO: Namespace Env?
 {
 	class EnvStore: private std::map<std::string, std::string, std::less<>>
 	{

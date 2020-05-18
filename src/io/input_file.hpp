@@ -2,8 +2,8 @@
 //@	 "targets":[{"name":"input_file.hpp","type":"include"}]
 //@	}
 
-#ifndef MAIKE_INPUTFILE_HPP
-#define MAIKE_INPUTFILE_HPP
+#ifndef MAIKE_IO_INPUTFILE_HPP
+#define MAIKE_IO_INPUTFILE_HPP
 
 #include "src/fs.hpp"
 

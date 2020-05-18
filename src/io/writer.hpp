@@ -2,8 +2,8 @@
 //@	 "targets":[{"name":"writer.hpp","type":"include"}]
 //@	}
 
-#ifndef MAIKE_WRITER_HPP
-#define MAIKE_WRITER_HPP
+#ifndef MAIKE_IO_WRITER_HPP
+#define MAIKE_IO_WRITER_HPP
 
 #include <cstddef>
 #include <type_traits>

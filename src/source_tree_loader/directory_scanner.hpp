@@ -3,8 +3,8 @@
 //@	,"dependencies_extra":[{"ref":"directory_scanner.o","rel":"implementation"}]
 //@ }
 
-#ifndef MAIKE_DIRECTORYSCANNER_HPP
-#define MAIKE_DIRECTORYSCANNER_HPP
+#ifndef MAIKE_SOURCETREELOADER_DIRECTORYSCANNER_HPP
+#define MAIKE_SOURCETREELOADER_DIRECTORYSCANNER_HPP
 
 #include "./source_file_loader_delegator.hpp"
 #include "./input_filter.hpp"
@@ -39,7 +39,7 @@ namespace Maike::SourceTreeLoader
 
 		static constexpr unsigned int Recursive = 0x1;
 
-		explicit DirectoryScanner(ThreadPool& workers,
+		explicit DirectoryScanner(Sched::ThreadPool& workers,
 		                          std::reference_wrapper<InputFilter const> filter,
 		                          std::reference_wrapper<SourceFileLoaderDelegator const> loaders):
 		   r_filter{filter},
@@ -67,10 +67,10 @@ namespace Maike::SourceTreeLoader
 		// TODO: Move these into a policy base class (to make it more efficient in single-threaded
 		//       single-threaded mode)
 		std::mutex m_source_files_mtx;
-		SignalingCounter<size_t> m_counter;
-		ThreadPool* r_workers;
+		Sched::SignalingCounter<size_t> m_counter;
+		Sched::ThreadPool* r_workers;
 
-		void processPath(fs::path&& src_path, std::unique_lock<SignalingCounter<size_t>> counter);
+		void processPath(fs::path&& src_path, std::unique_lock<Sched::SignalingCounter<size_t>> counter);
 
 		std::mutex m_errlog_mtx;
 		std::forward_list<std::unique_ptr<char const[]>> m_errlog;

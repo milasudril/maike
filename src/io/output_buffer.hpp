@@ -2,8 +2,8 @@
 //@	 "targets":[{"name":"output_buffer.hpp","type":"include"}]
 //@	}
 
-#ifndef MAIKE_OUTPUTBUFFER_HPP
-#define MAIKE_OUTPUTBUFFER_HPP
+#ifndef MAIKE_IO_OUTPUTBUFFER_HPP
+#define MAIKE_IO_OUTPUTBUFFER_HPP
 
 #include <cstddef>
 #include <array>

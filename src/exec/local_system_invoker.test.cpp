@@ -27,7 +27,7 @@ namespace Testcases
 {
 	void maikeLocalSystemInvokerMkdirFailed()
 	{
-		Maike::LocalSystemInvoker invoker;
+		Maike::Exec::LocalSystemInvoker invoker;
 		try
 		{
 			invoker.mkdir("/this directory does not exist/blah");
@@ -40,7 +40,7 @@ namespace Testcases
 
 	void maikeLocalSystemInvokerMkdirSucceeded()
 	{
-		Maike::LocalSystemInvoker invoker;
+		Maike::Exec::LocalSystemInvoker invoker;
 		auto path = Maike::fs::path{XSTR(MAIKE_TARGET_DIRECTORY)} / XSTR(MAIKE_CURRENT_DIRECTORY)
 		            / "__local_system_invoker_test";
 		invoker.mkdir(path);
@@ -51,7 +51,7 @@ namespace Testcases
 
 	void maikeLocalSystemInvokerSaveBufferFailed()
 	{
-		Maike::LocalSystemInvoker invoker;
+		Maike::Exec::LocalSystemInvoker invoker;
 		std::string buffer{"Hello, World"};
 		try
 		{
@@ -67,7 +67,7 @@ namespace Testcases
 
 	void maikeLocalSystemInvokerSaveBufferSucceeded()
 	{
-		Maike::LocalSystemInvoker invoker;
+		Maike::Exec::LocalSystemInvoker invoker;
 		auto path = Maike::fs::path{XSTR(MAIKE_TARGET_DIRECTORY)} / XSTR(MAIKE_CURRENT_DIRECTORY)
 		            / "__local_system_invoker_test.txt";
 		auto now = std::to_string(::time(nullptr));

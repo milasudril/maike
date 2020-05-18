@@ -3,10 +3,10 @@
 //@	 ,"dependencies_extra":[{"ref":"local_execp.o","rel":"implementation"}]
 //@	 }
 
-#ifndef MAIKE_LOCALEXECP_HPP
-#define MAIKE_LOCALEXECP_HPP
+#ifndef MAIKE_EXEC_LOCALEXECP_HPP
+#define MAIKE_EXEC_LOCALEXECP_HPP
 
-#include "./exec_result.hpp"
+#include "./result.hpp"
 
 #include "src/fs.hpp"
 #include "src/io/io_redirector.hpp"
@@ -14,14 +14,14 @@
 #include <cstddef>
 #include <vector>
 
-namespace Maike
+namespace Maike::Exec
 {
-	ExecResult execp(fs::path const& executable,
-	                 std::vector<std::string> const& args,
-	                 IoRedirector const& io_redir);
+	Result execp(fs::path const& executable,
+	             std::vector<std::string> const& args,
+	             IoRedirector const& io_redir);
 
 	template<class IoRedirectorType>
-	ExecResult
+	Result
 	execp(fs::path const& executable,
 	      std::vector<std::string> const& args,
 	      IoRedirectorType&& io_redir,

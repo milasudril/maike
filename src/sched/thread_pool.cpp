@@ -4,7 +4,7 @@
 
 #include "./thread_pool.hpp"
 
-Maike::ThreadPool::ThreadPool(ThreadCount n_threads):
+Maike::Sched::ThreadPool::ThreadPool(ThreadCount n_threads):
    m_terminate{false},
    m_n_threads{n_threads.value()},
    m_threads{std::make_unique<pthread_t[]>(m_n_threads)}
@@ -22,7 +22,7 @@ Maike::ThreadPool::ThreadPool(ThreadCount n_threads):
 	});
 }
 
-Maike::ThreadPool::~ThreadPool()
+Maike::Sched::ThreadPool::~ThreadPool()
 {
 	{
 		std::lock_guard lock{m_mtx};
@@ -36,7 +36,7 @@ Maike::ThreadPool::~ThreadPool()
 	});
 }
 
-void Maike::ThreadPool::performTasks()
+void Maike::Sched::ThreadPool::performTasks()
 {
 	while(true)
 	{

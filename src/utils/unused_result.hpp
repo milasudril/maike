@@ -7,8 +7,10 @@
 
 namespace Maike
 {
-	template<class ... T>
-	void unusedResult(T&&...){}
+	template<class... T>
+	void unusedResult(T&&...)
+	{
+	}
 }
 
 #endif

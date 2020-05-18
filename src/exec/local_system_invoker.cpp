@@ -18,9 +18,9 @@ namespace
 	};
 }
 
-void Maike::LocalSystemInvoker::saveBuffer(std::byte const* buffer,
-                                           size_t n,
-                                           fs::path const& file) const
+void Maike::Exec::LocalSystemInvoker::saveBuffer(std::byte const* buffer,
+                                                 size_t n,
+                                                 fs::path const& file) const
 {
 	std::unique_ptr<FILE, FileDeleter> output{fopen(file.c_str(), "wb")};
 	auto handle = output.get();

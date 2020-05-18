@@ -3,13 +3,13 @@
 //@		, "dependencies":[{"ref":"pthread", "rel":"external"}]}]
 //@	}
 
-#ifndef MAIKE_SIGNALINGCOUNTER_HPP
-#define MAIKE_SIGNALINGCOUNTER_HPP
+#ifndef MAIKE_SCHED_SIGNALINGCOUNTER_HPP
+#define MAIKE_SCHED_SIGNALINGCOUNTER_HPP
 
 #include <condition_variable>
 #include <mutex>
 
-namespace Maike
+namespace Maike::Sched
 {
 	template<class T>
 	class SignalingCounter

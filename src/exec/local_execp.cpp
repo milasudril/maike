@@ -130,7 +130,7 @@ namespace
 	}
 
 
-	Maike::ExecResult communicateWith(
+	Maike::Exec::Result communicateWith(
 	   pid_t pid, Maike::IoRedirector const& io_redirector, int stdin, int stdout, int stderr)
 	{
 		signal(SIGPIPE, SIG_IGN);
@@ -144,10 +144,10 @@ namespace
 		stdout_proc.join();
 		stderr_proc.join();
 
-		if(WIFEXITED(status)) { return Maike::ExecResult{}.exitStatus(WEXITSTATUS(status)); }
+		if(WIFEXITED(status)) { return Maike::Exec::Result{}.exitStatus(WEXITSTATUS(status)); }
 		else if(WIFSIGNALED(status))
 		{
-			return Maike::ExecResult{}.signo(WTERMSIG(status));
+			return Maike::Exec::Result{}.signo(WTERMSIG(status));
 		}
 
 		abort();
@@ -156,9 +156,9 @@ namespace
 
 std::mutex exec_mutex;
 
-Maike::ExecResult Maike::execp(fs::path const& executable,
-                               std::vector<std::string> const& args,
-                               IoRedirector const& io_redirector)
+Maike::Exec::Result Maike::Exec::execp(fs::path const& executable,
+                                       std::vector<std::string> const& args,
+                                       IoRedirector const& io_redirector)
 {
 	std::vector<char const*> cmd_args;
 	cmd_args.push_back(executable.c_str());
@@ -196,7 +196,7 @@ Maike::ExecResult Maike::execp(fs::path const& executable,
 			{
 				lock.unlock();
 				uint32_t val = errno;
- 				unusedResult(::write(fd_exec_err, &val, sizeof(errno)));
+				unusedResult(::write(fd_exec_err, &val, sizeof(errno)));
 				::close(fd_exec_err);
 				close(STDIN_FILENO);
 				close(STDOUT_FILENO);

@@ -17,7 +17,7 @@
 
 namespace
 {
-void* volatile buffer; // Must be volatile to avoid optimizer to remove memset
+	void* volatile buffer; // Must be volatile to avoid optimizer to remove memset
 }
 
 namespace Testcases

@@ -3,8 +3,8 @@
 //@	,"dependencies_extra":[{"ref":"system_time_stamp.o","rel":"implementation"}]
 //@	}
 
-#ifndef MAIKE_SYSTEMTIMESTAMP_HPP
-#define MAIKE_SYSTEMTIMESTAMP_HPP
+#ifndef MAIKE_TIME_SYSTEMTIMESTAMP_HPP
+#define MAIKE_TIME_SYSTEMTIMESTAMP_HPP
 
 #include "src/utils/empty.hpp"
 

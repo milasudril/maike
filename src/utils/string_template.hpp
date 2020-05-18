@@ -3,8 +3,8 @@
 //@	  ,"dependencies_extra":[{"ref":"string_template.o", "rel":"implementation"}]
 //@	}
 
-#ifndef MAIKE_STRINGTEMPLATE_HPP
-#define MAIKE_STRINGTEMPLATE_HPP
+#ifndef MAIKE_UTILS_STRINGTEMPLATE_HPP
+#define MAIKE_UTILS_STRINGTEMPLATE_HPP
 
 #include <string>
 

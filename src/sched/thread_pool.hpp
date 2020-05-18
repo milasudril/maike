@@ -4,8 +4,8 @@
 //@	,"dependencies_extra":[{"ref":"thread_pool.o", "rel":"implementation"}]
 //@	}
 
-#ifndef MAIKE_THREADPOOL_HPP
-#define MAIKE_THREADPOOL_HPP
+#ifndef MAIKE_SCHED_THREADPOOL_HPP
+#define MAIKE_SCHED_THREADPOOL_HPP
 
 #include "./thread_count.hpp"
 
@@ -22,62 +22,65 @@
 #include <condition_variable>
 #include <exception>
 
-namespace Maike
+namespace Maike::Sched
 {
+	template<class T>
+	class AsyncTaskResult
+	{
+	public:
+		T const& get() const
+		{
+			std::unique_lock<std::mutex> lock{m_mtx};
+			m_cv.wait(lock, [this]() { return ready(); });
+			if(m_except) { std::rethrow_exception(m_except); }
+			return *m_result;
+		}
+
+		T take()
+		{
+			std::unique_lock<std::mutex> lock{m_mtx};
+			m_cv.wait(lock, [this]() { return ready(); });
+			if(m_except) { std::rethrow_exception(m_except); }
+			return std::move(*m_result);
+		}
+
+		void set(T&& obj)
+		{
+			std::lock_guard lock{m_mtx};
+			m_result = std::move(obj);
+			m_cv.notify_one();
+		}
+
+		void set(std::exception_ptr except)
+		{
+			std::lock_guard lock{m_mtx};
+			m_except = except;
+			m_cv.notify_one();
+		}
+
+		~AsyncTaskResult()
+		{
+			std::unique_lock<std::mutex> lock{m_mtx};
+			m_cv.wait(lock, [this]() { return ready(); });
+		}
+
+	private:
+		std::optional<T> m_result;
+		std::exception_ptr m_except;
+		mutable std::mutex m_mtx;
+		mutable std::condition_variable m_cv;
+
+		bool ready() const
+		{
+			return m_result.has_value() || m_except;
+		}
+	};
+
 	class ThreadPool
 	{
 	public:
 		template<class T>
-		class TaskResult
-		{
-		public:
-			T const& get() const
-			{
-				std::unique_lock<std::mutex> lock{m_mtx};
-				m_cv.wait(lock, [this]() { return ready(); });
-				if(m_except) { std::rethrow_exception(m_except); }
-				return *m_result;
-			}
-
-			T take()
-			{
-				std::unique_lock<std::mutex> lock{m_mtx};
-				m_cv.wait(lock, [this]() { return ready(); });
-				if(m_except) { std::rethrow_exception(m_except); }
-				return std::move(*m_result);
-			}
-
-			void set(T&& obj)
-			{
-				std::lock_guard lock{m_mtx};
-				m_result = std::move(obj);
-				m_cv.notify_one();
-			}
-
-			void set(std::exception_ptr except)
-			{
-				std::lock_guard lock{m_mtx};
-				m_except = except;
-				m_cv.notify_one();
-			}
-
-			~TaskResult()
-			{
-				std::unique_lock<std::mutex> lock{m_mtx};
-				m_cv.wait(lock, [this]() { return ready(); });
-			}
-
-		private:
-			std::optional<T> m_result;
-			std::exception_ptr m_except;
-			mutable std::mutex m_mtx;
-			mutable std::condition_variable m_cv;
-
-			bool ready() const
-			{
-				return m_result.has_value() || m_except;
-			}
-		};
+		using TaskResult = AsyncTaskResult<T>;
 
 		explicit ThreadPool(ThreadCount n_threads = ThreadCount{});
 

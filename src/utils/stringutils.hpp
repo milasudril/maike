@@ -3,8 +3,8 @@
 //@	,"dependencies_extra":[{"ref":"stringutils.o", "rel":"implementation"}]
 //@	}
 
-#ifndef MAIKE_STRINGUTILS_HPP
-#define MAIKE_STRINGUTILS_HPP
+#ifndef MAIKE_UTILS_STRINGUTILS_HPP
+#define MAIKE_UTILS_STRINGUTILS_HPP
 
 #include <string>
 #include <vector>

@@ -2,8 +2,8 @@
 //@	 "targets":[{"name":"unique_function.hpp","type":"include"}]
 //@	}
 
-#ifndef MAIKE_UNIQUEFUNCTION_HPP
-#define MAIKE_UNIQUEFUNCTION_HPP
+#ifndef MAIKE_UTILS_UNIQUEFUNCTION_HPP
+#define MAIKE_UTILS_UNIQUEFUNCTION_HPP
 
 #include <type_traits>
 #include <utility>

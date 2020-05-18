@@ -101,7 +101,7 @@ namespace Testcases
 		   "#include <not_include>\n"
 		   "*/"};
 
-		auto deps = Maike::Cxx::SourceFileLoader{}.getDependencies(Maike::Reader{input});
+		auto deps = Cxx::SourceFileLoader{}.getDependencies(Maike::Reader{input});
 
 		assert(deps.size() == 8);
 		assert(deps[0].name() == Maike::fs::path{"foo"});
@@ -139,9 +139,9 @@ namespace Testcases
 		Sink tags;
 		Sink source;
 
-		Maike::Cxx::SourceFileLoader{}.filterInput(Maike::Reader{input},
-		                                           Maike::SourceTreeLoader::SourceOutStream{source},
-		                                           Maike::SourceTreeLoader::TagsOutStream{tags});
+		Cxx::SourceFileLoader{}.filterInput(Maike::Reader{input},
+		                                    Maike::SourceTreeLoader::SourceOutStream{source},
+		                                    Maike::SourceTreeLoader::TagsOutStream{tags});
 		assert(source.content() == input.content());
 
 		std::string_view tags_expected{

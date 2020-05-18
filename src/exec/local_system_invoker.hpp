@@ -3,8 +3,8 @@
 //@	 ,"dependencies_extra":[{"ref":"local_system_invoker.o","rel":"implementation"}]
 //@	 }
 
-#ifndef MAIKE_LOCALSYSTEMINVOKER_HPP
-#define MAIKE_LOCALSYSTEMINVOKER_HPP
+#ifndef MAIKE_EXEC_LOCALSYSTEMINVOKER_HPP
+#define MAIKE_EXEC_LOCALSYSTEMINVOKER_HPP
 
 #include "./local_execp.hpp"
 
@@ -13,7 +13,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-namespace Maike
+namespace Maike::Exec
 {
 	class LocalSystemInvoker
 	{
@@ -36,7 +36,7 @@ namespace Maike
 		                     std::vector<std::string> const& args,
 		                     IoRedirector const& redir) const
 		{
-			return Maike::execp(executable, args, redir);
+			return Maike::Exec::execp(executable, args, redir);
 		}
 
 	private:
