@@ -22,9 +22,8 @@ namespace Maike
 
 		Compiler(): m_handle{std::make_unique<NullCompiler>()} {};
 
-		template<class Obj>
-		explicit Compiler(Obj&& obj):
-		   m_handle{std::make_unique<CompilerImpl<Obj>>(std::forward<Obj>(obj))}
+		template<class Obj, std::enable_if_t<!std::is_same_v<Obj, Compiler>, int> = 0>
+		explicit Compiler(Obj obj): m_handle{std::make_unique<CompilerImpl<Obj>>(std::forward<Obj>(obj))}
 		{
 		}
 
@@ -41,9 +40,9 @@ namespace Maike
 			return m_handle->settings();
 		}
 
-		Compiler& settings(KeyValueStore::Compound&& cfg)
+		Compiler& settings(KeyValueStore::CompoundRefConst cfg)
 		{
-			m_handle->settings(std::move(cfg));
+			m_handle->settings(cfg);
 			return *this;
 		}
 
@@ -58,7 +57,7 @@ namespace Maike
 
 			virtual Maike::KeyValueStore::Compound settings() const = 0;
 
-			virtual void settings(KeyValueStore::Compound&& cfg) = 0;
+			virtual void settings(KeyValueStore::CompoundRefConst cfg) = 0;
 
 			virtual ~AbstractCompiler()
 			{
@@ -81,7 +80,7 @@ namespace Maike
 				return KeyValueStore::Compound{};
 			}
 
-			void settings(KeyValueStore::Compound&&) override
+			void settings(KeyValueStore::CompoundRefConst) override
 			{
 			}
 
@@ -109,9 +108,9 @@ namespace Maike
 				return m_obj.settings();
 			}
 
-			void settings(KeyValueStore::Compound&& cfg) override
+			void settings(KeyValueStore::CompoundRefConst cfg) override
 			{
-				(void)m_obj.settings(std::move(cfg));
+				(void)m_obj.settings(cfg);
 			}
 
 			~CompilerImpl() override = default;

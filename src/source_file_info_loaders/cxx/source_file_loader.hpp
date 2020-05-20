@@ -23,7 +23,7 @@ namespace Cxx
 
 		Maike::Compiler getCompiler(Maike::KeyValueStore::CompoundRefConst) const
 		{
-			return Maike::Compiler{};
+			return Maike::Compiler{m_compiler};
 		}
 
 	private:

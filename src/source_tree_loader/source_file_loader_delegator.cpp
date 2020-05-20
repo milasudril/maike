@@ -33,7 +33,7 @@ namespace
 			return Maike::KeyValueStore::Compound{};
 		}
 
-		void settings(Maike::KeyValueStore::Compound&&)
+		void settings(Maike::KeyValueStore::CompoundRefConst)
 		{
 		}
 	};
