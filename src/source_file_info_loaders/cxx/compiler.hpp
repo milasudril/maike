@@ -74,8 +74,7 @@ namespace Cxx
 		Maike::Command m_cmd;
 	};
 
-	inline auto fromJson(Maike::KeyValueStore::Empty<Compiler>,
-		Maike::KeyValueStore::JsonRefConst ref)
+	inline auto fromJson(Maike::KeyValueStore::Empty<Compiler>, Maike::KeyValueStore::JsonRefConst ref)
 	{
 		return Compiler{ref.as<Maike::KeyValueStore::CompoundRefConst>()};
 	}

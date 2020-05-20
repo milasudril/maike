@@ -21,7 +21,9 @@ namespace Maike::SourceFileInfoLoaders
 		explicit Config(KeyValueStore::CompoundRefConst);
 
 		std::map<std::string, Loader> const& loaders() const
-		{ return m_loaders; }
+		{
+			return m_loaders;
+		}
 
 	private:
 		std::map<std::string, Loader> m_loaders;

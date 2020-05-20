@@ -10,8 +10,6 @@
 		"source_file_info_loaders": {
 			"cxx": {
 				"compiler": {
-					"cxxversion_min":-1,
-					"cxxversion_max":-1,
 					"command": {
 						"args": [
 							"-c",
@@ -25,7 +23,9 @@
 							"%maike:source%"
 						],
 						"executable": "%env:CXX%"
-					}
+					},
+					"cxxversion_max": -1,
+					"cxxversion_min": -1
 				}
 			}
 		},

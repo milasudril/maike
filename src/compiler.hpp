@@ -35,17 +35,6 @@ namespace Maike
 			return m_handle->run(src, used_files, output_files, log);
 		}
 
-		Maike::KeyValueStore::Compound settings() const
-		{
-			return m_handle->settings();
-		}
-
-		Compiler& settings(KeyValueStore::CompoundRefConst cfg)
-		{
-			m_handle->settings(cfg);
-			return *this;
-		}
-
 	private:
 		class AbstractCompiler
 		{
@@ -54,10 +43,6 @@ namespace Maike
 			                std::vector<fs::path const*> const& used_files,
 			                std::vector<fs::path const*> const& output_files,
 			                CompilationLog& log) const = 0;
-
-			virtual Maike::KeyValueStore::Compound settings() const = 0;
-
-			virtual void settings(KeyValueStore::CompoundRefConst cfg) = 0;
 
 			virtual ~AbstractCompiler()
 			{
@@ -73,15 +58,6 @@ namespace Maike
 			        CompilationLog&) const override
 			{
 				return 0;
-			}
-
-			Maike::KeyValueStore::Compound settings() const override
-			{
-				return KeyValueStore::Compound{};
-			}
-
-			void settings(KeyValueStore::CompoundRefConst) override
-			{
 			}
 
 			~NullCompiler() override = default;
@@ -101,16 +77,6 @@ namespace Maike
 			        CompilationLog& log) const override
 			{
 				return m_obj.run(src, used_files, output_files, log);
-			}
-
-			Maike::KeyValueStore::Compound settings() const override
-			{
-				return m_obj.settings();
-			}
-
-			void settings(KeyValueStore::CompoundRefConst cfg) override
-			{
-				(void)m_obj.settings(cfg);
 			}
 
 			~CompilerImpl() override = default;

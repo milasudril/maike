@@ -27,15 +27,6 @@ namespace
 		{
 			return 0;
 		}
-
-		Maike::KeyValueStore::Compound settings() const
-		{
-			return Maike::KeyValueStore::Compound{};
-		}
-
-		void settings(Maike::KeyValueStore::CompoundRefConst)
-		{
-		}
 	};
 
 	std::vector<Maike::Dependency> fixNames(Maike::fs::path const& prefix,
