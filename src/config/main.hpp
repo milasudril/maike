@@ -5,8 +5,9 @@
 #ifndef MAIKE_CONFIG_MAIN_HPP
 #define MAIKE_CONFIG_MAIN_HPP
 
+#include "./utils.hpp"
+
 #include "src/env/env_store.hpp"
-#include "src/vcs_invoker/config.hpp"
 #include "src/source_tree_loader/config.hpp"
 
 namespace Maike::Config
@@ -20,8 +21,8 @@ namespace Maike::Config
 
 		explicit Main(KeyValueStore::CompoundRefConst obj):
 		   m_src_tree_loader_cfg{obj.get<SourceTreeLoader::Config>("source_tree_loader")},
-		   m_env{obj.get<EnvStore>("env")}
-		//		   m_vcs_config{obj.get<VcsInvoker::Main>("vcs_config")}
+		   m_env{obj.get<EnvStore>("env")},
+		   m_utils{obj.get<Utils>("utils")}
 		{
 		}
 
@@ -36,14 +37,14 @@ namespace Maike::Config
 			return *this;
 		}
 
-		VcsInvoker::Config const& vcsConfig() const
+		Utils const& utils() const
 		{
-			return m_vcs_config;
+			return m_utils;
 		}
 
-		Main& vcsConfig(VcsInvoker::Config&& val)
+		Main& utils(Utils&& val)
 		{
-			m_vcs_config = std::move(val);
+			m_utils = std::move(val);
 			return *this;
 		}
 
@@ -61,7 +62,7 @@ namespace Maike::Config
 	private:
 		SourceTreeLoader::Config m_src_tree_loader_cfg;
 		EnvStore m_env;
-		VcsInvoker::Config m_vcs_config;
+		Utils m_utils;
 	};
 
 	inline auto fromJson(KeyValueStore::Empty<Main>, KeyValueStore::JsonRefConst ref)
@@ -73,7 +74,7 @@ namespace Maike::Config
 	{
 		return KeyValueStore::Compound{}
 		   .set("env", cfg.env())
-		   .set("vcs", cfg.vcsConfig())
+		   .set("utils", cfg.utils())
 		   .set("source_tree_loader", cfg.sourceTreeLoaderCfg())
 		   .takeHandle();
 	}

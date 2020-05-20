@@ -14,7 +14,6 @@ namespace Testcases
 	{
 		Maike::Config::Main cfg;
 		assert(cfg.env() == Maike::EnvStore{});
-		assert(cfg.vcsConfig() == Maike::VcsInvoker::Config{});
 		assert(cfg.sourceTreeLoaderCfg() == Maike::SourceTreeLoader::Config{});
 	}
 }
