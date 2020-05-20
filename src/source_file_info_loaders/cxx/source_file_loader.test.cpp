@@ -140,8 +140,8 @@ namespace Testcases
 		Sink source;
 
 		Cxx::SourceFileLoader{}.filterInput(Maike::Io::Reader{input},
-		                                    Maike::SourceTreeLoader::SourceOutStream{source},
-		                                    Maike::SourceTreeLoader::TagsOutStream{tags});
+		                                    Maike::SourceFileInfoLoaders::SourceOutStream{source},
+		                                    Maike::SourceFileInfoLoaders::TagsOutStream{tags});
 		assert(source.content() == input.content());
 
 		std::string_view tags_expected{

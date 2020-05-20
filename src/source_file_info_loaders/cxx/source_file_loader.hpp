@@ -8,7 +8,7 @@
 
 #include "./compiler.hpp"
 
-#include "src/source_tree_loader/source_file_loader.hpp"
+#include "src/source_file_info_loaders/loader.hpp"
 
 namespace Cxx
 {
@@ -18,8 +18,8 @@ namespace Cxx
 		std::vector<Maike::Dependency> getDependencies(Maike::Io::Reader src) const;
 
 		void filterInput(Maike::Io::Reader input,
-		                 Maike::SourceTreeLoader::SourceOutStream source_stream,
-		                 Maike::SourceTreeLoader::TagsOutStream tag_stream) const;
+		                 Maike::SourceFileInfoLoaders::SourceOutStream source_stream,
+		                 Maike::SourceFileInfoLoaders::TagsOutStream tag_stream) const;
 
 		Maike::Compiler getCompiler(Maike::KeyValueStore::CompoundRefConst) const
 		{
@@ -37,8 +37,8 @@ namespace Cxx
 
 	inline auto filterInput(SourceFileLoader const& loader,
 	                        Maike::Io::Reader input,
-	                        Maike::SourceTreeLoader::SourceOutStream source_stream,
-	                        Maike::SourceTreeLoader::TagsOutStream tag_stream)
+	                        Maike::SourceFileInfoLoaders::SourceOutStream source_stream,
+	                        Maike::SourceFileInfoLoaders::TagsOutStream tag_stream)
 	{
 		return loader.filterInput(input, source_stream, tag_stream);
 	}

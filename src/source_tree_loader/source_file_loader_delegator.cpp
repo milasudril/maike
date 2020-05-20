@@ -79,15 +79,15 @@ namespace
 
 	Maike::SourceFileInfo loadSourceFile(std::vector<Maike::Dependency>&& builtin_deps,
 	                                     Maike::fs::path const& path,
-	                                     Maike::SourceTreeLoader::SourceFileLoader const& loader)
+	                                     Maike::SourceFileInfoLoaders::Loader const& loader)
 	{
 		Maike::Io::Fifo<std::byte> src_fifo;
 		Maike::Io::Fifo<std::byte> tags_fifo;
 
 		Maike::Io::InputFile input{path};
 		loader.filterInput(Maike::Io::Reader{input},
-		                   Maike::SourceTreeLoader::SourceOutStream{src_fifo},
-		                   Maike::SourceTreeLoader::TagsOutStream{tags_fifo});
+		                   Maike::SourceFileInfoLoaders::SourceOutStream{src_fifo},
+		                   Maike::SourceFileInfoLoaders::TagsOutStream{tags_fifo});
 		tags_fifo.stop();
 		src_fifo.stop();
 

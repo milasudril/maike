@@ -200,11 +200,11 @@ int main(int argc, char** argv)
 
 		Maike::Sched::ThreadPool workers{cmdline.option<Maike::CmdLineOption::NumWorkers>()};
 
-		std::map<std::string, Maike::SourceTreeLoader::SourceFileLoader> loaders;
-		loaders.insert(std::make_pair(
-		   std::string{".hpp"}, Maike::SourceTreeLoader::SourceFileLoader{Cxx::SourceFileLoader{}}));
-		loaders.insert(std::make_pair(
-		   std::string{".cpp"}, Maike::SourceTreeLoader::SourceFileLoader{Cxx::SourceFileLoader{}}));
+		std::map<std::string, Maike::SourceFileInfoLoaders::Loader> loaders;
+		loaders.insert(std::make_pair(std::string{".hpp"},
+		                              Maike::SourceFileInfoLoaders::Loader{Cxx::SourceFileLoader{}}));
+		loaders.insert(std::make_pair(std::string{".cpp"},
+		                              Maike::SourceFileInfoLoaders::Loader{Cxx::SourceFileLoader{}}));
 
 		Maike::SourceTreeLoader::SourceFileLoaderDelegator loader_delegator;
 		loader_delegator.loaders(std::move(loaders));

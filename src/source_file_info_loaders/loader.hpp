@@ -1,9 +1,9 @@
 //@	{
-//@	  "targets":[{"name":"source_file_loader.hpp","type":"include"}]
+//@	  "targets":[{"name":"loader.hpp","type":"include"}]
 //@	 }
 
-#ifndef MAIKE_SOURCETREELOADER_SOURCEFILELOADER_HPP
-#define MAIKE_SOURCETREELOADER_SOURCEFILELOADER_HPP
+#ifndef MAIKE_SOURCEFILEINFOLOADERS_LOADER_HPP
+#define MAIKE_SOURCEFILEINFOLOADERS_LOADER_HPP
 
 #include "src/io/reader.hpp"
 #include "src/io/writer.hpp"
@@ -14,7 +14,7 @@
 #include <type_traits>
 #include <cassert>
 
-namespace Maike::SourceTreeLoader
+namespace Maike::SourceFileInfoLoaders
 {
 	enum class TagFilterOutput
 	{
@@ -66,17 +66,15 @@ namespace Maike::SourceTreeLoader
 		};
 	}
 
-	class SourceFileLoader
+	class Loader
 	{
 	public:
-		SourceFileLoader(SourceFileLoader&& other) noexcept:
-		   m_handle{other.m_handle},
-		   m_vtable{other.m_vtable}
+		Loader(Loader&& other) noexcept: m_handle{other.m_handle}, m_vtable{other.m_vtable}
 		{
 			other.m_handle = nullptr;
 		}
 
-		SourceFileLoader& operator=(SourceFileLoader&& other) noexcept
+		Loader& operator=(Loader&& other) noexcept
 		{
 			std::swap(m_handle, other.m_handle);
 			std::swap(m_vtable, other.m_vtable);
@@ -85,24 +83,24 @@ namespace Maike::SourceTreeLoader
 			return *this;
 		}
 
-		~SourceFileLoader()
+		~Loader()
 		{
 			m_vtable.destroy(m_handle);
 		}
 
-		template<class Loader,
-		         std::enable_if_t<!std::is_same_v<std::decay_t<Loader>, SourceFileLoader>, int> = 0>
-		explicit SourceFileLoader(Loader&& loader):
-		   m_handle{new Loader(std::forward<Loader>(loader))},
-		   m_vtable{source_file_loader_detail::Tag<Loader>{}}
+		template<class LoaderType,
+		         std::enable_if_t<!std::is_same_v<std::decay_t<LoaderType>, Loader>, int> = 0>
+		explicit Loader(LoaderType&& loader):
+		   m_handle{new LoaderType(std::forward<LoaderType>(loader))},
+		   m_vtable{source_file_loader_detail::Tag<LoaderType>{}}
 		{
 		}
 
-		template<class Loader,
-		         std::enable_if_t<!std::is_same_v<std::decay_t<Loader>, SourceFileLoader>, int> = 0>
-		explicit SourceFileLoader(std::unique_ptr<Loader> loader):
+		template<class LoaderType,
+		         std::enable_if_t<!std::is_same_v<std::decay_t<LoaderType>, Loader>, int> = 0>
+		explicit Loader(std::unique_ptr<LoaderType> loader):
 		   m_handle{loader.release()},
-		   m_vtable{source_file_loader_detail::Tag<Loader>{}}
+		   m_vtable{source_file_loader_detail::Tag<LoaderType>{}}
 		{
 		}
 

@@ -6,8 +6,7 @@
 #ifndef MAIKE_SOURCETREELOADER_SOURCEFILELOADERDELEGATOR_HPP
 #define MAIKE_SOURCETREELOADER_SOURCEFILELOADERDELEGATOR_HPP
 
-#include "./source_file_loader.hpp"
-
+#include "src/source_file_info_loaders/loader.hpp"
 #include "src/source_file_info.hpp"
 #include "src/fs.hpp"
 
@@ -19,13 +18,13 @@ namespace Maike::SourceTreeLoader
 	class SourceFileLoaderDelegator
 	{
 	public:
-		SourceFileLoaderDelegator& loaders(std::map<std::string, SourceFileLoader>&& loaders)
+		SourceFileLoaderDelegator& loaders(std::map<std::string, SourceFileInfoLoaders::Loader>&& loaders)
 		{
 			m_loaders = std::move(loaders);
 			return *this;
 		}
 
-		std::map<std::string, SourceFileLoader> const& loaders() const
+		std::map<std::string, SourceFileInfoLoaders::Loader> const& loaders() const
 		{
 			return m_loaders;
 		}
@@ -33,7 +32,7 @@ namespace Maike::SourceTreeLoader
 		std::optional<SourceFileInfo> load(Maike::fs::path const& path) const;
 
 	private:
-		std::map<std::string, SourceFileLoader> m_loaders;
+		std::map<std::string, SourceFileInfoLoaders::Loader> m_loaders;
 	};
 }
 
