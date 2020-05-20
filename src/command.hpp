@@ -53,12 +53,12 @@ namespace Maike
 		std::vector<std::string> m_args;
 	};
 
-	bool operator==(Command const& a, Command const& b)
+	inline bool operator==(Command const& a, Command const& b)
 	{
 		return a.executable() == b.executable() && a.args() == b.args();
 	}
 
-	bool operator!=(Command const& a, Command const& b)
+	inline bool operator!=(Command const& a, Command const& b)
 	{
 		return !(a == b);
 	}

@@ -1,17 +1,40 @@
 //@	{
-//@	 "targets":[{"name":"source_file_loader.hpp","type":"include"}]
-//@	,"dependencies_extra":[{"ref":"source_file_loader.o","rel":"implementation"}]
+//@	 "targets":[{"name":"compiler.hpp","type":"include"}]
+//	,"dependencies_extra":[{"ref":"source_file_loader.o","rel":"implementation"}]
 //@	}
 
-#ifndef CXX_SOURCEFILELOADER_HPP
-#define CXX_SOURCEFILELOADER_HPP
+#ifndef CXX_COMPILER_HPP
+#define CXX_COMPILER_HPP
 
-#include "./compiler.hpp"
-
-#include "src/source_tree_loader/source_file_loader.hpp"
+#include "src/command.hpp"
 
 namespace Cxx
 {
+	class Compiler
+	{
+	public:
+		Compiler():
+			m_cxxversion{"c++17"},
+			m_cmd{"%env:CXX%", {"-c",
+						"?-std=%cxx:cxxversion%",
+						"*-%cxx:cflags%",
+						"*-iquote%cxx:localinclude%",
+						"*-I%cxx:sysinclude%",
+						"-DMAIKE_JOB_ID=%maike:jobid%",
+						"-o",
+						"%maike:target%",
+						"%maike:source%"}}
+			{}
+
+
+	private:
+		std::string m_cxxversion;
+		std::vector<Maike::fs::path> m_localinclude;
+		std::vector<Maike::fs::path> m_sysinclude;
+		Maike::Command m_cmd;
+	};
+
+#if 0
 	class SourceFileLoader
 	{
 	public:
@@ -47,6 +70,8 @@ namespace Cxx
 	{
 		return loader.getCompiler(cfg);
 	}
+
+#endif
 }
 
 #endif
