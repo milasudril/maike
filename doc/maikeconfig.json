@@ -13,7 +13,7 @@
 					"command": {
 						"args": [
 							"-c",
-							"-std=%cxx:cxxversion%",
+							"?-std=%cxx:cxxversion%",
 							"*-%cxx:cflags%",
 							"*-iquote%cxx:iquote%",
 							"*-I%cxx:includedir%",
