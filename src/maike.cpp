@@ -1,11 +1,10 @@
 //@	 {"targets":[{"name":"maike_next","type":"application"}]}
 
-#include "./config.hpp"
 #include "./cmd_line_options.hpp"
 #include "./build_info.hpp"
 
 #include "src/io/input_file.hpp"
-
+#include "src/config/main.hpp"
 #include "src/source_tree_loader/directory_scanner.hpp"
 #include "src/source_file_info_loaders/cxx/source_file_loader.hpp"
 
@@ -129,7 +128,7 @@ void write(FILE* stream, void const* buffer, size_t n)
 	fwrite(buffer, 1, n, stream);
 }
 
-void dumpConfig(Maike::Config const& cfg, Maike::fs::path const&)
+void dumpConfig(Maike::Config::Main const& cfg, Maike::fs::path const&)
 {
 	store(Maike::KeyValueStore::Compound{}.set("maikeconfig", cfg).handleReference(), stdout);
 }
@@ -167,7 +166,7 @@ int main(int argc, char** argv)
 		auto cfg_json =
 		   Maike::KeyValueStore::Compound{Maike::Io::Reader{cfg_file}, cfg_files[0].string()};
 
-		Maike::Config cfg{cfg_json.get<Maike::KeyValueStore::CompoundRefConst>("maikeconfig")};
+		Maike::Config::Main cfg{cfg_json.get<Maike::KeyValueStore::CompoundRefConst>("maikeconfig")};
 
 
 		if(cmdline.hasOption<Maike::CmdLineOption::ConfigDump>())

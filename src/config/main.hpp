@@ -1,27 +1,27 @@
 //@	{
-//@	  "targets":[{"name":"config.hpp","type":"include"}]
+//@	  "targets":[{"name":"main.hpp","type":"include"}]
 //@	}
 
-#ifndef MAIKE_CONFIG_HPP
-#define MAIKE_CONFIG_HPP
+#ifndef MAIKE_CONFIG_MAIN_HPP
+#define MAIKE_CONFIG_MAIN_HPP
 
 #include "src/env/env_store.hpp"
 #include "src/vcs_invoker/config.hpp"
 #include "src/source_tree_loader/config.hpp"
 
-namespace Maike
+namespace Maike::Config
 {
-	class Config
+	class Main
 	{
 	public:
-		Config()
+		Main()
 		{
 		}
 
-		explicit Config(KeyValueStore::CompoundRefConst obj):
+		explicit Main(KeyValueStore::CompoundRefConst obj):
 		   m_src_tree_loader_cfg{obj.get<SourceTreeLoader::Config>("source_tree_loader")},
 		   m_env{obj.get<EnvStore>("env")}
-		//		   m_vcs_config{obj.get<VcsInvoker::Config>("vcs_config")}
+		//		   m_vcs_config{obj.get<VcsInvoker::Main>("vcs_config")}
 		{
 		}
 
@@ -30,7 +30,7 @@ namespace Maike
 			return m_env;
 		}
 
-		Config& env(EnvStore&& val)
+		Main& env(EnvStore&& val)
 		{
 			m_env = std::move(val);
 			return *this;
@@ -41,7 +41,7 @@ namespace Maike
 			return m_vcs_config;
 		}
 
-		Config& vcsConfig(VcsInvoker::Config&& val)
+		Main& vcsConfig(VcsInvoker::Config&& val)
 		{
 			m_vcs_config = std::move(val);
 			return *this;
@@ -52,7 +52,7 @@ namespace Maike
 			return m_src_tree_loader_cfg;
 		}
 
-		Config& sourceTreeLoaderCfg(SourceTreeLoader::Config&& val)
+		Main& sourceTreeLoaderCfg(SourceTreeLoader::Config&& val)
 		{
 			m_src_tree_loader_cfg = std::move(val);
 			return *this;
@@ -64,12 +64,12 @@ namespace Maike
 		VcsInvoker::Config m_vcs_config;
 	};
 
-	inline auto fromJson(KeyValueStore::Empty<Config>, KeyValueStore::JsonRefConst ref)
+	inline auto fromJson(KeyValueStore::Empty<Main>, KeyValueStore::JsonRefConst ref)
 	{
-		return Config{ref.as<KeyValueStore::CompoundRefConst>()};
+		return Main{ref.as<KeyValueStore::CompoundRefConst>()};
 	}
 
-	inline auto toJson(Config const& cfg)
+	inline auto toJson(Main const& cfg)
 	{
 		return KeyValueStore::Compound{}
 		   .set("env", cfg.env())
