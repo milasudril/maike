@@ -24,8 +24,8 @@
 						],
 						"executable": "%env:CXX%"
 					},
-					"cxxversion_max": -1,
-					"cxxversion_min": -1
+					"cxxversion_max": "",
+					"cxxversion_min": ""
 				}
 			}
 		},

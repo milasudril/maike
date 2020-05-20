@@ -6,6 +6,8 @@
 #ifndef CXX_COMPILER_HPP
 #define CXX_COMPILER_HPP
 
+#include "./stdversion.hpp"
+
 #include "src/command.hpp"
 
 #include "src/compilation_log.hpp"
@@ -16,8 +18,6 @@ namespace Cxx
 	{
 	public:
 		Compiler():
-		   m_cxxversion_min{-1},
-		   m_cxxversion_max{-1},
 		   m_cmd{"%env:CXX%",
 		         {"-c",
 		          "?-std=%cxx:cxxversion%",
@@ -31,9 +31,9 @@ namespace Cxx
 		{
 		}
 
-		Compiler(Maike::KeyValueStore::CompoundRefConst settings):
-		   m_cxxversion_min{settings.get<json_int_t>("cxxversion_min")},
-		   m_cxxversion_max{settings.get<json_int_t>("cxxversion_max")},
+		explicit Compiler(Maike::KeyValueStore::CompoundRefConst settings):
+		   m_cxxversion_min{settings.get<Stdversion>("cxxversion_min")},
+		   m_cxxversion_max{settings.get<Stdversion>("cxxversion_max")},
 		   m_cmd{settings.get<Maike::Command>("command")}
 		{
 		}
@@ -61,14 +61,14 @@ namespace Cxx
 		void settings(Maike::KeyValueStore::CompoundRefConst settings)
 		{
 			m_cmd = settings.get<Maike::Command>("command");
-			m_cxxversion_max = std::min(m_cxxversion_max, settings.get<json_int_t>("cxxversion_max"));
-			m_cxxversion_min = std::max(m_cxxversion_min, settings.get<json_int_t>("cxxversion_min"));
+			m_cxxversion_max = std::min(m_cxxversion_max, settings.get<Stdversion>("cxxversion_max"));
+			m_cxxversion_min = std::max(m_cxxversion_min, settings.get<Stdversion>("cxxversion_min"));
 		}
 
 
 	private:
-		json_int_t m_cxxversion_min;
-		json_int_t m_cxxversion_max;
+		Stdversion m_cxxversion_min;
+		Stdversion m_cxxversion_max;
 		std::vector<Maike::fs::path> m_localinclude;
 		std::vector<Maike::fs::path> m_sysinclude;
 		Maike::Command m_cmd;
