@@ -73,6 +73,18 @@ namespace Cxx
 		std::vector<Maike::fs::path> m_sysinclude;
 		Maike::Command m_cmd;
 	};
+
+	inline auto fromJson(Maike::KeyValueStore::Empty<Compiler>,
+		Maike::KeyValueStore::JsonRefConst ref)
+	{
+		return Compiler{ref.as<Maike::KeyValueStore::CompoundRefConst>()};
+	}
+
+	inline auto toJson(Compiler const& compiler)
+	{
+		return compiler.settings().takeHandle();
+	}
+
 }
 
 #endif

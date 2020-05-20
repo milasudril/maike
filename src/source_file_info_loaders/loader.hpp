@@ -52,6 +52,10 @@ namespace Maike::SourceFileInfoLoaders
 			   destroy{[](void* handle) {
 				   auto self = reinterpret_cast<T*>(handle);
 				   delete self;
+			   }},
+			   to_json{[](void const* handle) {
+				   auto const& self = *reinterpret_cast<T const*>(handle);
+				   return toJson(self);
 			   }}
 			{
 			}
@@ -63,6 +67,7 @@ namespace Maike::SourceFileInfoLoaders
 			std::vector<Dependency> (*get_dependencies)(void const* handle, Io::Reader source_stream);
 			Compiler (*get_compiler)(void const* handle, KeyValueStore::CompoundRefConst cfg);
 			void (*destroy)(void* handle);
+			KeyValueStore::JsonHandle (*to_json)(void const* handle);
 		};
 	}
 
@@ -133,10 +138,21 @@ namespace Maike::SourceFileInfoLoaders
 			return m_handle != nullptr;
 		}
 
+		KeyValueStore::JsonHandle toJson() const
+		{
+			return m_vtable.to_json(m_handle);
+		}
+
+
 	private:
 		void* m_handle;
 		source_file_loader_detail::Vtable m_vtable;
 	};
+
+	inline auto toJson(Loader const& loader)
+	{
+		return loader.toJson();
+	}
 };
 
 #endif

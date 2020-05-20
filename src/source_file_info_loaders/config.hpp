@@ -1,11 +1,12 @@
 //@	{
 //@	  "targets":[{"name":"config.hpp","type":"include"}]
+//@	 ,"dependencies_extra":[{"ref":"config.o","rel":"implementation"}]
 //@	}
 
 #ifndef MAIKE_SOURCEFILEINFOLOADERS_CONFIG_HPP
 #define MAIKE_SOURCEFILEINFOLOADERS_CONFIG_HPP
 
-//#include "./source_file_info_loader.hpp"
+#include "./loader.hpp"
 #include "src/key_value_store/compound.hpp"
 
 #include <string>
@@ -16,16 +17,14 @@ namespace Maike::SourceFileInfoLoaders
 	class Config
 	{
 	public:
-		Config()
-		{
-		}
+		Config();
+		explicit Config(KeyValueStore::CompoundRefConst);
 
-		explicit Config(KeyValueStore::CompoundRefConst)
-		{
-		}
+		std::map<std::string, Loader> const& loaders() const
+		{ return m_loaders; }
 
 	private:
-		//		std::map<std::string, SourceFileInfoLoader> m_loaders;
+		std::map<std::string, Loader> m_loaders;
 	};
 
 	inline auto fromJson(KeyValueStore::Empty<Config>, KeyValueStore::JsonRefConst ref)
@@ -33,10 +32,7 @@ namespace Maike::SourceFileInfoLoaders
 		return Config{ref.as<KeyValueStore::CompoundRefConst>()};
 	}
 
-	inline auto toJson(Config const&)
-	{
-		return KeyValueStore::Compound{}.takeHandle();
-	}
+	KeyValueStore::JsonHandle toJson(Config const&);
 
 	inline bool operator==(Config const&, Config const&)
 	{

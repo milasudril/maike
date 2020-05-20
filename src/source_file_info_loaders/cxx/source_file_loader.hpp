@@ -15,6 +15,12 @@ namespace Cxx
 	class SourceFileLoader
 	{
 	public:
+		SourceFileLoader() = default;
+
+		explicit SourceFileLoader(Maike::KeyValueStore::CompoundRefConst cfg):
+			m_compiler{cfg.get<Compiler>("compiler")}
+		{}
+
 		std::vector<Maike::Dependency> getDependencies(Maike::Io::Reader src) const;
 
 		void filterInput(Maike::Io::Reader input,
@@ -24,6 +30,11 @@ namespace Cxx
 		Maike::Compiler getCompiler(Maike::KeyValueStore::CompoundRefConst) const
 		{
 			return Maike::Compiler{m_compiler};
+		}
+
+		Compiler const& compiler() const
+		{
+			return m_compiler;
 		}
 
 	private:
@@ -46,6 +57,11 @@ namespace Cxx
 	inline auto getCompiler(SourceFileLoader const& loader, Maike::KeyValueStore::CompoundRefConst cfg)
 	{
 		return loader.getCompiler(cfg);
+	}
+
+	inline auto toJson(SourceFileLoader const& loader)
+	{
+		return Maike::KeyValueStore::Compound{}.set("compiler", loader.compiler()).takeHandle();
 	}
 }
 
