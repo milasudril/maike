@@ -9,6 +9,7 @@
 
 #include "src/env/env_store.hpp"
 #include "src/source_tree_loader/config.hpp"
+#include "src/source_file_info_loaders/config.hpp"
 
 namespace Maike::Config
 {
@@ -20,7 +21,8 @@ namespace Maike::Config
 		}
 
 		explicit Main(KeyValueStore::CompoundRefConst obj):
-		   m_src_tree_loader_cfg{obj.get<SourceTreeLoader::Config>("source_tree_loader")},
+		   m_source_tree_loader{obj.get<SourceTreeLoader::Config>("source_tree_loader")},
+		   m_source_file_info_loaders{obj.get<SourceFileInfoLoaders::Config>("source_file_info_loaders")},
 		   m_env{obj.get<EnvStore>("env")},
 		   m_utils{obj.get<Utils>("utils")}
 		{
@@ -48,19 +50,31 @@ namespace Maike::Config
 			return *this;
 		}
 
-		SourceTreeLoader::Config const& sourceTreeLoaderCfg() const
+		SourceTreeLoader::Config const& sourceTreeLoader() const
 		{
-			return m_src_tree_loader_cfg;
+			return m_source_tree_loader;
 		}
 
-		Main& sourceTreeLoaderCfg(SourceTreeLoader::Config&& val)
+		Main& sourceTreeLoader(SourceTreeLoader::Config&& val)
 		{
-			m_src_tree_loader_cfg = std::move(val);
+			m_source_tree_loader = std::move(val);
+			return *this;
+		}
+
+		SourceFileInfoLoaders::Config const& sourceFileInfoLoaders() const
+		{
+			return m_source_file_info_loaders;
+		}
+
+		Main& sourceFileInfoLoaders(SourceFileInfoLoaders::Config&& val)
+		{
+			m_source_file_info_loaders = std::move(val);
 			return *this;
 		}
 
 	private:
-		SourceTreeLoader::Config m_src_tree_loader_cfg;
+		SourceTreeLoader::Config m_source_tree_loader;
+		SourceFileInfoLoaders::Config m_source_file_info_loaders;
 		EnvStore m_env;
 		Utils m_utils;
 	};
@@ -75,7 +89,8 @@ namespace Maike::Config
 		return KeyValueStore::Compound{}
 		   .set("env", cfg.env())
 		   .set("utils", cfg.utils())
-		   .set("source_tree_loader", cfg.sourceTreeLoaderCfg())
+		   .set("source_tree_loader", cfg.sourceTreeLoader())
+		   .set("source_file_info_loaders", cfg.sourceFileInfoLoaders())
 		   .takeHandle();
 	}
 }
