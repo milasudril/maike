@@ -18,13 +18,14 @@ namespace Maike::SourceTreeLoader
 	class SourceFileLoaderDelegator
 	{
 	public:
-		SourceFileLoaderDelegator& loaders(std::map<std::string, SourceFileInfoLoaders::Loader>&& loaders)
+		SourceFileLoaderDelegator& loaders(
+		   std::map<std::string, std::reference_wrapper<SourceFileInfoLoaders::Loader const>>&& loaders)
 		{
 			m_loaders = std::move(loaders);
 			return *this;
 		}
 
-		std::map<std::string, SourceFileInfoLoaders::Loader> const& loaders() const
+		auto const& loaders() const
 		{
 			return m_loaders;
 		}
@@ -32,7 +33,7 @@ namespace Maike::SourceTreeLoader
 		std::optional<SourceFileInfo> load(Maike::fs::path const& path) const;
 
 	private:
-		std::map<std::string, SourceFileInfoLoaders::Loader> m_loaders;
+		std::map<std::string, std::reference_wrapper<SourceFileInfoLoaders::Loader const>> m_loaders;
 	};
 }
 
