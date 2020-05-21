@@ -1,5 +1,6 @@
 //@	{
 //@	  "targets":[{"name":"main.hpp","type":"include"}]
+//@	 ,"dependencies_extra":[{"ref":"main.o","rel":"implementation"}]
 //@	}
 
 #ifndef MAIKE_CONFIG_MAIN_HPP
@@ -93,6 +94,9 @@ namespace Maike::Config
 		   .set("source_file_info_loaders", cfg.sourceFileInfoLoaders())
 		   .takeHandle();
 	}
+
+	std::map<std::string, std::reference_wrapper<SourceFileInfoLoaders::Loader const>>
+	mapSourceFileInfoLoaders(Main const& cfg);
 }
 
 #endif

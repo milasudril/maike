@@ -133,23 +133,6 @@ void dumpConfig(Maike::Config::Main const& cfg, Maike::fs::path const&)
 	store(Maike::KeyValueStore::Compound{}.set("maikeconfig", cfg).handleReference(), stdout);
 }
 
-std::map<std::string, std::reference_wrapper<Maike::SourceFileInfoLoaders::Loader const>>
-mapLoaders(std::map<std::string, std::string> const& name_map,
-           std::map<std::string, Maike::SourceFileInfoLoaders::Loader> const& loaders)
-{
-	std::map<std::string, std::reference_wrapper<Maike::SourceFileInfoLoaders::Loader const>> ret;
-	std::for_each(std::begin(name_map), std::end(name_map), [&ret, &loaders](auto const& item) {
-		auto i = loaders.find(item.second);
-		if(i == std::end(loaders))
-		{
-			throw std::runtime_error{std::string{"No loader of type "} + item.second
-			                         + " has been configured"};
-		}
-		ret.insert_or_assign(std::end(ret), item.first, i->second);
-	});
-	return ret;
-}
-
 int main(int argc, char** argv)
 {
 	try
@@ -218,8 +201,7 @@ int main(int argc, char** argv)
 		Maike::Sched::ThreadPool workers{cmdline.option<Maike::CmdLineOption::NumWorkers>()};
 
 		Maike::SourceTreeLoader::SourceFileLoaderDelegator loader_delegator;
-		loader_delegator.loaders(
-		   mapLoaders(cfg.sourceTreeLoader().fileInfoLoaders(), cfg.sourceFileInfoLoaders().loaders()));
+		loader_delegator.loaders(mapSourceFileInfoLoaders(cfg));
 
 		Maike::SourceTreeLoader::DirectoryScanner scanner{
 		   workers, std::cref(cfg.sourceTreeLoader().inputFilter()), std::cref(loader_delegator)};
