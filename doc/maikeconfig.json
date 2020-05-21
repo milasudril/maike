@@ -24,8 +24,12 @@
 						],
 						"executable": "%env:CXX%"
 					},
-					"cxxversion_max": "",
-					"cxxversion_min": ""
+					"localinclude": [
+						"."
+					],
+					"stdversion_max": "",
+					"stdversion_min": "",
+					"sysinclude": []
 				}
 			}
 		},
