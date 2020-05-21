@@ -5,7 +5,7 @@
 #include "./main.hpp"
 
 std::map<std::string, std::reference_wrapper<Maike::SourceFileInfoLoaders::Loader const>>
-	Maike::Config::mapSourceFileInfoLoaders(Maike::Config::Main const& cfg)
+Maike::Config::mapSourceFileInfoLoaders(Maike::Config::Main const& cfg)
 {
 	auto& name_map = cfg.sourceTreeLoader().fileInfoLoaders();
 	auto& loaders = cfg.sourceFileInfoLoaders().loaders();

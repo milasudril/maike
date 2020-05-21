@@ -46,6 +46,21 @@ void resolveDependencies(std::map<Maike::fs::path, Maike::SourceFileInfo>& sourc
 	});
 }
 
+void printDepGraph(std::map<Maike::fs::path, Maike::SourceFileInfo> const& src_files,
+                   Maike::fs::path const&)
+{
+	puts("digraph \"G\" {");
+	std::for_each(std::begin(src_files), std::end(src_files), [](auto const& item) {
+		auto const& deps = item.second.usedFiles();
+		printf("\"%s\"\n", item.first.c_str());
+		std::for_each(std::begin(deps), std::end(deps), [&item](auto const& edge) {
+			if(edge.sourceFile() != nullptr)
+			{ printf("\"%s\" -> \"%s\"\n", item.first.c_str(), edge.name().c_str()); }
+		});
+	});
+	puts("}");
+}
+
 void printHelp(Maike::CommandLine const& cmdline)
 {
 	auto info = cmdline.optionInfo();
@@ -77,22 +92,22 @@ void printHelp(Maike::CommandLine const& cmdline)
 
 void print(char const* name, Maike::fs::path const& path)
 {
-	printf("%s: %s", name, path.c_str());
+	fprintf(stderr, "%s: %s", name, path.c_str());
 }
 
 void print(char const* name, Maike::BuildId const& id)
 {
-	printf("%s: %s", name, toString(id).c_str());
+	fprintf(stderr, "%s: %s", name, toString(id).c_str());
 }
 
 void print(char const* name, Maike::ThreadCount count)
 {
-	printf("%s: %s", name, toString(count).c_str());
+	fprintf(stderr, "%s: %s", name, toString(count).c_str());
 }
 
 void print(char const* name, std::false_type)
 {
-	printf("%s: %s", name, "");
+	fprintf(stderr, "%s: %s", name, "");
 }
 
 void print(char const* name, Maike::SystemTimeStamp t)
@@ -102,24 +117,25 @@ void print(char const* name, Maike::SystemTimeStamp t)
 	tm time_decomposed;
 	gmtime_r(&timeval, &time_decomposed);
 
-	printf("%s: %04d-%02d-%02d %d:%02d:%02d UTC",
-	       name,
-	       time_decomposed.tm_year + 1900,
-	       time_decomposed.tm_mon + 1,
-	       time_decomposed.tm_mday,
-	       time_decomposed.tm_hour,
-	       time_decomposed.tm_min,
-	       time_decomposed.tm_sec);
+	fprintf(stderr,
+	        "%s: %04d-%02d-%02d %d:%02d:%02d UTC",
+	        name,
+	        time_decomposed.tm_year + 1900,
+	        time_decomposed.tm_mon + 1,
+	        time_decomposed.tm_mday,
+	        time_decomposed.tm_hour,
+	        time_decomposed.tm_min,
+	        time_decomposed.tm_sec);
 }
 
 
 template<class T>
 void print(char const* name, std::vector<T> const& v)
 {
-	printf("%s: ", name);
+	fprintf(stderr, "%s: ", name);
 	std::for_each(std::begin(v), std::end(v), [](auto const& val) {
 		print(nullptr, val);
-		printf(", ");
+		fprintf(stderr, ", ");
 	});
 }
 
@@ -208,23 +224,15 @@ int main(int argc, char** argv)
 		auto now = std::chrono::steady_clock::now();
 		scanner.processPath(Maike::fs::path{"."});
 		auto src_files = scanner.takeResult();
-		fprintf(stdout,
+		fprintf(stderr,
 		        "# Processed %zu files in %.7f seconds\n",
 		        src_files.size(),
 		        std::chrono::duration<double>(std::chrono::steady_clock::now() - now).count());
 		makeSourceFileInfosFromTargets(src_files);
 		resolveDependencies(src_files);
 
-#if 0
-		std::for_each(std::begin(src_files), std::end(src_files), [](auto const& item) {
-			auto const& deps = item.second.usedFiles();
-			printf("\"%s\"\n", item.first.c_str());
-			std::for_each(std::begin(deps), std::end(deps), [&item](auto const& edge) {
-				if(edge.sourceFile() != nullptr)
-				{ printf("\"%s\" -> \"%s\"\n", item.first.c_str(), edge.name().c_str()); }
-			});
-		});
-#endif
+		if(cmdline.hasOption<Maike::CmdLineOption::PrintDepGraph>())
+		{ printDepGraph(src_files, cmdline.option<Maike::CmdLineOption::PrintDepGraph>()); }
 	}
 	catch(std::exception const& err)
 	{
