@@ -97,6 +97,8 @@ namespace Maike::Config
 
 	std::map<std::string, std::reference_wrapper<SourceFileInfoLoaders::Loader const>>
 	mapSourceFileInfoLoaders(Main const& cfg);
+
+	Main load(std::vector<fs::path> const& cfg_files);
 }
 
 #endif

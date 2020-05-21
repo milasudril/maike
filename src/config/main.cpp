@@ -4,6 +4,8 @@
 
 #include "./main.hpp"
 
+#include "src/io/input_file.hpp"
+
 std::map<std::string, std::reference_wrapper<Maike::SourceFileInfoLoaders::Loader const>>
 Maike::Config::mapSourceFileInfoLoaders(Maike::Config::Main const& cfg)
 {
@@ -20,4 +22,22 @@ Maike::Config::mapSourceFileInfoLoaders(Maike::Config::Main const& cfg)
 		ret.insert_or_assign(std::end(ret), item.first, i->second);
 	});
 	return ret;
+}
+
+Maike::Config::Main Maike::Config::load(std::vector<fs::path> const& cfg_files)
+{
+	Main cfg;
+	std::for_each(std::begin(cfg_files), std::end(cfg_files), [&cfg](auto const& item) {
+		try
+		{
+			Maike::Io::InputFile cfg_file{item};
+			auto cfg_json = KeyValueStore::Compound{Maike::Io::Reader{cfg_file}, item.string()};
+			cfg = Main{cfg_json.get<Maike::KeyValueStore::CompoundRefConst>("maikeconfig")};
+		}
+		catch(...)
+		{
+		}
+	});
+
+	return cfg;
 }

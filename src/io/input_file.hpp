@@ -19,6 +19,8 @@ namespace Maike::Io
 	public:
 		explicit InputFile(fs::path const& path): m_handle{open(path.c_str(), O_RDONLY)}
 		{
+			if(m_handle == -1)
+			{ throw std::runtime_error{std::string{"It was not possible to read "} + path.string()}; }
 		}
 
 		InputFile(InputFile&& other): m_handle{other.m_handle}

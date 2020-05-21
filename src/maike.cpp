@@ -173,16 +173,9 @@ int main(int argc, char** argv)
 
 		Maike::KeyValueStore::init();
 
-		auto cfg_files = cmdline.hasOption<Maike::CmdLineOption::ConfigFiles>() ?
-		                    cmdline.option<Maike::CmdLineOption::ConfigFiles>() :
-		                    std::vector<Maike::fs::path>{"maikeconfig.json"};
-
-
-		Maike::Io::InputFile cfg_file{cfg_files[0]};
-		auto cfg_json =
-		   Maike::KeyValueStore::Compound{Maike::Io::Reader{cfg_file}, cfg_files[0].string()};
-
-		Maike::Config::Main cfg{cfg_json.get<Maike::KeyValueStore::CompoundRefConst>("maikeconfig")};
+		auto cfg = Maike::Config::load(cmdline.hasOption<Maike::CmdLineOption::ConfigFiles>() ?
+		                                  cmdline.option<Maike::CmdLineOption::ConfigFiles>() :
+		                                  std::vector<Maike::fs::path>{"maikeconfig.json"});
 
 
 		if(cmdline.hasOption<Maike::CmdLineOption::ConfigDump>())
