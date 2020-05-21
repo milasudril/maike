@@ -6,6 +6,7 @@
 			".",
 			"__targets",
 			"__legacy",
+			"test_dir",
 			".git"
 		],
 		"recursive": 1

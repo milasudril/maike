@@ -59,7 +59,7 @@ void Maike::SourceTreeLoader::DirectoryScanner::processPath(
 			   [this](auto&& src_path, auto&& src_file_info) {
 				   return m_source_files.insert(std::make_pair(std::move(src_path), std::move(src_file_info)));
 			   },
-			   std::move(src_path),
+			   std::move(src_path_normal),
 			   std::move(*src_file_info));
 
 			if(ins.second && is_directory(ins.first->first))

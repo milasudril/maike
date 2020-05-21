@@ -2,7 +2,7 @@
 
 #undef NDEBUG
 
-#include "mem_io_redirector.hpp"
+#include "./mem_io_redirector.hpp"
 
 #include <array>
 #include <cassert>

@@ -2,7 +2,7 @@
 //@	  "targets":[{"name":"command_line.o","type":"object"}]
 //@	}
 
-#include "command_line.hpp"
+#include "./command_line.hpp"
 
 namespace
 {

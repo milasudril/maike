@@ -5,9 +5,9 @@
 #ifndef MAIKE_COMPILER_HPP
 #define MAIKE_COMPILER_HPP
 
-#include "fs.hpp"
-#include "compilation_log.hpp"
-#include "key_value_store/compound.hpp"
+#include "./fs.hpp"
+#include "./compilation_log.hpp"
+#include "src/key_value_store/compound.hpp"
 
 #include <vector>
 #include <memory>

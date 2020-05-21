@@ -4,7 +4,7 @@
 
 #undef NDEBUG
 
-#include "output_buffer.hpp"
+#include "./output_buffer.hpp"
 
 #include <cassert>
 #include <vector>

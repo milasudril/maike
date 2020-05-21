@@ -3,7 +3,7 @@
 #ifndef MAIKE_VCSSTATE_HPP
 #define MAIKE_VCSSTATE_HPP
 
-#include "key_value_store/compound.hpp"
+#include "src/key_value_store/compound.hpp"
 
 #include <string>
 #include <type_traits>

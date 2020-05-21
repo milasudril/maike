@@ -4,7 +4,7 @@
 
 #undef NDEBUG
 
-#include "input_buffer.hpp"
+#include "./input_buffer.hpp"
 
 #include <cassert>
 #include <string_view>

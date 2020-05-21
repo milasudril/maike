@@ -38,7 +38,7 @@ namespace
 		   std::begin(deps), std::end(deps), std::back_inserter(ret), [&prefix](auto const& item) {
 			   if(item.resolver() == Maike::Dependency::Resolver::InternalLookup)
 			   {
-				   auto const& str = item.name().string();
+				   auto str = item.name().string();
 				   if(str.size() > 1 && memcmp(str.data(), "./", 2) == 0)
 				   { return Maike::Dependency{(prefix / item.name()).lexically_normal(), item.resolver()}; }
 			   }
