@@ -66,6 +66,18 @@ namespace Maike
 		SrcFile const* r_srcfile;
 		Resolver m_res_method;
 	};
+
+	template<class T>
+	inline bool operator==(BasicDependency<T> const& a, BasicDependency<T> const& b)
+	{
+		return a.name() == b.name() && a.resolver() == b.resolver();
+	}
+
+	template<class T>
+	inline bool operator!=(BasicDependency<T> const& a, BasicDependency<T> const& b)
+	{
+		return !(a == b);
+	}
 }
 
 #endif
