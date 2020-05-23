@@ -21,7 +21,7 @@ void makeSourceFileInfosFromTargets(std::map<Maike::fs::path, Maike::SourceFileI
 				std::vector<Maike::Dependency> deps{
 				   Maike::Dependency{item.first, Maike::Dependency::Resolver::InternalLookup}};
 				Maike::SourceFileInfo src_file;
-				src_file.usedFiles(std::move(deps));
+				src_file.buildDeps(std::move(deps));
 				// TODO: Should target dir be prepended to target?
 				source_files.insert(i, std::make_pair(target, std::move(src_file)));
 			}
@@ -32,7 +32,7 @@ void makeSourceFileInfosFromTargets(std::map<Maike::fs::path, Maike::SourceFileI
 void resolveDependencies(std::map<Maike::fs::path, Maike::SourceFileInfo>& source_files)
 {
 	std::for_each(std::begin(source_files), std::end(source_files), [&source_files](auto& item) {
-		auto const& deps = item.second.usedFiles();
+		auto const& deps = item.second.buildDeps();
 		std::vector<Maike::Dependency> deps_resolved;
 		deps_resolved.reserve(deps.size());
 		std::transform(std::begin(deps),
@@ -42,7 +42,7 @@ void resolveDependencies(std::map<Maike::fs::path, Maike::SourceFileInfo>& sourc
 			               auto tmp = edge;
 			               return tmp.resolve(source_files);
 		               });
-		item.second.usedFiles(std::move(deps_resolved));
+		item.second.buildDeps(std::move(deps_resolved));
 	});
 }
 
@@ -51,7 +51,7 @@ void printDepGraph(std::map<Maike::fs::path, Maike::SourceFileInfo> const& src_f
 {
 	puts("digraph \"G\" {");
 	std::for_each(std::begin(src_files), std::end(src_files), [](auto const& item) {
-		auto const& deps = item.second.usedFiles();
+		auto const& deps = item.second.buildDeps();
 		printf("\"%s\"\n", item.first.c_str());
 		std::for_each(std::begin(deps), std::end(deps), [&item](auto const& edge) {
 			if(edge.sourceFile() != nullptr)

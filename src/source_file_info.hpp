@@ -1,6 +1,5 @@
 //@	{
 //@	 "targets":[{"name":"source_file_info.hpp","type":"include"}]
-//@	 ,"dependencies_extra":[{"ref":"source_file_info.o","rel":"implementation"}]
 //@	 }
 
 #ifndef MAIKE_SOURCEFILEINFO_HPP
@@ -25,23 +24,28 @@ namespace Maike
 		 */
 		explicit SourceFileInfo() = default;
 
-		explicit SourceFileInfo(std::vector<Dependency>&& used_files,
-		                        std::vector<fs::path>&& targets,
-		                        Compiler&& compiler);
-
-		std::vector<Dependency> usedFilesCopy() const
+		explicit SourceFileInfo(std::vector<Dependency>&& build_deps,
+                                      std::vector<fs::path>&& targets,
+                                      Compiler&& compiler):
+			m_build_deps{std::move(build_deps)},
+			m_targets{std::move(targets)},
+			m_compiler{std::move(compiler)}
 		{
-			return m_used_files;
 		}
 
-		std::vector<Dependency> const& usedFiles() const
+		std::vector<Dependency> buildDepsCopy() const
 		{
-			return m_used_files;
+			return m_build_deps;
 		}
 
-		SourceFileInfo& usedFiles(std::vector<Dependency>&& used_files)
+		std::vector<Dependency> const& buildDeps() const
 		{
-			m_used_files = std::move(used_files);
+			return m_build_deps;
+		}
+
+		SourceFileInfo& buildDeps(std::vector<Dependency>&& used_files)
+		{
+			m_build_deps = std::move(used_files);
 			return *this;
 		}
 
@@ -56,102 +60,10 @@ namespace Maike
 		}
 
 	private:
-		std::vector<Dependency> m_used_files;
+		std::vector<Dependency> m_build_deps;
 		std::vector<fs::path> m_targets;
 		Compiler m_compiler;
 	};
-
-	class ConstTag
-	{
-	};
-	class NonConstTag
-	{
-	};
-
-	template<class Tag>
-	class SourceFile
-	{
-	public:
-		static_assert(std::is_same_v<Tag, ConstTag> || std::is_same_v<Tag, NonConstTag>);
-
-		static constexpr auto IsConst = std::is_same_v<Tag, ConstTag>;
-
-		using WrappedSourceFileInfo =
-		   std::conditional_t<IsConst, std::add_const_t<SourceFileInfo>, SourceFileInfo>;
-
-		SourceFile(): r_name{nullptr}, r_info{nullptr}
-		{
-		}
-
-		explicit SourceFile(fs::path const&& name, WrappedSourceFileInfo& info) = delete;
-
-		explicit SourceFile(fs::path const&& name, SourceFileInfo const&& info) = delete;
-
-		explicit SourceFile(fs::path const& name, WrappedSourceFileInfo& info):
-		   r_name{&name},
-		   r_info{&info}
-		{
-		}
-
-		bool valid() const
-		{
-			return r_name != nullptr;
-		}
-
-		fs::path const& name() const
-		{
-			return *r_name;
-		}
-
-		bool targetsUpToDate() const;
-
-		int compile();
-
-		std::vector<Dependency> usedFilesCopy() const
-		{
-			return r_info->usedFilesCopy();
-		}
-
-		std::vector<Dependency> const& usedFiles() const
-		{
-			return r_info->usedFiles();
-		}
-
-		SourceFile& usedFiles(std::vector<Dependency>&& used_files)
-		{
-			r_info->usedFiles(std::move(used_files));
-			return *this;
-		}
-
-		std::vector<fs::path> const& targets() const
-		{
-			return r_info->targets();
-		}
-
-		Compiler const& compiler() const
-		{
-			return r_info->compiler();
-		}
-
-		operator SourceFile<ConstTag>() const
-		{
-			return SourceFile<ConstTag>{*r_name, *r_info};
-		}
-
-		SourceFileInfo const* fileInfo() const
-		{
-			return r_info;
-		}
-
-	private:
-		fs::path const* r_name;
-		WrappedSourceFileInfo* r_info;
-	};
-
-
-	SourceFile(fs::path const& name, SourceFileInfo& info)->SourceFile<NonConstTag>;
-
-	SourceFile(fs::path const& name, SourceFileInfo const& info)->SourceFile<ConstTag>;
 }
 
 #endif
