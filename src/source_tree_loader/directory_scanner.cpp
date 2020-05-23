@@ -4,16 +4,7 @@
 
 #include "./directory_scanner.hpp"
 
-namespace
-{
-	// TODO: This function should be moved.
-	template<class Mutex, class Func, class... Args>
-	auto invokeWithMutex(Mutex& mtx, Func&& f, Args&&... args)
-	{
-		std::lock_guard lock{mtx};
-		return std::invoke(std::forward<Func>(f), std::forward<Args>(args)...);
-	}
-}
+#include "src/utils/with_mutex.hpp"
 
 Maike::SourceTreeLoader::DirectoryScanner&
 Maike::SourceTreeLoader::DirectoryScanner::processPath(fs::path const& src_path)
@@ -46,7 +37,7 @@ void Maike::SourceTreeLoader::DirectoryScanner::processPath(
 		if(src_path != "." && r_filter.get().match(src_path.filename().c_str())) { return; }
 
 		auto src_path_normal = src_path.lexically_normal();
-		auto i = invokeWithMutex(
+		auto i = invokeWithMutex<std::lock_guard>(
 		   m_source_files_mtx,
 		   [this](auto const& item) { return m_source_files.find(item); },
 		   src_path_normal);
@@ -54,7 +45,7 @@ void Maike::SourceTreeLoader::DirectoryScanner::processPath(
 
 		if(auto src_file_info = r_loaders.get().load(src_path); src_file_info.has_value())
 		{
-			auto ins = invokeWithMutex(
+			auto ins = invokeWithMutex<std::lock_guard>(
 			   m_source_files_mtx,
 			   [this](auto&& src_path, auto&& src_file_info) {
 				   return m_source_files.insert(std::make_pair(std::move(src_path), std::move(src_file_info)));

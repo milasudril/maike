@@ -42,6 +42,13 @@ namespace Maike::Exec
 		int m_signo;
 		int m_exit_status;
 	};
+
+	inline bool failed(Result res)
+	{
+		if(!res.returnedFromMain()) { return true; }
+
+		return res.exitStatus() != 0;
+	}
 }
 
 #endif
