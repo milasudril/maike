@@ -230,10 +230,12 @@ int main(int argc, char** argv)
 		                           cmdline.option<Maike::CmdLineOption::TargetDir>() :
 		                           Maike::fs::path{"__targets"};
 		makeSourceFileInfosFromTargets(src_files, target_dir);
-		resolveDependencies(src_files);
-
 		if(cmdline.hasOption<Maike::CmdLineOption::PrintDepGraph>())
-		{ printDepGraph(src_files, cmdline.option<Maike::CmdLineOption::PrintDepGraph>()); }
+		{
+			printDepGraph(src_files, cmdline.option<Maike::CmdLineOption::PrintDepGraph>());
+			return 0;
+		}
+		resolveDependencies(src_files);
 	}
 	catch(std::exception const& err)
 	{
