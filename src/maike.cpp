@@ -2,6 +2,7 @@
 
 #include "./cmd_line_options.hpp"
 #include "./build_info.hpp"
+#include "./target.hpp"
 
 #include "src/io/input_file.hpp"
 #include "src/config/main.hpp"
@@ -32,6 +33,30 @@ void makeSourceFileInfosFromTargets(std::map<Maike::fs::path, Maike::SourceFileI
 	              });
 }
 
+std::map<Maike::fs::path, Maike::Target> collectTargets(std::map<Maike::fs::path, Maike::SourceFileInfo>& source_files,
+Maike::fs::path const& target_dir)
+{
+	std::map<Maike::fs::path, Maike::Target> ret;
+	std::for_each(std::begin(source_files),
+	              std::end(source_files),
+	              [&ret, &target_dir](auto const& item) {
+		              auto const& targets = item.second.targets();
+		              std::for_each(std::begin(targets),
+		                            std::end(targets),
+		                            [&ret, &item, &target_dir](auto const& target) {
+			                            if(item.first != target) // For backwards compatiblity with old maike
+			                            {
+				                            auto i = ret.find(target);
+				                            if(i != std::end(ret))
+				                            { throw std::runtime_error{"Target has already been defined"}; }
+
+											ret.insert(i, std::make_pair(target_dir / target, Maike::Target{item.first, item.second}));
+			                            }
+		                            });
+	              });
+	return ret;
+}
+
 void resolveDependencies(std::map<Maike::fs::path, Maike::SourceFileInfo>& source_files)
 {
 	std::for_each(std::begin(source_files), std::end(source_files), [&source_files](auto& item) {
@@ -49,11 +74,22 @@ void resolveDependencies(std::map<Maike::fs::path, Maike::SourceFileInfo>& sourc
 	});
 }
 
-void printDepGraph(std::map<Maike::fs::path, Maike::SourceFileInfo> const& src_files,
+void printDepGraph(std::map<Maike::fs::path, Maike::Target> const& targets,
+                   std::map<Maike::fs::path, Maike::SourceFileInfo> const& source_files,
                    Maike::fs::path const&)
 {
 	puts("digraph \"G\" {\nrankdir=LR\n");
-	std::for_each(std::begin(src_files), std::end(src_files), [](auto const& item) {
+	std::for_each(std::begin(targets), std::end(targets), [](auto const& item) {
+		printf("\"%s\" -> \"%s\"\n", item.first.c_str(), item.second.sourceFilename().string().c_str());
+/*		std::for_each(std::begin(deps), std::end(deps), [&item](auto const& edge) {
+			//	if(edge.sourceFile() != nullptr)
+			{
+				printf("\"%s\" -> \"%s\"\n", item.first.c_str(), edge.name().c_str());
+			}
+		});*/
+	});
+
+	std::for_each(std::begin(source_files), std::end(source_files), [](auto const& item) {
 		auto const& deps = item.second.useDeps();
 		printf("\"%s\"\n", item.first.c_str());
 		std::for_each(std::begin(deps), std::end(deps), [&item](auto const& edge) {
@@ -230,9 +266,10 @@ int main(int argc, char** argv)
 		                           cmdline.option<Maike::CmdLineOption::TargetDir>() :
 		                           Maike::fs::path{"__targets"};
 		makeSourceFileInfosFromTargets(src_files, target_dir);
+		auto targets = collectTargets(src_files, target_dir);
 		if(cmdline.hasOption<Maike::CmdLineOption::PrintDepGraph>())
 		{
-			printDepGraph(src_files, cmdline.option<Maike::CmdLineOption::PrintDepGraph>());
+			printDepGraph(targets, src_files, cmdline.option<Maike::CmdLineOption::PrintDepGraph>());
 			return 0;
 		}
 		resolveDependencies(src_files);
