@@ -1,0 +1,40 @@
+@startuml
+
+Target "1" o-- "1" SourceFileInfo : r_src_file
+class Target {
+	-SourceFileInfo r_src_file
+	+Path sourceFileName() <<const>>
+	+Dependency[] buildDeps() <<const>>
+	+int compile() <<const>>
+}
+note right: Methods act on `r_src_file`.\n`buildDeps()` returns\n`r_src_file->useDeps()`.
+
+
+Dependency "1" o-- "0:1" Target : r_target
+class Dependency {
+	-Path m_name
+	-Target r_target
+}
+
+SourceFileInfo "1" *-- "∞" Dependency : m_use_deps
+class SourceFileInfo {
+	-Dependency[] m_use_deps
+	-Path[] m_target_names
+	+Dependency[] useDeps() <<const>>
+	+int compile() <<const>>
+}
+note left: Store target name instead of\nreference to the `Target`. This\nmakes it easier to relocate\n`SourceFileInfo` objects.
+
+SourceFileIndexEntry "1" *-- "1" SourceFileInfo
+class SourceFileIndexEntry {
+	-Path first <<const>>
+	-SourceFileInfo second
+}
+
+TargetIndexEntry "1" *-- "1" Target
+class TargetIndexEntry {
+	-Path first <<const>>
+	-Target second
+}
+
+@enduml

@@ -1,0 +1,13 @@
+digraph G
+{
+    "app" -> "app.o"
+    "app.o" -> "app.cpp"
+    "app.cpp" -> "foo.hpp"
+
+    "foo.o" -> "foo.cpp"
+    "foo.cpp" -> "foo.hpp"
+    "foo.cpp" -> "bar.hpp"
+
+    "bar.o" -> "bar.cpp"
+    "bar.cpp" -> "bar.hpp"
+}

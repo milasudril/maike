@@ -25,27 +25,27 @@ namespace Maike
 		explicit SourceFileInfo() = default;
 
 		explicit SourceFileInfo(std::vector<Dependency>&& build_deps,
-                                      std::vector<fs::path>&& targets,
-                                      Compiler&& compiler):
-			m_build_deps{std::move(build_deps)},
-			m_targets{std::move(targets)},
-			m_compiler{std::move(compiler)}
+		                        std::vector<fs::path>&& targets,
+		                        Compiler&& compiler):
+		   m_use_deps{std::move(build_deps)},
+		   m_targets{std::move(targets)},
+		   m_compiler{std::move(compiler)}
 		{
 		}
 
-		std::vector<Dependency> buildDepsCopy() const
+		std::vector<Dependency> useDepsCopy() const
 		{
-			return m_build_deps;
+			return m_use_deps;
 		}
 
-		std::vector<Dependency> const& buildDeps() const
+		std::vector<Dependency> const& useDeps() const
 		{
-			return m_build_deps;
+			return m_use_deps;
 		}
 
-		SourceFileInfo& buildDeps(std::vector<Dependency>&& used_files)
+		SourceFileInfo& useDeps(std::vector<Dependency>&& used_files)
 		{
-			m_build_deps = std::move(used_files);
+			m_use_deps = std::move(used_files);
 			return *this;
 		}
 
@@ -60,7 +60,7 @@ namespace Maike
 		}
 
 	private:
-		std::vector<Dependency> m_build_deps;
+		std::vector<Dependency> m_use_deps;
 		std::vector<fs::path> m_targets;
 		Compiler m_compiler;
 	};
