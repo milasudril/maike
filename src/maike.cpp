@@ -8,25 +8,28 @@
 #include "src/source_tree_loader/directory_scanner.hpp"
 #include "src/source_file_info_loaders/cxx/source_file_loader.hpp"
 
-void makeSourceFileInfosFromTargets(std::map<Maike::fs::path, Maike::SourceFileInfo>& source_files)
+void makeSourceFileInfosFromTargets(std::map<Maike::fs::path, Maike::SourceFileInfo>& source_files,
+                                    Maike::fs::path const& target_dir)
 {
-	std::for_each(std::begin(source_files), std::end(source_files), [&source_files](auto const& item) {
-		auto const& targets = item.second.targets();
-		std::for_each(std::begin(targets), std::end(targets), [&source_files, &item](auto const& target) {
-			if(item.first != target) // For backwards compatiblity with old maike
-			{
-				auto i = source_files.find(target);
-				if(i != std::end(source_files)) { throw std::runtime_error{"Target has already been defined"}; }
+	std::for_each(std::begin(source_files),
+	              std::end(source_files),
+	              [&source_files, &target_dir](auto const& item) {
+		              auto const& targets = item.second.targets();
+		              std::for_each(std::begin(targets),
+		                            std::end(targets),
+		                            [&source_files, &item, &target_dir](auto const& target) {
+			                            if(item.first != target) // For backwards compatiblity with old maike
+			                            {
+				                            auto i = source_files.find(target);
+				                            if(i != std::end(source_files))
+				                            { throw std::runtime_error{"Target has already been defined"}; }
 
-				std::vector<Maike::Dependency> deps{
-				   Maike::Dependency{item.first, Maike::Dependency::Resolver::InternalLookup}};
-				Maike::SourceFileInfo src_file;
-				src_file.useDeps(std::move(deps));
-				// TODO: Should target dir be prepended to target?
-				source_files.insert(i, std::make_pair(target, std::move(src_file)));
-			}
-		});
-	});
+				                            Maike::SourceFileInfo src_file;
+				                            source_files.insert(
+				                               i, std::make_pair(target_dir / target, std::move(src_file)));
+			                            }
+		                            });
+	              });
 }
 
 void resolveDependencies(std::map<Maike::fs::path, Maike::SourceFileInfo>& source_files)
@@ -49,13 +52,15 @@ void resolveDependencies(std::map<Maike::fs::path, Maike::SourceFileInfo>& sourc
 void printDepGraph(std::map<Maike::fs::path, Maike::SourceFileInfo> const& src_files,
                    Maike::fs::path const&)
 {
-	puts("digraph \"G\" {");
+	puts("digraph \"G\" {\nrankdir=LR\n");
 	std::for_each(std::begin(src_files), std::end(src_files), [](auto const& item) {
 		auto const& deps = item.second.useDeps();
 		printf("\"%s\"\n", item.first.c_str());
 		std::for_each(std::begin(deps), std::end(deps), [&item](auto const& edge) {
-		//	if(edge.sourceFile() != nullptr)
-			{ printf("\"%s\" -> \"%s\"\n", item.first.c_str(), edge.name().c_str()); }
+			//	if(edge.sourceFile() != nullptr)
+			{
+				printf("\"%s\" -> \"%s\"\n", item.first.c_str(), edge.name().c_str());
+			}
 		});
 	});
 	puts("}");
@@ -221,7 +226,10 @@ int main(int argc, char** argv)
 		        "# Processed %zu files in %.7f seconds\n",
 		        src_files.size(),
 		        std::chrono::duration<double>(std::chrono::steady_clock::now() - now).count());
-	//	makeSourceFileInfosFromTargets(src_files);
+		auto const target_dir = cmdline.hasOption<Maike::CmdLineOption::TargetDir>() ?
+		                           cmdline.option<Maike::CmdLineOption::TargetDir>() :
+		                           Maike::fs::path{"__targets"};
+		makeSourceFileInfosFromTargets(src_files, target_dir);
 		resolveDependencies(src_files);
 
 		if(cmdline.hasOption<Maike::CmdLineOption::PrintDepGraph>())
