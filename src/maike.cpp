@@ -33,27 +33,26 @@ void makeSourceFileInfosFromTargets(std::map<Maike::fs::path, Maike::SourceFileI
 	              });
 }
 
-std::map<Maike::fs::path, Maike::Target> collectTargets(std::map<Maike::fs::path, Maike::SourceFileInfo>& source_files,
-Maike::fs::path const& target_dir)
+std::map<Maike::fs::path, Maike::Target>
+collectTargets(std::map<Maike::fs::path, Maike::SourceFileInfo>& source_files,
+               Maike::fs::path const& target_dir)
 {
 	std::map<Maike::fs::path, Maike::Target> ret;
-	std::for_each(std::begin(source_files),
-	              std::end(source_files),
-	              [&ret, &target_dir](auto const& item) {
-		              auto const& targets = item.second.targets();
-		              std::for_each(std::begin(targets),
-		                            std::end(targets),
-		                            [&ret, &item, &target_dir](auto const& target) {
-			                            if(item.first != target) // For backwards compatiblity with old maike
-			                            {
-				                            auto i = ret.find(target);
-				                            if(i != std::end(ret))
-				                            { throw std::runtime_error{"Target has already been defined"}; }
+	std::for_each(
+	   std::begin(source_files), std::end(source_files), [&ret, &target_dir](auto const& item) {
+		   auto const& targets = item.second.targets();
+		   std::for_each(
+		      std::begin(targets), std::end(targets), [&ret, &item, &target_dir](auto const& target) {
+			      if(item.first != target) // For backwards compatiblity with old maike
+			      {
+				      auto i = ret.find(target);
+				      if(i != std::end(ret)) { throw std::runtime_error{"Target has already been defined"}; }
 
-											ret.insert(i, std::make_pair(target_dir / target, Maike::Target{item.first, item.second}));
-			                            }
-		                            });
-	              });
+				      ret.insert(i,
+				                 std::make_pair(target_dir / target, Maike::Target{item.first, item.second}));
+			      }
+		      });
+	   });
 	return ret;
 }
 
@@ -68,10 +67,23 @@ void resolveDependencies(std::map<Maike::fs::path, Maike::SourceFileInfo>& sourc
 		               std::back_inserter(deps_resolved),
 		               [&source_files](auto const& edge) {
 			               auto tmp = edge;
-			               return tmp.resolve(source_files);
+			               return tmp.resolve(std::cref(source_files));
 		               });
 		item.second.useDeps(std::move(deps_resolved));
 	});
+}
+
+std::map<Maike::fs::path, std::vector<Maike::Dependency>>
+invertDependencyGraph(std::map<Maike::fs::path, Maike::Target> const& source_files)
+{
+	std::map<Maike::fs::path, std::vector<Maike::Dependency>> ret;
+	std::for_each(std::begin(source_files), std::end(source_files), [&ret](auto const& index_entry) {
+		auto const& deps = index_entry.second.buildDeps();
+		std::for_each(std::begin(deps), std::end(deps), [&ret, &index_entry](auto const& edge) {
+			ret[edge.name()].push_back(Maike::Dependency{index_entry.first, edge.resolver()});
+		});
+	});
+	return ret;
 }
 
 void printDepGraph(std::map<Maike::fs::path, Maike::Target> const& targets,
@@ -81,12 +93,12 @@ void printDepGraph(std::map<Maike::fs::path, Maike::Target> const& targets,
 	puts("digraph \"G\" {\nrankdir=LR\n");
 	std::for_each(std::begin(targets), std::end(targets), [](auto const& item) {
 		printf("\"%s\" -> \"%s\"\n", item.first.c_str(), item.second.sourceFilename().string().c_str());
-/*		std::for_each(std::begin(deps), std::end(deps), [&item](auto const& edge) {
-			//	if(edge.sourceFile() != nullptr)
-			{
-				printf("\"%s\" -> \"%s\"\n", item.first.c_str(), edge.name().c_str());
-			}
-		});*/
+		/*		std::for_each(std::begin(deps), std::end(deps), [&item](auto const& edge) {
+		   //	if(edge.sourceFile() != nullptr)
+		   {
+		    printf("\"%s\" -> \"%s\"\n", item.first.c_str(), edge.name().c_str());
+		   }
+		  });*/
 	});
 
 	std::for_each(std::begin(source_files), std::end(source_files), [](auto const& item) {
@@ -101,6 +113,24 @@ void printDepGraph(std::map<Maike::fs::path, Maike::Target> const& targets,
 	});
 	puts("}");
 }
+
+void printDepGraph(std::map<Maike::fs::path, std::vector<Maike::Dependency>> const& targets,
+                   Maike::fs::path const&)
+{
+	puts("digraph \"G\" {\nrankdir=LR\n");
+	std::for_each(std::begin(targets), std::end(targets), [](auto const& item) {
+		auto const& deps = item.second;
+		printf("\"%s\"\n", item.first.c_str());
+		std::for_each(std::begin(deps), std::end(deps), [&item](auto const& edge) {
+			//	if(edge.sourceFile() != nullptr)
+			{
+				printf("\"%s\" -> \"%s\"\n", item.first.c_str(), edge.name().c_str());
+			}
+		});
+	});
+	puts("}");
+}
+
 
 void printHelp(Maike::CommandLine const& cmdline)
 {
@@ -267,9 +297,38 @@ int main(int argc, char** argv)
 		                           Maike::fs::path{"__targets"};
 		makeSourceFileInfosFromTargets(src_files, target_dir);
 		auto targets = collectTargets(src_files, target_dir);
+		auto targets_inv = invertDependencyGraph(targets);
+
+#if 0
+
+		puts("digraph \"G\" {");
+		std::for_each(std::begin(src_files_inv), std::end(src_files_inv), [&src_files, &targets](auto const& item) {
+			auto i = src_files.find(item.first);
+			if( i == std::end(src_files))
+			{ return; }
+			auto const& src_file = i->second;
+			auto const& child_use_deps = src_file.childTargetsUseDeps();
+
+
+			if(child_use_deps.size() != 0)
+			{
+				std::for_each(std::begin(child_use_deps), std::end(child_use_deps), [](auto const& depname) {
+				});
+			};
+
+		});
+		puts("}\n");
+#endif
+
 		if(cmdline.hasOption<Maike::CmdLineOption::PrintDepGraph>())
 		{
 			printDepGraph(targets, src_files, cmdline.option<Maike::CmdLineOption::PrintDepGraph>());
+			return 0;
+		}
+
+		if(cmdline.hasOption<Maike::CmdLineOption::PrintDepGraphInv>())
+		{
+			printDepGraph(targets_inv, cmdline.option<Maike::CmdLineOption::PrintDepGraphInv>());
 			return 0;
 		}
 		resolveDependencies(src_files);

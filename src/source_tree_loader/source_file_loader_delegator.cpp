@@ -68,6 +68,22 @@ namespace
 		return ret;
 	}
 
+	std::vector<Maike::fs::path> getChildTargetUseDeps(Maike::fs::path const& src_dir,
+	                                                   Maike::KeyValueStore::Compound const& tags)
+	{
+		std::vector<Maike::fs::path> ret;
+
+		if(auto deps = tags.getIf<Maike::KeyValueStore::ArrayRefConst>("dependencies_extra"); deps)
+		{
+			std::transform(
+			   std::begin(*deps), std::end(*deps), std::back_inserter(ret), [&src_dir](auto item) {
+				   auto const val = item.template as<Maike::KeyValueStore::CompoundRefConst>();
+				   return src_dir / Maike::fs::path{val.template get<char const*>("ref")};
+			   });
+		}
+		return ret;
+	}
+
 	Maike::SourceFileInfo loadSourceFile(std::vector<Maike::Dependency>&& builtin_deps,
 	                                     Maike::fs::path const& path,
 	                                     Maike::SourceFileInfoLoaders::Loader const& loader)
@@ -89,9 +105,11 @@ namespace
 
 		auto tags = Maike::KeyValueStore::Compound{Maike::Io::Reader{tags_fifo}, path.string()};
 		auto targets = getTargets(path.parent_path(), tags);
+		auto child_target_use_deps = getChildTargetUseDeps(path.parent_path(), tags);
 
 		auto compiler = tags.getIf<Maike::KeyValueStore::CompoundRefConst>("compiler");
 		return Maike::SourceFileInfo{std::move(builtin_deps),
+		                             std::move(child_target_use_deps),
 		                             std::move(targets),
 		                             compiler ? loader.getCompiler(*compiler) : loader.getCompiler()};
 	}
@@ -111,7 +129,8 @@ Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(Maike::fs::path const& 
 	{
 		std::vector<Maike::fs::path> targets;
 		targets.push_back(path.lexically_normal());
-		return Maike::SourceFileInfo{std::move(deps), std::move(targets), Maike::Compiler{MkDir{}}};
+		return Maike::SourceFileInfo{
+		   std::move(deps), std::vector<Maike::fs::path>{}, std::move(targets), Maike::Compiler{MkDir{}}};
 	}
 
 	auto extension = path.extension();

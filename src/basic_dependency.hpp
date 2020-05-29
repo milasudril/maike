@@ -33,14 +33,14 @@ namespace Maike
 		}
 
 		template<class SrcFileSet>
-		BasicDependency& resolve(SrcFileSet const& source_files)
+		BasicDependency& resolve(std::reference_wrapper<SrcFileSet const> source_files)
 		{
 			switch(m_res_method)
 			{
 				case Resolver::InternalLookup:
 				{
-					auto i = source_files.find(m_name);
-					r_srcfile = i == std::end(source_files) ? nullptr : &i->second;
+					auto i = source_files.get().find(m_name);
+					r_srcfile = i == std::end(source_files.get()) ? nullptr : &i->second;
 					if(r_srcfile == nullptr)
 					{ throw std::runtime_error{std::string{"Failed to resolve "} + m_name.string()}; }
 				}

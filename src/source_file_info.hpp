@@ -25,10 +25,12 @@ namespace Maike
 		explicit SourceFileInfo() = default;
 
 		explicit SourceFileInfo(std::vector<Dependency>&& build_deps,
+		                        std::vector<fs::path>&& child_target_use_deps,
 		                        std::vector<fs::path>&& targets,
 		                        Compiler&& compiler):
 		   m_use_deps{std::move(build_deps)},
 		   m_targets{std::move(targets)},
+		   m_child_targets_use_deps{std::move(child_target_use_deps)},
 		   m_compiler{std::move(compiler)}
 		{
 		}
@@ -59,9 +61,15 @@ namespace Maike
 			return m_compiler;
 		}
 
+		std::vector<fs::path> const& childTargetsUseDeps() const
+		{
+			return m_child_targets_use_deps;
+		}
+
 	private:
 		std::vector<Dependency> m_use_deps;
 		std::vector<fs::path> m_targets;
+		std::vector<fs::path> m_child_targets_use_deps;
 		Compiler m_compiler;
 	};
 }

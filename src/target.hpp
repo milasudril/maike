@@ -12,9 +12,10 @@ namespace Maike
 	class Target
 	{
 	public:
-		explicit Target(fs::path const& src_file_name, std::reference_wrapper<SourceFileInfo const> src_file):
-			m_src_filename{src_file_name},
-			r_src_file{src_file}
+		explicit Target(fs::path const& src_file_name,
+		                std::reference_wrapper<SourceFileInfo const> src_file):
+		   m_src_filename{src_file_name},
+		   r_src_file{src_file}
 		{
 		}
 
@@ -33,14 +34,14 @@ namespace Maike
 			return m_src_filename;
 		}
 
-	/*
-		TODO
-		template<class ... Args>
-		int compile(Args&& ... args) const
-		{
-			return r_src_file.get().compile(std::forward<Args>(args)...);
-		}
-	*/
+		/*
+		 TODO
+		 template<class ... Args>
+		 int compile(Args&& ... args) const
+		 {
+		  return r_src_file.get().compile(std::forward<Args>(args)...);
+		 }
+		*/
 	private:
 		fs::path m_src_filename;
 		std::reference_wrapper<SourceFileInfo const> r_src_file;
