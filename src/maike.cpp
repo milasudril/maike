@@ -9,50 +9,48 @@
 #include "src/source_tree_loader/directory_scanner.hpp"
 #include "src/source_file_info_loaders/cxx/source_file_loader.hpp"
 
-void makeSourceFileInfosFromTargets(std::map<Maike::fs::path, Maike::SourceFileInfo>& source_files,
+void makeSourceFileInfosFromTargets(Maike::SourceFileIndex& source_files,
                                     Maike::fs::path const& target_dir)
 {
-	std::for_each(std::begin(source_files),
-	              std::end(source_files),
-	              [&source_files, &target_dir](auto const& item) {
-		              auto const& targets = item.second.targets();
-		              std::for_each(std::begin(targets),
-		                            std::end(targets),
-		                            [&source_files, &item, &target_dir](auto const& target) {
-			                            if(item.first != target) // For backwards compatiblity with old maike
-			                            {
-				                            auto i = source_files.find(target);
-				                            if(i != std::end(source_files))
-				                            { throw std::runtime_error{"Target has already been defined"}; }
+	source_files.visitByPath([&source_files, target_dir](auto const& item) {
+		auto const& src_file_info = item.sourceFileInfo();
+		auto const& targets = src_file_info.targets();
+		std::for_each(std::begin(targets),
+		              std::end(targets),
+		              [&source_files, &name = item.path(), &target_dir](auto const& target) {
+			              if(name != target) // For backwards compatiblity with old maike
+			              {
+				              auto i = source_files.get(target);
+				              if(i.valid()) { throw std::runtime_error{"Target has already been defined"}; }
 
-				                            Maike::SourceFileInfo src_file;
-				                            source_files.insert(
-				                               i, std::make_pair(target_dir / target, std::move(src_file)));
-			                            }
-		                            });
-	              });
+				              Maike::SourceFileInfo src_file;
+				              source_files.insert(target_dir / target, std::move(src_file));
+			              }
+		              });
+	});
 }
 
-std::map<Maike::fs::path, Maike::Target>
-collectTargets(std::map<Maike::fs::path, Maike::SourceFileInfo>& source_files,
-               Maike::fs::path const& target_dir)
+std::map<Maike::fs::path, Maike::Target> collectTargets(Maike::SourceFileIndex const& source_files,
+                                                        Maike::fs::path const& target_dir)
 {
 	std::map<Maike::fs::path, Maike::Target> ret;
-	std::for_each(
-	   std::begin(source_files), std::end(source_files), [&ret, &target_dir](auto const& item) {
-		   auto const& targets = item.second.targets();
-		   std::for_each(
-		      std::begin(targets), std::end(targets), [&ret, &item, &target_dir](auto const& target) {
-			      if(item.first != target) // For backwards compatiblity with old maike
-			      {
-				      auto i = ret.find(target);
-				      if(i != std::end(ret)) { throw std::runtime_error{"Target has already been defined"}; }
 
-				      ret.insert(i,
-				                 std::make_pair(target_dir / target, Maike::Target{item.first, item.second}));
-			      }
-		      });
-	   });
+	source_files.visitByPath([&ret, target_dir](auto const& item) {
+		auto const& src_file_info = item.sourceFileInfo();
+		auto const& targets = src_file_info.targets();
+		std::for_each(
+		   std::begin(targets), std::end(targets), [&ret, &item, &target_dir](auto const& target) {
+			   if(item.path() != target) // For backwards compatiblity with old maike
+			   {
+				   auto i = ret.find(target);
+				   if(i != std::end(ret)) { throw std::runtime_error{"Target has already been defined"}; }
+
+				   ret.insert(
+				      i,
+				      std::make_pair(target_dir / target, Maike::Target{item.path(), item.sourceFileInfo()}));
+			   }
+		   });
+	});
 	return ret;
 }
 
@@ -74,28 +72,20 @@ void resolveDependencies(std::map<Maike::fs::path, Maike::SourceFileInfo>& sourc
 }
 
 void printDepGraph(std::map<Maike::fs::path, Maike::Target> const& targets,
-                   std::map<Maike::fs::path, Maike::SourceFileInfo> const& source_files,
+                   Maike::SourceFileIndex const& source_files,
                    Maike::fs::path const&)
 {
 	puts("digraph \"G\" {\nrankdir=LR\n");
 	std::for_each(std::begin(targets), std::end(targets), [](auto const& item) {
-		printf("\"%s\" -> \"%s\"\n", item.first.c_str(), item.second.sourceFilename().string().c_str());
-		/*		std::for_each(std::begin(deps), std::end(deps), [&item](auto const& edge) {
-		   //	if(edge.sourceFile() != nullptr)
-		   {
-		    printf("\"%s\" -> \"%s\"\n", item.first.c_str(), edge.name().c_str());
-		   }
-		  });*/
+		printf("\"%s\" -> \"%s\"\n", item.first.c_str(), item.second.sourceFilename().c_str());
 	});
 
-	std::for_each(std::begin(source_files), std::end(source_files), [](auto const& item) {
-		auto const& deps = item.second.useDeps();
-		printf("\"%s\"\n", item.first.c_str());
+
+	source_files.visitByPath([](auto const& item) {
+		auto const& deps = item.sourceFileInfo().useDeps();
+		printf("\"%s\"\n", item.path().c_str());
 		std::for_each(std::begin(deps), std::end(deps), [&item](auto const& edge) {
-			//	if(edge.sourceFile() != nullptr)
-			{
-				printf("\"%s\" -> \"%s\"\n", item.first.c_str(), edge.name().c_str());
-			}
+			printf("\"%s\" -> \"%s\"\n", item.path().c_str(), edge.name().c_str());
 		});
 	});
 	puts("}");
@@ -265,13 +255,16 @@ int main(int argc, char** argv)
 		                           cmdline.option<Maike::CmdLineOption::TargetDir>() :
 		                           Maike::fs::path{"__targets"};
 		makeSourceFileInfosFromTargets(src_files, target_dir);
+
 		auto targets = collectTargets(src_files, target_dir);
 		if(cmdline.hasOption<Maike::CmdLineOption::PrintDepGraph>())
 		{
 			printDepGraph(targets, src_files, cmdline.option<Maike::CmdLineOption::PrintDepGraph>());
 			return 0;
 		}
+#if 0
 		resolveDependencies(src_files);
+#endif
 	}
 	catch(std::exception const& err)
 	{

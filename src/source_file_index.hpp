@@ -48,7 +48,7 @@ namespace Maike
 				return *r_path;
 			}
 
-			auto& sourceFileInfO() const
+			auto& sourceFileInfo() const
 			{
 				return *r_src_file_info;
 			}
@@ -73,7 +73,7 @@ namespace Maike
 			return RecordConst{i->first, i->second.first, i->second.second};
 		}
 
-		void insert(fs::path&& path, SourceFileInfo&& info);
+		RecordConst insert(fs::path&& path, SourceFileInfo&& info);
 
 		template<class Func>
 		void visitByPath(Func&& f) const
