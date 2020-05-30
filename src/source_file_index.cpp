@@ -18,13 +18,10 @@ std::vector<Maike::SourceFileIndex::RecordConst> Maike::getRecordsById(SourceFil
 {
 	std::vector<Maike::SourceFileIndex::RecordConst> ret;
 	ret.reserve(index.size());
-	index.visitByPath([&ret](auto const& item) {
-		ret.push_back(item);
-	});
+	index.visitByPath([&ret](auto const& item) { ret.push_back(item); });
 
-	std::sort(std::begin(ret), std::end(ret), [](auto const& a, auto const& b) {
-		return a.id() < b.id();
-	});
+	std::sort(
+	   std::begin(ret), std::end(ret), [](auto const& a, auto const& b) { return a.id() < b.id(); });
 
 	return ret;
 }
