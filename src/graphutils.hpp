@@ -12,10 +12,8 @@
 
 namespace Maike
 {
-	template<class ItemCallback, class Graph>
-	void visitNodesInTopoOrder(ItemCallback&& cb, Graph const& graph)
+	namespace graphutils_detail
 	{
-		using std::size;
 		enum class Mark : int
 		{
 			Init,
@@ -23,50 +21,67 @@ namespace Maike
 			Done
 		};
 
-		auto const N = size(graph);
-		std::vector<Mark> visited(N);
-		std::stack<typename Graph::node_type const*> nodes;
-
-
-		auto processNode = [&nodes, &visited, &graph, &cb](auto const& node) {
+		template<class ItemCallback, class Graph, class Node>
+		void processGraphNodeRecursive(ItemCallback&& cb,
+									   Graph const& graph,
+		                               Node const& node,
+		                               std::stack<Node const*>& nodes_to_visit,
+		                               std::vector<Mark>& visited)
+		{
 			switch(visited[id(node)])
 			{
 				case Mark::Init:
-				{
-					auto processEdge = [&visited, &nodes, &graph](auto node_id) {
-						switch(visited[node_id])
-						{
-							case Mark::Init: nodes.push(getNodeById(graph, node_id)); break;
-
-							case Mark::InProgress: throw std::runtime_error{"Cyclic dependency detected"};
-
-							case Mark::Done: break;
-						}
-					};
-
-					nodes.push(&node);
-					while(!nodes.empty())
+					nodes_to_visit.push(&node);
+					while(!nodes_to_visit.empty())
 					{
-						auto node = nodes.top();
+						auto node = nodes_to_visit.top();
 						auto node_id = id(*node);
 						switch(visited[node_id])
 						{
 							case Mark::Init:
+							{
+								auto processEdge = [&graph,  &nodes_to_visit, &visited](auto node_id) {
+									switch(visited[node_id])
+									{
+										case Mark::Init: nodes_to_visit.push(getNodeById(graph, node_id)); break;
+
+										case Mark::InProgress: throw std::runtime_error{"Cyclic dependency detected"};
+
+										case Mark::Done: break;
+									}
+								};
 								visited[node_id] = Mark::InProgress;
 								visitEdges(processEdge, *node);
 								break;
+							}
 							default:
 								visited[node_id] = Mark::Done;
 								cb(*node);
-								nodes.pop();
+								nodes_to_visit.pop();
 						}
 					}
-				}
-				break;
+					break;
 				case Mark::InProgress: throw std::runtime_error{"Cyclic dependency detected"};
-
-				case Mark::Done: break;
+				case Mark::Done: return;
 			}
+		}
+	}
+
+	template<class ItemCallback, class Node>
+	void processGraphNodeRecursive(ItemCallback&& cb, Node const& node)
+	{
+	}
+
+	template<class ItemCallback, class Graph>
+	void visitNodesInTopoOrder(ItemCallback&& cb, Graph const& graph)
+	{
+		using std::size;
+		auto const N = size(graph);
+		std::vector<graphutils_detail::Mark> visited(N);
+		std::stack<typename Graph::node_type const*> nodes_to_visit;
+
+		auto processNode = [&cb, &graph, &nodes_to_visit, &visited](auto const& node) {
+			graphutils_detail::processGraphNodeRecursive(cb, graph, node, nodes_to_visit, visited);
 		};
 
 		visitNodes(processNode, graph);
