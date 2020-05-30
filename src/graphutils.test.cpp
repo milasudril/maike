@@ -131,6 +131,46 @@ namespace Testcases
 		{
 		}
 	}
+
+	void graphutilsProcessGraphNodeRecursive()
+	{
+		Graph graph;
+		graph.m_nodes.push_back(Node{0, std::vector<int>{1, 2, 3}});
+		graph.m_nodes.push_back(Node{1, std::vector<int>{4, 5, 6}});
+		graph.m_nodes.push_back(Node{2, std::vector<int>{4, 7, 8}});
+		graph.m_nodes.push_back(Node{3, std::vector<int>{8}});
+		graph.m_nodes.push_back(Node{4, std::vector<int>{10}});
+		graph.m_nodes.push_back(Node{5, std::vector<int>{10}});
+		graph.m_nodes.push_back(Node{6, std::vector<int>{10}});
+		graph.m_nodes.push_back(Node{7, std::vector<int>{10}});
+		graph.m_nodes.push_back(Node{8, std::vector<int>{10}});
+		graph.m_nodes.push_back(Node{9, std::vector<int>{4, 5, 6}});
+		graph.m_nodes.push_back(Node{10, std::vector<int>{}});
+
+		std::vector<Node const*> nodes_sorted;
+		Maike::processGraphNodeRecursive([&nodes_sorted](Node const& node) { nodes_sorted.push_back(&node); },
+		graph,
+		                             graph.m_nodes[9]);
+
+		auto index_of = [](auto const& nodes, int value) {
+			auto i = std::find_if(
+			   std::begin(nodes), std::end(nodes), [value](auto node) { return node->m_id == value; });
+			return i - std::begin(nodes);
+		};
+
+		auto s = size(graph);
+		std::vector<ptrdiff_t> node_index(s);
+		std::for_each(std::begin(graph.m_nodes),
+		              std::end(graph.m_nodes),
+		              [index_of, &nodes_sorted, &node_index](auto node) {
+			              node_index[node.m_id] = index_of(nodes_sorted, node.m_id);
+		              });
+
+		assert(node_index[10] == 0);
+		assert(node_index[4] < node_index[9]);
+		assert(node_index[5] < node_index[9]);
+		assert(node_index[6] < node_index[9]);
+	}
 }
 
 
@@ -138,6 +178,7 @@ int main()
 {
 	Testcases::graphutilsVisitNodesDag();
 	Testcases::graphutilsVisitNodesNoDag();
+	Testcases::graphutilsProcessGraphNodeRecursive();
 
 	return 0;
 }

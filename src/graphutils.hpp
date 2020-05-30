@@ -67,9 +67,14 @@ namespace Maike
 		}
 	}
 
-	template<class ItemCallback, class Node>
-	void processGraphNodeRecursive(ItemCallback&& cb, Node const& node)
+	template<class ItemCallback, class Graph, class Node>
+	void processGraphNodeRecursive(ItemCallback&& cb, Graph const& graph, Node const& node)
 	{
+		using std::size;
+		auto const N = size(graph);
+		std::vector<graphutils_detail::Mark> visited(N);
+		std::stack<typename Graph::node_type const*> nodes_to_visit;
+		graphutils_detail::processGraphNodeRecursive(cb, graph, node, nodes_to_visit, visited);
 	}
 
 	template<class ItemCallback, class Graph>
