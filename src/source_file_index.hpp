@@ -66,13 +66,6 @@ namespace Maike
 			return RecordConst{i->second.first, std::cref(i->first), std::cref(i->second.second)};
 		}
 
-		RecordConst get(size_t id) const
-		{
-			auto i = m_by_id.find(id);
-			if(i == std::end(m_by_id)) { return RecordConst{}; }
-			return RecordConst{i->first, i->second.first, i->second.second};
-		}
-
 		RecordConst insert(fs::path&& path, SourceFileInfo&& info);
 
 		template<class Func>
@@ -84,15 +77,6 @@ namespace Maike
 			   });
 		}
 
-		template<class Func>
-		void visitById(Func&& f) const
-		{
-			std::for_each(
-			   std::begin(m_by_id), std::end(m_by_id), [cb = std::forward<Func>(f)](auto const& item) {
-				   cb(RecordConst{item.first, item.second.first, item.second.second});
-			   });
-		}
-
 		size_t size() const
 		{
 			return m_by_path.size();
@@ -100,11 +84,9 @@ namespace Maike
 
 	private:
 		std::map<fs::path, std::pair<size_t const, SourceFileInfo>> m_by_path;
-		std::map<
-		   size_t,
-		   std::pair<std::reference_wrapper<fs::path const>, std::reference_wrapper<SourceFileInfo>>>
-		   m_by_id;
 	};
+
+	std::vector<SourceFileIndex::RecordConst> getRecordsById(SourceFileIndex const&);
 }
 
 #endif
