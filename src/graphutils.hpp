@@ -13,7 +13,7 @@
 namespace Maike
 {
 	template<class ItemCallback, class Graph>
-	void visitNodes(ItemCallback&& cb, Graph const& graph)
+	void visitNodesInTopoOrder(ItemCallback&& cb, Graph const& graph)
 	{
 		using std::size;
 		enum class Mark : int
@@ -40,8 +40,7 @@ namespace Maike
 
 							case Mark::InProgress: throw std::runtime_error{"Cyclic dependency detected"};
 
-							case Mark::Done:
-							break;
+							case Mark::Done: break;
 						}
 					};
 
@@ -66,9 +65,7 @@ namespace Maike
 				break;
 				case Mark::InProgress: throw std::runtime_error{"Cyclic dependency detected"};
 
-				case Mark::Done:
-				break;
-
+				case Mark::Done: break;
 			}
 		};
 

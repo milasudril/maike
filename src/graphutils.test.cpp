@@ -69,20 +69,22 @@ namespace Testcases
 		graph.m_nodes.push_back(Node{10, std::vector<int>{}});
 
 		std::vector<Node const*> nodes_sorted;
- 		Maike::visitNodes([&nodes_sorted](Node const& node) { nodes_sorted.push_back(&node); }, graph);
+		Maike::visitNodesInTopoOrder([&nodes_sorted](Node const& node) { nodes_sorted.push_back(&node); },
+		                             graph);
 
 		auto index_of = [](auto const& nodes, int value) {
-			auto i = std::find_if(std::begin(nodes), std::end(nodes), [value](auto node) {
-				return node->m_id == value;
-			});
+			auto i = std::find_if(
+			   std::begin(nodes), std::end(nodes), [value](auto node) { return node->m_id == value; });
 			return i - std::begin(nodes);
 		};
 
 		auto s = size(graph);
 		std::vector<ptrdiff_t> node_index(s);
-		std::for_each(std::begin(graph.m_nodes), std::end(graph.m_nodes), [index_of, &nodes_sorted, &node_index](auto node){
-			node_index[node.m_id] = index_of(nodes_sorted, node.m_id);
-		});
+		std::for_each(std::begin(graph.m_nodes),
+		              std::end(graph.m_nodes),
+		              [index_of, &nodes_sorted, &node_index](auto node) {
+			              node_index[node.m_id] = index_of(nodes_sorted, node.m_id);
+		              });
 
 		assert(node_index[10] == 0);
 		assert(node_index[10] < node_index[4]);
@@ -122,7 +124,7 @@ namespace Testcases
 
 		try
 		{
-			Maike::visitNodes([](Node const&) { abort(); }, graph);
+			Maike::visitNodesInTopoOrder([](Node const&) { abort(); }, graph);
 			abort();
 		}
 		catch(...)
