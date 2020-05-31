@@ -13,30 +13,34 @@ namespace Maike::Db
 {
 	class SourceFileId
 	{
-		public:
-			constexpr SourceFileId():m_value{std::numeric_limits<size_t>::max()} {}
+	public:
+		constexpr SourceFileId(): m_value{std::numeric_limits<size_t>::max()}
+		{
+		}
 
-			constexpr explicit SourceFileId(size_t val):m_value{val}{}
+		constexpr explicit SourceFileId(size_t val): m_value{val}
+		{
+		}
 
-			explicit constexpr operator size_t() const
-			{
-				assert(valid());
-				return m_value;
-			}
+		explicit constexpr operator size_t() const
+		{
+			assert(valid());
+			return m_value;
+		}
 
-			constexpr size_t value() const
-			{
-				assert(valid());
-				return m_value;
-			}
+		constexpr size_t value() const
+		{
+			assert(valid());
+			return m_value;
+		}
 
-			constexpr bool valid() const
-			{
-				return m_value != std::numeric_limits<size_t>::max();
-			}
+		constexpr bool valid() const
+		{
+			return m_value != std::numeric_limits<size_t>::max();
+		}
 
-		private:
-			size_t m_value;
+	private:
+		size_t m_value;
 	};
 
 	constexpr bool operator==(SourceFileId a, SourceFileId b)

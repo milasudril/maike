@@ -5,7 +5,7 @@
 #ifndef MAIKE_DB_SOURCEFILEINFO_HPP
 #define MAIKE_DB_SOURCEFILEINFO_HPP
 
-#include "./basic_dependency.hpp"
+#include "./unresolved_dependency.hpp"
 
 #include "src/compiler.hpp"
 #include "src/fs.hpp"
@@ -14,10 +14,6 @@
 
 namespace Maike::Db
 {
-	class SourceFileInfo;
-
-	using Dependency = BasicDependency<SourceFileInfo>;
-
 	class SourceFileInfo
 	{
 	public:
@@ -26,7 +22,7 @@ namespace Maike::Db
 		 */
 		explicit SourceFileInfo() = default;
 
-		explicit SourceFileInfo(std::vector<Dependency>&& build_deps,
+		explicit SourceFileInfo(std::vector<UnresolvedDependency>&& build_deps,
 		                        std::vector<fs::path>&& targets,
 		                        Compiler&& compiler):
 		   m_use_deps{std::move(build_deps)},
@@ -35,19 +31,19 @@ namespace Maike::Db
 		{
 		}
 
-		std::vector<Dependency> useDepsCopy() const
+		std::vector<UnresolvedDependency> useDepsCopy() const
 		{
 			return m_use_deps;
 		}
 
-		std::vector<Dependency> const& useDeps() const
+		std::vector<UnresolvedDependency> const& useDeps() const
 		{
 			return m_use_deps;
 		}
 
-		SourceFileInfo& useDeps(std::vector<Dependency>&& used_files)
+		SourceFileInfo& add(UnresolvedDependency&& dep)
 		{
-			m_use_deps = std::move(used_files);
+			m_use_deps.push_back(std::move(dep));
 			return *this;
 		}
 
@@ -62,7 +58,7 @@ namespace Maike::Db
 		}
 
 	private:
-		std::vector<Dependency> m_use_deps;
+		std::vector<UnresolvedDependency> m_use_deps;
 		std::vector<fs::path> m_targets;
 		Compiler m_compiler;
 	};

@@ -30,8 +30,8 @@ void makeSourceFileInfosFromTargets(Maike::Db::SourceFileIndex& source_files,
 	});
 }
 
-std::map<Maike::fs::path, Maike::Db::Target> collectTargets(Maike::Db::SourceFileIndex const& source_files,
-                                                        Maike::fs::path const& target_dir)
+std::map<Maike::fs::path, Maike::Db::Target>
+collectTargets(Maike::Db::SourceFileIndex const& source_files, Maike::fs::path const& target_dir)
 {
 	std::map<Maike::fs::path, Maike::Db::Target> ret;
 
@@ -45,9 +45,9 @@ std::map<Maike::fs::path, Maike::Db::Target> collectTargets(Maike::Db::SourceFil
 				   auto i = ret.find(target);
 				   if(i != std::end(ret)) { throw std::runtime_error{"Target has already been defined"}; }
 
-				   ret.insert(
-				      i,
-				      std::make_pair(target_dir / target, Maike::Db::Target{item.path(), item.sourceFileInfo()}));
+				   ret.insert(i,
+				              std::make_pair(target_dir / target,
+				                             Maike::Db::Target{item.path(), item.sourceFileInfo()}));
 			   }
 		   });
 	});

@@ -19,12 +19,12 @@ namespace Maike::Db
 		{
 		}
 
-		std::vector<Dependency> const& buildDeps() const
+		std::vector<UnresolvedDependency> const& buildDeps() const
 		{
 			return r_src_file.get().useDeps();
 		}
 
-		std::vector<Dependency> buildDepsCopy() const
+		std::vector<UnresolvedDependency> buildDepsCopy() const
 		{
 			return r_src_file.get().useDepsCopy();
 		}

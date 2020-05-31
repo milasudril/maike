@@ -20,7 +20,6 @@ namespace Maike::Db
 
 		explicit UnresolvedDependency(fs::path const& path, Resolver res_method):
 		   m_name{path},
-		   r_srcfile{nullptr},
 		   m_res_method{res_method}
 
 		{
