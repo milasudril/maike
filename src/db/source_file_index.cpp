@@ -4,7 +4,7 @@
 
 #include "./source_file_index.hpp"
 
-Maike::SourceFileIndex::RecordConst Maike::SourceFileIndex::insert(fs::path&& path,
+Maike::Db::SourceFileIndex::RecordConst Maike::Db::SourceFileIndex::insert(fs::path&& path,
                                                                    SourceFileInfo&& info)
 {
 	auto id = m_by_path.size();
@@ -14,9 +14,9 @@ Maike::SourceFileIndex::RecordConst Maike::SourceFileIndex::insert(fs::path&& pa
 	return RecordConst{id, r_path, r_info};
 }
 
-std::vector<Maike::SourceFileIndex::RecordConst> Maike::getRecordsById(SourceFileIndex const& index)
+std::vector<Maike::Db::SourceFileIndex::RecordConst> Maike::Db::getRecordsById(SourceFileIndex const& index)
 {
-	std::vector<Maike::SourceFileIndex::RecordConst> ret;
+	std::vector<SourceFileIndex::RecordConst> ret;
 	ret.reserve(index.size());
 	index.visitByPath([&ret](auto const& item) { ret.push_back(item); });
 

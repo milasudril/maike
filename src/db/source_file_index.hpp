@@ -3,8 +3,8 @@
 //@	 ,"dependencies_extra":[{"ref":"source_file_index.o","rel":"implementation"}]
 //@	 }
 
-#ifndef MAIKE_SOURCEFILEINDEX_HPP
-#define MAIKE_SOURCEFILEINDEX_HPP
+#ifndef MAIKE_DB_SOURCEFILEINDEX_HPP
+#define MAIKE_DB_SOURCEFILEINDEX_HPP
 
 #include "./source_file_info.hpp"
 
@@ -13,7 +13,7 @@
 #include <map>
 #include <algorithm>
 
-namespace Maike
+namespace Maike::Db
 {
 	class SourceFileIndex
 	{

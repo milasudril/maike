@@ -52,7 +52,7 @@ namespace Maike::SourceTreeLoader
 
 		DirectoryScanner& processPath(fs::path const& src_path);
 
-		SourceFileIndex takeResult()
+		Db::SourceFileIndex takeResult()
 		{
 			m_counter.wait(0);
 			if(!m_errlog.empty()) { throw ScanException{std::move(m_errlog)}; }
@@ -63,7 +63,7 @@ namespace Maike::SourceTreeLoader
 		std::reference_wrapper<InputFilter const> r_filter;
 		std::reference_wrapper<SourceFileLoaderDelegator const> r_loaders;
 
-		SourceFileIndex m_source_files;
+		Db::SourceFileIndex m_source_files;
 
 		// TODO: Move these into a policy base class (to make it more efficient in single-threaded
 		//       single-threaded mode)

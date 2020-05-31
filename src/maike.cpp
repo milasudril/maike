@@ -9,7 +9,7 @@
 #include "src/source_tree_loader/directory_scanner.hpp"
 #include "src/source_file_info_loaders/cxx/source_file_loader.hpp"
 
-void makeSourceFileInfosFromTargets(Maike::SourceFileIndex& source_files,
+void makeSourceFileInfosFromTargets(Maike::Db::SourceFileIndex& source_files,
                                     Maike::fs::path const& target_dir)
 {
 	source_files.visitByPath([&source_files, target_dir](auto const& item) {
@@ -23,17 +23,17 @@ void makeSourceFileInfosFromTargets(Maike::SourceFileIndex& source_files,
 				              auto i = source_files.get(target);
 				              if(i.valid()) { throw std::runtime_error{"Target has already been defined"}; }
 
-				              Maike::SourceFileInfo src_file;
+				              Maike::Db::SourceFileInfo src_file;
 				              source_files.insert(target_dir / target, std::move(src_file));
 			              }
 		              });
 	});
 }
 
-std::map<Maike::fs::path, Maike::Target> collectTargets(Maike::SourceFileIndex const& source_files,
+std::map<Maike::fs::path, Maike::Db::Target> collectTargets(Maike::Db::SourceFileIndex const& source_files,
                                                         Maike::fs::path const& target_dir)
 {
-	std::map<Maike::fs::path, Maike::Target> ret;
+	std::map<Maike::fs::path, Maike::Db::Target> ret;
 
 	source_files.visitByPath([&ret, target_dir](auto const& item) {
 		auto const& src_file_info = item.sourceFileInfo();
@@ -47,13 +47,14 @@ std::map<Maike::fs::path, Maike::Target> collectTargets(Maike::SourceFileIndex c
 
 				   ret.insert(
 				      i,
-				      std::make_pair(target_dir / target, Maike::Target{item.path(), item.sourceFileInfo()}));
+				      std::make_pair(target_dir / target, Maike::Db::Target{item.path(), item.sourceFileInfo()}));
 			   }
 		   });
 	});
 	return ret;
 }
 
+#if 0
 void resolveDependencies(std::map<Maike::fs::path, Maike::SourceFileInfo>& source_files)
 {
 	std::for_each(std::begin(source_files), std::end(source_files), [&source_files](auto& item) {
@@ -70,9 +71,10 @@ void resolveDependencies(std::map<Maike::fs::path, Maike::SourceFileInfo>& sourc
 		item.second.useDeps(std::move(deps_resolved));
 	});
 }
+#endif
 
-void printDepGraph(std::map<Maike::fs::path, Maike::Target> const& targets,
-                   Maike::SourceFileIndex const& source_files,
+void printDepGraph(std::map<Maike::fs::path, Maike::Db::Target> const& targets,
+                   Maike::Db::SourceFileIndex const& source_files,
                    Maike::fs::path const&)
 {
 	puts("digraph \"G\" {\nrankdir=LR\n");

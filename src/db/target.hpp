@@ -2,12 +2,12 @@
 //@	 "targets":[{"name":"target.hpp","type":"include"}]
 //@	 }
 
-#ifndef MAIKE_TARGET_HPP
-#define MAIKE_TARGET_HPP
+#ifndef MAIKE_DB_TARGET_HPP
+#define MAIKE_DB_TARGET_HPP
 
 #include "./source_file_info.hpp"
 
-namespace Maike
+namespace Maike::Db
 {
 	class Target
 	{

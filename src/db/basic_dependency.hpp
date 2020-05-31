@@ -2,12 +2,12 @@
 //@	 "targets":[{"name":"basic_dependency.hpp","type":"include"}]
 //@	 }
 
-#ifndef MAIKE_BASICDEPENDENCY_HPP
-#define MAIKE_BASICDEPENDENCY_HPP
+#ifndef MAIKE_DB_BASICDEPENDENCY_HPP
+#define MAIKE_DB_BASICDEPENDENCY_HPP
 
 #include "src/fs.hpp"
 
-namespace Maike
+namespace Maike::Db
 {
 	template<class SrcFile>
 	class BasicDependency

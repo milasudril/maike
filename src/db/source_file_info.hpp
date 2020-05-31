@@ -2,8 +2,8 @@
 //@	 "targets":[{"name":"source_file_info.hpp","type":"include"}]
 //@	 }
 
-#ifndef MAIKE_SOURCEFILEINFO_HPP
-#define MAIKE_SOURCEFILEINFO_HPP
+#ifndef MAIKE_DB_SOURCEFILEINFO_HPP
+#define MAIKE_DB_SOURCEFILEINFO_HPP
 
 #include "./basic_dependency.hpp"
 
@@ -12,7 +12,7 @@
 
 #include <vector>
 
-namespace Maike
+namespace Maike::Db
 {
 	class SourceFileInfo;
 
