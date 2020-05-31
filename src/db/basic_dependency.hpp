@@ -5,7 +5,7 @@
 #ifndef MAIKE_BASICDEPENDENCY_HPP
 #define MAIKE_BASICDEPENDENCY_HPP
 
-#include "./fs.hpp"
+#include "src/fs.hpp"
 
 namespace Maike
 {

@@ -2,8 +2,8 @@
 
 #include "./cmd_line_options.hpp"
 #include "./build_info.hpp"
-#include "./target.hpp"
 
+#include "src/db/target.hpp"
 #include "src/io/input_file.hpp"
 #include "src/config/main.hpp"
 #include "src/source_tree_loader/directory_scanner.hpp"

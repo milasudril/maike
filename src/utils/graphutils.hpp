@@ -23,7 +23,7 @@ namespace Maike
 
 		template<class ItemCallback, class Graph, class Node>
 		void processGraphNodeRecursive(ItemCallback&& cb,
-									   Graph const& graph,
+		                               Graph const& graph,
 		                               Node const& node,
 		                               std::stack<Node const*>& nodes_to_visit,
 		                               std::vector<Mark>& visited)
@@ -40,7 +40,7 @@ namespace Maike
 						{
 							case Mark::Init:
 							{
-								auto processEdge = [&graph,  &nodes_to_visit, &visited](auto node_id) {
+								auto processEdge = [&graph, &nodes_to_visit, &visited](auto node_id) {
 									switch(visited[static_cast<size_t>(node_id)])
 									{
 										case Mark::Init: nodes_to_visit.push(getNodeById(graph, node_id)); break;

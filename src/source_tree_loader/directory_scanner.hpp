@@ -10,7 +10,7 @@
 #include "./input_filter.hpp"
 
 #include "src/fs.hpp"
-#include "src/source_file_index.hpp"
+#include "src/db/source_file_index.hpp"
 #include "src/sched/signaling_counter.hpp"
 #include "src/sched/thread_pool.hpp"
 

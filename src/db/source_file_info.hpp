@@ -6,8 +6,10 @@
 #define MAIKE_SOURCEFILEINFO_HPP
 
 #include "./basic_dependency.hpp"
-#include "./compiler.hpp"
-#include "./fs.hpp"
+
+#include "src/compiler.hpp"
+#include "src/fs.hpp"
+
 #include <vector>
 
 namespace Maike

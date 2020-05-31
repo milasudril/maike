@@ -148,9 +148,8 @@ namespace Testcases
 		graph.m_nodes.push_back(Node{10, std::vector<int>{}});
 
 		std::vector<Node const*> nodes_sorted;
-		Maike::processGraphNodeRecursive([&nodes_sorted](Node const& node) { nodes_sorted.push_back(&node); },
-		graph,
-		                             graph.m_nodes[9]);
+		Maike::processGraphNodeRecursive(
+		   [&nodes_sorted](Node const& node) { nodes_sorted.push_back(&node); }, graph, graph.m_nodes[9]);
 
 		auto index_of = [](auto const& nodes, int value) {
 			auto i = std::find_if(

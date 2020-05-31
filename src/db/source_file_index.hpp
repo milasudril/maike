@@ -7,7 +7,8 @@
 #define MAIKE_SOURCEFILEINDEX_HPP
 
 #include "./source_file_info.hpp"
-#include "./fs.hpp"
+
+#include "src/fs.hpp"
 
 #include <map>
 #include <algorithm>

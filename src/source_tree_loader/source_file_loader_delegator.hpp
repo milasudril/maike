@@ -7,7 +7,7 @@
 #define MAIKE_SOURCETREELOADER_SOURCEFILELOADERDELEGATOR_HPP
 
 #include "src/source_file_info_loaders/loader.hpp"
-#include "src/source_file_info.hpp"
+#include "src/db/source_file_info.hpp"
 #include "src/fs.hpp"
 
 #include <map>

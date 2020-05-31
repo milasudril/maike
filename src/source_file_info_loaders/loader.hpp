@@ -7,9 +7,10 @@
 
 #include "src/io/reader.hpp"
 #include "src/io/writer.hpp"
-#include "src/compiler.hpp"
-#include "src/source_file_info.hpp"
+#include "src/db/source_file_info.hpp"
 #include "src/key_value_store/compound.hpp"
+
+#include "src/compiler.hpp"
 
 #include <type_traits>
 #include <cassert>
