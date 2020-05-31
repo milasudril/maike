@@ -7,6 +7,7 @@
 #define MAIKE_DB_SOURCEFILEINDEX_HPP
 
 #include "./source_file_info.hpp"
+#include "./source_file_id.hpp"
 
 #include "src/fs.hpp"
 
@@ -25,7 +26,7 @@ namespace Maike::Db
 			{
 			}
 
-			explicit RecordConst(size_t id,
+			explicit RecordConst(SourceFileId id,
 			                     std::reference_wrapper<fs::path const> path,
 			                     std::reference_wrapper<SourceFileInfo const> src_file_info):
 			   m_id{id},
@@ -55,7 +56,7 @@ namespace Maike::Db
 			}
 
 		private:
-			size_t m_id;
+			SourceFileId m_id;
 			fs::path const* r_path;
 			SourceFileInfo const* r_src_file_info;
 		};
@@ -84,7 +85,7 @@ namespace Maike::Db
 		}
 
 	private:
-		std::map<fs::path, std::pair<size_t const, SourceFileInfo>> m_by_path;
+		std::map<fs::path, std::pair<SourceFileId const, SourceFileInfo>> m_by_path;
 	};
 
 	std::vector<SourceFileIndex::RecordConst> getRecordsById(SourceFileIndex const&&) = delete;
