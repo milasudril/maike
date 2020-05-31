@@ -5,6 +5,8 @@
 #ifndef MAIKE_DB_DEPENDENCY_HPP
 #define MAIKE_DB_DEPENDENCY_HPP
 
+#include "./source_file_id.hpp"
+
 #include "src/fs.hpp"
 
 namespace Maike::Db
@@ -34,10 +36,21 @@ namespace Maike::Db
 			return m_res_method;
 		}
 
+		SourceFileId reference() const
+		{
+			return m_ref;
+		}
+
 	private:
+		SourceFileId m_ref;
 		fs::path m_name;
 		Resolver m_res_method;
 	};
+
+	inline auto reference(Dependency const& dep)
+	{
+		return dep.reference();
+	}
 
 	inline bool operator==(Dependency const& a, Dependency const& b)
 	{
