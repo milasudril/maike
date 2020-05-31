@@ -1,15 +1,15 @@
 //@	{
-//@	 "targets":[{"name":"unresolved_dependency.hpp","type":"include"}]
+//@	 "targets":[{"name":"dependency.hpp","type":"include"}]
 //@	 }
 
-#ifndef MAIKE_DB_UNRESOLVEDDEPENDENCY_HPP
-#define MAIKE_DB_UNRESOLVEDDEPENDENCY_HPP
+#ifndef MAIKE_DB_DEPENDENCY_HPP
+#define MAIKE_DB_DEPENDENCY_HPP
 
 #include "src/fs.hpp"
 
 namespace Maike::Db
 {
-	class UnresolvedDependency
+	class Dependency
 	{
 	public:
 		enum class Resolver : int
@@ -18,10 +18,9 @@ namespace Maike::Db
 			None
 		};
 
-		explicit UnresolvedDependency(fs::path const& path, Resolver res_method):
+		explicit Dependency(fs::path const& path, Resolver res_method):
 		   m_name{path},
 		   m_res_method{res_method}
-
 		{
 		}
 
@@ -40,12 +39,12 @@ namespace Maike::Db
 		Resolver m_res_method;
 	};
 
-	inline bool operator==(UnresolvedDependency const& a, UnresolvedDependency const& b)
+	inline bool operator==(Dependency const& a, Dependency const& b)
 	{
 		return a.name() == b.name() && a.resolver() == b.resolver();
 	}
 
-	inline bool operator!=(UnresolvedDependency const& a, UnresolvedDependency const& b)
+	inline bool operator!=(Dependency const& a, Dependency const& b)
 	{
 		return !(a == b);
 	}

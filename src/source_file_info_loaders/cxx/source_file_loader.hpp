@@ -22,7 +22,7 @@ namespace Cxx
 		{
 		}
 
-		std::vector<Maike::Db::UnresolvedDependency> getDependencies(Maike::Io::Reader src) const;
+		std::vector<Maike::Db::Dependency> getDependencies(Maike::Io::Reader src) const;
 
 		void filterInput(Maike::Io::Reader input,
 		                 Maike::SourceFileInfoLoaders::SourceOutStream source_stream,

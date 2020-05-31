@@ -29,19 +29,19 @@ namespace
 		}
 	};
 
-	std::vector<Maike::Db::UnresolvedDependency>
-	fixNames(Maike::fs::path const& prefix, std::vector<Maike::Db::UnresolvedDependency> const& deps)
+	std::vector<Maike::Db::Dependency>
+	fixNames(Maike::fs::path const& prefix, std::vector<Maike::Db::Dependency> const& deps)
 	{
-		std::vector<Maike::Db::UnresolvedDependency> ret;
+		std::vector<Maike::Db::Dependency> ret;
 		ret.reserve(deps.size());
 		std::transform(
 		   std::begin(deps), std::end(deps), std::back_inserter(ret), [&prefix](auto const& item) {
-			   if(item.resolver() == Maike::Db::UnresolvedDependency::Resolver::InternalLookup)
+			   if(item.resolver() == Maike::Db::Dependency::Resolver::InternalLookup)
 			   {
 				   auto str = item.name().string();
 				   if(str.size() > 1 && memcmp(str.data(), "./", 2) == 0)
 				   {
-					   return Maike::Db::UnresolvedDependency{(prefix / item.name()).lexically_normal(),
+					   return Maike::Db::Dependency{(prefix / item.name()).lexically_normal(),
 					                                          item.resolver()};
 				   }
 			   }
@@ -72,7 +72,7 @@ namespace
 	}
 
 	Maike::Db::SourceFileInfo
-	loadSourceFile(std::vector<Maike::Db::UnresolvedDependency>&& builtin_deps,
+	loadSourceFile(std::vector<Maike::Db::Dependency>&& builtin_deps,
 	               Maike::fs::path const& path,
 	               Maike::SourceFileInfoLoaders::Loader const& loader)
 	{
@@ -104,12 +104,12 @@ namespace
 std::optional<Maike::Db::SourceFileInfo>
 Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(Maike::fs::path const& path) const
 {
-	std::vector<Maike::Db::UnresolvedDependency> deps;
+	std::vector<Maike::Db::Dependency> deps;
 	if(!path.parent_path().empty())
 	{
 		deps.push_back(
-		   Maike::Db::UnresolvedDependency{path.parent_path().lexically_normal(),
-		                                   Maike::Db::UnresolvedDependency::Resolver::InternalLookup});
+		   Maike::Db::Dependency{path.parent_path().lexically_normal(),
+		                                   Maike::Db::Dependency::Resolver::InternalLookup});
 	}
 
 	if(is_directory(path))
