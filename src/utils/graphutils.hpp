@@ -9,6 +9,7 @@
 #include <cstddef>
 #include <stack>
 #include <stdexcept>
+#include <type_traits>
 
 namespace Maike
 {
@@ -21,6 +22,10 @@ namespace Maike
 			Done
 		};
 
+		template<class T>
+		inline bool valid(T x, std::enable_if_t<std::is_integral_v<T>, int> = 0)
+		{return x != static_cast<T>(-1);}
+
 		template<class ItemCallback, class Graph, class Node>
 		void processGraphNodeRecursive(ItemCallback&& cb,
 		                               Graph const& graph,
@@ -28,7 +33,7 @@ namespace Maike
 		                               std::stack<Node const*>& nodes_to_visit,
 		                               std::vector<Mark>& visited)
 		{
-			switch(visited[id(node)])
+			switch(visited[static_cast<size_t>(id(node))])
 			{
 				case Mark::Init:
 					nodes_to_visit.push(&node);
@@ -36,19 +41,24 @@ namespace Maike
 					{
 						auto node = nodes_to_visit.top();
 						auto node_id = id(*node);
-						switch(visited[node_id])
+						switch(visited[static_cast<size_t>(node_id)])
 						{
 							case Mark::Init:
 							{
 								auto processEdge = [&graph, &nodes_to_visit, &visited](auto const& edge) {
 									auto node_id = reference(edge);
-									switch(visited[static_cast<size_t>(node_id)])
+									if(valid(node_id))
 									{
-										case Mark::Init: nodes_to_visit.push(getNodeById(graph, node_id)); break;
+										switch(visited[static_cast<size_t>(node_id)])
+										{
+											case Mark::Init:
+												nodes_to_visit.push(&getNodeById(graph, node_id));
+												break;
 
-										case Mark::InProgress: throw std::runtime_error{"Cyclic dependency detected"};
+											case Mark::InProgress: throw std::runtime_error{"Cyclic dependency detected"};
 
-										case Mark::Done: break;
+											case Mark::Done: break;
+										}
 									}
 								};
 								visited[static_cast<size_t>(node_id)] = Mark::InProgress;

@@ -52,6 +52,11 @@ namespace Maike::Db
 	{
 		return !(a == b);
 	}
+
+	constexpr bool valid(SourceFileId id)
+	{
+		return id.valid();
+	}
 }
 
 #endif

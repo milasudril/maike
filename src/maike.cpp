@@ -4,10 +4,12 @@
 #include "./build_info.hpp"
 
 #include "src/db/target.hpp"
+#include "src/db/dependency_graph.hpp"
 #include "src/io/input_file.hpp"
 #include "src/config/main.hpp"
 #include "src/source_tree_loader/directory_scanner.hpp"
 #include "src/source_file_info_loaders/cxx/source_file_loader.hpp"
+#include "src/utils/graphutils.hpp"
 
 void makeSourceFileInfosFromTargets(Maike::Db::SourceFileIndex& source_files,
                                     Maike::fs::path const& target_dir)
@@ -257,6 +259,9 @@ int main(int argc, char** argv)
 		                           cmdline.option<Maike::CmdLineOption::TargetDir>() :
 		                           Maike::fs::path{"__targets"};
 		makeSourceFileInfosFromTargets(src_files, target_dir);
+
+		auto dep_graph = Maike::Db::DependencyGraph{src_files};
+		Maike::visitNodesInTopoOrder([](auto const&) {}, dep_graph);
 
 		auto targets = collectTargets(src_files, target_dir);
 		if(cmdline.hasOption<Maike::CmdLineOption::PrintDepGraph>())

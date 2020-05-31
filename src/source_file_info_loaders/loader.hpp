@@ -65,8 +65,7 @@ namespace Maike::SourceFileInfoLoaders
 			                     Io::Reader input,
 			                     SourceOutStream source,
 			                     TagsOutStream tags);
-			std::vector<Db::Dependency> (*get_dependencies)(void const* handle,
-			                                                          Io::Reader source_stream);
+			std::vector<Db::Dependency> (*get_dependencies)(void const* handle, Io::Reader source_stream);
 			Compiler (*get_compiler)(void const* handle, KeyValueStore::CompoundRefConst cfg);
 			void (*destroy)(void* handle);
 			KeyValueStore::JsonHandle (*to_json)(void const* handle);

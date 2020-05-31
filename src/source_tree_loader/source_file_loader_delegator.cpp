@@ -29,8 +29,8 @@ namespace
 		}
 	};
 
-	std::vector<Maike::Db::Dependency>
-	fixNames(Maike::fs::path const& prefix, std::vector<Maike::Db::Dependency> const& deps)
+	std::vector<Maike::Db::Dependency> fixNames(Maike::fs::path const& prefix,
+	                                            std::vector<Maike::Db::Dependency> const& deps)
 	{
 		std::vector<Maike::Db::Dependency> ret;
 		ret.reserve(deps.size());
@@ -41,8 +41,7 @@ namespace
 				   auto str = item.name().string();
 				   if(str.size() > 1 && memcmp(str.data(), "./", 2) == 0)
 				   {
-					   return Maike::Db::Dependency{(prefix / item.name()).lexically_normal(),
-					                                          item.resolver()};
+					   return Maike::Db::Dependency{(prefix / item.name()).lexically_normal(), item.resolver()};
 				   }
 			   }
 			   return item;
@@ -71,10 +70,9 @@ namespace
 		return ret;
 	}
 
-	Maike::Db::SourceFileInfo
-	loadSourceFile(std::vector<Maike::Db::Dependency>&& builtin_deps,
-	               Maike::fs::path const& path,
-	               Maike::SourceFileInfoLoaders::Loader const& loader)
+	Maike::Db::SourceFileInfo loadSourceFile(std::vector<Maike::Db::Dependency>&& builtin_deps,
+	                                         Maike::fs::path const& path,
+	                                         Maike::SourceFileInfoLoaders::Loader const& loader)
 	{
 		Maike::Io::Fifo<std::byte> src_fifo;
 		Maike::Io::Fifo<std::byte> tags_fifo;
@@ -107,9 +105,8 @@ Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(Maike::fs::path const& 
 	std::vector<Maike::Db::Dependency> deps;
 	if(!path.parent_path().empty())
 	{
-		deps.push_back(
-		   Maike::Db::Dependency{path.parent_path().lexically_normal(),
-		                                   Maike::Db::Dependency::Resolver::InternalLookup});
+		deps.push_back(Maike::Db::Dependency{path.parent_path().lexically_normal(),
+		                                     Maike::Db::Dependency::Resolver::InternalLookup});
 	}
 
 	if(is_directory(path))

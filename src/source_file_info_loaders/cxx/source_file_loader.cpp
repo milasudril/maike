@@ -193,9 +193,8 @@ Cxx::SourceFileLoader::getDependencies(Maike::Io::Reader input) const
 				{
 					case '"':
 						state = State::SkipLine;
-						deps.push_back(Maike::Db::Dependency{
-						   Maike::fs::path{std::move(include_path)},
-						   Maike::Db::Dependency::Resolver::InternalLookup});
+						deps.push_back(Maike::Db::Dependency{Maike::fs::path{std::move(include_path)},
+						                                     Maike::Db::Dependency::Resolver::InternalLookup});
 						break;
 
 					case '\n': state = State::Newline; break;
@@ -209,9 +208,8 @@ Cxx::SourceFileLoader::getDependencies(Maike::Io::Reader input) const
 				{
 					case '>':
 						state = State::SkipLine;
-						deps.push_back(
-						   Maike::Db::Dependency{Maike::fs::path{std::move(include_path)},
-						                                   Maike::Db::Dependency::Resolver::None});
+						deps.push_back(Maike::Db::Dependency{Maike::fs::path{std::move(include_path)},
+						                                     Maike::Db::Dependency::Resolver::None});
 						break;
 
 					case '\n': state = State::Newline; break;

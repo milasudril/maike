@@ -13,7 +13,9 @@ namespace
 {
 	struct Edge
 	{
-		Edge(int id):m_id{id}{}
+		Edge(int id): m_id{id}
+		{
+		}
 		int m_id;
 	};
 
@@ -21,7 +23,6 @@ namespace
 	{
 		return e.m_id;
 	}
-
 
 	struct Node
 	{
@@ -46,9 +47,9 @@ namespace
 		std::vector<Node> m_nodes;
 	};
 
-	Node const* getNodeById(Graph const& g, int id)
+	Node const& getNodeById(Graph const& g, int id)
 	{
-		return &g.m_nodes[id];
+		return g.m_nodes[id];
 	}
 
 	size_t size(Graph const& g)
