@@ -41,7 +41,7 @@ namespace Maike
 							case Mark::Init:
 							{
 								auto processEdge = [&graph,  &nodes_to_visit, &visited](auto node_id) {
-									switch(visited[node_id])
+									switch(visited[static_cast<size_t>(node_id)])
 									{
 										case Mark::Init: nodes_to_visit.push(getNodeById(graph, node_id)); break;
 
@@ -50,12 +50,12 @@ namespace Maike
 										case Mark::Done: break;
 									}
 								};
-								visited[node_id] = Mark::InProgress;
+								visited[static_cast<size_t>(node_id)] = Mark::InProgress;
 								visitEdges(processEdge, *node);
 								break;
 							}
 							default:
-								visited[node_id] = Mark::Done;
+								visited[static_cast<size_t>(node_id)] = Mark::Done;
 								cb(*node);
 								nodes_to_visit.pop();
 						}

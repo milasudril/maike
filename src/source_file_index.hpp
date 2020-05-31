@@ -86,6 +86,7 @@ namespace Maike
 		std::map<fs::path, std::pair<size_t const, SourceFileInfo>> m_by_path;
 	};
 
+	std::vector<SourceFileIndex::RecordConst> getRecordsById(SourceFileIndex const&&) = delete;
 	std::vector<SourceFileIndex::RecordConst> getRecordsById(SourceFileIndex const&);
 }
 
