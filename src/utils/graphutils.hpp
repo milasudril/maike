@@ -40,7 +40,8 @@ namespace Maike
 						{
 							case Mark::Init:
 							{
-								auto processEdge = [&graph, &nodes_to_visit, &visited](auto node_id) {
+								auto processEdge = [&graph, &nodes_to_visit, &visited](auto const& edge) {
+									auto node_id = reference(edge);
 									switch(visited[static_cast<size_t>(node_id)])
 									{
 										case Mark::Init: nodes_to_visit.push(getNodeById(graph, node_id)); break;

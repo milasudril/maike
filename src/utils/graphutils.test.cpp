@@ -11,10 +11,22 @@
 
 namespace
 {
+	struct Edge
+	{
+		Edge(int id):m_id{id}{}
+		int m_id;
+	};
+
+	int reference(Edge e)
+	{
+		return e.m_id;
+	}
+
+
 	struct Node
 	{
 		int m_id;
-		std::vector<int> m_edges;
+		std::vector<Edge> m_edges;
 	};
 
 	template<class F>
@@ -56,17 +68,17 @@ namespace Testcases
 	void graphutilsVisitNodesDag()
 	{
 		Graph graph;
-		graph.m_nodes.push_back(Node{0, std::vector<int>{1, 2, 3}});
-		graph.m_nodes.push_back(Node{1, std::vector<int>{4, 5, 6}});
-		graph.m_nodes.push_back(Node{2, std::vector<int>{4, 7, 8}});
-		graph.m_nodes.push_back(Node{3, std::vector<int>{8}});
-		graph.m_nodes.push_back(Node{4, std::vector<int>{10}});
-		graph.m_nodes.push_back(Node{5, std::vector<int>{10}});
-		graph.m_nodes.push_back(Node{6, std::vector<int>{10}});
-		graph.m_nodes.push_back(Node{7, std::vector<int>{10}});
-		graph.m_nodes.push_back(Node{8, std::vector<int>{10}});
-		graph.m_nodes.push_back(Node{9, std::vector<int>{4, 5, 6}});
-		graph.m_nodes.push_back(Node{10, std::vector<int>{}});
+		graph.m_nodes.push_back(Node{0, std::vector<Edge>{1, 2, 3}});
+		graph.m_nodes.push_back(Node{1, std::vector<Edge>{4, 5, 6}});
+		graph.m_nodes.push_back(Node{2, std::vector<Edge>{4, 7, 8}});
+		graph.m_nodes.push_back(Node{3, std::vector<Edge>{8}});
+		graph.m_nodes.push_back(Node{4, std::vector<Edge>{10}});
+		graph.m_nodes.push_back(Node{5, std::vector<Edge>{10}});
+		graph.m_nodes.push_back(Node{6, std::vector<Edge>{10}});
+		graph.m_nodes.push_back(Node{7, std::vector<Edge>{10}});
+		graph.m_nodes.push_back(Node{8, std::vector<Edge>{10}});
+		graph.m_nodes.push_back(Node{9, std::vector<Edge>{4, 5, 6}});
+		graph.m_nodes.push_back(Node{10, std::vector<Edge>{}});
 
 		std::vector<Node const*> nodes_sorted;
 		Maike::visitNodesInTopoOrder([&nodes_sorted](Node const& node) { nodes_sorted.push_back(&node); },
@@ -110,17 +122,17 @@ namespace Testcases
 	void graphutilsVisitNodesNoDag()
 	{
 		Graph graph;
-		graph.m_nodes.push_back(Node{0, std::vector<int>{1, 2, 3}});
-		graph.m_nodes.push_back(Node{1, std::vector<int>{4, 5, 6}});
-		graph.m_nodes.push_back(Node{2, std::vector<int>{4, 7, 8}});
-		graph.m_nodes.push_back(Node{3, std::vector<int>{8}});
-		graph.m_nodes.push_back(Node{4, std::vector<int>{10}});
-		graph.m_nodes.push_back(Node{5, std::vector<int>{10}});
-		graph.m_nodes.push_back(Node{6, std::vector<int>{10}});
-		graph.m_nodes.push_back(Node{7, std::vector<int>{10}});
-		graph.m_nodes.push_back(Node{8, std::vector<int>{10}});
-		graph.m_nodes.push_back(Node{9, std::vector<int>{4, 5, 6}});
-		graph.m_nodes.push_back(Node{10, std::vector<int>{9}});
+		graph.m_nodes.push_back(Node{0, std::vector<Edge>{1, 2, 3}});
+		graph.m_nodes.push_back(Node{1, std::vector<Edge>{4, 5, 6}});
+		graph.m_nodes.push_back(Node{2, std::vector<Edge>{4, 7, 8}});
+		graph.m_nodes.push_back(Node{3, std::vector<Edge>{8}});
+		graph.m_nodes.push_back(Node{4, std::vector<Edge>{10}});
+		graph.m_nodes.push_back(Node{5, std::vector<Edge>{10}});
+		graph.m_nodes.push_back(Node{6, std::vector<Edge>{10}});
+		graph.m_nodes.push_back(Node{7, std::vector<Edge>{10}});
+		graph.m_nodes.push_back(Node{8, std::vector<Edge>{10}});
+		graph.m_nodes.push_back(Node{9, std::vector<Edge>{4, 5, 6}});
+		graph.m_nodes.push_back(Node{10, std::vector<Edge>{9}});
 
 		try
 		{
@@ -135,17 +147,17 @@ namespace Testcases
 	void graphutilsProcessGraphNodeRecursive()
 	{
 		Graph graph;
-		graph.m_nodes.push_back(Node{0, std::vector<int>{1, 2, 3}});
-		graph.m_nodes.push_back(Node{1, std::vector<int>{4, 5, 6}});
-		graph.m_nodes.push_back(Node{2, std::vector<int>{4, 7, 8}});
-		graph.m_nodes.push_back(Node{3, std::vector<int>{8}});
-		graph.m_nodes.push_back(Node{4, std::vector<int>{10}});
-		graph.m_nodes.push_back(Node{5, std::vector<int>{10}});
-		graph.m_nodes.push_back(Node{6, std::vector<int>{10}});
-		graph.m_nodes.push_back(Node{7, std::vector<int>{10}});
-		graph.m_nodes.push_back(Node{8, std::vector<int>{10}});
-		graph.m_nodes.push_back(Node{9, std::vector<int>{4, 5, 6}});
-		graph.m_nodes.push_back(Node{10, std::vector<int>{}});
+		graph.m_nodes.push_back(Node{0, std::vector<Edge>{1, 2, 3}});
+		graph.m_nodes.push_back(Node{1, std::vector<Edge>{4, 5, 6}});
+		graph.m_nodes.push_back(Node{2, std::vector<Edge>{4, 7, 8}});
+		graph.m_nodes.push_back(Node{3, std::vector<Edge>{8}});
+		graph.m_nodes.push_back(Node{4, std::vector<Edge>{10}});
+		graph.m_nodes.push_back(Node{5, std::vector<Edge>{10}});
+		graph.m_nodes.push_back(Node{6, std::vector<Edge>{10}});
+		graph.m_nodes.push_back(Node{7, std::vector<Edge>{10}});
+		graph.m_nodes.push_back(Node{8, std::vector<Edge>{10}});
+		graph.m_nodes.push_back(Node{9, std::vector<Edge>{4, 5, 6}});
+		graph.m_nodes.push_back(Node{10, std::vector<Edge>{}});
 
 		std::vector<Node const*> nodes_sorted;
 		Maike::processGraphNodeRecursive(
