@@ -37,25 +37,25 @@ void Maike::SourceTreeLoader::DirectoryScanner::processPath(
 		if(src_path != "." && r_filter.get().match(src_path.filename().c_str())) { return; }
 
 		auto src_path_normal = src_path.lexically_normal();
-		auto res = invokeWithMutex<std::lock_guard>(
+		auto i = invokeWithMutex<std::lock_guard>(
 		   m_source_files_mtx,
-		   [this](auto const& item) { return m_source_files.get(item); },
+		   [this](auto const& item) { return m_source_files.find(item); },
 		   src_path_normal);
-		if(res.valid()) { return; }
+		if(i != std::end(m_source_files)) { return; }
 
 		if(auto src_file_info = r_loaders.get().load(src_path); src_file_info.has_value())
 		{
-			auto rec = invokeWithMutex<std::lock_guard>(
+			auto ins = invokeWithMutex<std::lock_guard>(
 			   m_source_files_mtx,
 			   [this](auto&& src_path, auto&& src_file_info) {
-				   return m_source_files.insert(std::move(src_path), std::move(src_file_info));
+				   return m_source_files.insert(std::make_pair(std::move(src_path), std::move(src_file_info)));
 			   },
 			   std::move(src_path_normal),
 			   std::move(*src_file_info));
 
-			if(is_directory(rec.path()))
+			if(ins.second && is_directory(ins.first->first))
 			{
-				auto i = Maike::fs::directory_iterator{rec.path()};
+				auto i = Maike::fs::directory_iterator{ins.first->first};
 				std::for_each(begin(i), end(i), [this, &counter](auto&& item) {
 					r_workers->addTask(
 					   [this,

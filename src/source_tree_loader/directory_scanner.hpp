@@ -10,7 +10,6 @@
 #include "./input_filter.hpp"
 
 #include "src/fs.hpp"
-#include "src/db/source_file_index.hpp"
 #include "src/sched/signaling_counter.hpp"
 #include "src/sched/thread_pool.hpp"
 
@@ -52,7 +51,7 @@ namespace Maike::SourceTreeLoader
 
 		DirectoryScanner& processPath(fs::path const& src_path);
 
-		Db::SourceFileIndex takeResult()
+		std::map<fs::path, Db::SourceFileInfo> takeResult()
 		{
 			m_counter.wait(0);
 			if(!m_errlog.empty()) { throw ScanException{std::move(m_errlog)}; }
@@ -63,7 +62,7 @@ namespace Maike::SourceTreeLoader
 		std::reference_wrapper<InputFilter const> r_filter;
 		std::reference_wrapper<SourceFileLoaderDelegator const> r_loaders;
 
-		Db::SourceFileIndex m_source_files;
+		std::map<fs::path, Db::SourceFileInfo> m_source_files;
 
 		// TODO: Move these into a policy base class (to make it more efficient in single-threaded
 		//       single-threaded mode)

@@ -11,6 +11,8 @@
 #include "src/source_file_info_loaders/cxx/source_file_loader.hpp"
 #include "src/utils/graphutils.hpp"
 
+#if 0
+
 void makeSourceFileInfosFromTargets(Maike::Db::SourceFileIndex& source_files,
                                     Maike::fs::path const& target_dir)
 {
@@ -56,7 +58,7 @@ collectTargets(Maike::Db::SourceFileIndex const& source_files, Maike::fs::path c
 	return ret;
 }
 
-#if 0
+
 void resolveDependencies(std::map<Maike::fs::path, Maike::SourceFileInfo>& source_files)
 {
 	std::for_each(std::begin(source_files), std::end(source_files), [&source_files](auto& item) {
@@ -245,7 +247,7 @@ int main(int argc, char** argv)
 
 		Maike::SourceTreeLoader::SourceFileLoaderDelegator loader_delegator;
 		loader_delegator.loaders(mapSourceFileInfoLoaders(cfg));
-
+#if 0
 		Maike::SourceTreeLoader::DirectoryScanner scanner{
 		   workers, std::cref(cfg.sourceTreeLoader().inputFilter()), std::cref(loader_delegator)};
 		auto now = std::chrono::steady_clock::now();
@@ -269,6 +271,7 @@ int main(int argc, char** argv)
 			printDepGraph(targets, src_files, cmdline.option<Maike::CmdLineOption::PrintDepGraph>());
 			return 0;
 		}
+#endif
 #if 0
 		resolveDependencies(src_files);
 #endif
