@@ -25,26 +25,28 @@ namespace
 	ForwardIt find(ForwardIt first, ForwardIt last, const T& value, Compare cmp)
 	{
 		ForwardIt i = std::lower_bound(first, last, value, cmp);
-		if (i != last && !cmp(value, *i))
+		if(i != last && !cmp(value, *i))
 			return i;
 		else
 			return last;
-
 	}
 
-	void resolve(Maike::Db::Dependency& dep, std::vector<Maike::Db::SourceFileRecordConst> const& src_files)
+	void resolve(Maike::Db::Dependency& dep,
+	             std::vector<Maike::Db::SourceFileRecordConst> const& src_files)
 	{
 		switch(dep.resolver())
 		{
 			case Maike::Db::Dependency::Resolver::InternalLookup:
 			{
-				auto i = find(std::begin(src_files), std::end(src_files), dep.name(), CompareSourceFileRecord{});
-				if( i == std::end(src_files))
-				{ throw std::runtime_error{std::string{"Failed to resolve "} + dep.name().string()};}
+				auto i =
+				   find(std::begin(src_files), std::end(src_files), dep.name(), CompareSourceFileRecord{});
+				if(i == std::end(src_files))
+				{ throw std::runtime_error{std::string{"Failed to resolve "} + dep.name().string()}; }
+
+				dep.reference(i->id());
 			}
-				break;
-			case Maike::Db::Dependency::Resolver::None:
-				break;
+			break;
+			case Maike::Db::Dependency::Resolver::None: break;
 		}
 	}
 }
@@ -62,11 +64,9 @@ Maike::Db::DependencyGraph::DependencyGraph(std::map<fs::path, SourceFileInfo>&&
 		   return SourceFileRecordConst{SourceFileId{k}, std::cref(item.first), std::cref(item.second)};
 	   });
 
-	std::for_each(std::begin(m_src_files), std::end(m_src_files), [&nodes = m_nodes](auto& item) {
+	std::for_each(std::begin(m_src_files), std::end(m_src_files), [& nodes = m_nodes](auto& item) {
 		auto deps = item.second.useDepsCopy();
-		std::for_each(std::begin(deps), std::end(deps), [&nodes](auto& item) {
-			resolve(item, nodes);
-		});
+		std::for_each(std::begin(deps), std::end(deps), [&nodes](auto& item) { resolve(item, nodes); });
 		item.second.useDeps(std::move(deps));
 	});
 }

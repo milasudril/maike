@@ -41,6 +41,12 @@ namespace Maike::Db
 			return m_ref;
 		}
 
+		Dependency& reference(SourceFileId id)
+		{
+			m_ref = id;
+			return *this;
+		}
+
 	private:
 		SourceFileId m_ref;
 		fs::path m_name;
