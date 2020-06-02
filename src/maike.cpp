@@ -12,29 +12,29 @@
 #include "src/utils/graphutils.hpp"
 #include "src/utils/callwrappers.hpp"
 
-#if 0
 
-void makeSourceFileInfosFromTargets(Maike::Db::SourceFileIndex& source_files,
+void makeSourceFileInfosFromTargets(std::map<Maike::fs::path, Maike::Db::SourceFileInfo>& source_files,
                                     Maike::fs::path const& target_dir)
 {
-	source_files.visitByPath([&source_files, target_dir](auto const& item) {
-		auto const& src_file_info = item.sourceFileInfo();
+	std::for_each(std::begin(source_files), std::end(source_files), [&source_files, &target_dir](auto const& item) {
+		auto const& src_file_info = item.second;
 		auto const& targets = src_file_info.targets();
 		std::for_each(std::begin(targets),
 		              std::end(targets),
-		              [&source_files, &name = item.path(), &target_dir](auto const& target) {
+		              [&source_files, &name = item.first, &target_dir](auto const& target) {
 			              if(name != target) // For backwards compatiblity with old maike
 			              {
-				              auto i = source_files.get(target);
-				              if(i.valid()) { throw std::runtime_error{"Target has already been defined"}; }
+				              auto i = source_files.find(target);
+				              if(i != std::end(source_files)) { throw std::runtime_error{"Target has already been defined"}; }
 
 				              Maike::Db::SourceFileInfo src_file;
-				              source_files.insert(target_dir / target, std::move(src_file));
+				              source_files.insert(std::make_pair(target_dir / target, std::move(src_file)));
 			              }
 		              });
 	});
 }
 
+#if 0
 std::map<Maike::fs::path, Maike::Db::Target>
 collectTargets(Maike::Db::SourceFileIndex const& source_files, Maike::fs::path const& target_dir)
 {
@@ -256,12 +256,14 @@ int main(int argc, char** argv)
 		        std::chrono::duration<double>(src_files.second).count()/src_files.first.size()
 		        );
 
-		Maike::Db::DependencyGraph g{std::move(src_files.first)};
-
-#if 0
 		auto const target_dir = cmdline.hasOption<Maike::CmdLineOption::TargetDir>() ?
 							cmdline.option<Maike::CmdLineOption::TargetDir>() :
 							Maike::fs::path{"__targets"};
+
+		makeSourceFileInfosFromTargets(src_files.first, target_dir);
+		Maike::Db::DependencyGraph g{std::move(src_files.first)};
+
+#if 0
 		auto targets = collectTargets(src_files, target_dir);
 		if(cmdline.hasOption<Maike::CmdLineOption::PrintDepGraph>())
 		{
@@ -280,7 +282,6 @@ int main(int argc, char** argv)
 		auto src_files = scanner.takeResult();
 
 
-		makeSourceFileInfosFromTargets(src_files, target_dir);
 
 		auto dep_graph = Maike::Db::DependencyGraph{src_files};
 		Maike::visitNodesInTopoOrder([](auto const&) {}, dep_graph);
