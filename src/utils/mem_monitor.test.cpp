@@ -5,7 +5,7 @@
 #undef NDEBUG
 
 #include "./mem_monitor.hpp"
-#include "./unused_result.hpp"
+#include "./callwrappers.hpp"
 
 #include <unistd.h>
 #include <sys/wait.h>
