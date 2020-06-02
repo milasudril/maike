@@ -10,6 +10,7 @@
 #include "src/source_tree_loader/directory_scanner.hpp"
 #include "src/source_file_info_loaders/cxx/source_file_loader.hpp"
 #include "src/utils/graphutils.hpp"
+#include "src/utils/callwrappers.hpp"
 
 #if 0
 
@@ -247,14 +248,15 @@ int main(int argc, char** argv)
 		Maike::SourceTreeLoader::SourceFileLoaderDelegator loader_delegator;
 		loader_delegator.loaders(mapSourceFileInfoLoaders(cfg));
 
-		auto now = std::chrono::steady_clock::now();
-		auto src_files = load(workers, Maike::fs::path{"."}, cfg.sourceTreeLoader().inputFilter(), loader_delegator);
+		auto src_files = Maike::timedCall(Maike::SourceTreeLoader::load, workers, Maike::fs::path{"."}, cfg.sourceTreeLoader().inputFilter(), loader_delegator);
 		fprintf(stderr,
-		        "# Processed %zu files in %.7f seconds\n",
-		        src_files.size(),
-		        std::chrono::duration<double>(std::chrono::steady_clock::now() - now).count());
+		        "# Processed %zu files in %.7f seconds (%.7f seconds/file)\n",
+		        src_files.first.size(),
+		        std::chrono::duration<double>(src_files.second).count(),
+		        std::chrono::duration<double>(src_files.second).count()/src_files.first.size()
+		        );
 
-		Maike::Db::DependencyGraph g{std::move(src_files)};
+		Maike::Db::DependencyGraph g{std::move(src_files.first)};
 
 #if 0
 		auto const target_dir = cmdline.hasOption<Maike::CmdLineOption::TargetDir>() ?
