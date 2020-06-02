@@ -41,6 +41,12 @@ namespace Maike::Db
 			return m_use_deps;
 		}
 
+		SourceFileInfo& useDeps(std::vector<Dependency>&& deps)
+		{
+			m_use_deps = std::move(deps);
+			return *this;
+		}
+
 		SourceFileInfo& add(Dependency&& dep)
 		{
 			m_use_deps.push_back(std::move(dep));

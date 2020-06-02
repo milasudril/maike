@@ -24,7 +24,9 @@ namespace Maike
 
 		template<class T>
 		inline bool valid(T x, std::enable_if_t<std::is_integral_v<T>, int> = 0)
-		{return x != static_cast<T>(-1);}
+		{
+			return x != static_cast<T>(-1);
+		}
 
 		template<class ItemCallback, class Graph, class Node>
 		void processGraphNodeRecursive(ItemCallback&& cb,
@@ -51,9 +53,7 @@ namespace Maike
 									{
 										switch(visited[static_cast<size_t>(node_id)])
 										{
-											case Mark::Init:
-												nodes_to_visit.push(&getNodeById(graph, node_id));
-												break;
+											case Mark::Init: nodes_to_visit.push(&getNodeById(graph, node_id)); break;
 
 											case Mark::InProgress: throw std::runtime_error{"Cyclic dependency detected"};
 

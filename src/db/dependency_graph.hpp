@@ -1,15 +1,15 @@
 //@	{
 //@	  "targets":[{"name":"dependency_graph.hpp","type":"include"}]
-//@	 ,"dependencies_extra":[{"ref":"dependency_graph.hpp", "rel":"implementation"}]
+//@	 ,"dependencies_extra":[{"ref":"dependency_graph.o", "rel":"implementation"}]
 //@	 }
 
 #ifndef MAIKE_DB_DEPENDENCYGRAPH_HPP
 #define MAIKE_DB_DEPENDENCYGRAPH_HPP
 
 #include "./source_file_record.hpp"
-#include "./source_file_index.hpp"
 
 #include <algorithm>
+#include <map>
 #include <cassert>
 
 namespace Maike::Db
@@ -17,9 +17,7 @@ namespace Maike::Db
 	class DependencyGraph
 	{
 	public:
-		explicit DependencyGraph(SourceFileIndex const& index): m_nodes{getRecordsById(index)}
-		{
-		}
+		explicit DependencyGraph(std::map<fs::path, SourceFileInfo>&& src_files);
 
 		using node_type = SourceFileRecordConst;
 
@@ -30,6 +28,7 @@ namespace Maike::Db
 
 
 	private:
+		std::map<fs::path, SourceFileInfo> m_src_files;
 		std::vector<SourceFileRecordConst> m_nodes;
 	};
 
@@ -40,12 +39,12 @@ namespace Maike::Db
 		std::for_each(std::begin(nodes), std::end(nodes), std::forward<Function>(f));
 	}
 
-	auto size(DependencyGraph const& g)
+	inline auto size(DependencyGraph const& g)
 	{
 		return g.nodes().size();
 	}
 
-	auto const& getNodeById(DependencyGraph const& g, SourceFileId id)
+	inline auto const& getNodeById(DependencyGraph const& g, SourceFileId id)
 	{
 		auto val = id.value();
 		assert(val < size(g));

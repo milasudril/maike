@@ -78,7 +78,7 @@ void resolveDependencies(std::map<Maike::fs::path, Maike::SourceFileInfo>& sourc
 #endif
 
 void printDepGraph(std::map<Maike::fs::path, Maike::Db::Target> const& targets,
-                   Maike::Db::SourceFileIndex const& source_files,
+                   Maike::Db::DependencyGraph const& source_files,
                    Maike::fs::path const&)
 {
 	puts("digraph \"G\" {\nrankdir=LR\n");
@@ -86,14 +86,13 @@ void printDepGraph(std::map<Maike::fs::path, Maike::Db::Target> const& targets,
 		printf("\"%s\" -> \"%s\"\n", item.first.c_str(), item.second.sourceFilename().c_str());
 	});
 
-
-	source_files.visitByPath([](auto const& item) {
+	visitNodes([](auto const& item) {
 		auto const& deps = item.sourceFileInfo().useDeps();
 		printf("\"%s\"\n", item.path().c_str());
 		std::for_each(std::begin(deps), std::end(deps), [&item](auto const& edge) {
 			printf("\"%s\" -> \"%s\"\n", item.path().c_str(), edge.name().c_str());
 		});
-	});
+	}, source_files);
 	puts("}");
 }
 
@@ -247,30 +246,44 @@ int main(int argc, char** argv)
 
 		Maike::SourceTreeLoader::SourceFileLoaderDelegator loader_delegator;
 		loader_delegator.loaders(mapSourceFileInfoLoaders(cfg));
-#if 0
-		Maike::SourceTreeLoader::DirectoryScanner scanner{
-		   workers, std::cref(cfg.sourceTreeLoader().inputFilter()), std::cref(loader_delegator)};
+
 		auto now = std::chrono::steady_clock::now();
-		scanner.processPath(Maike::fs::path{"."});
-		auto src_files = scanner.takeResult();
+		auto src_files = load(workers, Maike::fs::path{"."}, cfg.sourceTreeLoader().inputFilter(), loader_delegator);
 		fprintf(stderr,
 		        "# Processed %zu files in %.7f seconds\n",
 		        src_files.size(),
 		        std::chrono::duration<double>(std::chrono::steady_clock::now() - now).count());
+
+		Maike::Db::DependencyGraph g{std::move(src_files)};
+
+#if 0
 		auto const target_dir = cmdline.hasOption<Maike::CmdLineOption::TargetDir>() ?
-		                           cmdline.option<Maike::CmdLineOption::TargetDir>() :
-		                           Maike::fs::path{"__targets"};
-		makeSourceFileInfosFromTargets(src_files, target_dir);
-
-		auto dep_graph = Maike::Db::DependencyGraph{src_files};
-		Maike::visitNodesInTopoOrder([](auto const&) {}, dep_graph);
-
+							cmdline.option<Maike::CmdLineOption::TargetDir>() :
+							Maike::fs::path{"__targets"};
 		auto targets = collectTargets(src_files, target_dir);
 		if(cmdline.hasOption<Maike::CmdLineOption::PrintDepGraph>())
 		{
 			printDepGraph(targets, src_files, cmdline.option<Maike::CmdLineOption::PrintDepGraph>());
 			return 0;
 		}
+#endif
+
+
+
+#if 0
+		Maike::SourceTreeLoader::DirectoryScanner scanner{
+		   workers, std::cref(cfg.sourceTreeLoader().inputFilter()), std::cref(loader_delegator)};
+		auto now = std::chrono::steady_clock::now();
+		scanner.processPath(Maike::fs::path{"."});
+		auto src_files = scanner.takeResult();
+
+
+		makeSourceFileInfosFromTargets(src_files, target_dir);
+
+		auto dep_graph = Maike::Db::DependencyGraph{src_files};
+		Maike::visitNodesInTopoOrder([](auto const&) {}, dep_graph);
+
+
 #endif
 #if 0
 		resolveDependencies(src_files);
