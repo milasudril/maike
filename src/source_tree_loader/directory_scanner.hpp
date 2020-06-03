@@ -51,7 +51,7 @@ namespace Maike::SourceTreeLoader
 
 		DirectoryScanner& processPath(fs::path const& src_path);
 
-		std::map<fs::path, SourceFileInfo> takeResult()
+		std::map<fs::path, Db::SourceFileInfo> takeResult()
 		{
 			m_counter.wait(0);
 			if(!m_errlog.empty()) { throw ScanException{std::move(m_errlog)}; }
@@ -62,7 +62,7 @@ namespace Maike::SourceTreeLoader
 		std::reference_wrapper<InputFilter const> r_filter;
 		std::reference_wrapper<SourceFileLoaderDelegator const> r_loaders;
 
-		std::map<fs::path, SourceFileInfo> m_source_files;
+		std::map<fs::path, Db::SourceFileInfo> m_source_files;
 
 		// TODO: Move these into a policy base class (to make it more efficient in single-threaded
 		//       single-threaded mode)
@@ -75,6 +75,16 @@ namespace Maike::SourceTreeLoader
 		std::mutex m_errlog_mtx;
 		std::forward_list<std::unique_ptr<char const[]>> m_errlog;
 	};
+
+	inline std::map<fs::path, Db::SourceFileInfo> load(Sched::ThreadPool& workers,
+	                                                   fs::path const& src_path,
+	                                                   InputFilter const& filter,
+	                                                   SourceFileLoaderDelegator const& loaders)
+	{
+		return DirectoryScanner{workers, std::ref(filter), std::ref(loaders)}
+		   .processPath(src_path)
+		   .takeResult();
+	}
 }
 
 #endif

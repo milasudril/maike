@@ -2,20 +2,18 @@
 //@	 "targets":[{"name":"source_file_info.hpp","type":"include"}]
 //@	 }
 
-#ifndef MAIKE_SOURCEFILEINFO_HPP
-#define MAIKE_SOURCEFILEINFO_HPP
+#ifndef MAIKE_DB_SOURCEFILEINFO_HPP
+#define MAIKE_DB_SOURCEFILEINFO_HPP
 
-#include "./basic_dependency.hpp"
-#include "./compiler.hpp"
-#include "./fs.hpp"
+#include "./dependency.hpp"
+
+#include "src/compiler.hpp"
+#include "src/fs.hpp"
+
 #include <vector>
 
-namespace Maike
+namespace Maike::Db
 {
-	class SourceFileInfo;
-
-	using Dependency = BasicDependency<SourceFileInfo>;
-
 	class SourceFileInfo
 	{
 	public:
@@ -45,9 +43,15 @@ namespace Maike
 			return m_use_deps;
 		}
 
-		SourceFileInfo& useDeps(std::vector<Dependency>&& used_files)
+		SourceFileInfo& useDeps(std::vector<Dependency>&& deps)
 		{
-			m_use_deps = std::move(used_files);
+			m_use_deps = std::move(deps);
+			return *this;
+		}
+
+		SourceFileInfo& add(Dependency&& dep)
+		{
+			m_use_deps.push_back(std::move(dep));
 			return *this;
 		}
 

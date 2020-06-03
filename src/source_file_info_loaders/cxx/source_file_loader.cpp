@@ -7,10 +7,11 @@
 #include "src/io/input_buffer.hpp"
 #include "src/io/output_buffer.hpp"
 
-std::vector<Maike::Dependency> Cxx::SourceFileLoader::getDependencies(Maike::Io::Reader input) const
+std::vector<Maike::Db::Dependency>
+Cxx::SourceFileLoader::getDependencies(Maike::Io::Reader input) const
 {
 	Maike::Io::InputBuffer input_buff{input};
-	std::vector<Maike::Dependency> deps;
+	std::vector<Maike::Db::Dependency> deps;
 	enum class State : int
 	{
 		Newline,
@@ -192,8 +193,8 @@ std::vector<Maike::Dependency> Cxx::SourceFileLoader::getDependencies(Maike::Io:
 				{
 					case '"':
 						state = State::SkipLine;
-						deps.push_back(Maike::Dependency{Maike::fs::path{std::move(include_path)},
-						                                 Maike::Dependency::Resolver::InternalLookup});
+						deps.push_back(Maike::Db::Dependency{Maike::fs::path{std::move(include_path)},
+						                                     Maike::Db::Dependency::Resolver::InternalLookup});
 						break;
 
 					case '\n': state = State::Newline; break;
@@ -207,8 +208,8 @@ std::vector<Maike::Dependency> Cxx::SourceFileLoader::getDependencies(Maike::Io:
 				{
 					case '>':
 						state = State::SkipLine;
-						deps.push_back(Maike::Dependency{Maike::fs::path{std::move(include_path)},
-						                                 Maike::Dependency::Resolver::None});
+						deps.push_back(Maike::Db::Dependency{Maike::fs::path{std::move(include_path)},
+						                                     Maike::Db::Dependency::Resolver::None});
 						break;
 
 					case '\n': state = State::Newline; break;

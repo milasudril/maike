@@ -67,18 +67,17 @@ namespace
 	}
 
 	template<class Callback>
-	std::vector<Maike::Dependency>
-	fetch_libs(void const* invoker, Callback cb, std::string_view libname)
+	std::vector<Maike::fs::path> fetch_libs(void const* invoker, Callback cb, std::string_view libname)
 	{
 		auto cmd_out = pkgconfig_run(invoker, cb, "--libs", libname);
-		std::vector<Maike::Dependency> ret;
+		std::vector<Maike::fs::path> ret;
 		ret.reserve(cmd_out.size());
 		std::transform(
 		   std::begin(cmd_out), std::end(cmd_out), std::back_inserter(ret), [](auto const& val) {
 			   if(val.size() < 3 || !(val[0] == '-' && val[1] == 'l'))
 			   { throw std::runtime_error{std::string{"Unexpected format in pkg-config output: "} + val}; }
 			   // Strip "-L"
-			   return Maike::Dependency{val.c_str() + 2, Maike::Dependency::Resolver::None};
+			   return Maike::fs::path{val.c_str() + 2};
 		   });
 
 		return ret;
@@ -136,7 +135,7 @@ std::vector<Maike::fs::path> const& Maike::PkgConfig::Cache::libdirs(std::string
 	return i->second;
 }
 
-std::vector<Maike::Dependency> const& Maike::PkgConfig::Cache::libs(std::string_view libname) const
+std::vector<Maike::fs::path> const& Maike::PkgConfig::Cache::libs(std::string_view libname) const
 {
 	auto i = invokeWithMutex<std::shared_lock>(
 	   m_libs_mtx, [this](auto libname) { return m_libs.find(libname); }, libname);

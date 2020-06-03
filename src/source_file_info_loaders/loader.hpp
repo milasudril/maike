@@ -7,9 +7,10 @@
 
 #include "src/io/reader.hpp"
 #include "src/io/writer.hpp"
-#include "src/compiler.hpp"
-#include "src/source_file_info.hpp"
+#include "src/db/source_file_info.hpp"
 #include "src/key_value_store/compound.hpp"
+
+#include "src/compiler.hpp"
 
 #include <type_traits>
 #include <cassert>
@@ -64,7 +65,7 @@ namespace Maike::SourceFileInfoLoaders
 			                     Io::Reader input,
 			                     SourceOutStream source,
 			                     TagsOutStream tags);
-			std::vector<Dependency> (*get_dependencies)(void const* handle, Io::Reader source_stream);
+			std::vector<Db::Dependency> (*get_dependencies)(void const* handle, Io::Reader source_stream);
 			Compiler (*get_compiler)(void const* handle, KeyValueStore::CompoundRefConst cfg);
 			void (*destroy)(void* handle);
 			KeyValueStore::JsonHandle (*to_json)(void const* handle);
@@ -115,7 +116,7 @@ namespace Maike::SourceFileInfoLoaders
 			m_vtable.filter_input(m_handle, input, source, tags);
 		}
 
-		std::vector<Dependency> getDependencies(Io::Reader input) const
+		std::vector<Db::Dependency> getDependencies(Io::Reader input) const
 		{
 			assert(valid());
 			return m_vtable.get_dependencies(m_handle, input);

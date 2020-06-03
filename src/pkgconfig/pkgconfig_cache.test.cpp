@@ -164,10 +164,8 @@ namespace Testcases
 		invoker.expected_args = std::vector<std::string>{"--libs", "foobar"};
 		invoker.stdout = "-lfoo\\ bar -lbaz";
 		auto res_a = cache.libs("foobar");
-		assert((res_a
-		        == std::vector<Maike::Dependency>{
-		           Maike::Dependency{"foo bar", Maike::Dependency::Resolver::None},
-		           Maike::Dependency{"baz", Maike::Dependency::Resolver::None}}));
+		assert(
+		   (res_a == std::vector<Maike::fs::path>{Maike::fs::path{"foo bar"}, Maike::fs::path{"baz"}}));
 
 		invoker.expected_exe.clear();
 		auto res_b = cache.libs("foobar");

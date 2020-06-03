@@ -112,8 +112,8 @@ namespace Testcases
 		assert(deps[5].name() == Maike::fs::path{"test4"});
 		assert(deps[6].name() == Maike::fs::path{"test5"});
 		assert(deps[7].name() == Maike::fs::path{"test6"});
-		assert(deps[0].resolver() == Maike::Dependency::Resolver::InternalLookup);
-		assert(deps[1].resolver() == Maike::Dependency::Resolver::None);
+		assert(deps[0].resolver() == Maike::Db::Dependency::Resolver::InternalLookup);
+		assert(deps[1].resolver() == Maike::Db::Dependency::Resolver::None);
 	}
 
 	void maikeCxxSourceFileLoaderFilterInput()

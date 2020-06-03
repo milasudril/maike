@@ -7,7 +7,7 @@
 #define MAIKE_SOURCETREELOADER_SOURCEFILELOADERDELEGATOR_HPP
 
 #include "src/source_file_info_loaders/loader.hpp"
-#include "src/source_file_info.hpp"
+#include "src/db/source_file_info.hpp"
 #include "src/fs.hpp"
 
 #include <map>
@@ -30,7 +30,7 @@ namespace Maike::SourceTreeLoader
 			return m_loaders;
 		}
 
-		std::optional<SourceFileInfo> load(Maike::fs::path const& path) const;
+		std::optional<Db::SourceFileInfo> load(Maike::fs::path const& path) const;
 
 	private:
 		std::map<std::string, std::reference_wrapper<SourceFileInfoLoaders::Loader const>> m_loaders;

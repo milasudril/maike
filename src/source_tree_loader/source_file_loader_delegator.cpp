@@ -29,18 +29,20 @@ namespace
 		}
 	};
 
-	std::vector<Maike::Dependency> fixNames(Maike::fs::path const& prefix,
-	                                        std::vector<Maike::Dependency> const& deps)
+	std::vector<Maike::Db::Dependency> fixNames(Maike::fs::path const& prefix,
+	                                            std::vector<Maike::Db::Dependency> const& deps)
 	{
-		std::vector<Maike::Dependency> ret;
+		std::vector<Maike::Db::Dependency> ret;
 		ret.reserve(deps.size());
 		std::transform(
 		   std::begin(deps), std::end(deps), std::back_inserter(ret), [&prefix](auto const& item) {
-			   if(item.resolver() == Maike::Dependency::Resolver::InternalLookup)
+			   if(item.resolver() == Maike::Db::Dependency::Resolver::InternalLookup)
 			   {
 				   auto str = item.name().string();
 				   if(str.size() > 1 && memcmp(str.data(), "./", 2) == 0)
-				   { return Maike::Dependency{(prefix / item.name()).lexically_normal(), item.resolver()}; }
+				   {
+					   return Maike::Db::Dependency{(prefix / item.name()).lexically_normal(), item.resolver()};
+				   }
 			   }
 			   return item;
 		   });
@@ -84,9 +86,9 @@ namespace
 		return ret;
 	}
 
-	Maike::SourceFileInfo loadSourceFile(std::vector<Maike::Dependency>&& builtin_deps,
-	                                     Maike::fs::path const& path,
-	                                     Maike::SourceFileInfoLoaders::Loader const& loader)
+	Maike::Db::SourceFileInfo loadSourceFile(std::vector<Maike::Db::Dependency>&& builtin_deps,
+	                                         Maike::fs::path const& path,
+	                                         Maike::SourceFileInfoLoaders::Loader const& loader)
 	{
 		Maike::Io::Fifo<std::byte> src_fifo;
 		Maike::Io::Fifo<std::byte> tags_fifo;
@@ -108,34 +110,34 @@ namespace
 		auto child_target_use_deps = getChildTargetUseDeps(path.parent_path(), tags);
 
 		auto compiler = tags.getIf<Maike::KeyValueStore::CompoundRefConst>("compiler");
-		return Maike::SourceFileInfo{std::move(builtin_deps),
-		                             std::move(child_target_use_deps),
-		                             std::move(targets),
-		                             compiler ? loader.getCompiler(*compiler) : loader.getCompiler()};
+		return Maike::Db::SourceFileInfo{std::move(builtin_deps),
+		                                 std::move(child_target_use_deps),
+		                                 std::move(targets),
+		                                 compiler ? loader.getCompiler(*compiler) : loader.getCompiler()};
 	}
 }
 
-std::optional<Maike::SourceFileInfo>
+std::optional<Maike::Db::SourceFileInfo>
 Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(Maike::fs::path const& path) const
 {
-	std::vector<Maike::Dependency> deps;
+	std::vector<Maike::Db::Dependency> deps;
 	if(!path.parent_path().empty())
 	{
-		deps.push_back(Maike::Dependency{path.parent_path().lexically_normal(),
-		                                 Maike::Dependency::Resolver::InternalLookup});
+		deps.push_back(Maike::Db::Dependency{path.parent_path().lexically_normal(),
+		                                     Maike::Db::Dependency::Resolver::InternalLookup});
 	}
 
 	if(is_directory(path))
 	{
 		std::vector<Maike::fs::path> targets;
 		targets.push_back(path.lexically_normal());
-		return Maike::SourceFileInfo{
+		return Maike::Db::SourceFileInfo{
 		   std::move(deps), std::vector<Maike::fs::path>{}, std::move(targets), Maike::Compiler{MkDir{}}};
 	}
 
 	auto extension = path.extension();
 	auto i = m_loaders.find(extension);
-	if(i == std::end(m_loaders)) { return std::optional<Maike::SourceFileInfo>{}; }
+	if(i == std::end(m_loaders)) { return std::optional<Maike::Db::SourceFileInfo>{}; }
 
 	return loadSourceFile(std::move(deps), path, i->second);
 }
