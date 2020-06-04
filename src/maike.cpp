@@ -294,7 +294,13 @@ int main(int argc, char** argv)
 		   [&graph](auto const& node) {
 			   printf("%s\n", node.path().c_str());
 			   Maike::processGraphNodeRecursive(
-			      [](auto const& edge) { printf("    %s (%zu)\n", edge.path().c_str(), edge.id().value()); },
+			      [](auto const& edge) {
+					printf("    %s (%zu)\n", edge.path().c_str(), edge.id().value());
+					auto const& target_use_deps = edge.sourceFileInfo().childTargetsUseDeps();
+					std::for_each(std::begin(target_use_deps), std::end(target_use_deps),[](auto const& name){
+						printf("        %s\n", name.c_str());
+					});
+					},
 			      graph.result,
 			      node);
 		   },
