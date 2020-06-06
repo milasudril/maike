@@ -186,6 +186,43 @@ void dumpConfig(Maike::Config::Main const& cfg, Maike::fs::path const&)
 	store(Maike::KeyValueStore::Compound{}.set("maikeconfig", cfg).handleReference(), stdout);
 }
 
+class Logger
+{
+public:
+	struct SourceFilesFromTargets
+	{
+	};
+
+	template<class Duration>
+	void operator()(Duration duration,
+	                std::map<Maike::fs::path, Maike::Db::SourceFileInfo> const& result)
+	{
+		fprintf(stderr,
+		        "# Processed %zu files in %.7f seconds (%.7e seconds/file)\n",
+		        result.size(),
+		        std::chrono::duration<double>(duration).count(),
+		        std::chrono::duration<double>(duration).count() / result.size());
+	}
+
+	template<class Duration>
+	void operator()(Duration duration, Maike::Db::DependencyGraph const& result)
+	{
+		fprintf(stderr,
+		        "# Create dependency graph with %zu entries in %.7f seconds  (%.7e seconds/file)\n",
+		        size(result),
+		        std::chrono::duration<double>(duration).count(),
+		        std::chrono::duration<double>(duration).count() / size(result));
+	}
+
+	template<class Duration>
+	void operator()(Duration duration, SourceFilesFromTargets)
+	{
+		fprintf(stderr,
+		        "# Generated source file entries from collected targets %.7f seconds\n",
+		        std::chrono::duration<double>(duration).count());
+	}
+};
+
 int main(int argc, char** argv)
 {
 	try
@@ -243,50 +280,44 @@ int main(int argc, char** argv)
 		 bi.vcsState().branch().c_str());
 		fflush(stdout);*/
 
-
+		Logger logger;
 		Maike::Sched::ThreadPool workers{cmdline.option<Maike::CmdLineOption::NumWorkers>()};
 
 		Maike::SourceTreeLoader::SourceFileLoaderDelegator loader_delegator;
 		loader_delegator.loaders(mapSourceFileInfoLoaders(cfg));
 
-		auto src_files = Maike::timedCall(Maike::SourceTreeLoader::load,
+		auto src_files = Maike::timedCall(logger,
+		                                  Maike::SourceTreeLoader::load,
 		                                  workers,
 		                                  Maike::fs::path{"."},
 		                                  cfg.sourceTreeLoader().inputFilter(),
 		                                  loader_delegator);
-		fprintf(stderr,
-		        "# Processed %zu files in %.7f seconds (%.7e seconds/file)\n",
-		        src_files.result.size(),
-		        std::chrono::duration<double>(src_files.time).count(),
-		        std::chrono::duration<double>(src_files.time).count() / src_files.result.size());
+
+		//		auto targets = collectTargtes(src_files.result);
 
 		auto const target_dir = cmdline.hasOption<Maike::CmdLineOption::TargetDir>() ?
 		                           cmdline.option<Maike::CmdLineOption::TargetDir>() :
 		                           Maike::fs::path{"__targets"};
 
-		{
-			auto res = Maike::timedCall(makeSourceFileInfosFromTargets, src_files.result, target_dir);
-			fprintf(stderr,
-			        "# Added targets to source files in %.7f seconds\n",
-			        std::chrono::duration<double>(res.time).count());
-		}
 
-		auto graph = Maike::timedCall([src_files = std::move(src_files.result)]() mutable {
-			return Maike::Db::DependencyGraph{std::move(src_files)};
-		});
-		fprintf(stderr,
-		        "# Create dependency graph with %zu entries in %.7f seconds  (%.7e seconds/file)\n",
-		        size(graph.result),
-		        std::chrono::duration<double>(graph.time).count(),
-		        std::chrono::duration<double>(graph.time).count() / size(graph.result));
+		Maike::timedCall(
+		   logger,
+		   [](auto&&... args) {
+			   makeSourceFileInfosFromTargets(std::forward<decltype(args)>(args)...);
+			   return Logger::SourceFilesFromTargets{};
+		   },
+		   src_files,
+		   target_dir);
 
+		auto graph = Maike::timedCall(
+		   logger, [&src_files]() { return Maike::Db::DependencyGraph{std::move(src_files)}; });
 
 		auto targets = std::map<Maike::fs::path, Maike::Db::Target>{};
 
 		//		collectTargets(src_files, target_dir);
 		if(cmdline.hasOption<Maike::CmdLineOption::PrintDepGraph>())
 		{
-			printDepGraph(targets, graph.result, cmdline.option<Maike::CmdLineOption::PrintDepGraph>());
+			printDepGraph(targets, graph, cmdline.option<Maike::CmdLineOption::PrintDepGraph>());
 			return 0;
 		}
 
@@ -295,16 +326,16 @@ int main(int argc, char** argv)
 			   printf("%s\n", node.path().c_str());
 			   Maike::processGraphNodeRecursive(
 			      [](auto const& edge) {
-					printf("    %s (%zu)\n", edge.path().c_str(), edge.id().value());
-					auto const& target_use_deps = edge.sourceFileInfo().childTargetsUseDeps();
-					std::for_each(std::begin(target_use_deps), std::end(target_use_deps),[](auto const& name){
-						printf("        %s\n", name.c_str());
-					});
-					},
-			      graph.result,
+				      printf("    %s (%zu)\n", edge.path().c_str(), edge.id().value());
+				      auto const& target_use_deps = edge.sourceFileInfo().childTargetsUseDeps();
+				      std::for_each(std::begin(target_use_deps),
+				                    std::end(target_use_deps),
+				                    [](auto const& name) { printf("        %s\n", name.c_str()); });
+			      },
+			      graph,
 			      node);
 		   },
-		   graph.result);
+		   graph);
 
 
 #if 0
