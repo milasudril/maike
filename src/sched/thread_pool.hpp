@@ -84,6 +84,9 @@ namespace Maike::Sched
 
 		explicit ThreadPool(ThreadCount n_threads = ThreadCount{});
 
+		ThreadPool(ThreadPool&&) = delete;
+		ThreadPool& operator=(ThreadPool&&) = delete;
+
 		template<class Function>
 		ThreadPool& addTask(Function&& f, TaskResult<std::result_of_t<std::decay_t<Function>()>>& result)
 		{
