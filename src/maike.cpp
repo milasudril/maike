@@ -38,20 +38,41 @@ void makeSourceFileInfosFromTargets(
 {
 	std::for_each(
 	   std::begin(targets), std::end(targets), [&source_files, &target_dir](auto const& item) {
+		   auto const& buildDeps = item.second.buildDeps();
+		   std::vector<Maike::Db::Dependency> use_deps;
+		   std::for_each(
+		      std::begin(buildDeps),
+		      std::end(buildDeps),
+		      [&source_files, &target_name = item.first, &target_dir, &use_deps](const auto& item) {
+			      auto i = source_files.find(item.name());
+			      if(i != std::end(source_files))
+			      {
+				      auto const& child_target_use_deps = i->second.childTargetsUseDeps();
+				      std::for_each(std::begin(child_target_use_deps),
+				                    std::end(child_target_use_deps),
+				                    [&target_name, &target_dir, &use_deps](auto const& item) {
+					                    if(item != target_name)
+					                    {
+						                    // FIXME: We must store Dependency objecs in childTargetUseDeps, in case
+						                    //        this is an external lib.
+						                    use_deps.push_back(Maike::Db::Dependency{
+						                       target_dir / item, Maike::Db::Dependency::Resolver::InternalLookup});
+					                    }
+				                    });
+			      }
+		      });
 		   Maike::Db::SourceFileInfo src_file;
+
+		   // FIXME: Remove duplicates before sinking into src_file
+		   src_file.useDeps(std::move(use_deps));
 		   source_files.insert(std::make_pair(target_dir / item.first, std::move(src_file)));
 	   });
 }
 
 
-void printDepGraph(std::map<Maike::fs::path, Maike::Db::Target> const& targets,
-                   Maike::Db::DependencyGraph const& source_files,
-                   Maike::fs::path const&)
+void printDepGraph(Maike::Db::DependencyGraph const& source_files, Maike::fs::path const&)
 {
 	puts("digraph \"G\" {\nrankdir=LR\n");
-	std::for_each(std::begin(targets), std::end(targets), [](auto const& item) {
-		printf("\"%s\" -> \"%s\"\n", item.first.c_str(), item.second.sourceFilename().c_str());
-	});
 
 	visitNodes(
 	   [](auto const& item) {
@@ -287,6 +308,7 @@ int main(int argc, char** argv)
 
 		auto targets = Maike::timedCall(logger, collectTargets, src_files);
 
+
 		auto const target_dir = cmdline.hasOption<Maike::CmdLineOption::TargetDir>() ?
 		                           cmdline.option<Maike::CmdLineOption::TargetDir>() :
 		                           Maike::fs::path{"__targets"};
@@ -305,12 +327,12 @@ int main(int argc, char** argv)
 		auto graph = Maike::timedCall(
 		   logger, [&src_files]() { return Maike::Db::DependencyGraph{std::move(src_files)}; });
 
-		//		collectTargets(src_files, target_dir);
 		if(cmdline.hasOption<Maike::CmdLineOption::PrintDepGraph>())
 		{
-			printDepGraph(targets, graph, cmdline.option<Maike::CmdLineOption::PrintDepGraph>());
+			printDepGraph(graph, cmdline.option<Maike::CmdLineOption::PrintDepGraph>());
 			return 0;
 		}
+
 
 #if 0
 		Maike::Db::visitNodes(
