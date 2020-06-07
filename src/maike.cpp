@@ -16,35 +16,32 @@ std::map<Maike::fs::path, Maike::Db::Target>
 collectTargets(std::map<Maike::fs::path, Maike::Db::SourceFileInfo>& source_files)
 {
 	std::map<Maike::fs::path, Maike::Db::Target> ret;
-	std::for_each(
-	   std::begin(source_files), std::end(source_files), [&ret](auto const& item) {
-		   auto const& targets = item.second.targets();
-		   std::for_each(
-		      std::begin(targets), std::end(targets), [&ret, &item](auto const& target) {
-			      if(item.first != target) // For backwards compatiblity with old maike
-			      {
-				      auto i = ret.find(target);
-				      if(i != std::end(ret)) { throw std::runtime_error{"Target has already been defined"}; }
+	std::for_each(std::begin(source_files), std::end(source_files), [&ret](auto const& item) {
+		auto const& targets = item.second.targets();
+		std::for_each(std::begin(targets), std::end(targets), [&ret, &item](auto const& target) {
+			if(item.first != target) // For backwards compatiblity with old maike
+			{
+				auto i = ret.find(target);
+				if(i != std::end(ret)) { throw std::runtime_error{"Target has already been defined"}; }
 
-				      ret.insert(std::make_pair(target, Maike::Db::Target{item.first, item.second}));
-			      }
-		      });
-	   });
+				ret.insert(std::make_pair(target, Maike::Db::Target{item.first, item.second}));
+			}
+		});
+	});
 	return ret;
 }
 
-void makeSourceFileInfosFromTargets(const std::map<Maike::fs::path, Maike::Db::Target>& targets,
+void makeSourceFileInfosFromTargets(
+   const std::map<Maike::fs::path, Maike::Db::Target>& targets,
    std::map<Maike::fs::path, Maike::Db::SourceFileInfo>& source_files,
    Maike::fs::path const& target_dir)
 {
-	std::for_each(std::begin(targets),
-	              std::end(targets),
-	              [&source_files, &target_dir](auto const& item) {
-					 Maike::Db::SourceFileInfo src_file;
-	                  source_files.insert(std::make_pair(target_dir / item.first, std::move(src_file)));
-	              });
+	std::for_each(
+	   std::begin(targets), std::end(targets), [&source_files, &target_dir](auto const& item) {
+		   Maike::Db::SourceFileInfo src_file;
+		   source_files.insert(std::make_pair(target_dir / item.first, std::move(src_file)));
+	   });
 }
-
 
 
 void printDepGraph(std::map<Maike::fs::path, Maike::Db::Target> const& targets,
