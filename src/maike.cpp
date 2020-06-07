@@ -12,55 +12,40 @@
 #include "src/utils/graphutils.hpp"
 #include "src/utils/callwrappers.hpp"
 
-
-void makeSourceFileInfosFromTargets(
-   std::map<Maike::fs::path, Maike::Db::SourceFileInfo>& source_files,
-   Maike::fs::path const& target_dir)
-{
-	std::for_each(std::begin(source_files),
-	              std::end(source_files),
-	              [&source_files, &target_dir](auto const& item) {
-		              auto const& src_file_info = item.second;
-		              auto const& targets = src_file_info.targets();
-		              std::for_each(std::begin(targets),
-		                            std::end(targets),
-		                            [&source_files, &name = item.first, &target_dir](auto const& target) {
-			                            if(name != target) // For backwards compatiblity with old maike
-			                            {
-				                            auto i = source_files.find(target);
-				                            if(i != std::end(source_files))
-				                            { throw std::runtime_error{"Target has already been defined"}; }
-
-				                            Maike::Db::SourceFileInfo src_file;
-				                            source_files.insert(
-				                               std::make_pair(target_dir / target, std::move(src_file)));
-			                            }
-		                            });
-	              });
-}
-
 std::map<Maike::fs::path, Maike::Db::Target>
-collectTargets(std::map<Maike::fs::path, Maike::Db::SourceFileInfo>& source_files,
-               Maike::fs::path const& target_dir)
+collectTargets(std::map<Maike::fs::path, Maike::Db::SourceFileInfo>& source_files)
 {
 	std::map<Maike::fs::path, Maike::Db::Target> ret;
 	std::for_each(
-	   std::begin(source_files), std::end(source_files), [&ret, &target_dir](auto const& item) {
+	   std::begin(source_files), std::end(source_files), [&ret](auto const& item) {
 		   auto const& targets = item.second.targets();
 		   std::for_each(
-		      std::begin(targets), std::end(targets), [&ret, &item, &target_dir](auto const& target) {
+		      std::begin(targets), std::end(targets), [&ret, &item](auto const& target) {
 			      if(item.first != target) // For backwards compatiblity with old maike
 			      {
 				      auto i = ret.find(target);
 				      if(i != std::end(ret)) { throw std::runtime_error{"Target has already been defined"}; }
 
-				      ret.insert(
-				         i, std::make_pair(target_dir / target, Maike::Db::Target{item.first, item.second}));
+				      ret.insert(std::make_pair(target, Maike::Db::Target{item.first, item.second}));
 			      }
 		      });
 	   });
 	return ret;
 }
+
+void makeSourceFileInfosFromTargets(const std::map<Maike::fs::path, Maike::Db::Target>& targets,
+   std::map<Maike::fs::path, Maike::Db::SourceFileInfo>& source_files,
+   Maike::fs::path const& target_dir)
+{
+	std::for_each(std::begin(targets),
+	              std::end(targets),
+	              [&source_files, &target_dir](auto const& item) {
+					 Maike::Db::SourceFileInfo src_file;
+	                  source_files.insert(std::make_pair(target_dir / item.first, std::move(src_file)));
+	              });
+}
+
+
 
 void printDepGraph(std::map<Maike::fs::path, Maike::Db::Target> const& targets,
                    Maike::Db::DependencyGraph const& source_files,
@@ -208,7 +193,7 @@ public:
 	void operator()(Duration duration, Maike::Db::DependencyGraph const& result)
 	{
 		fprintf(stderr,
-		        "# Create dependency graph with %zu entries in %.7f seconds  (%.7e seconds/file)\n",
+		        "# Create dependency graph with %zu entries in %.7f seconds  (%.7e seconds/entry)\n",
 		        size(result),
 		        std::chrono::duration<double>(duration).count(),
 		        std::chrono::duration<double>(duration).count() / size(result));
@@ -218,8 +203,18 @@ public:
 	void operator()(Duration duration, SourceFilesFromTargets)
 	{
 		fprintf(stderr,
-		        "# Generated source file entries from collected targets %.7f seconds\n",
+		        "# Generated source file entries from collected targets in %.7f seconds\n",
 		        std::chrono::duration<double>(duration).count());
+	}
+
+	template<class Duration>
+	void operator()(Duration duration, std::map<Maike::fs::path, Maike::Db::Target> const& result)
+	{
+		fprintf(stderr,
+		        "# Collected %zu targets in %.7f seconds (%.7e seconds/entry)\n",
+		        result.size(),
+		        std::chrono::duration<double>(duration).count(),
+		        std::chrono::duration<double>(duration).count() / result.size());
 	}
 };
 
@@ -293,7 +288,7 @@ int main(int argc, char** argv)
 		                                  cfg.sourceTreeLoader().inputFilter(),
 		                                  loader_delegator);
 
-		//		auto targets = collectTargtes(src_files.result);
+		auto targets = Maike::timedCall(logger, collectTargets, src_files);
 
 		auto const target_dir = cmdline.hasOption<Maike::CmdLineOption::TargetDir>() ?
 		                           cmdline.option<Maike::CmdLineOption::TargetDir>() :
@@ -306,13 +301,12 @@ int main(int argc, char** argv)
 			   makeSourceFileInfosFromTargets(std::forward<decltype(args)>(args)...);
 			   return Logger::SourceFilesFromTargets{};
 		   },
+		   targets,
 		   src_files,
 		   target_dir);
 
 		auto graph = Maike::timedCall(
 		   logger, [&src_files]() { return Maike::Db::DependencyGraph{std::move(src_files)}; });
-
-		auto targets = std::map<Maike::fs::path, Maike::Db::Target>{};
 
 		//		collectTargets(src_files, target_dir);
 		if(cmdline.hasOption<Maike::CmdLineOption::PrintDepGraph>())
@@ -321,6 +315,7 @@ int main(int argc, char** argv)
 			return 0;
 		}
 
+#if 0
 		Maike::Db::visitNodes(
 		   [&graph](auto const& node) {
 			   printf("%s\n", node.path().c_str());
@@ -336,24 +331,6 @@ int main(int argc, char** argv)
 			      node);
 		   },
 		   graph);
-
-
-#if 0
-		Maike::SourceTreeLoader::DirectoryScanner scanner{
-		   workers, std::cref(cfg.sourceTreeLoader().inputFilter()), std::cref(loader_delegator)};
-		auto now = std::chrono::steady_clock::now();
-		scanner.processPath(Maike::fs::path{"."});
-		auto src_files = scanner.takeResult();
-
-
-
-		auto dep_graph = Maike::Db::DependencyGraph{src_files};
-		Maike::visitNodesInTopoOrder([](auto const&) {}, dep_graph);
-
-
-#endif
-#if 0
-		resolveDependencies(src_files);
 #endif
 	}
 	catch(std::exception const& err)
