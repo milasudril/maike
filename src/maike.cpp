@@ -36,34 +36,38 @@ void makeSourceFileInfosFromTargets(
    std::map<Maike::fs::path, Maike::Db::SourceFileInfo>& source_files,
    Maike::fs::path const& target_dir)
 {
+	Maike::Db::DependencyGraph g{std::move(source_files)};
+	source_files = g.takeSourceFiles();
 	std::for_each(
-	   std::begin(targets), std::end(targets), [&source_files, &target_dir](auto const& item) {
-		   auto const& buildDeps = item.second.buildDeps();
+	   std::begin(targets), std::end(targets), [&g, &source_files, &target_dir](auto const& item) {
 		   std::vector<Maike::Db::Dependency> use_deps;
-		   std::for_each(
-		      std::begin(buildDeps),
-		      std::end(buildDeps),
-		      [&source_files, &target_name = item.first, &target_dir, &use_deps](const auto& item) {
-			      auto i = source_files.find(item.name());
-			      if(i != std::end(source_files))
-			      {
-				      auto const& child_target_use_deps = i->second.childTargetsUseDeps();
-				      std::for_each(std::begin(child_target_use_deps),
-				                    std::end(child_target_use_deps),
-				                    [&target_name, &target_dir, &use_deps](auto const& item) {
-					                    if(item != target_name)
-					                    {
-						                    // FIXME: We must store Dependency objecs in childTargetUseDeps, in case
-						                    //        this is an external lib.
-						                    use_deps.push_back(Maike::Db::Dependency{
-						                       target_dir / item, Maike::Db::Dependency::Resolver::InternalLookup});
-					                    }
-				                    });
-			      }
-		      });
+		   auto node = getNode(g, item.second.sourceFilename());
+		   Maike::processGraphNodeRecursive(
+		      [&use_deps, &target_dir, &target_name = item.first](auto const& node) {
+			      auto const& child_target_use_deps = node.sourceFileInfo().childTargetsUseDeps();
+			      std::for_each(std::begin(child_target_use_deps),
+			                    std::end(child_target_use_deps),
+			                    [&use_deps, &target_dir, &target_name](auto const& item) {
+				                    if(item != target_name) // A target may never point to itself
+				                    {
+					                    // FIXME: These deps need resolver info (in case it was a pkgconfig lookup
+					                    use_deps.push_back(Maike::Db::Dependency{
+					                       target_dir / item, Maike::Db::Dependency::Resolver::InternalLookup});
+				                    }
+			                    });
+		      },
+		      g,
+		      node);
+
 		   Maike::Db::SourceFileInfo src_file;
 
 		   // FIXME: Remove duplicates before sinking into src_file
+
+		   // Add source file as a use dependency. Not really correct, but the source file must
+		   // exist in order to create the target, so if the source file was not in the dependency
+		   // list it is not known how to create the target.
+		   use_deps.push_back(Maike::Db::Dependency{item.second.sourceFilename(),
+		                                            Maike::Db::Dependency::Resolver::InternalLookup});
 		   src_file.useDeps(std::move(use_deps));
 		   source_files.insert(std::make_pair(target_dir / item.first, std::move(src_file)));
 	   });
@@ -312,7 +316,6 @@ int main(int argc, char** argv)
 		auto const target_dir = cmdline.hasOption<Maike::CmdLineOption::TargetDir>() ?
 		                           cmdline.option<Maike::CmdLineOption::TargetDir>() :
 		                           Maike::fs::path{"__targets"};
-
 
 		Maike::timedCall(
 		   logger,

@@ -26,6 +26,11 @@ namespace Maike::Db
 			return m_nodes;
 		}
 
+		auto&& takeSourceFiles()
+		{
+			return std::move(m_src_files);
+		}
+
 
 	private:
 		std::map<fs::path, SourceFileInfo> m_src_files;
@@ -50,6 +55,8 @@ namespace Maike::Db
 		assert(val < size(g));
 		return g.nodes()[id.value()];
 	}
+
+	SourceFileRecordConst getNode(DependencyGraph const& g, Maike::fs::path const& name);
 }
 
 #endif

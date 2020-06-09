@@ -70,3 +70,13 @@ Maike::Db::DependencyGraph::DependencyGraph(std::map<fs::path, SourceFileInfo>&&
 		item.second.useDeps(std::move(deps));
 	});
 }
+
+
+Maike::Db::SourceFileRecordConst Maike::Db::getNode(DependencyGraph const& g,
+                                                    Maike::fs::path const& name)
+{
+	auto& nodes = g.nodes();
+	auto i = find(std::begin(nodes), std::end(nodes), name, CompareSourceFileRecord{});
+	if(i == std::end(nodes)) { return SourceFileRecordConst{}; }
+	return *i;
+}
