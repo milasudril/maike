@@ -129,18 +129,18 @@ static bool sourceGeneratedIs(const ResourceObject& obj)
 	}
 
 
-static Stringkey targetLoaderKeyGet(const std::string& filename)
+static Stringkey targetLoaderKeyGet(const char* filename)
 	{
 	try
 		{
-		switch(FileInfo(filename.c_str()).typeGet())
+		switch(FileInfo(filename).typeGet())
 			{
 			case FileInfo::Type::FILE:
 				{
-				auto pos=filename.find_last_of('.');
-				if(pos==std::string::npos)
+				auto pos=strrchr(filename,'.');
+				if(pos==nullptr)
 					{return Stringkey("");}
-				return Stringkey(&filename[pos]);
+				return Stringkey(pos);
 				}
 
 			case FileInfo::Type::DIRECTORY:
