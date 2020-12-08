@@ -90,32 +90,20 @@ void Target_FactoryDelegatorDefault::loadersUnregister() noexcept
 Handle<Target> Target_FactoryDelegatorDefault::targetCreate(const ResourceObject& obj
 	,const char* name_src,const char* in_dir,size_t line_count)
 	{
-	auto suffix=name_src;
-	while(true)
+	auto suffix=strrchr(name_src,'.');
+	if(suffix==NULL)
 		{
-		suffix=strchr(suffix,'.');
-		if(suffix==NULL)
-			{
-			exceptionRaise(ErrorMessage("#0;: It is impossible to choose a target factory "
-				"without filename extension"
-				,{name_src}));
-			}
-		auto i=m_r_loaders.find(Stringkey(suffix));
-
-		if(i==m_r_loaders.end())
-			{
-			puts(suffix);
-			++suffix;
-			}
-		else
-			{
-			puts(suffix);
-			return i->second->targetCreate(obj,name_src,in_dir,rootGet(),idGet(),line_count);
-			}
+		exceptionRaise(ErrorMessage("#0;: It is impossible to choose a target factory "
+			"without filename extension"
+			,{name_src}));
 		}
-
-	exceptionRaise(ErrorMessage("#0; is not associated with any target factory"
-		,{name_src}));
+	auto i=m_r_loaders.find(Stringkey(suffix));
+	if(i==m_r_loaders.end())
+		{
+		exceptionRaise(ErrorMessage("#0;: #1; is not associated with any target factory"
+			,{name_src,suffix}));
+		}
+	return i->second->targetCreate(obj,name_src,in_dir,rootGet(),idGet(),line_count);
 	}
 
 
