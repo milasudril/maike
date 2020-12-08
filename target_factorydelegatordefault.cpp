@@ -86,24 +86,46 @@ void Target_FactoryDelegatorDefault::loadersUnregister() noexcept
 	m_r_loaders.clear();
 	}
 
+static const Target_Loader* targetLoaderGet(const char* filename,
+	const std::map<Stringkey,const Target_Loader*>& loaders)
+	{
+	try
+		{
+		switch(FileInfo(filename).typeGet())
+			{
+			case FileInfo::Type::FILE:
+				{
+				auto suffix=strrchr(filename,'.');
+				if(suffix==NULL)
+					{return nullptr;}
+				auto i=loaders.find(Stringkey(suffix));
+				if(i==loaders.end())
+					{return nullptr;}
+				return loaders.find(Stringkey(suffix))->second;
+				}
+
+			case FileInfo::Type::DIRECTORY:
+				return loaders.find(Stringkey("."))->second;
+
+			default:
+				return nullptr;
+			}
+		}
+	catch(...)
+		{return nullptr;}
+	}
+
 
 Handle<Target> Target_FactoryDelegatorDefault::targetCreate(const ResourceObject& obj
 	,const char* name_src,const char* in_dir,size_t line_count)
 	{
-	auto suffix=strrchr(name_src,'.');
-	if(suffix==NULL)
+	auto loader = targetLoaderGet(name_src, m_r_loaders);
+	if(loader == nullptr)
 		{
-		exceptionRaise(ErrorMessage("#0;: It is impossible to choose a target factory "
-			"without filename extension"
+		exceptionRaise(ErrorMessage("#0;: File type is not associated with any target factory"
 			,{name_src}));
 		}
-	auto i=m_r_loaders.find(Stringkey(suffix));
-	if(i==m_r_loaders.end())
-		{
-		exceptionRaise(ErrorMessage("#0;: #1; is not associated with any target factory"
-			,{name_src,suffix}));
-		}
-	return i->second->targetCreate(obj,name_src,in_dir,rootGet(),idGet(),line_count);
+	return loader->targetCreate(obj,name_src,in_dir,rootGet(),idGet(),line_count);
 	}
 
 
@@ -116,48 +138,10 @@ static bool sourceGeneratedIs(const ResourceObject& obj)
 	return 0;
 	}
 
-
-static Stringkey targetLoaderKeyGet(const char* filename)
-	{
-	try
-		{
-		switch(FileInfo(filename).typeGet())
-			{
-			case FileInfo::Type::FILE:
-				{
-				auto pos=strrchr(filename,'.');
-				if(pos==nullptr)
-					{return Stringkey("");}
-				return Stringkey(pos);
-				}
-
-			case FileInfo::Type::DIRECTORY:
-				return Stringkey(".");
-
-			default:
-				return Stringkey("");
-			}
-		}
-	catch(...)
-		{return Stringkey("");}
-	}
-
-static const Target_Loader* targetLoaderGet(const Stringkey& key
-	,const std::map<Stringkey,const Target_Loader*>& loaders)
-	{
-	auto i=loaders.find(key);
-	if(i==loaders.end())
-		{
-		return nullptr;
-		}
-	return i->second;
-	}
-
 bool Target_FactoryDelegatorDefault::loaderHas(const char* filename) const noexcept
 	{
-	return targetLoaderGet(targetLoaderKeyGet(filename), m_r_loaders) != nullptr;
+	return targetLoaderGet(filename, m_r_loaders) != nullptr;
 	}
-
 
 Handle<Target> Target_FactoryDelegatorDefault::targetCreate(const ResourceObject& obj
 	,const char* in_dir,size_t line_count)
@@ -188,7 +172,7 @@ static void depsExtraCollect(const Dependency& dep_in
 	,const char* root
 	,DependencyBuffer& buffer)
 	{
-	auto loader=targetLoaderGet(targetLoaderKeyGet(dep_in.nameGet()),loaders);
+	auto loader=targetLoaderGet(dep_in.nameGet(),loaders);
 	if(loader!=nullptr)
 		{
 		auto in_dir_include=dirname(dep_in.nameGet());
@@ -346,7 +330,7 @@ void Target_FactoryDelegatorDefault::targetsCreateImpl(TagExtractor& extractor
 void Target_FactoryDelegatorDefault::targetsLoad(const char* filename,const char* in_dir
 	,Spider& spider,DependencyGraph& targets)
 	{
-	auto loader=targetLoaderGet(targetLoaderKeyGet(filename),m_r_loaders);
+	auto loader=targetLoaderGet(filename,m_r_loaders);
 	if(loader!=nullptr)
 		{loader->targetsLoad(filename,in_dir,spider,targets,*this);}
 	}
