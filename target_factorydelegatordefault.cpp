@@ -95,13 +95,18 @@ static const Target_Loader* targetLoaderGet(const char* filename,
 			{
 			case FileInfo::Type::FILE:
 				{
-				auto suffix=strrchr(filename,'.');
-				if(suffix==NULL)
-					{return nullptr;}
-				auto i=loaders.find(Stringkey(suffix));
-				if(i==loaders.end())
-					{return nullptr;}
-				return loaders.find(Stringkey(suffix))->second;
+				auto suffix=strchr(filename,'.');
+				while(suffix!=NULL)
+					{
+					if(*suffix=='\0' || strcmp(suffix,".")==0)
+						{return nullptr;}
+					auto i=loaders.find(Stringkey(suffix));
+					if(i==loaders.end())
+						{++suffix;}
+					else
+						{return i->second;}
+					}
+				return nullptr;
 				}
 
 			case FileInfo::Type::DIRECTORY:
