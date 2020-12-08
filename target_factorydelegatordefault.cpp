@@ -101,15 +101,21 @@ Handle<Target> Target_FactoryDelegatorDefault::targetCreate(const ResourceObject
 				,{name_src}));
 			}
 		auto i=m_r_loaders.find(Stringkey(suffix));
+
 		if(i==m_r_loaders.end())
 			{
+			puts(suffix);
 			++suffix;
-		//	exceptionRaise(ErrorMessage("#0;: #1; is not associated with any target factory"
-		//		,{name_src,suffix}));
 			}
 		else
-			{return i->second->targetCreate(obj,name_src,in_dir,rootGet(),idGet(),line_count);}
+			{
+			puts(suffix);
+			return i->second->targetCreate(obj,name_src,in_dir,rootGet(),idGet(),line_count);
+			}
 		}
+
+	exceptionRaise(ErrorMessage("#0; is not associated with any target factory"
+		,{name_src}));
 	}
 
 
@@ -122,27 +128,6 @@ static bool sourceGeneratedIs(const ResourceObject& obj)
 	return 0;
 	}
 
-Handle<Target> Target_FactoryDelegatorDefault::targetCreate(const ResourceObject& obj
-	,const char* in_dir,size_t line_count)
-	{
-	std::string source_name;
-	auto source_generated=sourceGeneratedIs(obj);
-	auto source_name_raw=static_cast<const char*>(obj.objectGet("source_name"));
-
-	if(source_generated)
-		{
-		source_name+=static_cast<const char*>(r_eval.variableGet(Stringkey("target_directory")));
-		source_name+='/';
-		}
-
-	source_name+=source_name_raw;
-	auto ret=targetCreate(obj,source_name.c_str(),in_dir,line_count);
-	if(source_generated)
-		{
-		ret->dependencyAdd(Dependency(source_name_raw,rootGet(),Dependency::Relation::INTERNAL));
-		}
-	return ret;
-	}
 
 static Stringkey targetLoaderKeyGet(const std::string& filename)
 	{
@@ -178,6 +163,34 @@ static const Target_Loader* targetLoaderGet(const Stringkey& key
 		return nullptr;
 		}
 	return i->second;
+	}
+
+bool Target_FactoryDelegatorDefault::loaderHas(const char* filename) const noexcept
+	{
+	return targetLoaderGet(targetLoaderKeyGet(filename), m_r_loaders) != nullptr;
+	}
+
+
+Handle<Target> Target_FactoryDelegatorDefault::targetCreate(const ResourceObject& obj
+	,const char* in_dir,size_t line_count)
+	{
+	std::string source_name;
+	auto source_generated=sourceGeneratedIs(obj);
+	auto source_name_raw=static_cast<const char*>(obj.objectGet("source_name"));
+
+	if(source_generated)
+		{
+		source_name+=static_cast<const char*>(r_eval.variableGet(Stringkey("target_directory")));
+		source_name+='/';
+		}
+
+	source_name+=source_name_raw;
+	auto ret=targetCreate(obj,source_name.c_str(),in_dir,line_count);
+	if(source_generated)
+		{
+		ret->dependencyAdd(Dependency(source_name_raw,rootGet(),Dependency::Relation::INTERNAL));
+		}
+	return ret;
 	}
 
 static void depsExtraCollect(const Dependency& dep_in

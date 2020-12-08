@@ -228,7 +228,7 @@ void Session::dependenciesReload() const
 	{
 	m_graph.clear();
 	m_delegator.depsExtraCacheClear();
-	
+
 		{
 		ResourceObjectJansson config(ResourceObject::Type::OBJECT);
 		configDump(config);
@@ -333,10 +333,7 @@ size_t Session::targetsCountGet() const
 
 bool Session::loaderHas(const char* filename) const
 	{
-	auto filename_ext=strrchr(filename,'.');
-	if(filename_ext==NULL)
-		{return 0;}
 	if(targetHooksDirty())
 		{targetHooksRegister();}
-	return m_delegator.loaderHas(Stringkey(filename_ext));
+	return m_delegator.loaderHas(filename);
 	}

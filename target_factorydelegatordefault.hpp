@@ -72,8 +72,7 @@ namespace Maike
 			void targetsLoad(const char* filename,const char* in_dir,Spider& spider
 				,DependencyGraph& targets);
 
-			bool loaderHas(const Stringkey& filename_ext) const noexcept
-				{return m_r_loaders.find(filename_ext)!=m_r_loaders.end();}
+			bool loaderHas(const char* filename) const noexcept;
 
 			void depsExtraCacheClear() noexcept
 				{m_deps_extra_cache.clear();}
