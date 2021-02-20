@@ -42,12 +42,13 @@ bool TargetTrivial::upToDate(Twins<const Dependency*>
 	return 1;
 	}
 
-static void execute(const Command& cmd, const char* src, const char* dest, const char* current_dir)
+static void execute(const Command& cmd, const char* src, const char* dest, const char* current_dir, const char* target_dir)
 	{
-	ParameterSetMapFixed<Stringkey("source"),Stringkey("target"),Stringkey("in_dir")> params;
+	ParameterSetMapFixed<Stringkey("source"),Stringkey("target"),Stringkey("in_dir"),Stringkey("target_directory")> params;
 	params.get<Stringkey("source")>().push_back(std::string(src));
 	params.get<Stringkey("target")>().push_back(std::string(dest));
 	params.get<Stringkey("in_dir")>().push_back(std::string(current_dir));
+	params.get<Stringkey("target_directory")>().push_back(std::string(target_dir));
 
 	const ParameterSet* paramset[]={&params};
 	auto compiler=cmd.execute(Pipe::REDIRECT_STDERR
@@ -78,7 +79,7 @@ void TargetTrivial::compileImpl(Twins<const Dependency*>
 	,const char* target_dir)
 	{
 	auto name_out=dircat(target_dir,nameGet());
-	execute(r_cmd, sourceNameGet(), name_out.c_str(), inDirGet());
+	execute(r_cmd, sourceNameGet(), name_out.c_str(), inDirGet(), target_dir);
 	}
 
 TargetTrivial::~TargetTrivial() noexcept
