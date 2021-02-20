@@ -200,7 +200,7 @@ static void process(const char* filename,const char* out_dir)
 				break;
 
 			case State::SPELL:
-				if(ch_in>=0 && ch_in<=' ')
+				if(ch_in<=' ')
 					{break;}
 				switch(ch_in)
 					{

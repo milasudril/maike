@@ -38,7 +38,7 @@ Target_Hook_Registry::HookInfo& Target_Hook_Registry::hookCreate(const char* nam
 	if(i==m_hooks.end())
 		{
 		auto& plug=pluginLoad(plugname);
-		HookInfo hi{std::string(name),std::string(plugname),plug.create(r_sysvars)};
+		HookInfo hi{std::string(name),std::string(plugname),plug.create(r_sysvars),{}};
 		return m_hooks.emplace(std::move(key),std::move(hi)).first->second;
 		}
 	if(i->second.plugin!=plugname)
