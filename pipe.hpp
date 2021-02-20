@@ -89,8 +89,8 @@ namespace Maike
 					void operator delete(void *)=delete;
 					void operator delete[](void*)=delete;
 
-					size_t read(void* buffer, size_t n);
-					const char* nameGet() const noexcept;
+					size_t read(void* buffer, size_t n) override;
+					const char* nameGet() const noexcept override;
 
 					void init(intptr_t handle) noexcept
 						{m_handle=handle;}
@@ -99,7 +99,7 @@ namespace Maike
 
 				private:
 					intptr_t m_handle;
-					void destroy() noexcept
+					void destroy() noexcept override
 						{close();}
 				};
 
@@ -119,7 +119,7 @@ namespace Maike
 					void operator delete(void *)=delete;
 					void operator delete[](void*)=delete;
 
-					size_t write(const void* buffer, size_t n);
+					size_t write(const void* buffer, size_t n) override;
 
 					void init(intptr_t handle,bool echo) noexcept
 						{m_handle=handle; m_echo=echo;}
@@ -129,7 +129,7 @@ namespace Maike
 				private:
 					intptr_t m_handle;
 					bool m_echo;
-					void destroy() noexcept
+					void destroy() noexcept override
 						{close();}
 				};
 

@@ -17,21 +17,21 @@ namespace Maike
 		public:
 			static TargetCPHook* create();
 
-			const TargetCPLoader& loaderGet() const noexcept
+			const TargetCPLoader& loaderGet() const noexcept override
 				{return m_loader;}
 
-			void configClear();
+			void configClear() override;
 
-			TargetCPHook& configAppendDefault();
+			TargetCPHook& configAppendDefault() override;
 
-			TargetCPHook& configAppend(const ResourceObject& pythonoptions);
+			TargetCPHook& configAppend(const ResourceObject& options) override;
 
-			void configDump(ResourceObject& pythonoptions) const;
+			void configDump(ResourceObject& options) const override;
 
 		private:
 			TargetCPLoader m_loader;
 
-			void destroy() noexcept;
+			void destroy() noexcept override;
 		};
 	}
 

@@ -14,26 +14,26 @@ namespace Maike
 				,const char* root,size_t id,Dependency::Relation rel)
 				{return new TargetPlaceholder(name,name_src,root,id,rel);}
 
-			virtual void destroy() noexcept
+			virtual void destroy() noexcept override
 				{delete this;}
 
 			virtual bool upToDate(Twins<const Dependency*>
 				,Twins<const Dependency*>
-				,const char*) const
+				,const char*) const override
 				{return 1;}
 
 			void compileImpl(Twins<const Dependency*>
 				,Twins<const Dependency*>
-				,const char*)
+				,const char*) override
 				{}
 
 			Dependency::Relation relation() const noexcept
 				{return m_relation;}
 
-			bool generated() const noexcept
+			bool generated() const noexcept override
 				{return 0;}
 
-			void dumpDetails(ResourceObject&) const{}
+			void dumpDetails(ResourceObject&) const override {}
 
 		private:
 			TargetPlaceholder(const char* name,const char* name_src,const char* root,size_t id

@@ -179,7 +179,7 @@ namespace
 		public:
 			BySourceName(const char* filename):r_filename(filename){}
 
-			int operator()(DependencyGraph&,Target& target)
+			int operator()(DependencyGraph&,Target& target) override
 				{return strcmp(target.sourceNameGet(),r_filename);}
 
 		private:
@@ -191,7 +191,7 @@ namespace
 		public:
 			ByParentDirectory(const char* filename):r_filename(filename){}
 
-			int operator()(DependencyGraph&,Target& target)
+			int operator()(DependencyGraph&,Target& target) override
 				{return strcmp(target.inDirGet(),r_filename);}
 
 		private:
@@ -260,7 +260,7 @@ namespace
 				r_delegator(delegator)
 				{}
 
-			void operator()(const Stringkey& filename_ext,const Target_Hook& hook)
+			void operator()(const Stringkey& filename_ext,const Target_Hook& hook) override
 				{
 				r_delegator.loaderRegister(filename_ext,hook.loaderGet());
 				}

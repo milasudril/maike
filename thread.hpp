@@ -42,7 +42,7 @@ namespace Maike
 				{synchronize();}
 
 		private:
-			void run()
+			void run() override
 				{m_runner();}
 
 			Runner m_runner;

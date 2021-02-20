@@ -20,16 +20,16 @@ namespace Maike
 
 			static TargetArchiveHook* create(ParameterSet&& params)=delete;
 
-			const TargetArchiveLoader& loaderGet() const noexcept
+			const TargetArchiveLoader& loaderGet() const noexcept override
 				{return m_loader;}
 
-			void configClear();
+			void configClear() override;
 
-			TargetArchiveHook& configAppendDefault();
+			TargetArchiveHook& configAppendDefault() override;
 
-			TargetArchiveHook& configAppend(const ResourceObject& archiveoptions);
+			TargetArchiveHook& configAppend(const ResourceObject& archiveoptions) override;
 
-			void configDump(ResourceObject& archiveoptions) const;
+			void configDump(ResourceObject& archiveoptions) const override;
 
 		private:
 			TargetArchiveCompiler m_intpret;
@@ -37,7 +37,7 @@ namespace Maike
 
 			explicit TargetArchiveHook(const ParameterSetDumpable& params);
 
-			void destroy() noexcept;
+			void destroy() noexcept override;
 		};
 	}
 

@@ -18,15 +18,15 @@ namespace Maike
 			explicit FileIn(const char* filename);
 			~FileIn() noexcept;
 
-			size_t read(void* buffer,size_t count);
+			size_t read(void* buffer,size_t count) override;
 
-			const char* nameGet() const noexcept
+			const char* nameGet() const noexcept override
 				{return m_name.c_str();}
 
 		private:
 			std::string m_name;
 			intptr_t m_handle;
-			void destroy()
+			void destroy() override
 				{delete this;}
 		};
 	}

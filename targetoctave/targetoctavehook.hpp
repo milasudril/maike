@@ -20,16 +20,16 @@ namespace Maike
 
 			static TargetOctaveHook* create(ParameterSet&& params)=delete;
 
-			const TargetOctaveLoader& loaderGet() const noexcept
+			const TargetOctaveLoader& loaderGet() const noexcept override
 				{return m_loader;}
 
-			void configClear();
+			void configClear() override;
 
-			TargetOctaveHook& configAppendDefault();
+			TargetOctaveHook& configAppendDefault() override;
 
-			TargetOctaveHook& configAppend(const ResourceObject& octaveoptions);
+			TargetOctaveHook& configAppend(const ResourceObject& octaveoptions) override;
 
-			void configDump(ResourceObject& octaveoptions) const;
+			void configDump(ResourceObject& octaveoptions) const override;
 
 		private:
 			TargetOctaveInterpreter m_intpret;
@@ -37,7 +37,7 @@ namespace Maike
 
 			explicit TargetOctaveHook(const ParameterSetDumpable& params);
 
-			void destroy() noexcept;
+			void destroy() noexcept override;
 		};
 	}
 

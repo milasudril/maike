@@ -35,57 +35,57 @@ namespace Maike
 			size_t childCounterGet() const noexcept
 				{return m_child_counter;}
 
-			TargetBase& dependencyAdd(Dependency&& dep);
+			TargetBase& dependencyAdd(Dependency&& dep) override;
 
-			Twins<const Dependency*> dependencies() const noexcept
+			Twins<const Dependency*> dependencies() const noexcept override
 				{
 				auto ptr=m_dependencies.data();
 				return {ptr,ptr + m_dependencies.size()};
 				}
 
 
-			Twins<Dependency*> dependencies() noexcept
+			Twins<Dependency*> dependencies() noexcept override
 				{
 				auto ptr=m_dependencies.data();
 				return {ptr,ptr + m_dependencies.size()};
 				}
 
 
-			TargetBase& dependencyInverseAdd(Dependency&& dep);
+			TargetBase& dependencyInverseAdd(Dependency&& dep) override;
 
-			Twins<const Dependency*> dependenciesInverseGet() const noexcept
+			Twins<const Dependency*> dependenciesInverseGet() const noexcept override
 				{
 				auto ptr=m_deps_inverse.data();
 				return {ptr,ptr + m_deps_inverse.size()};
 				}
 
-			size_t idGet() const noexcept
+			size_t idGet() const noexcept override
 				{return m_id;}
 
-			const char* nameGet() const noexcept
+			const char* nameGet() const noexcept override
 				{return m_name.c_str();}
 
-			const char* sourceNameGet() const noexcept
+			const char* sourceNameGet() const noexcept override
 				{return m_source_name.c_str();}
 
-			const char* inDirGet() const noexcept
+			const char* inDirGet() const noexcept override
 				{return m_in_dir.c_str();}
 
-			void dump(ResourceObject& target) const;
+			void dump(ResourceObject& target) const override;
 
 			void compile(Twins<const Dependency*> dependency_list
 				,Twins<const Dependency*> dependency_list_full
-				,const char* target_dir);
+				,const char* target_dir) override;
 
-			double compilationTimeGet() const noexcept
+			double compilationTimeGet() const noexcept override
 				{return m_compilation_time;}
 
-			size_t lineCountGet() const noexcept
+			size_t lineCountGet() const noexcept override
 				{return m_loc;}
 
-			const char* descriptionGet() const noexcept
+			const char* descriptionGet() const noexcept override
 				{return m_description.c_str();}
-			
+
 
 		private:
 			virtual void compileImpl(Twins<const Dependency*> dependency_list

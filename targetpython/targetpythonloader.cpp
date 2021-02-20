@@ -32,12 +32,12 @@ namespace
 				,m_state(State::NEWLINE),m_lines(0)
 				{}
 
-			size_t read(void* buffer,size_t length);
+			size_t read(void* buffer,size_t length) override;
 
-			const char* nameGet() const noexcept
+			const char* nameGet() const noexcept override
 				{return m_reader.nameGet();}
 
-			size_t linesCountGet() const noexcept
+			size_t linesCountGet() const noexcept override
 				{return m_lines;}
 
 		private:
@@ -46,7 +46,7 @@ namespace
 			State m_state;
 			size_t m_lines;
 
-			void destroy()
+			void destroy() override
 				{delete this;}
 		};
 	}

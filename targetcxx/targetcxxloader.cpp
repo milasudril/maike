@@ -24,12 +24,12 @@ namespace
 				,m_state(State::NEWLINE),m_lines(0)
 				{}
 
-			size_t read(void* buffer,size_t length);
+			size_t read(void* buffer,size_t length) override;
 
-			const char* nameGet() const noexcept
+			const char* nameGet() const noexcept override
 				{return m_reader.nameGet();}
 
-			size_t linesCountGet() const noexcept
+			size_t linesCountGet() const noexcept override
 				{return m_lines;}
 
 		private:
@@ -38,7 +38,7 @@ namespace
 			State m_state;
 			size_t m_lines;
 
-			void destroy()
+			void destroy() override
 				{delete this;}
 		};
 	}
@@ -180,7 +180,7 @@ void TargetCxxLoader::dependenciesExtraGet(const char* name_src,const char* in_d
 			}
 		}
 	}
-	
+
 namespace
 	{
 	std::string resolveInclude(const std::string& filename,Twins<const std::string*> paths,const char** in_dir)
@@ -191,7 +191,7 @@ namespace
 			if(FileUtils::exists(name_dep_full.c_str()))
 				{return name_dep_full;}
 			}
-		
+
 		std::string name_dep_full;
 		std::find_if(paths.first, paths.second, [filename, &name_dep_full](const std::string& str)
 			{

@@ -24,7 +24,7 @@ namespace Maike
 			~SystemTargetInfo() noexcept;
 
 			void parameterGet(const Stringkey& key
-				,ParameterProcessor&& proc) const;
+				,ParameterProcessor&& proc) const override;
 
 			Variant variableGet(const Stringkey& key) const noexcept;
 
@@ -47,8 +47,8 @@ namespace Maike
 			void clear();
 
 			SystemTargetInfo& configAppend(const ResourceObject& targetinfo);
-			void configDump(ResourceObject& targetinfo) const;
-			ResourceObject configDump() const;
+			void configDump(ResourceObject& targetinfo) const override;
+			ResourceObject configDump() const override;
 
 			SystemTargetInfo& sysvarsLoad();
 			SystemTargetInfo& configAppendDefault();

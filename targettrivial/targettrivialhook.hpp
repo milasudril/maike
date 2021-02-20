@@ -18,22 +18,22 @@ namespace Maike
 		public:
 			static TargetTrivialHook* create();
 
-			const TargetTrivialLoader& loaderGet() const noexcept
+			const TargetTrivialLoader& loaderGet() const noexcept override
 				{return m_loader;}
 
-			void configClear();
+			void configClear() override;
 
-			TargetTrivialHook& configAppendDefault();
+			TargetTrivialHook& configAppendDefault() override;
 
-			TargetTrivialHook& configAppend(const ResourceObject& opts);
+			TargetTrivialHook& configAppend(const ResourceObject& opts) override;
 
-			void configDump(ResourceObject& opts) const;
+			void configDump(ResourceObject& opts) const override;
 
 		private:
 			TargetTrivialOptions m_opts;
 			TargetTrivialLoader m_loader;
 
-			void destroy() noexcept;
+			void destroy() noexcept override;
 
 			TargetTrivialHook();
 		};

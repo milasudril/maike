@@ -20,16 +20,16 @@ namespace Maike
 
 			static TargetPythonHook* create(ParameterSet&& params)=delete;
 
-			const TargetPythonLoader& loaderGet() const noexcept
+			const TargetPythonLoader& loaderGet() const noexcept override
 				{return m_loader;}
 
-			void configClear();
+			void configClear() override;
 
-			TargetPythonHook& configAppendDefault();
+			TargetPythonHook& configAppendDefault() override;
 
-			TargetPythonHook& configAppend(const ResourceObject& pythonoptions);
+			TargetPythonHook& configAppend(const ResourceObject& pythonoptions) override;
 
-			void configDump(ResourceObject& pythonoptions) const;
+			void configDump(ResourceObject& pythonoptions) const override;
 
 		private:
 			TargetPythonInterpreter m_intpret;
@@ -37,7 +37,7 @@ namespace Maike
 
 			explicit TargetPythonHook(const ParameterSetDumpable& params);
 
-			void destroy() noexcept;
+			void destroy() noexcept override;
 		};
 	}
 

@@ -20,16 +20,16 @@ namespace Maike
 
 			static TargetBashHook* create(ParameterSet&& params)=delete;
 
-			const TargetBashLoader& loaderGet() const noexcept
+			const TargetBashLoader& loaderGet() const noexcept override
 				{return m_loader;}
 
-			void configClear();
+			void configClear() override;
 
-			TargetBashHook& configAppendDefault();
+			TargetBashHook& configAppendDefault() override;
 
-			TargetBashHook& configAppend(const ResourceObject& options);
+			TargetBashHook& configAppend(const ResourceObject& options) override;
 
-			void configDump(ResourceObject& options) const;
+			void configDump(ResourceObject& options) const override;
 
 		private:
 			TargetBashInterpreter m_intpret;
@@ -37,7 +37,7 @@ namespace Maike
 
 			explicit TargetBashHook(const ParameterSetDumpable& params);
 
-			void destroy() noexcept;
+			void destroy() noexcept override;
 		};
 	}
 

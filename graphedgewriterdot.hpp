@@ -16,7 +16,7 @@ namespace Maike
 		{
 		public:
 			GraphEdgeWriterDOT(WriteBuffer& wb);
-			void edgeWrite(const char* from,const char* to,const char* label);
+			void edgeWrite(const char* from,const char* to,const char* label) override;
 			~GraphEdgeWriterDOT();
 		private:
 			WriteBuffer& r_wb;

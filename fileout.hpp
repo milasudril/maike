@@ -25,11 +25,11 @@ namespace Maike
 			FileOut(StdStream stream);
 			~FileOut() noexcept;
 
-			size_t write(const void* buffer,size_t count);
+			size_t write(const void* buffer,size_t count) override;
 
 		private:
 			intptr_t m_handle;
-			void destroy()
+			void destroy() override
 				{delete this;}
 		};
 	}

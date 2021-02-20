@@ -22,19 +22,19 @@ namespace Maike
 				r_handler(handler),m_patch_needed(0)
 				{}
 
-			DependencyGraphDefault& targetRegister(Handle<Target>&& target);
-			DependencyGraphDefault& targetsPatch();
-			void targetsProcess(TargetProcessorConst&& proc) const;
-			DependencyGraphDefault& targetsProcess(TargetProcessor&& proc);
-			DependencyGraphDefault& targetsRemove(TargetProcessor&& condition);
-			Target* targetFind(const Stringkey& key);
-			const Target* targetFind(const Stringkey& key) const;
+			DependencyGraphDefault& targetRegister(Handle<Target>&& target) override;
+			DependencyGraphDefault& targetsPatch() override;
+			void targetsProcess(TargetProcessorConst&& proc) const override;
+			DependencyGraphDefault& targetsProcess(TargetProcessor&& proc) override;
+			DependencyGraphDefault& targetsRemove(TargetProcessor&& condition) override;
+			Target* targetFind(const Stringkey& key) override;
+			const Target* targetFind(const Stringkey& key) const override;
 
-			const Twins<size_t>& idRangeGet() const;
+			const Twins<size_t>& idRangeGet() const override;
 
-			DependencyGraphDefault& clear() noexcept;
+			DependencyGraphDefault& clear() noexcept override;
 
-			size_t targetsCountGet() const noexcept
+			size_t targetsCountGet() const noexcept override
 				{return m_targets.size();}
 
 		private:

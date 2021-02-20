@@ -32,19 +32,19 @@ namespace
 			TagExtractor(DataSource& source):m_reader(source),m_lines(0)
 				{}
 
-			size_t read(void* buffer,size_t length);
+			size_t read(void* buffer,size_t length) override;
 
-			const char* nameGet() const noexcept
+			const char* nameGet() const noexcept override
 				{return m_reader.nameGet();}
 
-			size_t linesCountGet() const noexcept
+			size_t linesCountGet() const noexcept override
 				{return m_lines;}
 
 		private:
 			ReadBuffer m_reader;
 			size_t m_lines;
 
-			void destroy()
+			void destroy() override
 				{delete this;}
 		};
 	}
@@ -72,7 +72,7 @@ void TargetArchiveLoader::dependenciesGet(const char* name_src,const char* in_di
 	auto rc=rc_reader(src);
 	if(!rc.objectExists("contents"))
 		{return;}
-	
+
 	auto contents=rc.objectGet("contents");
 	if(contents.typeGet()!=ResourceObject::Type::ARRAY)
 		{return;}

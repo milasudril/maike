@@ -27,7 +27,7 @@ namespace Maike
 			using BaseType::length;
 			using BaseType::end;
 
-			void parameterGet(const Stringkey& key,ParameterProcessor&& proc) const;
+			void parameterGet(const Stringkey& key,ParameterProcessor&& proc) const override;
 		};
 
 	template<Stringkey::HashValue ... args>

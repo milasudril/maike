@@ -14,16 +14,16 @@ namespace Maike
 	class PRIVATE DependencyBufferDefault final:public DependencyBuffer
 		{
 		public:
-			void append(Dependency&& dep)
+			void append(Dependency&& dep) override
 				{m_deps.push_back(std::move(dep));}
 
-			const Dependency* begin() const noexcept
+			const Dependency* begin() const noexcept override
 				{return m_deps.data();}
 
-			const Dependency* end() const noexcept
+			const Dependency* end() const noexcept override
 				{return begin() + m_deps.size();}
 
-			void append(const DependencyBuffer& buffer)
+			void append(const DependencyBuffer& buffer) override
 				{
 				std::for_each(buffer.begin(),buffer.end()
 					,[this](const Dependency& dep)

@@ -103,12 +103,12 @@ namespace
 				,m_stdout(m_pipe.stdoutCapture())
 				{}
 
-			size_t read(void* buffer,size_t length);
+			size_t read(void* buffer,size_t length) override;
 
-			const char* nameGet() const noexcept
+			const char* nameGet() const noexcept override
 				{return m_src.c_str();}
 
-			size_t linesCountGet() const noexcept
+			size_t linesCountGet() const noexcept override
 				{return 1;}
 
 			ProcessExitStatus exitStatusGet() noexcept
@@ -120,7 +120,7 @@ namespace
 			Handle<DataSource> m_stderr;
 			Thread<ReadCallback> m_stderr_thread;
 			Handle<DataSource> m_stdout;
-			void destroy()
+			void destroy() override
 				{delete this;}
 		};
 	}

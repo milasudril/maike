@@ -44,8 +44,8 @@ namespace
 		public:
 			StringWriter(std::string& sink):r_sink(sink)
 				{}
-			
-			size_t write(const void* buffer,size_t n)
+
+			size_t write(const void* buffer,size_t n) override
 				{
 				auto ptr=reinterpret_cast<const char*>(buffer);
 				auto ptr_ref=ptr;
@@ -61,7 +61,7 @@ namespace
 				return static_cast<size_t>(ptr - ptr_ref);
 				}
 
-			void destroy(){}
+			void destroy() override {}
 
 		private:
 			std::string& r_sink;
@@ -91,7 +91,7 @@ namespace
 				r_libs(libs),r_tools(tools),r_rt(rt),r_rc(rc)
 				{}
 
-			int operator()(const DependencyGraph&,const Target& target)
+			int operator()(const DependencyGraph&,const Target& target) override
 				{
 				auto ptr=dynamic_cast<const TargetPlaceholder*>(&target);
 				if(ptr!=nullptr)
@@ -112,7 +112,7 @@ namespace
 							break;
 						default:
 							break;
-						}					
+						}
 					}
 				return 0;
 				}
@@ -132,7 +132,7 @@ bool TargetExternals::upToDate(Twins<const Dependency*>
 //	If there is content in m_data, we have been here before, but then we
 //	must also have written the string content in compile. Since the graph
 //	does not change during compilation, this target must be up to date.
-	if(m_data.size()!=0) 
+	if(m_data.size()!=0)
 		{return 1;}
 
 		{

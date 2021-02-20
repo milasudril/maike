@@ -261,7 +261,7 @@ namespace
 			StringGet(std::string& ret):r_ret(ret)
 				{}
 
-		virtual void operator()(const char* element)
+		virtual void operator()(const char* element) override
 			{r_ret=std::string(element);}
 
 		private:

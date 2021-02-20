@@ -28,23 +28,23 @@ namespace Maike
 
 			void compileImpl(Twins<const Dependency*> dependency_list
 				,Twins<const Dependency*> dependency_list_full
-				,const char* target_dir);
+				,const char* target_dir) override;
 
 			bool upToDate(Twins<const Dependency*> dependency_list
 				,Twins<const Dependency*> dependency_list_full
-				,const char* target_dir) const;
+				,const char* target_dir) const override;
 
-			void destroy() noexcept;
+			void destroy() noexcept override;
 
 			Type typeGet() const noexcept
 				{return m_type;}
 
-			void dumpDetails(ResourceObject& target) const;
+			void dumpDetails(ResourceObject& target) const override;
 
 			const TargetCxxOptions& optionsExtraGet() const noexcept
 				{return m_options_extra;}
 
-			bool generated() const noexcept;
+			bool generated() const noexcept override;
 
 		private:
 			TargetCxx(const ResourceObject& obj,const TargetCxxCompiler& compiler

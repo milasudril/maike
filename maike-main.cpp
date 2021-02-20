@@ -194,7 +194,7 @@ namespace
 			StringReader(const char* str,size_t n):r_str(str),m_n(n)
 				{}
 
-			size_t read(void* buffer,size_t n)
+			size_t read(void* buffer,size_t n) override
 				{
 				auto n_read=std::min(n,m_n);
 				memcpy(buffer,r_str,n_read);
@@ -202,10 +202,10 @@ namespace
 				return n_read;
 				}
 
-			const char* nameGet() const noexcept
+			const char* nameGet() const noexcept override
 				{return "Command line buffer";}
 
-			void destroy(){}
+			void destroy() override {}
 
 		private:
 			const char* r_str;

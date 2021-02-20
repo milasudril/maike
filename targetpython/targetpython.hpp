@@ -25,17 +25,17 @@ namespace Maike
 
 			bool upToDate(Twins<const Dependency*> dependency_list
 				,Twins<const Dependency*> dependency_list_full
-				,const char* target_dir) const;
+				,const char* target_dir) const override;
 
 			void compileImpl(Twins<const Dependency*> dependency_list
 				,Twins<const Dependency*> dependency_list_full
-				,const char* target_dir);
+				,const char* target_dir) override;
 
-			void destroy() noexcept;
+			void destroy() noexcept override;
 
-			void dumpDetails(ResourceObject& target) const;
+			void dumpDetails(ResourceObject& target) const override;
 
-			bool generated() const noexcept
+			bool generated() const noexcept override
 				{return 1;}
 
 		private:

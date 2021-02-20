@@ -49,7 +49,7 @@ namespace
 			ParamExtractor(const std::string& prefix
 				,std::vector<std::string>& result):r_prefix(prefix),r_result(result)
 				{}
-			void operator()(const char* value)
+			void operator()(const char* value) override
 				{r_result.push_back(r_prefix + value);}
 		private:
 			const std::string& r_prefix;

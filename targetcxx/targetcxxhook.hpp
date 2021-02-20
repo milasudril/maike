@@ -23,13 +23,13 @@ namespace Maike
 
 			static TargetCxxHook* create(ParameterSet&& params)=delete;
 
-			const TargetCxxLoader& loaderGet() const noexcept
+			const TargetCxxLoader& loaderGet() const noexcept override
 				{return m_loader;}
 
-			void configClear();
-			TargetCxxHook& configAppendDefault();
-			TargetCxxHook& configAppend(const ResourceObject& cxxoptions);
-			void configDump(ResourceObject& cxxoptions) const;
+			void configClear() override;
+			TargetCxxHook& configAppendDefault() override;
+			TargetCxxHook& configAppend(const ResourceObject& cxxoptions) override;
+			void configDump(ResourceObject& cxxoptions) const override;
 
 		private:
 			TargetCxxOptions m_options;
@@ -38,7 +38,7 @@ namespace Maike
 
 			explicit TargetCxxHook(const ParameterSet& params);
 
-			void destroy() noexcept;
+			void destroy() noexcept override;
 		};
 	}
 

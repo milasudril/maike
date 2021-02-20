@@ -141,11 +141,11 @@ class PRIVATE Encoder:public DataSink
 	public:
 		Encoder(WriteBuffer& wb):r_wb(wb)
 			{r_wb.write("//@\t");}
-		size_t write(const void* buffer,size_t n);
+		size_t write(const void* buffer,size_t n) override;
 
 	private:
 		WriteBuffer& r_wb;
-		void destroy(){}
+		void destroy() override {}
 	};
 
 size_t Encoder::write(const void* buffer,size_t n)

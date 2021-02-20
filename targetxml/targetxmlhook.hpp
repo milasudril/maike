@@ -17,21 +17,21 @@ namespace Maike
 		public:
 			static TargetXMLHook* create();
 
-			const TargetXMLLoader& loaderGet() const noexcept
+			const TargetXMLLoader& loaderGet() const noexcept override
 				{return m_loader;}
 
-			void configClear();
+			void configClear() override;
 
-			TargetXMLHook& configAppendDefault();
+			TargetXMLHook& configAppendDefault() override;
 
-			TargetXMLHook& configAppend(const ResourceObject& pythonoptions);
+			TargetXMLHook& configAppend(const ResourceObject& pythonoptions) override;
 
-			void configDump(ResourceObject& pythonoptions) const;
+			void configDump(ResourceObject& pythonoptions) const override;
 
 		private:
 			TargetXMLLoader m_loader;
 
-			void destroy() noexcept;
+			void destroy() noexcept override;
 		};
 	}
 

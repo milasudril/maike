@@ -23,7 +23,7 @@ namespace Maike
 
 			void targetsLoad(const char* name_src,const char* in_dir
 				,Spider& spider,DependencyGraph& graph
-				,Target_FactoryDelegator& factory) const;
+				,Target_FactoryDelegator& factory) const override;
 
 			TargetDirectoryLoader& pathReject(const char* name);
 			TargetDirectoryLoader& pathAccept(const char* name);
@@ -44,16 +44,16 @@ namespace Maike
 
 			void dependenciesExtraGet(const char*,const char*
 				,const char*,ResourceObject::Reader
-				,DependencyBuffer&) const
+				,DependencyBuffer&) const override
 				{}
 
 			void dependenciesGet(const char*,const char*
 				,const char*,ResourceObject::Reader
-				,DependencyBuffer&) const
+				,DependencyBuffer&) const override
 				{}
 
 			Handle<Target> targetCreate(const ResourceObject&,const char*
-				,const char*,const char*,size_t,size_t) const
+				,const char*,const char*,size_t,size_t) const override
 				{return Handle<Target>(nullptr);}
 
 		private:

@@ -24,8 +24,8 @@ namespace Maike
 			SpiderDefault(Target_FactoryDelegator& deleg
 				,DependencyGraph& targets);
 
-			SpiderDefault& scanFile(const char* filename,const char* in_dir);
-			SpiderDefault& run();
+			SpiderDefault& scanFile(const char* filename,const char* in_dir) override;
+			SpiderDefault& run() override;
 
 		private:
 			Target_FactoryDelegator& r_target_creator;

@@ -27,30 +27,30 @@ namespace Maike
 			Target_FactoryDelegatorDefault(ExpressionEvaluator&& eval)=delete;
 
 			Target_FactoryDelegatorDefault& loaderRegister(const Stringkey& filename_ext
-				,const Target_Loader& loader);
+				,const Target_Loader& loader) override;
 
-			void loadersUnregister() noexcept;
+			void loadersUnregister() noexcept override;
 
 			Handle<Target> targetCreate(const ResourceObject& obj,const char* name_src
-				,const char* in_dir,size_t line_count);
+				,const char* in_dir,size_t line_count) override;
 
 			Handle<Target> targetCreate(const ResourceObject& obj,const char* in_dir
-				,size_t line_count);
+				,size_t line_count) override;
 
 			void targetsCreate(TagExtractor& extractor,const char* name_src
 				,const char* in_dir
 				,const Target_Loader& loader_current
 				,Spider& spider
-				,DependencyGraph& graph);
+				,DependencyGraph& graph) override;
 
 			void targetsCreate(TagExtractor& extractor,const char* in_dir
 				,const Target_Loader& loader_current
-				,Spider& spider,DependencyGraph& graph);
+				,Spider& spider,DependencyGraph& graph) override;
 
-			size_t idGet() noexcept
+			size_t idGet() noexcept override
 				{return m_id_gen.idGet();}
 
-			const char* rootGet() const noexcept
+			const char* rootGet() const noexcept override
 				{return m_root.c_str();}
 
 			Target_FactoryDelegatorDefault& rootSet(const char* root)
@@ -60,17 +60,17 @@ namespace Maike
 				}
 
 			Target& dependencyResolve(DependencyGraph& graph
-				,const char* target_from,const Dependency& dep);
+				,const char* target_from,const Dependency& dep) override;
 
-			void targetRemoved(DependencyGraph&,Target& target)
+			void targetRemoved(DependencyGraph&,Target& target) override
 				{m_id_gen.idRelease(target.idGet());}
 
-			void graphCleared(DependencyGraph&)
+			void graphCleared(DependencyGraph&) override
 				{m_id_gen.reset();}
 
 
 			void targetsLoad(const char* filename,const char* in_dir,Spider& spider
-				,DependencyGraph& targets);
+				,DependencyGraph& targets) override;
 
 			bool loaderHas(const char* filename) const noexcept;
 

@@ -20,8 +20,8 @@ namespace
 		public:
 			StringWriter(std::string& sink):r_sink(sink)
 				{}
-			
-			size_t write(const void* buffer,size_t n)
+
+			size_t write(const void* buffer,size_t n) override
 				{
 				auto ptr=reinterpret_cast<const char*>(buffer);
 				auto ptr_ref=ptr;
@@ -37,7 +37,7 @@ namespace
 				return static_cast<size_t>(ptr - ptr_ref);
 				}
 
-			void destroy(){}
+			void destroy() override {}
 
 		private:
 			std::string& r_sink;
