@@ -337,7 +337,7 @@ int main(int argc, char** argv)
 		}
 
 
-#if 0
+#if 1
 		Maike::Db::visitNodes(
 		   [&graph](auto const& node) {
 			   printf("%s\n", node.path().c_str());
