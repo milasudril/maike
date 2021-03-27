@@ -49,14 +49,13 @@ namespace
 		return ret;
 	}
 
-	std::vector<Maike::fs::path> getTargets(Maike::fs::path const& src_dir,
+	std::vector<Maike::Db::TargetInfo> getTargets(Maike::fs::path const& src_dir,
 	                                        Maike::KeyValueStore::Compound const& tags)
 	{
-		std::vector<Maike::fs::path> ret;
+		std::vector<Maike::Db::TargetInfo> ret;
 		if(auto target = tags.getIf<Maike::KeyValueStore::CompoundRefConst>("target"); target)
 		{
-			auto const name = src_dir / target->template get<char const*>("name");
-			ret.push_back(name);
+			ret.push_back(Maike::Db::TargetInfo{src_dir / target->template get<char const*>("name")});
 		}
 
 		if(auto targets = tags.getIf<Maike::KeyValueStore::ArrayRefConst>("targets"); targets)
@@ -64,7 +63,7 @@ namespace
 			std::transform(
 			   std::begin(*targets), std::end(*targets), std::back_inserter(ret), [&src_dir](auto item) {
 				   auto const val = item.template as<Maike::KeyValueStore::CompoundRefConst>();
-				   return src_dir / Maike::fs::path{val.template get<char const*>("name")};
+				   return Maike::Db::TargetInfo{src_dir / Maike::fs::path{val.template get<char const*>("name")}};
 			   });
 		}
 		return ret;
@@ -129,8 +128,8 @@ Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(Maike::fs::path const& 
 
 	if(is_directory(path))
 	{
-		std::vector<Maike::fs::path> targets;
-		targets.push_back(path.lexically_normal());
+		std::vector<Maike::Db::TargetInfo> targets;
+		targets.push_back(Maike::Db::TargetInfo{path.lexically_normal()});
 		return Maike::Db::SourceFileInfo{
 		   std::move(deps), std::vector<Maike::fs::path>{}, std::move(targets), Maike::Compiler{MkDir{}}};
 	}

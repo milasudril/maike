@@ -19,12 +19,12 @@ collectTargets(std::map<Maike::fs::path, Maike::Db::SourceFileInfo>& source_file
 	std::for_each(std::begin(source_files), std::end(source_files), [&ret](auto const& item) {
 		auto const& targets = item.second.targets();
 		std::for_each(std::begin(targets), std::end(targets), [&ret, &item](auto const& target) {
-			if(item.first != target) // For backwards compatiblity with old maike
+			if(item.first != target.name()) // For backwards compatiblity with old maike
 			{
-				auto i = ret.find(target);
+				auto i = ret.find(target.name());
 				if(i != std::end(ret)) { throw std::runtime_error{"Target has already been defined"}; }
 
-				ret.insert(std::make_pair(target, Maike::Db::Target{item.first, item.second}));
+				ret.insert(std::make_pair(target.name(), Maike::Db::Target{item.first, item.second}));
 			}
 		});
 	});
@@ -332,7 +332,7 @@ int main(int argc, char** argv)
 		}
 
 
-#if 1
+#if 0
 		Maike::Db::visitNodes(
 		   [&graph](Maike::Db::SourceFileRecordConst const& node) {
 			   printf("%s\n", node.path().c_str());

@@ -6,6 +6,7 @@
 #define MAIKE_DB_SOURCEFILEINFO_HPP
 
 #include "./dependency.hpp"
+#include "./target_info.hpp"
 
 #include "src/compiler.hpp"
 #include "src/fs.hpp"
@@ -24,7 +25,7 @@ namespace Maike::Db
 
 		explicit SourceFileInfo(std::vector<Dependency>&& build_deps,
 		                        std::vector<fs::path>&& child_target_use_deps,
-		                        std::vector<fs::path>&& targets,
+		                        std::vector<TargetInfo>&& targets,
 		                        Compiler&& compiler):
 		   m_use_deps{std::move(build_deps)},
 		   m_targets{std::move(targets)},
@@ -55,7 +56,7 @@ namespace Maike::Db
 			return *this;
 		}
 
-		std::vector<fs::path> const& targets() const
+		std::vector<TargetInfo> const& targets() const
 		{
 			return m_targets;
 		}
@@ -72,7 +73,7 @@ namespace Maike::Db
 
 	private:
 		std::vector<Dependency> m_use_deps;
-		std::vector<fs::path> m_targets;
+		std::vector<TargetInfo> m_targets;
 		std::vector<fs::path> m_child_targets_use_deps;
 		Compiler m_compiler;
 	};
