@@ -90,6 +90,14 @@ namespace Maike::KeyValueStore
 			return JsonRefConst{obj, m_ref.source()}.as<T>();
 		}
 
+		template<class T>
+		std::optional<T> getIf(char const* key) const
+		{
+			auto obj = json_object_get(m_ref.handle(), key);
+			if(obj == nullptr) { return std::optional<T>{}; }
+			return JsonRefConst{obj, m_ref.source()}.as<T>();
+		}
+
 		size_t size() const
 		{
 			return json_object_size(m_ref.handle());

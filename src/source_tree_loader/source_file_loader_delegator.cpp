@@ -49,21 +49,38 @@ namespace
 		return ret;
 	}
 
+	Maike::Db::TargetInfo getTarget(Maike::fs::path const& src_dir,
+	                                Maike::KeyValueStore::CompoundRefConst target)
+	{
+		auto name = target.template get<char const*>("name");
+		std::vector<Maike::Db::Dependency> deps;
+		if(auto dependencies = target.template getIf<Maike::KeyValueStore::ArrayRefConst>("dependencies");
+		   dependencies)
+		{
+			std::transform(
+			   std::begin(*dependencies), std::end(*dependencies), std::back_inserter(deps), [](auto item) {
+				   auto obj = item.template as<Maike::KeyValueStore::CompoundRefConst>();
+				   return Maike::Db::Dependency{obj.template get<char const*>("ref"),
+				                                Maike::Db::Dependency::Resolver::InternalLookup};
+			   });
+		}
+		return Maike::Db::TargetInfo{src_dir / name};
+	}
+
+
 	std::vector<Maike::Db::TargetInfo> getTargets(Maike::fs::path const& src_dir,
-	                                        Maike::KeyValueStore::Compound const& tags)
+	                                              Maike::KeyValueStore::Compound const& tags)
 	{
 		std::vector<Maike::Db::TargetInfo> ret;
 		if(auto target = tags.getIf<Maike::KeyValueStore::CompoundRefConst>("target"); target)
-		{
-			ret.push_back(Maike::Db::TargetInfo{src_dir / target->template get<char const*>("name")});
-		}
+		{ ret.push_back(getTarget(src_dir, *target)); }
 
 		if(auto targets = tags.getIf<Maike::KeyValueStore::ArrayRefConst>("targets"); targets)
 		{
 			std::transform(
 			   std::begin(*targets), std::end(*targets), std::back_inserter(ret), [&src_dir](auto item) {
 				   auto const val = item.template as<Maike::KeyValueStore::CompoundRefConst>();
-				   return Maike::Db::TargetInfo{src_dir / Maike::fs::path{val.template get<char const*>("name")}};
+				   return getTarget(src_dir, val);
 			   });
 		}
 		return ret;
