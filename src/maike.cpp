@@ -40,7 +40,7 @@ void makeSourceFileInfosFromTargets(
 	source_files = g.takeSourceFiles();
 	std::for_each(
 	   std::begin(targets), std::end(targets), [&g, &source_files, &target_dir](auto const& item) {
-		   std::vector<Maike::Db::Dependency> use_deps;
+		   auto use_deps = item.second.useDeps();
 		   auto node = getNode(g, item.second.sourceFilename());
 		   Maike::processGraphNodeRecursive(
 		      [&use_deps, &target_dir, &target_name = item.first](auto const& node) {
