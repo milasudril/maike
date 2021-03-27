@@ -50,7 +50,7 @@ void makeSourceFileInfosFromTargets(
 			                    [&use_deps, &target_dir, &target_name](auto const& item) {
 				                    if(item != target_name) // A target may never point to itself
 				                    {
-					                    // FIXME: These deps need resolver info (in case it was a pkgconfig lookup
+					                    // FIXME: These deps need resolver info (in case it was a pkgconfig lookup)
 					                    use_deps.push_back(Maike::Db::Dependency{
 					                       target_dir / item, Maike::Db::Dependency::Resolver::InternalLookup});
 				                    }
@@ -63,11 +63,6 @@ void makeSourceFileInfosFromTargets(
 
 		   // FIXME: Remove duplicates before sinking into src_file
 
-		   // Add source file as a use dependency. Not really correct, but the source file must
-		   // exist in order to create the target, so if the source file was not in the dependency
-		   // list it is not known how to create the target.
-		   use_deps.push_back(Maike::Db::Dependency{item.second.sourceFilename(),
-		                                            Maike::Db::Dependency::Resolver::InternalLookup});
 		   src_file.useDeps(std::move(use_deps));
 		   source_files.insert(std::make_pair(target_dir / item.first, std::move(src_file)));
 	   });
