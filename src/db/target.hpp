@@ -13,8 +13,11 @@ namespace Maike::Db
 	{
 	public:
 		explicit Target(fs::path const& src_file_name,
+						std::reference_wrapper<TargetInfo const> target,
 		                std::reference_wrapper<SourceFileInfo const> src_file):
-		   m_src_filename{src_file_name}, r_src_file{src_file}
+		   m_src_filename{src_file_name},
+		   r_target{target},
+		   r_src_file{src_file}
 		{
 		}
 
@@ -23,14 +26,14 @@ namespace Maike::Db
 			return r_src_file.get().useDeps();
 		}
 
-		std::vector<Dependency> buildDepsCopy() const
-		{
-			return r_src_file.get().useDepsCopy();
-		}
-
 		fs::path const& sourceFilename() const
 		{
 			return m_src_filename;
+		}
+
+		std::vector<Dependency> const& useDeps() const
+		{
+			return r_target.get().useDeps();
 		}
 
 		/*
@@ -45,6 +48,7 @@ namespace Maike::Db
 
 	private:
 		fs::path m_src_filename;
+		std::reference_wrapper<TargetInfo const> r_target;
 		std::reference_wrapper<SourceFileInfo const> r_src_file;
 	};
 }

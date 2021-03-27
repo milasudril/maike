@@ -24,7 +24,7 @@ collectTargets(std::map<Maike::fs::path, Maike::Db::SourceFileInfo> const& sourc
 				auto i = ret.find(target.name());
 				if(i != std::end(ret)) { throw std::runtime_error{"Target has already been defined"}; }
 
-				ret.insert(std::make_pair(target.name(), Maike::Db::Target{item.first, item.second}));
+				ret.insert(std::make_pair(target.name(), Maike::Db::Target{item.first, target, item.second}));
 			}
 		});
 	});
@@ -332,7 +332,7 @@ int main(int argc, char** argv)
 		}
 
 
-#if 0
+#if 1
 		Maike::Db::visitNodes(
 		   [&graph](Maike::Db::SourceFileRecordConst const& node) {
 			   printf("%s\n", node.path().c_str());
