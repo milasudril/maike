@@ -13,7 +13,7 @@
 #include "src/utils/callwrappers.hpp"
 
 std::map<Maike::fs::path, Maike::Db::Target>
-collectTargets(std::map<Maike::fs::path, Maike::Db::SourceFileInfo>& source_files)
+collectTargets(std::map<Maike::fs::path, Maike::Db::SourceFileInfo> const& source_files)
 {
 	std::map<Maike::fs::path, Maike::Db::Target> ret;
 	std::for_each(std::begin(source_files), std::end(source_files), [&ret](auto const& item) {

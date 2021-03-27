@@ -64,7 +64,7 @@ namespace
 				                                Maike::Db::Dependency::Resolver::InternalLookup};
 			   });
 		}
-		return Maike::Db::TargetInfo{src_dir / name};
+		return Maike::Db::TargetInfo{src_dir / name, std::move(deps)};
 	}
 
 
@@ -146,7 +146,7 @@ Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(Maike::fs::path const& 
 	if(is_directory(path))
 	{
 		std::vector<Maike::Db::TargetInfo> targets;
-		targets.push_back(Maike::Db::TargetInfo{path.lexically_normal()});
+		targets.push_back(Maike::Db::TargetInfo{path.lexically_normal(), std::vector<Db::Dependency>{}});
 		return Maike::Db::SourceFileInfo{
 		   std::move(deps), std::vector<Maike::fs::path>{}, std::move(targets), Maike::Compiler{MkDir{}}};
 	}

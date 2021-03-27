@@ -5,14 +5,19 @@
 #ifndef MAIKE_DB_TARGETINFO_HPP
 #define MAIKE_DB_TARGETINFO_HPP
 
+#include "./dependency.hpp"
+
 #include "src/fs.hpp"
+
+#include <vector>
 
 namespace Maike::Db
 {
 	class TargetInfo
 	{
 	public:
-		explicit TargetInfo(fs::path&& name): m_name{std::move(name)}
+		explicit TargetInfo(fs::path&& name, std::vector<Dependency>&& use_deps): m_name{std::move(name)}
+		,m_use_deps{std::move(use_deps)}
 		{
 		}
 
@@ -21,8 +26,14 @@ namespace Maike::Db
 			return m_name;
 		}
 
+		std::vector<Dependency> const& useDeps() const
+		{
+			return m_use_deps;
+		}
+
 	private:
 		fs::path m_name;
+		std::vector<Dependency> m_use_deps;
 	};
 }
 #endif
