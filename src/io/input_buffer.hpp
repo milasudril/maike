@@ -18,9 +18,7 @@ namespace Maike::Io
 		InputBuffer& operator=(InputBuffer&&) = delete;
 
 		explicit InputBuffer(Source src):
-		   r_read_ptr{nullptr},
-		   r_read_end{nullptr},
-		   m_source{std::move(src)}
+		   r_read_ptr{nullptr}, r_read_end{nullptr}, m_source{std::move(src)}
 		{
 		}
 

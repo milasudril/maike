@@ -12,8 +12,7 @@
 #include <cstdlib>
 
 Maike::MemMonitor::MemMonitor(std::chrono::duration<double> refresh_interval):
-   m_mem_avail{0},
-   m_stop{false}
+   m_mem_avail{0}, m_stop{false}
 {
 	m_worker = std::thread(&Maike::MemMonitor::run, this, refresh_interval);
 }

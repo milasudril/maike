@@ -93,10 +93,7 @@ namespace
 		                    ResourceObject& tools,
 		                    ResourceObject& rt,
 		                    ResourceObject& rc):
-		   r_libs(libs),
-		   r_tools(tools),
-		   r_rt(rt),
-		   r_rc(rc)
+		   r_libs(libs), r_tools(tools), r_rt(rt), r_rc(rc)
 		{
 		}
 

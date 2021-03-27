@@ -18,9 +18,7 @@ namespace
 	{
 	public:
 		explicit Source(std::string_view content):
-		   m_content{content},
-		   r_read_ptr{m_content.data()},
-		   m_n_bytes_left{m_content.size()}
+		   m_content{content}, r_read_ptr{m_content.data()}, m_n_bytes_left{m_content.size()}
 		{
 		}
 

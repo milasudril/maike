@@ -38,9 +38,7 @@ namespace Maike::KeyValueStore
 			}
 
 			explicit const_iterator(json_t const* handle, char const* name):
-			   r_handle{handle},
-			   r_iter{json_object_iter(const_cast<json_t*>(handle))},
-			   r_name{name}
+			   r_handle{handle}, r_iter{json_object_iter(const_cast<json_t*>(handle))}, r_name{name}
 			{
 			}
 

@@ -10,8 +10,7 @@
 using namespace Maike;
 
 SpiderDefault::SpiderDefault(Target_FactoryDelegator& target_creator, DependencyGraph& targets):
-   r_target_creator(target_creator),
-   r_targets(targets)
+   r_target_creator(target_creator), r_targets(targets)
 {
 }
 

@@ -168,8 +168,7 @@ namespace Maike::KeyValueStore
 		}
 
 		explicit JsonHandle(json_t* handle, std::string_view src = "<scratch>"):
-		   m_handle{handle},
-		   m_src{src}
+		   m_handle{handle}, m_src{src}
 		{
 		}
 

@@ -26,9 +26,7 @@ namespace Maike::KeyValueStore
 			using value_type = JsonRefConst;
 
 			explicit const_iterator(json_t const* handle, size_t index, char const* name):
-			   r_handle{handle},
-			   m_index{index},
-			   r_name{name}
+			   r_handle{handle}, m_index{index}, r_name{name}
 			{
 			}
 

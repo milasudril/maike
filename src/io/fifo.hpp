@@ -39,7 +39,7 @@ namespace Maike::Io
 			if(m_bytes_left == 0)
 			{
 				std::unique_lock guard{m_mtx};
-				m_cv.wait(guard, [& list = m_elems]() { return list.size() != 0; });
+				m_cv.wait(guard, [&list = m_elems]() { return list.size() != 0; });
 				auto const& front = m_elems.front();
 				m_bytes_left = front.first;
 				r_read_ptr = front.second.get();

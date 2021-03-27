@@ -105,8 +105,7 @@ namespace Maike::SourceFileInfoLoaders
 		template<class LoaderType,
 		         std::enable_if_t<!std::is_same_v<std::decay_t<LoaderType>, Loader>, int> = 0>
 		explicit Loader(std::unique_ptr<LoaderType> loader):
-		   m_handle{loader.release()},
-		   m_vtable{source_file_loader_detail::Tag<LoaderType>{}}
+		   m_handle{loader.release()}, m_vtable{source_file_loader_detail::Tag<LoaderType>{}}
 		{
 		}
 

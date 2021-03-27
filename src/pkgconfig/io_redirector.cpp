@@ -4,8 +4,9 @@
 
 #include "./io_redirector.hpp"
 
-void Maike::PkgConfig::IoRedirector::
-operator()(void const* buffer, size_t buffer_size, Io::Redirector::StdOut)
+void Maike::PkgConfig::IoRedirector::operator()(void const* buffer,
+                                                size_t buffer_size,
+                                                Io::Redirector::StdOut)
 {
 	if(buffer_size == 0)
 	{
@@ -45,8 +46,9 @@ operator()(void const* buffer, size_t buffer_size, Io::Redirector::StdOut)
 	if(m_token.size() != 0) { m_stdout.push_back(std::move(m_token)); }
 }
 
-void Maike::PkgConfig::IoRedirector::
-operator()(void const* buffer, size_t buffer_size, Io::Redirector::StdErr)
+void Maike::PkgConfig::IoRedirector::operator()(void const* buffer,
+                                                size_t buffer_size,
+                                                Io::Redirector::StdErr)
 {
 	auto ptr = reinterpret_cast<char const*>(buffer);
 	std::copy(ptr, ptr + buffer_size, std::back_inserter(m_stderr));

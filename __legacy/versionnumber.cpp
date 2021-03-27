@@ -35,7 +35,8 @@ inline static int64_t makeWord(int64_t x)
 
 int64_t Maike::version(const char* version_string) noexcept
 {
-	union {
+	union
+	{
 		uint16_t parts[4];
 		int64_t number;
 	} version;

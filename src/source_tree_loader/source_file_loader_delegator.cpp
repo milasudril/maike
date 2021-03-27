@@ -55,7 +55,7 @@ namespace
 		std::vector<Maike::fs::path> ret;
 		if(auto target = tags.getIf<Maike::KeyValueStore::CompoundRefConst>("target"); target)
 		{
-			auto const name = target->template get<char const*>("name");
+			auto const name = src_dir / target->template get<char const*>("name");
 			ret.push_back(name);
 		}
 
@@ -135,7 +135,12 @@ Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(Maike::fs::path const& 
 		   std::move(deps), std::vector<Maike::fs::path>{}, std::move(targets), Maike::Compiler{MkDir{}}};
 	}
 
-	auto extension = path.extension();
+	std::string extension;
+	for(auto p = path; !p.extension().empty(); p = p.stem())
+	{
+		extension = std::string{p.extension()} + extension;
+	}
+
 	auto i = m_loaders.find(extension);
 	if(i == std::end(m_loaders)) { return std::optional<Maike::Db::SourceFileInfo>{}; }
 

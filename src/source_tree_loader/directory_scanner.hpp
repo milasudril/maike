@@ -42,10 +42,7 @@ namespace Maike::SourceTreeLoader
 		explicit DirectoryScanner(Sched::ThreadPool& workers,
 		                          std::reference_wrapper<InputFilter const> filter,
 		                          std::reference_wrapper<SourceFileLoaderDelegator const> loaders):
-		   r_filter{filter},
-		   r_loaders{loaders},
-		   m_counter{0},
-		   r_workers{&workers}
+		   r_filter{filter}, r_loaders{loaders}, m_counter{0}, r_workers{&workers}
 		{
 		}
 

@@ -18,9 +18,7 @@ namespace Maike
 		template<class Source>
 		explicit VcsState(Source const& src,
 		                  std::enable_if_t<!std::is_same_v<Source, VcsState>, int> = 0):
-		   m_revision{src.revision()},
-		   m_version_tag{src.versionTag()},
-		   m_branch{src.branch()}
+		   m_revision{src.revision()}, m_version_tag{src.versionTag()}, m_branch{src.branch()}
 		{
 		}
 

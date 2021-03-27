@@ -142,8 +142,7 @@ static unsigned long long int cxxversionDefaultGet(const Command& versionquery,
 }
 
 TargetCxxCompiler::TargetCxxCompiler(const TargetCxxOptions& options, const ParameterSet& sysvars):
-   r_options(options),
-   m_cxxversion_default(0)
+   r_options(options), m_cxxversion_default(0)
 {
 	r_paramset = &sysvars;
 }

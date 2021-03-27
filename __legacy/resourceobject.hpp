@@ -53,9 +53,7 @@ namespace Maike
 			};
 
 			Iterator(const Vtable& vtable, void* owner, void* handle) noexcept:
-			   r_vtable(&vtable),
-			   r_owner(owner),
-			   m_handle(handle)
+			   r_vtable(&vtable), r_owner(owner), m_handle(handle)
 			{
 			}
 

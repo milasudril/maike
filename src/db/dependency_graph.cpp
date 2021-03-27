@@ -64,7 +64,7 @@ Maike::Db::DependencyGraph::DependencyGraph(std::map<fs::path, SourceFileInfo>&&
 		   return SourceFileRecordConst{SourceFileId{k}, std::cref(item.first), std::cref(item.second)};
 	   });
 
-	std::for_each(std::begin(m_src_files), std::end(m_src_files), [& nodes = m_nodes](auto& item) {
+	std::for_each(std::begin(m_src_files), std::end(m_src_files), [&nodes = m_nodes](auto& item) {
 		auto deps = item.second.useDepsCopy();
 		std::for_each(std::begin(deps), std::end(deps), [&nodes](auto& item) { resolve(item, nodes); });
 		item.second.useDeps(std::move(deps));

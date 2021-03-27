@@ -47,8 +47,7 @@ namespace Maike
 	private:
 		TargetPlaceholder(
 		   const char* name, const char* name_src, const char* root, size_t id, Dependency::Relation rel):
-		   TargetBase(name, name_src, "", root, id),
-		   m_relation(rel)
+		   TargetBase(name, name_src, "", root, id), m_relation(rel)
 		{
 		}
 

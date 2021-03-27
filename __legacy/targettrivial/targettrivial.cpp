@@ -20,8 +20,7 @@ TargetTrivial::TargetTrivial(const Command& cmd,
                              const char* in_dir,
                              const char* root,
                              size_t id):
-   TargetBase(name, name_src, in_dir, root, id),
-   r_cmd{cmd}
+   TargetBase(name, name_src, in_dir, root, id), r_cmd{cmd}
 {
 }
 

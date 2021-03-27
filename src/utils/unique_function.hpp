@@ -32,9 +32,7 @@ namespace Maike
 		UniqueFunction& operator=(UniqueFunction const& other) = delete;
 
 		UniqueFunction(UniqueFunction&& other) noexcept:
-		   m_data{other.m_data},
-		   r_callback{other.r_callback},
-		   r_dtor{other.r_dtor}
+		   m_data{other.m_data}, r_callback{other.r_callback}, r_dtor{other.r_dtor}
 		{
 			other.r_dtor = null_dtor;
 		}

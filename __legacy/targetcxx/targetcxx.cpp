@@ -120,9 +120,7 @@ TargetCxx::TargetCxx(const ResourceObject& obj,
                      const char* root,
                      size_t id,
                      size_t line_count):
-   TargetBase(obj, name_src, in_dir, root, id, line_count),
-   m_autorun(0),
-   r_compiler(compiler)
+   TargetBase(obj, name_src, in_dir, root, id, line_count), m_autorun(0), r_compiler(compiler)
 {
 	m_type = type(name_src, static_cast<const char*>(obj.objectGet("type")));
 

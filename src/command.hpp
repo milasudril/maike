@@ -16,8 +16,7 @@ namespace Maike
 	{
 	public:
 		explicit Command(fs::path&& exe, std::vector<std::string>&& args):
-		   m_executable{std::move(exe)},
-		   m_args{std::move(args)}
+		   m_executable{std::move(exe)}, m_args{std::move(args)}
 		{
 		}
 

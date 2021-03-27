@@ -14,8 +14,7 @@ namespace Maike::Db
 	public:
 		explicit Target(fs::path const& src_file_name,
 		                std::reference_wrapper<SourceFileInfo const> src_file):
-		   m_src_filename{src_file_name},
-		   r_src_file{src_file}
+		   m_src_filename{src_file_name}, r_src_file{src_file}
 		{
 		}
 

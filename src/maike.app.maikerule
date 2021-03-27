@@ -1,0 +1,4 @@
+{
+	"target":{"name":"maike"}
+	,"dependencies_extra":[{"ref":"maike.o"}]
+}

@@ -25,8 +25,7 @@ namespace Maike
 		};
 
 		explicit ProcessExitStatus(TerminationMode mode, int error_code):
-		   m_term_mode{mode},
-		   m_error_code{error_code}
+		   m_term_mode{mode}, m_error_code{error_code}
 		{
 		}
 

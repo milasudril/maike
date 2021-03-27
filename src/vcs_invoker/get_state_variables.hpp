@@ -41,8 +41,7 @@ namespace Maike::VcsInvoker
 	{
 	public:
 		explicit StateVarsFetcher(std::reference_wrapper<Config const> cfg, Invoker invoker):
-		   r_cfg{cfg},
-		   m_invoker{std::move(invoker)}
+		   r_cfg{cfg}, m_invoker{std::move(invoker)}
 		{
 		}
 

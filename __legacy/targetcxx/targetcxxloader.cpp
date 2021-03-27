@@ -154,8 +154,7 @@ size_t TagExtractor::read(void* buffer, size_t length)
 
 TargetCxxLoader::TargetCxxLoader(const TargetCxxOptions& options,
                                  const TargetCxxCompiler& compiler):
-   r_options(options),
-   r_compiler(compiler)
+   r_options(options), r_compiler(compiler)
 {
 }
 

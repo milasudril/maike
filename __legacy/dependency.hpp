@@ -59,17 +59,13 @@ namespace Maike
 		}
 
 		explicit Dependency(const char* name, const char* root, Relation relation):
-		   m_name(nullptr),
-		   r_target(nullptr),
-		   m_rel(relation)
+		   m_name(nullptr), r_target(nullptr), m_rel(relation)
 		{
 			nameSet(rootStrip(name, root).c_str());
 		}
 
 		explicit Dependency(const char* name, Relation relation):
-		   m_name(nullptr),
-		   r_target(nullptr),
-		   m_rel(relation)
+		   m_name(nullptr), r_target(nullptr), m_rel(relation)
 		{
 			nameSet(name);
 		}

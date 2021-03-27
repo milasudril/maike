@@ -1,4 +1,4 @@
-//@	 {"targets":[{"name":"maike_next","type":"application"}]}
+//@	 {"targets":[{"name":"maike_next","type":"application"}, {"name":"maike.o","type":"object"}]}
 
 #include "./cmd_line_options.hpp"
 #include "./build_info.hpp"
@@ -339,7 +339,7 @@ int main(int argc, char** argv)
 
 #if 1
 		Maike::Db::visitNodes(
-		   [&graph](auto const& node) {
+		   [&graph](Maike::Db::SourceFileRecordConst const& node) {
 			   printf("%s\n", node.path().c_str());
 			   Maike::processGraphNodeRecursive(
 			      [](auto const& edge) {

@@ -426,8 +426,7 @@ namespace
 	{
 	public:
 		TargetsCompileLeaf(const Session& maike):
-		   r_target_dir(maike.targetDirectoryGet()),
-		   id_range(maike.targetIdRangeGet())
+		   r_target_dir(maike.targetDirectoryGet()), id_range(maike.targetIdRangeGet())
 		{
 		}
 
@@ -687,8 +686,7 @@ namespace
 	{
 	public:
 		TargetsDelete(const Session& maike):
-		   r_target_dir(maike.targetDirectoryGet()),
-		   id_range(maike.targetIdRangeGet())
+		   r_target_dir(maike.targetDirectoryGet()), id_range(maike.targetIdRangeGet())
 		{
 		}
 
@@ -723,8 +721,7 @@ namespace
 	{
 	public:
 		TargetsMakeSet(const char* target_dir, std::set<Stringkey>& target_list):
-		   r_target_dir(target_dir),
-		   r_target_list(target_list)
+		   r_target_dir(target_dir), r_target_list(target_list)
 		{
 		}
 

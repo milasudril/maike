@@ -24,9 +24,7 @@ namespace Maike::Db
 		explicit SourceFileRecordConst(SourceFileId id,
 		                               std::reference_wrapper<fs::path const> path,
 		                               std::reference_wrapper<SourceFileInfo const> src_file_info):
-		   m_id{id},
-		   r_path{&path.get()},
-		   r_src_file_info{&src_file_info.get()}
+		   m_id{id}, r_path{&path.get()}, r_src_file_info{&src_file_info.get()}
 		{
 		}
 

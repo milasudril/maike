@@ -171,7 +171,8 @@ namespace Maike
 
 
 	private:
-		union {
+		union
+		{
 			const void* x_vptr;
 			const char* x_cptr;
 			int64_t x_int64;
@@ -181,7 +182,8 @@ namespace Maike
 			double x_double;
 			float x_float;
 		} m_data;
-		union {
+		union
+		{
 			uintptr_t type;
 			const Formatter* fmt;
 		} m_type;

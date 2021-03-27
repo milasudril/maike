@@ -5,8 +5,7 @@
 using namespace Maike;
 
 TargetBashHook::TargetBashHook(const ParameterSetDumpable& params):
-   m_intpret(params),
-   m_loader(m_intpret)
+   m_intpret(params), m_loader(m_intpret)
 {
 }
 

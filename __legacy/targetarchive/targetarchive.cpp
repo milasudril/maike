@@ -39,8 +39,7 @@ TargetArchive::TargetArchive(const ResourceObject& obj,
                              const char* root,
                              size_t id,
                              size_t line_count):
-   TargetBase(obj, name_src, in_dir, root, id, line_count),
-   r_compiler(compiler)
+   TargetBase(obj, name_src, in_dir, root, id, line_count), r_compiler(compiler)
 {
 	m_type = type(name_src, static_cast<const char*>(obj.objectGet("type")));
 	if(obj.objectExists("compressor"))

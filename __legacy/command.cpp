@@ -49,8 +49,7 @@ namespace
 	{
 	public:
 		ParamExtractor(const std::string& prefix, std::vector<std::string>& result):
-		   r_prefix(prefix),
-		   r_result(result)
+		   r_prefix(prefix), r_result(result)
 		{
 		}
 		void operator()(const char* value)

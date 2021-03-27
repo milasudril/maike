@@ -21,8 +21,7 @@ namespace Maike::Db
 		};
 
 		explicit Dependency(fs::path const& path, Resolver res_method):
-		   m_name{path},
-		   m_res_method{res_method}
+		   m_name{path}, m_res_method{res_method}
 		{
 		}
 

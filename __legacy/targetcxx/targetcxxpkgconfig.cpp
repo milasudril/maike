@@ -52,9 +52,7 @@ namespace
 	{
 	public:
 		PkgConfigTokenizer(DataSource& src, const char* delim_seq):
-		   m_rb(src),
-		   r_delim_seq(delim_seq),
-		   m_ch_next('\0')
+		   m_rb(src), r_delim_seq(delim_seq), m_ch_next('\0')
 		{
 		}
 

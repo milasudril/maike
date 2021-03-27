@@ -5,11 +5,14 @@
 #include "./config.hpp"
 
 #include "src/source_file_info_loaders/cxx/source_file_loader.hpp"
+#include "src/source_file_info_loaders/app/source_file_loader.hpp"
 
 Maike::SourceFileInfoLoaders::Config::Config()
 {
 	m_loaders.insert(std::make_pair(std::string{"cxx"},
 	                                Maike::SourceFileInfoLoaders::Loader{Cxx::SourceFileLoader{}}));
+	m_loaders.insert(std::make_pair(std::string{"app"},
+	                                Maike::SourceFileInfoLoaders::Loader{App::SourceFileLoader{}}));
 }
 
 Maike::SourceFileInfoLoaders::Config::Config(KeyValueStore::CompoundRefConst items)
