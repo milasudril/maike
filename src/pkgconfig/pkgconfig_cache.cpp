@@ -76,7 +76,7 @@ namespace
 		   std::begin(cmd_out), std::end(cmd_out), std::back_inserter(ret), [](auto const& val) {
 			   if(val.size() < 3 || !(val[0] == '-' && val[1] == 'l'))
 			   { throw std::runtime_error{std::string{"Unexpected format in pkg-config output: "} + val}; }
-			   // Strip "-L"
+			   // Strip "-l"
 			   return Maike::fs::path{val.c_str() + 2};
 		   });
 

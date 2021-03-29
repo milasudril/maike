@@ -54,6 +54,8 @@ namespace
 Maike::Db::DependencyGraph::DependencyGraph(std::map<fs::path, SourceFileInfo>&& src_files):
    m_src_files{std::move(src_files)}
 {
+	// TODO: Create placeholder "SourceFileInfo" so to represent external deps
+
 	m_nodes.reserve(m_src_files.size());
 	std::transform(
 	   std::begin(m_src_files),

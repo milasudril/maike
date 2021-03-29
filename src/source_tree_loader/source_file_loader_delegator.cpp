@@ -61,8 +61,15 @@ namespace
 			   std::begin(*dependencies), std::end(*dependencies), std::back_inserter(deps), [](auto item) {
 				   auto obj = item.template as<Maike::KeyValueStore::CompoundRefConst>();
 				   return Maike::Db::Dependency{obj.template get<char const*>("ref"),
-				                                Maike::Db::Dependency::Resolver::InternalLookup};
+				                                Maike::Db::Dependency::Resolver::None};
 			   });
+		}
+
+		if(auto pkgconfig = target.template getIf<Maike::KeyValueStore::ArrayRefConst>("pkgconfig_libs"); pkgconfig)
+		{
+			std::for_each(std::begin(*pkgconfig), std::end(*pkgconfig), [](auto item) {
+				printf("%s\n", item.template as<char const*>());
+			});
 		}
 		return Maike::Db::TargetInfo{src_dir / name, std::move(deps)};
 	}
