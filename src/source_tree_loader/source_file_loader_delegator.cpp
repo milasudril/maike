@@ -67,6 +67,8 @@ namespace
 
 		if(auto pkgconfig = target.template getIf<Maike::KeyValueStore::ArrayRefConst>("pkgconfig_libs"); pkgconfig)
 		{
+			// Put these into the ordinary dependency array. Expand dependency when it is time to
+			// compile the source file
 			std::for_each(std::begin(*pkgconfig), std::end(*pkgconfig), [](auto item) {
 				printf("%s\n", item.template as<char const*>());
 			});
