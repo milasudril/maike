@@ -12,8 +12,8 @@ namespace Maike::CommandInterpreter
 {
 	/* Basic syntax
 	*
-	* <Command> ::= <command_id> ( <arglist> ) / <Separator>
-	* <arglist> ::= '' | <Argument> (','<Argument>)*
+	* <Command> ::= [<Argument>] '|'] <command_id> '(' <arglist> ')' [ '/' <Separator> ]
+	* <arglist> ::= '' | <Argument> (',' <Argument>)*
 	* <Argument> ::= <Value> | <VariableExpansion> | <Command>
 	* <VariableExpansion> ::= (<Value>? '{' <Command> '}' <Value>?) | <Command>
 	* <command_id> :: <namespace> '.' <name>
@@ -51,6 +51,7 @@ namespace Maike::CommandInterpreter
 	class Command
 	{
 		private:
+			Argument m_stdin;
 			std::string m_name;
 			std::vector<Argument> m_args;
 	};
