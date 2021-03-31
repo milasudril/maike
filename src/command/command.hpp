@@ -15,7 +15,7 @@ namespace Maike::CommandInterpreter
 	* <Command> ::= [<Argument>] '|'] <command_id> '(' <arglist> ')' [ '/' <Separator> ]
 	* <arglist> ::= '' | <Argument> (',' <Argument>)*
 	* <Argument> ::= <Value> | <VariableExpansion> | <Command>
-	* <VariableExpansion> ::= (<Value>? '{' <Command> '}' <Value>?) | <Command>
+	* <VariableExpansion> ::= <Value>? '{' <Command> '}' <Value>?
 	* <command_id> :: <namespace> '.' <name>
 	*
 	* Use ! as escape symbol
@@ -35,24 +35,23 @@ namespace Maike::CommandInterpreter
 
 	};
 
-	class VariableExpansion
-	{
-		private:
-			std::string m_prefix;
-			std::string m_name;
-			std::string m_suffix;
-	};
 
 	using Value = std::vector<std::string>;
-	class Command;
+	class VariableExpansion;
 
-	using Argument = std::variant<Value, VariableExpansion, RecursiveWrapper<Command>>;
+	using Argument = std::variant<Value, RecursiveWrapper<VariableExpansion>>;
 
 	class Command
 	{
-		private:
-			Argument m_stdin;
-			std::string m_name;
-			std::vector<Argument> m_args;
+		Argument stdin;
+		std::string name;
+		std::vector<Argument> args;
+	};
+
+	struct VariableExpansion
+	{
+		std::string prefix;
+		Command command;
+		std::string suffix;
 	};
 }
