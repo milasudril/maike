@@ -30,9 +30,18 @@ namespace Maike::CommandInterpreter
 
 			operator const T&() const { return *m_val; }
 
+			bool operator==(const RecursiveWrapper& other) const
+			{
+				return *m_val == *other.m_val;
+			}
+
+			bool operator!=(const RecursiveWrapper& other) const
+			{
+				return !(*this == other);
+			}
+
 		private:
 			std::unique_ptr<T> m_val;
-
 	};
 
 
@@ -41,7 +50,7 @@ namespace Maike::CommandInterpreter
 
 	using Argument = std::variant<Value, RecursiveWrapper<VariableExpansion>>;
 
-	class Command
+	struct Command
 	{
 		Argument stdin;
 		std::string name;
@@ -54,4 +63,26 @@ namespace Maike::CommandInterpreter
 		Command command;
 		std::string suffix;
 	};
+
+	inline bool operator==(Command const& a, Command const& b)
+	{
+		return a.stdin == b.stdin && a.name == b.name && a.args == b.args;
+	}
+
+	inline bool operator!=(Command const& a, Command const& b)
+	{
+		return !(a == b);
+	}
+
+	inline bool operator==(VariableExpansion const& a, VariableExpansion const& b)
+	{
+		return a.prefix == b.prefix && a.command == b.command && a.suffix == b.suffix;
+	}
+
+	inline bool operator!=(VariableExpansion const& a, VariableExpansion const& b)
+	{
+		return !(a == b);
+	}
+
+	Command makeCommand(char const* str);
 }
