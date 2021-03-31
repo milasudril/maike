@@ -12,11 +12,15 @@ namespace Maike::CommandInterpreter
 {
 	/* Basic syntax
 	*
-	* <Command> ::= [<Argument>] '|'] <command_id> '(' <arglist> ')' [ '/' <Separator> ]
-	* <arglist> ::= '' | <Argument> (',' <Argument>)*
-	* <Argument> ::= <Value> | <VariableExpansion> | <Command>
-	* <VariableExpansion> ::= <Value>? '{' <Command> '}' <Value>?
-	* <command_id> :: <namespace> '.' <name>
+	* <Command> ::= [CommandInput '|'] <CommandName> '(' <ArgList> ')'
+	* <CommandInput> ::= Value | <Command>
+	* <CommandName> ::= string
+	* <Value> ::= string
+	* <ArgList> ::= '' | <Argument> (',' <Argument>)*
+	* <Argument> ::= <ValueArray> | <VariableExpansion> | <SplitCommand>
+	* <VariableExpansion> ::= <CommandInput>? '{' <SplitCommand> '}' <CommandInput>?
+	* <SplitCommand> ::= <Command> '/' <Separator>
+	* <Separator> ::= ascii-char
 	*
 	* Use ! as escape symbol
 	*
@@ -45,23 +49,32 @@ namespace Maike::CommandInterpreter
 	};
 
 
-	using Value = std::vector<std::string>;
+	using Value = std::string;
+	using CommandName = std::string;
+	class Command;
+	using CommandInput = std::variant<Value, RecursiveWrapper<Command>>;
 	class VariableExpansion;
-
 	using Argument = std::variant<Value, RecursiveWrapper<VariableExpansion>>;
+	using ArgList = std::vector<Argument>;
 
 	struct Command
 	{
-		Argument stdin;
-		std::string name;
-		std::vector<Argument> args;
+		CommandInput stdin;
+		CommandName name;
+		ArgList args;
+	};
+
+	struct SplitCommand
+	{
+		Command cmd;
+		char separator;
 	};
 
 	struct VariableExpansion
 	{
-		std::string prefix;
-		Command command;
-		std::string suffix;
+		CommandInput prefix;
+		SplitCommand command;
+		CommandInput suffix;
 	};
 
 	inline bool operator==(Command const& a, Command const& b)
@@ -73,6 +86,14 @@ namespace Maike::CommandInterpreter
 	{
 		return !(a == b);
 	}
+
+
+	inline bool operator==(SplitCommand const& a, SplitCommand const& b)
+	{
+		return a.cmd == b.cmd && a.separator == b.separator;
+	}
+
+
 
 	inline bool operator==(VariableExpansion const& a, VariableExpansion const& b)
 	{

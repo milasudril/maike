@@ -7,6 +7,7 @@
 Maike::CommandInterpreter::Command Maike::CommandInterpreter::makeCommand(char const* str)
 {
 	Command cmd;
+	enum class State:int{};
 	while(true)
 	{
 		auto ch_in = *str;
@@ -14,5 +15,9 @@ Maike::CommandInterpreter::Command Maike::CommandInterpreter::makeCommand(char c
 		{
 			return cmd;
 		}
+
+
 	}
+
+	return cmd;
 }
