@@ -12,17 +12,21 @@ namespace Maike::CommandInterpreter
 {
 	/* Basic syntax
 	*
-	* <Command> ::= [CommandInput '|'] <CommandName> '(' <ArgList> ')'
-	* <CommandInput> ::= Value | <Command>
-	* <CommandName> ::= string
-	* <Value> ::= string
+	* <Command> ::= <CommandName> '(' <ArgList> ')' [ '<' <CommandInput> ]
+	* <CommandInput> ::= <Value> | <Command>
+	* <CommandName> ::= <String>
+	* <String> ::= #'.*'
+	* <Value> ::= <String>
 	* <ArgList> ::= '' | <Argument> (',' <Argument>)*
 	* <Argument> ::= <ValueArray> | <VariableExpansion> | <SplitCommand>
+	* <ValueArray> ::= '' | (',' <Value>)*
 	* <VariableExpansion> ::= <CommandInput>? '{' <SplitCommand> '}' <CommandInput>?
 	* <SplitCommand> ::= <Command> '/' <Separator>
-	* <Separator> ::= ascii-char
+	* <Separator> ::= #'.*'
 	*
-	* Use ! as escape symbol
+	* Use ~ as escape symbol
+	*
+	* system.g++(-, -x, c++, -std=c++17, system.pkg-config(--libs,gtk+-3)/~ , -o, foo.o) < cat(foo.txt)
 	*
 	*/
 	template<class T>
