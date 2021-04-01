@@ -69,8 +69,8 @@ namespace
 		{
 			// Put these into the ordinary dependency array. Expand dependency when it is time to
 			// compile the source file
-			std::for_each(std::begin(*pkgconfig), std::end(*pkgconfig), [](auto item) {
-				printf("%s\n", item.template as<char const*>());
+			std::transform(std::begin(*pkgconfig), std::end(*pkgconfig), std::back_inserter(deps), [](auto item) {
+				return Maike::Db::Dependency{item.template as<char const*>(), Maike::Db::Dependency::Resolver::PkgConfig};
 			});
 		}
 		return Maike::Db::TargetInfo{src_dir / name, std::move(deps)};

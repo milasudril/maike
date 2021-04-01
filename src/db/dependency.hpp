@@ -16,8 +16,9 @@ namespace Maike::Db
 	public:
 		enum class Resolver : int
 		{
+			None,
 			InternalLookup,
-			None
+			PkgConfig
 		};
 
 		explicit Dependency(fs::path const& path, Resolver res_method):

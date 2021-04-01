@@ -47,6 +47,7 @@ namespace
 			}
 			break;
 			case Maike::Db::Dependency::Resolver::None: break;
+			case Maike::Db::Dependency::Resolver::PkgConfig: break;
 		}
 	}
 }
