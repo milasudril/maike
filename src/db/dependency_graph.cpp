@@ -37,11 +37,8 @@ namespace
 		auto i = find(std::begin(src_files), std::end(src_files), dep.name(), CompareSourceFileRecord{});
 		if(i == std::end(src_files))
 		{
-			//	throw std::runtime_error{std::string{"Failed to resolve "} + dep.name().string()};
-			fprintf(stderr, "Failed to resolve %s\n", dep.name().c_str());
-			return;
+			throw std::runtime_error{std::string{"Failed to resolve "} + dep.name().string()};
 		}
-
 		dep.reference(i->id());
 	}
 }
