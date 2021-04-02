@@ -141,6 +141,7 @@ namespace
 		auto compiler = tags.getIf<Maike::KeyValueStore::CompoundRefConst>("compiler");
 
 		return Maike::Db::SourceFileInfo{std::move(builtin_deps),
+										 std::vector<Maike::Db::Dependency>{},
 		                                 std::move(child_target_use_deps),
 		                                 std::move(targets),
 		                                 compiler ? loader.getCompiler(*compiler) : loader.getCompiler()};
@@ -162,7 +163,7 @@ Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(Maike::fs::path const& 
 		std::vector<Maike::Db::TargetInfo> targets;
 		targets.push_back(Maike::Db::TargetInfo{path.lexically_normal(), std::vector<Db::Dependency>{}});
 		return Maike::Db::SourceFileInfo{
-		   std::move(deps), std::vector<Maike::fs::path>{}, std::move(targets), Maike::Compiler{MkDir{}}};
+		   std::move(deps), std::vector<Db::Dependency>{}, std::vector<Maike::fs::path>{}, std::move(targets), Maike::Compiler{MkDir{}}};
 	}
 
 	std::string extension;

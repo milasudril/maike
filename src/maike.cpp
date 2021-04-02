@@ -359,11 +359,15 @@ int main(int argc, char** argv)
 			return 0;
 		}
 
+		Maike::visitNodesInTopoOrder([](auto const& node){
+			printf("%s\n", node.path().c_str());
+		}, graph);
 
-#if 1
+#if 0
 		Maike::Db::visitNodes(
 		   [&graph](Maike::Db::SourceFileRecordConst const& node) {
 			   printf("%s\n", node.path().c_str());
+#if 0
 			   Maike::processGraphNodeRecursive(
 			      [](auto const& edge) {
 				      printf("    %s (%zu)\n", edge.path().c_str(), edge.id().value());
@@ -374,6 +378,7 @@ int main(int argc, char** argv)
 			      },
 			      graph,
 			      node);
+#endif
 		   },
 		   graph);
 #endif
