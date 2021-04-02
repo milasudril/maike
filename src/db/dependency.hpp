@@ -6,6 +6,7 @@
 #define MAIKE_DB_DEPENDENCY_HPP
 
 #include "./source_file_id.hpp"
+#include "./source_file_origin.hpp"
 
 #include "src/fs.hpp"
 
@@ -14,15 +15,8 @@ namespace Maike::Db
 	class Dependency
 	{
 	public:
-		enum class Resolver : int
-		{
-			None,
-			InternalLookup,
-			PkgConfig
-		};
-
-		explicit Dependency(fs::path const& path, Resolver res_method):
-		   m_name{path}, m_res_method{res_method}
+		explicit Dependency(fs::path const& path, SourceFileOrigin expected_origin):
+		   m_name{path}, m_expected_origin{expected_origin}
 		{
 		}
 
@@ -31,9 +25,9 @@ namespace Maike::Db
 			return m_name;
 		}
 
-		Resolver resolver() const
+		SourceFileOrigin expectedOrigin() const
 		{
-			return m_res_method;
+			return m_expected_origin;
 		}
 
 		SourceFileId reference() const
@@ -50,7 +44,7 @@ namespace Maike::Db
 	private:
 		SourceFileId m_ref;
 		fs::path m_name;
-		Resolver m_res_method;
+		SourceFileOrigin m_expected_origin;
 	};
 
 	inline auto reference(Dependency const& dep)
@@ -60,7 +54,7 @@ namespace Maike::Db
 
 	inline bool operator==(Dependency const& a, Dependency const& b)
 	{
-		return a.name() == b.name() && a.resolver() == b.resolver();
+		return a.name() == b.name() && a.expectedOrigin() == b.expectedOrigin();
 	}
 
 	inline bool operator!=(Dependency const& a, Dependency const& b)

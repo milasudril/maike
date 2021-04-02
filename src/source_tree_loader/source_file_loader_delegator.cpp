@@ -36,12 +36,12 @@ namespace
 		ret.reserve(deps.size());
 		std::transform(
 		   std::begin(deps), std::end(deps), std::back_inserter(ret), [&prefix](auto const& item) {
-			   if(item.resolver() == Maike::Db::Dependency::Resolver::InternalLookup)
+			   if(item.expectedOrigin() == Maike::Db::SourceFileOrigin::Project)
 			   {
 				   auto str = item.name().string();
 				   if(str.size() > 1 && memcmp(str.data(), "./", 2) == 0)
 				   {
-					   return Maike::Db::Dependency{(prefix / item.name()).lexically_normal(), item.resolver()};
+					   return Maike::Db::Dependency{(prefix / item.name()).lexically_normal(), item.expectedOrigin()};
 				   }
 			   }
 			   return item;
@@ -61,7 +61,7 @@ namespace
 			   std::begin(*dependencies), std::end(*dependencies), std::back_inserter(deps), [](auto item) {
 				   auto obj = item.template as<Maike::KeyValueStore::CompoundRefConst>();
 				   return Maike::Db::Dependency{obj.template get<char const*>("ref"),
-				                                Maike::Db::Dependency::Resolver::None};
+				                                Maike::Db::SourceFileOrigin::System};
 			   });
 		}
 
@@ -70,7 +70,7 @@ namespace
 			// Put these into the ordinary dependency array. Expand dependency when it is time to
 			// compile the source file
 			std::transform(std::begin(*pkgconfig), std::end(*pkgconfig), std::back_inserter(deps), [](auto item) {
-				return Maike::Db::Dependency{item.template as<char const*>(), Maike::Db::Dependency::Resolver::PkgConfig};
+				return Maike::Db::Dependency{item.template as<char const*>(), Maike::Db::SourceFileOrigin::PkgConfig};
 			});
 		}
 		return Maike::Db::TargetInfo{src_dir / name, std::move(deps)};
@@ -149,7 +149,7 @@ Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(Maike::fs::path const& 
 	if(!path.parent_path().empty())
 	{
 		deps.push_back(Maike::Db::Dependency{path.parent_path().lexically_normal(),
-		                                     Maike::Db::Dependency::Resolver::InternalLookup});
+		                                     Maike::Db::SourceFileOrigin::Project});
 	}
 
 	if(is_directory(path))

@@ -38,7 +38,7 @@
 						"{libdir}",
 						"{dependencies}"
 					],
-					"name": "g++-9"
+					"name": "g++"
 				},
 				"autorun_launcher": {
 					"args": [
@@ -70,7 +70,7 @@
 						"{libdir}",
 						"{dependencies}"
 					],
-					"name": "g++-9"
+					"name": "g++"
 				},
 				"include_format": "-include^",
 				"includedir": [],
@@ -113,7 +113,7 @@
 						"{target}",
 						"{source}"
 					],
-					"name": "g++-9"
+					"name": "g++"
 				},
 				"pkgconfig": {
 					"args": [
@@ -131,7 +131,7 @@
 						"c++",
 						"{nullfile}"
 					],
-					"name": "g++-9"
+					"name": "g++"
 				}
 			},
 			"filename_exts": [
