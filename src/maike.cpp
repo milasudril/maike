@@ -76,7 +76,7 @@ void makeSourceFileInfosFromTargets(
 			         std::begin(child_target_use_deps),
 			         std::end(child_target_use_deps),
 			         [&use_deps, &target_dir, &target_name](auto const& item) {
-				         if(item.name() != target_name) // A target may never point to itself
+				         if(item.name() != target_dir/target_name) // A target may never point to itself
 				         { use_deps.push_back(Maike::Db::Dependency{item.name(), item.expectedOrigin()}); }
 			         });
 		      },
