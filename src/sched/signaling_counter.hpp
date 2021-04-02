@@ -1,6 +1,5 @@
 //@	{
-//@	 "targets":[{"name":"signaling_counter.hpp","type":"include"
-//@		, "dependencies":[{"ref":"pthread", "rel":"external"}]}]
+//@	 "targets":[{"name":"signaling_counter.hpp","type":"include"}]
 //@	}
 
 #ifndef MAIKE_SCHED_SIGNALINGCOUNTER_HPP

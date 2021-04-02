@@ -1,5 +1,6 @@
 //@	{
-//@	 "targets":[{"name":"thread_pool.o","type":"object"}]
+//@	 "targets":[{"name":"thread_pool.o", "type":"object",
+//@		"dependencies":[{"ref":"pthread", "rel":"external"}]}]
 //@	}
 
 #include "./thread_pool.hpp"

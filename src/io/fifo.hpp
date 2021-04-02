@@ -1,6 +1,5 @@
 //@	{
-//@	 "targets":[{"name":"fifo.hpp","type":"include"
-//@		, "dependencies":[{"ref":"pthread", "rel":"external"}]}]
+//@	 "targets":[{"name":"fifo.hpp","type":"include"}]
 //@	}
 
 #ifndef MAIKE_IO_FIFO_HPP

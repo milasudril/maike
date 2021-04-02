@@ -1,6 +1,5 @@
 //@	{
-//@	 "targets":[{"name":"thread_pool.hpp","type":"include"
-//@		, "dependencies":[{"ref":"pthread", "rel":"external"}]}]
+//@	 "targets":[{"name":"thread_pool.hpp","type":"include"}]
 //@	,"dependencies_extra":[{"ref":"thread_pool.o", "rel":"implementation"}]
 //@	}
 
