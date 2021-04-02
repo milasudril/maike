@@ -90,7 +90,8 @@ void makeSourceFileInfosFromTargets(
 
 		   // FIXME: Remove duplicates before sinking into src_file
 
-		   src_file.useDeps(std::move(use_deps));
+		   src_file.useDeps(std::move(use_deps))
+			.buildDeps(std::vector{Maike::Db::Dependency{item.second.sourceFilename(), Maike::Db::SourceFileOrigin::Project}});
 		   source_files.insert(std::make_pair(target_dir / item.first, std::move(src_file)));
 	   });
 }
