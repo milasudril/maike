@@ -34,21 +34,12 @@ namespace
 	void resolve(Maike::Db::Dependency& dep,
 	             std::vector<Maike::Db::SourceFileRecordConst> const& src_files)
 	{
-		switch(dep.resolver())
-		{
-			case Maike::Db::Dependency::Resolver::InternalLookup:
-			{
-				auto i =
-				   find(std::begin(src_files), std::end(src_files), dep.name(), CompareSourceFileRecord{});
-				if(i == std::end(src_files))
-				{ throw std::runtime_error{std::string{"Failed to resolve "} + dep.name().string()}; }
+		auto i =
+			find(std::begin(src_files), std::end(src_files), dep.name(), CompareSourceFileRecord{});
+		if(i == std::end(src_files))
+		{ throw std::runtime_error{std::string{"Failed to resolve "} + dep.name().string()}; }
 
-				dep.reference(i->id());
-			}
-			break;
-			case Maike::Db::Dependency::Resolver::None: break;
-			case Maike::Db::Dependency::Resolver::PkgConfig: break;
-		}
+		dep.reference(i->id());
 	}
 }
 
