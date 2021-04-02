@@ -75,11 +75,10 @@ void makeSourceFileInfosFromTargets(
 			      std::for_each(std::begin(child_target_use_deps),
 			                    std::end(child_target_use_deps),
 			                    [&use_deps, &target_dir, &target_name](auto const& item) {
-				                    if(item != target_name) // A target may never point to itself
+				                    if(item.name() != target_name) // A target may never point to itself
 				                    {
-					                    // FIXME: These deps need source file origin
 					                    use_deps.push_back(Maike::Db::Dependency{
-					                       target_dir / item, Maike::Db::SourceFileOrigin::Generated});
+					                       target_dir / item.name(), item.expectedOrigin()});
 				                    }
 			                    });
 		      },
@@ -87,7 +86,6 @@ void makeSourceFileInfosFromTargets(
 		      node);
 
 		   Maike::Db::SourceFileInfo src_file;
-
 		   // FIXME: Remove duplicates before sinking into src_file
 
 		   src_file.useDeps(std::move(use_deps))
