@@ -34,10 +34,13 @@ namespace
 	void resolve(Maike::Db::Dependency& dep,
 	             std::vector<Maike::Db::SourceFileRecordConst> const& src_files)
 	{
-		auto i =
-			find(std::begin(src_files), std::end(src_files), dep.name(), CompareSourceFileRecord{});
+		auto i = find(std::begin(src_files), std::end(src_files), dep.name(), CompareSourceFileRecord{});
 		if(i == std::end(src_files))
-		{ throw std::runtime_error{std::string{"Failed to resolve "} + dep.name().string()}; }
+		{
+			//	throw std::runtime_error{std::string{"Failed to resolve "} + dep.name().string()};
+			fprintf(stderr, "Failed to resolve %s\n", dep.name().c_str());
+			return;
+		}
 
 		dep.reference(i->id());
 	}
@@ -46,8 +49,6 @@ namespace
 Maike::Db::DependencyGraph::DependencyGraph(std::map<fs::path, SourceFileInfo>&& src_files):
    m_src_files{std::move(src_files)}
 {
-	// TODO: Create placeholder "SourceFileInfo" so to represent external deps
-
 	m_nodes.reserve(m_src_files.size());
 	std::transform(
 	   std::begin(m_src_files),

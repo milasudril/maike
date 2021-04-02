@@ -11,45 +11,51 @@
 namespace Maike::CommandInterpreter
 {
 	/* Basic syntax
-	*
-	* <Command> ::= <CommandName> '(' <ArgList> ')' [ '<' <CommandInput> ]
-	* <CommandInput> ::= <Value> | <Command>
-	* <CommandName> ::= <String>
-	* <String> ::= #'.*'
-	* <Value> ::= <String>
-	* <ArgList> ::= '' | <Argument> (',' <Argument>)*
-	* <Argument> ::= <ValueArray> | <VariableExpansion> | <SplitCommand>
-	* <ValueArray> ::= '' | (',' <Value>)*
-	* <VariableExpansion> ::= <CommandInput>? '{' <SplitCommand> '}' <CommandInput>?
-	* <SplitCommand> ::= <Command> '/' <Separator>
-	* <Separator> ::= #'.*'
-	*
-	* Use ~ as escape symbol
-	*
-	* system.g++(-, -x, c++, -std=c++17, system.pkg-config(--libs,gtk+-3)/~ , -o, foo.o) < cat(foo.txt)
-	*
-	*/
+	 *
+	 * <Command> ::= <CommandName> '(' <ArgList> ')' [ '<' <CommandInput> ]
+	 * <CommandInput> ::= <Value> | <Command>
+	 * <CommandName> ::= <String>
+	 * <String> ::= #'.*'
+	 * <Value> ::= <String>
+	 * <ArgList> ::= '' | <Argument> (',' <Argument>)*
+	 * <Argument> ::= <ValueArray> | <VariableExpansion> | <SplitCommand>
+	 * <ValueArray> ::= '' | (',' <Value>)*
+	 * <VariableExpansion> ::= <CommandInput>? '{' <SplitCommand> '}' <CommandInput>?
+	 * <SplitCommand> ::= <Command> '/' <Separator>
+	 * <Separator> ::= #'.*'
+	 *
+	 * Use ~ as escape symbol
+	 *
+	 * system.g++(-, -x, c++, -std=c++17, system.pkg-config(--libs,gtk+-3)/~ , -o, foo.o) <
+	 * cat(foo.txt)
+	 *
+	 */
 	template<class T>
 	class RecursiveWrapper
 	{
-		public:
-			template<class ... Args>
-			RecursiveWrapper(Args&& ... args): m_val{std::make_unique<Args...>(std::forward<Args>(args)...)}{}
+	public:
+		template<class... Args>
+		RecursiveWrapper(Args&&... args): m_val{std::make_unique<Args...>(std::forward<Args>(args)...)}
+		{
+		}
 
-			operator const T&() const { return *m_val; }
+		operator const T&() const
+		{
+			return *m_val;
+		}
 
-			bool operator==(const RecursiveWrapper& other) const
-			{
-				return *m_val == *other.m_val;
-			}
+		bool operator==(const RecursiveWrapper& other) const
+		{
+			return *m_val == *other.m_val;
+		}
 
-			bool operator!=(const RecursiveWrapper& other) const
-			{
-				return !(*this == other);
-			}
+		bool operator!=(const RecursiveWrapper& other) const
+		{
+			return !(*this == other);
+		}
 
-		private:
-			std::unique_ptr<T> m_val;
+	private:
+		std::unique_ptr<T> m_val;
 	};
 
 
@@ -96,7 +102,6 @@ namespace Maike::CommandInterpreter
 	{
 		return a.cmd == b.cmd && a.separator == b.separator;
 	}
-
 
 
 	inline bool operator==(VariableExpansion const& a, VariableExpansion const& b)

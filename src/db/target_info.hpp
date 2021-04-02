@@ -16,8 +16,8 @@ namespace Maike::Db
 	class TargetInfo
 	{
 	public:
-		explicit TargetInfo(fs::path&& name, std::vector<Dependency>&& use_deps): m_name{std::move(name)}
-		,m_use_deps{std::move(use_deps)}
+		explicit TargetInfo(fs::path&& name, std::vector<Dependency>&& use_deps):
+		   m_name{std::move(name)}, m_use_deps{std::move(use_deps)}
 		{
 		}
 

@@ -41,7 +41,8 @@ namespace
 				   auto str = item.name().string();
 				   if(str.size() > 1 && memcmp(str.data(), "./", 2) == 0)
 				   {
-					   return Maike::Db::Dependency{(prefix / item.name()).lexically_normal(), item.expectedOrigin()};
+					   return Maike::Db::Dependency{(prefix / item.name()).lexically_normal(),
+					                                item.expectedOrigin()};
 				   }
 			   }
 			   return item;
@@ -65,13 +66,16 @@ namespace
 			   });
 		}
 
-		if(auto pkgconfig = target.template getIf<Maike::KeyValueStore::ArrayRefConst>("pkgconfig_libs"); pkgconfig)
+		if(auto pkgconfig = target.template getIf<Maike::KeyValueStore::ArrayRefConst>("pkgconfig_libs");
+		   pkgconfig)
 		{
 			// Put these into the ordinary dependency array. Expand dependency when it is time to
 			// compile the source file
-			std::transform(std::begin(*pkgconfig), std::end(*pkgconfig), std::back_inserter(deps), [](auto item) {
-				return Maike::Db::Dependency{item.template as<char const*>(), Maike::Db::SourceFileOrigin::PkgConfig};
-			});
+			std::transform(
+			   std::begin(*pkgconfig), std::end(*pkgconfig), std::back_inserter(deps), [](auto item) {
+				   return Maike::Db::Dependency{item.template as<char const*>(),
+				                                Maike::Db::SourceFileOrigin::PkgConfig};
+			   });
 		}
 		return Maike::Db::TargetInfo{src_dir / name, std::move(deps)};
 	}
@@ -135,6 +139,7 @@ namespace
 		auto child_target_use_deps = getChildTargetUseDeps(path.parent_path(), tags);
 
 		auto compiler = tags.getIf<Maike::KeyValueStore::CompoundRefConst>("compiler");
+
 		return Maike::Db::SourceFileInfo{std::move(builtin_deps),
 		                                 std::move(child_target_use_deps),
 		                                 std::move(targets),

@@ -12,6 +12,33 @@
 #include "src/utils/graphutils.hpp"
 #include "src/utils/callwrappers.hpp"
 
+void insertExternalDeps(std::vector<Maike::Db::Dependency> const& deps,
+                        std::map<Maike::fs::path, Maike::Db::SourceFileInfo>& source_files)
+{
+	std::for_each(std::begin(deps), std::end(deps), [&source_files](auto const& item) {
+		if(isExternal(item))
+		{ source_files.insert(std::make_pair(item.name(), Maike::Db::SourceFileInfo{})); }
+	});
+}
+
+std::map<Maike::fs::path, Maike::Db::SourceFileInfo>
+createDummySourceFiles(std::map<Maike::fs::path, Maike::Db::SourceFileInfo>& source_files)
+{
+	std::map<Maike::fs::path, Maike::Db::SourceFileInfo> ret;
+	std::for_each(std::begin(source_files), std::end(source_files), [&ret](auto const& item) {
+		auto const& targets = item.second.targets();
+		std::for_each(std::begin(targets), std::end(targets), [&ret](auto const& target) {
+			insertExternalDeps(target.useDeps(), ret);
+		});
+
+		auto const& use_deps = item.second.useDeps();
+		std::for_each(std::begin(use_deps), std::end(use_deps), [&ret](auto const& item) {
+			if(isExternal(item)) { ret.insert(std::make_pair(item.name(), Maike::Db::SourceFileInfo{})); }
+		});
+	});
+	return ret;
+}
+
 std::map<Maike::fs::path, Maike::Db::Target>
 collectTargets(std::map<Maike::fs::path, Maike::Db::SourceFileInfo> const& source_files)
 {
@@ -305,8 +332,9 @@ int main(int argc, char** argv)
 		                                  cfg.sourceTreeLoader().inputFilter(),
 		                                  loader_delegator);
 
-		auto targets = Maike::timedCall(logger, collectTargets, src_files);
+		src_files.merge(Maike::timedCall(logger, createDummySourceFiles, src_files));
 
+		auto targets = Maike::timedCall(logger, collectTargets, src_files);
 
 		auto const target_dir = cmdline.hasOption<Maike::CmdLineOption::TargetDir>() ?
 		                           cmdline.option<Maike::CmdLineOption::TargetDir>() :

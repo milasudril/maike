@@ -9,17 +9,14 @@
 Maike::CommandInterpreter::Command Maike::CommandInterpreter::makeCommand(char const* str)
 {
 	Command cmd;
-//	enum class State:int{Command, Escape, ArgList, State::BeforeCommandInput, State::CommandInput};
-//	auto state = State::Command;
-//	auto state_prev = state;
-//	std::string buffer;
+	//	enum class State:int{Command, Escape, ArgList, State::BeforeCommandInput, State::CommandInput};
+	//	auto state = State::Command;
+	//	auto state_prev = state;
+	//	std::string buffer;
 	while(true)
 	{
 		auto ch_in = *str;
-		if(ch_in == '\0')
-		{
-			return cmd;
-		}
+		if(ch_in == '\0') { return cmd; }
 #if 0
 		if(ch_in == '~')
 			{

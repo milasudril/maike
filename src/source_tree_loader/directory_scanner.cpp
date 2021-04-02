@@ -28,7 +28,6 @@ Maike::SourceTreeLoader::DirectoryScanner::ScanException::ScanException(
 	});
 }
 
-
 void Maike::SourceTreeLoader::DirectoryScanner::processPath(
    fs::path&& src_path, std::unique_lock<Sched::SignalingCounter<size_t>> counter)
 {
@@ -47,8 +46,8 @@ void Maike::SourceTreeLoader::DirectoryScanner::processPath(
 		{
 			auto ins = invokeWithMutex<std::lock_guard>(
 			   m_source_files_mtx,
-			   [this](auto&& src_path, auto&& src_file_info) {
-				   return m_source_files.insert(std::make_pair(std::move(src_path), std::move(src_file_info)));
+			   [&src_files = m_source_files](auto&& src_path, auto&& src_file_info) {
+				   return src_files.insert(std::make_pair(std::move(src_path), std::move(src_file_info)));
 			   },
 			   std::move(src_path_normal),
 			   std::move(*src_file_info));

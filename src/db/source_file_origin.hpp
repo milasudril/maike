@@ -14,6 +14,11 @@ namespace Maike::Db
 		System,
 		PkgConfig
 	};
+
+	constexpr bool isExternal(SourceFileOrigin origin)
+	{
+		return origin == SourceFileOrigin::System || origin == SourceFileOrigin::PkgConfig;
+	}
 }
 
 #endif

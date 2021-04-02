@@ -61,6 +61,11 @@ namespace Maike::Db
 	{
 		return !(a == b);
 	}
+
+	inline bool isExternal(Dependency const& a)
+	{
+		return isExternal(a.expectedOrigin());
+	}
 }
 
 #endif
