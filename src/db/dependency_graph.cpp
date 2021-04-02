@@ -56,9 +56,13 @@ Maike::Db::DependencyGraph::DependencyGraph(std::map<fs::path, SourceFileInfo>&&
 
 	std::for_each(std::begin(m_src_files), std::end(m_src_files), [&nodes = m_nodes](auto& item) {
 		{
+#if 0
+			auto deps = std::size(item.second.buildDeps())>0 ? item.second.buildDeps(): item.second.useDeps();
+#else
 			auto deps =	item.second.useDeps();
 			auto const& build_deps = item.second.buildDeps();
 			std::copy(std::begin(build_deps), std::end(build_deps), std::back_inserter(deps));
+#endif
 			std::for_each(std::begin(deps), std::end(deps), [&nodes](auto& item) { resolve(item, nodes); });
 			item.second.useDeps(std::move(deps));
 		}

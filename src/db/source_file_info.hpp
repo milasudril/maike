@@ -24,7 +24,7 @@ namespace Maike::Db
 		explicit SourceFileInfo() = default;
 
 		explicit SourceFileInfo(std::vector<Dependency>&& use_deps,
-								std::vector<Dependency>&& build_deps,
+		                        std::vector<Dependency>&& build_deps,
 		                        std::vector<Dependency>&& child_target_use_deps,
 		                        std::vector<TargetInfo>&& targets,
 		                        Compiler&& compiler):

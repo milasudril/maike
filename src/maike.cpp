@@ -72,15 +72,13 @@ void makeSourceFileInfosFromTargets(
 		   Maike::processGraphNodeRecursive(
 		      [&use_deps, &target_dir, &target_name = item.first](auto const& node) {
 			      auto const& child_target_use_deps = node.sourceFileInfo().childTargetsUseDeps();
-			      std::for_each(std::begin(child_target_use_deps),
-			                    std::end(child_target_use_deps),
-			                    [&use_deps, &target_dir, &target_name](auto const& item) {
-				                    if(item.name() != target_name) // A target may never point to itself
-				                    {
-					                    use_deps.push_back(Maike::Db::Dependency{
-					                       target_dir / item.name(), item.expectedOrigin()});
-				                    }
-			                    });
+			      std::for_each(
+			         std::begin(child_target_use_deps),
+			         std::end(child_target_use_deps),
+			         [&use_deps, &target_dir, &target_name](auto const& item) {
+				         if(item.name() != target_name) // A target may never point to itself
+				         { use_deps.push_back(Maike::Db::Dependency{item.name(), item.expectedOrigin()}); }
+			         });
 		      },
 		      g,
 		      node);
@@ -89,7 +87,8 @@ void makeSourceFileInfosFromTargets(
 		   // FIXME: Remove duplicates before sinking into src_file
 
 		   src_file.useDeps(std::move(use_deps))
-			.buildDeps(std::vector{Maike::Db::Dependency{item.second.sourceFilename(), Maike::Db::SourceFileOrigin::Project}});
+		      .buildDeps(std::vector{Maike::Db::Dependency{item.second.sourceFilename(),
+		                                                   Maike::Db::SourceFileOrigin::Project}});
 		   source_files.insert(std::make_pair(target_dir / item.first, std::move(src_file)));
 	   });
 }
@@ -358,9 +357,8 @@ int main(int argc, char** argv)
 			return 0;
 		}
 
-		Maike::visitNodesInTopoOrder([](auto const& node){
-			printf("%s\n", node.path().c_str());
-		}, graph);
+		Maike::visitNodesInTopoOrder([](auto const& node) { printf("%s\n", node.path().c_str()); },
+		                             graph);
 
 #if 0
 		Maike::Db::visitNodes(
