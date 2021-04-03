@@ -67,7 +67,7 @@ void makeSourceFileInfosFromTargets(
 	source_files = g.takeSourceFiles();
 	std::for_each(
 	   std::begin(targets), std::end(targets), [&g, &source_files, &target_dir](auto const& item) {
-		   auto use_deps = item.second.useDeps();
+		   auto use_deps = std::vector<Maike::Db::Dependency>{};
 		   auto node = getNode(g, item.second.sourceFilename());
 		   Maike::processGraphNodeRecursive(
 		      [&use_deps, &target_dir, &target_name = item.first](auto const& node) {
@@ -76,7 +76,7 @@ void makeSourceFileInfosFromTargets(
 			         std::begin(child_target_use_deps),
 			         std::end(child_target_use_deps),
 			         [&use_deps, &target_dir, &target_name](auto const& item) {
-				         if(item.name() != target_dir/target_name) // A target may never point to itself
+				         if(item.name() != target_dir / target_name) // A target may never point to itself
 				         { use_deps.push_back(Maike::Db::Dependency{item.name(), item.expectedOrigin()}); }
 			         });
 		      },
@@ -100,26 +100,27 @@ void printDepGraph(Maike::Db::DependencyGraph const& source_files, Maike::fs::pa
 
 	visitNodes(
 	   [](auto const& item) {
-		   auto const& deps = item.sourceFileInfo().useDeps();
 		   auto id = item.id();
 		   printf("\"%s (%zu)\"\n", item.path().c_str(), id.value());
-		   std::for_each(std::begin(deps), std::end(deps), [&item, id](auto const& edge) {
-			   if(edge.reference().valid())
-			   {
-				   printf("\"%s (%zu)\" -> \"%s (%zu)\"\n",
-				          item.path().c_str(),
-				          id.value(),
-				          edge.name().c_str(),
-				          edge.reference().value());
-			   }
-			   else
-			   {
-				   printf("\"%s (%zu)\" -> \"%s (unresolved)\"\n",
-				          item.path().c_str(),
-				          id.value(),
-				          edge.name().c_str());
-			   }
-		   });
+		   visitEdges(
+		      [&item, id](auto const& edge) {
+			      if(edge.reference().valid())
+			      {
+				      printf("\"%s (%zu)\" -> \"%s (%zu)\"\n",
+				             item.path().c_str(),
+				             id.value(),
+				             edge.name().c_str(),
+				             edge.reference().value());
+			      }
+			      else
+			      {
+				      printf("\"%s (%zu)\" -> \"%s (unresolved)\"\n",
+				             item.path().c_str(),
+				             id.value(),
+				             edge.name().c_str());
+			      }
+		      },
+		      item);
 	   },
 	   source_files);
 	puts("}");
@@ -357,21 +358,22 @@ int main(int argc, char** argv)
 			return 0;
 		}
 
-		Maike::visitNodesInTopoOrder([](auto const& node) {
-			printf("\n%s\n", node.path().c_str());
-			auto& file_info = node.sourceFileInfo();
+		Maike::visitNodesInTopoOrder(
+		   [](auto const& node) {
+			   printf("\n%s\n", node.path().c_str());
+			   auto& file_info = node.sourceFileInfo();
 
-			auto const& build_deps = file_info.buildDeps();
-			std::for_each(std::begin(build_deps), std::end(build_deps), [](auto const& dep) {
- 				printf("    (B) %s\n", dep.name().c_str());
-			});
+			   auto const& build_deps = file_info.buildDeps();
+			   std::for_each(std::begin(build_deps), std::end(build_deps), [](auto const& dep) {
+				   printf("    (B) %s\n", dep.name().c_str());
+			   });
 
-			auto const& use_deps = file_info.useDeps();
-			std::for_each(std::begin(use_deps), std::end(use_deps), [](auto const& dep) {
-				printf("    (U) %s\n", dep.name().c_str());
-			});
-
-		}, graph);
+			   auto const& use_deps = file_info.useDeps();
+			   std::for_each(std::begin(use_deps), std::end(use_deps), [](auto const& dep) {
+				   printf("    (U) %s\n", dep.name().c_str());
+			   });
+		   },
+		   graph);
 
 #if 0
 		Maike::Db::visitNodes(

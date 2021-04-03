@@ -1,3 +1,4 @@
 {
-	"target":{"name":"maike", "dependencies":[{"ref":"maike.o", "origin":"generated"}]}
+	 "target":{"name":"maike"}
+	,"dependencies_extra":[{"ref":"maike.o", "origin":"generated"}]
 }

@@ -58,8 +58,11 @@ namespace Maike::Db
 	void visitEdges(Function&& f, SourceFileRecordConst const& rec)
 	{
 		assert(rec.valid());
-		auto const& deps = rec.sourceFileInfo().useDeps();
-		std::for_each(std::begin(deps), std::end(deps), std::forward<Function>(f));
+		auto const& use_deps = rec.sourceFileInfo().useDeps();
+		std::for_each(std::begin(use_deps), std::end(use_deps), f);
+
+		auto const& build_deps = rec.sourceFileInfo().buildDeps();
+		std::for_each(std::begin(build_deps), std::end(build_deps), f);
 	}
 
 	inline auto id(SourceFileRecordConst const& rec)
