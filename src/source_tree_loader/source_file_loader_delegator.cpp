@@ -56,7 +56,6 @@ namespace
 	{
 		// FIXME: Need target dir here
 		auto const name = dep.get<char const*>("ref");
-		if(strcmp(name, "maike.o") == 0) { fprintf(stderr, "\n--- %s\n", name); }
 		auto expected_origin = default_origin;
 		if(auto origin = dep.getIf<char const*>("origin"); origin.has_value())
 		{
