@@ -70,6 +70,9 @@ void makeSourceFileInfosFromTargets(
 	   std::begin(targets), std::end(targets), [&g, &source_files, &target_dir](auto const& item) {
 		   auto use_deps = item.second.useDeps();
 		   auto node = getNode(g, item.second.sourceFilename());
+
+		   // NOTE: At this step there are no source files that could contian recursive linking information.
+		   //       Thus, this will *only* collect data from all include files.
 		   Maike::processGraphNodeRecursive(
 		      [&use_deps, &target_dir, &target_name = item.first](auto const& node) {
 			      auto const& child_target_use_deps = node.sourceFileInfo().childTargetsUseDeps();
