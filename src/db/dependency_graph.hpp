@@ -17,7 +17,24 @@ namespace Maike::Db
 	class DependencyGraph
 	{
 	public:
-		explicit DependencyGraph(std::map<fs::path, SourceFileInfo>&& src_files);
+		class IgnoreResolveErrors
+		{
+		public:
+			explicit constexpr IgnoreResolveErrors(bool value = true): m_value{value}
+			{
+			}
+
+			constexpr operator bool() const
+			{
+				return m_value;
+			}
+
+		private:
+			bool m_value;
+		};
+
+		explicit DependencyGraph(std::map<fs::path, SourceFileInfo>&& src_files,
+		                         IgnoreResolveErrors resolve_errors = IgnoreResolveErrors{false});
 
 		using node_type = SourceFileRecordConst;
 

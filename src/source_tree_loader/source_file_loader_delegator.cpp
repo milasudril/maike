@@ -149,8 +149,8 @@ namespace
 		return ret;
 	}
 
-	std::vector<Maike::Db::Dependency>
-	getUseDeps(Maike::fs::path const& src_dir, Maike::KeyValueStore::Compound const& tags)
+	std::vector<Maike::Db::Dependency> getUseDeps(Maike::fs::path const& src_dir,
+	                                              Maike::KeyValueStore::Compound const& tags)
 	{
 		std::vector<Maike::Db::Dependency> ret;
 

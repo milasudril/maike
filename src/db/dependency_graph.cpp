@@ -32,16 +32,22 @@ namespace
 	}
 
 	void resolve(Maike::Db::Dependency& dep,
-	             std::vector<Maike::Db::SourceFileRecordConst> const& src_files)
+	             std::vector<Maike::Db::SourceFileRecordConst> const& src_files,
+	             Maike::Db::DependencyGraph::IgnoreResolveErrors ignore_errors)
 	{
 		auto i = find(std::begin(src_files), std::end(src_files), dep.name(), CompareSourceFileRecord{});
 		if(i == std::end(src_files))
-		{ throw std::runtime_error{std::string{"Failed to resolve "} + dep.name().string()}; }
+		{
+			if(!ignore_errors)
+			{ throw std::runtime_error{std::string{"Failed to resolve "} + dep.name().string()}; }
+			return;
+		}
 		dep.reference(i->id());
 	}
 }
 
-Maike::Db::DependencyGraph::DependencyGraph(std::map<fs::path, SourceFileInfo>&& src_files):
+Maike::Db::DependencyGraph::DependencyGraph(std::map<fs::path, SourceFileInfo>&& src_files,
+                                            IgnoreResolveErrors ignore_res_errors):
    m_src_files{std::move(src_files)}
 {
 	m_nodes.reserve(m_src_files.size());
@@ -54,17 +60,25 @@ Maike::Db::DependencyGraph::DependencyGraph(std::map<fs::path, SourceFileInfo>&&
 		   return SourceFileRecordConst{SourceFileId{k}, std::cref(item.first), std::cref(item.second)};
 	   });
 
-	std::for_each(std::begin(m_src_files), std::end(m_src_files), [&nodes = m_nodes](auto& item) {
-		{
-			auto use_deps = item.second.useDeps();
-			auto build_deps = item.second.buildDeps();
-			std::for_each(
-			   std::begin(use_deps), std::end(use_deps), [&nodes](auto& item) { resolve(item, nodes); });
-			std::for_each(
-			   std::begin(build_deps), std::end(build_deps), [&nodes](auto& item) { resolve(item, nodes); });
-			item.second.useDeps(std::move(use_deps)).buildDeps(std::move(build_deps));
-		}
-	});
+	std::for_each(std::begin(m_src_files),
+	              std::end(m_src_files),
+	              [&nodes = m_nodes, ignore_res_errors](auto& item) {
+		              {
+			              auto use_deps = item.second.useDeps();
+			              auto build_deps = item.second.buildDeps();
+			              std::for_each(std::begin(use_deps),
+			                            std::end(use_deps),
+			                            [&nodes, ignore_res_errors](auto& item) {
+				                            resolve(item, nodes, ignore_res_errors);
+			                            });
+			              std::for_each(std::begin(build_deps),
+			                            std::end(build_deps),
+			                            [&nodes, ignore_res_errors](auto& item) {
+				                            resolve(item, nodes, ignore_res_errors);
+			                            });
+			              item.second.useDeps(std::move(use_deps)).buildDeps(std::move(build_deps));
+		              }
+	              });
 }
 
 

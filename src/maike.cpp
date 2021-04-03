@@ -63,11 +63,12 @@ void makeSourceFileInfosFromTargets(
    std::map<Maike::fs::path, Maike::Db::SourceFileInfo>& source_files,
    Maike::fs::path const& target_dir)
 {
-	Maike::Db::DependencyGraph g{std::move(source_files)};
+	Maike::Db::DependencyGraph g{std::move(source_files),
+	                             Maike::Db::DependencyGraph::IgnoreResolveErrors{}};
 	source_files = g.takeSourceFiles();
 	std::for_each(
 	   std::begin(targets), std::end(targets), [&g, &source_files, &target_dir](auto const& item) {
-		   auto use_deps = std::vector<Maike::Db::Dependency>{};
+		   auto use_deps = item.second.useDeps();
 		   auto node = getNode(g, item.second.sourceFilename());
 		   Maike::processGraphNodeRecursive(
 		      [&use_deps, &target_dir, &target_name = item.first](auto const& node) {
