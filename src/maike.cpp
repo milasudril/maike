@@ -357,8 +357,21 @@ int main(int argc, char** argv)
 			return 0;
 		}
 
-		Maike::visitNodesInTopoOrder([](auto const& node) { printf("%s\n", node.path().c_str()); },
-		                             graph);
+		Maike::visitNodesInTopoOrder([](auto const& node) {
+			printf("\n%s\n", node.path().c_str());
+			auto& file_info = node.sourceFileInfo();
+
+			auto const& build_deps = file_info.buildDeps();
+			std::for_each(std::begin(build_deps), std::end(build_deps), [](auto const& dep) {
+ 				printf("    (B) %s\n", dep.name().c_str());
+			});
+
+			auto const& use_deps = file_info.useDeps();
+			std::for_each(std::begin(use_deps), std::end(use_deps), [](auto const& dep) {
+				printf("    (U) %s\n", dep.name().c_str());
+			});
+
+		}, graph);
 
 #if 0
 		Maike::Db::visitNodes(
