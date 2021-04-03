@@ -23,11 +23,9 @@ bool Maike::newer(fs::path const& a, fs::path const& b)
 		throw std::runtime_error{std::move(msg)};
 	}
 
-	if(ec_a)
-	{ return false; }
+	if(ec_a) { return false; }
 
-	if(ec_b)
-	{ return true; }
+	if(ec_b) { return true; }
 
 	return t_a > t_b;
 }
