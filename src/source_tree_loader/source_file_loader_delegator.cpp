@@ -57,7 +57,7 @@ namespace
 		// FIXME: Need target dir here
 		auto const name = dep.get<char const*>("ref");
 		auto expected_origin = default_origin;
-		if(auto origin = dep.getIf<char const*>("origin"); origin.has_value())
+		if(auto origin = dep.getIf<char const*>("origin"); origin)
 		{
 			if(strcmp(*origin, "generated") == 0)
 			{ expected_origin = Maike::Db::SourceFileOrigin::Generated; }
@@ -149,6 +149,22 @@ namespace
 		return ret;
 	}
 
+	std::vector<Maike::Db::Dependency>
+	getUseDeps(Maike::fs::path const& src_dir, Maike::KeyValueStore::Compound const& tags)
+	{
+		std::vector<Maike::Db::Dependency> ret;
+
+		if(auto deps = tags.getIf<Maike::KeyValueStore::ArrayRefConst>("dependencies"); deps)
+		{
+			std::transform(
+			   std::begin(*deps), std::end(*deps), std::back_inserter(ret), [&src_dir](auto item) {
+				   auto const val = item.template as<Maike::KeyValueStore::CompoundRefConst>();
+				   return getDependency(src_dir, val, Maike::Db::SourceFileOrigin::Generated);
+			   });
+		}
+		return ret;
+	}
+
 	Maike::Db::SourceFileInfo loadSourceFile(std::vector<Maike::Db::Dependency>&& builtin_deps,
 	                                         Maike::fs::path const& path,
 	                                         Maike::SourceFileInfoLoaders::Loader const& loader)
@@ -170,8 +186,10 @@ namespace
 
 		auto tags = Maike::KeyValueStore::Compound{Maike::Io::Reader{tags_fifo}, path.string()};
 		auto targets = getTargets(path.parent_path(), tags);
+		auto use_deps = getUseDeps(path.parent_path(), tags);
 		auto child_target_use_deps = getChildTargetUseDeps(path.parent_path(), tags);
 
+		std::copy(std::begin(use_deps), std::end(use_deps), std::back_inserter(builtin_deps));
 		auto compiler = tags.getIf<Maike::KeyValueStore::CompoundRefConst>("compiler");
 
 		return Maike::Db::SourceFileInfo{std::move(builtin_deps),

@@ -1,4 +1,4 @@
 {
 	 "target":{"name":"maike"}
-	,"dependencies_extra":[{"ref":"maike.o", "origin":"generated"}]
+	,"dependencies":[{"ref":"maike.o", "origin":"generated"}]
 }
