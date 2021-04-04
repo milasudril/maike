@@ -71,6 +71,10 @@ namespace Maike::Db
 		return rec.id();
 	}
 
+	bool isUpToDate(TargetInfo const& target,
+	                fs::path const& src_file,
+	                std::vector<Dependency> const& deps);
+
 	bool isUpToDate(SourceFileRecordConst const& rec, std::vector<Dependency> const& deps);
 }
 

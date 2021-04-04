@@ -13,6 +13,8 @@ namespace Maike
 	namespace fs = std::filesystem;
 
 	bool newer(fs::path const& a, fs::path const& b);
+
+	bool older(fs::path const& a, fs::path const& b);
 }
 
 #endif
