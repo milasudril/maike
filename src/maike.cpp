@@ -98,7 +98,6 @@ void makeSourceFileInfosFromTargets(
 	   });
 }
 
-
 void printDepGraph(Maike::Db::DependencyGraph const& source_files, Maike::fs::path const&)
 {
 	puts("digraph \"G\" {\nrankdir=LR\n");

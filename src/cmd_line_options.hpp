@@ -26,6 +26,7 @@ namespace Maike
 		DumpDatabase,
 		ListLeafTargets,
 		ListExternalDeps,
+		Status,
 		Targets,
 		ConfigFiles,
 		ConfigDump,
@@ -584,6 +585,38 @@ namespace Maike
 		static constexpr char const* name()
 		{
 			return "--start-time";
+		}
+	};
+
+
+	template<>
+	struct CmdLineOptionTraits<CmdLineOption::Status>
+	{
+		using type = fs::path;
+
+		static constexpr bool valueRequired()
+		{
+			return false;
+		}
+
+		static constexpr char const* category()
+		{
+			return "Database queries";
+		}
+
+		static constexpr char const* summary()
+		{
+			return "Prints compilation status for each source file";
+		}
+
+		static constexpr char const* description()
+		{
+			return nullptr;
+		}
+
+		static constexpr char const* name()
+		{
+			return "--print-status";
 		}
 	};
 
