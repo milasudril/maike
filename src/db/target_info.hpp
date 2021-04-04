@@ -1,5 +1,6 @@
 //@	{
 //@	  "targets":[{"name":"target_info.hpp","type":"include"}]
+//@	 ,"dependenies_extra":[{"ref":"target_info.o","rel":"implementation"}]
 //@	 }
 
 #ifndef MAIKE_DB_TARGETINFO_HPP
@@ -35,5 +36,9 @@ namespace Maike::Db
 		fs::path m_name;
 		std::vector<Dependency> m_use_deps;
 	};
+
+	bool isUpToDate(TargetInfo const& target,
+                           fs::path const& src_file,
+                           std::vector<Dependency> const& deps);
 }
 #endif
