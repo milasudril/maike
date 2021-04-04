@@ -12,9 +12,9 @@ namespace Maike
 {
 	namespace fs = std::filesystem;
 
-	bool newer(fs::path const& a, fs::path const& b);
+	bool isNewer(fs::path const& a, fs::path const& b);
 
-	bool older(fs::path const& a, fs::path const& b);
+	bool isOlder(fs::path const& a, fs::path const& b);
 }
 
 #endif

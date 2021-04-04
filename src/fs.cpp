@@ -18,7 +18,7 @@ namespace
 	}
 }
 
-bool Maike::newer(fs::path const& a, fs::path const& b)
+bool Maike::isNewer(fs::path const& a, fs::path const& b)
 {
 	std::error_code ec_a{};
 	std::error_code ec_b{};
@@ -35,7 +35,7 @@ bool Maike::newer(fs::path const& a, fs::path const& b)
 	return t_a > t_b;
 }
 
-bool Maike::older(fs::path const& a, fs::path const& b)
+bool Maike::isOlder(fs::path const& a, fs::path const& b)
 {
 	std::error_code ec_a{};
 	std::error_code ec_b{};
