@@ -66,6 +66,21 @@ namespace Maike::Db
 	{
 		return isExternal(a.expectedOrigin());
 	}
+
+	namespace detail
+	{
+		inline bool call_is_older(fs::path const& a, fs::path const& b)
+		{
+			return isOlder(a, b);
+		}
+	}
+
+	inline bool isOlder(Dependency const& a, fs::path const& file)
+	{
+		if(isExternal(a.expectedOrigin())) { return true; }
+
+		return detail::call_is_older(a.name(), file);
+	}
 }
 
 #endif
