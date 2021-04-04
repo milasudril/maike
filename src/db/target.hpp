@@ -34,16 +34,6 @@ namespace Maike::Db
 			return r_target.get().useDeps();
 		}
 
-		/*
-		 TODO
-		 template<class ... Args>
-		 int compile(Args&& ... args) const
-		 {
-		  return r_src_file.get().compile(std::forward<Args>(args)...);
-		 }
-		*/
-
-
 	private:
 		fs::path m_src_filename;
 		std::reference_wrapper<TargetInfo const> r_target;

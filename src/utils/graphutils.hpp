@@ -28,13 +28,13 @@ namespace Maike
 			return x != static_cast<T>(-1);
 		}
 
-		template<class ItemCallback, class Graph, class Node, class ... VisitEdgesArgs>
+		template<class ItemCallback, class Graph, class Node, class... VisitEdgesArgs>
 		void processGraphNodeRecursive(ItemCallback&& cb,
 		                               Graph const& graph,
 		                               Node const& node,
 		                               std::stack<Node const*>& nodes_to_visit,
 		                               std::vector<Mark>& visited,
-									VisitEdgesArgs... visit_edges_args)
+		                               VisitEdgesArgs... visit_edges_args)
 		{
 			switch(visited[static_cast<size_t>(id(node))])
 			{

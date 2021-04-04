@@ -3,7 +3,6 @@
 #include "./cmd_line_options.hpp"
 #include "./build_info.hpp"
 
-#include "src/db/target.hpp"
 #include "src/db/dependency_graph.hpp"
 #include "src/io/input_file.hpp"
 #include "src/config/main.hpp"
@@ -11,92 +10,7 @@
 #include "src/source_file_info_loaders/cxx/source_file_loader.hpp"
 #include "src/utils/graphutils.hpp"
 #include "src/utils/callwrappers.hpp"
-
-void insertExternalDeps(std::vector<Maike::Db::Dependency> const& deps,
-                        std::map<Maike::fs::path, Maike::Db::SourceFileInfo>& source_files)
-{
-	std::for_each(std::begin(deps), std::end(deps), [&source_files](auto const& item) {
-		if(isExternal(item))
-		{ source_files.insert(std::make_pair(item.name(), Maike::Db::SourceFileInfo{})); }
-	});
-}
-
-std::map<Maike::fs::path, Maike::Db::SourceFileInfo>
-createDummySourceFiles(std::map<Maike::fs::path, Maike::Db::SourceFileInfo>& source_files)
-{
-	std::map<Maike::fs::path, Maike::Db::SourceFileInfo> ret;
-	std::for_each(std::begin(source_files), std::end(source_files), [&ret](auto const& item) {
-		auto const& targets = item.second.targets();
-		std::for_each(std::begin(targets), std::end(targets), [&ret](auto const& target) {
-			insertExternalDeps(target.useDeps(), ret);
-		});
-
-		auto const& use_deps = item.second.useDeps();
-		std::for_each(std::begin(use_deps), std::end(use_deps), [&ret](auto const& item) {
-			if(isExternal(item)) { ret.insert(std::make_pair(item.name(), Maike::Db::SourceFileInfo{})); }
-		});
-	});
-	return ret;
-}
-
-std::map<Maike::fs::path, Maike::Db::Target>
-collectTargets(std::map<Maike::fs::path, Maike::Db::SourceFileInfo> const& source_files)
-{
-	std::map<Maike::fs::path, Maike::Db::Target> ret;
-	std::for_each(std::begin(source_files), std::end(source_files), [&ret](auto const& item) {
-		auto const& targets = item.second.targets();
-		std::for_each(std::begin(targets), std::end(targets), [&ret, &item](auto const& target) {
-			if(item.first != target.name()) // For backwards compatiblity with old maike
-			{
-				auto i = ret.find(target.name());
-				if(i != std::end(ret)) { throw std::runtime_error{"Target has already been defined"}; }
-
-				ret.insert(std::make_pair(target.name(), Maike::Db::Target{item.first, target, item.second}));
-			}
-		});
-	});
-	return ret;
-}
-
-void makeSourceFileInfosFromTargets(
-   const std::map<Maike::fs::path, Maike::Db::Target>& targets,
-   std::map<Maike::fs::path, Maike::Db::SourceFileInfo>& source_files,
-   Maike::fs::path const& target_dir)
-{
-	Maike::Db::DependencyGraph g{std::move(source_files),
-	                             Maike::Db::DependencyGraph::IgnoreResolveErrors{}};
-	source_files = g.takeSourceFiles();
-	std::for_each(
-	   std::begin(targets), std::end(targets), [&g, &source_files, &target_dir](auto const& item) {
-		   auto use_deps = item.second.useDeps();
-		   auto node = getNode(g, item.second.sourceFilename());
-
-		   // NOTE: At this step there are no source files that could contian recursive linking
-		   // information.
-		   //       Thus, this will *only* collect data from all include files.
-		   Maike::processGraphNodeRecursive(
-		      [&use_deps, &target_dir, &target_name = item.first](auto const& node) {
-			      auto const& child_target_use_deps = node.sourceFileInfo().childTargetsUseDeps();
-			      std::for_each(
-			         std::begin(child_target_use_deps),
-			         std::end(child_target_use_deps),
-			         [&use_deps, &target_dir, &target_name](auto const& item) {
-				         if(item.name() != target_dir / target_name) // A target may never point to itself
-				         { use_deps.push_back(Maike::Db::Dependency{item.name(), item.expectedOrigin()}); }
-			         });
-		      },
-		      g,
-		      node);
-
-		   Maike::Db::SourceFileInfo src_file;
-		   // FIXME: Remove duplicates before sinking into src_file
-
-		   src_file.useDeps(std::move(use_deps))
-		      .buildDeps(std::vector{Maike::Db::Dependency{item.second.sourceFilename(),
-		                                                   Maike::Db::SourceFileOrigin::Project}});
-		   source_files.insert(std::make_pair(target_dir / item.first, std::move(src_file)));
-	   });
-}
+#include "src/db/source_file_list.hpp"
 
 void printDepGraph(Maike::Db::DependencyGraph const& source_files, Maike::fs::path const&)
 {
@@ -226,8 +140,7 @@ public:
 	};
 
 	template<class Duration>
-	void operator()(Duration duration,
-	                std::map<Maike::fs::path, Maike::Db::SourceFileInfo> const& result)
+	void operator()(Duration duration, Maike::Db::SourceFileList const& result)
 	{
 		fprintf(stderr,
 		        "# Processed %zu files in %.7f seconds (%.7e seconds/file)\n",
@@ -255,7 +168,7 @@ public:
 	}
 
 	template<class Duration>
-	void operator()(Duration duration, std::map<Maike::fs::path, Maike::Db::Target> const& result)
+	void operator()(Duration duration, Maike::Db::TargetList const& result)
 	{
 		fprintf(stderr,
 		        "# Collected %zu targets in %.7f seconds (%.7e seconds/entry)\n",
@@ -335,9 +248,14 @@ int main(int argc, char** argv)
 		                                  cfg.sourceTreeLoader().inputFilter(),
 		                                  loader_delegator);
 
-		src_files.merge(Maike::timedCall(logger, createDummySourceFiles, src_files));
+		src_files.merge(Maike::timedCall(logger, Maike::Db::createDummySourceFiles, src_files));
 
-		auto targets = Maike::timedCall(logger, collectTargets, src_files);
+		auto targets = Maike::timedCall(
+		   logger,
+		   [](auto&&... args) {
+			   return Maike::Db::collectTargets(std::forward<decltype(args)>(args)...);
+		   },
+		   src_files);
 
 		auto const target_dir = cmdline.hasOption<Maike::CmdLineOption::TargetDir>() ?
 		                           cmdline.option<Maike::CmdLineOption::TargetDir>() :
