@@ -104,7 +104,7 @@ std::vector<Maike::Db::Dependency> Maike::Db::getUseDepsRecursive(DependencyGrap
 		   auto i = bookkeeping.find(node.path());
 		   if(i != std::end(bookkeeping)) { return; }
 		   bookkeeping.insert(i, node.path());
-		   ret.push_back(Db::Dependency{node.path(), Db::SourceFileOrigin::Project});
+		   ret.push_back(Db::Dependency{node.path(), node.sourceFileInfo().origin()});
 	   },
 	   g,
 	   rec,
