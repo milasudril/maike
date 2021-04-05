@@ -283,34 +283,10 @@ int main(int argc, char** argv)
 
 		Maike::visitNodesInTopoOrder(
 		   [&graph](auto const& node) {
-			   printf("%s  ", node.path().c_str());
-			   if(isUpToDate(node, getUseDepsRecursive(graph, node))) { puts("Up-to-date"); }
-			   else
-			   {
-				   puts("Compilation needed");
-			   }
+			   auto use_deps = getUseDepsRecursive(graph, node);
+			   if(!isUpToDate(node, use_deps)) { printf("Compiling %s\n", node.path().c_str()); }
 		   },
 		   graph);
-
-#if 0
-		Maike::Db::visitNodes(
-		   [&graph](Maike::Db::SourceFileRecordConst const& node) {
-			   printf("%s\n", node.path().c_str());
-#if 0
-			   Maike::processGraphNodeRecursive(
-			      [](auto const& edge) {
-				      printf("    %s (%zu)\n", edge.path().c_str(), edge.id().value());
-				      auto const& target_use_deps = edge.sourceFileInfo().childTargetsUseDeps();
-				      std::for_each(std::begin(target_use_deps),
-				                    std::end(target_use_deps),
-				                    [](auto const& name) { printf("        %s\n", name.c_str()); });
-			      },
-			      graph,
-			      node);
-#endif
-		   },
-		   graph);
-#endif
 	}
 	catch(std::exception const& err)
 	{
