@@ -229,7 +229,7 @@ Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(fs::path const& path,
 	if(is_directory(path))
 	{
 		std::vector<Maike::Db::TargetInfo> targets;
-		targets.push_back(Maike::Db::TargetInfo{path.lexically_normal(), std::vector<Db::Dependency>{}});
+		targets.push_back(Maike::Db::TargetInfo{target_dir / (path.lexically_normal()), std::vector<Db::Dependency>{}});
 		return Maike::Db::SourceFileInfo{std::move(deps),
 		                                 std::vector<Db::Dependency>{},
 		                                 std::vector<Maike::Db::Dependency>{},
