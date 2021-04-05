@@ -31,8 +31,9 @@ namespace
 		}
 	};
 
-	std::vector<Maike::Db::Dependency> fixNames(Maike::fs::path const& prefix,
-	                                            std::vector<Maike::Db::Dependency> const& deps)
+	std::vector<Maike::Db::Dependency>
+	addPrefixWhereAppiciable(Maike::fs::path const& prefix,
+	                         std::vector<Maike::Db::Dependency> const& deps)
 	{
 		std::vector<Maike::Db::Dependency> ret;
 		ret.reserve(deps.size());
@@ -187,7 +188,8 @@ namespace
 		src_fifo.stop();
 
 		{
-			auto deps = fixNames(path.parent_path(), loader.getDependencies(Maike::Io::Reader{src_fifo}));
+			auto deps = addPrefixWhereAppiciable(path.parent_path(),
+			                                     loader.getDependencies(Maike::Io::Reader{src_fifo}));
 			builtin_deps.insert(std::end(builtin_deps), std::begin(deps), std::end(deps));
 		}
 
