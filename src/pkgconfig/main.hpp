@@ -1,6 +1,5 @@
 //@	{
 //@	 "targets":[{"name":"main.hpp","type":"include"}]
-//@	,"dependencies_extra":[{"ref":"main.o","rel":"implementation"}]
 //@	}
 
 #ifndef MAIKE_PKGCONFIG_MAIN_HPP

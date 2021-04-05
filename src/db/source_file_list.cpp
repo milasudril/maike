@@ -97,8 +97,10 @@ Maike::Db::SourceFileInfo Maike::Db::makeSourceFileInfo(TargetList::value_type c
 		   std::for_each(std::begin(child_target_use_deps),
 		                 std::end(child_target_use_deps),
 		                 [&use_deps, &target_dir, &target_name](auto const& item) {
-			                 if(item.name()
-			                    != target_dir / target_name) // A target may never point to itself
+			                 // Since an implementation file may include the interface file, it may
+			                 // happen that a target has itself as a use dependency. To prevent this
+			                 // situation, skip adding this dependency.
+			                 if(item.name() != target_name)
 			                 {
 				                 use_deps.push_back(Maike::Db::Dependency{item.name(), item.expectedOrigin()});
 			                 }
@@ -126,7 +128,6 @@ void Maike::Db::makeSourceFileInfosFromTargets(TargetList const& targets,
 	source_files = g.takeSourceFiles();
 	std::for_each(
 	   std::begin(targets), std::end(targets), [&g, &source_files, &target_dir](auto const& item) {
-		   source_files.insert(
-		      std::make_pair(target_dir / item.first, makeSourceFileInfo(item, g, target_dir)));
+		   source_files.insert(std::make_pair(item.first, makeSourceFileInfo(item, g, target_dir)));
 	   });
 }

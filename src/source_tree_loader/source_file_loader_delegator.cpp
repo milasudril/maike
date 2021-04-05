@@ -113,7 +113,7 @@ namespace
 				                                Maike::Db::SourceFileOrigin::PkgConfig};
 			   });
 		}
-		return Maike::Db::TargetInfo{src_dir / name, std::move(deps)};
+		return Maike::Db::TargetInfo{target_dir / src_dir / name, std::move(deps)};
 	}
 
 
