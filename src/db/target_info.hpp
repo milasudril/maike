@@ -40,5 +40,10 @@ namespace Maike::Db
 	bool isUpToDate(TargetInfo const& target,
 	                fs::path const& src_file,
 	                std::vector<Dependency> const& deps);
+
+	// FIXME:
+	void compile(std::vector<TargetInfo> const& targets,
+	             fs::path const& src_file,
+	             std::vector<Dependency> const& deps);
 }
 #endif

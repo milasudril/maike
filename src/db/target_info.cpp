@@ -16,3 +16,15 @@ bool Maike::Db::isUpToDate(TargetInfo const& target,
 		          return isOlder(item, target_name);
 	          });
 }
+
+void Maike::Db::compile(std::vector<TargetInfo> const& targets,
+                        fs::path const& src_file,
+                        std::vector<Dependency> const& deps)
+{
+	if(std::size(targets) == 0) { return; }
+	printf("g++ -std=c++17 -o '%s' '%s'", targets[0].name().c_str(), src_file.c_str());
+	std::for_each(std::rbegin(deps), std::rend(deps), [](auto const& item) {
+		printf(" '%s'", item.name().c_str());
+	});
+	printf("\n");
+}

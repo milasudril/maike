@@ -284,7 +284,7 @@ int main(int argc, char** argv)
 		Maike::visitNodesInTopoOrder(
 		   [&graph](auto const& node) {
 			   auto use_deps = getUseDepsRecursive(graph, node);
-			   if(!isUpToDate(node, use_deps)) { printf("Compiling %s\n", node.path().c_str()); }
+			   if(!isUpToDate(node, use_deps)) { compile(node, use_deps); }
 		   },
 		   graph);
 	}
