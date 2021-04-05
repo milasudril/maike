@@ -82,8 +82,7 @@ Maike::Db::collectTargets(std::reference_wrapper<SourceFileList const> source_fi
 }
 
 Maike::Db::SourceFileInfo Maike::Db::makeSourceFileInfo(TargetList::value_type const& item,
-                                                        DependencyGraph const& g,
-                                                        fs::path const& target_dir)
+                                                        DependencyGraph const& g)
 {
 	auto use_deps = item.second.useDeps();
 	auto node = getNode(g, item.second.sourceFilename());
@@ -92,11 +91,11 @@ Maike::Db::SourceFileInfo Maike::Db::makeSourceFileInfo(TargetList::value_type c
 	// information.
 	//       Thus, this will *only* collect data from all include files.
 	Maike::processGraphNodeRecursive(
-	   [&use_deps, &target_dir, &target_name = item.first](auto const& node) {
+	   [&use_deps, &target_name = item.first](auto const& node) {
 		   auto const& child_target_use_deps = node.sourceFileInfo().childTargetsUseDeps();
 		   std::for_each(std::begin(child_target_use_deps),
 		                 std::end(child_target_use_deps),
-		                 [&use_deps, &target_dir, &target_name](auto const& item) {
+		                 [&use_deps, &target_name](auto const& item) {
 			                 // Since an implementation file may include the interface file, it may
 			                 // happen that a target has itself as a use dependency. To prevent this
 			                 // situation, skip adding this dependency.
@@ -119,15 +118,12 @@ Maike::Db::SourceFileInfo Maike::Db::makeSourceFileInfo(TargetList::value_type c
 	return src_file;
 }
 
-void Maike::Db::makeSourceFileInfosFromTargets(TargetList const& targets,
-                                               SourceFileList& source_files,
-                                               fs::path const& target_dir)
+void Maike::Db::makeSourceFileInfos(TargetList const& targets, SourceFileList& source_files)
 {
 	Maike::Db::DependencyGraph g{std::move(source_files),
 	                             Maike::Db::DependencyGraph::IgnoreResolveErrors{}};
 	source_files = g.takeSourceFiles();
-	std::for_each(
-	   std::begin(targets), std::end(targets), [&g, &source_files, &target_dir](auto const& item) {
-		   source_files.insert(std::make_pair(item.first, makeSourceFileInfo(item, g, target_dir)));
-	   });
+	std::for_each(std::begin(targets), std::end(targets), [&g, &source_files](auto const& item) {
+		source_files.insert(std::make_pair(item.first, makeSourceFileInfo(item, g)));
+	});
 }

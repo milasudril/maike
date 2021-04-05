@@ -266,12 +266,11 @@ int main(int argc, char** argv)
 		Maike::timedCall(
 		   logger,
 		   [](auto&&... args) {
-			   makeSourceFileInfosFromTargets(std::forward<decltype(args)>(args)...);
+			   makeSourceFileInfos(std::forward<decltype(args)>(args)...);
 			   return Logger::SourceFilesFromTargets{};
 		   },
 		   targets,
-		   src_files,
-		   target_dir);
+		   src_files);
 
 		auto graph = Maike::timedCall(
 		   logger, [&src_files]() { return Maike::Db::DependencyGraph{std::move(src_files)}; });

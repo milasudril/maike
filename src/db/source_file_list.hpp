@@ -38,13 +38,10 @@ namespace Maike::Db
 
 	TargetList collectTargets(std::reference_wrapper<SourceFileList const> source_files);
 
-	void makeSourceFileInfosFromTargets(TargetList const& targets,
-	                                    SourceFileList& source_files,
-	                                    fs::path const& target_dir);
+	SourceFileInfo makeSourceFileInfo(TargetList::value_type const& item, DependencyGraph const& g);
 
-	SourceFileInfo makeSourceFileInfo(TargetList::value_type const& item,
-	                                  DependencyGraph const& g,
-	                                  fs::path const& target_dir);
+	void makeSourceFileInfos(TargetList const& targets, SourceFileList& source_files);
+
 }
 
 #endif
