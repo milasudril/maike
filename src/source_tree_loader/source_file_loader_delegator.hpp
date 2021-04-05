@@ -30,7 +30,7 @@ namespace Maike::SourceTreeLoader
 			return m_loaders;
 		}
 
-		std::optional<Db::SourceFileInfo> load(Maike::fs::path const& path) const;
+		std::optional<Db::SourceFileInfo> load(fs::path const& path, fs::path const& target_dir) const;
 
 	private:
 		std::map<std::string, std::reference_wrapper<SourceFileInfoLoaders::Loader const>> m_loaders;

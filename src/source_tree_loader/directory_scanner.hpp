@@ -46,7 +46,7 @@ namespace Maike::SourceTreeLoader
 		{
 		}
 
-		DirectoryScanner& processPath(fs::path const& src_path);
+		DirectoryScanner& processPath(fs::path const& src_path, fs::path const& target_dir);
 
 		std::map<fs::path, Db::SourceFileInfo> takeResult()
 		{
@@ -67,7 +67,9 @@ namespace Maike::SourceTreeLoader
 		Sched::SignalingCounter<size_t> m_counter;
 		Sched::ThreadPool* r_workers;
 
-		void processPath(fs::path&& src_path, std::unique_lock<Sched::SignalingCounter<size_t>> counter);
+		void processPath(fs::path&& src_path,
+		                 std::unique_lock<Sched::SignalingCounter<size_t>> counter,
+		                 fs::path const& target_dir);
 
 		std::mutex m_errlog_mtx;
 		std::forward_list<std::unique_ptr<char const[]>> m_errlog;
@@ -76,10 +78,11 @@ namespace Maike::SourceTreeLoader
 	inline std::map<fs::path, Db::SourceFileInfo> load(Sched::ThreadPool& workers,
 	                                                   fs::path const& src_path,
 	                                                   InputFilter const& filter,
-	                                                   SourceFileLoaderDelegator const& loaders)
+	                                                   SourceFileLoaderDelegator const& loaders,
+	                                                   fs::path const& target_dir)
 	{
 		return DirectoryScanner{workers, std::ref(filter), std::ref(loaders)}
-		   .processPath(src_path)
+		   .processPath(src_path, target_dir)
 		   .takeResult();
 	}
 }

@@ -52,9 +52,9 @@ namespace
 
 	Maike::Db::Dependency getDependency(Maike::fs::path const& src_dir,
 	                                    Maike::KeyValueStore::CompoundRefConst dep,
-	                                    Maike::Db::SourceFileOrigin default_origin)
+	                                    Maike::Db::SourceFileOrigin default_origin,
+	                                    Maike::fs::path const& target_dir)
 	{
-		// FIXME: Need target dir here
 		auto const name = dep.get<char const*>("ref");
 		auto expected_origin = default_origin;
 		if(auto origin = dep.getIf<char const*>("origin"); origin)
@@ -77,14 +77,15 @@ namespace
 		auto ret = Maike::Db::Dependency{isExternal(expected_origin) ?
 		                                    name :
 		                                    expected_origin == Maike::Db::SourceFileOrigin::Generated ?
-		                                    Maike::fs::path{"__targets"} / src_dir / name :
+		                                    target_dir / src_dir / name :
 		                                    src_dir / name,
 		                                 expected_origin};
 		return ret;
 	}
 
 	Maike::Db::TargetInfo getTarget(Maike::fs::path const& src_dir,
-	                                Maike::KeyValueStore::CompoundRefConst target)
+	                                Maike::KeyValueStore::CompoundRefConst target,
+	                                Maike::fs::path const& target_dir)
 	{
 		auto name = target.template get<char const*>("name");
 		std::vector<Maike::Db::Dependency> deps;
@@ -94,9 +95,10 @@ namespace
 			std::transform(std::begin(*dependencies),
 			               std::end(*dependencies),
 			               std::back_inserter(deps),
-			               [&src_dir](auto item) {
+			               [&src_dir, &target_dir](auto item) {
 				               auto obj = item.template as<Maike::KeyValueStore::CompoundRefConst>();
-				               return getDependency(src_dir, obj, Maike::Db::SourceFileOrigin::System);
+				               return getDependency(
+				                  src_dir, obj, Maike::Db::SourceFileOrigin::System, target_dir);
 			               });
 		}
 
@@ -116,58 +118,71 @@ namespace
 
 
 	std::vector<Maike::Db::TargetInfo> getTargets(Maike::fs::path const& src_dir,
-	                                              Maike::KeyValueStore::Compound const& tags)
+	                                              Maike::KeyValueStore::Compound const& tags,
+	                                              Maike::fs::path const& target_dir)
 	{
 		std::vector<Maike::Db::TargetInfo> ret;
 		if(auto target = tags.getIf<Maike::KeyValueStore::CompoundRefConst>("target"); target)
-		{ ret.push_back(getTarget(src_dir, *target)); }
+		{ ret.push_back(getTarget(src_dir, *target, target_dir)); }
 
 		if(auto targets = tags.getIf<Maike::KeyValueStore::ArrayRefConst>("targets"); targets)
 		{
-			std::transform(
-			   std::begin(*targets), std::end(*targets), std::back_inserter(ret), [&src_dir](auto item) {
-				   auto const val = item.template as<Maike::KeyValueStore::CompoundRefConst>();
-				   return getTarget(src_dir, val);
-			   });
+			std::transform(std::begin(*targets),
+			               std::end(*targets),
+			               std::back_inserter(ret),
+			               [&src_dir, &target_dir](auto item) {
+				               auto const val = item.template as<Maike::KeyValueStore::CompoundRefConst>();
+				               return getTarget(src_dir, val, target_dir);
+			               });
 		}
 		return ret;
 	}
 
 	std::vector<Maike::Db::Dependency>
-	getChildTargetUseDeps(Maike::fs::path const& src_dir, Maike::KeyValueStore::Compound const& tags)
+	getChildTargetUseDeps(Maike::fs::path const& src_dir,
+	                      Maike::KeyValueStore::Compound const& tags,
+	                      Maike::fs::path const& target_dir)
 	{
 		std::vector<Maike::Db::Dependency> ret;
 
 		if(auto deps = tags.getIf<Maike::KeyValueStore::ArrayRefConst>("dependencies_extra"); deps)
 		{
-			std::transform(
-			   std::begin(*deps), std::end(*deps), std::back_inserter(ret), [&src_dir](auto item) {
-				   auto const val = item.template as<Maike::KeyValueStore::CompoundRefConst>();
-				   return getDependency(src_dir, val, Maike::Db::SourceFileOrigin::Generated);
-			   });
+			std::transform(std::begin(*deps),
+			               std::end(*deps),
+			               std::back_inserter(ret),
+			               [&src_dir, &target_dir](auto item) {
+				               auto const val = item.template as<Maike::KeyValueStore::CompoundRefConst>();
+				               return getDependency(
+				                  src_dir, val, Maike::Db::SourceFileOrigin::Generated, target_dir);
+			               });
 		}
 		return ret;
 	}
 
 	std::vector<Maike::Db::Dependency> getUseDeps(Maike::fs::path const& src_dir,
-	                                              Maike::KeyValueStore::Compound const& tags)
+	                                              Maike::KeyValueStore::Compound const& tags,
+	                                              Maike::fs::path const& target_dir)
 	{
 		std::vector<Maike::Db::Dependency> ret;
 
 		if(auto deps = tags.getIf<Maike::KeyValueStore::ArrayRefConst>("dependencies"); deps)
 		{
-			std::transform(
-			   std::begin(*deps), std::end(*deps), std::back_inserter(ret), [&src_dir](auto item) {
-				   auto const val = item.template as<Maike::KeyValueStore::CompoundRefConst>();
-				   return getDependency(src_dir, val, Maike::Db::SourceFileOrigin::Generated);
-			   });
+			std::transform(std::begin(*deps),
+			               std::end(*deps),
+			               std::back_inserter(ret),
+			               [&src_dir, &target_dir](auto item) {
+				               auto const val = item.template as<Maike::KeyValueStore::CompoundRefConst>();
+				               return getDependency(
+				                  src_dir, val, Maike::Db::SourceFileOrigin::Generated, target_dir);
+			               });
 		}
 		return ret;
 	}
 
 	Maike::Db::SourceFileInfo loadSourceFile(std::vector<Maike::Db::Dependency>&& builtin_deps,
 	                                         Maike::fs::path const& path,
-	                                         Maike::SourceFileInfoLoaders::Loader const& loader)
+	                                         Maike::SourceFileInfoLoaders::Loader const& loader,
+	                                         Maike::fs::path const& target_dir)
 	{
 		Maike::Io::Fifo<std::byte> src_fifo;
 		Maike::Io::Fifo<std::byte> tags_fifo;
@@ -185,9 +200,9 @@ namespace
 		}
 
 		auto tags = Maike::KeyValueStore::Compound{Maike::Io::Reader{tags_fifo}, path.string()};
-		auto targets = getTargets(path.parent_path(), tags);
-		auto use_deps = getUseDeps(path.parent_path(), tags);
-		auto child_target_use_deps = getChildTargetUseDeps(path.parent_path(), tags);
+		auto targets = getTargets(path.parent_path(), tags, target_dir);
+		auto use_deps = getUseDeps(path.parent_path(), tags, target_dir);
+		auto child_target_use_deps = getChildTargetUseDeps(path.parent_path(), tags, target_dir);
 
 		std::copy(std::begin(use_deps), std::end(use_deps), std::back_inserter(builtin_deps));
 		auto compiler = tags.getIf<Maike::KeyValueStore::CompoundRefConst>("compiler");
@@ -201,7 +216,8 @@ namespace
 }
 
 std::optional<Maike::Db::SourceFileInfo>
-Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(Maike::fs::path const& path) const
+Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(fs::path const& path,
+                                                         fs::path const& target_dir) const
 {
 	std::vector<Maike::Db::Dependency> deps;
 	if(!path.parent_path().empty())
@@ -230,5 +246,5 @@ Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(Maike::fs::path const& 
 	auto i = m_loaders.find(extension);
 	if(i == std::end(m_loaders)) { return std::optional<Maike::Db::SourceFileInfo>{}; }
 
-	return loadSourceFile(std::move(deps), path, i->second);
+	return loadSourceFile(std::move(deps), path, i->second, target_dir);
 }

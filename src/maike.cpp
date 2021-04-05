@@ -241,12 +241,17 @@ int main(int argc, char** argv)
 		Maike::SourceTreeLoader::SourceFileLoaderDelegator loader_delegator;
 		loader_delegator.loaders(mapSourceFileInfoLoaders(cfg));
 
+		auto const target_dir = cmdline.hasOption<Maike::CmdLineOption::TargetDir>() ?
+		                           cmdline.option<Maike::CmdLineOption::TargetDir>() :
+		                           Maike::fs::path{"__targets"};
+
 		auto src_files = Maike::timedCall(logger,
 		                                  Maike::SourceTreeLoader::load,
 		                                  workers,
 		                                  Maike::fs::path{"."},
 		                                  cfg.sourceTreeLoader().inputFilter(),
-		                                  loader_delegator);
+		                                  loader_delegator,
+		                                  target_dir);
 
 		src_files.merge(Maike::timedCall(logger, Maike::Db::createDummySourceFiles, src_files));
 
@@ -257,9 +262,6 @@ int main(int argc, char** argv)
 		   },
 		   src_files);
 
-		auto const target_dir = cmdline.hasOption<Maike::CmdLineOption::TargetDir>() ?
-		                           cmdline.option<Maike::CmdLineOption::TargetDir>() :
-		                           Maike::fs::path{"__targets"};
 
 		Maike::timedCall(
 		   logger,

@@ -7,14 +7,15 @@
 #include "src/utils/with_mutex.hpp"
 
 Maike::SourceTreeLoader::DirectoryScanner&
-Maike::SourceTreeLoader::DirectoryScanner::processPath(fs::path const& src_path)
+Maike::SourceTreeLoader::DirectoryScanner::processPath(fs::path const& src_path,
+                                                       fs::path const& target_dir)
 {
-	r_workers->addTask(
-	   [this,
-	    src_path = fs::path{src_path},
-	    counter = std::unique_lock<Sched::SignalingCounter<size_t>>(m_counter)]() mutable {
-		   this->processPath(std::move(src_path), std::move(counter));
-	   });
+	r_workers->addTask([this,
+	                    src_path = fs::path{src_path},
+	                    counter = std::unique_lock<Sched::SignalingCounter<size_t>>(m_counter),
+	                    target_dir]() mutable {
+		this->processPath(std::move(src_path), std::move(counter), target_dir);
+	});
 
 	return *this;
 }
@@ -29,7 +30,9 @@ Maike::SourceTreeLoader::DirectoryScanner::ScanException::ScanException(
 }
 
 void Maike::SourceTreeLoader::DirectoryScanner::processPath(
-   fs::path&& src_path, std::unique_lock<Sched::SignalingCounter<size_t>> counter)
+   fs::path&& src_path,
+   std::unique_lock<Sched::SignalingCounter<size_t>> counter,
+   fs::path const& target_dir)
 {
 	try
 	{
@@ -42,7 +45,7 @@ void Maike::SourceTreeLoader::DirectoryScanner::processPath(
 		   src_path_normal);
 		if(i != std::end(m_source_files)) { return; }
 
-		if(auto src_file_info = r_loaders.get().load(src_path); src_file_info.has_value())
+		if(auto src_file_info = r_loaders.get().load(src_path, target_dir); src_file_info)
 		{
 			auto ins = invokeWithMutex<std::lock_guard>(
 			   m_source_files_mtx,
@@ -55,12 +58,13 @@ void Maike::SourceTreeLoader::DirectoryScanner::processPath(
 			if(ins.second && is_directory(ins.first->first))
 			{
 				auto i = Maike::fs::directory_iterator{ins.first->first};
-				std::for_each(begin(i), end(i), [this, &counter](auto&& item) {
+				std::for_each(begin(i), end(i), [this, &counter, &target_dir](auto&& item) {
 					r_workers->addTask(
 					   [this,
 					    src_path = item.path(),
+					    target_dir,
 					    counter = std::unique_lock<Sched::SignalingCounter<size_t>>(*counter.mutex())]() mutable {
-						   this->processPath(std::move(src_path), std::move(counter));
+						   this->processPath(std::move(src_path), std::move(counter), target_dir);
 					   });
 				});
 			}
