@@ -95,11 +95,10 @@ Maike::Db::SourceFileRecordConst Maike::Db::getNode(DependencyGraph const& g,
 
 std::vector<Maike::Db::Dependency> Maike::Db::getUseDepsRecursive(DependencyGraph const& g, SourceFileRecordConst const& rec)
 {
-	auto ret = rec.sourceFileInfo().useDeps();
+	std::vector<Maike::Db::Dependency> ret;
 	Maike::processGraphNodeRecursive(
 			      [&ret](auto const& node) {
-					  auto const& use_deps = node.sourceFileInfo().useDeps();
-					  std::copy(std::begin(use_deps), std::end(use_deps), std::back_inserter(ret));
+					  ret.push_back(Db::Dependency{node.path(), Db::SourceFileOrigin::Project});
 			      },
 			      g,
 			      rec,
