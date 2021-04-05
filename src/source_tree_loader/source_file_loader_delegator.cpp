@@ -9,8 +9,6 @@
 #include "src/io/fifo.hpp"
 #include "src/io/input_file.hpp"
 #include "src/io/reader.hpp"
-#include "src/key_value_store/array.hpp"
-#include "src/key_value_store/compound.hpp"
 
 #include <algorithm>
 #include <cstring>
@@ -50,125 +48,6 @@ namespace
 			   }
 			   return item;
 		   });
-		return ret;
-	}
-
-	Maike::Db::Dependency
-	getDependency(Maike::SourceTreeLoader::SourceFileLoadContext const& load_ctxt,
-	              Maike::KeyValueStore::CompoundRefConst dep,
-	              Maike::Db::SourceFileOrigin default_origin)
-	{
-		auto const name = dep.get<char const*>("ref");
-		auto expected_origin = default_origin;
-		if(auto origin = dep.getIf<char const*>("origin"); origin)
-		{
-			if(strcmp(*origin, "generated") == 0)
-			{ expected_origin = Maike::Db::SourceFileOrigin::Generated; }
-			else if(strcmp(*origin, "project") == 0)
-			{
-				expected_origin = Maike::Db::SourceFileOrigin::Project;
-			}
-			else if(strcmp(*origin, "system") == 0)
-			{
-				expected_origin = Maike::Db::SourceFileOrigin::System;
-			}
-			else if(strcmp(*origin, "pkg-config") == 0)
-			{
-				expected_origin = Maike::Db::SourceFileOrigin::PkgConfig;
-			}
-		}
-		auto ret = Maike::Db::Dependency{isExternal(expected_origin) ?
-		                                    name :
-		                                    expected_origin == Maike::Db::SourceFileOrigin::Generated ?
-		                                    load_ctxt.targetDir() / load_ctxt.sourceFileDir() / name :
-		                                    load_ctxt.sourceFileDir() / name,
-		                                 expected_origin};
-		return ret;
-	}
-
-	Maike::Db::TargetInfo getTarget(Maike::SourceTreeLoader::SourceFileLoadContext const& load_ctxt,
-	                                Maike::KeyValueStore::CompoundRefConst target)
-	{
-		auto name = target.template get<char const*>("name");
-		std::vector<Maike::Db::Dependency> deps;
-		if(auto dependencies = target.template getIf<Maike::KeyValueStore::ArrayRefConst>("dependencies");
-		   dependencies)
-		{
-			std::transform(std::begin(*dependencies),
-			               std::end(*dependencies),
-			               std::back_inserter(deps),
-			               [&load_ctxt](auto item) {
-				               auto obj = item.template as<Maike::KeyValueStore::CompoundRefConst>();
-				               return getDependency(load_ctxt, obj, Maike::Db::SourceFileOrigin::System);
-			               });
-		}
-
-		if(auto pkgconfig = target.template getIf<Maike::KeyValueStore::ArrayRefConst>("pkgconfig_libs");
-		   pkgconfig)
-		{
-			// Put these into the ordinary dependency array. Expand dependency when it is time to
-			// compile the source file
-			std::transform(
-			   std::begin(*pkgconfig), std::end(*pkgconfig), std::back_inserter(deps), [](auto item) {
-				   return Maike::Db::Dependency{item.template as<char const*>(),
-				                                Maike::Db::SourceFileOrigin::PkgConfig};
-			   });
-		}
-		return Maike::Db::TargetInfo{load_ctxt.targetDir() / load_ctxt.sourceFileDir() / name,
-		                             std::move(deps)};
-	}
-
-
-	std::vector<Maike::Db::TargetInfo>
-	getTargets(Maike::SourceTreeLoader::SourceFileLoadContext const& load_ctxt,
-	           Maike::KeyValueStore::Compound const& tags)
-	{
-		std::vector<Maike::Db::TargetInfo> ret;
-		if(auto target = tags.getIf<Maike::KeyValueStore::CompoundRefConst>("target"); target)
-		{ ret.push_back(getTarget(load_ctxt, *target)); }
-
-		if(auto targets = tags.getIf<Maike::KeyValueStore::ArrayRefConst>("targets"); targets)
-		{
-			std::transform(
-			   std::begin(*targets), std::end(*targets), std::back_inserter(ret), [&load_ctxt](auto item) {
-				   auto const val = item.template as<Maike::KeyValueStore::CompoundRefConst>();
-				   return getTarget(load_ctxt, val);
-			   });
-		}
-		return ret;
-	}
-
-	std::vector<Maike::Db::Dependency>
-	getChildTargetUseDeps(Maike::SourceTreeLoader::SourceFileLoadContext const& load_ctxt,
-	                      Maike::KeyValueStore::Compound const& tags)
-	{
-		std::vector<Maike::Db::Dependency> ret;
-
-		if(auto deps = tags.getIf<Maike::KeyValueStore::ArrayRefConst>("dependencies_extra"); deps)
-		{
-			std::transform(
-			   std::begin(*deps), std::end(*deps), std::back_inserter(ret), [&load_ctxt](auto item) {
-				   auto const val = item.template as<Maike::KeyValueStore::CompoundRefConst>();
-				   return getDependency(load_ctxt, val, Maike::Db::SourceFileOrigin::Generated);
-			   });
-		}
-		return ret;
-	}
-
-	std::vector<Maike::Db::Dependency>
-	getUseDeps(Maike::SourceTreeLoader::SourceFileLoadContext const& load_ctxt,
-	           Maike::KeyValueStore::Compound const& tags)
-	{
-		std::vector<Maike::Db::Dependency> ret;
-
-		if(auto deps = tags.getIf<Maike::KeyValueStore::ArrayRefConst>("dependencies"); deps)
-		{
-			std::transform(
-			   std::begin(*deps), std::end(*deps), std::back_inserter(ret), [&load_ctxt](auto item) {
-				   auto const val = item.template as<Maike::KeyValueStore::CompoundRefConst>();
-				   return getDependency(load_ctxt, val, Maike::Db::SourceFileOrigin::Generated);
-			   });
-		}
 		return ret;
 	}
 
