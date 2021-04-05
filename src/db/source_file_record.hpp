@@ -55,6 +55,8 @@ namespace Maike::Db
 		SourceFileInfo const* r_src_file_info;
 	};
 
+	struct UseDepsOnly{};
+
 	template<class Function>
 	void visitEdges(Function&& f, SourceFileRecordConst const& rec)
 	{
@@ -64,6 +66,14 @@ namespace Maike::Db
 
 		auto const& build_deps = rec.sourceFileInfo().buildDeps();
 		std::for_each(std::begin(build_deps), std::end(build_deps), f);
+	}
+
+	template<class Function>
+	void visitEdges(Function&& f, SourceFileRecordConst const& rec, UseDepsOnly)
+	{
+		assert(rec.valid());
+		auto const& use_deps = rec.sourceFileInfo().useDeps();
+		std::for_each(std::begin(use_deps), std::end(use_deps), f);
 	}
 
 	inline auto id(SourceFileRecordConst const& rec)

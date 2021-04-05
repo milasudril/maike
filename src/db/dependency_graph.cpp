@@ -4,6 +4,8 @@
 
 #include "./dependency_graph.hpp"
 
+#include "src/utils/graphutils.hpp"
+
 #include <algorithm>
 
 namespace
@@ -89,4 +91,19 @@ Maike::Db::SourceFileRecordConst Maike::Db::getNode(DependencyGraph const& g,
 	auto i = find(std::begin(nodes), std::end(nodes), name, CompareSourceFileRecord{});
 	if(i == std::end(nodes)) { return SourceFileRecordConst{}; }
 	return *i;
+}
+
+std::vector<Maike::Db::Dependency> Maike::Db::getUseDepsRecursive(DependencyGraph const& g, SourceFileRecordConst const& rec)
+{
+	auto ret = rec.sourceFileInfo().useDeps();
+	Maike::processGraphNodeRecursive(
+			      [&ret](auto const& node) {
+					  auto const& use_deps = node.sourceFileInfo().useDeps();
+					  std::copy(std::begin(use_deps), std::end(use_deps), std::back_inserter(ret));
+			      },
+			      g,
+			      rec,
+				  UseDepsOnly{});
+
+	return ret;
 }
