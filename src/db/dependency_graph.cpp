@@ -103,6 +103,7 @@ std::vector<Maike::Db::Dependency> Maike::Db::getUseDepsRecursive(DependencyGrap
 			      g,
 			      rec,
 				  UseDepsOnly{});
+	ret.pop_back();
 
 	return ret;
 }
