@@ -7,6 +7,7 @@
 #include "src/utils/graphutils.hpp"
 
 #include <algorithm>
+#include <set>
 
 namespace
 {
@@ -95,9 +96,14 @@ Maike::Db::SourceFileRecordConst Maike::Db::getNode(DependencyGraph const& g,
 
 std::vector<Maike::Db::Dependency> Maike::Db::getUseDepsRecursive(DependencyGraph const& g, SourceFileRecordConst const& rec)
 {
-	std::vector<Maike::Db::Dependency> ret;
+	std::vector<Db::Dependency> ret;
+	std::set<fs::path> bookkeeping;
 	Maike::processGraphNodeRecursive(
-			      [&ret](auto const& node) {
+			      [&ret, &bookkeeping](auto const& node) {
+					  auto i = bookkeeping.find(node.path());
+					  if(i != std::end(bookkeeping))
+					  { return; }
+					  bookkeeping.insert(i, node.path());
 					  ret.push_back(Db::Dependency{node.path(), Db::SourceFileOrigin::Project});
 			      },
 			      g,
