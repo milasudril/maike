@@ -93,23 +93,23 @@ std::optional<Maike::Db::SourceFileInfo>
 Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(fs::path const& path,
                                                          fs::path const& target_dir) const
 {
-	std::vector<Maike::Db::Dependency> deps;
+	std::vector<Db::Dependency> deps;
 	if(!path.parent_path().empty())
 	{
-		deps.push_back(Maike::Db::Dependency{path.parent_path().lexically_normal(),
-		                                     Maike::Db::SourceFileOrigin::Project});
+		deps.push_back(
+		   Db::Dependency{path.parent_path().lexically_normal(), Db::SourceFileOrigin::Project});
 	}
 
 	if(is_directory(path))
 	{
-		std::vector<Maike::Db::TargetInfo> targets;
+		std::vector<Db::TargetInfo> targets;
 		targets.push_back(
-		   Maike::Db::TargetInfo{target_dir / (path.lexically_normal()), std::vector<Db::Dependency>{}});
-		return Maike::Db::SourceFileInfo{std::move(deps),
-		                                 std::vector<Db::Dependency>{},
-		                                 std::vector<Maike::Db::Dependency>{},
-		                                 std::move(targets),
-		                                 Maike::Compiler{MkDir{}}};
+		   Db::TargetInfo{target_dir / (path.lexically_normal()), std::vector<Db::Dependency>{}});
+		return Db::SourceFileInfo{std::move(deps),
+		                          std::vector<Db::Dependency>{},
+		                          std::vector<Db::Dependency>{},
+		                          std::move(targets),
+		                          Compiler{MkDir{}}};
 	}
 
 	std::string extension;
@@ -119,7 +119,7 @@ Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(fs::path const& path,
 	}
 
 	auto i = m_loaders.find(extension);
-	if(i == std::end(m_loaders)) { return std::optional<Maike::Db::SourceFileInfo>{}; }
+	if(i == std::end(m_loaders)) { return std::optional<Db::SourceFileInfo>{}; }
 
 	return loadSourceFile(std::move(deps), path, i->second, target_dir);
 }
