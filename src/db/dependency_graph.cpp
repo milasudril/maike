@@ -94,21 +94,21 @@ Maike::Db::SourceFileRecordConst Maike::Db::getNode(DependencyGraph const& g,
 	return *i;
 }
 
-std::vector<Maike::Db::Dependency> Maike::Db::getUseDepsRecursive(DependencyGraph const& g, SourceFileRecordConst const& rec)
+std::vector<Maike::Db::Dependency> Maike::Db::getUseDepsRecursive(DependencyGraph const& g,
+                                                                  SourceFileRecordConst const& rec)
 {
 	std::vector<Db::Dependency> ret;
 	std::set<fs::path> bookkeeping;
 	Maike::processGraphNodeRecursive(
-			      [&ret, &bookkeeping](auto const& node) {
-					  auto i = bookkeeping.find(node.path());
-					  if(i != std::end(bookkeeping))
-					  { return; }
-					  bookkeeping.insert(i, node.path());
-					  ret.push_back(Db::Dependency{node.path(), Db::SourceFileOrigin::Project});
-			      },
-			      g,
-			      rec,
-				  UseDepsOnly{});
+	   [&ret, &bookkeeping](auto const& node) {
+		   auto i = bookkeeping.find(node.path());
+		   if(i != std::end(bookkeeping)) { return; }
+		   bookkeeping.insert(i, node.path());
+		   ret.push_back(Db::Dependency{node.path(), Db::SourceFileOrigin::Project});
+	   },
+	   g,
+	   rec,
+	   UseDepsOnly{});
 	ret.pop_back();
 
 	return ret;

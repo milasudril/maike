@@ -90,7 +90,7 @@ Maike::Db::SourceFileInfo Maike::Db::makeSourceFileInfo(TargetList::value_type c
 	// NOTE: At this step there are no source files that could contian recursive linking
 	// information.
 	//       Thus, this will *only* collect data from all include files.
-	Maike::processGraphNodeRecursive(
+	processGraphNodeRecursive(
 	   [&use_deps, &target_name = item.first](auto const& node) {
 		   auto const& child_target_use_deps = node.sourceFileInfo().childTargetsUseDeps();
 		   std::for_each(std::begin(child_target_use_deps),
@@ -100,28 +100,23 @@ Maike::Db::SourceFileInfo Maike::Db::makeSourceFileInfo(TargetList::value_type c
 			                 // happen that a target has itself as a use dependency. To prevent this
 			                 // situation, skip adding this dependency.
 			                 if(item.name() != target_name)
-			                 {
-				                 use_deps.push_back(Maike::Db::Dependency{item.name(), item.expectedOrigin()});
-			                 }
+			                 { use_deps.push_back(Db::Dependency{item.name(), item.expectedOrigin()}); }
 		                 });
 	   },
 	   g,
 	   node);
 
-	Maike::Db::SourceFileInfo src_file;
-	// FIXME: Remove duplicates before sinking into src_file
+	SourceFileInfo src_file{SourceFileOrigin::Generated};
 
 	src_file.useDeps(std::move(use_deps))
-	   .buildDeps(std::vector{
-	      Maike::Db::Dependency{item.second.sourceFilename(), Maike::Db::SourceFileOrigin::Project}});
+	   .buildDeps(std::vector{Dependency{item.second.sourceFilename(), SourceFileOrigin::Project}});
 
 	return src_file;
 }
 
 void Maike::Db::makeSourceFileInfos(TargetList const& targets, SourceFileList& source_files)
 {
-	Maike::Db::DependencyGraph g{std::move(source_files),
-	                             Maike::Db::DependencyGraph::IgnoreResolveErrors{}};
+	DependencyGraph g{std::move(source_files), Db::DependencyGraph::IgnoreResolveErrors{}};
 	source_files = g.takeSourceFiles();
 	std::for_each(std::begin(targets), std::end(targets), [&g, &source_files](auto const& item) {
 		source_files.insert(std::make_pair(item.first, makeSourceFileInfo(item, g)));

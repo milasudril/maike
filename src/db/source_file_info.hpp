@@ -21,18 +21,22 @@ namespace Maike::Db
 		/**
 		 * Allows to create a node without a source file to be scanned.
 		 */
-		explicit SourceFileInfo() = default;
+		explicit SourceFileInfo(SourceFileOrigin origin): m_origin{origin}
+		{
+		}
 
 		explicit SourceFileInfo(std::vector<Dependency>&& use_deps,
 		                        std::vector<Dependency>&& build_deps,
 		                        std::vector<Dependency>&& child_target_use_deps,
 		                        std::vector<TargetInfo>&& targets,
-		                        Compiler&& compiler):
+		                        Compiler&& compiler,
+		                        SourceFileOrigin origin):
 		   m_use_deps{std::move(use_deps)},
 		   m_build_deps{std::move(build_deps)},
 		   m_child_targets_use_deps{std::move(child_target_use_deps)},
 		   m_targets{std::move(targets)},
-		   m_compiler{std::move(compiler)}
+		   m_compiler{std::move(compiler)},
+		   m_origin{origin}
 		{
 		}
 
@@ -80,12 +84,18 @@ namespace Maike::Db
 			return m_child_targets_use_deps;
 		}
 
+		SourceFileOrigin origin() const
+		{
+			return m_origin;
+		}
+
 	private:
 		std::vector<Dependency> m_use_deps;
 		std::vector<Dependency> m_build_deps;
 		std::vector<Dependency> m_child_targets_use_deps;
 		std::vector<TargetInfo> m_targets;
 		Compiler m_compiler;
+		SourceFileOrigin m_origin;
 	};
 }
 

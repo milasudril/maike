@@ -85,7 +85,8 @@ namespace
 		                                 std::vector<Maike::Db::Dependency>{},
 		                                 std::move(child_target_use_deps),
 		                                 std::move(targets),
-		                                 compiler ? loader.getCompiler(*compiler) : loader.getCompiler()};
+		                                 compiler ? loader.getCompiler(*compiler) : loader.getCompiler(),
+		                                 Maike::Db::SourceFileOrigin::Project};
 	}
 }
 
@@ -109,7 +110,8 @@ Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(fs::path const& path,
 		                          std::vector<Db::Dependency>{},
 		                          std::vector<Db::Dependency>{},
 		                          std::move(targets),
-		                          Compiler{MkDir{}}};
+		                          Compiler{MkDir{}},
+		                          Db::SourceFileOrigin::Project};
 	}
 
 	std::string extension;

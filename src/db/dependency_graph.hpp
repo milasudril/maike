@@ -75,7 +75,8 @@ namespace Maike::Db
 
 	SourceFileRecordConst getNode(DependencyGraph const& g, Maike::fs::path const& name);
 
-	std::vector<Db::Dependency> getUseDepsRecursive(DependencyGraph const& g, SourceFileRecordConst const& rec);
+	std::vector<Db::Dependency> getUseDepsRecursive(DependencyGraph const& g,
+	                                                SourceFileRecordConst const& rec);
 }
 
 #endif

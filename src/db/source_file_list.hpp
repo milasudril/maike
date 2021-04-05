@@ -19,7 +19,8 @@ namespace Maike::Db
 
 	inline void insertSourceFileIfExternal(Dependency const& dep, SourceFileList& source_files)
 	{
-		if(isExternal(dep)) { source_files.insert(std::make_pair(dep.name(), SourceFileInfo{})); }
+		if(isExternal(dep))
+		{ source_files.insert(std::make_pair(dep.name(), SourceFileInfo{dep.expectedOrigin()})); }
 	}
 
 	void insertSourceFilesForExternalEntries(std::vector<Dependency> const& deps,

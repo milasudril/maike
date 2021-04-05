@@ -55,7 +55,9 @@ namespace Maike::Db
 		SourceFileInfo const* r_src_file_info;
 	};
 
-	struct UseDepsOnly{};
+	struct UseDepsOnly
+	{
+	};
 
 	template<class Function>
 	void visitEdges(Function&& f, SourceFileRecordConst const& rec)
