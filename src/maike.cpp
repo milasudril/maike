@@ -283,11 +283,12 @@ int main(int argc, char** argv)
 
 		Maike::visitNodesInTopoOrder(
 		   [&graph](auto const& node) {
-			   printf("\n%s\n", node.path().c_str());
-			   auto const use_deps = getUseDepsRecursive(graph, node);
-			   std::for_each(std::begin(use_deps), std::end(use_deps), [](auto const& dep) {
-				   printf("    %s\n", dep.name().c_str());
-			   });
+			   printf("%s  ", node.path().c_str());
+			   if(isUpToDate(node, getUseDepsRecursive(graph, node))) { puts("Up-to-date"); }
+			   else
+			   {
+				   puts("Compilation needed");
+			   }
 		   },
 		   graph);
 

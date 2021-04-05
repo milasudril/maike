@@ -1,6 +1,6 @@
 //@	{
 //@	  "targets":[{"name":"source_file_record.hpp","type":"include"}]
-//@	 ,"dependenies_extra":[{"ref":"source_file_record.o","rel":"implementation"}]
+//@	 ,"dependencies_extra":[{"ref":"source_file_record.o","rel":"implementation"}]
 //@	}
 
 #ifndef MAIKE_DB_SOURCEFILERECORD_HPP
@@ -82,10 +82,6 @@ namespace Maike::Db
 	{
 		return rec.id();
 	}
-
-	bool isUpToDate(TargetInfo const& target,
-	                fs::path const& src_file,
-	                std::vector<Dependency> const& deps);
 
 	bool isUpToDate(SourceFileRecordConst const& rec, std::vector<Dependency> const& deps);
 }

@@ -1,6 +1,6 @@
 //@	{
 //@	  "targets":[{"name":"target_info.hpp","type":"include"}]
-//@	 ,"dependenies_extra":[{"ref":"target_info.o","rel":"implementation"}]
+//@	 ,"dependencies_extra":[{"ref":"target_info.o","rel":"implementation"}]
 //@	 }
 
 #ifndef MAIKE_DB_TARGETINFO_HPP

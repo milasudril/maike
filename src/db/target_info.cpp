@@ -15,5 +15,4 @@ bool Maike::Db::isUpToDate(TargetInfo const& target,
 	          std::begin(deps), std::end(deps), [&target_name = target.name()](auto const& item) {
 		          return isOlder(item, target_name);
 	          });
-	return true;
 }

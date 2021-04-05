@@ -77,7 +77,7 @@ namespace Maike::Db
 
 	inline bool isOlder(Dependency const& a, fs::path const& file)
 	{
-		if(isExternal(a.expectedOrigin())) { return true; }
+		if(isExternal(a.expectedOrigin()) || is_directory(a.name())) { return true; }
 
 		return detail::call_is_older(a.name(), file);
 	}

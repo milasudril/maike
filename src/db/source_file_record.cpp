@@ -1,6 +1,5 @@
 //@	{
 //@	  "targets":[{"name":"source_file_record.o","type":"object"}]
-//@	 ,"dependenies_extra":[{"ref":"source_file_record.o","rel":"implementation"}]
 //@	}
 
 #include "./source_file_record.hpp"
