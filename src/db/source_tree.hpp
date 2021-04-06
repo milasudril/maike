@@ -14,8 +14,8 @@ namespace Maike::Db
 	class SourceTree
 	{
 	public:
-		explicit SourceTree(TargetList&& targets, DependencyGraph&& graph):
-		   m_targets{std::move(targets)}, m_graph{std::move(graph)}
+		explicit SourceTree(TargetList&& targets, DependencyGraph&& graph, fs::path&& target_dir):
+		   m_targets{std::move(targets)}, m_graph{std::move(graph)}, m_target_dir{std::move(target_dir)}
 		{
 		}
 
@@ -29,9 +29,15 @@ namespace Maike::Db
 			return m_graph;
 		}
 
+		fs::path const& targetDirectory() const
+		{
+			return m_target_dir;
+		}
+
 	private:
 		TargetList m_targets;
 		DependencyGraph m_graph;
+		fs::path m_target_dir;
 	};
 
 	Target const& getTarget(SourceTree const& src_tree, fs::path const& target_name);

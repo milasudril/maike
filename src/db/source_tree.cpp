@@ -10,7 +10,7 @@ Maike::Db::Target const& Maike::Db::getTarget(SourceTree const& src_tree,
                                               fs::path const& target_name)
 {
 	auto const& targets = src_tree.targets();
-	auto i = targets.find(target_name);
+	auto i = targets.find(src_tree.targetDirectory() / target_name);
 	if(i == std::end(targets))
 	{
 		std::string msg{"Unkonwn target `"};
