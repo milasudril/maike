@@ -10,14 +10,15 @@
 #include <algorithm>
 
 void Maike::Db::insertPlaceholdersForExternalEntries(std::vector<Dependency> const& deps,
-                                                    SourceFileList& source_files)
+                                                     SourceFileList& source_files)
 {
 	std::for_each(std::begin(deps), std::end(deps), [&source_files](auto const& item) {
 		insertPlaceholderIfExternal(item, source_files);
 	});
 }
 
-void Maike::Db::insertPlaceholdersForExternalEntries(SourceFileList::value_type const& item, SourceFileList& list)
+void Maike::Db::insertPlaceholdersForExternalEntries(SourceFileList::value_type const& item,
+                                                     SourceFileList& list)
 {
 	auto const& targets = item.second.targets();
 	std::for_each(std::begin(targets), std::end(targets), [&list](auto const& target) {
@@ -30,7 +31,8 @@ void Maike::Db::insertPlaceholdersForExternalEntries(SourceFileList::value_type 
 	});
 }
 
-Maike::Db::SourceFileList Maike::Db::createPlaceholdersForExternalEntries(SourceFileList const& source_files)
+Maike::Db::SourceFileList
+Maike::Db::createPlaceholdersForExternalEntries(SourceFileList const& source_files)
 {
 	SourceFileList ret;
 	std::for_each(std::begin(source_files), std::end(source_files), [&ret](auto const& item) {

@@ -135,20 +135,6 @@ void dumpConfig(Maike::Config::Main const& cfg, Maike::fs::path const&)
 class Logger
 {
 public:
-	struct SourceFilesFromTargets
-	{
-	};
-
-	template<class Duration>
-	void operator()(Duration duration, Maike::Db::SourceFileList const& result)
-	{
-		fprintf(stderr,
-		        "# Processed %zu files in %.7f seconds (%.7e seconds/file)\n",
-		        result.size(),
-		        std::chrono::duration<double>(duration).count(),
-		        std::chrono::duration<double>(duration).count() / result.size());
-	}
-
 	template<class Duration>
 	void operator()(Duration duration, Maike::Db::DependencyGraph const& result)
 	{
@@ -157,24 +143,6 @@ public:
 		        size(result),
 		        std::chrono::duration<double>(duration).count(),
 		        std::chrono::duration<double>(duration).count() / size(result));
-	}
-
-	template<class Duration>
-	void operator()(Duration duration, SourceFilesFromTargets)
-	{
-		fprintf(stderr,
-		        "# Generated source file entries from collected targets in %.7f seconds\n",
-		        std::chrono::duration<double>(duration).count());
-	}
-
-	template<class Duration>
-	void operator()(Duration duration, Maike::Db::TargetList const& result)
-	{
-		fprintf(stderr,
-		        "# Collected %zu targets in %.7f seconds (%.7e seconds/entry)\n",
-		        result.size(),
-		        std::chrono::duration<double>(duration).count(),
-		        std::chrono::duration<double>(duration).count() / result.size());
 	}
 };
 
@@ -245,35 +213,13 @@ int main(int argc, char** argv)
 		                           cmdline.option<Maike::CmdLineOption::TargetDir>() :
 		                           Maike::fs::path{"__targets"};
 
-		auto src_files = Maike::timedCall(logger,
-		                                  Maike::SourceTreeLoader::collectSourceFiles,
-		                                  workers,
-		                                  Maike::fs::path{"."},
-		                                  cfg.sourceTreeLoader().inputFilter(),
-		                                  loader_delegator,
-		                                  target_dir);
-
-
-		auto targets = Maike::timedCall(
-		   logger,
-		   [](auto&&... args) {
-			   return Maike::Db::collectTargets(std::forward<decltype(args)>(args)...);
-		   },
-		   src_files);
-
-		src_files.merge(Maike::timedCall(logger, Maike::Db::createPlaceholdersForExternalEntries, src_files));
-
-		Maike::timedCall(
-		   logger,
-		   [](auto&&... args) {
-			   makeSourceFileInfos(std::forward<decltype(args)>(args)...);
-			   return Logger::SourceFilesFromTargets{};
-		   },
-		   targets,
-		   src_files);
-
-		auto graph = Maike::timedCall(
-		   logger, [&src_files]() { return Maike::Db::DependencyGraph{std::move(src_files)}; });
+		auto graph = Maike::timedCall(logger,
+		                              Maike::SourceTreeLoader::load,
+		                              workers,
+		                              Maike::fs::path{"."},
+		                              cfg.sourceTreeLoader().inputFilter(),
+		                              loader_delegator,
+		                              target_dir);
 
 		if(cmdline.hasOption<Maike::CmdLineOption::PrintDepGraph>())
 		{

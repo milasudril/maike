@@ -24,9 +24,10 @@ namespace Maike::Db
 	}
 
 	void insertPlaceholdersForExternalEntries(std::vector<Dependency> const& deps,
-	                                         SourceFileList& source_files);
+	                                          SourceFileList& source_files);
 
-	void insertPlaceholdersForExternalEntries(SourceFileList::value_type const& item, SourceFileList& list);
+	void insertPlaceholdersForExternalEntries(SourceFileList::value_type const& item,
+	                                          SourceFileList& list);
 
 	SourceFileList createPlaceholdersForExternalEntries(SourceFileList const& source_files);
 
