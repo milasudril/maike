@@ -34,6 +34,7 @@ namespace Maike::Db
 		DependencyGraph m_graph;
 	};
 
+	Target const& getTarget(SourceTree const& src_tree, fs::path const& target_name);
 	void compile(SourceTree const& src_tree);
 	void compile(SourceTree const& src_tree, fs::path const& target);
 	void compileAlways(SourceTree const& src_tree);

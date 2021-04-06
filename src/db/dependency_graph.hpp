@@ -77,6 +77,12 @@ namespace Maike::Db
 
 	std::vector<Db::Dependency> getUseDepsRecursive(DependencyGraph const& g,
 	                                                SourceFileRecordConst const& rec);
+
+	inline void compile(DependencyGraph const& g, SourceFileRecordConst const& node)
+	{
+		auto use_deps = getUseDepsRecursive(g, node);
+		if(!isUpToDate(node, use_deps)) { compile(node, use_deps); }
+	}
 }
 
 #endif
