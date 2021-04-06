@@ -6,13 +6,6 @@
 
 #include "src/utils/graphutils.hpp"
 
-void Maike::Db::compile(SourceTree const& src_tree)
-{
-	visitNodesInTopoOrder(
-	   [&graph = src_tree.dependencyGraph()](auto const& node) { compile(graph, node); },
-	   src_tree.dependencyGraph());
-}
-
 Maike::Db::Target const& Maike::Db::getTarget(SourceTree const& src_tree,
                                               fs::path const& target_name)
 {
@@ -29,6 +22,23 @@ Maike::Db::Target const& Maike::Db::getTarget(SourceTree const& src_tree,
 	return i->second;
 }
 
+void Maike::Db::compile(SourceTree const& src_tree)
+{
+	visitNodesInTopoOrder(
+	   [&graph = src_tree.dependencyGraph()](auto const& node) { compile(graph, node); },
+	   src_tree.dependencyGraph());
+}
+
+void Maike::Db::compile(SourceTree const& src_tree, fs::path const& target_name)
+{
+	auto const& target = getTarget(src_tree, target_name);
+	auto const& graph = src_tree.dependencyGraph();
+	auto const& node = getNode(graph, target.sourceFilename());
+
+	processGraphNodeRecursive(
+	   [&graph = src_tree.dependencyGraph()](auto const& node) { compile(graph, node); }, graph, node);
+}
+
 void Maike::Db::compileAlways(SourceTree const& src_tree, fs::path const& target_name)
 {
 	auto const& target = getTarget(src_tree, target_name);
@@ -36,18 +46,14 @@ void Maike::Db::compileAlways(SourceTree const& src_tree, fs::path const& target
 	auto const& node = getNode(graph, target.sourceFilename());
 
 	processGraphNodeRecursive(
-	   [&graph = src_tree.dependencyGraph()](auto const& node) {
-		   compile(node, getUseDepsRecursive(graph, node));
-	   },
+	   [&graph = src_tree.dependencyGraph()](auto const& node) { compileAlways(graph, node); },
 	   graph,
 	   node);
 }
 
 void Maike::Db::compileAlways(SourceTree const& src_tree)
 {
-	visitNodesInTopoOrder([&graph = src_tree.dependencyGraph()](
-	                         auto const& node) { compile(node, getUseDepsRecursive(graph, node)); },
-	                      src_tree.dependencyGraph());
+	visitNodesInTopoOrder(
+	   [&graph = src_tree.dependencyGraph()](auto const& node) { compileAlways(graph, node); },
+	   src_tree.dependencyGraph());
 }
-
-void Maike::Db::compile(SourceTree const& src_tree, fs::path const& target);

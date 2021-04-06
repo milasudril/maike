@@ -83,6 +83,11 @@ namespace Maike::Db
 		auto use_deps = getUseDepsRecursive(g, node);
 		if(!isUpToDate(node, use_deps)) { compile(node, use_deps); }
 	}
+
+	inline void compileAlways(DependencyGraph const& g, SourceFileRecordConst const& node)
+	{
+		compile(node, getUseDepsRecursive(g, node));
+	}
 }
 
 #endif
