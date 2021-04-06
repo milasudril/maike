@@ -8,7 +8,7 @@
 
 #include "./directory_scanner.hpp"
 
-#include "src/db/dependency_graph.hpp"
+#include "src/db/source_tree.hpp"
 
 namespace Maike::SourceTreeLoader
 {
@@ -24,11 +24,11 @@ namespace Maike::SourceTreeLoader
 		   .takeResult();
 	}
 
-	Db::DependencyGraph load(Sched::ThreadPool& workers,
-	                         fs::path const& src_path,
-	                         InputFilter const& filter,
-	                         SourceFileLoaderDelegator const& loaders,
-	                         fs::path const& target_dir);
+	Db::SourceTree load(Sched::ThreadPool& workers,
+	                    fs::path const& src_path,
+	                    InputFilter const& filter,
+	                    SourceFileLoaderDelegator const& loaders,
+	                    fs::path const& target_dir);
 }
 
 #endif

@@ -136,13 +136,16 @@ class Logger
 {
 public:
 	template<class Duration>
-	void operator()(Duration duration, Maike::Db::DependencyGraph const& result)
+	void operator()(Duration duration, Maike::Db::SourceTree const& result)
 	{
-		fprintf(stderr,
-		        "# Create dependency graph with %zu entries in %.7f seconds  (%.7e seconds/entry)\n",
-		        size(result),
-		        std::chrono::duration<double>(duration).count(),
-		        std::chrono::duration<double>(duration).count() / size(result));
+		auto const n = size(result.dependencyGraph());
+		fprintf(
+		   stderr,
+		   "# Loaded source tree with %zu entries (%zu targets) in %.7f seconds  (%.7e seconds/entry)\n",
+		   n,
+		   size(result.targets()),
+		   std::chrono::duration<double>(duration).count(),
+		   std::chrono::duration<double>(duration).count() / n);
 	}
 };
 
@@ -213,26 +216,26 @@ int main(int argc, char** argv)
 		                           cmdline.option<Maike::CmdLineOption::TargetDir>() :
 		                           Maike::fs::path{"__targets"};
 
-		auto graph = Maike::timedCall(logger,
-		                              Maike::SourceTreeLoader::load,
-		                              workers,
-		                              Maike::fs::path{"."},
-		                              cfg.sourceTreeLoader().inputFilter(),
-		                              loader_delegator,
-		                              target_dir);
+		auto src_tree = Maike::timedCall(logger,
+		                                 Maike::SourceTreeLoader::load,
+		                                 workers,
+		                                 Maike::fs::path{"."},
+		                                 cfg.sourceTreeLoader().inputFilter(),
+		                                 loader_delegator,
+		                                 target_dir);
 
 		if(cmdline.hasOption<Maike::CmdLineOption::PrintDepGraph>())
 		{
-			printDepGraph(graph, cmdline.option<Maike::CmdLineOption::PrintDepGraph>());
+			printDepGraph(src_tree.dependencyGraph(), cmdline.option<Maike::CmdLineOption::PrintDepGraph>());
 			return 0;
 		}
 
 		Maike::visitNodesInTopoOrder(
-		   [&graph](auto const& node) {
+		   [&graph = src_tree.dependencyGraph()](auto const& node) {
 			   auto use_deps = getUseDepsRecursive(graph, node);
 			   if(!isUpToDate(node, use_deps)) { compile(node, use_deps); }
 		   },
-		   graph);
+		   src_tree.dependencyGraph());
 	}
 	catch(std::exception const& err)
 	{
