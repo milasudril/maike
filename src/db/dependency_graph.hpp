@@ -7,6 +7,7 @@
 #define MAIKE_DB_DEPENDENCYGRAPH_HPP
 
 #include "./source_file_record.hpp"
+#include "./compilation_context.hpp"
 
 #include <algorithm>
 #include <map>
@@ -78,15 +79,37 @@ namespace Maike::Db
 	std::vector<Db::Dependency> getUseDepsRecursive(DependencyGraph const& g,
 	                                                SourceFileRecordConst const& rec);
 
-	inline void compile(DependencyGraph const& g, SourceFileRecordConst const& node)
+	inline CompilationContext makeCompilationContext(DependencyGraph const& g,
+	                                                 Sched::ThreadPool& workers)
 	{
-		auto use_deps = getUseDepsRecursive(g, node);
-		if(!isUpToDate(node, use_deps)) { compile(node, use_deps); }
+		return CompilationContext{size(g), workers};
 	}
 
-	inline void compileAlways(DependencyGraph const& g, SourceFileRecordConst const& node)
+	inline void
+	compile(DependencyGraph const& g, SourceFileRecordConst const& node, CompilationContext& ctxt)
 	{
-		compile(node, getUseDepsRecursive(g, node));
+		auto guard = ctxt.taskCompletionEvent(node.id());
+		auto use_deps = getUseDepsRecursive(g, node);
+		if(std::any_of(std::begin(use_deps), std::end(use_deps), [&ctxt](auto const& item) {
+			   return ctxt.waitForTarget(item.reference()) == Sched::TaskResult::Failure;
+		   }))
+		{ throw std::runtime_error{"Build failed"}; }
+		if(!isUpToDate(node, use_deps)) { compile(node, use_deps); }
+		guard.taskSuceceded();
+	}
+
+	inline void compileAlways(DependencyGraph const& g,
+	                          SourceFileRecordConst const& node,
+	                          CompilationContext& ctxt)
+	{
+		auto guard = ctxt.taskCompletionEvent(node.id());
+		auto use_deps = getUseDepsRecursive(g, node);
+		if(std::any_of(std::begin(use_deps), std::end(use_deps), [&ctxt](auto const& item) {
+			   return ctxt.waitForTarget(item.reference()) == Sched::TaskResult::Failure;
+		   }))
+		{ throw std::runtime_error{"Build failed"}; }
+		compile(node, use_deps);
+		//	guard.taskSuceceded();
 	}
 }
 

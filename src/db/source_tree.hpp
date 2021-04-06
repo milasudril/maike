@@ -9,6 +9,8 @@
 #include "./source_file_list.hpp"
 #include "./dependency_graph.hpp"
 
+#include "src/sched/thread_pool.hpp"
+
 namespace Maike::Db
 {
 	class SourceTree
@@ -41,10 +43,13 @@ namespace Maike::Db
 	};
 
 	Target const& getTarget(SourceTree const& src_tree, fs::path const& target_name);
-	void compile(SourceTree const& src_tree);
-	void compile(SourceTree const& src_tree, fs::path const& target_name);
-	void compileAlways(SourceTree const& src_tree);
-	void compileAlways(SourceTree const& src_tree, fs::path const& target_name);
+
+	void compile(SourceTree const& src_tree, Sched::ThreadPool& workers);
+	void compile(SourceTree const& src_tree, fs::path const& target_name, Sched::ThreadPool& workers);
+	void compileAlways(SourceTree const& src_tree, Sched::ThreadPool& workers);
+	void compileAlways(SourceTree const& src_tree,
+	                   fs::path const& target_name,
+	                   Sched::ThreadPool& workers);
 }
 
 #endif
