@@ -109,7 +109,7 @@ namespace Maike::Db
 		   }))
 		{ throw std::runtime_error{"Build failed"}; }
 		compile(node, use_deps);
-		//	guard.taskSuceceded();
+		guard.taskSuceceded();
 	}
 }
 

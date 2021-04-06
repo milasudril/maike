@@ -54,8 +54,11 @@ void Maike::Db::compileAlways(SourceTree const& src_tree,
 	auto const& node = getNode(graph, target.sourceFilename());
 
 	processGraphNodeRecursive([&graph = src_tree.dependencyGraph(),
-	                           ctxt = makeCompilationContext(src_tree.dependencyGraph(), workers)](
-	                             auto const& node) mutable { compileAlways(graph, node, ctxt); },
+	                           ctxt = makeCompilationContext(src_tree.dependencyGraph(), workers),
+							   &workers](
+	                             auto const& node) mutable {
+									 workers.addTask([&graph, &node, &ctxt](){compileAlways(graph, node, ctxt);});
+								},
 	                          graph,
 	                          node);
 }

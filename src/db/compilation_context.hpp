@@ -10,6 +10,8 @@
 #include "src/sched/task_completion_event.hpp"
 #include "src/sched/thread_pool.hpp"
 
+#include <thread>
+
 namespace Maike::Db
 {
 	class CompilationContext
@@ -18,6 +20,11 @@ namespace Maike::Db
 		explicit CompilationContext(size_t n_targets, Sched::ThreadPool& workers):
 		   m_events{std::make_unique<Sched::TaskCompletionEvent[]>(n_targets)}, m_workers{workers}
 		{
+		}
+
+		~CompilationContext()
+		{
+			std::this_thread::sleep_for(std::chrono::seconds(10));
 		}
 
 		Sched::TaskResult waitForTarget(SourceFileId id)
