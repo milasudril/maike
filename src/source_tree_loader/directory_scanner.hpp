@@ -74,17 +74,6 @@ namespace Maike::SourceTreeLoader
 		std::mutex m_errlog_mtx;
 		std::forward_list<std::unique_ptr<char const[]>> m_errlog;
 	};
-
-	inline std::map<fs::path, Db::SourceFileInfo> load(Sched::ThreadPool& workers,
-	                                                   fs::path const& src_path,
-	                                                   InputFilter const& filter,
-	                                                   SourceFileLoaderDelegator const& loaders,
-	                                                   fs::path const& target_dir)
-	{
-		return DirectoryScanner{workers, std::ref(filter), std::ref(loaders)}
-		   .processPath(src_path, target_dir)
-		   .takeResult();
-	}
 }
 
 #endif

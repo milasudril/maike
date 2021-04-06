@@ -6,7 +6,7 @@
 #include "src/db/dependency_graph.hpp"
 #include "src/io/input_file.hpp"
 #include "src/config/main.hpp"
-#include "src/source_tree_loader/directory_scanner.hpp"
+#include "src/source_tree_loader/main.hpp"
 #include "src/source_file_info_loaders/cxx/source_file_loader.hpp"
 #include "src/utils/graphutils.hpp"
 #include "src/utils/callwrappers.hpp"
@@ -246,14 +246,13 @@ int main(int argc, char** argv)
 		                           Maike::fs::path{"__targets"};
 
 		auto src_files = Maike::timedCall(logger,
-		                                  Maike::SourceTreeLoader::load,
+		                                  Maike::SourceTreeLoader::collectSourceFiles,
 		                                  workers,
 		                                  Maike::fs::path{"."},
 		                                  cfg.sourceTreeLoader().inputFilter(),
 		                                  loader_delegator,
 		                                  target_dir);
 
-		src_files.merge(Maike::timedCall(logger, Maike::Db::createDummySourceFiles, src_files));
 
 		auto targets = Maike::timedCall(
 		   logger,
@@ -262,6 +261,7 @@ int main(int argc, char** argv)
 		   },
 		   src_files);
 
+		src_files.merge(Maike::timedCall(logger, Maike::Db::createDummySourceFiles, src_files));
 
 		Maike::timedCall(
 		   logger,
