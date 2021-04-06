@@ -9,32 +9,32 @@
 
 #include <algorithm>
 
-void Maike::Db::insertSourceFilesForExternalEntries(std::vector<Dependency> const& deps,
+void Maike::Db::insertPlaceholdersForExternalEntries(std::vector<Dependency> const& deps,
                                                     SourceFileList& source_files)
 {
 	std::for_each(std::begin(deps), std::end(deps), [&source_files](auto const& item) {
-		insertSourceFileIfExternal(item, source_files);
+		insertPlaceholderIfExternal(item, source_files);
 	});
 }
 
-void Maike::Db::insertDummySourceFiles(SourceFileList::value_type const& item, SourceFileList& list)
+void Maike::Db::insertPlaceholdersForExternalEntries(SourceFileList::value_type const& item, SourceFileList& list)
 {
 	auto const& targets = item.second.targets();
 	std::for_each(std::begin(targets), std::end(targets), [&list](auto const& target) {
-		insertSourceFilesForExternalEntries(target.useDeps(), list);
+		insertPlaceholdersForExternalEntries(target.useDeps(), list);
 	});
 
 	auto const& use_deps = item.second.useDeps();
 	std::for_each(std::begin(use_deps), std::end(use_deps), [&list](auto const& item) {
-		insertSourceFileIfExternal(item, list);
+		insertPlaceholderIfExternal(item, list);
 	});
 }
 
-Maike::Db::SourceFileList Maike::Db::createDummySourceFiles(SourceFileList const& source_files)
+Maike::Db::SourceFileList Maike::Db::createPlaceholdersForExternalEntries(SourceFileList const& source_files)
 {
 	SourceFileList ret;
 	std::for_each(std::begin(source_files), std::end(source_files), [&ret](auto const& item) {
-		insertDummySourceFiles(item, ret);
+		insertPlaceholdersForExternalEntries(item, ret);
 	});
 	return ret;
 }

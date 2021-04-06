@@ -261,7 +261,7 @@ int main(int argc, char** argv)
 		   },
 		   src_files);
 
-		src_files.merge(Maike::timedCall(logger, Maike::Db::createDummySourceFiles, src_files));
+		src_files.merge(Maike::timedCall(logger, Maike::Db::createPlaceholdersForExternalEntries, src_files));
 
 		Maike::timedCall(
 		   logger,

@@ -17,18 +17,18 @@ namespace Maike::Db
 	using SourceFileList = std::map<fs::path, SourceFileInfo>;
 	using TargetList = std::map<Maike::fs::path, Maike::Db::Target>;
 
-	inline void insertSourceFileIfExternal(Dependency const& dep, SourceFileList& source_files)
+	inline void insertPlaceholderIfExternal(Dependency const& dep, SourceFileList& source_files)
 	{
 		if(isExternal(dep))
 		{ source_files.insert(std::make_pair(dep.name(), SourceFileInfo{dep.expectedOrigin()})); }
 	}
 
-	void insertSourceFilesForExternalEntries(std::vector<Dependency> const& deps,
+	void insertPlaceholdersForExternalEntries(std::vector<Dependency> const& deps,
 	                                         SourceFileList& source_files);
 
-	void insertDummySourceFiles(SourceFileList::value_type const& item, SourceFileList& list);
+	void insertPlaceholdersForExternalEntries(SourceFileList::value_type const& item, SourceFileList& list);
 
-	SourceFileList createDummySourceFiles(SourceFileList const& source_files);
+	SourceFileList createPlaceholdersForExternalEntries(SourceFileList const& source_files);
 
 	void insertUnique(std::reference_wrapper<TargetInfo const> target,
 	                  std::reference_wrapper<SourceFileList::value_type const> src_file_entry,
