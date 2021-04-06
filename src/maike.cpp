@@ -216,13 +216,13 @@ int main(int argc, char** argv)
 		                           cmdline.option<Maike::CmdLineOption::TargetDir>() :
 		                           Maike::fs::path{"__targets"};
 
-		auto src_tree = Maike::timedCall(logger,
-		                                 Maike::SourceTreeLoader::load,
-		                                 workers,
-		                                 Maike::fs::path{"."},
-		                                 cfg.sourceTreeLoader().inputFilter(),
-		                                 loader_delegator,
-		                                 target_dir);
+		auto const src_tree = Maike::timedCall(logger,
+		                                       Maike::SourceTreeLoader::load,
+		                                       workers,
+		                                       Maike::fs::path{"."},
+		                                       cfg.sourceTreeLoader().inputFilter(),
+		                                       loader_delegator,
+		                                       target_dir);
 
 		if(cmdline.hasOption<Maike::CmdLineOption::PrintDepGraph>())
 		{
@@ -230,12 +230,7 @@ int main(int argc, char** argv)
 			return 0;
 		}
 
-		Maike::visitNodesInTopoOrder(
-		   [&graph = src_tree.dependencyGraph()](auto const& node) {
-			   auto use_deps = getUseDepsRecursive(graph, node);
-			   if(!isUpToDate(node, use_deps)) { compile(node, use_deps); }
-		   },
-		   src_tree.dependencyGraph());
+		compileAlways(src_tree, "__targets/src/build_id.o");
 	}
 	catch(std::exception const& err)
 	{
