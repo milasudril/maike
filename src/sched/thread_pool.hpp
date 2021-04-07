@@ -122,7 +122,6 @@ namespace Maike::Sched
 				{
 					fprintf(stderr, "%s\n", e.what());
 				}
-
 			});
 			{
 				std::lock_guard lock{m_mtx};

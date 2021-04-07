@@ -25,34 +25,6 @@ Maike::Db::Target const& Maike::Db::getTarget(SourceTree const& src_tree,
 	return i->second;
 }
 
-#if 0
-void doIt()
-{
-	size_t n = 0;
-	Sched::SignalingCounter<size_t> c{0};
-	processNodes(graph,
-	             [&n, &c, results = std::make_unique<Sched::TaskCompletionEvent[]>(size(graph))](
-	                auto const& node) mutable {
-		             workers.addTask([&graph, &c, &results, &node]() {
-			   OnScopeExit task_result{[&e = results[static_cast<size_t>(node.id()]](){
-				e.taskFailed();
-						}};
-			   OnScopeExit task_completion{[&c]() { ++c; }};
-
-			   auto use_deps = getUseDepsRecursive(graph, node);
-			   if(std::any_of(std::begin(use_deps), std::end(use_deps), [&ctxt](auto const& item) {
-				      return ctxt.waitForTarget(item.reference()) == Sched::TaskResult::Failure;
-			      }))
-			   { throw std::runtime_error{"Build failed"}; }
-			   if(!isUpToDate(node, use_deps)) { compile(node, use_deps); }
-			   task_result.get().taskSuceceded();
-		             });
-		             ++n;
-	             });
-	c.wait(n);
-}
-#endif
-
 void Maike::Db::compile(SourceTree const& src_tree,
                         ForceRecompilation force_recompilation,
                         Sched::ThreadPool& workers)
@@ -60,8 +32,12 @@ void Maike::Db::compile(SourceTree const& src_tree,
 	visitNodesInTopoOrder(
 	   [&graph = src_tree.dependencyGraph(),
 	    force_recompilation,
-	    ctxt = CompilationContext{size(src_tree.dependencyGraph()), workers}](auto const& node) mutable {
-		   compile(graph, node, force_recompilation, ctxt);
+	    ctxt =
+	       CompilationContext{size(src_tree.dependencyGraph()), workers}](auto const& node) mutable {
+		   ctxt.process(node.id(), [&graph, &node, force_recompilation, &ctxt]() {
+			   compile(graph, node, force_recompilation, ctxt);
+			   std::this_thread::sleep_for(std::chrono::seconds{2});
+		   });
 	   },
 	   src_tree.dependencyGraph());
 }
@@ -78,8 +54,8 @@ void Maike::Db::compile(SourceTree const& src_tree,
 	processGraphNodeRecursive(
 	   [&graph = src_tree.dependencyGraph(),
 	    force_recompilation,
-	    ctxt = CompilationContext{size(src_tree.dependencyGraph()), workers}
-		](auto const& node) mutable {
+	    ctxt =
+	       CompilationContext{size(src_tree.dependencyGraph()), workers}](auto const& node) mutable {
 		   ctxt.process(node.id(), [&graph, &node, force_recompilation, &ctxt]() {
 			   compile(graph, node, force_recompilation, ctxt);
 			   std::this_thread::sleep_for(std::chrono::seconds{2});
@@ -87,5 +63,4 @@ void Maike::Db::compile(SourceTree const& src_tree,
 	   },
 	   graph,
 	   node);
-	puts("=======================");
 }

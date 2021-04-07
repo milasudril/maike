@@ -147,6 +147,14 @@ public:
 		   std::chrono::duration<double>(duration).count(),
 		   std::chrono::duration<double>(duration).count() / n);
 	}
+
+	template<class Duration>
+	void operator()(Duration duration)
+	{
+		fprintf(stderr,
+		        "# Compilation job completed in %.7f seconds\n",
+		        std::chrono::duration<double>(duration).count());
+	}
 };
 
 int main(int argc, char** argv)
@@ -230,7 +238,12 @@ int main(int argc, char** argv)
 			return 0;
 		}
 
-		compile(src_tree, Maike::Db::ForceRecompilation{}, "src/maike", workers);
+		Maike::timedCall(
+		   logger,
+		   [](auto&&... args) { compile(std::forward<decltype(args)>(args)...); },
+		   src_tree,
+		   Maike::Db::ForceRecompilation{},
+		   workers);
 	}
 	catch(std::exception const& err)
 	{

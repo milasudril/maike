@@ -104,7 +104,11 @@ namespace Maike::Db
 		if(std::any_of(std::begin(use_deps), std::end(use_deps), [&ctxt](auto const& item) {
 			   return ctxt.taskFailed(item.reference());
 		   }))
-		{ throw std::runtime_error{"Build failed"}; }
+		{
+			std::string msg{node.path()};
+			msg += ": At least one dependency was not compiled";
+			throw std::runtime_error{std::move(msg)};
+		}
 		if(force_recompilation || !isUpToDate(node, use_deps)) { compile(node, use_deps); }
 	}
 }

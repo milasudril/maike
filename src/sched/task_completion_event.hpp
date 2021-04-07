@@ -55,10 +55,32 @@ namespace Maike::Sched
 	class TaskCompletionEventGuard
 	{
 	public:
-		TaskCompletionEventGuard(TaskCompletionEventGuard&&) = delete;
+		TaskCompletionEventGuard(TaskCompletionEventGuard&& other) noexcept:
+		   m_event{other.m_event}, m_triggered{other.m_triggered}
+		{
+			other.m_triggered = true;
+		}
+
+		TaskCompletionEventGuard& operator=(TaskCompletionEventGuard&& other) noexcept
+		{
+			expire();
+			m_event = other.m_event;
+			m_triggered = other.m_triggered;
+			other.m_triggered = true;
+			return *this;
+		}
 
 		explicit TaskCompletionEventGuard(Event& event): m_event{event}, m_triggered{false}
 		{
+		}
+
+		void expire()
+		{
+			if(!m_triggered)
+			{
+				m_event.get().taskFailed();
+				m_triggered = true;
+			}
 		}
 
 		void taskSuceceded()
@@ -69,7 +91,7 @@ namespace Maike::Sched
 
 		~TaskCompletionEventGuard()
 		{
-			if(!m_triggered) { m_event.get().taskFailed(); }
+			expire();
 		}
 
 	private:

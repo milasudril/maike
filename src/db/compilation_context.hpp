@@ -39,13 +39,12 @@ namespace Maike::Db
 		void process(SourceFileId id, Callable&& f)
 		{
 			m_threads.get().addTask([&tasks_completed = m_tasks_completed,
-									&event = m_events[id.value()],
-									func = std::forward<Callable>(f)]() {
-				ScopeExitHandler on_exit{[&tasks_completed](){++tasks_completed;}};
-				Sched::TaskCompletionEventGuard guard{event};
+			                         event = Sched::TaskCompletionEventGuard{m_events[id.value()]},
+			                         func = std::forward<Callable>(f)]() mutable {
+				ScopeExitHandler on_exit{[&tasks_completed]() { ++tasks_completed; }};
 				func();
 				event.taskSuceceded();
-				});
+			});
 			++m_tasks_sched;
 		}
 
