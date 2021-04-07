@@ -46,23 +46,28 @@ Maike::Db::NodeProcessCounter Maike::Db::compile(SourceTree const& src_tree,
 Maike::Db::NodeProcessCounter Maike::Db::compile(SourceTree const& src_tree,
                                                  ForceRecompilation force_recompilation,
                                                  Sched::ThreadPool& workers,
-                                                 fs::path const& target_name)
+                                                 std::pair<fs::path const*, size_t> targets)
 {
-	auto const& target = getTarget(src_tree, target_name);
-	auto const& graph = src_tree.dependencyGraph();
-	auto const& node = getNode(graph, target.sourceFilename());
-
 	CompilationContext ctxt{size(src_tree.dependencyGraph()), workers};
 
-	processGraphNodeRecursive(
-	   [&graph = src_tree.dependencyGraph(), force_recompilation, &ctxt](auto const& node) {
-		   ctxt.process(node.id(), [&graph, &node, force_recompilation, &ctxt]() {
-			   compile(graph, node, force_recompilation, ctxt);
-			   std::this_thread::sleep_for(std::chrono::seconds{2});
-		   });
-	   },
-	   graph,
-	   node);
+	std::for_each_n(
+	   targets.first,
+	   targets.second,
+	   [&src_tree, force_recompilation, &ctxt](auto const& target_name) {
+		   auto const& target = getTarget(src_tree, target_name);
+		   auto const& graph = src_tree.dependencyGraph();
+		   auto const& node = getNode(graph, target.sourceFilename());
+
+		   processGraphNodeRecursive(
+		      [&graph = src_tree.dependencyGraph(), force_recompilation, &ctxt](auto const& node) {
+			      ctxt.process(node.id(), [&graph, &node, force_recompilation, &ctxt]() {
+				      compile(graph, node, force_recompilation, ctxt);
+				      std::this_thread::sleep_for(std::chrono::seconds{2});
+			      });
+		      },
+		      graph,
+		      node);
+	   });
 
 	return ctxt.taskCount();
 }
