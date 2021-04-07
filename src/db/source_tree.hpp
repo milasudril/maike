@@ -47,8 +47,8 @@ namespace Maike::Db
 	void compile(SourceTree const& src_tree, ForceRecompilation, Sched::ThreadPool& workers);
 	void compile(SourceTree const& src_tree,
 	             ForceRecompilation,
-	             fs::path const& target_name,
-	             Sched::ThreadPool& workers);
+	             Sched::ThreadPool& workers,
+	             fs::path const& target_name);
 }
 
 #endif

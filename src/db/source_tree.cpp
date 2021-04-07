@@ -44,8 +44,8 @@ void Maike::Db::compile(SourceTree const& src_tree,
 
 void Maike::Db::compile(SourceTree const& src_tree,
                         ForceRecompilation force_recompilation,
-                        fs::path const& target_name,
-                        Sched::ThreadPool& workers)
+						Sched::ThreadPool& workers,
+                        fs::path const& target_name)
 {
 	auto const& target = getTarget(src_tree, target_name);
 	auto const& graph = src_tree.dependencyGraph();
