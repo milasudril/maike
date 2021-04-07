@@ -44,11 +44,13 @@ namespace Maike::Db
 
 	Target const& getTarget(SourceTree const& src_tree, fs::path const& target_name);
 
-	TaskCounter compile(SourceTree const& src_tree, ForceRecompilation, Sched::ThreadPool& workers);
-	void compile(SourceTree const& src_tree,
-	             ForceRecompilation,
-	             Sched::ThreadPool& workers,
-	             fs::path const& target_name);
+	NodeProcessCounter
+	compile(SourceTree const& src_tree, ForceRecompilation, Sched::ThreadPool& workers);
+
+	NodeProcessCounter compile(SourceTree const& src_tree,
+	                           ForceRecompilation,
+	                           Sched::ThreadPool& workers,
+	                           fs::path const& target_name);
 }
 
 #endif

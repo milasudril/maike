@@ -9,49 +9,17 @@
 
 #include "src/sched/task_completion_event.hpp"
 #include "src/sched/thread_pool.hpp"
+#include "src/sched/task_counter.hpp"
 #include "src/sched/signaling_counter.hpp"
 #include "src/utils/scope_exit_handler.hpp"
 
 namespace Maike::Db
 {
-	class TaskCounter
+	class NodeProcess
 	{
-	public:
-		constexpr TaskCounter(): m_n{0}
-		{
-		}
-
-		constexpr size_t value() const
-		{
-			return m_n;
-		}
-
-		constexpr TaskCounter& operator++()
-		{
-			++m_n;
-			return *this;
-		}
-
-		constexpr TaskCounter operator++(int)
-		{
-			auto ret = *this;
-			++(*this);
-			return ret;
-		}
-
-	private:
-		size_t m_n;
 	};
 
-	constexpr bool operator==(TaskCounter a, TaskCounter b)
-	{
-		return a.value() == b.value();
-	}
-
-	constexpr bool operator!=(TaskCounter a, TaskCounter b)
-	{
-		return !(a == b);
-	}
+	using NodeProcessCounter = Sched::TaskCounter<NodeProcess>;
 
 	class CompilationContext
 	{
@@ -84,7 +52,7 @@ namespace Maike::Db
 			++m_tasks_sched;
 		}
 
-		TaskCounter taskCount() const
+		NodeProcessCounter taskCount() const
 		{
 			return m_tasks_sched;
 		}
@@ -92,8 +60,8 @@ namespace Maike::Db
 	private:
 		std::unique_ptr<Sched::TaskCompletionEvent[]> m_events;
 		std::reference_wrapper<Sched::ThreadPool> m_threads;
-		TaskCounter m_tasks_sched;
-		Sched::SignalingCounter<TaskCounter> m_tasks_completed;
+		NodeProcessCounter m_tasks_sched;
+		Sched::SignalingCounter<NodeProcessCounter> m_tasks_completed;
 	};
 }
 

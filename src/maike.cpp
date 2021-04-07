@@ -149,11 +149,13 @@ public:
 	}
 
 	template<class Duration>
-	void operator()(Duration duration)
+	void operator()(Duration duration, Maike::Db::NodeProcessCounter n)
 	{
 		fprintf(stderr,
-		        "# Compilation job completed in %.7f seconds\n",
-		        std::chrono::duration<double>(duration).count());
+		        "# Completed %zu tasks in %.7f seconds (%.7e seconds/task)\n",
+		        n.value(),
+		        std::chrono::duration<double>(duration).count(),
+		        std::chrono::duration<double>(duration).count() / n.value());
 	}
 };
 
@@ -240,7 +242,7 @@ int main(int argc, char** argv)
 
 		Maike::timedCall(
 		   logger,
-		   [](auto&&... args) { compile(std::forward<decltype(args)>(args)...); },
+		   [](auto&&... args) { return compile(std::forward<decltype(args)>(args)...); },
 		   src_tree,
 		   Maike::Db::ForceRecompilation{},
 		   workers);
