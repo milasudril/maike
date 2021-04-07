@@ -16,7 +16,7 @@ namespace Maike
 			Variable
 		};
 
-		explicit Varstring(Type type, std::string&& str): m_type{type}, m_value{type}
+		explicit Varstring(Type type, std::string&& str): m_type{type}, m_value{std::move(str)}
 		{
 		}
 
