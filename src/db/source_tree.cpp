@@ -40,7 +40,7 @@ Maike::Db::NodeProcessCounter Maike::Db::compile(SourceTree const& src_tree,
 	   },
 	   src_tree.dependencyGraph());
 
-	return ctxt.taskCount();
+	return ctxt.throwAnyPendingException().taskCount();
 }
 
 Maike::Db::NodeProcessCounter Maike::Db::compile(SourceTree const& src_tree,
@@ -54,7 +54,7 @@ Maike::Db::NodeProcessCounter Maike::Db::compile(SourceTree const& src_tree,
 
 	CompilationContext ctxt{size(src_tree.dependencyGraph()), workers};
 
-		processGraphNodeRecursive(
+	processGraphNodeRecursive(
 	   [&graph = src_tree.dependencyGraph(), force_recompilation, &ctxt](auto const& node) {
 		   ctxt.process(node.id(), [&graph, &node, force_recompilation, &ctxt]() {
 			   compile(graph, node, force_recompilation, ctxt);
@@ -64,7 +64,7 @@ Maike::Db::NodeProcessCounter Maike::Db::compile(SourceTree const& src_tree,
 	   graph,
 	   node);
 
-	return ctxt.taskCount();
+	return ctxt.throwAnyPendingException().taskCount();
 }
 
 Maike::Db::NodeProcessCounter Maike::Db::compile(SourceTree const& src_tree,
@@ -73,12 +73,11 @@ Maike::Db::NodeProcessCounter Maike::Db::compile(SourceTree const& src_tree,
                                                  std::pair<fs::path const*, size_t> targets)
 {
 	NodeProcessCounter n;
-	std::for_each_n(
-	   targets.first,
-	   targets.second,
-	   [&n, &src_tree, force_recompilation, &workers](auto const& target_name) {
-		   n += compile(src_tree, force_recompilation, workers, target_name);
-	});
+	std::for_each_n(targets.first,
+	                targets.second,
+	                [&n, &src_tree, force_recompilation, &workers](auto const& target_name) {
+		                n += compile(src_tree, force_recompilation, workers, target_name);
+	                });
 
 	return n;
 }

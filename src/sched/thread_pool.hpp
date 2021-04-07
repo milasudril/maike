@@ -113,14 +113,15 @@ namespace Maike::Sched
 		   Function&& f,
 		   std::enable_if_t<std::is_same_v<std::result_of_t<std::decay_t<Function>()>, void>, int> = 0)
 		{
-			auto task = UniqueFunction<void()>([do_it = std::forward<Function>(f)]() mutable {
+			auto task = UniqueFunction<void()>([do_it = std::forward<Function>(f), this]() mutable {
 				try
 				{
 					do_it();
 				}
-				catch(std::exception const& e)
+				catch(...)
 				{
-					fprintf(stderr, "%s\n", e.what());
+					std::lock_guard lock{m_eptr_mtx};
+					m_eptr = std::current_exception();
 				}
 			});
 			{
@@ -129,6 +130,14 @@ namespace Maike::Sched
 				m_cv.notify_one();
 			}
 			return *this;
+		}
+
+		std::exception_ptr takeLastException()
+		{
+			std::lock_guard lock{m_eptr_mtx};
+			auto ret = m_eptr;
+			m_eptr = nullptr;
+			return ret;
 		}
 
 		~ThreadPool();
@@ -143,6 +152,9 @@ namespace Maike::Sched
 		std::unique_ptr<pthread_t[]> m_threads;
 
 		void performTasks();
+
+		std::mutex m_eptr_mtx;
+		std::exception_ptr m_eptr;
 	};
 }
 

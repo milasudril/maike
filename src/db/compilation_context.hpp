@@ -42,6 +42,7 @@ namespace Maike::Db
 		template<class Callable>
 		void process(SourceFileId id, Callable&& f)
 		{
+			if(auto e = m_threads.get().takeLastException(); e != nullptr) { std::rethrow_exception(e); }
 			m_threads.get().addTask([&tasks_completed = m_tasks_completed,
 			                         event = Sched::TaskCompletionEventGuard{m_events[id.value()]},
 			                         func = std::forward<Callable>(f)]() mutable {
@@ -55,6 +56,13 @@ namespace Maike::Db
 		NodeProcessCounter taskCount() const
 		{
 			return m_tasks_sched;
+		}
+
+		CompilationContext& throwAnyPendingException()
+		{
+			m_tasks_completed.wait(m_tasks_sched);
+			if(auto e = m_threads.get().takeLastException(); e != nullptr) { std::rethrow_exception(e); }
+			return *this;
 		}
 
 	private:

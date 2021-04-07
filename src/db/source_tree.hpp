@@ -53,9 +53,9 @@ namespace Maike::Db
 	                           std::pair<fs::path const*, size_t> targets);
 
 	NodeProcessCounter compile(SourceTree const& src_tree,
-	                                  ForceRecompilation force_recompilation,
-	                                  Sched::ThreadPool& workers,
-	                                  fs::path const& target_name);
+	                           ForceRecompilation force_recompilation,
+	                           Sched::ThreadPool& workers,
+	                           fs::path const& target_name);
 }
 
 #endif
