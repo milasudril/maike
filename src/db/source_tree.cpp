@@ -5,6 +5,7 @@
 #include "./source_tree.hpp"
 
 #include "src/utils/graphutils.hpp"
+#include "src/sched/signaling_counter.hpp"
 
 Maike::Db::Target const& Maike::Db::getTarget(SourceTree const& src_tree,
                                               fs::path const& target_name)
@@ -57,7 +58,8 @@ void Maike::Db::compile(SourceTree const& src_tree,
 	visitNodesInTopoOrder(
 	   [&graph = src_tree.dependencyGraph(),
 	    force_recompilation,
-	    ctxt = makeCompilationContext(src_tree.dependencyGraph(), workers)](auto const& node) mutable {
+	    &workers,
+	    ctxt = makeCompilationContext(src_tree.dependencyGraph())](auto const& node) mutable {
 		   compile(graph, node, force_recompilation, ctxt);
 	   },
 	   src_tree.dependencyGraph());
@@ -72,10 +74,25 @@ void Maike::Db::compile(SourceTree const& src_tree,
 	auto const& graph = src_tree.dependencyGraph();
 	auto const& node = getNode(graph, target.sourceFilename());
 
-	processGraphNodeRecursive([&graph = src_tree.dependencyGraph(),
-	                           force_recompilation,
-	                           ctxt = makeCompilationContext(src_tree.dependencyGraph(), workers)](
-	                             auto const& node) mutable { compile(graph, node, force_recompilation, ctxt); },
-	                          graph,
-	                          node);
+	size_t tasks_pending = 0;
+	Sched::SignalingCounter<size_t> tasks_competed{0};
+	processGraphNodeRecursive(
+	   [&graph = src_tree.dependencyGraph(),
+	    force_recompilation,
+	    &workers,
+	    ctxt = makeCompilationContext(src_tree.dependencyGraph()),
+	    &tasks_pending,
+	    &tasks_competed](auto const& node) mutable {
+		   workers.addTask([&graph, &node, force_recompilation, &ctxt, &tasks_competed]() {
+			   compile(graph, node, force_recompilation, ctxt);
+			   std::this_thread::sleep_for(std::chrono::seconds{2});
+			   ++tasks_competed;
+		   });
+		   ++tasks_pending;
+	   },
+	   graph,
+	   node);
+	printf("Tasks pending: %zu\n", tasks_pending);
+	tasks_competed.wait(tasks_pending);
+	puts("=======================");
 }

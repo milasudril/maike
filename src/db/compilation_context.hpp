@@ -17,8 +17,8 @@ namespace Maike::Db
 	class CompilationContext
 	{
 	public:
-		explicit CompilationContext(size_t n_targets, Sched::ThreadPool& workers):
-		   m_events{std::make_unique<Sched::TaskCompletionEvent[]>(n_targets)}, m_workers{workers}
+		explicit CompilationContext(size_t n_targets):
+		   m_events{std::make_unique<Sched::TaskCompletionEvent[]>(n_targets)}
 		{
 		}
 
@@ -35,7 +35,6 @@ namespace Maike::Db
 
 	private:
 		std::unique_ptr<Sched::TaskCompletionEvent[]> m_events;
-		std::reference_wrapper<Sched::ThreadPool> m_workers;
 	};
 }
 

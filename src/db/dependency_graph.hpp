@@ -79,12 +79,6 @@ namespace Maike::Db
 	std::vector<Db::Dependency> getUseDepsRecursive(DependencyGraph const& g,
 	                                                SourceFileRecordConst const& rec);
 
-	inline CompilationContext makeCompilationContext(DependencyGraph const& g,
-	                                                 Sched::ThreadPool& workers)
-	{
-		return CompilationContext{size(g), workers};
-	}
-
 	class ForceRecompilation
 	{
 	public:
