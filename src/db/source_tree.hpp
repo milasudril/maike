@@ -52,13 +52,10 @@ namespace Maike::Db
 	                           Sched::ThreadPool& workers,
 	                           std::pair<fs::path const*, size_t> targets);
 
-	inline NodeProcessCounter compile(SourceTree const& src_tree,
+	NodeProcessCounter compile(SourceTree const& src_tree,
 	                                  ForceRecompilation force_recompilation,
 	                                  Sched::ThreadPool& workers,
-	                                  fs::path const& target_name)
-	{
-		return compile(src_tree, force_recompilation, workers, std::pair{&target_name, 1});
-	}
+	                                  fs::path const& target_name);
 }
 
 #endif

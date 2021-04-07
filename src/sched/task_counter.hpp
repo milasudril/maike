@@ -33,6 +33,12 @@ namespace Maike::Sched
 			return ret;
 		}
 
+		constexpr TaskCounter& operator+=(TaskCounter other)
+		{
+			m_n += other.m_n;
+			return *this;
+		}
+
 	private:
 		size_t m_n;
 	};
