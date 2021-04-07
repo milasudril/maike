@@ -100,14 +100,12 @@ namespace Maike::Db
 	                    ForceRecompilation force_recompilation,
 	                    CompilationContext& ctxt)
 	{
-		auto guard = ctxt.taskCompletionEvent(node.id());
 		auto use_deps = getUseDepsRecursive(g, node);
 		if(std::any_of(std::begin(use_deps), std::end(use_deps), [&ctxt](auto const& item) {
-			   return ctxt.waitForTarget(item.reference()) == Sched::TaskResult::Failure;
+			   return ctxt.taskFailed(item.reference());
 		   }))
 		{ throw std::runtime_error{"Build failed"}; }
 		if(force_recompilation || !isUpToDate(node, use_deps)) { compile(node, use_deps); }
-		guard.taskSuceceded();
 	}
 }
 

@@ -113,7 +113,17 @@ namespace Maike::Sched
 		   Function&& f,
 		   std::enable_if_t<std::is_same_v<std::result_of_t<std::decay_t<Function>()>, void>, int> = 0)
 		{
-			auto task = UniqueFunction<void()>([do_it = std::forward<Function>(f)]() mutable { do_it(); });
+			auto task = UniqueFunction<void()>([do_it = std::forward<Function>(f)]() mutable {
+				try
+				{
+					do_it();
+				}
+				catch(std::exception const& e)
+				{
+					fprintf(stderr, "%s\n", e.what());
+				}
+
+			});
 			{
 				std::lock_guard lock{m_mtx};
 				m_tasks.push(std::move(task));

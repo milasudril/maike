@@ -11,11 +11,11 @@ namespace Maike
 	class ScopeExitHandler
 	{
 	public:
-		explicit ScopeExitHandler(Function&& f): m_obj{std::move(f)}
+		explicit ScopeExitHandler(Callable&& f): m_obj{std::move(f)}
 		{
 		}
 
-		ScopedExitHandler(ScopedExitHandler&&) = delete;
+		ScopeExitHandler(ScopeExitHandler&&) = delete;
 
 		~ScopeExitHandler()
 		{
