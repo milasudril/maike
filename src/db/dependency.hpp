@@ -8,7 +8,7 @@
 #include "./source_file_id.hpp"
 #include "./source_file_origin.hpp"
 
-#include "src/fs.hpp"
+#include "src/utils/fs.hpp"
 
 namespace Maike::Db
 {

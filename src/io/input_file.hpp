@@ -5,7 +5,7 @@
 #ifndef MAIKE_IO_INPUTFILE_HPP
 #define MAIKE_IO_INPUTFILE_HPP
 
-#include "src/fs.hpp"
+#include "src/utils/fs.hpp"
 
 #include <unistd.h>
 #include <fcntl.h>

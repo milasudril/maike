@@ -9,7 +9,7 @@
 #include "./source_file_id.hpp"
 #include "./source_file_info.hpp"
 
-#include "src/fs.hpp"
+#include "src/utils/fs.hpp"
 
 #include <functional>
 

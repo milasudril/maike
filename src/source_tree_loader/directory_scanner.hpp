@@ -9,7 +9,7 @@
 #include "./source_file_loader_delegator.hpp"
 #include "./input_filter.hpp"
 
-#include "src/fs.hpp"
+#include "src/utils/fs.hpp"
 #include "src/sched/signaling_counter.hpp"
 #include "src/sched/thread_pool.hpp"
 

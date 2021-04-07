@@ -3,7 +3,7 @@
 #ifndef MAIKE_COMMAND_HPP
 #define MAIKE_COMMAND_HPP
 
-#include "./fs.hpp"
+#include "utils/fs.hpp"
 #include "src/key_value_store/compound.hpp"
 #include "src/key_value_store/array.hpp"
 
