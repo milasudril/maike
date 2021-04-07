@@ -25,26 +25,27 @@ Maike::Db::Target const& Maike::Db::getTarget(SourceTree const& src_tree,
 	return i->second;
 }
 
-void Maike::Db::compile(SourceTree const& src_tree,
-                        ForceRecompilation force_recompilation,
-                        Sched::ThreadPool& workers)
+Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
+                                          ForceRecompilation force_recompilation,
+                                          Sched::ThreadPool& workers)
 {
+	CompilationContext ctxt{size(src_tree.dependencyGraph()), workers};
+
 	visitNodesInTopoOrder(
-	   [&graph = src_tree.dependencyGraph(),
-	    force_recompilation,
-	    ctxt =
-	       CompilationContext{size(src_tree.dependencyGraph()), workers}](auto const& node) mutable {
+	   [&graph = src_tree.dependencyGraph(), force_recompilation, &ctxt](auto const& node) mutable {
 		   ctxt.process(node.id(), [&graph, &node, force_recompilation, &ctxt]() {
 			   compile(graph, node, force_recompilation, ctxt);
 			   std::this_thread::sleep_for(std::chrono::seconds{2});
 		   });
 	   },
 	   src_tree.dependencyGraph());
+
+	return ctxt.taskCount();
 }
 
 void Maike::Db::compile(SourceTree const& src_tree,
                         ForceRecompilation force_recompilation,
-						Sched::ThreadPool& workers,
+                        Sched::ThreadPool& workers,
                         fs::path const& target_name)
 {
 	auto const& target = getTarget(src_tree, target_name);

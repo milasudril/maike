@@ -14,6 +14,8 @@ namespace Maike::Sched
 	class SignalingCounter
 	{
 	public:
+		SignalingCounter() = default;
+
 		explicit SignalingCounter(T init_val): m_value{init_val}
 		{
 		}

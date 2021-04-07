@@ -14,14 +14,50 @@
 
 namespace Maike::Db
 {
+	class TaskCounter
+	{
+	public:
+		constexpr TaskCounter(): m_n{0}
+		{
+		}
+
+		constexpr size_t value() const
+		{
+			return m_n;
+		}
+
+		constexpr TaskCounter& operator++()
+		{
+			++m_n;
+			return *this;
+		}
+
+		constexpr TaskCounter operator++(int)
+		{
+			auto ret = *this;
+			++(*this);
+			return ret;
+		}
+
+	private:
+		size_t m_n;
+	};
+
+	constexpr bool operator==(TaskCounter a, TaskCounter b)
+	{
+		return a.value() == b.value();
+	}
+
+	constexpr bool operator!=(TaskCounter a, TaskCounter b)
+	{
+		return !(a == b);
+	}
+
 	class CompilationContext
 	{
 	public:
 		explicit CompilationContext(size_t n_nodes, Sched::ThreadPool& threads):
-		   m_events{std::make_unique<Sched::TaskCompletionEvent[]>(n_nodes)},
-		   m_threads{threads},
-		   m_tasks_sched{0},
-		   m_tasks_completed{0}
+		   m_events{std::make_unique<Sched::TaskCompletionEvent[]>(n_nodes)}, m_threads{threads}
 		{
 		}
 
@@ -48,11 +84,16 @@ namespace Maike::Db
 			++m_tasks_sched;
 		}
 
+		TaskCounter taskCount() const
+		{
+			return m_tasks_sched;
+		}
+
 	private:
 		std::unique_ptr<Sched::TaskCompletionEvent[]> m_events;
 		std::reference_wrapper<Sched::ThreadPool> m_threads;
-		size_t m_tasks_sched;
-		Sched::SignalingCounter<size_t> m_tasks_completed;
+		TaskCounter m_tasks_sched;
+		Sched::SignalingCounter<TaskCounter> m_tasks_completed;
 	};
 }
 
