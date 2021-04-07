@@ -44,12 +44,8 @@ namespace Maike::Db
 
 	Target const& getTarget(SourceTree const& src_tree, fs::path const& target_name);
 
-	void compile(SourceTree const& src_tree, Sched::ThreadPool& workers);
-	void compile(SourceTree const& src_tree, fs::path const& target_name, Sched::ThreadPool& workers);
-	void compileAlways(SourceTree const& src_tree, Sched::ThreadPool& workers);
-	void compileAlways(SourceTree const& src_tree,
-	                   fs::path const& target_name,
-	                   Sched::ThreadPool& workers);
+	void compile(SourceTree const& src_tree, ForceRecompilation, Sched::ThreadPool& workers);
+	void compile(SourceTree const& src_tree, ForceRecompilation, fs::path const& target_name, Sched::ThreadPool& workers);
 }
 
 #endif

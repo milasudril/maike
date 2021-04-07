@@ -85,22 +85,26 @@ namespace Maike::Db
 		return CompilationContext{size(g), workers};
 	}
 
-	inline void
-	compile(DependencyGraph const& g, SourceFileRecordConst const& node, CompilationContext& ctxt)
+	class ForceRecompilation
 	{
-		auto guard = ctxt.taskCompletionEvent(node.id());
-		auto use_deps = getUseDepsRecursive(g, node);
-		if(std::any_of(std::begin(use_deps), std::end(use_deps), [&ctxt](auto const& item) {
-			   return ctxt.waitForTarget(item.reference()) == Sched::TaskResult::Failure;
-		   }))
-		{ throw std::runtime_error{"Build failed"}; }
-		if(!isUpToDate(node, use_deps)) { compile(node, use_deps); }
-		guard.taskSuceceded();
-	}
+	public:
+		explicit ForceRecompilation(bool value = true): m_value{value}
+		{
+		}
 
-	inline void compileAlways(DependencyGraph const& g,
-	                          SourceFileRecordConst const& node,
-	                          CompilationContext& ctxt)
+		constexpr operator bool() const
+		{
+			return m_value;
+		}
+
+	private:
+		bool m_value;
+	};
+
+	inline void compile(DependencyGraph const& g,
+	                    SourceFileRecordConst const& node,
+	                    ForceRecompilation force_recompilation,
+	                    CompilationContext& ctxt)
 	{
 		auto guard = ctxt.taskCompletionEvent(node.id());
 		auto use_deps = getUseDepsRecursive(g, node);
@@ -108,7 +112,7 @@ namespace Maike::Db
 			   return ctxt.waitForTarget(item.reference()) == Sched::TaskResult::Failure;
 		   }))
 		{ throw std::runtime_error{"Build failed"}; }
-		compile(node, use_deps);
+		if(force_recompilation || !isUpToDate(node, use_deps)) { compile(node, use_deps); }
 		guard.taskSuceceded();
 	}
 }

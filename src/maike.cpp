@@ -230,7 +230,7 @@ int main(int argc, char** argv)
 			return 0;
 		}
 
-		compileAlways(src_tree, "src/maike", workers);
+		compile(src_tree, Maike::Db::ForceRecompilation{}, "src/maike", workers);
 	}
 	catch(std::exception const& err)
 	{

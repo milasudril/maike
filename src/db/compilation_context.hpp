@@ -22,11 +22,6 @@ namespace Maike::Db
 		{
 		}
 
-		~CompilationContext()
-		{
-			std::this_thread::sleep_for(std::chrono::seconds(10));
-		}
-
 		Sched::TaskResult waitForTarget(SourceFileId id)
 		{
 			return m_events[id.value()].wait();
