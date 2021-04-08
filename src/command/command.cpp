@@ -103,6 +103,7 @@ Maike::CommandInterpreter::Pipe Maike::CommandInterpreter::makePipe(char const* 
 		State state{State::Init};
 		State state_prev{State::Init};
 		std::string buffer;
+		int bracecount{0};
 	};
 
 	std::stack<Context> contexts;
@@ -153,7 +154,10 @@ Maike::CommandInterpreter::Pipe Maike::CommandInterpreter::makePipe(char const* 
 				auto& cmd = *std::get_if<Command>(&ctxt.node.back());
 				switch(ch_in)
 				{
-					case '{': ctxt.state = State::ExpandString; break;
+					case '{':
+						ctxt.state = State::ExpandString;
+						++ctxt.bracecount;
+						break;
 
 					case ',': cmd.add(Literal{std::move(ctxt.buffer)}); break;
 
@@ -170,8 +174,11 @@ Maike::CommandInterpreter::Pipe Maike::CommandInterpreter::makePipe(char const* 
 			case State::ExpandString:
 				switch(ch_in)
 				{
-					case '{': break;
-					case '}': ctxt.state = State::ArgList; break;
+					case '{': ++ctxt.bracecount; break;
+					case '}':
+						--ctxt.bracecount;
+						if(ctxt.bracecount == 0) { ctxt.state = State::ArgList; }
+						break;
 					default: break;
 				};
 				break;
