@@ -52,6 +52,10 @@ namespace Maike::CommandInterpreter
 	class Command
 	{
 	public:
+		explicit Command(std::string&& name): m_name{std::move(name)}
+		{
+		}
+
 		std::string const& name() const
 		{
 			return m_name;
@@ -60,6 +64,10 @@ namespace Maike::CommandInterpreter
 		{
 			return m_args;
 		}
+
+		Command& add(Literal&& arg);
+
+		Command& add(ExpandString&& str);
 
 	private:
 		std::string m_name;
@@ -148,6 +156,18 @@ namespace Maike::CommandInterpreter
 		CommandSplitOutput m_command;
 		Literal m_suffix;
 	};
+
+	inline Command& Command::add(Literal&& arg)
+	{
+		m_args.push_back(std::move(arg));
+		return *this;
+	}
+
+	inline Command& Command::add(ExpandString&& str)
+	{
+		m_args.push_back(std::move(str));
+		return *this;
+	}
 
 	EvaluatedArgument makeEvaluatedArgument(ExpandString const& obj);
 }
