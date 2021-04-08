@@ -27,9 +27,14 @@ namespace Maike::CommandInterpreter
 	class Literal
 	{
 	public:
-		explicit Literal(std::string&& val):m_value{std::move(val)}{}
+		explicit Literal(std::string&& val): m_value{std::move(val)}
+		{
+		}
 
-		std::string const& value() const { return m_value; }
+		std::string const& value() const
+		{
+			return m_value;
+		}
 
 	private:
 		std::string m_value;
@@ -38,15 +43,23 @@ namespace Maike::CommandInterpreter
 	CommandOutput expand(Literal const& obj, CommandOutput const& sysin);
 
 	inline EvaluatedArgument makeEvaluatedArgument(Literal const& obj)
-	{return EvaluatedArgument{obj.value()};}
+	{
+		return EvaluatedArgument{obj.value()};
+	}
 
 	class ExpandString;
 
 	class Command
 	{
 	public:
-		std::string const& name() const { return m_name; }
-		std::vector<std::variant<Literal, ExpandString>> args() const { return m_args; }
+		std::string const& name() const
+		{
+			return m_name;
+		}
+		std::vector<std::variant<Literal, ExpandString>> args() const
+		{
+			return m_args;
+		}
 
 	private:
 		std::string m_name;
@@ -55,17 +68,37 @@ namespace Maike::CommandInterpreter
 
 	CommandOutput expand(Command const&, CommandOutput const& sysin);
 
+	class Command;
+
+	class Pipe
+	{
+	public:
+		auto const& commands() const
+		{
+			return m_commands;
+		}
+
+	private:
+		std::vector<std::variant<Command, Literal>> m_commands;
+	};
+
+	CommandOutput expand(Pipe const& pipe, CommandOutput const& sysin);
+
 	class CommandSplitOutput
 	{
 	public:
-		Command const& command() const
-		{ return m_command; }
+		Pipe const& pipe() const
+		{
+			return m_pipe;
+		}
 
 		char separator() const
-		{ return m_separator; }
+		{
+			return m_separator;
+		}
 
 	private:
-		Command m_command;  // TODO: This should be a pipe
+		Pipe m_pipe;
 		char m_separator;
 	};
 
@@ -74,9 +107,18 @@ namespace Maike::CommandInterpreter
 	class ExpandString
 	{
 	public:
-		Literal const& prefix() const { return m_prefix; }
-		CommandSplitOutput command() const { return m_command; }
-		Literal const& suffix() const { return m_suffix; }
+		Literal const& prefix() const
+		{
+			return m_prefix;
+		}
+		CommandSplitOutput command() const
+		{
+			return m_command;
+		}
+		Literal const& suffix() const
+		{
+			return m_suffix;
+		}
 
 	private:
 		Literal m_prefix;
@@ -86,15 +128,6 @@ namespace Maike::CommandInterpreter
 
 	EvaluatedArgument makeEvaluatedArgument(ExpandString const& obj);
 
-	class Pipe
-	{
-	public:
-		auto const& commands() const { return m_commands; }
-	private:
-		std::vector<std::variant<Command, Literal>> m_commands;
-	};
-
-	CommandOutput expand(Pipe const& pipe, CommandOutput const& sysin);
 
 #if 0
 	struct SplitCommand
