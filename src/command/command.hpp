@@ -27,8 +27,16 @@ namespace Maike::CommandInterpreter
 	class Literal
 	{
 	public:
+		Literal() = default;
+
 		explicit Literal(std::string&& val): m_value{std::move(val)}
 		{
+		}
+
+		Literal& value(std::string&& val)
+		{
+			m_value = val;
+			return *this;
 		}
 
 		std::string const& value() const
@@ -128,10 +136,7 @@ namespace Maike::CommandInterpreter
 	class CommandSplitOutput
 	{
 	public:
-		explicit CommandSplitOutput(Pipe&& pipe, char separator):
-		   m_pipe{std::move(pipe)}, m_separator{separator}
-		{
-		}
+		CommandSplitOutput():m_separator{'\0'}{}
 
 		Pipe const& pipe() const
 		{
@@ -153,8 +158,8 @@ namespace Maike::CommandInterpreter
 	class ExpandString
 	{
 	public:
-		explicit ExpandString(Literal&& prefix, CommandSplitOutput&& command, Literal&& suffix):
-		   m_prefix{std::move(prefix)}, m_command{std::move(command)}, m_suffix{std::move(suffix)}
+		explicit ExpandString(Literal&& prefix):
+		   m_prefix{std::move(prefix)}
 		{
 		}
 

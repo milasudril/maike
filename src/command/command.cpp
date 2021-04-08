@@ -93,6 +93,7 @@ Maike::CommandInterpreter::Pipe Maike::CommandInterpreter::makePipe(char const* 
 		Init,
 		ArgList,
 		ExpandString,
+		AfterExpandString,
 		AfterCommand,
 		Escape
 	};
@@ -155,6 +156,7 @@ Maike::CommandInterpreter::Pipe Maike::CommandInterpreter::makePipe(char const* 
 				switch(ch_in)
 				{
 					case '{':
+						cmd.add(ExpandString{Literal{std::move(ctxt.buffer)}});
 						ctxt.state = State::ExpandString;
 						++ctxt.bracecount;
 						break;
@@ -177,10 +179,21 @@ Maike::CommandInterpreter::Pipe Maike::CommandInterpreter::makePipe(char const* 
 					case '{': ++ctxt.bracecount; break;
 					case '}':
 						--ctxt.bracecount;
-						if(ctxt.bracecount == 0) { ctxt.state = State::ArgList; }
+						if(ctxt.bracecount == 0) { ctxt.state = State::AfterExpandString; }
 						break;
 					default: break;
 				};
+				break;
+
+			case State::AfterExpandString:
+				switch(ch_in)
+				{
+					case ')': ctxt.state = State::Init; break;
+
+					case ',': ctxt.state = State::ArgList; break;
+
+					default: puts(str); throw std::runtime_error{"Illegal character after command"};
+				}
 				break;
 
 			case State::AfterCommand:
