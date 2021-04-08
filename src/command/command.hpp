@@ -78,11 +78,34 @@ namespace Maike::CommandInterpreter
 			return m_commands;
 		}
 
+		Pipe& operator|=(Command&& cmd)
+		{
+			m_commands.push_back(std::move(cmd));
+			return *this;
+		}
+
+		Pipe& operator|=(Literal&& x)
+		{
+			m_commands.push_back(std::move(x));
+			return *this;
+		}
+
 	private:
 		std::vector<std::variant<Command, Literal>> m_commands;
 	};
 
+	inline Pipe& operator|(Pipe& a, Command&& cmd)
+	{
+		return a |= std::move(cmd);
+	}
+
+	inline Pipe& operator|(Pipe& a, Literal&& x)
+	{
+		return a |= std::move(x);
+	}
+
 	CommandOutput expand(Pipe const& pipe, CommandOutput const& sysin);
+
 
 	class CommandSplitOutput
 	{
@@ -127,35 +150,4 @@ namespace Maike::CommandInterpreter
 	};
 
 	EvaluatedArgument makeEvaluatedArgument(ExpandString const& obj);
-
-
-#if 0
-	struct SplitCommand
-	{
-		Command cmd;
-		char separator;
-	};
-
-	struct VariableExpansion
-	{
-		CommandInput prefix;
-		SplitCommand command;
-		CommandInput suffix;
-	};
-
-	inline bool operator==(Command const&, Command const&)
-	{
-		return true;
-	}
-
-	inline bool operator!=(Command const& a, Command const& b)
-	{
-		return !(a == b);
-	}
-
-
-	std::vector<std::byte> execute(Command const& cmd, Invoker const& i);
-
-	Command makeCommand(char const* str);
-#endif
 }
