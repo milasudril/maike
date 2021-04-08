@@ -58,9 +58,10 @@ namespace Maike
 
 		ExecResult execp(fs::path const& executable,
 		                 std::vector<Varstring> const& args,
-		                 std::vector<std::byte> const& sysin) const
+		                 std::vector<std::byte> const& sysin,
+		                 char ifs) const
 		{
-			return m_handle->execp(executable, args, sysin);
+			return m_handle->execp(executable, args, sysin, ifs);
 		}
 
 		void setvar(std::string&& name, std::string&& value)
@@ -76,7 +77,8 @@ namespace Maike
 
 			virtual ExecResult execp(fs::path const& executable,
 			                         std::vector<Varstring> const& args,
-			                         std::vector<std::byte> const& sysin) const = 0;
+			                         std::vector<std::byte> const& sysin,
+			                         char ifs) const = 0;
 
 			virtual void setvar(std::string&& name, std::string&& value) = 0;
 
@@ -98,9 +100,10 @@ namespace Maike
 
 			ExecResult execp(fs::path const& executable,
 			                 std::vector<Varstring> const& args,
-			                 std::vector<std::byte> const& sysin) const override
+			                 std::vector<std::byte> const& sysin,
+			                 char ifs) const override
 			{
-				return m_obj.execp(executable, args, sysin);
+				return m_obj.execp(executable, args, sysin, ifs);
 			}
 
 			void setvar(std::string&& name, std::string&& value) override
