@@ -35,7 +35,7 @@ namespace Maike::CommandInterpreter
 		std::string m_value;
 	};
 
-	CommandOutput expand(Literal const& obj);
+	CommandOutput expand(Literal const& obj, CommandOutput const& sysin);
 
 	inline EvaluatedArgument makeEvaluatedArgument(Literal const& obj)
 	{return EvaluatedArgument{obj.value()};}
@@ -53,7 +53,7 @@ namespace Maike::CommandInterpreter
 		std::vector<std::variant<Literal, ExpandString>> m_args;
 	};
 
-	CommandOutput expand(Command const&);
+	CommandOutput expand(Command const&, CommandOutput const& sysin);
 
 	class CommandSplitOutput
 	{
@@ -65,7 +65,7 @@ namespace Maike::CommandInterpreter
 		{ return m_separator; }
 
 	private:
-		Command m_command;
+		Command m_command;  // TODO: This should be a pipe
 		char m_separator;
 	};
 
@@ -94,7 +94,7 @@ namespace Maike::CommandInterpreter
 		std::vector<std::variant<Command, Literal>> m_commands;
 	};
 
-	CommandOutput expand(Pipe const& pipe);
+	CommandOutput expand(Pipe const& pipe, CommandOutput const& sysin);
 
 #if 0
 	struct SplitCommand

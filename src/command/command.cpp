@@ -6,7 +6,7 @@
 
 #include <algorithm>
 
-Maike::CommandInterpreter::CommandOutput Maike::CommandInterpreter::expand(Literal const& obj)
+Maike::CommandInterpreter::CommandOutput Maike::CommandInterpreter::expand(Literal const& obj, CommandOutput const&)
 {
 	CommandOutput ret;
 	auto const& val = obj.value();
@@ -15,7 +15,7 @@ Maike::CommandInterpreter::CommandOutput Maike::CommandInterpreter::expand(Liter
 	return ret;
 }
 
-Maike::CommandInterpreter::CommandOutput Maike::CommandInterpreter::expand(Command const& cmd)
+Maike::CommandInterpreter::CommandOutput Maike::CommandInterpreter::expand(Command const& cmd, CommandOutput const&)
 {
 	auto const& args = cmd.args();
 	std::vector<std::string> args_eval;
@@ -25,13 +25,13 @@ Maike::CommandInterpreter::CommandOutput Maike::CommandInterpreter::expand(Comma
 		std::copy(std::begin(arg_eval), std::end(arg_eval), std::back_inserter(arg_eval));
 	});
 	// TODO:
-	// return exep(cmd.executable(), args);
+	// return exep(cmd.executable(), args, sysín);
 	return CommandOutput{};
 }
 
 Maike::CommandInterpreter::EvaluatedArgument Maike::CommandInterpreter::makeEvaluatedArgument(CommandSplitOutput const& obj)
 {
-	auto const command_output = expand(obj.command());
+	auto const command_output = expand(obj.command(), CommandOutput{});
 
 	EvaluatedArgument output_split;
 	std::string buffer;
@@ -72,15 +72,15 @@ Maike::CommandInterpreter::EvaluatedArgument Maike::CommandInterpreter::makeEval
 	return ret;
 }
 
-Maike::CommandInterpreter::CommandOutput Maike::CommandInterpreter::expand(Pipe const& pipe)
+Maike::CommandInterpreter::CommandOutput Maike::CommandInterpreter::expand(Pipe const& pipe, CommandOutput const& sysin)
 {
 	auto const& commands = pipe.commands();
-	CommandOutput ret;
-	std::for_each(std::begin(commands), std::end(commands), [&ret](auto const& cmd) {
-		ret = std::visit([](auto const& item){return expand(item);}, cmd);
+	CommandOutput sysout{sysin};
+	std::for_each(std::begin(commands), std::end(commands), [&sysout](auto const& cmd) {
+		sysout = std::visit([&sysin = sysout](auto const& item){return expand(item, sysin);}, cmd);
 	});
 
-	return ret;
+	return sysout;
 }
 
 
