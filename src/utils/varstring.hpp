@@ -4,6 +4,7 @@
 #define MAIKE_UTILS_VARSTRING_HPP
 
 #include <string>
+#include <vector>
 
 namespace Maike
 {
@@ -16,32 +17,38 @@ namespace Maike
 			Variable
 		};
 
-		explicit Varstring(Type type, std::string&& str): m_type{type}, m_value{std::move(str)}
+		explicit Varstring(Type type, std::string&& val): m_type{type}
+		{
+			m_values.push_back(std::move(val));
+		}
+
+		explicit Varstring(std::vector<std::string>&& vals):
+		   m_type{Type::Value}, m_values{std::move(vals)}
 		{
 		}
 
 		template<class Dictionary>
-		std::string const& get(Dictionary const& dict) const;
+		std::vector<std::string> const& get(Dictionary const& dict) const;
 
 	private:
 		Type m_type;
-		std::string m_value;
+		std::vector<std::string> m_values;
 	};
 
 	template<class Dictionary>
-	std::string const& Varstring::get(Dictionary const& dict) const
+	std::vector<std::string> const& Varstring::get(Dictionary const& dict) const
 	{
 		switch(m_type)
 		{
-			case Type::Value: return m_value;
+			case Type::Value: return m_values;
 			case Type::Variable:
 			{
-				auto i = dict.find(m_value);
+				auto i = dict.find(m_values[0]);
 				using std::end;
 				if(i == end(dict))
 				{
 					std::string msg{"`"};
-					msg += m_value;
+					msg += m_values[0];
 					msg += "` not in dictionary";
 					throw std::runtime_error{msg};
 				}
