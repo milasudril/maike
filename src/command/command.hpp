@@ -69,6 +69,11 @@ namespace Maike::CommandInterpreter
 
 		Command& add(ExpandString&& str);
 
+		auto& back()
+		{
+			return m_args.back();
+		}
+
 	private:
 		std::string m_name;
 		std::vector<std::variant<Literal, ExpandString>> m_args;
@@ -96,6 +101,11 @@ namespace Maike::CommandInterpreter
 		{
 			m_commands.push_back(std::move(x));
 			return *this;
+		}
+
+		auto& back()
+		{
+			return m_commands.back();
 		}
 
 	private:
@@ -182,4 +192,6 @@ namespace Maike::CommandInterpreter
 	}
 
 	EvaluatedArgument makeEvaluatedArgument(ExpandString const& obj);
+
+	Pipe makePipe(char const* buffer);
 }

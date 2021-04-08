@@ -5,6 +5,7 @@
 #include "./command.hpp"
 
 #include <algorithm>
+#include <stack>
 
 Maike::CommandInterpreter::CommandOutput Maike::CommandInterpreter::expand(Literal const& obj,
                                                                            CommandOutput const&)
@@ -84,6 +85,118 @@ Maike::CommandInterpreter::expand(Pipe const& pipe, CommandOutput const& sysin)
 	return sysout;
 }
 
+
+Maike::CommandInterpreter::Pipe Maike::CommandInterpreter::makePipe(char const* str)
+{
+	enum class State : int
+	{
+		Init,
+		ArgList,
+		ExpandString,
+		AfterCommand,
+		Escape
+	};
+
+	struct Context
+	{
+		Pipe node;
+		State state{State::Init};
+		State state_prev{State::Init};
+		std::string buffer;
+	};
+
+	std::stack<Context> contexts;
+	Context ctxt;
+	while(true)
+	{
+		auto ch_in = *str;
+		++str;
+
+		if(ch_in == '\0')
+		{
+			if(std::size(contexts) != 0) { throw std::runtime_error{"Unterminated command"}; }
+
+			return ctxt.node;
+		}
+
+		if(ch_in == '~')
+		{
+			ctxt.state_prev = ctxt.state;
+			ctxt.state = State::Escape;
+			continue;
+		}
+
+		if(ctxt.state != State::Escape)
+		{
+			if(ch_in >= 0 && ch_in <= ' ') { continue; }
+		}
+
+		switch(ctxt.state)
+		{
+			case State::Init:
+				switch(ch_in)
+				{
+					case '|': ctxt.node |= Literal{std::move(ctxt.buffer)}; break;
+
+					case '(':
+						ctxt.node |= Command{std::move(ctxt.buffer)};
+						ctxt.state = State::ArgList;
+						break;
+
+					default: ctxt.buffer += ch_in;
+				}
+				break;
+
+
+			case State::ArgList:
+			{
+				auto& cmd = *std::get_if<Command>(&ctxt.node.back());
+				switch(ch_in)
+				{
+					case '{': ctxt.state = State::ExpandString; break;
+
+					case ',': cmd.add(Literal{std::move(ctxt.buffer)}); break;
+
+					case ')':
+						cmd.add(Literal{std::move(ctxt.buffer)});
+						ctxt.state = State::AfterCommand;
+						break;
+
+					default: ctxt.buffer += ch_in;
+				}
+				break;
+			}
+
+			case State::ExpandString:
+				switch(ch_in)
+				{
+					case '{': break;
+					case '}': ctxt.state = State::ArgList; break;
+					default: break;
+				};
+				break;
+
+			case State::AfterCommand:
+				switch(ch_in)
+				{
+					case '|': ctxt.state = State::Init; break;
+
+					case ',': ctxt.state = State::ArgList; break;
+
+					default: puts(str); throw std::runtime_error{"Illegal character after command"};
+				}
+				break;
+
+
+			case State::Escape:
+				ctxt.buffer += ch_in;
+				ctxt.state = ctxt.state_prev;
+				break;
+		}
+	}
+
+	return ctxt.node;
+}
 
 #if 0
 Maike::CommandInterpreter::Command Maike::CommandInterpreter::makeCommand(char const* str)
