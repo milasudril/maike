@@ -118,6 +118,8 @@ namespace Maike::CommandInterpreter
 	class CommandSplitOutput
 	{
 	public:
+		explicit CommandSplitOutput(Pipe&& pipe, char separator):m_pipe{std::move(pipe)}, m_separator{separator}{}
+
 		Pipe const& pipe() const
 		{
 			return m_pipe;
