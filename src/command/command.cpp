@@ -6,6 +6,7 @@
 
 #include <string>
 
+#if 0
 Maike::CommandInterpreter::Command Maike::CommandInterpreter::makeCommand(char const* str)
 {
 	Command cmd;
@@ -17,7 +18,6 @@ Maike::CommandInterpreter::Command Maike::CommandInterpreter::makeCommand(char c
 	{
 		auto ch_in = *str;
 		if(ch_in == '\0') { return cmd; }
-#if 0
 		if(ch_in == '~')
 			{
 			state_prev = state;
@@ -93,7 +93,7 @@ Maike::CommandInterpreter::Command Maike::CommandInterpreter::makeCommand(char c
 				state = state_prev;
 				break;
 		}
-#endif
 	}
 	return cmd;
 }
+#endif

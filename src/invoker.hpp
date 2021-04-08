@@ -22,7 +22,7 @@ namespace Maike
 			Signal
 		};
 
-		constexpr explicit ExitSignal(Type type, int value): m_type{type}, m_value{value}
+		constexpr explicit ExitStatus(Type type, int value): m_type{type}, m_value{value}
 		{
 		}
 

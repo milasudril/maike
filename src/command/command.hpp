@@ -3,6 +3,8 @@
 //@	,"dependencies_extra":[{"ref":"command.o","rel":"implementation"}]
 //@	}
 
+#include "src/invoker.hpp"
+
 #include <memory>
 #include <string>
 #include <vector>
@@ -12,68 +14,52 @@ namespace Maike::CommandInterpreter
 {
 	/* Basic syntax
 	 *
-	 * <Command> ::= <CommandName> '(' <ArgList> ')' [ '<' <CommandInput> ]
-	 * <CommandInput> ::= <Value> | <Command>
-	 * <CommandName> ::= <String>
-	 * <String> ::= #'.*'
-	 * <Value> ::= <String>
-	 * <ArgList> ::= '' | <Argument> (',' <Argument>)*
-	 * <Argument> ::= <ValueArray> | <VariableExpansion> | <SplitCommand>
-	 * <ValueArray> ::= '' | (',' <Value>)*
-	 * <VariableExpansion> ::= <CommandInput>? '{' <SplitCommand> '}' <CommandInput>?
-	 * <SplitCommand> ::= <Command> '/' <Separator>
-	 * <Separator> ::= #'.*'
 	 *
 	 * Use ~ as escape symbol
 	 *
-	 * system.g++(-, -x, c++, -std=c++17, system.pkg-config(--libs,gtk+-3)/~ , -o, foo.o) <
-	 * cat(foo.txt)
-	 *
+	 * system.cat(foo.cpp)|system.g++(-, -x, c++, -std=c++17, system.pkg-config(--libs,gtk+-3)/~ , -o,
+	 * foo.o)
 	 */
-	template<class T>
-	class RecursiveWrapper
+
+	class Literal
 	{
 	public:
-		template<class... Args>
-		RecursiveWrapper(Args&&... args): m_val{std::make_unique<Args...>(std::forward<Args>(args)...)}
-		{
-		}
-
-		operator const T&() const
-		{
-			return *m_val;
-		}
-
-		bool operator==(const RecursiveWrapper& other) const
-		{
-			return *m_val == *other.m_val;
-		}
-
-		bool operator!=(const RecursiveWrapper& other) const
-		{
-			return !(*this == other);
-		}
-
 	private:
-		std::unique_ptr<T> m_val;
+		std::string m_value;
 	};
 
+	class ExpandString;
 
-	using Value = std::string;
-	using CommandName = std::string;
-	class Command;
-	using CommandInput = std::variant<Value, RecursiveWrapper<Command>>;
-	class VariableExpansion;
-	using Argument = std::variant<Value, RecursiveWrapper<VariableExpansion>>;
-	using ArgList = std::vector<Argument>;
-
-	struct Command
+	class Command
 	{
-		CommandInput stdin;
-		CommandName name;
-		ArgList args;
+	private:
+		std::string m_name;
+		std::vector<std::variant<Literal, ExpandString>> m_args;
 	};
 
+	class CommandSplitOutput
+	{
+	public:
+	private:
+		Command m_command;
+		char m_separator;
+	};
+
+	class ExpandString
+	{
+	private:
+		Literal m_prefix;
+		CommandSplitOutput m_command;
+		Literal m_suffix;
+	};
+
+	class Pipe
+	{
+	public:
+	private:
+		std::vector<std::variant<Command, Literal>> m_commands;
+	};
+#if 0
 	struct SplitCommand
 	{
 		Command cmd;
@@ -87,9 +73,9 @@ namespace Maike::CommandInterpreter
 		CommandInput suffix;
 	};
 
-	inline bool operator==(Command const& a, Command const& b)
+	inline bool operator==(Command const&, Command const&)
 	{
-		return a.stdin == b.stdin && a.name == b.name && a.args == b.args;
+		return true;
 	}
 
 	inline bool operator!=(Command const& a, Command const& b)
@@ -98,21 +84,8 @@ namespace Maike::CommandInterpreter
 	}
 
 
-	inline bool operator==(SplitCommand const& a, SplitCommand const& b)
-	{
-		return a.cmd == b.cmd && a.separator == b.separator;
-	}
-
-
-	inline bool operator==(VariableExpansion const& a, VariableExpansion const& b)
-	{
-		return a.prefix == b.prefix && a.command == b.command && a.suffix == b.suffix;
-	}
-
-	inline bool operator!=(VariableExpansion const& a, VariableExpansion const& b)
-	{
-		return !(a == b);
-	}
+	std::vector<std::byte> execute(Command const& cmd, Invoker const& i);
 
 	Command makeCommand(char const* str);
+#endif
 }
