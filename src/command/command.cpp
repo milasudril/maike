@@ -86,7 +86,8 @@ Maike::CommandInterpreter::expand(Pipe const& pipe, CommandOutput const& sysin)
 }
 
 
-std::pair<Maike::CommandInterpreter::Pipe, char const*> Maike::CommandInterpreter::makePipe(char const* str)
+std::pair<Maike::CommandInterpreter::Pipe, char const*>
+Maike::CommandInterpreter::makePipe(char const* str)
 {
 	enum class State : int
 	{
@@ -126,14 +127,9 @@ std::pair<Maike::CommandInterpreter::Pipe, char const*> Maike::CommandInterprete
 		if(ch_in == '~')
 		{
 			if(ctxt.state == State::AfterExpandStringPipe)
-			{
-				throw std::runtime_error{"Junk after expand string pipe"};
-			}
+			{ throw std::runtime_error{"Junk after expand string pipe"}; }
 
-			if(ctxt.state == State::AfterCommand)
-			{
-				throw std::runtime_error{"Junk after command"};
-			}
+			if(ctxt.state == State::AfterCommand) { throw std::runtime_error{"Junk after command"}; }
 
 			ctxt.state_prev = ctxt.state;
 			ctxt.state = State::Escape;
@@ -175,8 +171,7 @@ std::pair<Maike::CommandInterpreter::Pipe, char const*> Maike::CommandInterprete
 					case ',': cmd.add(Literal{std::move(ctxt.buffer)}); break;
 
 					case ')':
-						if(std::size(ctxt.buffer) != 0)
-						{ cmd.add(Literal{std::move(ctxt.buffer)}); }
+						if(std::size(ctxt.buffer) != 0) { cmd.add(Literal{std::move(ctxt.buffer)}); }
 						if(std::size(contexts) != 0)
 						{
 							auto& ctxt_prev = contexts.top();
@@ -221,8 +216,7 @@ std::pair<Maike::CommandInterpreter::Pipe, char const*> Maike::CommandInterprete
 						}
 						else
 						{
-							if(ctxt.bracecount == 0)
-							{throw std::runtime_error{"Curly-brace mismatch"};}
+							if(ctxt.bracecount == 0) { throw std::runtime_error{"Curly-brace mismatch"}; }
 							ctxt.buffer += ch_in;
 							--ctxt.bracecount;
 						}
@@ -282,7 +276,9 @@ std::pair<Maike::CommandInterpreter::Pipe, char const*> Maike::CommandInterprete
 							contexts.pop();
 						}
 						else
-						{ ctxt.state = State::AfterCommand; }
+						{
+							ctxt.state = State::AfterCommand;
+						}
 						break;
 
 					case ',':

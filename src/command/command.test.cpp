@@ -17,8 +17,10 @@ namespace Testcases
 		auto res_1 = Maike::CommandInterpreter::makePipe(test);
 		auto res_2 = Maike::CommandInterpreter::makePipe(res_1.second);
 
-		printf("%s\n", std::get_if<Maike::CommandInterpreter::Command>(&res_1.first.back())->name().c_str());
-		printf("%s\n", std::get_if<Maike::CommandInterpreter::Command>(&res_2.first.back())->name().c_str());
+		printf("%s\n",
+		       std::get_if<Maike::CommandInterpreter::Command>(&res_1.first.back())->name().c_str());
+		printf("%s\n",
+		       std::get_if<Maike::CommandInterpreter::Command>(&res_2.first.back())->name().c_str());
 		//		assert(cmd == Maike::CommandInterpreter::Command{});
 	}
 }
