@@ -140,6 +140,12 @@ namespace Maike::CommandInterpreter
 		{
 		}
 
+		CommandSplitOutput& pipe(Pipe&& pipe)
+		{
+			m_pipe = std::move(pipe);
+			return *this;
+		}
+
 		Pipe const& pipe() const
 		{
 			return m_pipe;
@@ -170,6 +176,11 @@ namespace Maike::CommandInterpreter
 		}
 
 		CommandSplitOutput const& command() const
+		{
+			return m_command;
+		}
+
+		CommandSplitOutput& command()
 		{
 			return m_command;
 		}

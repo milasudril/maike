@@ -165,7 +165,19 @@ Maike::CommandInterpreter::Pipe Maike::CommandInterpreter::makePipe(char const* 
 
 					case ')':
 						cmd.add(Literal{std::move(ctxt.buffer)});
-						ctxt.state = State::AfterCommand;
+						if(std::size(contexts) != 0)
+						{
+							auto& ctxt_prev = contexts.top();
+							auto& cmd_prev = *std::get_if<Command>(&ctxt_prev.node.back());
+							auto& expand_string = *std::get_if<ExpandString>(&cmd_prev.back());
+							expand_string.command().pipe(std::move(ctxt.node));
+							ctxt = std::move(contexts.top());
+							contexts.pop();
+						}
+						else
+						{
+							ctxt.state = State::AfterCommand;
+						}
 						break;
 
 					default: ctxt.buffer += ch_in;
@@ -174,16 +186,24 @@ Maike::CommandInterpreter::Pipe Maike::CommandInterpreter::makePipe(char const* 
 			}
 
 			case State::ExpandString:
+			{
 				switch(ch_in)
 				{
+					case '(':
+						contexts.push(std::move(ctxt));
+						ctxt.state = State::ArgList;
+						ctxt.node |= Command{std::move(contexts.top().buffer)};
+						break;
+
 					case '{': ++ctxt.bracecount; break;
 					case '}':
 						--ctxt.bracecount;
 						if(ctxt.bracecount == 0) { ctxt.state = State::AfterExpandString; }
 						break;
-					default: break;
+					default: ctxt.buffer += ch_in;
 				};
 				break;
+			}
 
 			case State::AfterExpandString:
 			{
