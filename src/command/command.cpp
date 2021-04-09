@@ -33,6 +33,11 @@ Maike::CommandInterpreter::CommandOutput Maike::CommandInterpreter::expand(Comma
 	return CommandOutput{};
 }
 
+bool Maike::CommandInterpreter::operator==(Command const& a, Command const& b)
+{
+	return a.name() == b.name() && a.args() == b.args();
+}
+
 Maike::CommandInterpreter::EvaluatedArgument
 Maike::CommandInterpreter::makeEvaluatedArgument(CommandSplitOutput const& obj)
 {

@@ -16,8 +16,8 @@ namespace Maike::CommandInterpreter
 	 *
 	 * Use ~ as escape symbol
 	 *
-	 * system.cat(foo.cpp)|system.g++(-, -x, c++, -std=c++17, {system.pkg-config(--libs,gtk+-3)/~ }, -o,
-	 * foo.o)
+	 * system.cat(foo.cpp)|system.g++(-, -x, c++, -std=c++17, {system.pkg-config(--libs,gtk+-3)/~ },
+	 * -o, foo.o)
 	 */
 
 	using CommandOutput = std::vector<std::byte>;
@@ -47,6 +47,16 @@ namespace Maike::CommandInterpreter
 	private:
 		std::string m_value;
 	};
+
+	inline bool operator==(Literal const& a, Literal const& b)
+	{
+		return a.value() == b.value();
+	}
+
+	inline bool operator!=(Literal const& a, Literal const& b)
+	{
+		return !(a == b);
+	}
 
 	CommandOutput expand(Literal const& obj, CommandOutput const& sysin);
 
@@ -87,6 +97,13 @@ namespace Maike::CommandInterpreter
 		std::vector<std::variant<Literal, ExpandString>> m_args;
 	};
 
+	bool operator==(Command const& a, Command const& b);
+
+	inline bool operator!=(Command const& a, Command const& b)
+	{
+		return !(a == b);
+	}
+
 	CommandOutput expand(Command const&, CommandOutput const& sysin);
 
 	class Command;
@@ -119,6 +136,16 @@ namespace Maike::CommandInterpreter
 	private:
 		std::vector<std::variant<Literal, Command>> m_commands;
 	};
+
+	inline bool operator==(Pipe const& a, Pipe const& b)
+	{
+		return a.commands() == b.commands();
+	}
+
+	inline bool operator!=(Pipe const& a, Pipe const& b)
+	{
+		return !(a == b);
+	}
 
 	inline Pipe& operator|(Pipe& a, Command&& cmd)
 	{
@@ -167,6 +194,16 @@ namespace Maike::CommandInterpreter
 		char m_separator;
 	};
 
+	inline bool operator==(CommandSplitOutput const& a, CommandSplitOutput const& b)
+	{
+		return a.pipe() == b.pipe() && a.separator() == b.separator();
+	}
+
+	inline bool operator!=(CommandSplitOutput const& a, CommandSplitOutput const& b)
+	{
+		return !(a == b);
+	}
+
 	EvaluatedArgument makeEvaluatedArgument(CommandSplitOutput const& obj);
 
 	class ExpandString
@@ -207,6 +244,16 @@ namespace Maike::CommandInterpreter
 		CommandSplitOutput m_command;
 		Literal m_suffix;
 	};
+
+	inline bool operator==(ExpandString const& a, ExpandString const& b)
+	{
+		return a.prefix() == b.prefix() && a.command() == b.command() && a.suffix() == b.suffix();
+	}
+
+	inline bool operator!=(ExpandString const& a, ExpandString const& b)
+	{
+		return !(a == b);
+	}
 
 	inline Command& Command::add(Literal&& arg)
 	{
