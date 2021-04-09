@@ -125,6 +125,16 @@ Maike::CommandInterpreter::Pipe Maike::CommandInterpreter::makePipe(char const* 
 
 		if(ch_in == '~')
 		{
+			if(ctxt.state == State::AfterExpandStringPipe)
+			{
+				throw std::runtime_error{"Junk after expand string pipe"};
+			}
+
+			if(ctxt.state == State::AfterCommand)
+			{
+				throw std::runtime_error{"Junk after command"};
+			}
+
 			ctxt.state_prev = ctxt.state;
 			ctxt.state = State::Escape;
 			continue;
@@ -272,7 +282,7 @@ Maike::CommandInterpreter::Pipe Maike::CommandInterpreter::makePipe(char const* 
 							contexts.pop();
 						}
 						else
-						{ ctxt.state = State::Init; }
+						{ ctxt.state = State::AfterCommand; }
 						break;
 
 					case ',':
@@ -289,9 +299,9 @@ Maike::CommandInterpreter::Pipe Maike::CommandInterpreter::makePipe(char const* 
 				{
 					case '|': ctxt.state = State::Init; break;
 
-					case ',': ctxt.state = State::ArgList; break;
+					case ';': return ctxt.node;
 
-					default: throw std::runtime_error{"Illegal character after command"};
+					default: throw std::runtime_error{"Junk after command"};
 				}
 				break;
 
