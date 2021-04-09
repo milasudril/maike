@@ -151,6 +151,12 @@ namespace Maike::CommandInterpreter
 			return m_pipe;
 		}
 
+		CommandSplitOutput& separator(char sep)
+		{
+			m_separator = sep;
+			return *this;
+		}
+
 		char separator() const
 		{
 			return m_separator;

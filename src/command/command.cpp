@@ -93,6 +93,7 @@ Maike::CommandInterpreter::Pipe Maike::CommandInterpreter::makePipe(char const* 
 		Init,
 		ArgList,
 		ExpandString,
+		Separator,
 		AfterExpandString,
 		AfterCommand,
 		Escape
@@ -195,15 +196,56 @@ Maike::CommandInterpreter::Pipe Maike::CommandInterpreter::makePipe(char const* 
 						ctxt.node |= Command{std::move(contexts.top().buffer)};
 						break;
 
-					case '{': ++ctxt.bracecount; break;
+					case '{':
+						++ctxt.bracecount;
+						ctxt.buffer += ch_in;
+						break;
+
 					case '}':
 						--ctxt.bracecount;
 						if(ctxt.bracecount == 0) { ctxt.state = State::AfterExpandString; }
+						else
+						{
+							ctxt.buffer += ch_in;
+						}
+
 						break;
+
+					case '/':
+						if(std::size(ctxt.buffer) != 0) { throw std::runtime_error{"Junk after expand string pipe"}; }
+						ctxt.state = State::Separator;
+						break;
+
 					default: ctxt.buffer += ch_in;
 				};
 				break;
 			}
+
+			case State::Separator:
+				switch(ch_in)
+				{
+					case '}':
+						--ctxt.bracecount;
+						if(ctxt.bracecount == 0)
+						{
+							if(std::size(ctxt.buffer) != 1)
+							{ throw std::runtime_error{"Expected field separator of length 1"}; }
+							auto& cmd = *std::get_if<Command>(&ctxt.node.back());
+							auto& expand_string = *std::get_if<ExpandString>(&cmd.back());
+							expand_string.command().separator(ctxt.buffer[0]);
+							ctxt.buffer.clear();
+							ctxt.state = State::AfterExpandString;
+						}
+						else
+						{
+							ctxt.buffer += ch_in;
+						}
+						break;
+
+					default: ctxt.buffer += ch_in;
+				}
+
+				break;
 
 			case State::AfterExpandString:
 			{

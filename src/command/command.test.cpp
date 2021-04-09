@@ -12,8 +12,8 @@ namespace Testcases
 	{
 		constexpr char const* test =
 		   "system.cat(foo.cpp)|system.g++(-, -x, c++, -std=c++17, foo{system.pkg-config(--libs, "
-		   "gtk+-3)/~ "
-		   "}bar, -o, foo.o)";
+		   "gtk+-3)/~ }"
+		   "bar, -o, foo.o)";
 		auto pipe = Maike::CommandInterpreter::makePipe(test);
 
 		printf("%s\n", std::get_if<Maike::CommandInterpreter::Command>(&pipe.back())->name().c_str());
