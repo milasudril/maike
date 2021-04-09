@@ -92,7 +92,8 @@ Maike::CommandInterpreter::Pipe Maike::CommandInterpreter::makePipe(char const* 
 	{
 		Init,
 		ArgList,
-		ExpandString,
+		ExpandStringFirstCommand,
+		AfterExpandStringPipe,
 		Separator,
 		AfterExpandString,
 		AfterCommand,
@@ -158,8 +159,7 @@ Maike::CommandInterpreter::Pipe Maike::CommandInterpreter::makePipe(char const* 
 				{
 					case '{':
 						cmd.add(ExpandString{Literal{std::move(ctxt.buffer)}});
-						ctxt.state = State::ExpandString;
-						++ctxt.bracecount;
+						ctxt.state = State::ExpandStringFirstCommand;
 						break;
 
 					case ',': cmd.add(Literal{std::move(ctxt.buffer)}); break;
@@ -173,6 +173,7 @@ Maike::CommandInterpreter::Pipe Maike::CommandInterpreter::makePipe(char const* 
 							auto& expand_string = *std::get_if<ExpandString>(&cmd_prev.back());
 							expand_string.command().pipe(std::move(ctxt.node));
 							ctxt = std::move(contexts.top());
+							ctxt.state = State::AfterExpandStringPipe;
 							contexts.pop();
 						}
 						else
@@ -186,7 +187,7 @@ Maike::CommandInterpreter::Pipe Maike::CommandInterpreter::makePipe(char const* 
 				break;
 			}
 
-			case State::ExpandString:
+			case State::ExpandStringFirstCommand:
 			{
 				switch(ch_in)
 				{
@@ -202,18 +203,18 @@ Maike::CommandInterpreter::Pipe Maike::CommandInterpreter::makePipe(char const* 
 						break;
 
 					case '}':
-						--ctxt.bracecount;
-						if(ctxt.bracecount == 0) { ctxt.state = State::AfterExpandString; }
+						if(std::size(ctxt.buffer) == 0)
+						{
+							ctxt.state = State::AfterExpandString;
+							break;
+						}
 						else
 						{
+							if(ctxt.bracecount == 0)
+							{throw std::runtime_error{"Curly-brace mismatch"};}
 							ctxt.buffer += ch_in;
+							--ctxt.bracecount;
 						}
-
-						break;
-
-					case '/':
-						if(std::size(ctxt.buffer) != 0) { throw std::runtime_error{"Junk after expand string pipe"}; }
-						ctxt.state = State::Separator;
 						break;
 
 					default: ctxt.buffer += ch_in;
@@ -221,27 +222,31 @@ Maike::CommandInterpreter::Pipe Maike::CommandInterpreter::makePipe(char const* 
 				break;
 			}
 
+			case State::AfterExpandStringPipe:
+				switch(ch_in)
+				{
+					case '/': ctxt.state = State::Separator; break;
+
+					case '}': ctxt.state = State::AfterExpandString; break;
+
+					default: throw std::runtime_error{"Junk after expand string pipe"};
+				}
+				break;
+
 			case State::Separator:
 				switch(ch_in)
 				{
 					case '}':
-						--ctxt.bracecount;
-						if(ctxt.bracecount == 0)
-						{
-							if(std::size(ctxt.buffer) != 1)
-							{ throw std::runtime_error{"Expected field separator of length 1"}; }
-							auto& cmd = *std::get_if<Command>(&ctxt.node.back());
-							auto& expand_string = *std::get_if<ExpandString>(&cmd.back());
-							expand_string.command().separator(ctxt.buffer[0]);
-							ctxt.buffer.clear();
-							ctxt.state = State::AfterExpandString;
-						}
-						else
-						{
-							ctxt.buffer += ch_in;
-						}
+					{
+						if(std::size(ctxt.buffer) != 1)
+						{ throw std::runtime_error{"Expected field separator of length 1"}; }
+						auto& cmd = *std::get_if<Command>(&ctxt.node.back());
+						auto& expand_string = *std::get_if<ExpandString>(&cmd.back());
+						expand_string.command().separator(ctxt.buffer[0]);
+						ctxt.buffer.clear();
+						ctxt.state = State::AfterExpandString;
 						break;
-
+					}
 					default: ctxt.buffer += ch_in;
 				}
 
@@ -274,7 +279,7 @@ Maike::CommandInterpreter::Pipe Maike::CommandInterpreter::makePipe(char const* 
 
 					case ',': ctxt.state = State::ArgList; break;
 
-					default: puts(str); throw std::runtime_error{"Illegal character after command"};
+					default: throw std::runtime_error{"Illegal character after command"};
 				}
 				break;
 
@@ -288,95 +293,3 @@ Maike::CommandInterpreter::Pipe Maike::CommandInterpreter::makePipe(char const* 
 
 	return ctxt.node;
 }
-
-#if 0
-Maike::CommandInterpreter::Command Maike::CommandInterpreter::makeCommand(char const* str)
-{
-	Command cmd;
-	//	enum class State:int{Command, Escape, ArgList, State::BeforeCommandInput, State::CommandInput};
-	//	auto state = State::Command;
-	//	auto state_prev = state;
-	//	std::string buffer;
-	while(true)
-	{
-		auto ch_in = *str;
-		if(ch_in == '\0') { return cmd; }
-		if(ch_in == '~')
-			{
-			state_prev = state;
-			state = State::Escape;
-			continue;
-		}
-
-		switch(state)
-		{
-			case State::Command:
-				switch(ch_in)
-				{
-					case '('
-						cmd.name = std::move(buffer);
-						state = State::ArgList;
-						break;
-
-					default:
-						buffer += ch_in;
-						break;
-				}
-				break;
-
-			case State::ArgList:
-				switch(ch_in)
-				{
-					case '(':
-						push(cmd, state);
-						cmd.name = std::move(buffer);
-						state = State::Command;
-						break;
-
-					case ',':
-						cmd.args.push_back(arg);
-						break;
-
-					case ')':
-						state = State::BeforeCommandInput;
-						break;
-
-					default:
-						buffer += ch_in;
-				}
-
-			case State::BeforeCommandInput:
-				switch(ch_in)
-				{
-					case '<':
-						state = CommandInput;
-						break;
-					default:
-						[cmd, state] = pop();
-				}
-
-			case State::CommandInput:
-				switch(ch_in)
-				{
-					case '(': {
-						Command stdin;
-						stdin.name = std::move(buffer);
-						cmd.stdin = stdin;
-
-						state = State::Command;
-						break;
-					}
-					default:
-						buffer += ch_in;
-				}
-				break;
-
-			case State::Escape:
-				buffer += ch_in;
-				state = state_prev;
-				break;
-		}
-	}
-	return cmd;
-}
-#endif
