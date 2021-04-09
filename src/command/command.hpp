@@ -68,7 +68,7 @@ namespace Maike::CommandInterpreter
 		{
 			return m_name;
 		}
-		std::vector<std::variant<Literal, ExpandString>> args() const
+		std::vector<std::variant<Literal, ExpandString>> const& args() const
 		{
 			return m_args;
 		}
@@ -117,7 +117,7 @@ namespace Maike::CommandInterpreter
 		}
 
 	private:
-		std::vector<std::variant<Command, Literal>> m_commands;
+		std::vector<std::variant<Literal, Command>> m_commands;
 	};
 
 	inline Pipe& operator|(Pipe& a, Command&& cmd)
