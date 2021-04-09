@@ -83,9 +83,19 @@ namespace Maike::CommandInterpreter
 			return m_args;
 		}
 
-		Command& add(Literal&& arg);
+		Command& add(Literal&& arg) &;
 
-		Command& add(ExpandString&& str);
+		Command&& add(Literal&& arg) &&
+		{
+			return std::move(add(std::move(arg)));
+		}
+
+		Command& add(ExpandString&& str) &;
+
+		Command&& add(ExpandString&& str) &&
+		{
+			return std::move(add(std::move(str)));
+		}
 
 		auto& back()
 		{
@@ -157,6 +167,16 @@ namespace Maike::CommandInterpreter
 		return a |= std::move(x);
 	}
 
+	inline Pipe&& operator|(Pipe&& a, Command&& cmd)
+	{
+		return std::move(a |= std::move(cmd));
+	}
+
+	inline Pipe&& operator|(Pipe&& a, Literal&& x)
+	{
+		return std::move(a |= std::move(x));
+	}
+
 	CommandOutput expand(Pipe const& pipe, CommandOutput const& sysin);
 
 
@@ -167,10 +187,16 @@ namespace Maike::CommandInterpreter
 		{
 		}
 
-		CommandSplitOutput& pipe(Pipe&& pipe)
+		CommandSplitOutput& pipe(Pipe&& pipe) &
 		{
 			m_pipe = std::move(pipe);
 			return *this;
+		}
+
+
+		CommandSplitOutput&& pipe(Pipe&& val) &&
+		{
+			return std::move(pipe(std::move(val)));
 		}
 
 		Pipe const& pipe() const
@@ -178,10 +204,15 @@ namespace Maike::CommandInterpreter
 			return m_pipe;
 		}
 
-		CommandSplitOutput& separator(char sep)
+		CommandSplitOutput& separator(char sep) &
 		{
 			m_separator = sep;
 			return *this;
+		}
+
+		CommandSplitOutput&& separator(char sep) &&
+		{
+			return std::move(separator(sep));
 		}
 
 		char separator() const
@@ -228,15 +259,31 @@ namespace Maike::CommandInterpreter
 			return m_command;
 		}
 
+		ExpandString& command(CommandSplitOutput&& command) &
+		{
+			m_command = std::move(command);
+			return *this;
+		}
+
+		ExpandString&& command(CommandSplitOutput&& val) &&
+		{
+			return std::move(command(std::move(val)));
+		}
+
 		Literal const& suffix() const
 		{
 			return m_suffix;
 		}
 
-		ExpandString& suffix(Literal&& suffix)
+		ExpandString& suffix(Literal&& suffix) &
 		{
 			m_suffix = std::move(suffix);
 			return *this;
+		}
+
+		ExpandString&& suffix(Literal&& val) &&
+		{
+			return std::move(suffix(std::move(val)));
 		}
 
 	private:
@@ -255,13 +302,13 @@ namespace Maike::CommandInterpreter
 		return !(a == b);
 	}
 
-	inline Command& Command::add(Literal&& arg)
+	inline Command& Command::add(Literal&& arg) &
 	{
 		m_args.push_back(std::move(arg));
 		return *this;
 	}
 
-	inline Command& Command::add(ExpandString&& str)
+	inline Command& Command::add(ExpandString&& str) &
 	{
 		m_args.push_back(std::move(str));
 		return *this;

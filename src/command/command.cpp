@@ -126,7 +126,7 @@ Maike::CommandInterpreter::makePipe(char const* str)
 		{
 			if(std::size(contexts) != 0) { throw std::runtime_error{"Unterminated command"}; }
 
-			return std::pair{ctxt.node, str};
+			return std::pair{ctxt.node, str - 1};
 		}
 
 		if(ch_in == '~')
