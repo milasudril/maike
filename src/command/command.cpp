@@ -186,16 +186,25 @@ Maike::CommandInterpreter::Pipe Maike::CommandInterpreter::makePipe(char const* 
 				break;
 
 			case State::AfterExpandString:
+			{
+				auto& cmd = *std::get_if<Command>(&ctxt.node.back());
+				auto& expand_string = *std::get_if<ExpandString>(&cmd.back());
 				switch(ch_in)
 				{
-					case ')': ctxt.state = State::Init; break;
+					case ')':
+						expand_string.suffix(Literal{std::move(ctxt.buffer)});
+						ctxt.state = State::Init;
+						break;
 
-					case ',': ctxt.state = State::ArgList; break;
+					case ',':
+						expand_string.suffix(Literal{std::move(ctxt.buffer)});
+						ctxt.state = State::ArgList;
+						break;
 
-					default: puts(str); throw std::runtime_error{"Illegal character after command"};
+					default: ctxt.buffer += ch_in;
 				}
 				break;
-
+			}
 			case State::AfterCommand:
 				switch(ch_in)
 				{
