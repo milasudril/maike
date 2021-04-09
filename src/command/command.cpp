@@ -86,7 +86,7 @@ Maike::CommandInterpreter::expand(Pipe const& pipe, CommandOutput const& sysin)
 }
 
 
-Maike::CommandInterpreter::Pipe Maike::CommandInterpreter::makePipe(char const* str)
+std::pair<Maike::CommandInterpreter::Pipe, char const*> Maike::CommandInterpreter::makePipe(char const* str)
 {
 	enum class State : int
 	{
@@ -120,7 +120,7 @@ Maike::CommandInterpreter::Pipe Maike::CommandInterpreter::makePipe(char const* 
 		{
 			if(std::size(contexts) != 0) { throw std::runtime_error{"Unterminated command"}; }
 
-			return ctxt.node;
+			return std::pair{ctxt.node, str};
 		}
 
 		if(ch_in == '~')
@@ -299,7 +299,7 @@ Maike::CommandInterpreter::Pipe Maike::CommandInterpreter::makePipe(char const* 
 				{
 					case '|': ctxt.state = State::Init; break;
 
-					case ';': return ctxt.node;
+					case ';': return std::pair{ctxt.node, str};
 
 					default: throw std::runtime_error{"Junk after command"};
 				}
@@ -312,6 +312,4 @@ Maike::CommandInterpreter::Pipe Maike::CommandInterpreter::makePipe(char const* 
 				break;
 		}
 	}
-
-	return ctxt.node;
 }

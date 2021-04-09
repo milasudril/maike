@@ -222,5 +222,5 @@ namespace Maike::CommandInterpreter
 
 	EvaluatedArgument makeEvaluatedArgument(ExpandString const& obj);
 
-	Pipe makePipe(char const* buffer);
+	std::pair<Pipe, char const*> makePipe(char const* buffer);
 }
