@@ -6,7 +6,6 @@
 #define MAIKE_INVOKER_HPP
 
 #include "src/utils/fs.hpp"
-#include "src/utils/varstring.hpp"
 
 #include <vector>
 #include <memory>
@@ -51,34 +50,27 @@ namespace Maike
 	class Invoker
 	{
 	public:
-		void mkdir(fs::path const& dir) const
-		{
-			return m_handle->mkdir(dir);
-		}
-
 		ExecResult execp(fs::path const& executable,
-		                 std::vector<Varstring> const& args,
+		                 std::vector<std::string> const& args,
 		                 std::vector<std::byte> const& sysin) const
 		{
 			return m_handle->execp(executable, args, sysin);
 		}
 
-		void setvar(std::string&& name, std::string&& value)
+		std::vector<std::string> const& getvar(std::string_view name) const
 		{
-			m_handle->setvar(std::move(name), std::move(value));
+			return m_handle->getvar(name);
 		}
 
 	private:
 		class AbstractInvoker
 		{
 		public:
-			virtual void mkdir(fs::path const& dir) const = 0;
-
 			virtual ExecResult execp(fs::path const& executable,
-			                         std::vector<Varstring> const& args,
+			                         std::vector<std::string> const& args,
 			                         std::vector<std::byte> const& sysin) const = 0;
 
-			virtual void setvar(std::string&& name, std::string&& value) = 0;
+			virtual std::vector<std::string> const& getvar(std::string_view name) = 0;
 
 			virtual ~AbstractInvoker()
 			{
@@ -91,21 +83,16 @@ namespace Maike
 		public:
 			explicit InvokerImpl(T&& obj): m_obj{std::move(obj)} {};
 
-			void mkdir(fs::path const& dir) const override
-			{
-				return m_obj.mkdir(dir);
-			}
-
 			ExecResult execp(fs::path const& executable,
-			                 std::vector<Varstring> const& args,
+			                 std::vector<std::string> const& args,
 			                 std::vector<std::byte> const& sysin) const override
 			{
 				return m_obj.execp(executable, args, sysin);
 			}
 
-			void setvar(std::string&& name, std::string&& value) override
+			std::vector<std::string> const& getvar(std::string_view name) override
 			{
-				m_obj.setvar(name, value);
+				return m_obj.getvar(name);
 			}
 
 			~InvokerImpl() override = default;
