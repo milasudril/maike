@@ -100,10 +100,10 @@ namespace Maike::CommandInterpreter
 		return !(a == b);
 	}
 
-	// TODO: This must look up obj in dictionary
-	inline EvaluatedArgument makeEvaluatedArgument(Varname const&, Invoker const&)
+
+	inline EvaluatedArgument makeEvaluatedArgument(Varname const& varname, Invoker const& invoker)
 	{
-		return EvaluatedArgument{};
+		return invoker.getvar(varname.value());
 	}
 
 
