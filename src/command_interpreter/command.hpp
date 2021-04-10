@@ -3,7 +3,7 @@
 //@	,"dependencies_extra":[{"ref":"command.o","rel":"implementation"}]
 //@	}
 
-#include "src/invoker.hpp"
+#include "./invoker.hpp"
 
 #include <string>
 #include <vector>
