@@ -16,7 +16,7 @@ namespace Testcases
 		   "cat({$source_file}) | g++(-, -x, c++, -std=c++17, foo{pkg-config(--libs, "
 		   "gtk+-3)/~ }"
 		   "bar, -o, foo.o, a{fo{o}(a, {test()/!}, {kaka()/%})/:}b, a{}b, {$dependencies}); "
-		   "next_command()";
+		   "next_command({inner_command({$varname})})";
 		auto res_1 = CI::makePipe(test);
 		auto res_2 = CI::makePipe(res_1.second);
 
@@ -55,7 +55,13 @@ namespace Testcases
 		         .add(CI::ExpandString{CI::Literal{""}}.value(CI::Varname{"dependencies"})));
 
 		assert(res_1.first == val_1);
-		assert((res_2.first == (CI::Pipe{} | CI::Command{"next_command"})));
+		assert(
+		   (res_2.first
+		    == (CI::Pipe{}
+		        | CI::Command{"next_command"}.add(CI::ExpandString{CI::Literal{""}}.value(
+		           CI::CommandSplitOutput{}.pipe(CI::Pipe{}
+		                                         | CI::Command{"inner_command"}.add(CI::ExpandString{
+		                                            CI::Literal{""}}.value(CI::Varname{"varname"}))))))));
 		assert(*res_2.second == '\0');
 	}
 }
