@@ -8,7 +8,7 @@
 #include <stack>
 
 Maike::CommandInterpreter::CommandOutput
-Maike::CommandInterpreter::execute(Literal const& obj, CommandOutput const&, Invoker const&)
+Maike::CommandInterpreter::execute(Literal const& obj, Invoker const&, CommandOutput const&)
 {
 	CommandOutput ret;
 	auto const& val = obj.value();
@@ -18,8 +18,8 @@ Maike::CommandInterpreter::execute(Literal const& obj, CommandOutput const&, Inv
 	return ret;
 }
 
-Maike::CommandInterpreter::CommandOutput
-Maike::CommandInterpreter::execute(Command const& cmd, CommandOutput const& sysin, Invoker const& invoker)
+Maike::CommandInterpreter::CommandOutput Maike::CommandInterpreter::execute(
+   Command const& cmd, Invoker const& invoker, CommandOutput const& sysin)
 {
 	auto const& args = cmd.args();
 	std::vector<std::string> args_eval;
@@ -42,7 +42,7 @@ Maike::CommandInterpreter::EvaluatedArgument
 Maike::CommandInterpreter::makeEvaluatedArgument(CommandSplitOutput const& obj,
                                                  Invoker const& invoker)
 {
-	auto const command_output = execute(obj.pipe(), CommandOutput{}, invoker);
+	auto const command_output = execute(obj.pipe(), invoker, CommandOutput{});
 
 	EvaluatedArgument output_split;
 	std::string buffer;
@@ -81,13 +81,13 @@ Maike::CommandInterpreter::makeEvaluatedArgument(ExpandString const& arg, Invoke
 }
 
 Maike::CommandInterpreter::CommandOutput Maike::CommandInterpreter::execute(
-   Pipe const& pipe, CommandOutput const& sysin, Invoker const& invoker)
+   Pipe const& pipe, Invoker const& invoker, CommandOutput const& sysin)
 {
 	auto const& commands = pipe.commands();
 	CommandOutput sysout{sysin};
-	std::for_each(std::begin(commands), std::end(commands), [&sysout, &invoker](auto const& cmd) {
+	std::for_each(std::begin(commands), std::end(commands), [&invoker, &sysout](auto const& cmd) {
 		sysout = std::visit(
-		   [&sysin = sysout, &invoker](auto const& item) { return execute(item, sysin, invoker); }, cmd);
+		   [&invoker, &sysin = sysout](auto const& item) { return execute(item, invoker, sysin); }, cmd);
 	});
 
 	return sysout;

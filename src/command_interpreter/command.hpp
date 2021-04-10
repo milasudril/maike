@@ -58,7 +58,7 @@ namespace Maike::CommandInterpreter
 		return !(a == b);
 	}
 
-	CommandOutput execute(Literal const& obj, CommandOutput const& sysin, Invoker const& invoker);
+	CommandOutput execute(Literal const& obj, Invoker const& invoker, CommandOutput const& sysin);
 
 	inline EvaluatedArgument makeEvaluatedArgument(Literal const& obj, Invoker const&)
 	{
@@ -156,7 +156,7 @@ namespace Maike::CommandInterpreter
 		return !(a == b);
 	}
 
-	CommandOutput execute(Command const&, CommandOutput const& sysin, Invoker const& invoker);
+	CommandOutput execute(Command const&, Invoker const& invoker, CommandOutput const& sysin);
 
 
 	class Command;
@@ -220,7 +220,7 @@ namespace Maike::CommandInterpreter
 		return std::move(a |= std::move(x));
 	}
 
-	CommandOutput execute(Pipe const& pipe, CommandOutput const& sysin, Invoker const& invoker);
+	CommandOutput execute(Pipe const& pipe, Invoker const& invoker, CommandOutput const& sysin);
 
 
 	class CommandSplitOutput
