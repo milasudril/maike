@@ -65,6 +65,42 @@ namespace Maike::CommandInterpreter
 		return EvaluatedArgument{obj.value()};
 	}
 
+
+	class Varname
+	{
+	public:
+		Varname() = default;
+
+		explicit Varname(std::string&& val): m_value{std::move(val)}
+		{
+		}
+
+		Varname& value(std::string&& val)
+		{
+			m_value = val;
+			return *this;
+		}
+
+		std::string const& value() const
+		{
+			return m_value;
+		}
+
+	private:
+		std::string m_value;
+	};
+
+	inline bool operator==(Varname const& a, Varname const& b)
+	{
+		return a.value() == b.value();
+	}
+
+	inline bool operator!=(Varname const& a, Varname const& b)
+	{
+		return !(a == b);
+	}
+
+
 	class ExpandString;
 
 	class Command
