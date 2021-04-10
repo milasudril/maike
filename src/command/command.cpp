@@ -104,6 +104,7 @@ Maike::CommandInterpreter::makePipe(char const* str)
 		Separator,
 		AfterExpandString,
 		AfterCommand,
+		Varname,
 		Escape
 	};
 
@@ -203,6 +204,11 @@ Maike::CommandInterpreter::makePipe(char const* str)
 			{
 				switch(ch_in)
 				{
+					case '$':
+						++ctxt.bracecount;
+						ctxt.state = State::Varname;
+						break;
+
 					case '(':
 						contexts.push(std::move(ctxt));
 						ctxt.state = State::ArgList;
@@ -233,6 +239,32 @@ Maike::CommandInterpreter::makePipe(char const* str)
 				break;
 			}
 
+			case State::Varname:
+				switch(ch_in)
+				{
+					case '{':
+						++ctxt.bracecount;
+						ctxt.buffer += ch_in;
+						break;
+					case '}':
+						--ctxt.bracecount;
+						if(ctxt.bracecount == 0)
+						{
+							ctxt.state = State::AfterExpandString;
+							auto& cmd = *std::get_if<Command>(&ctxt.node.back());
+							auto& expand_string = *std::get_if<ExpandString>(&cmd.back());
+							expand_string.value(Varname{std::move(ctxt.buffer)});
+						}
+						else
+						{
+							ctxt.buffer += ch_in;
+						}
+						break;
+
+					default: ctxt.buffer += ch_in;
+				}
+				break;
+
 			case State::AfterExpandStringPipe:
 				switch(ch_in)
 				{
@@ -261,7 +293,6 @@ Maike::CommandInterpreter::makePipe(char const* str)
 					}
 					default: ctxt.buffer += ch_in;
 				}
-
 				break;
 
 			case State::AfterExpandString:
@@ -276,8 +307,8 @@ Maike::CommandInterpreter::makePipe(char const* str)
 						{
 							auto& ctxt_prev = contexts.top();
 							auto& cmd_prev = *std::get_if<Command>(&ctxt_prev.node.back());
-							auto& expand_string = *std::get_if<ExpandString>(&cmd_prev.back());
-							expand_string.value(CommandSplitOutput{}.pipe(std::move(ctxt.node)));
+							auto& expand_string_prev = *std::get_if<ExpandString>(&cmd_prev.back());
+							expand_string_prev.value(CommandSplitOutput{}.pipe(std::move(ctxt.node)));
 							ctxt = std::move(contexts.top());
 							ctxt.state = State::AfterExpandStringPipe;
 							contexts.pop();

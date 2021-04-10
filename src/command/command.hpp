@@ -312,6 +312,17 @@ namespace Maike::CommandInterpreter
 			return std::move(value(std::move(val)));
 		}
 
+		ExpandString& value(Varname&& name) &
+		{
+			m_value = std::move(name);
+			return *this;
+		}
+
+		ExpandString&& value(Varname&& val) &&
+		{
+			return std::move(value(std::move(val)));
+		}
+
 		Literal const& suffix() const
 		{
 			return m_suffix;
