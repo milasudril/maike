@@ -19,7 +19,7 @@ Maike::CommandInterpreter::execute(Literal const& obj, CommandOutput const&, Inv
 }
 
 Maike::CommandInterpreter::CommandOutput
-Maike::CommandInterpreter::execute(Command const& cmd, CommandOutput const&, Invoker const& invoker)
+Maike::CommandInterpreter::execute(Command const& cmd, CommandOutput const& sysin, Invoker const& invoker)
 {
 	auto const& args = cmd.args();
 	std::vector<std::string> args_eval;
@@ -29,9 +29,8 @@ Maike::CommandInterpreter::execute(Command const& cmd, CommandOutput const&, Inv
 		   std::visit([&invoker](auto const& item) { return makeEvaluatedArgument(item, invoker); }, arg);
 		std::copy(std::begin(arg_eval), std::end(arg_eval), std::back_inserter(arg_eval));
 	});
-	// TODO:
-	// return exep(cmd.executable(), args, sysín);
-	return CommandOutput{};
+
+	return invoker.execp(cmd.name(), args_eval, sysin);
 }
 
 bool Maike::CommandInterpreter::operator==(Command const& a, Command const& b)
