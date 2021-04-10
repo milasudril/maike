@@ -16,13 +16,13 @@ namespace
 
 	struct MyInvoker
 	{
-		std::vector<std::byte> execp(Maike::fs::path const& pathname, std::vector<std::string> const& args, std::vector<std::byte> const&) const
+		std::vector<std::byte> execp(Maike::fs::path const& pathname,
+		                             std::vector<std::string> const& args,
+		                             std::vector<std::byte> const&) const
 		{
 			printf("execp: %s", pathname.c_str());
-			std::for_each(std::begin(args), std::end(args), [](auto const& item)
-			{
-				printf(" %s", item.c_str());
-			});
+			std::for_each(
+			   std::begin(args), std::end(args), [](auto const& item) { printf(" %s", item.c_str()); });
 			printf("\n");
 			return std::vector<std::byte>{};
 		}
@@ -96,7 +96,8 @@ namespace Testcases
 		assert(*res_2.second == '\0');
 
 		Data data;
-		execute(res_1.first, CI::Invoker{MyInvoker{data}}, CI::CommandOutput{});
+		MyInvoker invoker{data};
+		execute(res_1.first, CI::Invoker{std::ref(invoker)}, CI::CommandOutput{});
 	}
 }
 

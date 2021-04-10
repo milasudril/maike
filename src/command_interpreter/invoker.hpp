@@ -18,60 +18,43 @@ namespace Maike::CommandInterpreter
 		using ExecResult = std::vector<std::byte>;
 
 		template<class T>
-		explicit Invoker(T&& obj): m_handle{std::make_unique<InvokerImpl<T>>(std::forward<T>(obj))}{}
+		explicit Invoker(std::reference_wrapper<T> obj):
+		   r_handle{&obj.get()},
+		   m_vt{[](void const* handle,
+		           fs::path const& executable,
+		           std::vector<std::string> const& args,
+		           std::vector<std::byte> const& sysin) {
+			        return static_cast<T const*>(handle)->execp(executable, args, sysin);
+		        },
+		        [](void const* handle, std::string_view name) -> std::vector<std::string> const& {
+			        return static_cast<T const*>(handle)->getvar(name);
+		        }}
+		{
+		}
 
 		ExecResult execp(fs::path const& executable,
 		                 std::vector<std::string> const& args,
 		                 std::vector<std::byte> const& sysin) const
 		{
-			return m_handle->execp(executable, args, sysin);
+			return m_vt.execp(r_handle, executable, args, sysin);
 		}
 
 		std::vector<std::string> const& getvar(std::string_view name) const
 		{
-			return m_handle->getvar(name);
+			return m_vt.getvar(r_handle, name);
 		}
 
 	private:
-		class AbstractInvoker
+		void* r_handle;
+		struct Vtable
 		{
-		public:
-			virtual ExecResult execp(fs::path const& executable,
-			                         std::vector<std::string> const& args,
-			                         std::vector<std::byte> const& sysin) const = 0;
-
-			virtual std::vector<std::string> const& getvar(std::string_view name) = 0;
-
-			virtual ~AbstractInvoker()
-			{
-			}
+			ExecResult (*execp)(void const*,
+			                    fs::path const&,
+			                    std::vector<std::string> const&,
+			                    std::vector<std::byte> const&);
+			std::vector<std::string> const& (*getvar)(void const*, std::string_view);
 		};
-
-		template<class T>
-		class InvokerImpl: public AbstractInvoker
-		{
-		public:
-			explicit InvokerImpl(T&& obj): m_obj{std::move(obj)} {};
-
-			ExecResult execp(fs::path const& executable,
-			                 std::vector<std::string> const& args,
-			                 std::vector<std::byte> const& sysin) const override
-			{
-				return m_obj.execp(executable, args, sysin);
-			}
-
-			std::vector<std::string> const& getvar(std::string_view name) override
-			{
-				return m_obj.getvar(name);
-			}
-
-			~InvokerImpl() override = default;
-
-		private:
-			T m_obj;
-		};
-
-		std::unique_ptr<AbstractInvoker> m_handle;
+		Vtable m_vt;
 	};
 }
 
