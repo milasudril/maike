@@ -10,12 +10,15 @@
 #include <vector>
 #include <memory>
 
-namespace Maike
+namespace Maike::CommandInterpreter
 {
 	class Invoker
 	{
 	public:
 		using ExecResult = std::vector<std::byte>;
+
+		template<class T>
+		explicit Invoker(T&& obj): m_handle{std::make_unique<InvokerImpl<T>>(std::forward<T>(obj))}{}
 
 		ExecResult execp(fs::path const& executable,
 		                 std::vector<std::string> const& args,

@@ -48,7 +48,7 @@ Maike::CommandInterpreter::makeEvaluatedArgument(CommandSplitOutput const& obj,
 	std::string buffer;
 	auto ptr = std::begin(command_output);
 	auto const separator = obj.separator();
-	while(true)
+	while(ptr != std::end(command_output))
 	{
 		auto ch_in = static_cast<char>(*ptr);
 		++ptr;

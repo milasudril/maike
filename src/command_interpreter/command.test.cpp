@@ -5,6 +5,37 @@
 #include "./command.hpp"
 
 #include <cassert>
+#include <algorithm>
+
+namespace
+{
+	struct Data
+	{
+		std::vector<std::string> variable;
+	};
+
+	struct MyInvoker
+	{
+		std::vector<std::byte> execp(Maike::fs::path const& pathname, std::vector<std::string> const& args, std::vector<std::byte> const&) const
+		{
+			printf("execp: %s", pathname.c_str());
+			std::for_each(std::begin(args), std::end(args), [](auto const& item)
+			{
+				printf(" %s", item.c_str());
+			});
+			printf("\n");
+			return std::vector<std::byte>{};
+		}
+
+		std::vector<std::string> const& getvar(std::string_view argname) const
+		{
+			printf("getvar: %s\n", argname.data());
+			return data.get().variable;
+		}
+
+		std::reference_wrapper<Data> data;
+	};
+}
 
 namespace Testcases
 {
@@ -63,6 +94,9 @@ namespace Testcases
 		                                         | CI::Command{"inner_command"}.add(CI::ExpandString{
 		                                            CI::Literal{""}}.value(CI::Varname{"varname"}))))))));
 		assert(*res_2.second == '\0');
+
+		Data data;
+		execute(res_1.first, CI::Invoker{MyInvoker{data}}, CI::CommandOutput{});
 	}
 }
 
