@@ -58,9 +58,9 @@ namespace Maike::CommandInterpreter
 		return !(a == b);
 	}
 
-	CommandOutput execute(Literal const& obj, CommandOutput const& sysin);
+	CommandOutput execute(Literal const& obj, CommandOutput const& sysin, Invoker const& invoker);
 
-	inline EvaluatedArgument makeEvaluatedArgument(Literal const& obj)
+	inline EvaluatedArgument makeEvaluatedArgument(Literal const& obj, Invoker const&)
 	{
 		return EvaluatedArgument{obj.value()};
 	}
@@ -101,7 +101,7 @@ namespace Maike::CommandInterpreter
 	}
 
 	// TODO: This must look up obj in dictionary
-	inline EvaluatedArgument makeEvaluatedArgument(Varname const&)
+	inline EvaluatedArgument makeEvaluatedArgument(Varname const&, Invoker const&)
 	{
 		return EvaluatedArgument{};
 	}
@@ -156,7 +156,8 @@ namespace Maike::CommandInterpreter
 		return !(a == b);
 	}
 
-	CommandOutput execute(Command const&, CommandOutput const& sysin);
+	CommandOutput execute(Command const&, CommandOutput const& sysin, Invoker const& invoker);
+
 
 	class Command;
 
@@ -219,7 +220,7 @@ namespace Maike::CommandInterpreter
 		return std::move(a |= std::move(x));
 	}
 
-	CommandOutput execute(Pipe const& pipe, CommandOutput const& sysin);
+	CommandOutput execute(Pipe const& pipe, CommandOutput const& sysin, Invoker const& invoker);
 
 
 	class CommandSplitOutput
@@ -277,7 +278,7 @@ namespace Maike::CommandInterpreter
 		return !(a == b);
 	}
 
-	EvaluatedArgument makeEvaluatedArgument(CommandSplitOutput const& obj);
+	EvaluatedArgument makeEvaluatedArgument(CommandSplitOutput const& obj, Invoker const& invoker);
 
 	class ExpandString
 	{
@@ -367,7 +368,7 @@ namespace Maike::CommandInterpreter
 		return *this;
 	}
 
-	EvaluatedArgument makeEvaluatedArgument(ExpandString const& obj);
+	EvaluatedArgument makeEvaluatedArgument(ExpandString const& obj, Invoker const& invoker);
 
 	std::pair<Pipe, char const*> makePipe(char const* buffer);
 }

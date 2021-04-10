@@ -7,8 +7,8 @@
 #include <algorithm>
 #include <stack>
 
-Maike::CommandInterpreter::CommandOutput Maike::CommandInterpreter::execute(Literal const& obj,
-                                                                           CommandOutput const&)
+Maike::CommandInterpreter::CommandOutput
+Maike::CommandInterpreter::execute(Literal const& obj, CommandOutput const&, Invoker const&)
 {
 	CommandOutput ret;
 	auto const& val = obj.value();
@@ -18,14 +18,15 @@ Maike::CommandInterpreter::CommandOutput Maike::CommandInterpreter::execute(Lite
 	return ret;
 }
 
-Maike::CommandInterpreter::CommandOutput Maike::CommandInterpreter::execute(Command const& cmd,
-                                                                           CommandOutput const&)
+Maike::CommandInterpreter::CommandOutput
+Maike::CommandInterpreter::execute(Command const& cmd, CommandOutput const&, Invoker const& invoker)
 {
 	auto const& args = cmd.args();
 	std::vector<std::string> args_eval;
 	args_eval.reserve(std::size(args));
-	std::for_each(std::begin(args), std::end(args), [&args_eval](auto const& arg) {
-		auto arg_eval = std::visit([](auto const& item) { return makeEvaluatedArgument(item); }, arg);
+	std::for_each(std::begin(args), std::end(args), [&args_eval, &invoker](auto const& arg) {
+		auto arg_eval =
+		   std::visit([&invoker](auto const& item) { return makeEvaluatedArgument(item, invoker); }, arg);
 		std::copy(std::begin(arg_eval), std::end(arg_eval), std::back_inserter(arg_eval));
 	});
 	// TODO:
@@ -39,9 +40,10 @@ bool Maike::CommandInterpreter::operator==(Command const& a, Command const& b)
 }
 
 Maike::CommandInterpreter::EvaluatedArgument
-Maike::CommandInterpreter::makeEvaluatedArgument(CommandSplitOutput const& obj)
+Maike::CommandInterpreter::makeEvaluatedArgument(CommandSplitOutput const& obj,
+                                                 Invoker const& invoker)
 {
-	auto const command_output = execute(obj.pipe(), CommandOutput{});
+	auto const command_output = execute(obj.pipe(), CommandOutput{}, invoker);
 
 	EvaluatedArgument output_split;
 	std::string buffer;
@@ -63,10 +65,10 @@ Maike::CommandInterpreter::makeEvaluatedArgument(CommandSplitOutput const& obj)
 }
 
 Maike::CommandInterpreter::EvaluatedArgument
-Maike::CommandInterpreter::makeEvaluatedArgument(ExpandString const& arg)
+Maike::CommandInterpreter::makeEvaluatedArgument(ExpandString const& arg, Invoker const& invoker)
 {
-	auto const cmd_output =
-	   std::visit([](auto const& val) { return makeEvaluatedArgument(val); }, arg.value());
+	auto const cmd_output = std::visit(
+	   [&invoker](auto const& val) { return makeEvaluatedArgument(val, invoker); }, arg.value());
 
 	EvaluatedArgument ret;
 	std::transform(std::begin(cmd_output),
@@ -79,13 +81,14 @@ Maike::CommandInterpreter::makeEvaluatedArgument(ExpandString const& arg)
 	return ret;
 }
 
-Maike::CommandInterpreter::CommandOutput
-Maike::CommandInterpreter::execute(Pipe const& pipe, CommandOutput const& sysin)
+Maike::CommandInterpreter::CommandOutput Maike::CommandInterpreter::execute(
+   Pipe const& pipe, CommandOutput const& sysin, Invoker const& invoker)
 {
 	auto const& commands = pipe.commands();
 	CommandOutput sysout{sysin};
-	std::for_each(std::begin(commands), std::end(commands), [&sysout](auto const& cmd) {
-		sysout = std::visit([&sysin = sysout](auto const& item) { return execute(item, sysin); }, cmd);
+	std::for_each(std::begin(commands), std::end(commands), [&sysout, &invoker](auto const& cmd) {
+		sysout = std::visit(
+		   [&sysin = sysout, &invoker](auto const& item) { return execute(item, sysin, invoker); }, cmd);
 	});
 
 	return sysout;
