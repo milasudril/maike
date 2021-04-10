@@ -45,7 +45,7 @@ namespace Testcases
 
 		constexpr char const* test =
 		   "cat({$source_file}) | g++(-, -x, c++, -std=c++17, foo{pkg-config(--libs, "
-		   "gtk+-3)/~ }"
+		   "{$pkgconfig_requests})/~ }"
 		   "bar, -o, foo.o, a{fo{o}(a, {test()/!}, {kaka()/%})/:}b, a{}b, {$dependencies}); "
 		   "next_command({inner_command({$varname})})";
 		auto res_1 = CI::makePipe(test);
@@ -65,7 +65,8 @@ namespace Testcases
 		                    CI::Pipe{}
 		                    | CI::Command{"pkg-config"}
 		                         .add(CI::Literal{"--libs"})
-		                         .add(CI::Literal{"gtk+-3"}))))
+		                         .add(CI::ExpandString{CI::Literal{""}}.value(
+		                            CI::Varname{"pkgconfig_requests"})))))
 		         .add(CI::Literal{"-o"})
 		         .add(CI::Literal{"foo.o"})
 		         .add(CI::ExpandString{CI::Literal{"a"}}
