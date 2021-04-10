@@ -58,7 +58,7 @@ namespace Maike::CommandInterpreter
 		return !(a == b);
 	}
 
-	CommandOutput expand(Literal const& obj, CommandOutput const& sysin);
+	CommandOutput execute(Literal const& obj, CommandOutput const& sysin);
 
 	inline EvaluatedArgument makeEvaluatedArgument(Literal const& obj)
 	{
@@ -156,7 +156,7 @@ namespace Maike::CommandInterpreter
 		return !(a == b);
 	}
 
-	CommandOutput expand(Command const&, CommandOutput const& sysin);
+	CommandOutput execute(Command const&, CommandOutput const& sysin);
 
 	class Command;
 
@@ -219,7 +219,7 @@ namespace Maike::CommandInterpreter
 		return std::move(a |= std::move(x));
 	}
 
-	CommandOutput expand(Pipe const& pipe, CommandOutput const& sysin);
+	CommandOutput execute(Pipe const& pipe, CommandOutput const& sysin);
 
 
 	class CommandSplitOutput

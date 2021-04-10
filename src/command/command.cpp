@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <stack>
 
-Maike::CommandInterpreter::CommandOutput Maike::CommandInterpreter::expand(Literal const& obj,
+Maike::CommandInterpreter::CommandOutput Maike::CommandInterpreter::execute(Literal const& obj,
                                                                            CommandOutput const&)
 {
 	CommandOutput ret;
@@ -18,7 +18,7 @@ Maike::CommandInterpreter::CommandOutput Maike::CommandInterpreter::expand(Liter
 	return ret;
 }
 
-Maike::CommandInterpreter::CommandOutput Maike::CommandInterpreter::expand(Command const& cmd,
+Maike::CommandInterpreter::CommandOutput Maike::CommandInterpreter::execute(Command const& cmd,
                                                                            CommandOutput const&)
 {
 	auto const& args = cmd.args();
@@ -41,7 +41,7 @@ bool Maike::CommandInterpreter::operator==(Command const& a, Command const& b)
 Maike::CommandInterpreter::EvaluatedArgument
 Maike::CommandInterpreter::makeEvaluatedArgument(CommandSplitOutput const& obj)
 {
-	auto const command_output = expand(obj.pipe(), CommandOutput{});
+	auto const command_output = execute(obj.pipe(), CommandOutput{});
 
 	EvaluatedArgument output_split;
 	std::string buffer;
@@ -80,12 +80,12 @@ Maike::CommandInterpreter::makeEvaluatedArgument(ExpandString const& arg)
 }
 
 Maike::CommandInterpreter::CommandOutput
-Maike::CommandInterpreter::expand(Pipe const& pipe, CommandOutput const& sysin)
+Maike::CommandInterpreter::execute(Pipe const& pipe, CommandOutput const& sysin)
 {
 	auto const& commands = pipe.commands();
 	CommandOutput sysout{sysin};
 	std::for_each(std::begin(commands), std::end(commands), [&sysout](auto const& cmd) {
-		sysout = std::visit([&sysin = sysout](auto const& item) { return expand(item, sysin); }, cmd);
+		sysout = std::visit([&sysin = sysout](auto const& item) { return execute(item, sysin); }, cmd);
 	});
 
 	return sysout;
