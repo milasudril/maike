@@ -28,7 +28,7 @@ namespace Testcases
 		         .add(CI::Literal{"-std=c++17"})
 		         .add(CI::ExpandString{CI::Literal{"foo"}}
 		                 .suffix(CI::Literal{"bar"})
-		                 .command(CI::CommandSplitOutput{}.separator(' ').pipe(
+		                 .value(CI::CommandSplitOutput{}.separator(' ').pipe(
 		                    CI::Pipe{}
 		                    | CI::Command{"system.pkg-config"}
 		                         .add(CI::Literal{"--libs"})
@@ -37,17 +37,17 @@ namespace Testcases
 		         .add(CI::Literal{"foo.o"})
 		         .add(CI::ExpandString{CI::Literal{"a"}}
 		                 .suffix(CI::Literal{"b"})
-		                 .command(CI::CommandSplitOutput{}.separator(':').pipe(
+		                 .value(CI::CommandSplitOutput{}.separator(':').pipe(
 		                    CI::Pipe{}
 		                    | CI::Command{"fo{o}"}
 		                         .add(CI::Literal{"a"})
 		                         .add(CI::ExpandString{CI::Literal{""}}
 		                                 .suffix(CI::Literal{""})
-		                                 .command(CI::CommandSplitOutput{}.separator('!').pipe(
+		                                 .value(CI::CommandSplitOutput{}.separator('!').pipe(
 		                                    CI::Pipe{} | CI::Command{"test"})))
 		                         .add(CI::ExpandString{CI::Literal{""}}
 		                                 .suffix(CI::Literal{""})
-		                                 .command(CI::CommandSplitOutput{}.separator('%').pipe(
+		                                 .value(CI::CommandSplitOutput{}.separator('%').pipe(
 		                                    CI::Pipe{} | CI::Command{"kaka"}))))))
 		         .add(CI::ExpandString{CI::Literal{"a"}}.suffix(CI::Literal{"b"})));
 

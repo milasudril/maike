@@ -100,6 +100,12 @@ namespace Maike::CommandInterpreter
 		return !(a == b);
 	}
 
+	// TODO: This must look up obj in dictionary
+	inline EvaluatedArgument makeEvaluatedArgument(Varname const&)
+	{
+		return EvaluatedArgument{};
+	}
+
 
 	class ExpandString;
 
@@ -285,25 +291,25 @@ namespace Maike::CommandInterpreter
 			return m_prefix;
 		}
 
-		CommandSplitOutput const& command() const
+		auto const& value() const
 		{
-			return m_command;
+			return m_value;
 		}
 
-		CommandSplitOutput& command()
+		auto& value()
 		{
-			return m_command;
+			return m_value;
 		}
 
-		ExpandString& command(CommandSplitOutput&& command) &
+		ExpandString& value(CommandSplitOutput&& command) &
 		{
-			m_command = std::move(command);
+			m_value = std::move(command);
 			return *this;
 		}
 
-		ExpandString&& command(CommandSplitOutput&& val) &&
+		ExpandString&& value(CommandSplitOutput&& val) &&
 		{
-			return std::move(command(std::move(val)));
+			return std::move(value(std::move(val)));
 		}
 
 		Literal const& suffix() const
@@ -324,13 +330,13 @@ namespace Maike::CommandInterpreter
 
 	private:
 		Literal m_prefix;
-		CommandSplitOutput m_command;
+		std::variant<Varname, CommandSplitOutput> m_value;
 		Literal m_suffix;
 	};
 
 	inline bool operator==(ExpandString const& a, ExpandString const& b)
 	{
-		return a.prefix() == b.prefix() && a.command() == b.command() && a.suffix() == b.suffix();
+		return a.prefix() == b.prefix() && a.value() == b.value() && a.suffix() == b.suffix();
 	}
 
 	inline bool operator!=(ExpandString const& a, ExpandString const& b)

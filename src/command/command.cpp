@@ -65,7 +65,8 @@ Maike::CommandInterpreter::makeEvaluatedArgument(CommandSplitOutput const& obj)
 Maike::CommandInterpreter::EvaluatedArgument
 Maike::CommandInterpreter::makeEvaluatedArgument(ExpandString const& arg)
 {
-	auto const cmd_output = makeEvaluatedArgument(arg.command());
+	auto const cmd_output =
+	   std::visit([](auto const& val) { return makeEvaluatedArgument(val); }, arg.value());
 
 	EvaluatedArgument ret;
 	std::transform(std::begin(cmd_output),
@@ -182,7 +183,7 @@ Maike::CommandInterpreter::makePipe(char const* str)
 							auto& ctxt_prev = contexts.top();
 							auto& cmd_prev = *std::get_if<Command>(&ctxt_prev.node.back());
 							auto& expand_string = *std::get_if<ExpandString>(&cmd_prev.back());
-							expand_string.command().pipe(std::move(ctxt.node));
+							expand_string.value(CommandSplitOutput{}.pipe(std::move(ctxt.node)));
 							ctxt = std::move(contexts.top());
 							ctxt.state = State::AfterExpandStringPipe;
 							contexts.pop();
@@ -252,7 +253,8 @@ Maike::CommandInterpreter::makePipe(char const* str)
 						{ throw std::runtime_error{"Expected field separator of length 1"}; }
 						auto& cmd = *std::get_if<Command>(&ctxt.node.back());
 						auto& expand_string = *std::get_if<ExpandString>(&cmd.back());
-						expand_string.command().separator(ctxt.buffer[0]);
+						auto& this_cmd = *std::get_if<CommandSplitOutput>(&expand_string.value());
+						this_cmd.separator(ctxt.buffer[0]);
 						ctxt.buffer.clear();
 						ctxt.state = State::AfterExpandString;
 						break;
@@ -275,7 +277,7 @@ Maike::CommandInterpreter::makePipe(char const* str)
 							auto& ctxt_prev = contexts.top();
 							auto& cmd_prev = *std::get_if<Command>(&ctxt_prev.node.back());
 							auto& expand_string = *std::get_if<ExpandString>(&cmd_prev.back());
-							expand_string.command().pipe(std::move(ctxt.node));
+							expand_string.value(CommandSplitOutput{}.pipe(std::move(ctxt.node)));
 							ctxt = std::move(contexts.top());
 							ctxt.state = State::AfterExpandStringPipe;
 							contexts.pop();
