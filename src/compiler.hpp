@@ -7,7 +7,7 @@
 
 #include "./compilation_log.hpp"
 #include "src/key_value_store/compound.hpp"
-#include "utils/fs.hpp"
+#include "src/utils/fs.hpp"
 
 #include <vector>
 #include <memory>
