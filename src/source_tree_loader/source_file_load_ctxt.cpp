@@ -36,6 +36,14 @@ Maike::Db::Dependency Maike::SourceTreeLoader::getDependency(SourceFileLoadConte
 	                                 load_ctxt.targetDir() / load_ctxt.sourceFileDir() / name :
 	                                 load_ctxt.sourceFileDir() / name),
 	                          expected_origin};
+
+	std::vector<Db::Property> properties;
+	std::for_each(std::begin(dep), std::end(dep), [&properties](auto const& item) {
+		if(strcmp(item.first, "ref") != 0 && strcmp(item.first, "origin") != 0)
+		{ properties.push_back(Db::Property{item.first, item.second.template as<char const*>()}); }
+	});
+	ret.properties(std::move(properties));
+
 	return ret;
 }
 
