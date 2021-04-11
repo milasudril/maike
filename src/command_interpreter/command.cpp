@@ -119,17 +119,10 @@ Maike::CommandInterpreter::makeVariableDefinition(char const* str)
 		{
 			switch(state)
 			{
-				case State::Name:
-					ret.name(Varname{std::move(buffer)});
-					break;
-				case State::ValueSource:
-					ret.value().source(Varname{std::move(buffer)});
-					break;
-				case State::ValueFilter:
-					ret.value().filter(std::regex{std::move(buffer)});
-					break;
-				default:
-					throw std::runtime_error{"Missing character"};
+				case State::Name: ret.name(Varname{std::move(buffer)}); break;
+				case State::ValueSource: ret.value().source(Varname{std::move(buffer)}); break;
+				case State::ValueFilter: ret.value().filter(std::regex{std::move(buffer)}); break;
+				default: throw std::runtime_error{"Missing character"};
 			}
 			return std::pair{std::move(ret), str - 1};
 		}
@@ -151,9 +144,7 @@ Maike::CommandInterpreter::makeVariableDefinition(char const* str)
 			case State::Name:
 				switch(ch_in)
 				{
-					case ';':
-						ret.name(Varname{std::move(buffer)});
-						return std::pair{std::move(ret), str};
+					case ';': ret.name(Varname{std::move(buffer)}); return std::pair{std::move(ret), str};
 
 					case '=':
 						ret.name(Varname{std::move(buffer)});
@@ -167,8 +158,7 @@ Maike::CommandInterpreter::makeVariableDefinition(char const* str)
 			case State::PreValue:
 				switch(ch_in)
 				{
-					case ';':
-						return std::pair{std::move(ret), str};
+					case ';': return std::pair{std::move(ret), str};
 					case '$': state = State::ValueSource; break;
 					default: throw std::runtime_error{"Only a variable may be used in this context"};
 				}
