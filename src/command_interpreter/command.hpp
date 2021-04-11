@@ -393,4 +393,27 @@ namespace Maike::CommandInterpreter
 	EvaluatedArgument makeEvaluatedArgument(ExpandString const& obj, Invoker const& invoker);
 
 	std::pair<Pipe, char const*> makePipe(char const* buffer);
+
+
+	class Statement
+	{
+	public:
+		Statement& value(VariableDefinition&& vardef)
+		{
+			m_value = std::move(vardef);
+			return *this;
+		}
+
+		Statement& value(Pipe&& pipe)
+		{
+			m_value = std::move(pipe);
+			return *this;
+		}
+
+	private:
+		std::variant<VariableDefinition, Pipe> m_value;
+	};
+
+
+	using Script = std::vector<Statement>;
 }
