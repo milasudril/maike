@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 #include <variant>
+#include <regex>
 
 namespace Maike::CommandInterpreter
 {
@@ -23,6 +24,7 @@ namespace Maike::CommandInterpreter
 	using CommandOutput = std::vector<std::byte>;
 
 	using EvaluatedArgument = std::vector<std::string>;
+
 
 	class Literal
 	{
@@ -100,14 +102,32 @@ namespace Maike::CommandInterpreter
 		return !(a == b);
 	}
 
-
 	inline EvaluatedArgument makeEvaluatedArgument(Varname const& varname, Invoker const& invoker)
 	{
 		return invoker.getvar(varname.value());
 	}
 
 
+	class VarfilterExpression
+	{
+	public:
+	private:
+		Varname m_name;
+		std::regex m_filter;
+	};
+
+
+	class VariableDefinition
+	{
+	public:
+	private:
+		Varname m_name;
+		VarfilterExpression m_filter;
+	};
+
+
 	class ExpandString;
+
 
 	class Command
 	{
@@ -160,6 +180,7 @@ namespace Maike::CommandInterpreter
 
 
 	class Command;
+
 
 	class Pipe
 	{
@@ -279,6 +300,7 @@ namespace Maike::CommandInterpreter
 	}
 
 	EvaluatedArgument makeEvaluatedArgument(CommandSplitOutput const& obj, Invoker const& invoker);
+
 
 	class ExpandString
 	{
