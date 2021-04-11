@@ -94,6 +94,122 @@ Maike::CommandInterpreter::CommandOutput Maike::CommandInterpreter::execute(
 }
 
 
+std::pair<Maike::CommandInterpreter::VariableDefinition, char const*>
+Maike::CommandInterpreter::makeVariableDefinition(char const* str)
+{
+	enum class State : int
+	{
+		Name,
+		PreValue,
+		ValueSource,
+		ValueFilter,
+		Escape
+	};
+
+	VariableDefinition ret;
+	auto state = State::Name;
+	auto state_prev = State::Name;
+	std::string buffer;
+	while(true)
+	{
+		auto ch_in = *str;
+		++str;
+
+		if(ch_in == '\0')
+		{
+			switch(state)
+			{
+				case State::Name:
+					ret.name(Varname{std::move(buffer)});
+					break;
+				case State::ValueSource:
+					ret.value().source(Varname{std::move(buffer)});
+					break;
+				case State::ValueFilter:
+					ret.value().filter(std::regex{std::move(buffer)});
+					break;
+				default:
+					throw std::runtime_error{"Missing character"};
+			}
+			return std::pair{std::move(ret), str - 1};
+		}
+
+		if(ch_in == '~')
+		{
+			state_prev = state;
+			state = State::Escape;
+			continue;
+		}
+
+		if(state != State::Escape)
+		{
+			if(ch_in >= 0 && ch_in <= ' ') { continue; }
+		}
+
+		switch(state)
+		{
+			case State::Name:
+				switch(ch_in)
+				{
+					case ';':
+						ret.name(Varname{std::move(buffer)});
+						return std::pair{std::move(ret), str};
+
+					case '=':
+						ret.name(Varname{std::move(buffer)});
+						state = State::ValueSource;
+						break;
+
+					default: buffer += ch_in; break;
+				}
+				break;
+
+			case State::PreValue:
+				switch(ch_in)
+				{
+					case ';':
+						return std::pair{std::move(ret), str};
+					case '$': state = State::ValueSource; break;
+					default: throw std::runtime_error{"Only a variable may be used in this context"};
+				}
+				break;
+
+			case State::ValueSource:
+				switch(ch_in)
+				{
+					case ';':
+						ret.value().source(Varname{std::move(buffer)});
+						return std::pair{std::move(ret), str};
+
+					case ':':
+						ret.value().source(Varname{std::move(buffer)});
+						state = State::ValueFilter;
+						break;
+
+					default: buffer += ch_in; break;
+				}
+				break;
+
+			case State::ValueFilter:
+				switch(ch_in)
+				{
+					case ';':
+						ret.value().filter(std::regex{std::move(buffer)});
+						return std::pair{std::move(ret), str};
+
+					default: buffer += ch_in;
+				}
+				break;
+
+			case State::Escape:
+				buffer += ch_in;
+				state = state_prev;
+				break;
+		}
+	}
+}
+
+
 std::pair<Maike::CommandInterpreter::Pipe, char const*>
 Maike::CommandInterpreter::makePipe(char const* str)
 {
@@ -346,6 +462,28 @@ Maike::CommandInterpreter::makePipe(char const* str)
 				ctxt.buffer += ch_in;
 				ctxt.state = ctxt.state_prev;
 				break;
+		}
+	}
+}
+
+
+std::pair<Maike::CommandInterpreter::Statement, char const*>
+Maike::CommandInterpreter::makeStatement(char const* buffer)
+{
+	switch(*buffer)
+	{
+		case '\0': return std::pair{Statement{}, buffer};
+
+		case '$':
+		{
+			auto ret = makeVariableDefinition(buffer + 1);
+			return std::pair{Statement{}.value(std::move(ret.first)), ret.second};
+		}
+
+		default:
+		{
+			auto ret = makePipe(buffer);
+			return std::pair{Statement{}.value(std::move(ret.first)), ret.second};
 		}
 	}
 }

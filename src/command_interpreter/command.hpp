@@ -111,8 +111,20 @@ namespace Maike::CommandInterpreter
 	class VarfilterExpression
 	{
 	public:
+		VarfilterExpression& source(Varname&& src)
+		{
+			m_source = std::move(src);
+			return *this;
+		}
+
+		VarfilterExpression& filter(std::regex&& f)
+		{
+			m_filter = std::move(f);
+			return *this;
+		}
+
 	private:
-		Varname m_name;
+		Varname m_source;
 		std::regex m_filter;
 	};
 
@@ -120,10 +132,23 @@ namespace Maike::CommandInterpreter
 	class VariableDefinition
 	{
 	public:
+		VariableDefinition& name(Varname&& name)
+		{
+			m_name = std::move(name);
+			return *this;
+		}
+
+		VarfilterExpression& value()
+		{
+			return m_value;
+		}
+
 	private:
 		Varname m_name;
-		VarfilterExpression m_filter;
+		VarfilterExpression m_value;
 	};
+
+	std::pair<VariableDefinition, char const*> makeVariableDefinition(char const* buffer);
 
 
 	class ExpandString;
@@ -413,6 +438,8 @@ namespace Maike::CommandInterpreter
 	private:
 		std::variant<VariableDefinition, Pipe> m_value;
 	};
+
+	std::pair<Statement, char const*> makeStatement(char const* buffer);
 
 
 	using Script = std::vector<Statement>;
