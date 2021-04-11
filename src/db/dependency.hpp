@@ -11,6 +11,8 @@
 
 #include "src/utils/fs.hpp"
 
+#include <vector>
+
 namespace Maike::Db
 {
 	class Dependency
@@ -42,10 +44,22 @@ namespace Maike::Db
 			return *this;
 		}
 
+		Dependency& properties(std::vector<Property>&& props)
+		{
+			m_properties = std::move(props);
+			return *this;
+		}
+
+		std::vector<Property> const& properties() const
+		{
+			return m_properties;
+		}
+
 	private:
 		SourceFileId m_ref;
 		fs::path m_name;
 		SourceFileOrigin m_expected_origin;
+		std::vector<Property> m_properties;
 	};
 
 	inline auto reference(Dependency const& dep)
