@@ -18,16 +18,7 @@ namespace Cxx
 	{
 	public:
 		Compiler():
-		   m_command{"%env:CXX%",
-		             {"-c",
-		              "?-std=%cxx:stdversion%",
-		              "*-%cxx:cflags%",
-		              "*-iquote%cxx:localinclude%",
-		              "*-I%cxx:sysinclude%",
-		              "-DMAIKE_JOB_ID=%maike:jobid%",
-		              "-o",
-		              "%maike:target%",
-		              "%maike:source%"}}
+		   m_launcher{"cxxcompiler.py"}
 		{
 			m_localinclude.push_back(Maike::fs::path{"."});
 		}
@@ -35,7 +26,7 @@ namespace Cxx
 		explicit Compiler(Maike::KeyValueStore::CompoundRefConst settings):
 		   m_stdversion_min{settings.get<Stdversion>("stdversion_min")},
 		   m_stdversion_max{settings.get<Stdversion>("stdversion_max")},
-		   m_command{settings.get<Maike::Command>("command")}
+		   m_launcher{settings.get<char const*>("launcher")}
 		{
 			auto from_json_array = [](Maike::KeyValueStore::ArrayRefConst array) {
 				std::vector<Maike::fs::path> ret;
@@ -63,9 +54,9 @@ namespace Cxx
 			return 0;
 		}
 
-		Maike::Command const& command() const
+		std::string const& launcher() const
 		{
-			return m_command;
+			return m_launcher;
 		}
 
 		Stdversion stdversionMin() const
@@ -93,7 +84,7 @@ namespace Cxx
 		Stdversion m_stdversion_max;
 		std::vector<Maike::fs::path> m_localinclude;
 		std::vector<Maike::fs::path> m_sysinclude;
-		Maike::Command m_command;
+		std::string m_launcher;
 	};
 
 	inline auto fromJson(Maike::KeyValueStore::Empty<Compiler>, Maike::KeyValueStore::JsonRefConst ref)
@@ -108,7 +99,7 @@ namespace Cxx
 		};
 
 		return Maike::KeyValueStore::Compound{}
-		   .set("command", compiler.command())
+		   .set("launcher", compiler.launcher())
 		   .set("stdversion_min", compiler.stdversionMin())
 		   .set("stdversion_max", compiler.stdversionMax())
 		   .set("localinclude", to_json_array(compiler.localinclude()))
