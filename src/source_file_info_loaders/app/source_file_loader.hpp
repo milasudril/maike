@@ -12,6 +12,11 @@ namespace App
 {
 	struct Compiler
 	{
+		static Maike::fs::path defaultRecipe()
+		{
+			return Maike::fs::path{"cxx_linker.py"};
+		}
+
 		template<class... Args>
 		int run(Args&&...) const
 		{

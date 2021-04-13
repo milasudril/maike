@@ -20,6 +20,11 @@ namespace
 	class MkDir
 	{
 	public:
+		static Maike::fs::path defaultRecipe()
+		{
+			return Maike::fs::path{"mkdir.py"};
+		}
+
 		int run(Maike::fs::path const&,
 		        std::vector<Maike::fs::path const*> const&,
 		        std::vector<Maike::fs::path const*> const&,

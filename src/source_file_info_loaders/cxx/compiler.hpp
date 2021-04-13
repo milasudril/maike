@@ -11,22 +11,26 @@
 #include "src/command.hpp"
 
 #include "src/compilation_log.hpp"
+#include "src/utils/fs.hpp"
 
 namespace Cxx
 {
 	class Compiler
 	{
 	public:
-		Compiler():
-		   m_launcher{"cxxcompiler.py"}
+		static Maike::fs::path defaultRecipe()
+		{
+			return Maike::fs::path{"cxx.py"};
+		}
+
+		Compiler()
 		{
 			m_localinclude.push_back(Maike::fs::path{"."});
 		}
 
 		explicit Compiler(Maike::KeyValueStore::CompoundRefConst settings):
 		   m_stdversion_min{settings.get<Stdversion>("stdversion_min")},
-		   m_stdversion_max{settings.get<Stdversion>("stdversion_max")},
-		   m_launcher{settings.get<char const*>("launcher")}
+		   m_stdversion_max{settings.get<Stdversion>("stdversion_max")}
 		{
 			auto from_json_array = [](Maike::KeyValueStore::ArrayRefConst array) {
 				std::vector<Maike::fs::path> ret;
@@ -54,11 +58,6 @@ namespace Cxx
 			return 0;
 		}
 
-		std::string const& launcher() const
-		{
-			return m_launcher;
-		}
-
 		Stdversion stdversionMin() const
 		{
 			return m_stdversion_min;
@@ -84,7 +83,6 @@ namespace Cxx
 		Stdversion m_stdversion_max;
 		std::vector<Maike::fs::path> m_localinclude;
 		std::vector<Maike::fs::path> m_sysinclude;
-		std::string m_launcher;
 	};
 
 	inline auto fromJson(Maike::KeyValueStore::Empty<Compiler>, Maike::KeyValueStore::JsonRefConst ref)
@@ -99,7 +97,6 @@ namespace Cxx
 		};
 
 		return Maike::KeyValueStore::Compound{}
-		   .set("launcher", compiler.launcher())
 		   .set("stdversion_min", compiler.stdversionMin())
 		   .set("stdversion_max", compiler.stdversionMax())
 		   .set("localinclude", to_json_array(compiler.localinclude()))

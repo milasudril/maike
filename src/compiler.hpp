@@ -11,6 +11,7 @@
 
 #include <vector>
 #include <memory>
+#include <type_traits>
 
 namespace Maike
 {
@@ -23,16 +24,15 @@ namespace Maike
 		Compiler(): m_handle{std::make_unique<NullCompiler>()} {};
 
 		template<class Obj, std::enable_if_t<!std::is_same_v<Obj, Compiler>, int> = 0>
-		explicit Compiler(Obj obj): m_handle{std::make_unique<CompilerImpl<Obj>>(std::forward<Obj>(obj))}
+		explicit Compiler(Obj&& obj):
+		m_recipe{std::remove_reference_t<Obj>::defaultRecipe()}
+		,m_handle{std::make_unique<CompilerImpl<Obj>>(std::forward<Obj>(obj))}
 		{
 		}
 
-		int run(fs::path const& src,
-		        std::vector<fs::path const*> const& used_files,
-		        std::vector<fs::path const*> const& output_files,
-		        CompilationLog& log) const
+		fs::path const& recipe() const
 		{
-			return m_handle->run(src, used_files, output_files, log);
+			return m_recipe;
 		}
 
 	private:
@@ -85,6 +85,7 @@ namespace Maike
 			T m_obj;
 		};
 
+		fs::path m_recipe;
 		std::unique_ptr<AbstractCompiler> m_handle;
 	};
 }
