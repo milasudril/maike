@@ -83,17 +83,12 @@ namespace Maike::Db
 		return rec.id();
 	}
 
-	// FIXME: What about exceptions? Need to wrap signaling counter so that dtor can terminate other
-	// tasks
 	bool isUpToDate(SourceFileRecordConst const& rec, std::vector<Dependency> const& deps);
 
 	// FIXME: Pass invoker, and job info (env)
-	// FIXME: What about exceptions? Need to wrap signaling counter so that dtor can terminate other
-	// tasks
 	inline void compile(SourceFileRecordConst const& rec, std::vector<Dependency> const& deps)
 	{
-		// FIXME: Get compiler from source file info
-		compile(rec.sourceFileInfo().targets(), rec.path(), deps);
+		compile(rec.sourceFileInfo().compiler(), rec.sourceFileInfo().targets(), rec.path(), deps);
 	}
 }
 

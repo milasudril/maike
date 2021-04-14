@@ -24,16 +24,20 @@ bool Maike::Db::isUpToDate(TargetInfo const& target,
 
 static std::mutex m;
 
-void Maike::Db::compile(std::vector<TargetInfo> const& targets,
+void Maike::Db::compile(Compiler const& compiler,
+                        std::vector<TargetInfo> const& targets,
                         fs::path const& src_file,
-                        std::vector<Dependency> const& deps)
+                        std::vector<Dependency> const&)
 {
 	if(std::size(targets) == 0) { return; }
 
 	std::lock_guard lock{m};
-	printf("g++ -std=c++17 -o '%s' '%s'", targets[0].name().c_str(), src_file.c_str());
-	std::for_each(std::rbegin(deps), std::rend(deps), [](auto const& item) {
-		printf(" '%s'", item.name().c_str());
-	});
+	printf("%s -std=c++17 -o '%s' '%s'",
+	       compiler.recipe().c_str(),
+	       targets[0].name().c_str(),
+	       src_file.c_str());
+	//	std::for_each(std::rbegin(deps), std::rend(deps), [](auto const& item) {
+	//		printf(" '%s'", item.name().c_str());
+	//	});
 	printf("\n");
 }

@@ -25,8 +25,8 @@ namespace Maike
 
 		template<class Obj, std::enable_if_t<!std::is_same_v<Obj, Compiler>, int> = 0>
 		explicit Compiler(Obj&& obj):
-		m_recipe{std::remove_reference_t<Obj>::defaultRecipe()}
-		,m_handle{std::make_unique<CompilerImpl<Obj>>(std::forward<Obj>(obj))}
+		   m_recipe{std::remove_reference_t<Obj>::defaultRecipe()},
+		   m_handle{std::make_unique<CompilerImpl<Obj>>(std::forward<Obj>(obj))}
 		{
 		}
 

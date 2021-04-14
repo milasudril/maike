@@ -9,6 +9,7 @@
 #include "./dependency.hpp"
 
 #include "src/utils/fs.hpp"
+#include "src/compiler.hpp"
 
 #include <vector>
 
@@ -41,8 +42,8 @@ namespace Maike::Db
 	                fs::path const& src_file,
 	                std::vector<Dependency> const& deps);
 
-	// FIXME:
-	void compile(std::vector<TargetInfo> const& targets,
+	void compile(Compiler const& compiler,
+	             std::vector<TargetInfo> const& targets,
 	             fs::path const& src_file,
 	             std::vector<Dependency> const& deps);
 }
