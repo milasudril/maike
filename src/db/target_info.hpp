@@ -7,9 +7,9 @@
 #define MAIKE_DB_TARGETINFO_HPP
 
 #include "./dependency.hpp"
+#include "./compiler.hpp"
 
 #include "src/utils/fs.hpp"
-#include "src/compiler.hpp"
 
 #include <vector>
 

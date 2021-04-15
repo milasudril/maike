@@ -35,6 +35,11 @@ namespace Maike
 			return m_recipe;
 		}
 
+		std::string const& config() const
+		{
+			return m_config;
+		}
+
 	private:
 		class AbstractCompiler
 		{
@@ -86,6 +91,7 @@ namespace Maike
 		};
 
 		fs::path m_recipe;
+		std::string m_config;
 		std::unique_ptr<AbstractCompiler> m_handle;
 	};
 }

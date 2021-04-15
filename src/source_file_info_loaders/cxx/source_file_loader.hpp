@@ -6,8 +6,6 @@
 #ifndef CXX_SOURCEFILELOADER_HPP
 #define CXX_SOURCEFILELOADER_HPP
 
-#include "./compiler.hpp"
-
 #include "src/source_file_info_loaders/loader.hpp"
 
 namespace Cxx
@@ -18,7 +16,7 @@ namespace Cxx
 		SourceFileLoader() = default;
 
 		explicit SourceFileLoader(Maike::KeyValueStore::CompoundRefConst cfg):
-		   m_compiler{cfg.get<Compiler>("compiler")}
+		   m_compiler{cfg.get<Maike::Db::Compiler>("compiler")}
 		{
 		}
 
@@ -28,19 +26,19 @@ namespace Cxx
 		                 Maike::SourceFileInfoLoaders::SourceOutStream source_stream,
 		                 Maike::SourceFileInfoLoaders::TagsOutStream tag_stream) const;
 
-		Maike::Compiler getCompiler(Maike::KeyValueStore::CompoundRefConst) const
+		Maike::Db::Compiler getCompiler(Maike::KeyValueStore::CompoundRefConst) const
 		{
 			// TODO: Add configuration to new compiler instance before returning the compiler.
-			return Maike::Compiler{m_compiler};
+			return m_compiler;
 		}
 
-		Compiler const& compiler() const
+		Maike::Db::Compiler const& compiler() const
 		{
 			return m_compiler;
 		}
 
 	private:
-		Compiler m_compiler;
+		Maike::Db::Compiler m_compiler;
 	};
 
 	inline auto getDependencies(SourceFileLoader const& loader, Maike::Io::Reader src)

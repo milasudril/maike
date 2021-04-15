@@ -7,9 +7,7 @@
 
 #include "./dependency.hpp"
 #include "./target_info.hpp"
-
-#include "src/compiler.hpp"
-#include "src/utils/fs.hpp"
+#include "./compiler.hpp"
 
 #include <vector>
 
@@ -21,7 +19,8 @@ namespace Maike::Db
 		/**
 		 * Allows to create a node without a source file to be scanned.
 		 */
-		explicit SourceFileInfo(SourceFileOrigin origin): m_origin{origin}
+		explicit SourceFileInfo(SourceFileOrigin origin, Compiler&& compiler): m_compiler{std::move(compiler)},
+		m_origin{origin}
 		{
 		}
 

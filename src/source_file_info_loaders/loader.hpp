@@ -10,8 +10,6 @@
 #include "src/db/source_file_info.hpp"
 #include "src/key_value_store/compound.hpp"
 
-#include "src/compiler.hpp"
-
 #include <type_traits>
 #include <cassert>
 
@@ -66,7 +64,7 @@ namespace Maike::SourceFileInfoLoaders
 			                     SourceOutStream source,
 			                     TagsOutStream tags);
 			std::vector<Db::Dependency> (*get_dependencies)(void const* handle, Io::Reader source_stream);
-			Compiler (*get_compiler)(void const* handle, KeyValueStore::CompoundRefConst cfg);
+			Db::Compiler (*get_compiler)(void const* handle, KeyValueStore::CompoundRefConst cfg);
 			void (*destroy)(void* handle);
 			KeyValueStore::JsonHandle (*to_json)(void const* handle);
 		};
@@ -121,13 +119,13 @@ namespace Maike::SourceFileInfoLoaders
 			return m_vtable.get_dependencies(m_handle, input);
 		}
 
-		Compiler getCompiler(KeyValueStore::CompoundRefConst cfg) const
+		Db::Compiler getCompiler(KeyValueStore::CompoundRefConst cfg) const
 		{
 			assert(valid());
 			return m_vtable.get_compiler(m_handle, cfg);
 		}
 
-		Compiler getCompiler() const
+		Db::Compiler getCompiler() const
 		{
 			KeyValueStore::Compound empty;
 			return getCompiler(empty.reference());
