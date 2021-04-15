@@ -20,7 +20,10 @@ namespace Maike::Db
 	inline void insertPlaceholderIfExternal(Dependency const& dep, SourceFileList& source_files)
 	{
 		if(isExternal(dep))
-		{ source_files.insert(std::make_pair(dep.name(), SourceFileInfo{dep.expectedOrigin()})); }
+		{
+			source_files.insert(
+			   std::make_pair(dep.name(), SourceFileInfo{dep.expectedOrigin(), Compiler{"", ""}}));
+		}
 	}
 
 	void insertPlaceholdersForExternalEntries(std::vector<Dependency> const& deps,

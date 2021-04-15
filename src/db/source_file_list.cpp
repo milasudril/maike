@@ -108,7 +108,7 @@ Maike::Db::SourceFileInfo Maike::Db::makeSourceFileInfo(TargetList::value_type c
 	   g,
 	   node);
 
-	SourceFileInfo src_file{SourceFileOrigin::Generated};
+	SourceFileInfo src_file{SourceFileOrigin::Generated, Compiler{"", ""}};
 
 	src_file.useDeps(std::move(use_deps))
 	   .buildDeps(std::vector{Dependency{item.second.sourceFilename(), SourceFileOrigin::Project}});

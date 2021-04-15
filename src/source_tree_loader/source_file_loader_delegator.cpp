@@ -10,6 +10,8 @@
 #include "src/io/input_file.hpp"
 #include "src/io/reader.hpp"
 
+#include "src/compilation_log.hpp"
+
 #include <algorithm>
 #include <cstring>
 
@@ -115,7 +117,7 @@ Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(fs::path const& path,
 		                          std::vector<Db::Dependency>{},
 		                          std::vector<Db::Dependency>{},
 		                          std::move(targets),
-		                          Compiler{MkDir{}},
+		                          Db::Compiler{"mkdir", ""},
 		                          Db::SourceFileOrigin::Project};
 	}
 

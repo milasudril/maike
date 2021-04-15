@@ -10,29 +10,19 @@
 
 namespace App
 {
-	struct Compiler
-	{
-		static Maike::fs::path defaultRecipe()
-		{
-			return Maike::fs::path{"cxx_linker.py"};
-		}
-
-		template<class... Args>
-		int run(Args&&...) const
-		{
-			return 0;
-		}
-	};
-
 	class SourceFileLoader
 	{
 	public:
-		SourceFileLoader() = default;
+		SourceFileLoader(): m_compiler{"cxx_compiler", ""}
+		{
+		}
 
+#if 0
 		explicit SourceFileLoader(Maike::KeyValueStore::CompoundRefConst)
 		//	TODO:	   m_compiler{cfg.get<Compiler>("compiler")}
 		{
 		}
+#endif
 
 		std::vector<Maike::Db::Dependency> getDependencies(Maike::Io::Reader) const
 		{
@@ -43,10 +33,9 @@ namespace App
 		                 Maike::SourceFileInfoLoaders::SourceOutStream source_stream,
 		                 Maike::SourceFileInfoLoaders::TagsOutStream tag_stream) const;
 
-		Maike::Compiler getCompiler(Maike::KeyValueStore::CompoundRefConst) const
+		Maike::Db::Compiler getCompiler(Maike::KeyValueStore::CompoundRefConst) const
 		{
-			// TODO: Add configuration to new compiler instance before returning the compiler.
-			return Maike::Compiler{m_compiler};
+			return m_compiler;
 		}
 #if 0
 		Compiler const& compiler() const
@@ -56,7 +45,7 @@ namespace App
 #endif
 
 	private:
-		Compiler m_compiler;
+		Maike::Db::Compiler m_compiler;
 	};
 
 	inline auto getDependencies(SourceFileLoader const& loader, Maike::Io::Reader src)

@@ -52,10 +52,16 @@ namespace Maike::SourceFileInfoLoaders
 				   auto self = reinterpret_cast<T*>(handle);
 				   delete self;
 			   }},
+			   to_json
+			{
+				nullptr
+			}
+#if 0
 			   to_json{[](void const* handle) {
 				   auto const& self = *reinterpret_cast<T const*>(handle);
 				   return toJson(self);
-			   }}
+			   }
+#endif
 			{
 			}
 
