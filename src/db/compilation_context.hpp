@@ -34,7 +34,7 @@ namespace Maike::Db
 			m_tasks_completed.wait(m_tasks_sched);
 		}
 
-		bool taskFailed(SourceFileId id)
+		bool taskFailed(SourceFileId id) const
 		{
 			return m_events[id.value()].wait() == Sched::TaskResult::Failure;
 		}

@@ -98,7 +98,7 @@ namespace Maike::Db
 	inline void compile(DependencyGraph const& g,
 	                    SourceFileRecordConst const& node,
 	                    ForceRecompilation force_recompilation,
-	                    CompilationContext& ctxt)
+	                    CompilationContext const& ctxt)
 	{
 		auto use_deps = getUseDepsRecursive(g, node);
 		if(std::any_of(std::begin(use_deps), std::end(use_deps), [&ctxt](auto const& item) {
