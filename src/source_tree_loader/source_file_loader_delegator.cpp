@@ -19,23 +19,6 @@ namespace
 {
 	// TODO: These functions should be moved
 
-	class MkDir
-	{
-	public:
-		static Maike::fs::path defaultRecipe()
-		{
-			return Maike::fs::path{"mkdir.py"};
-		}
-
-		int run(Maike::fs::path const&,
-		        std::vector<Maike::fs::path const*> const&,
-		        std::vector<Maike::fs::path const*> const&,
-		        Maike::CompilationLog&) const
-		{
-			return 0;
-		}
-	};
-
 	std::vector<Maike::Db::Dependency>
 	addPrefixWhereAppiciable(Maike::fs::path const& prefix,
 	                         std::vector<Maike::Db::Dependency> const& deps)
@@ -117,7 +100,7 @@ Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(fs::path const& path,
 		                          std::vector<Db::Dependency>{},
 		                          std::vector<Db::Dependency>{},
 		                          std::move(targets),
-		                          Db::Compiler{"mkdir", ""},
+		                          Db::Compiler{"make_directory", ""},
 		                          Db::SourceFileOrigin::Project};
 	}
 
