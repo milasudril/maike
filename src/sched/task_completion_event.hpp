@@ -46,8 +46,8 @@ namespace Maike::Sched
 		}
 
 	private:
-		mutable std::mutex m_mtx;
-		mutable std::condition_variable m_cv;
+		std::mutex m_mtx;
+		std::condition_variable m_cv;
 		TaskResult m_value;
 	};
 
