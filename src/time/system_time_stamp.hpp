@@ -9,6 +9,7 @@
 #include "src/utils/empty.hpp"
 
 #include <chrono>
+#include <string>
 
 namespace Maike
 {
@@ -33,6 +34,8 @@ namespace Maike
 	private:
 		std::chrono::system_clock::time_point m_val;
 	};
+
+	std::string format(SystemTimeStamp val);
 
 	inline SystemTimeStamp fromString(Empty<SystemTimeStamp>, char const* str)
 	{

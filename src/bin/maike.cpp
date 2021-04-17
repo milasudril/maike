@@ -111,7 +111,6 @@ void print(char const* name, Maike::SystemTimeStamp t)
 	        time_decomposed.tm_sec);
 }
 
-
 template<class T>
 void print(char const* name, std::vector<T> const& v)
 {
@@ -199,22 +198,13 @@ int main(int argc, char** argv)
 
 		// Current state
 
-		/*	Maike::BuildInfo bi{Maike::VcsState{getStateVariables(std::cref(vcs), invoker)}};
-
-		store(toJson(bi), BuildInfoSink{});
-
+		Maike::BuildInfo bi;
 		printf(
-		 "\n\n#       Start time: %s\n"
-		 "#               Id: %s\n"
-		 "#     VCS revision: %s\n"
-		 "#  VCS version tag: %s\n"
-		 "#       VCS branch: %s\n",
-		 Maike::toString(bi.startTime()).c_str(),
-		 toString(bi.buildId()).c_str(),
-		 bi.vcsState().revision().c_str(),
-		 bi.vcsState().versionTag().c_str(),
-		 bi.vcsState().branch().c_str());
-		fflush(stdout);*/
+		 "\n\n# Start time: %s\n"
+		 "#         Id: %s\n",
+		 format(bi.startTime()).c_str(),
+		 toString(bi.buildId()).c_str());
+		fflush(stdout);
 
 		Logger logger;
 		Maike::Sched::ThreadPool workers{cmdline.option<Maike::CmdLineOption::NumWorkers>()};
