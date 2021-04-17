@@ -56,16 +56,16 @@ void Maike::Db::compile(SourceFileRecordConst const& rec,
 
 	{
 		KeyValueStore::Array deps_out;
-		std::for_each(std::begin(deps), std::end(deps), [&deps_out](auto const& item) {
-			deps_out.append(item);
-		});
+		std::for_each(
+		   std::begin(deps), std::end(deps), [&deps_out](auto const& item) { deps_out.append(item); });
 		cmd_opts.set("dependencies", std::move(deps_out));
 	}
 
 	CmdOptsString str;
 	store(cmd_opts, str);
 
-
+#if 1
 	std::lock_guard lock{m};
 	printf("%s\n", str.buffer.c_str());
+#endif
 }

@@ -101,8 +101,7 @@ Maike::Db::SourceFileInfo Maike::Db::makeSourceFileInfo(TargetList::value_type c
 			                 // Since an implementation file may include the interface file, it may
 			                 // happen that a target has itself as a use dependency. To prevent this
 			                 // situation, skip adding this dependency.
-			                 if(item.name() != target_name)
-			                 { use_deps.push_back(Db::Dependency{item.name(), item.expectedOrigin()}); }
+			                 if(item.name() != target_name) { use_deps.push_back(item); }
 		                 });
 	   },
 	   g,

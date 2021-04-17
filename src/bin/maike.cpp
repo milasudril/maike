@@ -24,11 +24,12 @@ void printDepGraph(Maike::Db::DependencyGraph const& source_files, Maike::fs::pa
 		      [&item, id](auto const& edge) {
 			      if(edge.reference().valid())
 			      {
-				      printf("\"%s (%zu)\" -> \"%s (%zu)\"\n",
+				      printf("\"%s (%zu)\" -> \"%s (%zu)\"[label=\"%zu\"]\n",
 				             item.path().c_str(),
 				             id.value(),
 				             edge.name().c_str(),
-				             edge.reference().value());
+				             edge.reference().value(),
+				             std::size(edge.properties()));
 			      }
 			      else
 			      {

@@ -99,18 +99,13 @@ std::vector<Maike::Db::Dependency> Maike::Db::getUseDepsRecursive(DependencyGrap
 {
 	std::vector<Db::Dependency> ret;
 	std::set<fs::path> bookkeeping;
-	Maike::processGraphNodeRecursive(
-	   [&ret, &bookkeeping](auto const& node) {
-		   auto i = bookkeeping.find(node.path());
-		   if(i != std::end(bookkeeping)) { return; }
-		   bookkeeping.insert(i, node.path());
-		   ret.push_back(
-		      Db::Dependency{node.path(), node.sourceFileInfo().origin()}.reference(node.id()));
-	   },
-	   g,
-	   rec,
-	   UseDepsOnly{});
-	ret.pop_back();
+	auto add_dependency = [bookkeeping = std::set<fs::path>{}, &ret](auto const& item) mutable {
+		auto i = bookkeeping.find(item.name());
+		if(i != std::end(bookkeeping)) { return; }
+		bookkeeping.insert(item.name());
+		ret.push_back(item);
+	};
+	Maike::processGraphNodeRecursive([](auto const&) {}, g, rec, std::ref(add_dependency));
 
 	return ret;
 }
