@@ -44,18 +44,39 @@ namespace Maike::Db
 
 	Target const& getTarget(SourceTree const& src_tree, fs::path const& target_name);
 
-	NodeProcessCounter
-	compile(SourceTree const& src_tree, ForceRecompilation, Sched::ThreadPool& workers);
+	class TaskCounter
+	{
+	public:
+		constexpr explicit TaskCounter(size_t n): m_value{n}
+		{
+		}
 
-	NodeProcessCounter compile(SourceTree const& src_tree,
-	                           ForceRecompilation force_recompilation,
-	                           Sched::ThreadPool& workers,
-	                           std::pair<fs::path const*, size_t> targets);
+		constexpr size_t value() const
+		{
+			return m_value;
+		}
 
-	NodeProcessCounter compile(SourceTree const& src_tree,
-	                           ForceRecompilation force_recompilation,
-	                           Sched::ThreadPool& workers,
-	                           fs::path const& target_name);
+		TaskCounter& operator+=(TaskCounter other)
+		{
+			m_value += other.value();
+			return *this;
+		}
+
+	private:
+		size_t m_value;
+	};
+
+	TaskCounter compile(SourceTree const& src_tree, ForceRecompilation, Sched::ThreadPool& workers);
+
+	TaskCounter compile(SourceTree const& src_tree,
+	                    ForceRecompilation force_recompilation,
+	                    Sched::ThreadPool& workers,
+	                    std::pair<fs::path const*, size_t> targets);
+
+	TaskCounter compile(SourceTree const& src_tree,
+	                    ForceRecompilation force_recompilation,
+	                    Sched::ThreadPool& workers,
+	                    fs::path const& target_name);
 }
 
 #endif

@@ -149,7 +149,7 @@ public:
 	}
 
 	template<class Duration>
-	void operator()(Duration duration, Maike::Db::NodeProcessCounter n)
+	void operator()(Duration duration, Maike::Db::TaskCounter n)
 	{
 		fprintf(stderr,
 		        "# Completed %zu tasks in %.7f seconds (%.7e seconds/task)\n",

@@ -7,7 +7,7 @@
 #define MAIKE_DB_DEPENDENCYGRAPH_HPP
 
 #include "./source_file_record.hpp"
-#include "./compilation_context.hpp"
+#include "src/sched/batch.hpp"
 
 #include <algorithm>
 #include <map>
@@ -98,11 +98,11 @@ namespace Maike::Db
 	inline void compile(DependencyGraph const& g,
 	                    SourceFileRecordConst const& node,
 	                    ForceRecompilation force_recompilation,
-	                    CompilationContext const& ctxt)
+	                    Sched::Batch const& ctxt)
 	{
 		auto use_deps = getUseDepsRecursive(g, node);
 		if(std::any_of(std::begin(use_deps), std::end(use_deps), [&ctxt](auto const& item) {
-			   return ctxt.taskFailed(item.reference());
+			   return ctxt.taskFailed(item.reference().value());
 		   }))
 		{
 			std::string msg{node.path()};
