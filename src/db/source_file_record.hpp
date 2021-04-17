@@ -12,7 +12,7 @@
 #include "src/utils/fs.hpp"
 #include "src/build/info.hpp"
 
-#include <functional>
+#include <algorithm>
 
 namespace Maike::Db
 {
