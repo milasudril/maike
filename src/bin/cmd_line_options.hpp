@@ -5,8 +5,7 @@
 #ifndef MAIKE_BIN_CMDLINEOPTIONS_HPP
 #define MAIKE_BIN_CMDLINEOPTIONS_HPP
 
-#include "./build_id.hpp"
-
+#include "src/build/id.hpp"
 #include "src/time/system_time_stamp.hpp"
 #include "src/sched/thread_count.hpp"
 #include "src/cmd_line_parser/command_line.hpp"
@@ -304,7 +303,7 @@ namespace Maike
 	template<>
 	struct CmdLineOptionTraits<CmdLineOption::BuildId>
 	{
-		using type = BuildId;
+		using type = Build::Id;
 
 		static constexpr bool valueRequired()
 		{

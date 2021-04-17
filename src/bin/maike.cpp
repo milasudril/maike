@@ -1,9 +1,9 @@
 //@	 {"targets":[{"name":"maike_next","type":"application"}, {"name":"maike.o","type":"object"}]}
 
 #include "./cmd_line_options.hpp"
-#include "./build_info.hpp"
 #include "./config.hpp"
 
+#include "src/build/info.hpp"
 #include "src/db/dependency_graph.hpp"
 #include "src/io/input_file.hpp"
 #include "src/source_tree_loader/main.hpp"
@@ -72,13 +72,12 @@ void printHelp(Maike::CommandLine const& cmdline)
 	              });
 }
 
-
 void print(char const* name, Maike::fs::path const& path)
 {
 	fprintf(stderr, "%s: %s", name, path.c_str());
 }
 
-void print(char const* name, Maike::BuildId const& id)
+void print(char const* name, Maike::Build::Id const& id)
 {
 	fprintf(stderr, "%s: %s", name, toString(id).c_str());
 }
@@ -125,7 +124,6 @@ void write(FILE* stream, void const* buffer, size_t n)
 {
 	fwrite(buffer, 1, n, stream);
 }
-
 void dumpConfig(Maike::Config const& cfg, Maike::fs::path const&)
 {
 	store(Maike::KeyValueStore::Compound{}.set("maikeconfig", cfg).handleReference(), stdout);
@@ -205,7 +203,7 @@ int main(int argc, char** argv)
 		Maike::SourceTreeLoader::SourceFileLoaderDelegator loader_delegator;
 		loader_delegator.loaders(mapSourceFileInfoLoaders(cfg));
 
-		Maike::BuildInfo build_info;
+		Maike::Build::Info build_info;
 		printf(
 		   "# Build job with %zu workers started\n"
 		   "#\n"
@@ -238,7 +236,6 @@ int main(int argc, char** argv)
 		   logger,
 		   [](auto&&... args) { return compile(std::forward<decltype(args)>(args)...); },
 		   src_tree,
-		   //	   build_info,
 		   Maike::Db::ForceRecompilation{},
 		   workers);
 	}

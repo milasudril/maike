@@ -1,11 +1,11 @@
-//@	{"targets":[{"name":"build_id.o","type":"object"}]}
+//@	{"targets":[{"name":"id.o","type":"object"}]}
 
-#include "./build_id.hpp"
+#include "./id.hpp"
 
 #include <algorithm>
 #include <random>
 
-Maike::BuildId::BuildId()
+Maike::Build::Id::Id()
 {
 	std::generate(std::begin(m_bytes),
 	              std::end(m_bytes),
@@ -28,7 +28,7 @@ namespace
 	}
 }
 
-Maike::BuildId::BuildId(char const* cstr): m_bytes{}
+Maike::Build::Id::Id(char const* cstr): m_bytes{}
 {
 	size_t k = 0;
 	std::byte val;
@@ -53,7 +53,7 @@ Maike::BuildId::BuildId(char const* cstr): m_bytes{}
 	}
 }
 
-std::string Maike::toString(BuildId const& id)
+std::string Maike::Build::toString(Id const& id)
 {
 	auto& bytes = id.bytes();
 	std::string ret;
