@@ -6,6 +6,8 @@
 
 #include "src/key_value_store/compound.hpp"
 
+#include <algorithm>
+
 Maike::KeyValueStore::JsonHandle Maike::Db::toJson(Dependency const& dep)
 {
 #if 0
@@ -15,8 +17,13 @@ Maike::KeyValueStore::JsonHandle Maike::Db::toJson(Dependency const& dep)
 		std::vector<Property> m_properties;
 #endif
 
-	return KeyValueStore::Compound{}
-		.set("ref", dep.name().c_str())
-//		.set("build_id", info.buildId())
-		.takeHandle();
+	KeyValueStore::Compound ret;
+	ret.set("ref", dep.name());
+
+	auto& props = dep.properties();
+	std::for_each(std::begin(props), std::end(props), [&ret](auto const& item) {
+		ret.set(item.name().c_str(), item.value().c_str());
+	});
+
+	return ret.takeHandle();
 }
