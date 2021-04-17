@@ -15,21 +15,7 @@ Maike::Db::Dependency Maike::SourceTreeLoader::getDependency(SourceFileLoadConte
 	auto const name = dep.get<char const*>("ref");
 	auto expected_origin = default_origin;
 	if(auto origin = dep.getIf<char const*>("origin"); origin)
-	{
-		if(strcmp(*origin, "generated") == 0) { expected_origin = Db::SourceFileOrigin::Generated; }
-		else if(strcmp(*origin, "project") == 0)
-		{
-			expected_origin = Db::SourceFileOrigin::Project;
-		}
-		else if(strcmp(*origin, "system") == 0)
-		{
-			expected_origin = Db::SourceFileOrigin::System;
-		}
-		else if(strcmp(*origin, "pkg-config") == 0)
-		{
-			expected_origin = Db::SourceFileOrigin::PkgConfig;
-		}
-	}
+	{ expected_origin = fromString(KeyValueStore::Empty<Db::SourceFileOrigin>{}, *origin); }
 	auto ret = Db::Dependency{isExternal(expected_origin) ?
 	                             name :
 	                             (expected_origin == Db::SourceFileOrigin::Generated ?

@@ -10,15 +10,8 @@
 
 Maike::KeyValueStore::JsonHandle Maike::Db::toJson(Dependency const& dep)
 {
-#if 0
-		SourceFileId m_ref;
-		fs::path m_name;
-		SourceFileOrigin m_expected_origin;
-		std::vector<Property> m_properties;
-#endif
-
 	KeyValueStore::Compound ret;
-	ret.set("ref", dep.name());
+	ret.set("ref", dep.name()).set("origin", toString(dep.expectedOrigin()));
 
 	auto& props = dep.properties();
 	std::for_each(std::begin(props), std::end(props), [&ret](auto const& item) {
