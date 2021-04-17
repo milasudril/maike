@@ -1,10 +1,10 @@
 //@	{
-//@	  "targets":[{"name":"main.test","type":"application", "autorun":1}]
+//@	  "targets":[{"name":"config.test","type":"application", "autorun":1}]
 //@	}
 
 #undef NDEBUG
 
-#include "./main.hpp"
+#include "./config.hpp"
 
 #include <cassert>
 
@@ -12,7 +12,7 @@ namespace Testcases
 {
 	void maikeConfigMainInit()
 	{
-		Maike::Config::Main cfg;
+		Maike::Config cfg;
 		assert(cfg.env() == Maike::EnvStore{});
 		assert(cfg.sourceTreeLoader() == Maike::SourceTreeLoader::Config{});
 		assert(cfg.sourceFileInfoLoaders() == Maike::SourceFileInfoLoaders::Config{});

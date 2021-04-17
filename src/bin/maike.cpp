@@ -2,10 +2,10 @@
 
 #include "./cmd_line_options.hpp"
 #include "./build_info.hpp"
+#include "./config.hpp"
 
 #include "src/db/dependency_graph.hpp"
 #include "src/io/input_file.hpp"
-#include "src/config/main.hpp"
 #include "src/source_tree_loader/main.hpp"
 #include "src/source_file_info_loaders/cxx/source_file_loader.hpp"
 #include "src/utils/graphutils.hpp"
@@ -127,7 +127,7 @@ void write(FILE* stream, void const* buffer, size_t n)
 	fwrite(buffer, 1, n, stream);
 }
 
-void dumpConfig(Maike::Config::Main const& cfg, Maike::fs::path const&)
+void dumpConfig(Maike::Config const& cfg, Maike::fs::path const&)
 {
 	store(Maike::KeyValueStore::Compound{}.set("maikeconfig", cfg).handleReference(), stdout);
 }
@@ -183,7 +183,7 @@ int main(int argc, char** argv)
 
 		Maike::KeyValueStore::init();
 
-		auto cfg = Maike::Config::load(cmdline.hasOption<Maike::CmdLineOption::ConfigFiles>() ?
+		auto cfg = Maike::loadConfig(cmdline.hasOption<Maike::CmdLineOption::ConfigFiles>() ?
 		                                  cmdline.option<Maike::CmdLineOption::ConfigFiles>() :
 		                                  std::vector<Maike::fs::path>{"maikeconfig.json"});
 

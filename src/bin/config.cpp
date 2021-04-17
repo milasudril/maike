@@ -1,13 +1,13 @@
 //@	{
-//@	  "targets":[{"name":"main.o","type":"object"}]
+//@	  "targets":[{"name":"config.o","type":"object"}]
 //@	}
 
-#include "./main.hpp"
+#include "./config.hpp"
 
 #include "src/io/input_file.hpp"
 
 std::map<std::string, std::reference_wrapper<Maike::SourceFileInfoLoaders::Loader const>>
-Maike::Config::mapSourceFileInfoLoaders(Maike::Config::Main const& cfg)
+Maike::mapSourceFileInfoLoaders(Maike::Config const& cfg)
 {
 	auto& name_map = cfg.sourceTreeLoader().fileInfoLoaders();
 	auto& loaders = cfg.sourceFileInfoLoaders().loaders();
@@ -24,15 +24,15 @@ Maike::Config::mapSourceFileInfoLoaders(Maike::Config::Main const& cfg)
 	return ret;
 }
 
-Maike::Config::Main Maike::Config::load(std::vector<fs::path> const& cfg_files)
+Maike::Config Maike::loadConfig(std::vector<fs::path> const& cfg_files)
 {
-	Main cfg;
+	Config cfg;
 	std::for_each(std::begin(cfg_files), std::end(cfg_files), [&cfg](auto const& item) {
 		try
 		{
 			Maike::Io::InputFile cfg_file{item};
 			auto cfg_json = KeyValueStore::Compound{Maike::Io::Reader{cfg_file}, item.string()};
-			cfg = Main{cfg_json.get<Maike::KeyValueStore::CompoundRefConst>("maikeconfig")};
+			cfg = Config{cfg_json.get<Maike::KeyValueStore::CompoundRefConst>("maikeconfig")};
 		}
 		catch(...)
 		{

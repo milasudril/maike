@@ -10,8 +10,6 @@
 #include "src/io/input_file.hpp"
 #include "src/io/reader.hpp"
 
-#include "src/compilation_log.hpp"
-
 #include <algorithm>
 #include <cstring>
 
