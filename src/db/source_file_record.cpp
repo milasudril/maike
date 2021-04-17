@@ -35,7 +35,7 @@ namespace
 
 void Maike::Db::compile(SourceFileRecordConst const& rec,
                         Build::Info const& info,
-                        std::vector<Dependency> const&)
+                        std::vector<Dependency> const& deps)
 {
 	auto& targets = rec.sourceFileInfo().targets();
 	if(std::size(targets) == 0) { return; }
@@ -46,18 +46,24 @@ void Maike::Db::compile(SourceFileRecordConst const& rec,
 	   .set("task_id", rec.id().value())
 	   .set("build_info", info);
 
-	KeyValueStore::Array target_names;
-	std::for_each(std::begin(targets), std::end(targets), [&target_names](auto const& item) {
-		target_names.append(item.name().c_str());
-	});
-	cmd_opts.set("targets", std::move(target_names));
+	{
+		KeyValueStore::Array target_names;
+		std::for_each(std::begin(targets), std::end(targets), [&target_names](auto const& item) {
+			target_names.append(item.name().c_str());
+		});
+		cmd_opts.set("targets", std::move(target_names));
+	}
+
+	{
+		KeyValueStore::Array deps_out;
+		std::for_each(std::begin(deps), std::end(deps), [&deps_out](auto const& item) {
+			deps_out.append(item);
+		});
+		cmd_opts.set("dependencies", std::move(deps_out));
+	}
 
 	CmdOptsString str;
 	store(cmd_opts, str);
-
-
-	//	.set("targets", targets[0]);
-	//	.set("");
 
 
 	std::lock_guard lock{m};

@@ -1,6 +1,7 @@
 //@	{
 //@	 "targets":[{"name":"dependency.hpp","type":"include"}]
-//@	 }
+//@	 ,"dependencies_extra":[{"ref":"dependency.o", "rel":"implementation"}]
+//@	}
 
 #ifndef MAIKE_DB_DEPENDENCY_HPP
 #define MAIKE_DB_DEPENDENCY_HPP
@@ -10,6 +11,7 @@
 #include "./property.hpp"
 
 #include "src/utils/fs.hpp"
+#include "src/key_value_store/json_handle.hpp"
 
 #include <vector>
 
@@ -96,6 +98,8 @@ namespace Maike::Db
 
 		return detail::call_is_older(a.name(), file);
 	}
+
+	KeyValueStore::JsonHandle toJson(Dependency const& dep);
 }
 
 #endif
