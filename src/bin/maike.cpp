@@ -183,8 +183,8 @@ int main(int argc, char** argv)
 		Maike::KeyValueStore::init();
 
 		auto cfg = Maike::loadConfig(cmdline.hasOption<Maike::CmdLineOption::ConfigFiles>() ?
-		                                  cmdline.option<Maike::CmdLineOption::ConfigFiles>() :
-		                                  std::vector<Maike::fs::path>{"maikeconfig.json"});
+		                                cmdline.option<Maike::CmdLineOption::ConfigFiles>() :
+		                                std::vector<Maike::fs::path>{"maikeconfig.json"});
 
 
 		if(cmdline.hasOption<Maike::CmdLineOption::ConfigDump>())
@@ -198,13 +198,6 @@ int main(int argc, char** argv)
 
 		// Current state
 
-		Maike::BuildInfo bi;
-		printf(
-		 "\n\n# Start time: %s\n"
-		 "#         Id: %s\n",
-		 format(bi.startTime()).c_str(),
-		 toString(bi.buildId()).c_str());
-		fflush(stdout);
 
 		Logger logger;
 		Maike::Sched::ThreadPool workers{cmdline.option<Maike::CmdLineOption::NumWorkers>()};
@@ -212,6 +205,17 @@ int main(int argc, char** argv)
 		Maike::SourceTreeLoader::SourceFileLoaderDelegator loader_delegator;
 		loader_delegator.loaders(mapSourceFileInfoLoaders(cfg));
 
+		Maike::BuildInfo build_info;
+		printf(
+		   "# Build job with %zu workers started\n"
+		   "#\n"
+		   "# Start time: %s\n"
+		   "#         Id: %s\n"
+		   "#\n",
+		   workers.count(),
+		   format(build_info.startTime()).c_str(),
+		   toString(build_info.buildId()).c_str());
+		fflush(stdout);
 		auto const target_dir = cmdline.hasOption<Maike::CmdLineOption::TargetDir>() ?
 		                           cmdline.option<Maike::CmdLineOption::TargetDir>() :
 		                           Maike::fs::path{"__targets"};
@@ -234,6 +238,7 @@ int main(int argc, char** argv)
 		   logger,
 		   [](auto&&... args) { return compile(std::forward<decltype(args)>(args)...); },
 		   src_tree,
+		   //	   build_info,
 		   Maike::Db::ForceRecompilation{},
 		   workers);
 	}

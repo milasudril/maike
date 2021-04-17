@@ -142,6 +142,11 @@ namespace Maike::Sched
 
 		~ThreadPool();
 
+		size_t count() const
+		{
+			return m_n_threads;
+		}
+
 	private:
 		std::queue<UniqueFunction<void()>> m_tasks;
 		std::mutex m_mtx;
