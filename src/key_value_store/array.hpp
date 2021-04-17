@@ -1,7 +1,7 @@
 //@	{
 //@	  "targets":[{"name":"array.hpp","type":"include"}]
+//@	 ,"dependencies_extra":[{"ref":"array.o","rel":"implementation"}]
 //@	 }
-
 
 #ifndef MAIKE_KEYVALUESTORE_ARRAY_HPP
 #define MAIKE_KEYVALUESTORE_ARRAY_HPP
@@ -173,6 +173,15 @@ namespace Maike::KeyValueStore
 	{
 		store(obj.reference(), sink);
 	}
+
+	template<class Other>
+	Array& operator|=(Array& a, Other const& b)
+	{
+		a.append(b);
+		return a;
+	}
+
+	Array& operator|=(Array& a, Array const& b);
 }
 
 #endif
