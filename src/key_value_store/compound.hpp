@@ -114,6 +114,11 @@ namespace Maike::KeyValueStore
 			return const_iterator{m_ref.handle(), nullptr};
 		}
 
+		auto handle() const
+		{
+			return m_ref;
+		}
+
 	private:
 		JsonRefConst m_ref;
 	};
@@ -121,6 +126,10 @@ namespace Maike::KeyValueStore
 	class Compound
 	{
 	public:
+		explicit Compound(CompoundRefConst ref): m_handle{ref.handle()}
+		{
+		}
+
 		template<class Source>
 		explicit Compound(Source&& src, std::string_view src_name): m_handle{jsonLoad(src, src_name)}
 		{

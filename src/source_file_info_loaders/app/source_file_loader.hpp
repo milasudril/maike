@@ -8,12 +8,17 @@
 
 #include "src/source_file_info_loaders/loader.hpp"
 
+#include "src/key_value_store/array.hpp"
+
 namespace App
 {
 	class SourceFileLoader
 	{
 	public:
-		SourceFileLoader(): m_compiler{"cxx_compiler", ""}
+		SourceFileLoader():
+		   m_compiler{
+		      "cxx_linker",
+		      Maike::KeyValueStore::Compound{}.set("cflags", Maike::KeyValueStore::Array{}.append("-g"))}
 		{
 		}
 
@@ -33,7 +38,7 @@ namespace App
 		                 Maike::SourceFileInfoLoaders::SourceOutStream source_stream,
 		                 Maike::SourceFileInfoLoaders::TagsOutStream tag_stream) const;
 
-		Maike::Db::Compiler getCompiler(Maike::KeyValueStore::CompoundRefConst) const
+		Maike::Db::Compiler const& compiler() const
 		{
 			return m_compiler;
 		}
@@ -59,11 +64,6 @@ namespace App
 	                        Maike::SourceFileInfoLoaders::TagsOutStream tag_stream)
 	{
 		return loader.filterInput(input, source_stream, tag_stream);
-	}
-
-	inline auto getCompiler(SourceFileLoader const& loader, Maike::KeyValueStore::CompoundRefConst cfg)
-	{
-		return loader.getCompiler(cfg);
 	}
 
 	inline auto toJson(SourceFileLoader const&)

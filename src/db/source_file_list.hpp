@@ -22,7 +22,7 @@ namespace Maike::Db
 		if(isExternal(dep))
 		{
 			source_files.insert(
-			   std::make_pair(dep.name(), SourceFileInfo{dep.expectedOrigin(), Compiler{"", ""}}));
+			   std::make_pair(dep.name(), SourceFileInfo{dep.expectedOrigin(), Compiler{""}}));
 		}
 	}
 

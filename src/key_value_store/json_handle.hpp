@@ -151,7 +151,15 @@ namespace Maike::KeyValueStore
 		JsonHandle(JsonHandle&&) = default;
 		JsonHandle& operator=(JsonHandle&&) = default;
 
-		JsonHandle(JsonHandle const& other):m_handle{json_deep_copy(other.handle())},m_src{other.source()}{}
+		JsonHandle(JsonHandle const& other):
+		   m_handle{json_deep_copy(other.handle())}, m_src{other.source()}
+		{
+		}
+
+		explicit JsonHandle(JsonRefConst other):
+		   m_handle{json_deep_copy(other.handle())}, m_src{other.source()}
+		{
+		}
 
 		template<class IntegralType>
 		explicit JsonHandle(IntegralType x,

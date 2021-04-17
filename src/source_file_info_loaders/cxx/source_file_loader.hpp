@@ -8,12 +8,18 @@
 
 #include "src/source_file_info_loaders/loader.hpp"
 
+#include "src/key_value_store/array.hpp"
+
 namespace Cxx
 {
 	class SourceFileLoader
 	{
 	public:
-		SourceFileLoader(): m_compiler{"cxx_compiler", ""}
+		SourceFileLoader():
+		   m_compiler{"cxx_compiler",
+		              Maike::KeyValueStore::Compound{}
+		                 .set("iquote", Maike::KeyValueStore::Array{}.append("."))
+		                 .set("cflags", Maike::KeyValueStore::Array{}.append("-c").append("-g"))}
 		{
 		}
 

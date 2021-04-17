@@ -44,9 +44,9 @@ namespace Maike::SourceFileInfoLoaders
 				   auto const& self = *reinterpret_cast<T const*>(handle);
 				   return getDependencies(self, input);
 			   }},
-			   get_compiler{[](void const* handle, KeyValueStore::CompoundRefConst cfg) {
+			   get_compiler{[](void const* handle) -> Db::Compiler const& {
 				   auto const& self = *reinterpret_cast<T const*>(handle);
-				   return getCompiler(self, cfg);
+				   return self.compiler();
 			   }},
 			   destroy{[](void* handle) {
 				   auto self = reinterpret_cast<T*>(handle);
@@ -70,7 +70,7 @@ namespace Maike::SourceFileInfoLoaders
 			                     SourceOutStream source,
 			                     TagsOutStream tags);
 			std::vector<Db::Dependency> (*get_dependencies)(void const* handle, Io::Reader source_stream);
-			Db::Compiler (*get_compiler)(void const* handle, KeyValueStore::CompoundRefConst cfg);
+			Db::Compiler const& (*get_compiler)(void const* handle);
 			void (*destroy)(void* handle);
 			KeyValueStore::JsonHandle (*to_json)(void const* handle);
 		};
@@ -125,16 +125,10 @@ namespace Maike::SourceFileInfoLoaders
 			return m_vtable.get_dependencies(m_handle, input);
 		}
 
-		Db::Compiler getCompiler(KeyValueStore::CompoundRefConst cfg) const
+		Db::Compiler const& compiler() const
 		{
 			assert(valid());
-			return m_vtable.get_compiler(m_handle, cfg);
-		}
-
-		Db::Compiler getCompiler() const
-		{
-			KeyValueStore::Compound empty;
-			return getCompiler(empty.reference());
+			return m_vtable.get_compiler(m_handle);
 		}
 
 		bool valid() const

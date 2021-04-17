@@ -7,6 +7,7 @@
 
 #include "src/utils/fs.hpp"
 #include "src/key_value_store/compound.hpp"
+
 #include <string>
 
 namespace Maike::Db
@@ -14,8 +15,12 @@ namespace Maike::Db
 	class Compiler
 	{
 	public:
-		explicit Compiler(fs::path&& m_recipe, std::string&& config):
-		   m_recipe{std::move(m_recipe)}, m_config{std::move(config)}
+		explicit Compiler(fs::path&& m_recipe): m_recipe{std::move(m_recipe)}
+		{
+		}
+
+		explicit Compiler(fs::path&& m_recipe, KeyValueStore::Compound&& config):
+		   m_recipe{std::move(m_recipe)}, m_cfg_2{std::move(config)}
 		{
 		}
 
@@ -34,5 +39,21 @@ namespace Maike::Db
 		std::string m_config;
 		KeyValueStore::Compound m_cfg_2;
 	};
+
+	inline auto fromJson(KeyValueStore::Empty<Compiler>, Maike::KeyValueStore::JsonRefConst val)
+	{
+		auto obj = val.as<KeyValueStore::CompoundRefConst>();
+		auto recipe = obj.getIf<char const*>("recipe");
+		return Compiler{recipe ? *recipe : "",
+		                KeyValueStore::Compound{obj.get<KeyValueStore::CompoundRefConst>("config")}};
+	}
+
+	inline auto toJson(Compiler const& obj)
+	{
+		return KeyValueStore::Compound{}
+		   .set("recipe", obj.recipe().c_str())
+		   .set("config", obj.config())
+		   .takeHandle();
+	}
 }
 #endif

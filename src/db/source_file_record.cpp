@@ -41,7 +41,8 @@ void Maike::Db::compile(SourceFileRecordConst const& rec,
 	if(std::size(targets) == 0) { return; }
 
 	KeyValueStore::Compound cmd_opts;
-	cmd_opts.set("compiler_config", rec.sourceFileInfo().compiler().config())
+	cmd_opts.set("compiler_basecfg", rec.sourceFileInfo().compilerDefault().config())
+	   .set("compiler", rec.sourceFileInfo().compiler())
 	   .set("source_file", rec.path().c_str())
 	   .set("task_id", rec.id().value())
 	   .set("build_info", info);

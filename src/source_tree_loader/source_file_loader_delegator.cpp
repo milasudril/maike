@@ -67,16 +67,19 @@ namespace
 		auto child_target_use_deps = getChildTargetUseDeps(load_ctxt, tags);
 
 		std::copy(std::begin(use_deps), std::end(use_deps), std::back_inserter(builtin_deps));
-		auto compiler = tags.getIf<Maike::KeyValueStore::CompoundRefConst>("compiler");
+		auto compiler = tags.getIf<Maike::Db::Compiler>("compiler");
 
 		return Maike::Db::SourceFileInfo{std::move(builtin_deps),
 		                                 std::vector<Maike::Db::Dependency>{},
 		                                 std::move(child_target_use_deps),
 		                                 std::move(targets),
-		                                 compiler ? loader.getCompiler(*compiler) : loader.getCompiler(),
+		                                 std::ref(loader.compiler()),
+		                                 compiler ? (*compiler) : Maike::Db::Compiler{""},
 		                                 Maike::Db::SourceFileOrigin::Project};
 	}
 }
+
+static const Maike::Db::Compiler mkdir{"make_directory"};
 
 std::optional<Maike::Db::SourceFileInfo>
 Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(fs::path const& path,
@@ -98,7 +101,8 @@ Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(fs::path const& path,
 		                          std::vector<Db::Dependency>{},
 		                          std::vector<Db::Dependency>{},
 		                          std::move(targets),
-		                          Db::Compiler{"make_directory", ""},
+		                          mkdir,
+		                          Db::Compiler{""},
 		                          Db::SourceFileOrigin::Project};
 	}
 
