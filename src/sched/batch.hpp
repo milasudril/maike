@@ -17,7 +17,9 @@ namespace Maike::Sched
 	{
 	public:
 		explicit Batch(size_t size, Sched::ThreadPool& threads):
-		   m_events{std::make_unique<Sched::TaskCompletionEvent[]>(size)}, m_threads{threads}
+		   m_events{std::make_unique<Sched::TaskCompletionEvent[]>(size)}, m_threads{threads},
+		   m_tasks_sched{0},
+		   m_tasks_completed{0}
 		{
 		}
 
