@@ -23,7 +23,8 @@ namespace Maike::KeyValueStore
 
 	class Compound;
 
-	JsonHandle toJson(Compound compound);
+	JsonHandle toJson(Compound&& compound);
+	JsonHandle toJson(Compound const& compound);
 
 	class CompoundRefConst
 	{
@@ -199,9 +200,14 @@ namespace Maike::KeyValueStore
 		JsonHandle m_handle;
 	};
 
-	inline JsonHandle toJson(Compound compound)
+	inline JsonHandle toJson(Compound&& compound)
 	{
-		return compound.takeHandle();
+		return std::move(compound).takeHandle();
+	}
+
+	inline JsonHandle toJson(Compound const& compound)
+	{
+		return toJson(Compound{compound});
 	}
 
 	inline CompoundRefConst fromJson(Empty<CompoundRefConst>, JsonRefConst ref)

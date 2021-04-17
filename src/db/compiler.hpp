@@ -6,6 +6,7 @@
 #define MAIKE_DB_COMPILER_HPP
 
 #include "src/utils/fs.hpp"
+#include "src/key_value_store/compound.hpp"
 #include <string>
 
 namespace Maike::Db
@@ -23,14 +24,15 @@ namespace Maike::Db
 			return m_recipe;
 		}
 
-		std::string const& config() const
+		KeyValueStore::Compound const& config() const
 		{
-			return m_config;
+			return m_cfg_2;
 		}
 
 	private:
 		fs::path m_recipe;
 		std::string m_config;
+		KeyValueStore::Compound m_cfg_2;
 	};
 }
 #endif
