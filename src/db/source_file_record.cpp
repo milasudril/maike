@@ -14,3 +14,8 @@ bool Maike::Db::isUpToDate(SourceFileRecordConst const& rec, std::vector<Depende
 		   return isUpToDate(item, src_file, deps);
 	   });
 }
+
+void Maike::Db::compile(SourceFileRecordConst const& rec, Build::Info const&, std::vector<Dependency> const& deps)
+{
+	compile(rec.sourceFileInfo().compiler(), rec.sourceFileInfo().targets(), rec.path(), deps);
+}

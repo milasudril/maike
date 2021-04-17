@@ -87,11 +87,7 @@ namespace Maike::Db
 	bool isUpToDate(SourceFileRecordConst const& rec, std::vector<Dependency> const& deps);
 
 	// FIXME: Pass invoker, and env
-	inline void
-	compile(SourceFileRecordConst const& rec, Build::Info const&, std::vector<Dependency> const& deps)
-	{
-		compile(rec.sourceFileInfo().compiler(), rec.sourceFileInfo().targets(), rec.path(), deps);
-	}
+	void compile(SourceFileRecordConst const& rec, Build::Info const&, std::vector<Dependency> const& deps);
 }
 
 #endif
