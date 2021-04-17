@@ -7,8 +7,6 @@
 #include "src/utils/graphutils.hpp"
 #include "src/sched/signaling_counter.hpp"
 
-#include <thread>
-
 Maike::Db::Target const& Maike::Db::getTarget(SourceTree const& src_tree,
                                               fs::path const& target_name)
 {
@@ -35,7 +33,6 @@ Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
 	   [&graph = src_tree.dependencyGraph(), force_recompilation, &ctxt](auto const& node) {
 		   ctxt.add(node.id().value(), [&graph, &node, force_recompilation, &ctxt]() {
 			   compile(graph, node, force_recompilation, ctxt);
-			   std::this_thread::sleep_for(std::chrono::seconds{2});
 		   });
 	   },
 	   src_tree.dependencyGraph());
@@ -58,7 +55,6 @@ Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
 	   [&graph = src_tree.dependencyGraph(), force_recompilation, &ctxt](auto const& node) {
 		   ctxt.add(node.id().value(), [&graph, &node, force_recompilation, &ctxt]() {
 			   compile(graph, node, force_recompilation, ctxt);
-			   std::this_thread::sleep_for(std::chrono::seconds{2});
 		   });
 	   },
 	   graph,
