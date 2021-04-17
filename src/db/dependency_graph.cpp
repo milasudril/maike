@@ -114,3 +114,21 @@ std::vector<Maike::Db::Dependency> Maike::Db::getUseDepsRecursive(DependencyGrap
 
 	return ret;
 }
+
+void Maike::Db::compile(DependencyGraph const& g,
+                        SourceFileRecordConst const& node,
+                        Build::Info const& build_info,
+                        ForceRecompilation force_recompilation,
+                        Sched::Batch const& ctxt)
+{
+	auto use_deps = getUseDepsRecursive(g, node);
+	if(std::any_of(std::begin(use_deps), std::end(use_deps), [&ctxt](auto const& item) {
+		   return ctxt.taskFailed(item.reference().value());
+	   }))
+	{
+		std::string msg{node.path()};
+		msg += ": At least one dependency was not compiled";
+		throw std::runtime_error{std::move(msg)};
+	}
+	if(force_recompilation || !isUpToDate(node, use_deps)) { compile(node, build_info, use_deps); }
+}

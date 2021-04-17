@@ -10,6 +10,7 @@
 #include "./source_file_info.hpp"
 
 #include "src/utils/fs.hpp"
+#include "src/build/info.hpp"
 
 #include <functional>
 
@@ -85,8 +86,9 @@ namespace Maike::Db
 
 	bool isUpToDate(SourceFileRecordConst const& rec, std::vector<Dependency> const& deps);
 
-	// FIXME: Pass invoker, and job info (env)
-	inline void compile(SourceFileRecordConst const& rec, std::vector<Dependency> const& deps)
+	// FIXME: Pass invoker, and env
+	inline void
+	compile(SourceFileRecordConst const& rec, Build::Info const&, std::vector<Dependency> const& deps)
 	{
 		compile(rec.sourceFileInfo().compiler(), rec.sourceFileInfo().targets(), rec.path(), deps);
 	}

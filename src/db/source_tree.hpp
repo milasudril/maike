@@ -10,6 +10,7 @@
 #include "./dependency_graph.hpp"
 
 #include "src/sched/thread_pool.hpp"
+#include "src/build/info.hpp"
 
 namespace Maike::Db
 {
@@ -66,14 +67,19 @@ namespace Maike::Db
 		size_t m_value;
 	};
 
-	TaskCounter compile(SourceTree const& src_tree, ForceRecompilation, Sched::ThreadPool& workers);
+	TaskCounter compile(SourceTree const& src_tree,
+	                    Build::Info const&,
+	                    ForceRecompilation,
+	                    Sched::ThreadPool& workers);
 
 	TaskCounter compile(SourceTree const& src_tree,
+	                    Build::Info const&,
 	                    ForceRecompilation force_recompilation,
 	                    Sched::ThreadPool& workers,
 	                    std::pair<fs::path const*, size_t> targets);
 
 	TaskCounter compile(SourceTree const& src_tree,
+	                    Build::Info const&,
 	                    ForceRecompilation force_recompilation,
 	                    Sched::ThreadPool& workers,
 	                    fs::path const& target_name);
