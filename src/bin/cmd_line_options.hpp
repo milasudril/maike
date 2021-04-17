@@ -2,8 +2,8 @@
 //@	  "targets":[{"name":"cmd_line_options.hpp","type":"include"}]
 //@	}
 
-#ifndef MAIKE_CMDLINEOPTIONS_HPP
-#define MAIKE_CMDLINEOPTIONS_HPP
+#ifndef MAIKE_BIN_CMDLINEOPTIONS_HPP
+#define MAIKE_BIN_CMDLINEOPTIONS_HPP
 
 #include "./build_id.hpp"
 

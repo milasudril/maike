@@ -2,8 +2,8 @@
 //@	 "targets":[{"name":"build_info.hpp","type":"include"}]
 //@	}
 
-#ifndef MAIKE_BUILDINFO_HPP
-#define MAIKE_BUILDINFO_HPP
+#ifndef MAIKE_BIN_BUILDINFO_HPP
+#define MAIKE_BIN_BUILDINFO_HPP
 
 #include "./build_id.hpp"
 

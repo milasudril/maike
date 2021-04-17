@@ -3,8 +3,8 @@
 //@	,"dependencies_extra":[{"ref":"build_id.o", "rel":"implementation"}]
 //@	}
 
-#ifndef MAIKE_BUILDID_HPP
-#define MAIKE_BUILDID_HPP
+#ifndef MAIKE_BIN_BUILDID_HPP
+#define MAIKE_BIN_BUILDID_HPP
 
 #include "src/utils/empty.hpp"
 #include "src/key_value_store/json_handle.hpp"

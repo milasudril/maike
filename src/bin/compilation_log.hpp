@@ -2,8 +2,8 @@
 //@	 "targets":[{"name":"compilation_log.hpp","type":"include"}]
 //@	 }
 
-#ifndef MAIKE_COMPILATIONLOG_HPP
-#define MAIKE_COMPILATIONLOG_HPP
+#ifndef MAIKE_BIN_COMPILATIONLOG_HPP
+#define MAIKE_BIN_COMPILATIONLOG_HPP
 
 namespace Maike
 {
