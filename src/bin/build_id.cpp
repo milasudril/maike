@@ -60,7 +60,7 @@ std::string Maike::toString(BuildId const& id)
 	for(size_t k = 0; k < bytes.size(); ++k)
 	{
 		constexpr std::array<char, 16> val_lut{
-		   '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+		   '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 		auto val = bytes[k];
 		auto msb = static_cast<int>((val & static_cast<std::byte>(0xf0)) >> 4);
 		auto lsb = static_cast<int>((val & static_cast<std::byte>(0x0f)));
