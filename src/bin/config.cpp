@@ -7,10 +7,10 @@
 #include "src/io/input_file.hpp"
 
 std::map<std::string, std::reference_wrapper<Maike::SourceFileInfoLoaders::Loader const>>
-Maike::mapSourceFileInfoLoaders(Maike::Config const& cfg)
+Maike::mapSourceFileInfoLoaders(std::reference_wrapper<Maike::Config const> cfg)
 {
-	auto& name_map = cfg.sourceTreeLoader().fileInfoLoaders();
-	auto& loaders = cfg.sourceFileInfoLoaders().loaders();
+	auto& name_map = cfg.get().sourceTreeLoader().fileInfoLoaders();
+	auto& loaders = cfg.get().sourceFileInfoLoaders().loaders();
 	std::map<std::string, std::reference_wrapper<Maike::SourceFileInfoLoaders::Loader const>> ret;
 	std::for_each(std::begin(name_map), std::end(name_map), [&ret, &loaders](auto const& item) {
 		auto i = loaders.find(item.second);
