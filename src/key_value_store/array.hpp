@@ -84,6 +84,11 @@ namespace Maike::KeyValueStore
 			return json_array_size(m_ref.handle());
 		}
 
+		auto handle() const
+		{
+			return m_ref;
+		}
+
 	private:
 		JsonRefConst m_ref;
 	};
@@ -96,9 +101,12 @@ namespace Maike::KeyValueStore
 		{
 			if(m_handle.valid()) { validateType<Type::Array>(m_handle.type(), src_name); }
 		}
+
 		Array(): m_handle{json_array()}
 		{
 		}
+
+		explicit Array(ArrayRefConst ref):m_handle{ref.handle()}{}
 
 		template<class Iter>
 		explicit Array(Iter a, Iter b): Array{}
@@ -174,14 +182,12 @@ namespace Maike::KeyValueStore
 		store(obj.reference(), sink);
 	}
 
-	template<class Other>
-	Array& operator|=(Array& a, Other const& b)
-	{
-		a.append(b);
-		return a;
-	}
+	Array& operator|=(Array& a, ArrayRefConst b);
 
-	Array& operator|=(Array& a, Array const& b);
+	inline Array operator|(Array&& a, ArrayRefConst b)
+	{
+		return a |= b;
+	}
 }
 
 #endif

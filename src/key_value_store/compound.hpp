@@ -1,7 +1,7 @@
 //@	{
 //@	  "targets":[{"name":"compound.hpp","type":"include"}]
+//@	  ,"dependencies_extra":[{"ref":"compound.o","rel":"implementation"}]
 //@	 }
-
 
 #ifndef MAIKE_KEYVALUESTORE_COMPOUND_HPP
 #define MAIKE_KEYVALUESTORE_COMPOUND_HPP
@@ -174,6 +174,13 @@ namespace Maike::KeyValueStore
 			return JsonRefConst{obj, m_handle.source().c_str()}.as<T>();
 		}
 
+		std::optional<JsonRefConst> getIfAny(char const* key) const
+		{
+			auto obj = json_object_get(m_handle.handle(), key);
+			if(obj == nullptr) { return std::optional<JsonRefConst>{}; }
+			return JsonRefConst{obj, m_handle.source().c_str()};
+		}
+
 
 		size_t size() const
 		{
@@ -228,6 +235,19 @@ namespace Maike::KeyValueStore
 	void store(Compound const& obj, Sink&& sink)
 	{
 		store(obj.handleReference(), sink);
+	}
+
+
+	Compound& operator|=(Compound& a, CompoundRefConst b);
+
+	inline Compound& operator|=(Compound& a, Compound const& b)
+	{
+		return a |= b.reference();
+	}
+
+	inline Compound& operator|(Compound&& a, CompoundRefConst b)
+	{
+		return a |= b;
 	}
 }
 
