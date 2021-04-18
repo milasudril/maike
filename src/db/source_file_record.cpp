@@ -40,9 +40,10 @@ void Maike::Db::compile(SourceFileRecordConst const& rec,
 	auto& targets = rec.sourceFileInfo().targets();
 	if(std::size(targets) == 0) { return; }
 
+	auto compiler = rec.sourceFileInfo().compilerDefault() | rec.sourceFileInfo().compiler();
+
 	KeyValueStore::Compound cmd_opts;
-	cmd_opts.set("compiler_basecfg", rec.sourceFileInfo().compilerDefault().config())
-	   .set("compiler", rec.sourceFileInfo().compiler())
+	cmd_opts.set("compiler_cfg", compiler.config())
 	   .set("source_file", rec.path().c_str())
 	   .set("task_id", rec.id().value())
 	   .set("build_info", info);

@@ -55,5 +55,11 @@ namespace Maike::Db
 		   .set("config", obj.config())
 		   .takeHandle();
 	}
+
+	inline Compiler operator|(Compiler const& a, Compiler const& b)
+	{
+		return Compiler{fs::path{b.recipe() != "" ? b.recipe() : a.recipe()},
+		                KeyValueStore::Compound{a.config()} | b.config().reference()};
+	}
 }
 #endif
