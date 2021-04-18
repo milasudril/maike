@@ -42,12 +42,6 @@ namespace App
 		{
 			return m_compiler;
 		}
-#if 0
-		Compiler const& compiler() const
-		{
-			return m_compiler;
-		}
-#endif
 
 	private:
 		Maike::Db::Compiler m_compiler;
@@ -66,10 +60,9 @@ namespace App
 		return loader.filterInput(input, source_stream, tag_stream);
 	}
 
-	inline auto toJson(SourceFileLoader const&)
+	inline auto toJson(SourceFileLoader const& loader)
 	{
-		return Maike::KeyValueStore::Compound{}
-		   .takeHandle(); //.set("compiler", loader.compiler()).takeHandle();
+		return Maike::KeyValueStore::Compound{}.set("compiler", loader.compiler()).takeHandle();
 	}
 }
 
