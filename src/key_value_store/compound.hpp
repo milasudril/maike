@@ -245,7 +245,9 @@ namespace Maike::KeyValueStore
 		return a |= b.reference();
 	}
 
-	inline Compound& operator|(Compound&& a, CompoundRefConst b)
+	inline Compound operator|(Compound const& a, CompoundRefConst b) = delete;
+
+	inline Compound operator|(Compound&& a, CompoundRefConst b)
 	{
 		return a |= b;
 	}

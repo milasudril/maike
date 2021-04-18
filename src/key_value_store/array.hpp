@@ -106,7 +106,9 @@ namespace Maike::KeyValueStore
 		{
 		}
 
-		explicit Array(ArrayRefConst ref):m_handle{ref.handle()}{}
+		explicit Array(ArrayRefConst ref): m_handle{ref.handle()}
+		{
+		}
 
 		template<class Iter>
 		explicit Array(Iter a, Iter b): Array{}
@@ -183,6 +185,8 @@ namespace Maike::KeyValueStore
 	}
 
 	Array& operator|=(Array& a, ArrayRefConst b);
+
+	inline Array operator|(Array const& a, ArrayRefConst b) = delete;
 
 	inline Array operator|(Array&& a, ArrayRefConst b)
 	{

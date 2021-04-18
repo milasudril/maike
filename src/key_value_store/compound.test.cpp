@@ -5,6 +5,7 @@
 #undef NDEBUG
 
 #include "./compound.hpp"
+#include "./array.hpp"
 
 #include <cassert>
 #include <cstring>
@@ -151,6 +152,52 @@ namespace Testcases
 		{
 		}
 	}
+
+	void maikeKeyValueStoreCompoundCombine()
+	{
+		Maike::KeyValueStore::Compound a;
+		a.set("Foo", 123)
+		   .set("Bar", 0.125)
+		   .set("Subobj", Maike::KeyValueStore::Compound{}.set("Kaka", "hej"))
+		   .set("array", Maike::KeyValueStore::Array{}.append(1).append("foo"));
+
+		{
+			Maike::KeyValueStore::Compound b;
+			b.set("Foo", 124)
+			   .set("Bar", 0.5)
+			   .set("Subobj", Maike::KeyValueStore::Compound{}.set("Bulle", "nisse"))
+			   .set("array",
+			        Maike::KeyValueStore::Array{}
+			           .append(Maike::KeyValueStore::Compound{}.set("key", "value"))
+			           .append(2));
+
+			a |= b;
+		}
+
+		assert(a.get<json_int_t>("Foo") == 124);
+		assert(a.get<double>("Bar") == 0.5);
+
+		auto subobj = a.get<Maike::KeyValueStore::CompoundRefConst>("Subobj");
+		assert(std::string_view{subobj.get<char const*>("Kaka")} == "hej");
+		assert(std::string_view{subobj.get<char const*>("Bulle")} == "nisse");
+
+		auto array = a.get<Maike::KeyValueStore::ArrayRefConst>("array");
+		auto i = std::begin(array);
+		assert((*i).as<json_int_t>() == 1);
+		++i;
+
+		assert(std::string_view{(*i).as<char const*>()} == "foo");
+		++i;
+
+		{
+			auto compound = (*i).as<Maike::KeyValueStore::CompoundRefConst>();
+			assert(std::string_view{compound.get<char const*>("key")} == "value");
+			++i;
+		}
+
+		assert((*i).as<json_int_t>() == 2);
+		++i;
+	}
 }
 
 int main()
@@ -165,4 +212,5 @@ int main()
 	Testcases::maikeKeyValueStoreCompoundToJson();
 	Testcases::maikeKeyValueStoreCompoundSetAndGetValues();
 	Testcases::maikeKeyValueStoreCompoundRefConstWrongType();
+	Testcases::maikeKeyValueStoreCompoundCombine();
 }
