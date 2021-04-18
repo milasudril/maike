@@ -11,6 +11,7 @@
 
 #include "src/utils/fs.hpp"
 #include "src/build/info.hpp"
+#include "src/exec/command.hpp"
 
 #include <algorithm>
 
@@ -100,10 +101,10 @@ namespace Maike::Db
 
 	bool isUpToDate(SourceFileRecordConst const& rec, std::vector<Dependency> const& deps);
 
-	// FIXME: Pass invoker, and env
-	void compile(SourceFileRecordConst const& rec,
-	             Build::Info const&,
-	             std::vector<Dependency> const& deps);
+
+	Exec::Command makeBuildCommand(SourceFileRecordConst const& rec,
+	                               Build::Info const&,
+	                               std::vector<Dependency> const& deps);
 }
 
 #endif

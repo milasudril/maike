@@ -33,12 +33,11 @@ namespace
 	}
 }
 
-void Maike::Db::compile(SourceFileRecordConst const& rec,
-                        Build::Info const& info,
-                        std::vector<Dependency> const& deps)
+Maike::Exec::Command Maike::Db::makeBuildCommand(SourceFileRecordConst const& rec,
+                                                 Build::Info const& info,
+                                                 std::vector<Dependency> const& deps)
 {
 	auto& targets = rec.sourceFileInfo().targets();
-	if(std::size(targets) == 0) { return; }
 
 	auto compiler = rec.sourceFileInfo().compilerDefault() | rec.sourceFileInfo().compiler();
 
@@ -66,8 +65,6 @@ void Maike::Db::compile(SourceFileRecordConst const& rec,
 	CmdOptsString str;
 	store(cmd_opts, str, KeyValueStore::PrettyPrint{false});
 
-#if 1
-	std::lock_guard lock{m};
-	printf("%s '%s'\n", compiler.recipe().c_str(), str.buffer.c_str());
-#endif
+	return Exec::Command{std::move(compiler.recipe()),
+	                     std::vector<std::string>{std::move(str.buffer)}};
 }

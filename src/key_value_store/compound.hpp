@@ -232,7 +232,7 @@ namespace Maike::KeyValueStore
 	}
 
 	template<class Sink>
-	void store(Compound const& obj, Sink&& sink, PrettyPrint pretty_print=PrettyPrint{true})
+	void store(Compound const& obj, Sink&& sink, PrettyPrint pretty_print = PrettyPrint{true})
 	{
 		store(obj.handleReference(), sink, pretty_print);
 	}

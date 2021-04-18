@@ -116,6 +116,8 @@ void Maike::Db::compile(DependencyGraph const& g,
                         ForceRecompilation force_recompilation,
                         Sched::Batch const& ctxt)
 {
+	if(std::size(node.sourceFileInfo().targets()) == 0) { return; }
+
 	auto use_deps = getUseDepsRecursive(g, node);
 	if(std::any_of(std::begin(use_deps), std::end(use_deps), [&ctxt](auto const& item) {
 		   return ctxt.taskFailed(item.reference().value());
@@ -125,5 +127,6 @@ void Maike::Db::compile(DependencyGraph const& g,
 		msg += ": At least one dependency was not compiled";
 		throw std::runtime_error{std::move(msg)};
 	}
-	if(force_recompilation || !isUpToDate(node, use_deps)) { compile(node, build_info, use_deps); }
+	if(force_recompilation || !isUpToDate(node, use_deps))
+	{ auto cmd = makeBuildCommand(node, build_info, use_deps); }
 }
