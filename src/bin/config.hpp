@@ -6,7 +6,6 @@
 #ifndef MAIKE_BIN_CONFIG_HPP
 #define MAIKE_BIN_CONFIG_HPP
 
-#include "src/env/env_store.hpp"
 #include "src/source_tree_loader/config.hpp"
 #include "src/source_file_info_loaders/config.hpp"
 
