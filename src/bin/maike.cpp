@@ -170,7 +170,7 @@ int main(int argc, char** argv)
 
 		cmdline.forEachOption([](char const* name, auto const& val) {
 			print(name, val);
-			putchar('\n');
+			fputc('\n', stderr);
 		});
 
 
