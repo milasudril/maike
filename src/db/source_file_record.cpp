@@ -64,7 +64,7 @@ void Maike::Db::compile(SourceFileRecordConst const& rec,
 	}
 
 	CmdOptsString str;
-	store(cmd_opts, str);
+	store(cmd_opts, str, KeyValueStore::PrettyPrint{false});
 
 #if 1
 	std::lock_guard lock{m};

@@ -278,8 +278,20 @@ namespace Maike::KeyValueStore
 		return jsonLoad(Io::Reader{src}, src_name);
 	}
 
+	class PrettyPrint
+	{
+	public:
+		explicit PrettyPrint(bool value = true):m_value{value}{}
+
+		constexpr operator bool() const
+		{ return m_value;}
+
+	private:
+		bool m_value;
+	};
+
 	template<class Sink>
-	void store(json_t const* handle, Sink&& sink)
+	void store(json_t const* handle, Sink&& sink, PrettyPrint pretty_print=PrettyPrint{true})
 	{
 		json_dump_callback(
 		   handle,
@@ -290,19 +302,19 @@ namespace Maike::KeyValueStore
 			   return 0;
 		   },
 		   &sink,
-		   JSON_SORT_KEYS | JSON_ENCODE_ANY | JSON_INDENT(4));
+		   JSON_SORT_KEYS | JSON_ENCODE_ANY | (pretty_print? JSON_INDENT(4) : 0));
 	}
 
 	template<class Sink>
-	void store(JsonHandle const& obj, Sink&& sink)
+	void store(JsonHandle const& obj, Sink&& sink, PrettyPrint pretty_print=PrettyPrint{true})
 	{
-		store(obj.handle(), sink);
+		store(obj.handle(), sink, pretty_print);
 	}
 
 	template<class Sink>
-	void store(JsonRefConst obj, Sink&& sink)
+	void store(JsonRefConst obj, Sink&& sink, PrettyPrint pretty_print=PrettyPrint{true})
 	{
-		store(obj.handle(), sink);
+		store(obj.handle(), sink, pretty_print);
 	}
 
 	void init();
