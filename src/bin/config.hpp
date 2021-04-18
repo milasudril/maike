@@ -19,20 +19,8 @@ namespace Maike
 
 		explicit Config(KeyValueStore::CompoundRefConst obj):
 		   m_source_tree_loader{obj.get<SourceTreeLoader::Config>("source_tree_loader")},
-		   m_source_file_info_loaders{obj.get<SourceFileInfoLoaders::Config>("source_file_info_loaders")},
-		   m_env{obj.get<EnvStore>("env")}
+		   m_source_file_info_loaders{obj.get<SourceFileInfoLoaders::Config>("source_file_info_loaders")}
 		{
-		}
-
-		EnvStore const& env() const
-		{
-			return m_env;
-		}
-
-		Config& env(EnvStore&& val)
-		{
-			m_env = std::move(val);
-			return *this;
 		}
 
 		SourceTreeLoader::Config const& sourceTreeLoader() const
@@ -60,7 +48,6 @@ namespace Maike
 	private:
 		SourceTreeLoader::Config m_source_tree_loader;
 		SourceFileInfoLoaders::Config m_source_file_info_loaders;
-		EnvStore m_env;
 	};
 
 	inline auto fromJson(KeyValueStore::Empty<Config>, KeyValueStore::JsonRefConst ref)
@@ -71,7 +58,6 @@ namespace Maike
 	inline auto toJson(Config const& cfg)
 	{
 		return KeyValueStore::Compound{}
-		   .set("env", cfg.env())
 		   .set("source_tree_loader", cfg.sourceTreeLoader())
 		   .set("source_file_info_loaders", cfg.sourceFileInfoLoaders())
 		   .takeHandle();

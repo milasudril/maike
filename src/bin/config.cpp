@@ -26,18 +26,23 @@ Maike::mapSourceFileInfoLoaders(std::reference_wrapper<Maike::Config const> cfg)
 
 Maike::Config Maike::loadConfig(std::vector<fs::path> const& cfg_files)
 {
-	Config cfg;
-	std::for_each(std::begin(cfg_files), std::end(cfg_files), [&cfg](auto const& item) {
-		try
-		{
-			Maike::Io::InputFile cfg_file{item};
-			auto cfg_json = KeyValueStore::Compound{Maike::Io::Reader{cfg_file}, item.string()};
-			cfg = Config{cfg_json.get<Maike::KeyValueStore::CompoundRefConst>("maikeconfig")};
-		}
-		catch(...)
-		{
-		}
-	});
-
-	return cfg;
+	try
+	{
+		KeyValueStore::Compound cfg;
+		std::for_each(std::begin(cfg_files), std::end(cfg_files), [&cfg](auto const& item) {
+			try
+			{
+				Maike::Io::InputFile cfg_file{item};
+				cfg |= KeyValueStore::Compound{Maike::Io::Reader{cfg_file}, item.string()};
+			}
+			catch(...)
+			{
+			}
+		});
+		return Config{cfg.get<Maike::KeyValueStore::CompoundRefConst>("maikeconfig")};
+	}
+	catch(...)
+	{
+	}
+	return Config{};
 }
