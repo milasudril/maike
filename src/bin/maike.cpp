@@ -233,11 +233,14 @@ int main(int argc, char** argv)
 			return 0;
 		}
 
+		Maike::Build::CommandDictionary commands;
+
 		Maike::timedCall(
 		   logger,
 		   [](auto&&... args) { return compile(std::forward<decltype(args)>(args)...); },
 		   src_tree,
 		   build_info,
+		   commands,
 		   Maike::Db::ForceRecompilation{},
 		   workers);
 	}

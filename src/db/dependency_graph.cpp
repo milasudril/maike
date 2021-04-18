@@ -113,6 +113,7 @@ std::vector<Maike::Db::Dependency> Maike::Db::getUseDepsRecursive(DependencyGrap
 void Maike::Db::compile(DependencyGraph const& g,
                         SourceFileRecordConst const& node,
                         Build::Info const& build_info,
+                        Build::CommandDictionary const& commands,
                         ForceRecompilation force_recompilation,
                         Sched::Batch const& ctxt)
 {
@@ -128,5 +129,5 @@ void Maike::Db::compile(DependencyGraph const& g,
 		throw std::runtime_error{std::move(msg)};
 	}
 	if(force_recompilation || !isUpToDate(node, use_deps))
-	{ auto cmd = makeBuildCommand(node, build_info, use_deps); }
+	{ auto cmd = makeBuildCommand(node, build_info, commands, use_deps); }
 }
