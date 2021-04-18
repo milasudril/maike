@@ -23,12 +23,10 @@ namespace Cxx
 		{
 		}
 
-#if 0
 		explicit SourceFileLoader(Maike::KeyValueStore::CompoundRefConst cfg):
 		   m_compiler{cfg.get<Maike::Db::Compiler>("compiler")}
 		{
 		}
-#endif
 
 		std::vector<Maike::Db::Dependency> getDependencies(Maike::Io::Reader src) const;
 

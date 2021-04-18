@@ -20,12 +20,15 @@ Maike::SourceFileInfoLoaders::Config::Config()
 Maike::SourceFileInfoLoaders::Config::Config(KeyValueStore::CompoundRefConst items)
 {
 	std::for_each(std::begin(items), std::end(items), [this](auto const& item) {
-		//		auto cfg = item.second.template as<Maike::KeyValueStore::CompoundRefConst>();
+		auto cfg = item.second.template as<Maike::KeyValueStore::CompoundRefConst>();
 		if(item.first == std::string_view{"cxx"})
 		{
-			//			m_loaders.insert_or_assign(std::end(m_loaders), item.first,
-			//	Loader{Cxx::SourceFileLoader(cfg)});
-			m_loaders.insert_or_assign(std::end(m_loaders), item.first, Loader{Cxx::SourceFileLoader{}});
+			m_loaders.insert_or_assign(std::end(m_loaders), item.first, Loader{Cxx::SourceFileLoader(cfg)});
+		}
+
+		if(item.first == std::string_view{"app"})
+		{
+			m_loaders.insert_or_assign(std::end(m_loaders), item.first, Loader{App::SourceFileLoader(cfg)});
 		}
 	});
 }
