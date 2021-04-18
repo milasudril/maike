@@ -68,6 +68,6 @@ void Maike::Db::compile(SourceFileRecordConst const& rec,
 
 #if 1
 	std::lock_guard lock{m};
-	printf("%s\n", str.buffer.c_str());
+	printf("%s '%s'\n", compiler.recipe().c_str(), str.buffer.c_str());
 #endif
 }

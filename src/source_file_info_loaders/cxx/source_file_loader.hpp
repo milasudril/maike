@@ -36,12 +36,6 @@ namespace Cxx
 		                 Maike::SourceFileInfoLoaders::SourceOutStream source_stream,
 		                 Maike::SourceFileInfoLoaders::TagsOutStream tag_stream) const;
 
-		Maike::Db::Compiler getCompiler(Maike::KeyValueStore::CompoundRefConst) const
-		{
-			// TODO: Add configuration to new compiler instance before returning the compiler.
-			return m_compiler;
-		}
-
 		Maike::Db::Compiler const& compiler() const
 		{
 			return m_compiler;
@@ -64,17 +58,10 @@ namespace Cxx
 		return loader.filterInput(input, source_stream, tag_stream);
 	}
 
-	inline auto getCompiler(SourceFileLoader const& loader, Maike::KeyValueStore::CompoundRefConst cfg)
-	{
-		return loader.getCompiler(cfg);
-	}
-
-#if 0
 	inline auto toJson(SourceFileLoader const& loader)
 	{
 		return Maike::KeyValueStore::Compound{}.set("compiler", loader.compiler()).takeHandle();
 	}
-#endif
 }
 
 #endif
