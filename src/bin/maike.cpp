@@ -233,6 +233,7 @@ int main(int argc, char** argv)
 			return 0;
 		}
 
+		printf("%s\n", Maike::execPrefix().c_str());
 		Maike::Build::CommandDictionary commands;
 
 		Maike::timedCall(

@@ -16,6 +16,11 @@ namespace
 
 		throw std::runtime_error{std::move(msg)};
 	}
+
+	Maike::fs::path getExecPrefix()
+	{
+		return read_symlink(Maike::fs::path{"/proc/self/exe"}).parent_path().parent_path();
+	}
 }
 
 bool Maike::isNewer(fs::path const& a, fs::path const& b)
@@ -50,4 +55,11 @@ bool Maike::isOlder(fs::path const& a, fs::path const& b)
 	if(ec_b) { return false; }
 
 	return t_a < t_b;
+}
+
+Maike::fs::path const& Maike::execPrefix()
+{
+	static auto ret = getExecPrefix();
+
+	return ret;
 }

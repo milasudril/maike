@@ -15,6 +15,8 @@ namespace Maike
 	bool isNewer(fs::path const& a, fs::path const& b);
 
 	bool isOlder(fs::path const& a, fs::path const& b);
+
+	fs::path const& execPrefix();
 }
 
 #endif
