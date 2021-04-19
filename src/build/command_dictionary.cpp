@@ -6,10 +6,6 @@
 
 #include <algorithm>
 
-Maike::Build::CommandDictionary::CommandDictionary()
-{
-}
-
 Maike::fs::path Maike::Build::CommandDictionary::get(fs::path const& cmd) const
 {
 	{

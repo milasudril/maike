@@ -161,7 +161,9 @@ int main(int argc, char** argv)
 {
 	try
 	{
-		Maike::CommandLine cmdline{argc - 1, argv + 1};
+		Maike::KeyValueStore::init();
+
+		Maike::CommandLine const cmdline{argc - 1, argv + 1};
 		if(cmdline.hasOption<Maike::CmdLineOption::Help>())
 		{
 			printHelp(cmdline);
@@ -179,12 +181,13 @@ int main(int argc, char** argv)
 		   return 0;
 		  }*/
 
-		Maike::KeyValueStore::init();
+		auto const src_dir = cmdline.hasOption<Maike::CmdLineOption::SourceDir>() ?
+			cmdline.option<Maike::CmdLineOption::SourceDir>():
+			Maike::fs::path{"."};
 
-		auto cfg = Maike::loadConfig(cmdline.hasOption<Maike::CmdLineOption::ConfigFiles>() ?
+		auto const cfg = Maike::loadConfig(cmdline.hasOption<Maike::CmdLineOption::ConfigFiles>() ?
 		                                cmdline.option<Maike::CmdLineOption::ConfigFiles>() :
-		                                std::vector<Maike::fs::path>{"maikeconfig.json"});
-
+		                                std::vector<Maike::fs::path>{src_dir / "maikeconfig.json"});
 
 		if(cmdline.hasOption<Maike::CmdLineOption::ConfigDump>())
 		{
@@ -202,6 +205,7 @@ int main(int argc, char** argv)
 		Maike::Sched::ThreadPool workers{cmdline.option<Maike::CmdLineOption::NumWorkers>()};
 
 		Maike::SourceTreeLoader::SourceFileLoaderDelegator loader_delegator;
+		Maike::Build::CommandDictionary commands{};
 		loader_delegator.loaders(mapSourceFileInfoLoaders(cfg));
 
 		Maike::Build::Info build_info;
@@ -222,7 +226,7 @@ int main(int argc, char** argv)
 		auto const src_tree = Maike::timedCall(logger,
 		                                       Maike::SourceTreeLoader::load,
 		                                       workers,
-		                                       Maike::fs::path{"."},
+		                                       src_dir,
 		                                       cfg.sourceTreeLoader().inputFilter(),
 		                                       loader_delegator,
 		                                       target_dir);
@@ -233,8 +237,6 @@ int main(int argc, char** argv)
 			return 0;
 		}
 
-		printf("%s\n", Maike::execPrefix().c_str());
-		Maike::Build::CommandDictionary commands;
 
 		Maike::timedCall(
 		   logger,

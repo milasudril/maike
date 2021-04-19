@@ -17,7 +17,11 @@ namespace Maike::Build
 	class CommandDictionary
 	{
 	public:
-		CommandDictionary();
+#if 0
+		explicit CommandDictionary(std::vector<fs::path>&& search_paths):
+		m_search_paths{std::move(search_paths)}
+		{}
+#endif
 
 		fs::path get(fs::path const& cmd) const;
 
