@@ -182,24 +182,18 @@ int main(int argc, char** argv)
 		  }*/
 
 		auto const src_dir = cmdline.hasOption<Maike::CmdLineOption::SourceDir>() ?
-			cmdline.option<Maike::CmdLineOption::SourceDir>():
-			Maike::fs::path{"."};
+		                        cmdline.option<Maike::CmdLineOption::SourceDir>() :
+		                        Maike::fs::path{"."};
 
 		auto const cfg = Maike::loadConfig(cmdline.hasOption<Maike::CmdLineOption::ConfigFiles>() ?
-		                                cmdline.option<Maike::CmdLineOption::ConfigFiles>() :
-		                                std::vector<Maike::fs::path>{src_dir / "maikeconfig.json"});
+		                                      cmdline.option<Maike::CmdLineOption::ConfigFiles>() :
+		                                      std::vector<Maike::fs::path>{src_dir / "maikeconfig.json"});
 
 		if(cmdline.hasOption<Maike::CmdLineOption::ConfigDump>())
 		{
 			dumpConfig(cfg, cmdline.option<Maike::CmdLineOption::ConfigDump>());
 			return 0;
 		}
-
-
-		//	Maike::LocalSystemInvoker invoker;
-
-		// Current state
-
 
 		Logger logger;
 		Maike::Sched::ThreadPool workers{cmdline.option<Maike::CmdLineOption::NumWorkers>()};

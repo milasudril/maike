@@ -34,7 +34,8 @@ namespace Maike
 		BuildId,
 		StartTime,
 		NumWorkers,
-		DryRun
+		DryRun,
+		ForceRebuild
 		//	LogFlags,
 		//	LogFile,
 		//	LogFormat,
@@ -42,7 +43,7 @@ namespace Maike
 
 	static constexpr auto end(Empty<CmdLineOption>)
 	{
-		return static_cast<int>(CmdLineOption::DryRun) + 1;
+		return static_cast<int>(CmdLineOption::ForceRebuild) + 1;
 	}
 
 	template<CmdLineOption opt>
@@ -551,6 +552,37 @@ namespace Maike
 		static constexpr char const* name()
 		{
 			return "--dry-run";
+		}
+	};
+
+	template<>
+	struct CmdLineOptionTraits<CmdLineOption::ForceRebuild>
+	{
+		using type = std::false_type;
+
+		static constexpr bool valueRequired()
+		{
+			return false;
+		}
+
+		static constexpr char const* category()
+		{
+			return "Processing options";
+		}
+
+		static constexpr char const* summary()
+		{
+			return "Rebuild targets, even if they are up-to-date";
+		}
+
+		static constexpr char const* description()
+		{
+			return nullptr;
+		}
+
+		static constexpr char const* name()
+		{
+			return "--force-rebuild";
 		}
 	};
 
