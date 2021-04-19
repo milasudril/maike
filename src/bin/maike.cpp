@@ -213,9 +213,14 @@ int main(int argc, char** argv)
 		   format(build_info.startTime()).c_str(),
 		   toString(build_info.buildId()).c_str());
 		fflush(stdout);
+
+
 		auto const target_dir = cmdline.hasOption<Maike::CmdLineOption::TargetDir>() ?
 		                           cmdline.option<Maike::CmdLineOption::TargetDir>() :
-		                           Maike::fs::path{"__targets"};
+		                           src_dir.filename() == "." ?
+		                           Maike::fs::path{"__targets"} :
+		                           Maike::fs::path{src_dir.filename().string() + "_targets"};
+		printf("%s\n", target_dir.c_str());
 
 		auto const src_tree = Maike::timedCall(logger,
 		                                       Maike::SourceTreeLoader::load,
