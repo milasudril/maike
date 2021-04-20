@@ -3,11 +3,11 @@
 #include "./cmd_line_options.hpp"
 #include "./config.hpp"
 
-#include "src/build/command_dictionary.hpp"
 #include "src/build/info.hpp"
 #include "src/db/dependency_graph.hpp"
 #include "src/io/input_file.hpp"
 #include "src/source_tree_loader/main.hpp"
+#include "src/source_tree_loader/command_dictionary.hpp"
 #include "src/source_file_info_loaders/cxx/source_file_loader.hpp"
 #include "src/utils/graphutils.hpp"
 #include "src/utils/callwrappers.hpp"
