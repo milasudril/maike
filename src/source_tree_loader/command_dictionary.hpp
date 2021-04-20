@@ -7,6 +7,7 @@
 #define MAIKE_SOURCETREELOADER_COMMANDDICTIONARY_HPP
 
 #include "src/utils/fs.hpp"
+#include "src/db/source_file_origin.hpp"
 
 #include <map>
 #include <shared_mutex>
@@ -17,18 +18,24 @@ namespace Maike::SourceTreeLoader
 	class CommandDictionary
 	{
 	public:
-#if 0
-		explicit CommandDictionary(std::vector<fs::path>&& search_paths):
-		m_search_paths{std::move(search_paths)}
-		{}
-#endif
+		std::pair<Db::SourceFileOrigin, fs::path> get(fs::path const& cmd) const;
 
-		fs::path get(fs::path const& cmd) const;
+		CommandDictionary& projectDir(fs::path&& dir)
+		{
+			m_search_paths[0] = std::move(dir);
+			return *this;
+		}
+
+		CommandDictionary& systemDir(fs::path&& dir)
+		{
+			m_search_paths[1] = std::move(dir);
+			return *this;
+		}
 
 	private:
 		mutable std::shared_mutex m_mtx;
-		mutable std::map<fs::path, fs::path> m_commands;
-		std::vector<fs::path> m_search_paths;
+		mutable std::map<fs::path, std::pair<Db::SourceFileOrigin, fs::path>> m_commands;
+		std::array<fs::path, 2> m_search_paths;
 	};
 }
 #endif
