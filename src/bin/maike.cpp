@@ -223,7 +223,7 @@ int main(int argc, char** argv)
 		Maike::Sched::ThreadPool workers{cmdline.option<Maike::CmdLineOption::NumWorkers>()};
 
 		Maike::SourceTreeLoader::SourceFileLoaderDelegator loader_delegator;
-		Maike::Build::CommandDictionary commands{};
+		Maike::SourceTreeLoader::CommandDictionary commands{};
 		loader_delegator.loaders(mapSourceFileInfoLoaders(cfg));
 
 		printf(

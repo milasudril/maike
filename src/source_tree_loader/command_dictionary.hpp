@@ -3,8 +3,8 @@
 //@	,"dependencies_extra":[{"ref":"command_dictionary.o","rel":"implementation"}]
 //@	}
 
-#ifndef MAIKE_BUILD_COMMANDDICTIONARY_HPP
-#define MAIKE_BUILD_COMMANDDICTIONARY_HPP
+#ifndef MAIKE_SOURCETREELOADER_COMMANDDICTIONARY_HPP
+#define MAIKE_SOURCETREELOADER_COMMANDDICTIONARY_HPP
 
 #include "src/utils/fs.hpp"
 
@@ -12,7 +12,7 @@
 #include <shared_mutex>
 #include <vector>
 
-namespace Maike::Build
+namespace Maike::SourceTreeLoader
 {
 	class CommandDictionary
 	{

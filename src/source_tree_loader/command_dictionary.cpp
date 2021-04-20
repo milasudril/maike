@@ -6,7 +6,7 @@
 
 #include <algorithm>
 
-Maike::fs::path Maike::Build::CommandDictionary::get(fs::path const& cmd) const
+Maike::fs::path Maike::SourceTreeLoader::CommandDictionary::get(fs::path const& cmd) const
 {
 	{
 		std::shared_lock read_lock{m_mtx};
