@@ -10,8 +10,9 @@ std::pair<Maike::Db::SourceFileOrigin, Maike::fs::path>
 Maike::SourceTreeLoader::CommandDictionary::get(fs::path const& cmd) const
 {
 	{
-		std::shared_lock read_lock{m_mtx};
-		if(auto i = m_commands.find(cmd); i != std::end(m_commands)) { return i->second; }
+		std::shared_lock read_lock{m_content->m_mtx};
+		if(auto i = m_content->m_commands.find(cmd); i != std::end(m_content->m_commands))
+		{ return i->second; }
 	}
 
 	auto res = [&cmd](auto const& search_paths) {
@@ -31,9 +32,9 @@ Maike::SourceTreeLoader::CommandDictionary::get(fs::path const& cmd) const
 		if(i - std::begin(search_paths) == 0)
 		{ return std::pair{Db::SourceFileOrigin::Project, (*i) / cmd}; }
 		return std::pair{Db::SourceFileOrigin::System, (*i) / cmd};
-	}(m_search_paths);
+	}(m_content->m_search_paths);
 
-	std::lock_guard write_lock{m_mtx};
-	m_commands[cmd] = res;
+	std::lock_guard write_lock{m_content->m_mtx};
+	m_content->m_commands[cmd] = res;
 	return res;
 }

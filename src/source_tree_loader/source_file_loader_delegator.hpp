@@ -6,6 +6,7 @@
 #ifndef MAIKE_SOURCETREELOADER_SOURCEFILELOADERDELEGATOR_HPP
 #define MAIKE_SOURCETREELOADER_SOURCEFILELOADERDELEGATOR_HPP
 
+#include "./command_dictionary.hpp"
 #include "src/source_file_info_loaders/loader.hpp"
 #include "src/db/source_file_info.hpp"
 #include "src/utils/fs.hpp"
@@ -32,8 +33,15 @@ namespace Maike::SourceTreeLoader
 
 		std::optional<Db::SourceFileInfo> load(fs::path const& path, fs::path const& target_dir) const;
 
+		SourceFileLoaderDelegator& commandDictionary(CommandDictionary&& cmds)
+		{
+			m_cmds = std::move(cmds);
+			return *this;
+		}
+
 	private:
 		std::map<std::string, std::reference_wrapper<SourceFileInfoLoaders::Loader const>> m_loaders;
+		CommandDictionary m_cmds;
 	};
 }
 

@@ -223,10 +223,10 @@ int main(int argc, char** argv)
 		Maike::Sched::ThreadPool workers{cmdline.option<Maike::CmdLineOption::NumWorkers>()};
 
 		Maike::SourceTreeLoader::SourceFileLoaderDelegator loader_delegator;
-		Maike::SourceTreeLoader::CommandDictionary commands;
-		commands.projectDir(Maike::fs::path{build_info.sourceDir()})
-			.systemDir(Maike::fs::path{Maike::execPrefix()});
-		loader_delegator.loaders(mapSourceFileInfoLoaders(cfg));
+		loader_delegator.loaders(mapSourceFileInfoLoaders(cfg))
+		   .commandDictionary(Maike::SourceTreeLoader::CommandDictionary{}
+		                         .projectDir(Maike::fs::path{build_info.sourceDir()})
+		                         .systemDir(Maike::fs::path{Maike::execPrefix()}));
 
 		printf(
 		   "# Build job with %zu workers started\n"

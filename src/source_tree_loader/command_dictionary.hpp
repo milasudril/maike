@@ -18,24 +18,43 @@ namespace Maike::SourceTreeLoader
 	class CommandDictionary
 	{
 	public:
+		CommandDictionary(): m_content{std::make_unique<Content>()}
+		{
+		}
+
 		std::pair<Db::SourceFileOrigin, fs::path> get(fs::path const& cmd) const;
 
-		CommandDictionary& projectDir(fs::path&& dir)
+		CommandDictionary& projectDir(fs::path&& dir) &
 		{
-			m_search_paths[0] = std::move(dir);
+			m_content->m_search_paths[0] = std::move(dir);
 			return *this;
 		}
 
-		CommandDictionary& systemDir(fs::path&& dir)
+		CommandDictionary& systemDir(fs::path&& dir) &
 		{
-			m_search_paths[1] = std::move(dir);
+			m_content->m_search_paths[1] = std::move(dir);
 			return *this;
+		}
+
+		CommandDictionary&& projectDir(fs::path&& dir) &&
+		{
+			return std::move(projectDir(std::move(dir)));
+		}
+
+		CommandDictionary&& systemDir(fs::path&& dir) &&
+		{
+			return std::move(systemDir(std::move(dir)));
 		}
 
 	private:
-		mutable std::shared_mutex m_mtx;
-		mutable std::map<fs::path, std::pair<Db::SourceFileOrigin, fs::path>> m_commands;
-		std::array<fs::path, 2> m_search_paths;
+		struct Content
+		{
+			std::shared_mutex m_mtx;
+			mutable std::map<fs::path, std::pair<Db::SourceFileOrigin, fs::path>> m_commands;
+			std::array<fs::path, 2> m_search_paths;
+		};
+
+		std::unique_ptr<Content> m_content;
 	};
 }
 #endif
