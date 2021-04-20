@@ -63,7 +63,7 @@ namespace Maike::SourceTreeLoader
 
 		// TODO: Move these into a policy base class (to make it more efficient in single-threaded
 		//       single-threaded mode)
-		std::mutex m_source_files_mtx;
+		std::shared_mutex m_source_files_mtx;
 		Sched::SignalingCounter<size_t> m_counter;
 		Sched::ThreadPool* r_workers;
 
