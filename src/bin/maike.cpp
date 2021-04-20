@@ -3,6 +3,7 @@
 #include "./cmd_line_options.hpp"
 #include "./config.hpp"
 
+#include "src/build/command_dictionary.hpp"
 #include "src/build/info.hpp"
 #include "src/db/dependency_graph.hpp"
 #include "src/io/input_file.hpp"
@@ -254,13 +255,11 @@ int main(int argc, char** argv)
 			return 0;
 		}
 
-
 		Maike::timedCall(
 		   logger,
 		   [](auto&&... args) { return compile(std::forward<decltype(args)>(args)...); },
 		   src_tree,
 		   build_info,
-		   commands,
 		   Maike::Db::ForceRecompilation{},
 		   workers);
 	}

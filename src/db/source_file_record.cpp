@@ -35,7 +35,6 @@ namespace
 
 Maike::Exec::Command Maike::Db::makeBuildCommand(SourceFileRecordConst const& rec,
                                                  Build::Info const& info,
-                                                 Build::CommandDictionary const& commands,
                                                  std::vector<Dependency> const& deps)
 {
 	auto& targets = rec.sourceFileInfo().targets();
@@ -66,6 +65,6 @@ Maike::Exec::Command Maike::Db::makeBuildCommand(SourceFileRecordConst const& re
 	CmdOptsString str;
 	store(cmd_opts, str, KeyValueStore::PrettyPrint{false});
 
-	return Exec::Command{commands.get(compiler.recipe()),
+	return Exec::Command{std::move(compiler.recipe()),
 	                     std::vector<std::string>{std::move(str.buffer)}};
 }
