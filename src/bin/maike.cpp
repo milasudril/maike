@@ -12,6 +12,25 @@
 #include "src/utils/callwrappers.hpp"
 #include "src/db/source_file_list.hpp"
 
+Maike::Build::Info makeBuildInfo(Maike::CommandLine const& cmdline)
+{
+	Maike::Build::Info ret;
+
+	if(cmdline.hasOption<Maike::CmdLineOption::StartTime>())
+	{ ret.startTime(cmdline.option<Maike::CmdLineOption::StartTime>()); }
+
+	if(cmdline.hasOption<Maike::CmdLineOption::BuildId>())
+	{ ret.buildId(Maike::Build::Id{cmdline.option<Maike::CmdLineOption::BuildId>()}); }
+
+	if(cmdline.hasOption<Maike::CmdLineOption::SourceDir>())
+	{ ret.sourceDir(Maike::fs::path{cmdline.option<Maike::CmdLineOption::SourceDir>()}); }
+
+	if(cmdline.hasOption<Maike::CmdLineOption::TargetDir>())
+	{ ret.targetDir(Maike::fs::path{cmdline.option<Maike::CmdLineOption::TargetDir>()}); }
+
+	return ret;
+}
+
 void printDepGraph(Maike::Db::DependencyGraph const& source_files, Maike::fs::path const&)
 {
 	puts("digraph \"G\" {\nrankdir=LR\n");
