@@ -19,7 +19,9 @@ namespace Maike::Build
 	class Info
 	{
 	public:
-		Info():m_source_dir{"."}, m_target_dir{"__targets"}{}
+		Info(): m_source_dir{"."}, m_target_dir{"__targets"}
+		{
+		}
 
 		Info& startTime(SystemTimeStamp val)
 		{
@@ -49,7 +51,7 @@ namespace Maike::Build
 			return *this;
 		}
 
-		fs::path sourceDir() const
+		fs::path const& sourceDir() const
 		{
 			return m_source_dir;
 		}
@@ -60,9 +62,9 @@ namespace Maike::Build
 			return *this;
 		}
 
-		fs::path targetDir() const
+		fs::path const& targetDir() const
 		{
-			return m_source_dir;
+			return m_target_dir;
 		}
 
 	private:

@@ -44,7 +44,7 @@ namespace Maike
 
 	constexpr char const* typeToString(Empty<SystemTimeStamp>)
 	{
-		return "timestamp";
+		return "Timestamp";
 	}
 }
 #endif

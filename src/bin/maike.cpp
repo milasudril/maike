@@ -27,6 +27,11 @@ Maike::Build::Info makeBuildInfo(Maike::CommandLine const& cmdline)
 
 	if(cmdline.hasOption<Maike::CmdLineOption::TargetDir>())
 	{ ret.targetDir(Maike::fs::path{cmdline.option<Maike::CmdLineOption::TargetDir>()}); }
+	else
+	{
+		if(ret.sourceDir().filename() != ".")
+		{ ret.targetDir(Maike::fs::path{ret.sourceDir().filename().string() + "_targets"}); }
+	}
 
 	return ret;
 }
@@ -200,13 +205,12 @@ int main(int argc, char** argv)
 		   return 0;
 		  }*/
 
-		auto const src_dir = cmdline.hasOption<Maike::CmdLineOption::SourceDir>() ?
-		                        cmdline.option<Maike::CmdLineOption::SourceDir>() :
-		                        Maike::fs::path{"."};
+		auto const build_info = makeBuildInfo(cmdline);
 
-		auto const cfg = Maike::loadConfig(cmdline.hasOption<Maike::CmdLineOption::ConfigFiles>() ?
-		                                      cmdline.option<Maike::CmdLineOption::ConfigFiles>() :
-		                                      std::vector<Maike::fs::path>{src_dir / "maikeconfig.json"});
+		auto const cfg = Maike::loadConfig(
+		   cmdline.hasOption<Maike::CmdLineOption::ConfigFiles>() ?
+		      cmdline.option<Maike::CmdLineOption::ConfigFiles>() :
+		      std::vector<Maike::fs::path>{build_info.sourceDir() / "maikeconfig.json"});
 
 		if(cmdline.hasOption<Maike::CmdLineOption::ConfigDump>())
 		{
@@ -221,33 +225,28 @@ int main(int argc, char** argv)
 		Maike::Build::CommandDictionary commands{};
 		loader_delegator.loaders(mapSourceFileInfoLoaders(cfg));
 
-		Maike::Build::Info build_info;
 		printf(
 		   "# Build job with %zu workers started\n"
 		   "#\n"
 		   "# Start time: %s\n"
 		   "#         Id: %s\n"
+		   "# Source dir: %s\n"
+		   "# Target dir: %s\n"
 		   "#\n",
 		   workers.count(),
 		   format(build_info.startTime()).c_str(),
-		   toString(build_info.buildId()).c_str());
+		   toString(build_info.buildId()).c_str(),
+		   build_info.sourceDir().c_str(),
+		   build_info.targetDir().c_str());
 		fflush(stdout);
-
-
-		auto const target_dir = cmdline.hasOption<Maike::CmdLineOption::TargetDir>() ?
-		                           cmdline.option<Maike::CmdLineOption::TargetDir>() :
-		                           src_dir.filename() == "." ?
-		                           Maike::fs::path{"__targets"} :
-		                           Maike::fs::path{src_dir.filename().string() + "_targets"};
-		printf("%s\n", target_dir.c_str());
 
 		auto const src_tree = Maike::timedCall(logger,
 		                                       Maike::SourceTreeLoader::load,
 		                                       workers,
-		                                       src_dir,
+		                                       build_info.sourceDir(),
 		                                       cfg.sourceTreeLoader().inputFilter(),
 		                                       loader_delegator,
-		                                       target_dir);
+		                                       build_info.targetDir());
 
 		if(cmdline.hasOption<Maike::CmdLineOption::PrintDepGraph>())
 		{
