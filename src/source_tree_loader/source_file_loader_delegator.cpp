@@ -39,15 +39,15 @@ namespace
 		return ret;
 	}
 
-	Maike::Db::SourceFileInfo loadSourceFile(std::vector<Maike::Db::Dependency>&& builtin_deps,
-	                                         Maike::fs::path const& path,
-	                                         Maike::SourceFileInfoLoaders::Loader const& loader,
-	                                         Maike::fs::path const& target_dir)
+	Maike::Db::SourceFileInfo loadSourceFile(Maike::fs::path const& src_path,
+	                                         Maike::fs::path const& target_dir,
+	                                         std::vector<Maike::Db::Dependency>&& builtin_deps,
+	                                         Maike::SourceFileInfoLoaders::Loader const& loader)
 	{
 		Maike::Io::Fifo<std::byte> src_fifo;
 		Maike::Io::Fifo<std::byte> tags_fifo;
 
-		Maike::Io::InputFile input{path};
+		Maike::Io::InputFile input{src_path};
 		loader.filterInput(Maike::Io::Reader{input},
 		                   Maike::SourceFileInfoLoaders::SourceOutStream{src_fifo},
 		                   Maike::SourceFileInfoLoaders::TagsOutStream{tags_fifo});
@@ -55,13 +55,13 @@ namespace
 		src_fifo.stop();
 
 		{
-			auto deps = addPrefixWhereAppiciable(path.parent_path(),
+			auto deps = addPrefixWhereAppiciable(src_path.parent_path(),
 			                                     loader.getDependencies(Maike::Io::Reader{src_fifo}));
 			builtin_deps.insert(std::end(builtin_deps), std::begin(deps), std::end(deps));
 		}
 
-		auto tags = Maike::KeyValueStore::Compound{Maike::Io::Reader{tags_fifo}, path.string()};
-		Maike::SourceTreeLoader::SourceFileLoadContext load_ctxt{path.parent_path(), target_dir};
+		auto tags = Maike::KeyValueStore::Compound{Maike::Io::Reader{tags_fifo}, src_path.string()};
+		Maike::SourceTreeLoader::SourceFileLoadContext load_ctxt{src_path.parent_path(), target_dir};
 		auto targets = getTargets(load_ctxt, tags);
 		auto use_deps = getUseDeps(load_ctxt, tags);
 		auto child_target_use_deps = getChildTargetUseDeps(load_ctxt, tags);
@@ -82,21 +82,21 @@ namespace
 static const Maike::Db::Compiler mkdir{"make_directory"};
 
 std::optional<Maike::Db::SourceFileInfo>
-Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(fs::path const& path,
+Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(fs::path const& str_path,
                                                          fs::path const& target_dir) const
 {
 	std::vector<Db::Dependency> deps;
-	if(!path.parent_path().empty())
+	if(!str_path.parent_path().empty())
 	{
 		deps.push_back(
-		   Db::Dependency{path.parent_path().lexically_normal(), Db::SourceFileOrigin::Project});
+		   Db::Dependency{str_path.parent_path().lexically_normal(), Db::SourceFileOrigin::Project});
 	}
 
-	if(is_directory(path))
+	if(is_directory(str_path))
 	{
 		std::vector<Db::TargetInfo> targets;
 		targets.push_back(
-		   Db::TargetInfo{target_dir / (path.lexically_normal()), std::vector<Db::Dependency>{}});
+		   Db::TargetInfo{target_dir / (str_path.lexically_normal()), std::vector<Db::Dependency>{}});
 		return Db::SourceFileInfo{std::move(deps),
 		                          std::vector<Db::Dependency>{},
 		                          std::vector<Db::Dependency>{},
@@ -107,7 +107,7 @@ Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(fs::path const& path,
 	}
 
 	std::string extension;
-	for(auto p = path; !p.extension().empty(); p = p.stem())
+	for(auto p = str_path; !p.extension().empty(); p = p.stem())
 	{
 		extension = std::string{p.extension()} + extension;
 	}
@@ -115,5 +115,5 @@ Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(fs::path const& path,
 	auto i = m_loaders.find(extension);
 	if(i == std::end(m_loaders)) { return std::optional<Db::SourceFileInfo>{}; }
 
-	return loadSourceFile(std::move(deps), path, i->second, target_dir);
+	return loadSourceFile(str_path, target_dir, std::move(deps), i->second);
 }
