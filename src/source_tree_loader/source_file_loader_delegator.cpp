@@ -42,7 +42,8 @@ namespace
 	Maike::Db::SourceFileInfo loadSourceFile(Maike::fs::path const& src_path,
 	                                         Maike::fs::path const& target_dir,
 	                                         std::vector<Maike::Db::Dependency>&& builtin_deps,
-	                                         Maike::SourceFileInfoLoaders::Loader const& loader)
+	                                         Maike::SourceFileInfoLoaders::Loader const& loader,
+	                                         Maike::Build::CommandDictionary const&)
 	{
 		Maike::Io::Fifo<std::byte> src_fifo;
 		Maike::Io::Fifo<std::byte> tags_fifo;
@@ -115,5 +116,5 @@ Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(fs::path const& str_pat
 	auto i = m_loaders.find(extension);
 	if(i == std::end(m_loaders)) { return std::optional<Db::SourceFileInfo>{}; }
 
-	return loadSourceFile(str_path, target_dir, std::move(deps), i->second);
+	return loadSourceFile(str_path, target_dir, std::move(deps), i->second, m_cmds);
 }
