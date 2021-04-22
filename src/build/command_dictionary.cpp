@@ -7,7 +7,7 @@
 #include <algorithm>
 
 std::pair<Maike::Db::SourceFileOrigin, Maike::fs::path>
-Maike::SourceTreeLoader::CommandDictionary::get(fs::path const& cmd) const
+Maike::Build::CommandDictionary::get(fs::path const& cmd) const
 {
 	{
 		std::shared_lock read_lock{m_content->m_mtx};

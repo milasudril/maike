@@ -128,5 +128,8 @@ void Maike::Db::compile(DependencyGraph const& g,
 		throw std::runtime_error{std::move(msg)};
 	}
 	if(force_recompilation || !isUpToDate(node, use_deps))
-	{ auto cmd = makeBuildCommand(node, build_info, use_deps); }
+	{
+		auto cmd = makeBuildCommand(node, build_info, use_deps);
+		puts(cmd.args[0].c_str());
+	}
 }

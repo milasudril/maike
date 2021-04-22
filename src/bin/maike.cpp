@@ -3,11 +3,11 @@
 #include "./cmd_line_options.hpp"
 #include "./config.hpp"
 
+#include "src/build/command_dictionary.hpp"
 #include "src/build/info.hpp"
 #include "src/db/dependency_graph.hpp"
 #include "src/io/input_file.hpp"
 #include "src/source_tree_loader/main.hpp"
-#include "src/source_tree_loader/command_dictionary.hpp"
 #include "src/source_file_info_loaders/cxx/source_file_loader.hpp"
 #include "src/utils/graphutils.hpp"
 #include "src/utils/callwrappers.hpp"
@@ -222,11 +222,12 @@ int main(int argc, char** argv)
 		Logger logger;
 		Maike::Sched::ThreadPool workers{cmdline.option<Maike::CmdLineOption::NumWorkers>()};
 
-		Maike::SourceTreeLoader::SourceFileLoaderDelegator loader_delegator;
-		loader_delegator.loaders(mapSourceFileInfoLoaders(cfg))
-		   .commandDictionary(Maike::SourceTreeLoader::CommandDictionary{}
-		                         .projectDir(Maike::fs::path{build_info.sourceDir()})
-		                         .systemDir(Maike::fs::path{Maike::execPrefix()}));
+		Maike::Build::CommandDictionary cmds;
+		cmds.projectDir(Maike::fs::path{build_info.sourceDir()})
+		   .systemDir(Maike::fs::path{Maike::execPrefix()});
+
+		Maike::SourceTreeLoader::SourceFileLoaderDelegator loader_delegator{cmds};
+		loader_delegator.loaders(mapSourceFileInfoLoaders(cfg));
 
 		printf(
 		   "# Build job with %zu workers started\n"

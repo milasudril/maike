@@ -13,7 +13,7 @@
 #include <shared_mutex>
 #include <vector>
 
-namespace Maike::SourceTreeLoader
+namespace Maike::Build
 {
 	class CommandDictionary
 	{
