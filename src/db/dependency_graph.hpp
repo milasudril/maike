@@ -100,6 +100,7 @@ namespace Maike::Db
 	void compile(DependencyGraph const& g,
 	             SourceFileRecordConst const& node,
 	             Build::Info const& build_info,
+	             Build::CommandDictionary const& commands,
 	             ForceRecompilation force_recompilation,
 	             Sched::Batch const& ctxt);
 }

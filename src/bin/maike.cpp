@@ -3,7 +3,6 @@
 #include "./cmd_line_options.hpp"
 #include "./config.hpp"
 
-#include "src/build/command_dictionary.hpp"
 #include "src/build/info.hpp"
 #include "src/db/dependency_graph.hpp"
 #include "src/io/input_file.hpp"
@@ -222,11 +221,11 @@ int main(int argc, char** argv)
 		Logger logger;
 		Maike::Sched::ThreadPool workers{cmdline.option<Maike::CmdLineOption::NumWorkers>()};
 
-		Maike::Build::CommandDictionary cmds;
-		cmds.projectDir(Maike::fs::path{build_info.sourceDir()})
+		Maike::Build::CommandDictionary commands;
+		commands.projectDir(Maike::fs::path{build_info.sourceDir()})
 		   .systemDir(Maike::fs::path{Maike::execPrefix()});
 
-		Maike::SourceTreeLoader::SourceFileLoaderDelegator loader_delegator{cmds};
+		Maike::SourceTreeLoader::SourceFileLoaderDelegator loader_delegator{commands};
 		loader_delegator.loaders(mapSourceFileInfoLoaders(cfg));
 
 		printf(
@@ -258,11 +257,13 @@ int main(int argc, char** argv)
 			return 0;
 		}
 
+
 		Maike::timedCall(
 		   logger,
 		   [](auto&&... args) { return compile(std::forward<decltype(args)>(args)...); },
 		   src_tree,
 		   build_info,
+		   commands,
 		   Maike::Db::ForceRecompilation{},
 		   workers);
 	}

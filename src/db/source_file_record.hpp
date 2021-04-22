@@ -11,6 +11,7 @@
 
 #include "src/utils/fs.hpp"
 #include "src/build/info.hpp"
+#include "src/build/command_dictionary.hpp"
 #include "src/exec/command.hpp"
 
 #include <algorithm>
@@ -104,6 +105,7 @@ namespace Maike::Db
 
 	Exec::Command makeBuildCommand(SourceFileRecordConst const& rec,
 	                               Build::Info const&,
+	                               Build::CommandDictionary const& commands,
 	                               std::vector<Dependency> const& deps);
 }
 
