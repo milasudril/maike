@@ -84,7 +84,7 @@ namespace Maike
 
 	Config loadConfig(std::vector<fs::path> const& cfg_files);
 
-	Config resolveCommands(Config const& cfg, Build::CommandDictionary const& commands);
+	Config resolveRecipes(Config const& cfg, Build::CommandDictionary const& commands);
 }
 
 #endif

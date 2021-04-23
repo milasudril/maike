@@ -47,7 +47,7 @@ Maike::Config Maike::loadConfig(std::vector<fs::path> const& cfg_files)
 	return Config{};
 }
 
-Maike::Config Maike::resolveCommands(Config const& cfg, Build::CommandDictionary const& commands)
+Maike::Config Maike::resolveRecipes(Config const& cfg, Build::CommandDictionary const& commands)
 {
 	Config ret;
 	ret.dirCompiler(Db::Compiler{cfg.dirCompiler()}.resolveRecipe(commands));

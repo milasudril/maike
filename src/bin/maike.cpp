@@ -240,7 +240,7 @@ int main(int argc, char** argv)
 		commands.projectDir(Maike::fs::path{build_info.sourceDir()})
 		   .systemDir(Maike::fs::path{Maike::execPrefix()});
 
-		auto const cfg_new = resolveCommands(cfg, commands);
+		auto const cfg_new = resolveRecipes(cfg, commands);
 		Maike::SourceTreeLoader::SourceFileLoaderDelegator loader_delegator{commands};
 		loader_delegator.loaders(mapSourceFileInfoLoaders(cfg_new));
 
