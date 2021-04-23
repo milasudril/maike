@@ -65,6 +65,10 @@ Maike::Exec::Command Maike::Db::makeBuildCommand(SourceFileRecordConst const& re
 	CmdOptsString str;
 	store(cmd_opts, str, KeyValueStore::PrettyPrint{false});
 
+<<<<<<< HEAD
+	return Exec::Command{commands.get(compiler.recipe()).first,
+=======
 	return Exec::Command{std::move(compiler.recipe()),
+>>>>>>> parent of 86f7360... Revert "Revert "Get command from command dictionary""
 	                     std::vector<std::string>{std::move(str.buffer)}};
 }

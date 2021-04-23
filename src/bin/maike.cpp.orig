@@ -237,13 +237,18 @@ int main(int argc, char** argv)
 		Logger logger;
 		Maike::Sched::ThreadPool workers{cmdline.option<Maike::CmdLineOption::NumWorkers>()};
 
-		Maike::Build::CommandDictionary commands;
-		commands.projectDir(Maike::fs::path{build_info.sourceDir()})
+		Maike::Build::CommandDictionary cmds;
+		cmds.projectDir(Maike::fs::path{build_info.sourceDir()})
 		   .systemDir(Maike::fs::path{Maike::execPrefix()});
 
+<<<<<<< HEAD
 		auto const cfg_new = resolveRecipes(cfg, commands);
 		Maike::SourceTreeLoader::SourceFileLoaderDelegator loader_delegator{commands};
 		loader_delegator.loaders(mapSourceFileInfoLoaders(cfg_new));
+=======
+		Maike::SourceTreeLoader::SourceFileLoaderDelegator loader_delegator{cmds};
+		loader_delegator.loaders(mapSourceFileInfoLoaders(cfg));
+>>>>>>> parent of 86f7360... Revert "Revert "Get command from command dictionary""
 
 		printf(
 		   "# Build job with %zu workers started\n"
