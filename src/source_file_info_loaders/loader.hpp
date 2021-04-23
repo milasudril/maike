@@ -48,6 +48,10 @@ namespace Maike::SourceFileInfoLoaders
 				   auto const& self = *reinterpret_cast<T const*>(handle);
 				   return self.compiler();
 			   }},
+			   set_compiler{[](void* handle, Db::Compiler&& compiler) {
+				   auto& self = *reinterpret_cast<T*>(handle);
+				   (void)self.compiler(std::move(compiler));
+			   }},
 			   destroy{[](void* handle) {
 				   auto self = reinterpret_cast<T*>(handle);
 				   delete self;
@@ -55,6 +59,10 @@ namespace Maike::SourceFileInfoLoaders
 			   to_json{[](void const* handle) {
 				   auto const& self = *reinterpret_cast<T const*>(handle);
 				   return toJson(self);
+			   }},
+			   clone{[](void const* handle) -> void* {
+				   auto const& self = *reinterpret_cast<T const*>(handle);
+				   return new T(self);
 			   }}
 			{
 			}
@@ -65,8 +73,10 @@ namespace Maike::SourceFileInfoLoaders
 			                     TagsOutStream tags);
 			std::vector<Db::Dependency> (*get_dependencies)(void const* handle, Io::Reader source_stream);
 			Db::Compiler const& (*get_compiler)(void const* handle);
+			void (*set_compiler)(void* handle, Db::Compiler&&);
 			void (*destroy)(void* handle);
 			KeyValueStore::JsonHandle (*to_json)(void const* handle);
+			void* (*clone)(void const* handle);
 		};
 	}
 
@@ -85,6 +95,11 @@ namespace Maike::SourceFileInfoLoaders
 			other.m_vtable.destroy(other.m_handle);
 			other.m_handle = nullptr;
 			return *this;
+		}
+
+		Loader(Loader const& other):
+		   m_handle{other.m_vtable.clone(other.m_handle)}, m_vtable{other.m_vtable}
+		{
 		}
 
 		~Loader()
@@ -125,6 +140,12 @@ namespace Maike::SourceFileInfoLoaders
 			return m_vtable.get_compiler(m_handle);
 		}
 
+		Loader& compiler(Db::Compiler&& compiler)
+		{
+			m_vtable.set_compiler(m_handle, std::move(compiler));
+			return *this;
+		}
+
 		bool valid() const
 		{
 			return m_handle != nullptr;
@@ -133,6 +154,10 @@ namespace Maike::SourceFileInfoLoaders
 		KeyValueStore::JsonHandle toJson() const
 		{
 			return m_vtable.to_json(m_handle);
+		}
+
+		void test()
+		{
 		}
 
 

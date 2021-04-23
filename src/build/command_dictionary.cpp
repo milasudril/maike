@@ -6,7 +6,7 @@
 
 #include <algorithm>
 
-std::pair<Maike::Db::SourceFileOrigin, Maike::fs::path>
+Maike::Build::CommandDictionary::result_type
 Maike::Build::CommandDictionary::get(fs::path const& cmd) const
 {
 	{
@@ -30,8 +30,8 @@ Maike::Build::CommandDictionary::get(fs::path const& cmd) const
 		}
 
 		if(i - std::begin(search_paths) == 0)
-		{ return std::pair{Db::SourceFileOrigin::Project, (*i) / cmd}; }
-		return std::pair{Db::SourceFileOrigin::System, (*i) / cmd};
+		{ return std::pair{(*i) / cmd, Db::SourceFileOrigin::Project}; }
+		return std::pair{(*i) / cmd, Db::SourceFileOrigin::System};
 	}(m_content->m_search_paths);
 
 	std::lock_guard write_lock{m_content->m_mtx};

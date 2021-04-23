@@ -54,12 +54,10 @@ void printDepGraph(Maike::Db::DependencyGraph const& source_files, Maike::fs::pa
 	std::set<std::pair<Maike::fs::path, Maike::fs::path>> output;
 	visitNodes(
 	   [&output](auto const& item) {
-		visitEdges(
-			[&output, &item](auto const& edge) {
-				if(item.path().parent_path() != edge.name().parent_path())
-				{
-					output.insert(std::pair{item.path().parent_path(), edge.name().parent_path()});
-				}
+		   visitEdges(
+		      [&output, &item](auto const& edge) {
+			      if(item.path().parent_path() != edge.name().parent_path())
+			      { output.insert(std::pair{item.path().parent_path(), edge.name().parent_path()}); }
 #if 0
 				if(edge.reference().valid())
 				{
@@ -75,15 +73,13 @@ void printDepGraph(Maike::Db::DependencyGraph const& source_files, Maike::fs::pa
 							edge.name().c_str());
 				}
 #endif
-			},
-			item);
+		      },
+		      item);
 	   },
 	   source_files);
 	puts("digraph \"G\" {\nrankdir=LR\n");
 	std::for_each(std::begin(output), std::end(output), [](auto const& item) {
-		printf("\"%s\" -> \"%s\"\n",
-		item.first.c_str(),
-		item.second.c_str());
+		printf("\"%s\" -> \"%s\"\n", item.first.c_str(), item.second.c_str());
 	});
 	puts("}");
 }
@@ -244,8 +240,9 @@ int main(int argc, char** argv)
 		commands.projectDir(Maike::fs::path{build_info.sourceDir()})
 		   .systemDir(Maike::fs::path{Maike::execPrefix()});
 
+		auto const cfg_new = resolveCommands(cfg, commands);
 		Maike::SourceTreeLoader::SourceFileLoaderDelegator loader_delegator{commands};
-		loader_delegator.loaders(mapSourceFileInfoLoaders(cfg));
+		loader_delegator.loaders(mapSourceFileInfoLoaders(cfg_new));
 
 		printf(
 		   "# Build job with %zu workers started\n"
@@ -266,7 +263,7 @@ int main(int argc, char** argv)
 		                                       Maike::SourceTreeLoader::load,
 		                                       workers,
 		                                       build_info.sourceDir(),
-		                                       cfg.sourceTreeLoader().inputFilter(),
+		                                       cfg_new.sourceTreeLoader().inputFilter(),
 		                                       loader_delegator,
 		                                       build_info.targetDir());
 

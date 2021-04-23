@@ -39,6 +39,12 @@ namespace Cxx
 			return m_compiler;
 		}
 
+		SourceFileLoader& compiler(Maike::Db::Compiler&& compiler)
+		{
+			m_compiler = std::move(compiler);
+			return *this;
+		}
+
 	private:
 		Maike::Db::Compiler m_compiler;
 	};

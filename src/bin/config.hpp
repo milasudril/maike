@@ -8,13 +8,16 @@
 
 #include "src/source_tree_loader/config.hpp"
 #include "src/source_file_info_loaders/config.hpp"
+#include "src/build/command_dictionary.hpp"
 
 namespace Maike
 {
 	class Config
 	{
 	public:
-		Config():m_dir_compiler{"make_directory"}{}
+		Config(): m_dir_compiler{"make_directory"}
+		{
+		}
 
 		explicit Config(KeyValueStore::CompoundRefConst obj):
 		   m_source_tree_loader{obj.get<SourceTreeLoader::Config>("source_tree_loader")},
@@ -45,7 +48,10 @@ namespace Maike
 			return *this;
 		}
 
-		Db::Compiler const& dirCompiler() const { return m_dir_compiler; }
+		Db::Compiler const& dirCompiler() const
+		{
+			return m_dir_compiler;
+		}
 
 		Config& dirCompiler(Db::Compiler&& val)
 		{
@@ -78,7 +84,7 @@ namespace Maike
 
 	Config loadConfig(std::vector<fs::path> const& cfg_files);
 
-
+	Config resolveCommands(Config const& cfg, Build::CommandDictionary const& commands);
 }
 
 #endif

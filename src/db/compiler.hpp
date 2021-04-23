@@ -20,7 +20,7 @@ namespace Maike::Db
 		}
 
 		explicit Compiler(fs::path&& m_recipe, KeyValueStore::Compound&& config):
-		   m_recipe{std::move(m_recipe)}, m_cfg_2{std::move(config)}
+		   m_recipe{std::move(m_recipe)}, m_config{std::move(config)}
 		{
 		}
 
@@ -31,13 +31,33 @@ namespace Maike::Db
 
 		KeyValueStore::Compound const& config() const
 		{
-			return m_cfg_2;
+			return m_config;
+		}
+
+		SourceFileOrigin origin() const
+		{
+			return m_origin;
+		}
+
+		template<class PathResolver>
+		Compiler& resolveRecipe(PathResolver const& resolver) &
+		{
+			auto res = resolver.get(m_recipe);
+			m_recipe = res.first;
+			m_origin = res.second;
+			return *this;
+		}
+
+		template<class PathResolver>
+		Compiler&& resolveRecipe(PathResolver const& resolver) &&
+		{
+			return std::move(resolveRecipe(resolver));
 		}
 
 	private:
 		fs::path m_recipe;
-		std::string m_config;
-		KeyValueStore::Compound m_cfg_2;
+		SourceFileOrigin m_origin;
+		KeyValueStore::Compound m_config;
 	};
 
 	inline auto fromJson(KeyValueStore::Empty<Compiler>, Maike::KeyValueStore::JsonRefConst val)

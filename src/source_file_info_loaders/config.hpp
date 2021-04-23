@@ -17,16 +17,24 @@ namespace Maike::SourceFileInfoLoaders
 	class Config
 	{
 	public:
+		using LoaderMap = std::map<std::string, Loader>;
+
 		Config();
 		explicit Config(KeyValueStore::CompoundRefConst);
 
-		std::map<std::string, Loader> const& loaders() const
+		LoaderMap const& loaders() const
 		{
 			return m_loaders;
 		}
 
+		Config& loaders(LoaderMap&& loaders)
+		{
+			m_loaders = std::move(loaders);
+			return *this;
+		}
+
 	private:
-		std::map<std::string, Loader> m_loaders;
+		LoaderMap m_loaders;
 	};
 
 	inline auto fromJson(KeyValueStore::Empty<Config>, KeyValueStore::JsonRefConst ref)

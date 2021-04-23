@@ -46,3 +46,17 @@ Maike::Config Maike::loadConfig(std::vector<fs::path> const& cfg_files)
 	}
 	return Config{};
 }
+
+Maike::Config Maike::resolveCommands(Config const& cfg, Build::CommandDictionary const& commands)
+{
+	Config ret;
+	ret.dirCompiler(Db::Compiler{cfg.dirCompiler()}.resolveRecipe(commands));
+	auto loaders = cfg.sourceFileInfoLoaders().loaders();
+	std::for_each(std::begin(loaders), std::end(loaders), [&commands](auto& item) {
+		item.second.compiler(Db::Compiler{item.second.compiler()}.resolveRecipe(commands));
+	});
+	SourceFileInfoLoaders::Config loaders_new;
+	loaders_new.loaders(std::move(loaders));
+	ret.sourceFileInfoLoaders(std::move(loaders_new));
+	return ret;
+}

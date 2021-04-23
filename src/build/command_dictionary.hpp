@@ -18,11 +18,13 @@ namespace Maike::Build
 	class CommandDictionary
 	{
 	public:
+		using result_type = std::pair<fs::path, Db::SourceFileOrigin>;
+
 		CommandDictionary(): m_content{std::make_unique<Content>()}
 		{
 		}
 
-		std::pair<Db::SourceFileOrigin, fs::path> get(fs::path const& cmd) const;
+		result_type get(fs::path const& cmd) const;
 
 		CommandDictionary& projectDir(fs::path&& dir) &
 		{
@@ -50,7 +52,7 @@ namespace Maike::Build
 		struct Content
 		{
 			std::shared_mutex m_mtx;
-			mutable std::map<fs::path, std::pair<Db::SourceFileOrigin, fs::path>> m_commands;
+			mutable std::map<fs::path, result_type> m_commands;
 			std::array<fs::path, 2> m_search_paths;
 		};
 
