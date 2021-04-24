@@ -157,8 +157,8 @@ namespace
 std::mutex exec_mutex;
 
 Maike::Exec::ExitStatus Maike::Exec::execve(fs::path const& executable,
-                                       std::vector<std::string> const& args,
-                                       Io::Redirector const& io_redirector)
+                                            std::vector<std::string> const& args,
+                                            Io::Redirector const& io_redirector)
 {
 	std::vector<char const*> cmd_args;
 	cmd_args.push_back(executable.c_str());
@@ -221,4 +221,38 @@ Maike::Exec::ExitStatus Maike::Exec::execve(fs::path const& executable,
 	stderr.closeWriteEnd();
 
 	return communicateWith(pid, io_redirector, stdin.writeEnd(), stdout.readEnd(), stderr.readEnd());
+}
+
+namespace
+{
+	struct IOCapture
+	{
+		std::vector<std::byte> stdout;
+		std::vector<std::byte> stderr;
+
+		size_t operator()(std::byte*, size_t, Maike::Io::Redirector::StdIn) const
+		{
+			return 0;
+		}
+
+		size_t operator()(std::byte const* buffer, size_t n, Maike::Io::Redirector::StdOut)
+		{
+			stdout.insert(std::end(stderr), buffer, buffer + n);
+			return n;
+		}
+
+		size_t operator()(std::byte const* buffer, size_t n, Maike::Io::Redirector::StdErr)
+		{
+			stderr.insert(std::end(stderr), buffer, buffer + n);
+			return n;
+		}
+	};
+}
+
+Maike::Exec::Result Maike::Exec::execve(fs::path const& executable,
+                                        std::vector<std::string> const& args)
+{
+	IOCapture ret;
+	auto retval = execve(executable, args, std::ref(ret));
+	return Result{retval, std::move(ret.stdout), std::move(ret.stderr)};
 }

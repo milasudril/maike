@@ -15,13 +15,26 @@ namespace Maike::Exec
 	class Result
 	{
 	public:
-		explicit Result(ExitStatus status, std::vector<std::byte>&& stdout, std::vector<std::byte>&& stderr):
-		m_status{status}, m_stdout{std::move(stdout)}, m_stderr{std::move(stderr)}{}
+		explicit Result(ExitStatus status,
+		                std::vector<std::byte>&& stdout,
+		                std::vector<std::byte>&& stderr):
+		   m_status{status}, m_stdout{std::move(stdout)}, m_stderr{std::move(stderr)}
+		{
+		}
 
-		ExitStatus exitStatus() const { return m_status; }
+		ExitStatus exitStatus() const
+		{
+			return m_status;
+		}
 
-		std::vector<std::byte> const& stdout() const { return m_stdout; }
-		std::vector<std::byte> const& stderr() const { return m_stderr; }
+		std::vector<std::byte> const& stdout() const
+		{
+			return m_stdout;
+		}
+		std::vector<std::byte> const& stderr() const
+		{
+			return m_stderr;
+		}
 
 	private:
 		ExitStatus m_status;
