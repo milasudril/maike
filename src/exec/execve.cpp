@@ -237,7 +237,7 @@ namespace
 
 		size_t operator()(std::byte const* buffer, size_t n, Maike::Io::Redirector::StdOut)
 		{
-			stdout.insert(std::end(stderr), buffer, buffer + n);
+			stdout.insert(std::end(stdout), buffer, buffer + n);
 			return n;
 		}
 

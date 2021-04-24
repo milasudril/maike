@@ -128,6 +128,24 @@ exit 123
 		}
 		putc('\n', stderr);
 	}
+
+	void maikeLocalExecveSimpleApiNoStdin()
+	{
+		auto res = Maike::Exec::execve("/bin/sh", {"-c", "echo 'Hej'; echo 'Då' 1>&2"});
+		std::string stdout;
+		std::string stderr;
+		std::transform(res.stdout().begin(),
+		               res.stdout().end(),
+		               std::back_inserter(stdout),
+		               [](auto val) { return static_cast<char>(val); });
+		std::transform(res.stderr().begin(),
+		               res.stderr().end(),
+		               std::back_inserter(stderr),
+		               [](auto val) { return static_cast<char>(val); });
+		assert(stdout == "Hej\n");
+		assert(stderr == "Då\n");
+		assert(res.exitStatus().returnCode() == 0);
+	}
 }
 
 int main()
@@ -135,5 +153,6 @@ int main()
 	Testcases::maikeLocalExecveTestArgs();
 	Testcases::maikeLocalExecveNonExistingExe();
 	Testcases::maikeLocalExecveTestPipesAndExitStatus();
+	Testcases::maikeLocalExecveSimpleApiNoStdin();
 	Testcases::maikeLocalExecveTestPipesAndExitStatusMt5Times();
 }
