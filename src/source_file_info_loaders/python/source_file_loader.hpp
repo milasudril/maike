@@ -59,7 +59,7 @@ namespace Python
 
 	inline auto toJson(SourceFileLoader const&)
 	{
-		return Maike::KeyValueStore::Compound{};
+		return Maike::KeyValueStore::Compound{}.takeHandle();
 	}
 }
 

@@ -9,6 +9,8 @@
 Maike::SourceTreeLoader::CommandDictionary::result_type
 Maike::SourceTreeLoader::CommandDictionary::get(fs::path const& cmd) const
 {
+	if(cmd == "") { return std::pair{cmd, Db::SourceFileOrigin::Project}; }
+
 	{
 		std::shared_lock read_lock{m_content->m_mtx};
 		if(auto i = m_content->m_commands.find(cmd); i != std::end(m_content->m_commands))

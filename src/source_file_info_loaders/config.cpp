@@ -6,6 +6,7 @@
 
 #include "src/source_file_info_loaders/cxx/source_file_loader.hpp"
 #include "src/source_file_info_loaders/app/source_file_loader.hpp"
+#include "src/source_file_info_loaders/python/source_file_loader.hpp"
 
 #include <algorithm>
 
@@ -15,6 +16,8 @@ Maike::SourceFileInfoLoaders::Config::Config()
 	                                Maike::SourceFileInfoLoaders::Loader{Cxx::SourceFileLoader{}}));
 	m_loaders.insert(std::make_pair(std::string{"app"},
 	                                Maike::SourceFileInfoLoaders::Loader{App::SourceFileLoader{}}));
+	m_loaders.insert(std::make_pair(std::string{"python"},
+	                                Maike::SourceFileInfoLoaders::Loader{Python::SourceFileLoader{}}));
 }
 
 Maike::SourceFileInfoLoaders::Config::Config(KeyValueStore::CompoundRefConst items)
@@ -29,6 +32,12 @@ Maike::SourceFileInfoLoaders::Config::Config(KeyValueStore::CompoundRefConst ite
 		if(item.first == std::string_view{"app"})
 		{
 			m_loaders.insert_or_assign(std::end(m_loaders), item.first, Loader{App::SourceFileLoader(cfg)});
+		}
+
+		if(item.first == std::string_view{"python"})
+		{
+			m_loaders.insert_or_assign(
+			   std::end(m_loaders), item.first, Loader{Python::SourceFileLoader(cfg)});
 		}
 	});
 }
