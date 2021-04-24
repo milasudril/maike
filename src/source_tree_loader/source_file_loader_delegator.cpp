@@ -93,7 +93,7 @@ Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(fs::path const& str_pat
                                                          fs::path const& target_dir) const
 {
 	std::vector<Db::Dependency> deps;
-	if(!str_path.parent_path().empty())
+	if(!str_path.parent_path().empty() && str_path != m_dir_compiler.get().recipe())
 	{
 		deps.push_back(
 		   Db::Dependency{str_path.parent_path().lexically_normal(), Db::SourceFileOrigin::Project});
@@ -104,6 +104,7 @@ Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(fs::path const& str_pat
 		std::vector<Db::TargetInfo> targets;
 		targets.push_back(
 		   Db::TargetInfo{target_dir / (str_path.lexically_normal()), std::vector<Db::Dependency>{}});
+		deps.push_back(makeDependency(m_dir_compiler));
 		return Db::SourceFileInfo{std::move(deps),
 		                          std::vector<Db::Dependency>{},
 		                          std::vector<Db::Dependency>{},
