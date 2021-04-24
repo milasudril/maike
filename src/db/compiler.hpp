@@ -15,12 +15,17 @@ namespace Maike::Db
 	class Compiler
 	{
 	public:
-		explicit Compiler(fs::path&& m_recipe): m_recipe{std::move(m_recipe)}
+		explicit Compiler(fs::path&& recipe): m_recipe{std::move(recipe)}
 		{
 		}
 
-		explicit Compiler(fs::path&& m_recipe, KeyValueStore::Compound&& config):
-		   m_recipe{std::move(m_recipe)}, m_config{std::move(config)}
+		explicit Compiler(fs::path&& recipe, KeyValueStore::Compound&& config):
+		   m_recipe{std::move(recipe)}, m_config{std::move(config)}
+		{
+		}
+
+		explicit Compiler(fs::path&& recipe, std::optional<SourceFileOrigin> origin, KeyValueStore::Compound&& config):
+		   m_recipe{std::move(recipe)}, m_origin{origin}, m_config{std::move(config)}
 		{
 		}
 
@@ -34,7 +39,7 @@ namespace Maike::Db
 			return m_config;
 		}
 
-		SourceFileOrigin origin() const
+		std::optional<SourceFileOrigin> origin() const
 		{
 			return m_origin;
 		}
@@ -56,7 +61,7 @@ namespace Maike::Db
 
 	private:
 		fs::path m_recipe;
-		SourceFileOrigin m_origin;
+		std::optional<SourceFileOrigin> m_origin;
 		KeyValueStore::Compound m_config;
 	};
 
@@ -78,6 +83,7 @@ namespace Maike::Db
 
 	inline Compiler operator|(Compiler const& a, Compiler const& b)
 	{
+		// TODO: Return b.origin() (if set)
 		return Compiler{fs::path{b.recipe() != "" ? b.recipe() : a.recipe()},
 		                KeyValueStore::Compound{a.config()} | b.config().reference()};
 	}
