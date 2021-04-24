@@ -69,6 +69,7 @@ namespace
 
 		std::copy(std::begin(use_deps), std::end(use_deps), std::back_inserter(builtin_deps));
 		auto compiler = tags.getIf<Maike::Db::Compiler>("compiler");
+
 		if(compiler)
 		{
 			builtin_deps.push_back(makeDependency(*compiler));
