@@ -1,10 +1,10 @@
 //@	{
-//@	 "targets":[{"name":"local_execp.hpp","type":"include"}]
-//@	 ,"dependencies_extra":[{"ref":"local_execp.o","rel":"implementation"}]
+//@	 "targets":[{"name":"execve.hpp","type":"include"}]
+//@	 ,"dependencies_extra":[{"ref":"execve.o","rel":"implementation"}]
 //@	 }
 
-#ifndef MAIKE_EXEC_LOCALEXECP_HPP
-#define MAIKE_EXEC_LOCALEXECP_HPP
+#ifndef MAIKE_EXEC_EXECVE_HPP
+#define MAIKE_EXEC_EXECVE_HPP
 
 #include "./result.hpp"
 

@@ -1,10 +1,10 @@
 //@	{
-//@	 "targets":[{"name":"local_execp.test","type":"application", "autorun":1}]
+//@	 "targets":[{"name":"execve.test","type":"application", "autorun":1}]
 //@	 }
 
 #undef NDEBUG
 
-#include "./local_execp.hpp"
+#include "./execve.hpp"
 
 #include <cassert>
 #include <cstring>

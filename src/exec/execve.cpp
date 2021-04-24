@@ -1,10 +1,10 @@
 //@	{
 //@	 "targets":
-//@	 	[{"name":"local_execp.o","type":"object", "dependencies":
+//@	 	[{"name":"execve.o","type":"object", "dependencies":
 //@			[{"ref":"pthread", "rel":"external"}]}]
 //@	}
 
-#include "./local_execp.hpp"
+#include "./execve.hpp"
 
 #include "src/utils/callwrappers.hpp"
 
