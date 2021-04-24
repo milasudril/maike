@@ -77,21 +77,21 @@ namespace
 
 namespace Testcases
 {
-	void maikeLocalExcepTestArgs()
+	void maikeLocalExecveTestArgs()
 	{
 		IoRedirectorTest redir{"The text here does not matter"};
 
-		auto status = Maike::Exec::execp("bash", {"-c", "echo Hello, World"}, redir);
+		auto status = Maike::Exec::execve("/bin/sh", {"-c", "echo Hello, World"}, redir);
 		assert(status.returnedFromMain());
 		assert(status.exitStatus() == 0);
 		assert(redir.stdout() == "Hello, World\n");
 	}
 
-	void maikeLocalExcepNonExistingExe()
+	void maikeLocalExecveNonExistingExe()
 	{
 		try
 		{
-			(void)Maike::Exec::execp("This file does not exsit", {}, IoRedirectorTest{""});
+			(void)Maike::Exec::execve("This file does not exsit", {}, IoRedirectorTest{""});
 			abort();
 		}
 		catch(...)
@@ -99,14 +99,14 @@ namespace Testcases
 		}
 	}
 
-	void maikeLocalExcepTestPipesAndExitStatus()
+	void maikeLocalExecveTestPipesAndExitStatus()
 	{
 		IoRedirectorTest redir{R"bash(echo "This is some text written to stdout"
 echo "This is some text written to stderr" 1>&2
 exit 123
 )bash"};
 
-		auto status = Maike::Exec::execp("bash", {}, redir);
+		auto status = Maike::Exec::execve("/bin/sh", {}, redir);
 		assert(status.returnedFromMain());
 		assert(status.exitStatus() == 123);
 
@@ -114,14 +114,14 @@ exit 123
 		assert(redir.stdout() == "This is some text written to stdout\n");
 	}
 
-	void maikeLocalExcepTestPipesAndExitStatusMt5Times()
+	void maikeLocalExecveTestPipesAndExitStatusMt5Times()
 	{
 		for(int k = 0; k < 5; ++k)
 		{
 			std::vector<std::thread> threads;
 			for(int k = 0; k < 16; ++k)
 			{
-				threads.emplace_back(maikeLocalExcepTestPipesAndExitStatus);
+				threads.emplace_back(maikeLocalExecveTestPipesAndExitStatus);
 			}
 			std::for_each(std::begin(threads), std::end(threads), [](auto& x) { x.join(); });
 			putc('*', stderr);
@@ -132,8 +132,8 @@ exit 123
 
 int main()
 {
-	Testcases::maikeLocalExcepTestArgs();
-	Testcases::maikeLocalExcepNonExistingExe();
-	Testcases::maikeLocalExcepTestPipesAndExitStatus();
-	Testcases::maikeLocalExcepTestPipesAndExitStatusMt5Times();
+	Testcases::maikeLocalExecveTestArgs();
+	Testcases::maikeLocalExecveNonExistingExe();
+	Testcases::maikeLocalExecveTestPipesAndExitStatus();
+	Testcases::maikeLocalExecveTestPipesAndExitStatusMt5Times();
 }

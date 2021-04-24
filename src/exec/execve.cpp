@@ -156,7 +156,7 @@ namespace
 
 std::mutex exec_mutex;
 
-Maike::Exec::Result Maike::Exec::execp(fs::path const& executable,
+Maike::Exec::Result Maike::Exec::execve(fs::path const& executable,
                                        std::vector<std::string> const& args,
                                        Io::Redirector const& io_redirector)
 {
@@ -192,7 +192,7 @@ Maike::Exec::Result Maike::Exec::execp(fs::path const& executable,
 			stdout.moveWriteEndTo(STDOUT_FILENO);
 			stderr.moveWriteEndTo(STDERR_FILENO);
 			auto fd_exec_err = exec_err.closeWriteEndOnExec();
-			if(execvp(executable.c_str(), const_cast<char* const*>(cmd_args.data())) == -1)
+			if(::execve(executable.c_str(), const_cast<char* const*>(cmd_args.data()), environ) == -1)
 			{
 				lock.unlock();
 				uint32_t val = errno;
@@ -212,7 +212,7 @@ Maike::Exec::Result Maike::Exec::execp(fs::path const& executable,
 	if(auto n = exec_err.read(&val, sizeof(val)); n == sizeof(val))
 	{
 		errno = val;
-		throw std::runtime_error{"Exec failed"};
+		throw std::runtime_error{std::string{"Exec failed "} + std::to_string(val)};
 	}
 	errno = val;
 
