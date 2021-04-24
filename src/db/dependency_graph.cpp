@@ -113,12 +113,17 @@ std::vector<Maike::Db::Dependency> Maike::Db::getUseDepsRecursive(DependencyGrap
 void Maike::Db::compile(DependencyGraph const& g,
                         SourceFileRecordConst const& node,
                         Build::Info const& build_info,
+                        Invoker invoker,
                         ForceRecompilation force_recompilation,
                         Sched::Batch const& ctxt)
 {
 	if(std::size(node.sourceFileInfo().targets()) == 0) { return; }
 
 	auto use_deps = getUseDepsRecursive(g, node);
+
+	// Generate the command while we're waiting for dependencies to complete
+	auto cmd = makeBuildCommand(node, build_info, use_deps);
+
 	if(std::any_of(std::begin(use_deps), std::end(use_deps), [&ctxt](auto const& item) {
 		   return ctxt.taskFailed(item.reference().value());
 	   }))
@@ -129,7 +134,18 @@ void Maike::Db::compile(DependencyGraph const& g,
 	}
 	if(force_recompilation || !isUpToDate(node, use_deps))
 	{
-		auto cmd = makeBuildCommand(node, build_info, use_deps);
-		puts(cmd.args[0].c_str());
+		auto result = invoker.execve(cmd);
+		if(failed(result))
+		{
+			std::string msg{"Failed to compile "};
+			msg += node.path();
+			msg += ":\n";
+			auto& stderr = result.stderr();
+			std::transform(std::begin(stderr), std::end(stderr), std::back_inserter(msg), [](auto val) {
+				return static_cast<char>(val);
+			});
+			//	puts(msg.c_str());
+			throw std::runtime_error{std::move(msg)};
+		}
 	}
 }

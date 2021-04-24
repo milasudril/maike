@@ -12,6 +12,7 @@
 #include "src/utils/graphutils.hpp"
 #include "src/utils/callwrappers.hpp"
 #include "src/db/source_file_list.hpp"
+#include "src/exec/execve.hpp"
 
 #include <set>
 
@@ -247,11 +248,14 @@ int main(int argc, char** argv)
 			return 0;
 		}
 
+		Maike::Exec::LocalExecve invoker;
+
 		Maike::timedCall(
 		   logger,
 		   [](auto&&... args) { return compile(std::forward<decltype(args)>(args)...); },
 		   src_tree,
 		   build_info,
+		   Maike::Db::Invoker{std::ref(invoker)},
 		   Maike::Db::ForceRecompilation{},
 		   workers);
 	}

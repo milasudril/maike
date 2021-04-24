@@ -69,20 +69,24 @@ namespace Maike::Db
 
 	TaskCounter compile(SourceTree const& src_tree,
 	                    Build::Info const&,
+	                    Invoker invoker,
 	                    ForceRecompilation,
 	                    Sched::ThreadPool& workers);
 
-	TaskCounter compile(SourceTree const& src_tree,
-	                    Build::Info const&,
-	                    ForceRecompilation force_recompilation,
-	                    Sched::ThreadPool& workers,
-	                    std::pair<fs::path const*, size_t> targets);
 
 	TaskCounter compile(SourceTree const& src_tree,
 	                    Build::Info const&,
+	                    Invoker invoker,
 	                    ForceRecompilation force_recompilation,
 	                    Sched::ThreadPool& workers,
 	                    fs::path const& target_name);
+
+	TaskCounter compile(SourceTree const& src_tree,
+	                    Build::Info const&,
+	                    Invoker invoker,
+	                    ForceRecompilation force_recompilation,
+	                    Sched::ThreadPool& workers,
+	                    std::pair<fs::path const*, size_t> targets);
 }
 
 #endif

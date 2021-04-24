@@ -11,7 +11,7 @@ namespace Maike::Exec
 {
 	struct Command
 	{
-		fs::path command;
+		fs::path executable;
 		std::vector<std::string> args;
 	};
 }

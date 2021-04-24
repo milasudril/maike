@@ -1,12 +1,13 @@
 //@	{
 //@	 "targets":[{"name":"execve.hpp","type":"include"}]
 //@	 ,"dependencies_extra":[{"ref":"execve.o","rel":"implementation"}]
-//@	 }
+//@	}
 
 #ifndef MAIKE_EXEC_EXECVE_HPP
 #define MAIKE_EXEC_EXECVE_HPP
 
 #include "./result.hpp"
+#include "./command.hpp"
 
 #include "src/utils/fs.hpp"
 #include "src/io/io_redirector.hpp"
@@ -31,6 +32,15 @@ namespace Maike::Exec
 	}
 
 	Result execve(fs::path const& executable, std::vector<std::string> const& args);
+
+	class LocalExecve
+	{
+	};
+
+	inline Result execve(LocalExecve, Command const& cmd)
+	{
+		return execve(cmd.executable, cmd.args);
+	}
 }
 
 #endif

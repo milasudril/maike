@@ -7,6 +7,7 @@
 #define MAIKE_DB_DEPENDENCYGRAPH_HPP
 
 #include "./source_file_record.hpp"
+#include "./invoker.hpp"
 
 #include "src/sched/batch.hpp"
 #include "src/build/info.hpp"
@@ -100,6 +101,7 @@ namespace Maike::Db
 	void compile(DependencyGraph const& g,
 	             SourceFileRecordConst const& node,
 	             Build::Info const& build_info,
+	             Invoker invoker,
 	             ForceRecompilation force_recompilation,
 	             Sched::Batch const& ctxt);
 }
