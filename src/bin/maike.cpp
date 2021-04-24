@@ -189,12 +189,6 @@ int main(int argc, char** argv)
 			fputc('\n', stderr);
 		});
 
-
-		/*		{
-		   printf(">>> %s\n", toString(cmdline.option<Maike::CmdLineOption::BuildId>()).c_str());
-		   return 0;
-		  }*/
-
 		auto const build_info = makeBuildInfo(cmdline);
 
 		auto const cfg = Maike::loadConfig(
