@@ -8,7 +8,7 @@
 
 #include "src/source_tree_loader/config.hpp"
 #include "src/source_file_info_loaders/config.hpp"
-#include "src/build/command_dictionary.hpp"
+#include "src/source_tree_loader/command_dictionary.hpp"
 
 namespace Maike
 {
@@ -84,7 +84,7 @@ namespace Maike
 
 	Config loadConfig(std::vector<fs::path> const& cfg_files);
 
-	Config resolveRecipes(Config const& cfg, Build::CommandDictionary const& commands);
+	Config resolveRecipes(Config const& cfg, SourceTreeLoader::CommandDictionary const& commands);
 }
 
 #endif

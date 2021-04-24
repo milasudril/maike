@@ -6,7 +6,8 @@
 #ifndef MAIKE_SOURCETREELOADER_SOURCEFILELOADERDELEGATOR_HPP
 #define MAIKE_SOURCETREELOADER_SOURCEFILELOADERDELEGATOR_HPP
 
-#include "src/build/command_dictionary.hpp"
+#include "./command_dictionary.hpp"
+
 #include "src/source_file_info_loaders/loader.hpp"
 #include "src/db/source_file_info.hpp"
 #include "src/utils/fs.hpp"
@@ -19,8 +20,7 @@ namespace Maike::SourceTreeLoader
 	class SourceFileLoaderDelegator
 	{
 	public:
-		SourceFileLoaderDelegator(std::reference_wrapper<Build::CommandDictionary const> cmds):
-		   m_cmds{cmds}
+		SourceFileLoaderDelegator(std::reference_wrapper<CommandDictionary const> cmds): m_cmds{cmds}
 		{
 		}
 
@@ -40,7 +40,7 @@ namespace Maike::SourceTreeLoader
 
 	private:
 		std::map<std::string, std::reference_wrapper<SourceFileInfoLoaders::Loader const>> m_loaders;
-		std::reference_wrapper<Build::CommandDictionary const> m_cmds;
+		std::reference_wrapper<CommandDictionary const> m_cmds;
 	};
 }
 

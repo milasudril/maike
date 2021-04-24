@@ -100,7 +100,7 @@ namespace Maike::Db
 
 	inline Dependency makeDependency(Compiler const& a)
 	{
-		return Dependency{a.recipe(), a.origin()? *a.origin(): SourceFileOrigin::System};
+		return Dependency{a.recipe(), a.origin() ? *a.origin() : SourceFileOrigin::System};
 	}
 }
 #endif

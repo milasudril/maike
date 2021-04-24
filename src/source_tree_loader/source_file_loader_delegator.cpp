@@ -43,7 +43,7 @@ namespace
 	                                         Maike::fs::path const& target_dir,
 	                                         std::vector<Maike::Db::Dependency>&& builtin_deps,
 	                                         Maike::SourceFileInfoLoaders::Loader const& loader,
-	                                         Maike::Build::CommandDictionary const&)
+	                                         Maike::SourceTreeLoader::CommandDictionary const&)
 	{
 		Maike::Io::Fifo<std::byte> src_fifo;
 		Maike::Io::Fifo<std::byte> tags_fifo;
