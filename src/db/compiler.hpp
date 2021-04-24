@@ -17,6 +17,8 @@ namespace Maike::Db
 	class Compiler
 	{
 	public:
+		Compiler() = default;
+
 		explicit Compiler(fs::path&& recipe): m_recipe{std::move(recipe)}
 		{
 		}
