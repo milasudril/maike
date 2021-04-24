@@ -24,7 +24,9 @@ namespace Maike::Db
 		{
 		}
 
-		explicit Compiler(fs::path&& recipe, std::optional<SourceFileOrigin> origin, KeyValueStore::Compound&& config):
+		explicit Compiler(fs::path&& recipe,
+		                  std::optional<SourceFileOrigin> origin,
+		                  KeyValueStore::Compound&& config):
 		   m_recipe{std::move(recipe)}, m_origin{origin}, m_config{std::move(config)}
 		{
 		}
@@ -83,8 +85,14 @@ namespace Maike::Db
 
 	inline Compiler operator|(Compiler const& a, Compiler const& b)
 	{
-		// TODO: Return b.origin() (if set)
+		if(auto b_origin = b.origin(); b_origin)
+		{
+			return Compiler{fs::path{b.recipe() != "" ? b.recipe() : a.recipe()},
+			                b_origin,
+			                KeyValueStore::Compound{a.config()} | b.config().reference()};
+		}
 		return Compiler{fs::path{b.recipe() != "" ? b.recipe() : a.recipe()},
+		                a.origin(),
 		                KeyValueStore::Compound{a.config()} | b.config().reference()};
 	}
 }
