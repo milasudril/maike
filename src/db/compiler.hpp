@@ -5,6 +5,8 @@
 #ifndef MAIKE_DB_COMPILER_HPP
 #define MAIKE_DB_COMPILER_HPP
 
+#include "./dependency.hpp"
+
 #include "src/utils/fs.hpp"
 #include "src/key_value_store/compound.hpp"
 
@@ -94,6 +96,11 @@ namespace Maike::Db
 		return Compiler{fs::path{b.recipe() != "" ? b.recipe() : a.recipe()},
 		                a.origin(),
 		                KeyValueStore::Compound{a.config()} | b.config().reference()};
+	}
+
+	inline Dependency makeDependency(Compiler const& a)
+	{
+		return Dependency{a.recipe(), a.origin()? *a.origin(): SourceFileOrigin::System};
 	}
 }
 #endif
