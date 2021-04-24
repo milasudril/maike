@@ -7,7 +7,7 @@
 
 #include "./id.hpp"
 
-#include "src/time/system_time_stamp.hpp"
+#include "src/utils/system_time_stamp.hpp"
 #include "src/key_value_store/compound.hpp"
 
 #include <chrono>

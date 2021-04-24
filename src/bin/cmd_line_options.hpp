@@ -6,7 +6,7 @@
 #define MAIKE_BIN_CMDLINEOPTIONS_HPP
 
 #include "src/build/id.hpp"
-#include "src/time/system_time_stamp.hpp"
+#include "src/utils/system_time_stamp.hpp"
 #include "src/sched/thread_count.hpp"
 #include "src/cmd_line_parser/command_line.hpp"
 #include "src/utils/fs.hpp"
