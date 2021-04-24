@@ -20,7 +20,9 @@ namespace Maike::SourceTreeLoader
 	class SourceFileLoaderDelegator
 	{
 	public:
-		SourceFileLoaderDelegator(std::reference_wrapper<CommandDictionary const> cmds): m_cmds{cmds}
+		SourceFileLoaderDelegator(std::reference_wrapper<CommandDictionary const> cmds,
+		                          std::reference_wrapper<Db::Compiler const> dir_compiler):
+		   m_cmds{cmds}, m_dir_compiler{dir_compiler}
 		{
 		}
 
@@ -41,6 +43,7 @@ namespace Maike::SourceTreeLoader
 	private:
 		std::map<std::string, std::reference_wrapper<SourceFileInfoLoaders::Loader const>> m_loaders;
 		std::reference_wrapper<CommandDictionary const> m_cmds;
+		std::reference_wrapper<Db::Compiler const> m_dir_compiler;
 	};
 }
 

@@ -41,17 +41,6 @@ Maike::Build::Info makeBuildInfo(Maike::CommandLine const& cmdline)
 
 void printDepGraph(Maike::Db::DependencyGraph const& source_files, Maike::fs::path const&)
 {
-#if 0
-	std::vector<Maike::fs::path> dirs;
-	visitNodes([&dirs](auto const& item) {
-		if(is_directory(item.path()))
-		{
-			dirs.push_back(item.path());
-			printf("\"%s\"\n", item.path().c_str());
-		}
-	}, source_files);
-#endif
-
 	std::set<std::pair<Maike::fs::path, Maike::fs::path>> output;
 	visitNodes(
 	   [&output](auto const& item) {
@@ -59,21 +48,6 @@ void printDepGraph(Maike::Db::DependencyGraph const& source_files, Maike::fs::pa
 		      [&output, &item](auto const& edge) {
 			      if(item.path().parent_path() != edge.name().parent_path())
 			      { output.insert(std::pair{item.path().parent_path(), edge.name().parent_path()}); }
-#if 0
-				if(edge.reference().valid())
-				{
-					printf("\"%s\" -> \"%s\"[label=\"%zu\"]\n",
-							item.path().c_str(),
-							edge.name().c_str(),
-							std::size(edge.properties()));
-				}
-				else
-				{
-					printf("\"%s\" -> \"%s (unresolved)\"\n",
-							item.path().c_str(),
-							edge.name().c_str());
-				}
-#endif
 		      },
 		      item);
 	   },
@@ -242,7 +216,8 @@ int main(int argc, char** argv)
 		   .systemDir(Maike::fs::path{Maike::execPrefix()});
 
 		auto const cfg_new = resolveRecipes(cfg, commands);
-		Maike::SourceTreeLoader::SourceFileLoaderDelegator loader_delegator{commands};
+		Maike::SourceTreeLoader::SourceFileLoaderDelegator loader_delegator{commands,
+		                                                                    cfg_new.dirCompiler()};
 		loader_delegator.loaders(mapSourceFileInfoLoaders(cfg_new));
 
 		printf(

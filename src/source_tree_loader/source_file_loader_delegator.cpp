@@ -108,7 +108,7 @@ Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(fs::path const& str_pat
 		                          std::vector<Db::Dependency>{},
 		                          std::vector<Db::Dependency>{},
 		                          std::move(targets),
-		                          mkdir,
+		                          m_dir_compiler,
 		                          Db::Compiler{""},
 		                          Db::SourceFileOrigin::Project};
 	}
