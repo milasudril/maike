@@ -6,7 +6,7 @@
 #ifndef MAIKE_EXEC_EXECVE_HPP
 #define MAIKE_EXEC_EXECVE_HPP
 
-#include "./result.hpp"
+#include "./exit_status.hpp"
 
 #include "src/utils/fs.hpp"
 #include "src/io/io_redirector.hpp"
@@ -16,12 +16,12 @@
 
 namespace Maike::Exec
 {
-	Result execve(fs::path const& executable,
+	ExitStatus execve(fs::path const& executable,
 	             std::vector<std::string> const& args,
 	             Io::Redirector const& io_redir);
 
 	template<class IoRedirectorType>
-	Result
+	ExitStatus
 	execve(fs::path const& executable,
 	      std::vector<std::string> const& args,
 	      IoRedirectorType&& io_redir,

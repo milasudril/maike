@@ -130,7 +130,7 @@ namespace
 	}
 
 
-	Maike::Exec::Result communicateWith(
+	Maike::Exec::ExitStatus communicateWith(
 	   pid_t pid, Maike::Io::Redirector const& io_redirector, int stdin, int stdout, int stderr)
 	{
 		signal(SIGPIPE, SIG_IGN);
@@ -144,10 +144,10 @@ namespace
 		stdout_proc.join();
 		stderr_proc.join();
 
-		if(WIFEXITED(status)) { return Maike::Exec::Result{}.exitStatus(WEXITSTATUS(status)); }
+		if(WIFEXITED(status)) { return Maike::Exec::ExitStatus{}.returnCode(WEXITSTATUS(status)); }
 		else if(WIFSIGNALED(status))
 		{
-			return Maike::Exec::Result{}.signo(WTERMSIG(status));
+			return Maike::Exec::ExitStatus{}.signo(WTERMSIG(status));
 		}
 
 		abort();
@@ -156,7 +156,7 @@ namespace
 
 std::mutex exec_mutex;
 
-Maike::Exec::Result Maike::Exec::execve(fs::path const& executable,
+Maike::Exec::ExitStatus Maike::Exec::execve(fs::path const& executable,
                                        std::vector<std::string> const& args,
                                        Io::Redirector const& io_redirector)
 {

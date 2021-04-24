@@ -1,34 +1,54 @@
-class ExitStatus
+//@	{
+//@	 "targets":[{"name":"exit_status.hpp","type":"include"}]
+//@	 }
+
+#ifndef MAIKE_EXEC_EXITSTATUS_HPP
+#define MAIKE_EXEC_EXITSTATUS_HPP
+
+namespace Maike::Exec
 {
-public:
-	enum class Type
+	class ExitStatus
 	{
-		ReturnValue,
-		Signal
+	public:
+		ExitStatus& signo(int s)
+		{
+			m_signo = s;
+			return *this;
+		}
+
+		ExitStatus& returnCode(int status)
+		{
+			m_signo = -1;
+			m_return_code = status;
+			return *this;
+		}
+
+		int signo() const
+		{
+			return m_signo;
+		}
+
+		int returnCode() const
+		{
+			return m_return_code;
+		}
+
+		bool returnedFromMain() const
+		{
+			return m_signo == -1;
+		};
+
+	private:
+		int m_signo;
+		int m_return_code;
 	};
 
-	constexpr explicit ExitStatus(Type type, int value): m_type{type}, m_value{value}
+	inline bool failed(ExitStatus res)
 	{
+		if(!res.returnedFromMain()) { return true; }
+
+		return res.returnCode() != 0;
 	}
+}
 
-	constexpr int value() const
-	{
-		return m_value;
-	}
-
-	constexpr Type type() const
-	{
-		return m_type;
-	}
-
-private:
-	Type m_type;
-	int m_value;
-};
-
-struct ExecResult
-{
-	std::vector<std::byte> sysout;
-	std::vector<std::byte> syserr;
-	ExitStatus exit_status;
-};
+#endif

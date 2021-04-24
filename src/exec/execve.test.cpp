@@ -83,7 +83,7 @@ namespace Testcases
 
 		auto status = Maike::Exec::execve("/bin/sh", {"-c", "echo Hello, World"}, redir);
 		assert(status.returnedFromMain());
-		assert(status.exitStatus() == 0);
+		assert(status.returnCode() == 0);
 		assert(redir.stdout() == "Hello, World\n");
 	}
 
@@ -108,7 +108,7 @@ exit 123
 
 		auto status = Maike::Exec::execve("/bin/sh", {}, redir);
 		assert(status.returnedFromMain());
-		assert(status.exitStatus() == 123);
+		assert(status.returnCode() == 123);
 
 		assert(redir.stderr() == "This is some text written to stderr\n");
 		assert(redir.stdout() == "This is some text written to stdout\n");
