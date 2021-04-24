@@ -15,7 +15,7 @@ namespace Maike
 	class Config
 	{
 	public:
-		Config(): m_dir_compiler{"make_directory"}
+		Config(): m_dir_compiler{"make_directory.py"}
 		{
 		}
 

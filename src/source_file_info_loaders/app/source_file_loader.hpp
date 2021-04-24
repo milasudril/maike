@@ -17,7 +17,7 @@ namespace App
 	public:
 		SourceFileLoader():
 		   m_compiler{
-		      "cxx_linker",
+		      "cxx_linker.py",
 		      Maike::KeyValueStore::Compound{}.set("cflags", Maike::KeyValueStore::Array{}.append("-g"))}
 		{
 		}
