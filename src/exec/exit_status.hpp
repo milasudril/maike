@@ -10,6 +10,11 @@ namespace Maike::Exec
 	class ExitStatus
 	{
 	public:
+		static ExitStatus success()
+		{
+			return ExitStatus{}.returnCode(0);
+		}
+
 		ExitStatus& signo(int s)
 		{
 			m_signo = s;

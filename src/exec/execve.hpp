@@ -33,11 +33,12 @@ namespace Maike::Exec
 
 	Result execve(fs::path const& executable, std::vector<std::string> const& args);
 
-	class LocalExecve
+	struct LocalExecve
 	{
+		bool dryrun;
 	};
 
-	Result execve(LocalExecve, Command const& cmd);
+	Result execve(LocalExecve cfg, Command const& cmd);
 }
 
 #endif

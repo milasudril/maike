@@ -5,9 +5,8 @@ all:
 .PHONY: bootstrap
 bootstrap:
 	maike
-	__targets/src/bin/maike_next --target-dir=__targets_new
-#TODO:  __targets/src/bin/maike_next --force-rebuild --num-workers=1 --dry-run > __targets/bootstrap
-#	chmod u+x __targets/bootstrap
+	__targets/src/bin/maike_next --force-rebuild --dry-run > __targets/bootstrap
+	chmod u+x __targets/bootstrap
 
 .PHONY: clean
 clean:
