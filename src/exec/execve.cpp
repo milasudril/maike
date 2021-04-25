@@ -272,7 +272,7 @@ namespace
 	}
 }
 
-Maike::Exec::Result Maike::Exec::execve(LocalExecve, Command const& cmd)
+Maike::Exec::Result Maike::Exec::execve(LocalExecve cfg, Command const& cmd)
 {
 	auto cmdline = shell_escape(cmd.executable.string());
 	std::for_each(std::begin(cmd.args), std::end(cmd.args), [&cmdline](auto const& item) {
@@ -280,5 +280,7 @@ Maike::Exec::Result Maike::Exec::execve(LocalExecve, Command const& cmd)
 		cmdline += shell_escape(item);
 	});
 	puts(cmdline.c_str());
+	if(cfg.dryrun)
+	{ return Result{ExitStatus::success(), std::vector<std::byte>{}, std::vector<std::byte>{}}; }
 	return execve(cmd.executable, cmd.args);
 }

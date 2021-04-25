@@ -248,7 +248,7 @@ int main(int argc, char** argv)
 			return 0;
 		}
 
-		Maike::Exec::LocalExecve invoker;
+		Maike::Exec::LocalExecve invoker{cmdline.hasOption<Maike::CmdLineOption::DryRun>()};
 
 		Maike::timedCall(
 		   logger,
