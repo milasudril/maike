@@ -117,6 +117,17 @@ void Maike::Db::compile(DependencyGraph const& g,
                         ForceRecompilation force_recompilation,
                         Sched::Batch const& ctxt)
 {
+	// Wait until build deps has been processed
+	auto const& build_deps = node.sourceFileInfo().buildDeps();
+	if(std::any_of(std::begin(build_deps), std::end(build_deps), [&ctxt](auto const& item) {
+		   return ctxt.taskFailed(item.reference().value());
+	   }))
+	{
+		std::string msg{node.path()};
+		msg += ": At least one dependency was not compiled";
+		throw std::runtime_error{std::move(msg)};
+	}
+
 	if(std::size(node.sourceFileInfo().targets()) == 0) { return; }
 
 	auto use_deps = getUseDepsRecursive(g, node);
@@ -132,6 +143,7 @@ void Maike::Db::compile(DependencyGraph const& g,
 		msg += ": At least one dependency was not compiled";
 		throw std::runtime_error{std::move(msg)};
 	}
+
 	if(force_recompilation || !isUpToDate(node, use_deps))
 	{
 		auto result = invoker.execve(cmd);
