@@ -1,0 +1,8 @@
+digraph G
+{
+	node [ fontname=Andika];
+	"A" -> "M"
+	"A" -> "I"
+	"K" -> "I"
+	"K" -> "E"
+}
