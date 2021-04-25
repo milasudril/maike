@@ -256,7 +256,7 @@ int main(int argc, char** argv)
 		   src_tree,
 		   build_info,
 		   Maike::Db::Invoker{std::ref(invoker)},
-		   Maike::Db::ForceRecompilation{},
+		   Maike::Db::ForceRecompilation{cmdline.hasOption<Maike::CmdLineOption::ForceRebuild>()},
 		   workers);
 	}
 	catch(std::exception const& err)
