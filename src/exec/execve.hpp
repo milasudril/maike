@@ -37,10 +37,7 @@ namespace Maike::Exec
 	{
 	};
 
-	inline Result execve(LocalExecve, Command const& cmd)
-	{
-		return execve(cmd.executable, cmd.args);
-	}
+	Result execve(LocalExecve, Command const& cmd);
 }
 
 #endif
