@@ -4,6 +4,7 @@ import sys
 import json
 import os
 import subprocess
+import shutil
 
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
@@ -30,6 +31,10 @@ def compile(dict):
 	args.append('-o')
 	args.append(dict['targets'][0])
 	result = subprocess.run(args)
+
+	for target in dict['targets'][1:]:
+		shutil.copyfile(dict['targets'][0], target)
+
 	return result.returncode
 
 
