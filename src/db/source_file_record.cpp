@@ -66,5 +66,5 @@ Maike::Exec::Command Maike::Db::makeBuildCommand(SourceFileRecordConst const& re
 	store(cmd_opts, str, KeyValueStore::PrettyPrint{false});
 
 	return Exec::Command{std::move(compiler.recipe()),
-	                     std::vector<std::string>{std::move(str.buffer)}};
+	                     std::vector<std::string>{"compile", std::move(str.buffer)}};
 }
