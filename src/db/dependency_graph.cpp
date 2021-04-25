@@ -137,9 +137,8 @@ void Maike::Db::compile(DependencyGraph const& g,
 		auto result = invoker.execve(cmd);
 		if(failed(result))
 		{
-			std::string msg{"Failed to compile "};
-			msg += node.path();
-			msg += ":\n";
+			std::string msg{node.path()};
+			msg += ":1:1: error: ";
 			auto& stderr = result.stderr();
 			std::transform(std::begin(stderr), std::end(stderr), std::back_inserter(msg), [](auto val) {
 				return static_cast<char>(val);
