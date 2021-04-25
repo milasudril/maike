@@ -27,7 +27,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -46,23 +46,21 @@
      inkscape:window-height="1151"
      id="namedview996"
      showgrid="false"
-     inkscape:zoom="2.5740291"
-     inkscape:cx="120.98271"
-     inkscape:cy="135.14324"
+     inkscape:zoom="3.6402269"
+     inkscape:cx="157.46498"
+     inkscape:cy="88.476526"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
-     inkscape:current-layer="graph0" />
+     inkscape:current-layer="node5" />
   <g
      id="graph0"
      class="graph"
      transform="translate(17.392022,112)">
-    <title
-       id="title926">G</title>
-    <!-- A -->
     <g
        id="node1"
-       class="node">
+       class="node"
+       style="fill:#ffe5af;fill-opacity:1">
       <title
          id="title930">A</title>
       <ellipse
@@ -71,18 +69,18 @@
          rx="27"
          ry="18"
          id="ellipse932"
-         style="fill:none;stroke:#000000" />
+         style="fill:#ffe5af;stroke:#000000;fill-opacity:1" />
       <text
          x="45"
          y="-86.300003"
          font-size="14.00"
          id="text934"
-         style="font-size:14px;font-family:Andika;text-anchor:middle">A</text>
+         style="font-size:14px;font-family:Andika;text-anchor:middle;fill:#000000;fill-opacity:1;">A</text>
     </g>
-    <!-- M -->
     <g
        id="node2"
-       class="node">
+       class="node"
+       style="fill:#ffe5af;fill-opacity:1">
       <title
          id="title937">M</title>
       <ellipse
@@ -91,18 +89,86 @@
          rx="27"
          ry="18"
          id="ellipse939"
-         style="fill:none;stroke:#000000" />
+         style="fill:#ffe5af;stroke:#000000;fill-opacity:1" />
       <text
          x="27"
          y="-14.3"
          font-size="14.00"
          id="text941"
-         style="font-size:14px;font-family:Andika;text-anchor:middle;stroke-width:0.28346456;stroke-miterlimit:4;stroke-dasharray:none">
+         style="font-size:14px;font-family:Andika;text-anchor:middle;stroke-width:0.28346456;stroke-miterlimit:4;stroke-dasharray:none;fill:#090000;fill-opacity:1;">
         <tspan
-           style="stroke:none;stroke-opacity:1;stroke-width:0.28346456;stroke-miterlimit:4;stroke-dasharray:none"
+           style="stroke:none;stroke-opacity:1;stroke-width:0.28346456;stroke-miterlimit:4;stroke-dasharray:none;fill:#090000;fill-opacity:1;"
            id="tspan1002">M</tspan>
       </text>
     </g>
+    <g
+       id="node3"
+       class="node"
+       style="fill:#ffe5af;fill-opacity:1">
+      <title
+         id="title951">I</title>
+      <ellipse
+         cx="99"
+         cy="-18"
+         rx="27"
+         ry="18"
+         id="ellipse953"
+         style="fill:#ffe5af;stroke:#000000;fill-opacity:1" />
+      <text
+         x="99"
+         y="-14.3"
+         font-size="14.00"
+         id="text955"
+         style="font-size:14px;font-family:Andika;text-anchor:middle;fill:#000000;fill-opacity:1;">I</text>
+    </g>
+    <g
+       id="node4"
+       class="node"
+       style="fill:#ffe5af;fill-opacity:1">
+      <title
+         id="title965">K</title>
+      <ellipse
+         cx="153"
+         cy="-90"
+         rx="27"
+         ry="18"
+         id="ellipse967"
+         style="fill:#ffe5af;stroke:#000000;fill-opacity:1" />
+      <text
+         x="153"
+         y="-86.300003"
+         font-size="14.00"
+         id="text969"
+         style="font-size:14px;font-family:Andika;text-anchor:middle;fill:#000000;fill-opacity:1;">K</text>
+    </g>
+    <g
+       id="node5"
+       class="node"
+       style="fill:#ffe5af;fill-opacity:1">
+      <title
+         id="title979">E</title>
+      <ellipse
+         cx="171"
+         cy="-18"
+         rx="27"
+         ry="18"
+         id="ellipse981"
+         style="fill:#ffe5af;stroke:#000000;fill-opacity:1" />
+      <text
+         x="171"
+         y="-14.3"
+         font-size="14.00"
+         id="text983"
+         style="font-size:14px;font-family:Andika;text-anchor:middle;fill:#ffe5af;fill-opacity:1">
+        <tspan
+           style="fill:#000000;fill-opacity:1"
+           id="tspan858">E</tspan>
+      </text>
+    </g>
+    <title
+       id="title926">G</title>
+    <!-- A -->
+    <!-- M -->
     <!-- A&#45;&gt;M -->
     <g
        id="edge1"
@@ -120,25 +186,6 @@
          style="fill:#000000;stroke:#000000" />
     </g>
     <!-- I -->
-    <g
-       id="node3"
-       class="node">
-      <title
-         id="title951">I</title>
-      <ellipse
-         cx="99"
-         cy="-18"
-         rx="27"
-         ry="18"
-         id="ellipse953"
-         style="fill:none;stroke:#000000" />
-      <text
-         x="99"
-         y="-14.3"
-         font-size="14.00"
-         id="text955"
-         style="font-size:14px;font-family:Andika;text-anchor:middle">I</text>
-    </g>
     <!-- A&#45;&gt;I -->
     <g
        id="edge2"
@@ -156,25 +203,6 @@
          style="fill:#000000;stroke:#000000" />
     </g>
     <!-- K -->
-    <g
-       id="node4"
-       class="node">
-      <title
-         id="title965">K</title>
-      <ellipse
-         cx="153"
-         cy="-90"
-         rx="27"
-         ry="18"
-         id="ellipse967"
-         style="fill:none;stroke:#000000" />
-      <text
-         x="153"
-         y="-86.300003"
-         font-size="14.00"
-         id="text969"
-         style="font-size:14px;font-family:Andika;text-anchor:middle">K</text>
-    </g>
     <!-- K&#45;&gt;I -->
     <g
        id="edge3"
@@ -192,25 +220,6 @@
          style="fill:#000000;stroke:#000000" />
     </g>
     <!-- E -->
-    <g
-       id="node5"
-       class="node">
-      <title
-         id="title979">E</title>
-      <ellipse
-         cx="171"
-         cy="-18"
-         rx="27"
-         ry="18"
-         id="ellipse981"
-         style="fill:none;stroke:#000000" />
-      <text
-         x="171"
-         y="-14.3"
-         font-size="14.00"
-         id="text983"
-         style="font-size:14px;font-family:Andika;text-anchor:middle">E</text>
-    </g>
     <!-- K&#45;&gt;E -->
     <g
        id="edge4"
