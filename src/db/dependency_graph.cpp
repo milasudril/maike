@@ -144,7 +144,6 @@ void Maike::Db::compile(DependencyGraph const& g,
 			std::transform(std::begin(stderr), std::end(stderr), std::back_inserter(msg), [](auto val) {
 				return static_cast<char>(val);
 			});
-			//	puts(msg.c_str());
 			throw std::runtime_error{std::move(msg)};
 		}
 	}

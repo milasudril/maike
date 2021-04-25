@@ -121,7 +121,7 @@ namespace Maike::Sched
 				catch(...)
 				{
 					std::lock_guard lock{m_eptr_mtx};
-					m_eptr = std::current_exception();
+					m_eptr = (m_eptr == nullptr) ? std::current_exception() : m_eptr;
 				}
 			});
 			{
