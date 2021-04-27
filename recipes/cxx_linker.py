@@ -19,9 +19,11 @@ def build_dep_array(list):
 				ret.append(item['ref'])
 		elif item['origin'] == 'pkg-config':
 			ret.extend(pkg_config.get_libs(item['ref']))
+			ret.extend(pkg_config.get_libdirs(item['ref']))
 		elif item['origin'] == 'system':
 			ret.append('-l%s'%item['ref'])
 
+	eprint(ret)
 	return ret
 
 def compile(dict):
