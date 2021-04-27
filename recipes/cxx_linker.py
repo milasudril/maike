@@ -17,11 +17,11 @@ def build_dep_array(list):
 		if (item['origin'] == 'generated' or item['origin'] == 'project') and 'rel' in item:
 			if item['rel'] == 'implementation':
 				ret.append(item['ref'])
-		if item['origin'] == 'pkg-config':
+		elif item['origin'] == 'pkg-config':
 			ret.extend(pkg_config.get_libs(item['ref']))
+		elif item['origin'] == 'system':
+			ret.append('-l%s'%item['ref'])
 
-	ret.append('-lpthread')
-	eprint(ret)
 	return ret
 
 def compile(dict):

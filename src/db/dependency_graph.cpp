@@ -100,6 +100,7 @@ std::vector<Maike::Db::Dependency> Maike::Db::getUseDepsRecursive(DependencyGrap
 	std::vector<Db::Dependency> ret;
 	std::set<fs::path> bookkeeping;
 	auto add_dependency = [bookkeeping = std::set<fs::path>{}, &ret](auto const& item) mutable {
+		if(item.name() == "") { return; }
 		auto i = bookkeeping.find(item.name());
 		if(i != std::end(bookkeeping)) { return; }
 		bookkeeping.insert(item.name());
