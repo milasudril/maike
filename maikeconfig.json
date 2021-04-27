@@ -2,7 +2,7 @@
 	"maikeconfig": {
 		"dir_compiler": {
 			"config": {},
-			"recipe": "make_directory.py"
+			"recipe": "recipes/make_directory.py"
 		},
 		"source_file_info_loaders": {
 			"app": {
@@ -12,7 +12,7 @@
 							"-g"
 						]
 					},
-					"recipe": "cxx_linker.py"
+					"recipe": "recipes/cxx_linker.py"
 				}
 			},
 			"cxx": {
@@ -26,7 +26,7 @@
 							"."
 						]
 					},
-					"recipe": "cxx_compiler.py"
+					"recipe": "recipes/cxx_compiler.py"
 				}
 			},
 			"python": {}

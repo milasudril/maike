@@ -73,7 +73,9 @@ namespace
 		if(compiler) { builtin_deps.push_back(makeDependency(*compiler)); }
 		else
 		{
-			builtin_deps.push_back(makeDependency(loader.compiler()));
+			auto dep = makeDependency(loader.compiler());
+			printf("%s\n", dep.name().c_str());
+			builtin_deps.push_back(std::move(dep));
 		}
 
 		return Maike::Db::SourceFileInfo{std::move(builtin_deps),

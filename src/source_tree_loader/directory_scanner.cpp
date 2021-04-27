@@ -38,9 +38,7 @@ void Maike::SourceTreeLoader::DirectoryScanner::processPath(
 	{
 		if(src_path != "." && r_filter.get().match(src_path.filename().c_str())) { return; }
 
-		auto src_path_normal = src_path.parent_path() != "." || is_directory(src_path) ?
-		                          src_path.lexically_normal() :
-		                          src_path;
+		auto src_path_normal = src_path.lexically_normal();
 		auto i = invokeWithMutex<std::shared_lock>(
 		   m_source_files_mtx,
 		   [this](auto const& item) { return m_source_files.find(item); },

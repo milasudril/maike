@@ -32,8 +32,8 @@ Maike::SourceTreeLoader::CommandDictionary::get(fs::path const& cmd) const
 		}
 
 		if(i - std::begin(search_paths) == 0)
-		{ return std::pair{(*i) / cmd, Db::SourceFileOrigin::Project}; }
-		return std::pair{(*i) / cmd, Db::SourceFileOrigin::System};
+		{ return std::pair{((*i) / cmd).lexically_normal(), Db::SourceFileOrigin::Project}; }
+		return std::pair{((*i) / cmd).lexically_normal(), Db::SourceFileOrigin::System};
 	}(m_content->m_search_paths);
 
 	std::lock_guard write_lock{m_content->m_mtx};
