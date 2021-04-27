@@ -14,3 +14,4 @@ versioninfo-in.txt
 bootstrap
 build.sh
 externals-in.json
+__pycache__
