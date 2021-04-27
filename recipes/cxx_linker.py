@@ -11,20 +11,30 @@ import pkg_config
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
-def build_dep_array(list):
+def collect_deps(deps):
 	ret = []
-	for item in list:
+	for item in deps:
 		if (item['origin'] == 'generated' or item['origin'] == 'project') and 'rel' in item:
 			if item['rel'] == 'implementation':
 				ret.append(item['ref'])
 		elif item['origin'] == 'pkg-config':
 			ret.extend(pkg_config.get_libs(item['ref']))
 			ret.extend(pkg_config.get_libdirs(item['ref']))
-		elif item['origin'] == 'system':
-			ret.append('-l%s'%item['ref'])
-
-	eprint(ret)
+		elif item['origin'] == 'system' and 'rel' in item:
+			if item['rel'] == 'external':
+				ret.append('-l%s'%item['ref'])
 	return ret
+
+def filter_deps(dep_items):
+	bookkeeping = set()
+	ret = []
+	for item in dep_items:
+		if not item in bookkeeping:
+			ret.append(item)
+			bookkeeping.add(item)
+	ret.reverse()
+	return ret
+
 
 def compile(dict):
 #	TODO: different rule for dll?
@@ -34,7 +44,7 @@ def compile(dict):
 	args.append('g++')
 	args.extend(dict['compiler_cfg']['cflags'])
 	args.append('-std=c++17')
-	args.extend(build_dep_array(dict['dependencies']))
+	args.extend(filter_deps(collect_deps(dict['dependencies'])))
 	args.append('-o')
 	args.append(dict['targets'][0])
 	result = subprocess.run(args)

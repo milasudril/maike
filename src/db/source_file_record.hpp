@@ -80,20 +80,6 @@ namespace Maike::Db
 		std::for_each(std::begin(use_deps), std::end(use_deps), f);
 	}
 
-	template<class Function, class EdgeCallback>
-	void visitEdges(Function&& f, SourceFileRecordConst const& rec, EdgeCallback&& ec)
-	{
-		assert(rec.valid());
-		auto const& use_deps = rec.sourceFileInfo().useDeps();
-		std::for_each(
-		   std::begin(use_deps),
-		   std::end(use_deps),
-		   [func = std::forward<Function>(f), edge = std::forward<EdgeCallback>(ec)](auto const& item) {
-			   edge(item);
-			   func(item);
-		   });
-	}
-
 	inline auto id(SourceFileRecordConst const& rec)
 	{
 		return rec.id();

@@ -1,5 +1,5 @@
 //@	{
-//@	  "targets":[{"name":"json_handle.hpp","type":"include", "pkgconfig_libs":["jansson"]}]
+//@	  "targets":[{"name":"json_handle.hpp","type":"include"}]
 //@	 ,"dependencies_extra":[{"ref":"json_handle.o","rel":"implementation"}]
 //@	 }
 

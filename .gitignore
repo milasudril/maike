@@ -5,7 +5,7 @@
 *.a
 *.lib
 *.pdf
-__targets
+__targets*
 ./maike
 gh-pages
 __doc

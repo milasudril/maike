@@ -47,7 +47,7 @@ void printDepGraph(Maike::Db::DependencyGraph const& source_files, Maike::fs::pa
 	   [&output](auto const& item) {
 		   visitEdges(
 		      [&output, &item](auto const& edge) {
-#if 1
+#if 0
 			      if(item.path().parent_path() != edge.name().parent_path())
 			      { output.insert(std::pair{item.path().parent_path(), edge.name().parent_path()}); }
 #else

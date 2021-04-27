@@ -42,6 +42,8 @@ namespace Maike::Db
 
 		using node_type = SourceFileRecordConst;
 
+		using edge_type = Dependency;
+
 		auto const& nodes() const
 		{
 			return m_nodes;

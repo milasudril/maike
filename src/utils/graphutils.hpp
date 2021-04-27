@@ -28,22 +28,25 @@ namespace Maike
 			return x != static_cast<T>(-1);
 		}
 
-		template<class ItemCallback, class Graph, class Node, class... VisitEdgesArgs>
+		template<class ItemCallback, class Graph, class... VisitEdgesArgs>
 		void processGraphNodeRecursive(ItemCallback&& cb,
 		                               Graph const& graph,
-		                               Node const& node,
-		                               std::stack<Node const*>& nodes_to_visit,
+		                               typename Graph::node_type const& node,
 		                               std::vector<Mark>& visited,
 		                               VisitEdgesArgs... visit_edges_args)
 		{
+			using Node = typename Graph::node_type;
+			using Edge = typename Graph::edge_type;
+			Edge const* incoming_edge{nullptr};
+			std::stack<std::pair<Node const*, Edge const*>> nodes_to_visit;
 			switch(visited[static_cast<size_t>(id(node))])
 			{
 				case Mark::Init:
-					nodes_to_visit.push(&node);
+					nodes_to_visit.push(std::pair{&node, incoming_edge});
 					while(!nodes_to_visit.empty())
 					{
-						auto node = nodes_to_visit.top();
-						auto node_id = id(*node);
+						auto node_edge = nodes_to_visit.top();
+						auto node_id = id(*node_edge.first);
 						switch(visited[static_cast<size_t>(node_id)])
 						{
 							case Mark::Init:
@@ -54,7 +57,9 @@ namespace Maike
 									{
 										switch(visited[static_cast<size_t>(node_id)])
 										{
-											case Mark::Init: nodes_to_visit.push(&getNodeById(graph, node_id)); break;
+											case Mark::Init:
+												nodes_to_visit.push(std::pair{&getNodeById(graph, node_id), &edge});
+												break;
 
 											case Mark::InProgress: throw std::runtime_error{"Cyclic dependency detected"};
 
@@ -63,12 +68,12 @@ namespace Maike
 									}
 								};
 								visited[static_cast<size_t>(node_id)] = Mark::InProgress;
-								visitEdges(processEdge, *node, visit_edges_args...);
+								visitEdges(processEdge, *node_edge.first, visit_edges_args...);
 								break;
 							}
 							case Mark::InProgress:
 								visited[static_cast<size_t>(node_id)] = Mark::Done;
-								cb(*node);
+								cb(*node_edge.first, node_edge.second);
 								nodes_to_visit.pop();
 								break;
 							default: nodes_to_visit.pop(); break;
@@ -90,9 +95,8 @@ namespace Maike
 		using std::size;
 		auto const N = size(graph);
 		std::vector<graphutils_detail::Mark> visited(N);
-		std::stack<typename Graph::node_type const*> nodes_to_visit;
 		graphutils_detail::processGraphNodeRecursive(
-		   cb, graph, node, nodes_to_visit, visited, std::forward<VisitEdgesArgs>(args)...);
+		   cb, graph, node, visited, std::forward<VisitEdgesArgs>(args)...);
 	}
 
 	template<class ItemCallback, class Graph>
@@ -101,10 +105,9 @@ namespace Maike
 		using std::size;
 		auto const N = size(graph);
 		std::vector<graphutils_detail::Mark> visited(N);
-		std::stack<typename Graph::node_type const*> nodes_to_visit;
 
-		auto processNode = [&cb, &graph, &nodes_to_visit, &visited](auto const& node) {
-			graphutils_detail::processGraphNodeRecursive(cb, graph, node, nodes_to_visit, visited);
+		auto processNode = [&cb, &graph, &visited](auto const& node) {
+			graphutils_detail::processGraphNodeRecursive(cb, graph, node, visited);
 		};
 
 		visitNodes(processNode, graph);

@@ -33,7 +33,7 @@ Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
 
 	visitNodesInTopoOrder(
 	   [&graph = src_tree.dependencyGraph(), &build_info, invoker, force_recompilation, &ctxt](
-	      auto const& node) {
+	      SourceFileRecordConst const& node, auto const&...) {
 		   ctxt.add(node.id().value(),
 		            [&graph, &node, &build_info, invoker, force_recompilation, &ctxt]() {
 			            compile(graph, node, build_info, invoker, force_recompilation, ctxt);
@@ -59,7 +59,7 @@ Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
 
 	processGraphNodeRecursive(
 	   [&graph = src_tree.dependencyGraph(), &build_info, invoker, force_recompilation, &ctxt](
-	      auto const& node) {
+	      SourceFileRecordConst const& node, auto const&...) {
 		   ctxt.add(node.id().value(),
 		            [&graph, &node, &build_info, invoker, force_recompilation, &ctxt]() {
 			            compile(graph, node, build_info, invoker, force_recompilation, ctxt);

@@ -44,6 +44,7 @@ namespace
 	struct Graph
 	{
 		using node_type = Node;
+		using edge_type = Edge;
 		std::vector<Node> m_nodes;
 	};
 
@@ -82,8 +83,8 @@ namespace Testcases
 		graph.m_nodes.push_back(Node{10, std::vector<Edge>{}});
 
 		std::vector<Node const*> nodes_sorted;
-		Maike::visitNodesInTopoOrder([&nodes_sorted](Node const& node) { nodes_sorted.push_back(&node); },
-		                             graph);
+		Maike::visitNodesInTopoOrder(
+		   [&nodes_sorted](Node const& node, auto const&...) { nodes_sorted.push_back(&node); }, graph);
 
 		auto index_of = [](auto const& nodes, int value) {
 			auto i = std::find_if(
@@ -137,7 +138,7 @@ namespace Testcases
 
 		try
 		{
-			Maike::visitNodesInTopoOrder([](Node const&) { abort(); }, graph);
+			Maike::visitNodesInTopoOrder([](Node const&, auto const&...) { abort(); }, graph);
 			abort();
 		}
 		catch(...)
@@ -162,7 +163,9 @@ namespace Testcases
 
 		std::vector<Node const*> nodes_sorted;
 		Maike::processGraphNodeRecursive(
-		   [&nodes_sorted](Node const& node) { nodes_sorted.push_back(&node); }, graph, graph.m_nodes[9]);
+		   [&nodes_sorted](Node const& node, auto const&...) { nodes_sorted.push_back(&node); },
+		   graph,
+		   graph.m_nodes[9]);
 
 		auto index_of = [](auto const& nodes, int value) {
 			auto i = std::find_if(
@@ -196,7 +199,9 @@ namespace Testcases
 
 		std::vector<Node const*> nodes_sorted;
 		Maike::processGraphNodeRecursive(
-		   [&nodes_sorted](Node const& node) { nodes_sorted.push_back(&node); }, graph, graph.m_nodes[0]);
+		   [&nodes_sorted](Node const& node, auto const&...) { nodes_sorted.push_back(&node); },
+		   graph,
+		   graph.m_nodes[0]);
 
 		auto index_of = [](auto const& nodes, int value) {
 			auto i = std::find_if(

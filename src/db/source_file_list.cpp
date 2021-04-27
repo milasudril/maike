@@ -93,7 +93,7 @@ Maike::Db::SourceFileInfo Maike::Db::makeSourceFileInfo(TargetList::value_type c
 	// information.
 	//       Thus, this will *only* collect data from all include files.
 	processGraphNodeRecursive(
-	   [&use_deps, &target_name = item.first](auto const& node) {
+	   [&use_deps, &target_name = item.first](SourceFileRecordConst const& node, auto const) {
 		   auto const& child_target_use_deps = node.sourceFileInfo().childTargetsUseDeps();
 		   std::for_each(std::begin(child_target_use_deps),
 		                 std::end(child_target_use_deps),

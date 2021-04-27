@@ -1,4 +1,16 @@
 {
+	"directoryoptions": {
+		"paths_full_reject": [],
+		"paths_reject": [
+			"..",
+			".",
+			"__targets",
+			"__legacy",
+			"test_dir",
+			".git"
+		],
+		"recursive": 1
+	},
 	"maikeconfig": {
 		"dir_compiler": {
 			"config": {},
@@ -44,18 +56,6 @@
 			],
 			"recursive": 0
 		}
-	},
-	"directoryoptions": {
-		"paths_full_reject": [],
-		"paths_reject": [
-			"..",
-			".",
-			"__targets",
-			"__legacy",
-			"test_dir",
-			".git"
-		],
-		"recursive": 1
 	},
 	"source_files": [
 		"."
