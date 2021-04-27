@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 
+#@	{"dependencies":[{"ref":"pkg_config.py","origin":"project"}]}
+
 import sys
 import json
 import os
 import subprocess
 import shutil
+import pkg_config
 
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
@@ -15,12 +18,6 @@ def format_iquote(list):
 		ret.append('-iquote%s'%(item))
 	return ret
 
-def get_pkg_config(libname):
-	result = subprocess.run(['pkg-config', '--cflags', libname], stdout=subprocess.PIPE, Text=True)
-	if result.returncode != 0:
-		raise Exception('pkg-config failed: %d' % result.returncode)
-	return result.stdout.strip().split(' ')
-
 def collect_cflags(compiler_flags, dependencies):
 	ret = set()
 	ret.update(compiler_flags['cflags'])
@@ -28,7 +25,7 @@ def collect_cflags(compiler_flags, dependencies):
 	ret.update(format_iquote(compiler_flags['iquote']))
 	for item in dependencies:
 		if item['origin'] == 'pkg-config':
-			ret.update(get_pkg_config(item['ref']))
+			ret.update(pkg_config.get_cflags(item['ref']))
 	ret.add('-std=c++17')
 	return ret
 
@@ -52,7 +49,6 @@ def compile(build_args):
 		shutil.copyfile(build_args['targets'][0], target)
 
 	return result.returncode
-
 
 if __name__ == '__main__':
 	if sys.argv[1] == 'compile':

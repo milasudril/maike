@@ -1,18 +1,15 @@
 #!/usr/bin/env python3
 
+#@	{"dependencies":[{"ref":"pkg_config.py","origin":"project"}]}
+
 import sys
 import json
 import os
 import subprocess
+import pkg_config
 
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
-
-def get_pkg_config(libname):
-	result = subprocess.run(['pkg-config', '--libs', libname], stdout=subprocess.PIPE, text=True)
-	if result.returncode != 0:
-		raise Exception('pkg-config failed: %d' % result.returncode)
-	return result.stdout.strip().split(' ')
 
 def build_dep_array(list):
 	ret = []
@@ -21,7 +18,7 @@ def build_dep_array(list):
 			if item['rel'] == 'implementation':
 				ret.append(item['ref'])
 		if item['origin'] == 'pkg-config':
-			ret.extend(get_pkg_config(item['ref']))
+			ret.extend(pkg_config.get_libs(item['ref']))
 
 	ret.append('-lpthread')
 	eprint(ret)
