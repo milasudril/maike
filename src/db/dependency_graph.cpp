@@ -109,16 +109,21 @@ std::vector<Maike::Db::Dependency> Maike::Db::getUseDepsRecursive(DependencyGrap
 void Maike::Db::compile(DependencyGraph const& g,
                         SourceFileRecordConst const& node,
                         Build::Info const& build_info,
-                        Invoker invoker,
+                        Invoker invoker, /*
+      CompilationLog& log,*/
                         ForceRecompilation force_recompilation,
                         Sched::Batch const& ctxt)
 {
+	//	TODO:	LogEntry e{log, node.id(), node.sourceFileInfo().name()};
+
 	// No targets. Nothing to do.
 	if(std::size(node.sourceFileInfo().targets()) == 0) { return; }
 
 	// Generate the command while we're waiting for dependencies to complete
 	auto use_deps = getUseDepsRecursive(g, node);
-	auto cmd = makeBuildCommand(node, build_info, use_deps);
+	auto cmd = makeBuildCommand(node, build_info, use_deps
+	                            //	TODO:,								log.outputFormat()
+	);
 
 	// Wait until build deps has been processed
 	auto const& build_deps = node.sourceFileInfo().buildDeps();
@@ -143,7 +148,9 @@ void Maike::Db::compile(DependencyGraph const& g,
 
 	if(force_recompilation || !isUpToDate(node, use_deps))
 	{
+		//	TODO:		e.command(cmd);
 		auto result = invoker.execve(cmd);
+		//	TODO:		e.result(result);
 		if(failed(result))
 		{
 			std::string msg{node.path()};
