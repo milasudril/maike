@@ -113,6 +113,9 @@ void Maike::Db::compile(DependencyGraph const& g,
                         ForceRecompilation force_recompilation,
                         Sched::Batch const& ctxt)
 {
+	// No targets. Nothing to do.
+	if(std::size(node.sourceFileInfo().targets()) == 0) { return; }
+
 	// Wait until build deps has been processed
 	auto const& build_deps = node.sourceFileInfo().buildDeps();
 	if(std::any_of(std::begin(build_deps), std::end(build_deps), [&ctxt](auto const& item) {
@@ -124,7 +127,6 @@ void Maike::Db::compile(DependencyGraph const& g,
 		throw std::runtime_error{std::move(msg)};
 	}
 
-	if(std::size(node.sourceFileInfo().targets()) == 0) { return; }
 
 	auto use_deps = getUseDepsRecursive(g, node);
 
