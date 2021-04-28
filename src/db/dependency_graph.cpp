@@ -116,6 +116,10 @@ void Maike::Db::compile(DependencyGraph const& g,
 	// No targets. Nothing to do.
 	if(std::size(node.sourceFileInfo().targets()) == 0) { return; }
 
+	// Generate the command while we're waiting for dependencies to complete
+	auto use_deps = getUseDepsRecursive(g, node);
+	auto cmd = makeBuildCommand(node, build_info, use_deps);
+
 	// Wait until build deps has been processed
 	auto const& build_deps = node.sourceFileInfo().buildDeps();
 	if(std::any_of(std::begin(build_deps), std::end(build_deps), [&ctxt](auto const& item) {
@@ -127,12 +131,7 @@ void Maike::Db::compile(DependencyGraph const& g,
 		throw std::runtime_error{std::move(msg)};
 	}
 
-
-	auto use_deps = getUseDepsRecursive(g, node);
-
-	// Generate the command while we're waiting for dependencies to complete
-	auto cmd = makeBuildCommand(node, build_info, use_deps);
-
+	// Wait until use deps for all build deps have been processed
 	if(std::any_of(std::begin(use_deps), std::end(use_deps), [&ctxt](auto const& item) {
 		   return ctxt.taskFailed(item.reference().value());
 	   }))
