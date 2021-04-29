@@ -257,29 +257,8 @@ Maike::Exec::Result Maike::Exec::execve(fs::path const& executable,
 	return Result{retval, std::move(ret.stdout), std::move(ret.stderr)};
 }
 
-namespace
-{
-	std::string shell_escape(std::string const& str)
-	{
-		std::string ret{"'"};
-		std::for_each(std::begin(str), std::end(str), [&ret](auto ch_in) {
-			if(ch_in == '\\' || ch_in == '\'') { ret += '\\'; }
-			ret += ch_in;
-		});
-		ret += "'";
-
-		return ret;
-	}
-}
-
 Maike::Exec::Result Maike::Exec::execve(LocalExecve cfg, Command const& cmd)
 {
-	auto cmdline = shell_escape(cmd.executable.string());
-	std::for_each(std::begin(cmd.args), std::end(cmd.args), [&cmdline](auto const& item) {
-		cmdline += " ";
-		cmdline += shell_escape(item);
-	});
-	puts(cmdline.c_str());
 	if(cfg.dryrun)
 	{ return Result{ExitStatus::success(), std::vector<std::byte>{}, std::vector<std::byte>{}}; }
 	return execve(cmd.executable, cmd.args);
