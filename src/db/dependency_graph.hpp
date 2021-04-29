@@ -8,6 +8,7 @@
 
 #include "./source_file_record.hpp"
 #include "./invoker.hpp"
+#include "./compilation_log.hpp"
 
 #include "src/sched/batch.hpp"
 #include "src/build/info.hpp"

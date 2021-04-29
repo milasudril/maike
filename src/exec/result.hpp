@@ -15,6 +15,10 @@ namespace Maike::Exec
 	class Result
 	{
 	public:
+		explicit Result(ExitStatus status): m_status{status}
+		{
+		}
+
 		explicit Result(ExitStatus status,
 		                std::vector<std::byte>&& stdout,
 		                std::vector<std::byte>&& stderr):
