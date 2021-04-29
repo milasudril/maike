@@ -105,6 +105,7 @@ namespace Maike::Db
 	             SourceFileRecordConst const& node,
 	             Build::Info const& build_info,
 	             Invoker invoker,
+	             CompilationLog& log,
 	             ForceRecompilation force_recompilation,
 	             Sched::Batch const& ctxt);
 }

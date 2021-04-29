@@ -12,6 +12,7 @@
 #include "src/utils/graphutils.hpp"
 #include "src/utils/callwrappers.hpp"
 #include "src/db/source_file_list.hpp"
+#include "src/db/compilation_log.hpp"
 #include "src/exec/execve.hpp"
 
 #include <set>
@@ -178,6 +179,7 @@ public:
 
 int main(int argc, char** argv)
 {
+	Maike::Db::CompilationLog log{Maike::Db::CompilationLog::OutputFormat::AnsiTerm};
 	try
 	{
 		Maike::KeyValueStore::init();
@@ -256,6 +258,7 @@ int main(int argc, char** argv)
 		   src_tree,
 		   build_info,
 		   Maike::Db::Invoker{std::ref(invoker)},
+		   log,
 		   Maike::Db::ForceRecompilation{cmdline.hasOption<Maike::CmdLineOption::ForceRebuild>()},
 		   workers);
 	}

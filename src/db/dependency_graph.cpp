@@ -109,12 +109,12 @@ std::vector<Maike::Db::Dependency> Maike::Db::getUseDepsRecursive(DependencyGrap
 void Maike::Db::compile(DependencyGraph const& g,
                         SourceFileRecordConst const& node,
                         Build::Info const& build_info,
-                        Invoker invoker, /*
-      CompilationLog& log,*/
+                        Invoker invoker,
+                        CompilationLog& log,
                         ForceRecompilation force_recompilation,
                         Sched::Batch const& ctxt)
 {
-	//	TODO:	LogEntry e{log, node.id(), node.sourceFileInfo().name()};
+	CompilationLog::EntryContext log_entry{log};
 
 	// No targets. Nothing to do.
 	if(std::size(node.sourceFileInfo().targets()) == 0) { return; }
@@ -148,17 +148,15 @@ void Maike::Db::compile(DependencyGraph const& g,
 
 	if(force_recompilation || !isUpToDate(node, use_deps))
 	{
-		//	TODO:		e.command(cmd);
 		auto result = invoker.execve(cmd);
-		//	TODO:		e.result(result);
-		if(failed(result))
+		log_entry.command(std::move(cmd));
+		auto const build_failed = failed(result);
+		log_entry.result(std::move(result));
+
+		if(build_failed)
 		{
 			std::string msg{node.path()};
-			msg += ":1:1: error: ";
-			auto& stderr = result.stderr();
-			std::transform(std::begin(stderr), std::end(stderr), std::back_inserter(msg), [](auto val) {
-				return static_cast<char>(val);
-			});
+			msg += ":1:1: Compilation failed";
 			throw std::runtime_error{std::move(msg)};
 		}
 	}

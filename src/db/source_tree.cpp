@@ -26,18 +26,24 @@ Maike::Db::Target const& Maike::Db::getTarget(SourceTree const& src_tree,
 Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
                                           Build::Info const& build_info,
                                           Invoker invoker,
+                                          CompilationLog& compilation_log,
                                           ForceRecompilation force_recompilation,
                                           Sched::ThreadPool& workers)
 {
 	Sched::Batch ctxt{size(src_tree.dependencyGraph()), workers};
 
 	visitNodesInTopoOrder(
-	   [&graph = src_tree.dependencyGraph(), &build_info, invoker, force_recompilation, &ctxt](
-	      SourceFileRecordConst const& node, auto const&...) {
-		   ctxt.add(node.id().value(),
-		            [&graph, &node, &build_info, invoker, force_recompilation, &ctxt]() {
-			            compile(graph, node, build_info, invoker, force_recompilation, ctxt);
-		            });
+	   [&graph = src_tree.dependencyGraph(),
+	    &build_info,
+	    invoker,
+	    &compilation_log,
+	    force_recompilation,
+	    &ctxt](SourceFileRecordConst const& node, auto const&...) {
+		   ctxt.add(
+		      node.id().value(),
+		      [&graph, &node, &build_info, invoker, &compilation_log, force_recompilation, &ctxt]() {
+			      compile(graph, node, build_info, invoker, compilation_log, force_recompilation, ctxt);
+		      });
 	   },
 	   src_tree.dependencyGraph());
 
@@ -47,6 +53,7 @@ Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
 Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
                                           Build::Info const& build_info,
                                           Invoker invoker,
+                                          CompilationLog& compilation_log,
                                           ForceRecompilation force_recompilation,
                                           Sched::ThreadPool& workers,
                                           fs::path const& target_name)
@@ -58,12 +65,17 @@ Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
 	Sched::Batch ctxt{size(src_tree.dependencyGraph()), workers};
 
 	processGraphNodeRecursive(
-	   [&graph = src_tree.dependencyGraph(), &build_info, invoker, force_recompilation, &ctxt](
-	      SourceFileRecordConst const& node, auto const&...) {
-		   ctxt.add(node.id().value(),
-		            [&graph, &node, &build_info, invoker, force_recompilation, &ctxt]() {
-			            compile(graph, node, build_info, invoker, force_recompilation, ctxt);
-		            });
+	   [&graph = src_tree.dependencyGraph(),
+	    &build_info,
+	    invoker,
+	    &compilation_log,
+	    force_recompilation,
+	    &ctxt](SourceFileRecordConst const& node, auto const&...) {
+		   ctxt.add(
+		      node.id().value(),
+		      [&graph, &node, &build_info, invoker, &compilation_log, force_recompilation, &ctxt]() {
+			      compile(graph, node, build_info, invoker, compilation_log, force_recompilation, ctxt);
+		      });
 	   },
 	   graph,
 	   node);
@@ -74,6 +86,7 @@ Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
 Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
                                           Build::Info const& build_info,
                                           Invoker invoker,
+                                          CompilationLog& compilation_log,
                                           ForceRecompilation force_recompilation,
                                           Sched::ThreadPool& workers,
                                           std::pair<fs::path const*, size_t> targets)
@@ -82,8 +95,10 @@ Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
 	std::for_each_n(
 	   targets.first,
 	   targets.second,
-	   [&n, &src_tree, &build_info, invoker, force_recompilation, &workers](auto const& target_name) {
-		   n += compile(src_tree, build_info, invoker, force_recompilation, workers, target_name);
+	   [&n, &src_tree, &build_info, invoker, &compilation_log, force_recompilation, &workers](
+	      auto const& target_name) {
+		   n += compile(
+		      src_tree, build_info, invoker, compilation_log, force_recompilation, workers, target_name);
 	   });
 
 	return n;

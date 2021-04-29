@@ -8,6 +8,7 @@
 
 #include "./source_file_list.hpp"
 #include "./dependency_graph.hpp"
+#include "./compilation_log.hpp"
 
 #include "src/sched/thread_pool.hpp"
 #include "src/build/info.hpp"
@@ -70,6 +71,7 @@ namespace Maike::Db
 	TaskCounter compile(SourceTree const& src_tree,
 	                    Build::Info const&,
 	                    Invoker invoker,
+	                    CompilationLog& compilation_log,
 	                    ForceRecompilation,
 	                    Sched::ThreadPool& workers);
 
@@ -77,6 +79,7 @@ namespace Maike::Db
 	TaskCounter compile(SourceTree const& src_tree,
 	                    Build::Info const&,
 	                    Invoker invoker,
+	                    CompilationLog& compilation_log,
 	                    ForceRecompilation force_recompilation,
 	                    Sched::ThreadPool& workers,
 	                    fs::path const& target_name);
@@ -84,6 +87,7 @@ namespace Maike::Db
 	TaskCounter compile(SourceTree const& src_tree,
 	                    Build::Info const&,
 	                    Invoker invoker,
+	                    CompilationLog& compilation_log,
 	                    ForceRecompilation force_recompilation,
 	                    Sched::ThreadPool& workers,
 	                    std::pair<fs::path const*, size_t> targets);
