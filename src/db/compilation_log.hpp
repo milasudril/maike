@@ -1,10 +1,14 @@
 //@	{
 //@	  "targets":[{"name":"compilation_log.hpp","type":"include"}]
+//@	 ,"dependencies_extra":[{"ref":"compilation_log.o", "rel":"implementation"}]
 //@	 }
 
 #ifndef MAIKE_DB_COMPILATIONLOG_HPP
 #define MAIKE_DB_COMPILATIONLOG_HPP
 
+#include "./source_file_id.hpp"
+
+#include "src/exec/result.hpp"
 #include "src/exec/command.hpp"
 
 #include <chrono>
@@ -45,12 +49,7 @@ namespace Maike::Db
 			Exec::Result result;
 		};
 
-		CompilationLog& write(Entry&& e)
-		{
-			std::lock_guard lock{m_list_mutex};
-			m_entries.push_front(std::move(e));
-			return *this;
-		}
+		CompilationLog& write(Entry&& e);
 
 		class EntryContext
 		{
@@ -100,8 +99,7 @@ namespace Maike::Db
 
 	private:
 		OutputFormat m_format;
-		std::mutex m_list_mutex;
-		std::forward_list<Entry> m_entries;
+		std::mutex m_output_mutext;
 	};
 }
 

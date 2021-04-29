@@ -7,6 +7,9 @@
 
 #include "src/utils/fs.hpp"
 
+#include <vector>
+#include <string>
+
 namespace Maike::Exec
 {
 	struct Command
