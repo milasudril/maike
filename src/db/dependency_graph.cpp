@@ -114,10 +114,11 @@ void Maike::Db::compile(DependencyGraph const& g,
                         ForceRecompilation force_recompilation,
                         Sched::Batch const& ctxt)
 {
-	CompilationLog::EntryContext log_entry{log};
-
 	// No targets. Nothing to do.
 	if(std::size(node.sourceFileInfo().targets()) == 0) { return; }
+
+	CompilationLog::EntryContext log_entry{log};
+	log_entry.sourceFileId(node.id()).sourcePath(fs::path{node.path()});
 
 	// Generate the command while we're waiting for dependencies to complete
 	auto use_deps = getUseDepsRecursive(g, node);

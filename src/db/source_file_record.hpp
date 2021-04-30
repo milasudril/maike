@@ -92,7 +92,7 @@ namespace Maike::Db
 	Exec::Command makeBuildCommand(SourceFileRecordConst const& rec,
 	                               Build::Info const&,
 	                               std::vector<Dependency> const& deps,
-								   CompilationLog::OutputFormat format);
+	                               CompilationLog::OutputFormat format);
 }
 
 #endif

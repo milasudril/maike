@@ -27,7 +27,7 @@ namespace Maike::Db
 			AnsiTerm
 		};
 
-		enum class LogLevel:int
+		enum class LogLevel : int
 		{
 			OnlyErrors,
 			SourceFileInfo,

@@ -36,18 +36,18 @@ def filter_deps(dep_items):
 	return ret
 
 
-def compile(dict):
+def compile(build_args):
 #	TODO: different rule for dll?
 #	ext = os.path.splitext(dict['source_file'].lower())
 #
 	args = []
 	args.append('g++')
-	args.extend(dict['compiler_cfg']['cflags'])
+	args.extend(build_args['compiler_cfg']['cflags'])
 	args.append('-std=c++17')
 	args.append('-fdiagnostics-color=%s'%('always' if build_args['log_format']=='ansi_term' else 'never'))
-	args.extend(filter_deps(collect_deps(dict['dependencies'])))
+	args.extend(filter_deps(collect_deps(build_args['dependencies'])))
 	args.append('-o')
-	args.append(dict['targets'][0])
+	args.append(build_args['targets'][0])
 	result = subprocess.run(args)
 	return result.returncode
 

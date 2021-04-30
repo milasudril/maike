@@ -21,7 +21,6 @@ def format_iquote(list):
 def collect_cflags(compiler_flags, dependencies):
 	ret = set()
 	ret.update(compiler_flags['cflags'])
-	eprint(compiler_flags['cflags'])
 	ret.update(format_iquote(compiler_flags['iquote']))
 	for item in dependencies:
 		if item['origin'] == 'pkg-config':
