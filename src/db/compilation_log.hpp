@@ -27,6 +27,13 @@ namespace Maike::Db
 			AnsiTerm
 		};
 
+		enum class LogLevel:int
+		{
+			OnlyErrors,
+			SourceFileInfo,
+			CompilationCommand
+		};
+
 		explicit CompilationLog(OutputFormat format): m_format{format}
 		{
 		}
