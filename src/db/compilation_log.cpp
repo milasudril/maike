@@ -29,15 +29,29 @@ Maike::Db::CompilationLog& Maike::Db::CompilationLog::write(Entry&& e)
 {
 	auto cmdline = toString(e.command);
 	auto stderr_buff = to_string(e.result.stderr());
+	std::string stdout_buff;
+	switch(m_log_level)
+	{
+		case LogLevel::CompilationCommand:
+			stdout_buff += cmdline;
+			stdout_buff += " #";
+			[[fallthrough]];
+		case LogLevel::SourceFileInfo:
+			stdout_buff += ' ';
+			stdout_buff += std::to_string(e.src_id.value());
+			stdout_buff += " | ";
+			stdout_buff += e.src_path;
+			stdout_buff += " | ";
+			stdout_buff += std::to_string(to_mus(e.start_time));
+			stdout_buff += " | ";
+			stdout_buff += std::to_string(to_mus(e.completion_time));
+			[[fallthrough]];
+		case LogLevel::Errors: break;
+	}
+
 	std::lock_guard lock{m_output_mutext};
-	fprintf(stdout, "%s #", cmdline.c_str());
-	fprintf(stdout,
-	        " %zu | %s | %zu | %zu\n",
-	        e.src_id.value(),
-	        e.src_path.c_str(),
-	        to_mus(e.start_time),
-	        to_mus(e.completion_time));
-	fprintf(stderr, "%s", stderr_buff.c_str());
+	if(stdout_buff.size() > 0) { fprintf(stdout, "%s\n", stdout_buff.c_str()); }
+	if(stderr_buff.size() > 0) { fprintf(stderr, "%s\n", stderr_buff.c_str()); }
 	return *this;
 }
 

@@ -179,7 +179,6 @@ public:
 
 int main(int argc, char** argv)
 {
-	Maike::Db::CompilationLog log{Maike::Db::CompilationLog::OutputFormat::AnsiTerm};
 	try
 	{
 		Maike::KeyValueStore::init();
@@ -251,6 +250,9 @@ int main(int argc, char** argv)
 		}
 
 		Maike::Exec::LocalExecve invoker{cmdline.hasOption<Maike::CmdLineOption::DryRun>()};
+
+		Maike::Db::CompilationLog log{Maike::Db::CompilationLog::OutputFormat::AnsiTerm,
+		                              Maike::Db::CompilationLog::LogLevel::SourceFileInfo};
 
 		Maike::timedCall(
 		   logger,

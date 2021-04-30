@@ -29,12 +29,13 @@ namespace Maike::Db
 
 		enum class LogLevel : int
 		{
-			OnlyErrors,
+			Errors,
 			SourceFileInfo,
 			CompilationCommand
 		};
 
-		explicit CompilationLog(OutputFormat format): m_format{format}
+		explicit CompilationLog(OutputFormat format, LogLevel log_level):
+		   m_format{format}, m_log_level{log_level}
 		{
 		}
 
@@ -107,6 +108,7 @@ namespace Maike::Db
 
 	private:
 		OutputFormat m_format;
+		LogLevel m_log_level;
 		std::mutex m_output_mutext;
 	};
 
