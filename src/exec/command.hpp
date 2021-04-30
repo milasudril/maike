@@ -1,5 +1,6 @@
 //@	{
-//@	 "targets":[{"name":"command.hpp","type":"include"}]
+//@	  "targets":[{"name":"command.hpp","type":"include"}]
+//@	 ,"dependencies_extra":[{"ref":"command.o","rel":"implementation"}]
 //@	 }
 
 #ifndef MAIKE_EXEC_COMMAND_HPP
@@ -17,6 +18,8 @@ namespace Maike::Exec
 		fs::path executable;
 		std::vector<std::string> args;
 	};
+
+	std::string toString(Command const& cmd);
 }
 
 #endif
