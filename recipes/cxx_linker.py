@@ -44,6 +44,7 @@ def compile(dict):
 	args.append('g++')
 	args.extend(dict['compiler_cfg']['cflags'])
 	args.append('-std=c++17')
+	args.append('-fdiagnostics-color=%s'%('always' if build_args['log_format']=='ansi_term' else 'never'))
 	args.extend(filter_deps(collect_deps(dict['dependencies'])))
 	args.append('-o')
 	args.append(dict['targets'][0])

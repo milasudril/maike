@@ -8,6 +8,7 @@
 
 #include "./source_file_id.hpp"
 #include "./source_file_info.hpp"
+#include "./compilation_log.hpp"
 
 #include "src/utils/fs.hpp"
 #include "src/build/info.hpp"
@@ -90,7 +91,8 @@ namespace Maike::Db
 
 	Exec::Command makeBuildCommand(SourceFileRecordConst const& rec,
 	                               Build::Info const&,
-	                               std::vector<Dependency> const& deps);
+	                               std::vector<Dependency> const& deps,
+								   CompilationLog::OutputFormat format);
 }
 
 #endif

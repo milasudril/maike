@@ -35,7 +35,8 @@ namespace
 
 Maike::Exec::Command Maike::Db::makeBuildCommand(SourceFileRecordConst const& rec,
                                                  Build::Info const& info,
-                                                 std::vector<Dependency> const& deps)
+                                                 std::vector<Dependency> const& deps,
+												 CompilationLog::OutputFormat format)
 {
 	auto& targets = rec.sourceFileInfo().targets();
 
@@ -45,7 +46,8 @@ Maike::Exec::Command Maike::Db::makeBuildCommand(SourceFileRecordConst const& re
 	cmd_opts.set("compiler_cfg", compiler.config())
 	   .set("source_file", rec.path().c_str())
 	   .set("task_id", rec.id().value())
-	   .set("build_info", info);
+	   .set("build_info", info)
+	   .set("log_format", format);
 
 	{
 		KeyValueStore::Array target_names;

@@ -121,9 +121,7 @@ void Maike::Db::compile(DependencyGraph const& g,
 
 	// Generate the command while we're waiting for dependencies to complete
 	auto use_deps = getUseDepsRecursive(g, node);
-	auto cmd = makeBuildCommand(node, build_info, use_deps
-	                            //	TODO:,								log.outputFormat()
-	);
+	auto cmd = makeBuildCommand(node, build_info, use_deps, log.outputFormat());
 
 	// Wait until build deps has been processed
 	auto const& build_deps = node.sourceFileInfo().buildDeps();

@@ -28,3 +28,19 @@ Maike::Db::CompilationLog& Maike::Db::CompilationLog::write(Entry&& e)
 	fprintf(stderr, "%s", stderr_buff.c_str());
 	return *this;
 }
+
+Maike::KeyValueStore::JsonHandle Maike::Db::toJson(CompilationLog::OutputFormat format)
+{
+	using OutputFormat = CompilationLog::OutputFormat;
+	switch(format)
+	{
+		case OutputFormat::PlainText:
+			return KeyValueStore::toJson("plain_text");
+
+		case OutputFormat::AnsiTerm:
+			return KeyValueStore::toJson("ansi_term");
+
+		default:
+			__builtin_unreachable();
+	}
+};

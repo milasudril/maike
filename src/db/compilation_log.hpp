@@ -10,6 +10,7 @@
 
 #include "src/exec/result.hpp"
 #include "src/exec/command.hpp"
+#include "src/key_value_store/json_handle.hpp"
 
 #include <chrono>
 #include <forward_list>
@@ -101,6 +102,8 @@ namespace Maike::Db
 		OutputFormat m_format;
 		std::mutex m_output_mutext;
 	};
+
+	KeyValueStore::JsonHandle toJson(CompilationLog::OutputFormat format);
 }
 
 #endif
