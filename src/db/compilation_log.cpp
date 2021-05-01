@@ -19,9 +19,10 @@ namespace
 		return buffer;
 	}
 
-	uint64_t to_mus(std::chrono::time_point<std::chrono::steady_clock> t)
+	template<class Rep, class Period>
+	uint64_t to_mus(std::chrono::duration<Rep, Period> t)
 	{
-		return std::chrono::duration_cast<std::chrono::microseconds>(t.time_since_epoch()).count();
+		return std::chrono::duration_cast<std::chrono::microseconds>(t).count();
 	}
 }
 
@@ -42,16 +43,19 @@ Maike::Db::CompilationLog& Maike::Db::CompilationLog::write(Entry&& e)
 			stdout_buff += " | ";
 			stdout_buff += e.src_path;
 			stdout_buff += " | ";
-			stdout_buff += std::to_string(to_mus(e.start_time));
+			stdout_buff += std::to_string(to_mus(e.start_time - m_start_time));
 			stdout_buff += " | ";
-			stdout_buff += std::to_string(to_mus(e.completion_time));
+			stdout_buff += std::to_string(to_mus(e.completion_time - m_start_time));
 			[[fallthrough]];
 		case LogLevel::Errors: break;
 	}
 
-	std::lock_guard lock{m_output_mutext};
-	if(stdout_buff.size() > 0) { fprintf(stdout, "%s\n", stdout_buff.c_str()); }
-	if(stderr_buff.size() > 0) { fprintf(stderr, "%s\n", stderr_buff.c_str()); }
+	if(std::size(stdout_buff) > 0) {stdout_buff += "\n"; }
+	if(std::size(stderr_buff) > 0) {stderr_buff += "\n"; }
+
+	std::lock_guard lock{m_output_mutex};
+	fputs(stdout_buff.c_str(), stdout);
+	fputs(stderr_buff.c_str(), stderr);
 	return *this;
 }
 

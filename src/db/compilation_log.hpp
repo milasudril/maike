@@ -35,9 +35,8 @@ namespace Maike::Db
 		};
 
 		explicit CompilationLog(OutputFormat format, LogLevel log_level):
-		   m_format{format}, m_log_level{log_level}
-		{
-		}
+		   m_format{format}, m_log_level{log_level}, m_start_time{std::chrono::steady_clock::now()}
+		{}
 
 		OutputFormat outputFormat() const
 		{
@@ -109,7 +108,8 @@ namespace Maike::Db
 	private:
 		OutputFormat m_format;
 		LogLevel m_log_level;
-		std::mutex m_output_mutext;
+		std::chrono::steady_clock::time_point m_start_time;
+		std::mutex m_output_mutex;
 	};
 
 	KeyValueStore::JsonHandle toJson(CompilationLog::OutputFormat format);
