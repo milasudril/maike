@@ -10,6 +10,7 @@
 #include "src/sched/thread_count.hpp"
 #include "src/cmd_line_parser/command_line.hpp"
 #include "src/utils/fs.hpp"
+#include "src/db/compilation_log.hpp"
 
 #include <vector>
 
@@ -35,15 +36,14 @@ namespace Maike
 		StartTime,
 		NumWorkers,
 		DryRun,
-		ForceRebuild
-		//	LogFlags,
-		//	LogFile,
-		//	LogFormat,
+		ForceRebuild,
+		LogLevel,
+		LogOutputFormat
 	};
 
 	static constexpr auto end(Empty<CmdLineOption>)
 	{
-		return static_cast<int>(CmdLineOption::ForceRebuild) + 1;
+		return static_cast<int>(CmdLineOption::LogOutputFormat) + 1;
 	}
 
 	template<CmdLineOption opt>
@@ -648,6 +648,69 @@ namespace Maike
 		static constexpr char const* name()
 		{
 			return "--print-status";
+		}
+	};
+
+	template<>
+	struct CmdLineOptionTraits<CmdLineOption::LogOutputFormat>
+	{
+		using type = Db::CompilationLog::OutputFormat;
+
+		static constexpr bool valueRequired()
+		{
+			return true;
+		}
+
+		static constexpr char const* category()
+		{
+			return "Logging options";
+		}
+
+		static constexpr char const* summary()
+		{
+			return "Selects the log format";
+		}
+
+		static constexpr char const* description()
+		{
+			return nullptr;
+		}
+
+		static constexpr char const* name()
+		{
+			return "--log-output-format";
+		}
+	};
+
+
+	template<>
+	struct CmdLineOptionTraits<CmdLineOption::LogLevel>
+	{
+		using type = Db::CompilationLog::LogLevel;
+
+		static constexpr bool valueRequired()
+		{
+			return true;
+		}
+
+		static constexpr char const* category()
+		{
+			return "Logging options";
+		}
+
+		static constexpr char const* summary()
+		{
+			return "Selects the log log level";
+		}
+
+		static constexpr char const* description()
+		{
+			return nullptr;
+		}
+
+		static constexpr char const* name()
+		{
+			return "--log-level";
 		}
 	};
 

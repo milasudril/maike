@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <cinttypes>
+#include <cstring>
 
 namespace
 {
@@ -50,8 +51,8 @@ Maike::Db::CompilationLog& Maike::Db::CompilationLog::write(Entry&& e)
 		case LogLevel::Errors: break;
 	}
 
-	if(std::size(stdout_buff) > 0) {stdout_buff += "\n"; }
-	if(std::size(stderr_buff) > 0) {stderr_buff += "\n"; }
+	if(std::size(stdout_buff) > 0) { stdout_buff += "\n"; }
+	if(std::size(stderr_buff) > 0) { stderr_buff += "\n"; }
 
 	std::lock_guard lock{m_output_mutex};
 	fputs(stdout_buff.c_str(), stdout);
@@ -59,15 +60,53 @@ Maike::Db::CompilationLog& Maike::Db::CompilationLog::write(Entry&& e)
 	return *this;
 }
 
-Maike::KeyValueStore::JsonHandle Maike::Db::toJson(CompilationLog::OutputFormat format)
+Maike::Db::CompilationLog::OutputFormat
+Maike::Db::fromString(Maike::Empty<Maike::Db::CompilationLog::OutputFormat>, char const* str)
+{
+	if(strcmp(str, "plain_text") == 0) { return CompilationLog::OutputFormat::PlainText; }
+	if(strcmp(str, "ansi_term") == 0) { return CompilationLog::OutputFormat::AnsiTerm; }
+
+	throw std::runtime_error{
+	   "Unsupported output format. Supported formats: `plain_text`, `ansi_term`"};
+}
+
+Maike::Db::CompilationLog::LogLevel
+Maike::Db::fromString(Maike::Empty<Maike::Db::CompilationLog::LogLevel>, char const* str)
+{
+	if(strcmp(str, "errors") == 0) { return CompilationLog::LogLevel::Errors; }
+	if(strcmp(str, "source_file_info") == 0) { return CompilationLog::LogLevel::SourceFileInfo; }
+	if(strcmp(str, "compilation_command") == 0)
+	{ return CompilationLog::LogLevel::CompilationCommand; }
+
+	throw std::runtime_error{
+	   "Invalid log level format. Valid log levels: `errors`, `source_file_info`, "
+	   "`compilation_command`"};
+}
+
+char const* Maike::Db::toString(CompilationLog::OutputFormat format)
 {
 	using OutputFormat = CompilationLog::OutputFormat;
 	switch(format)
 	{
-		case OutputFormat::PlainText: return KeyValueStore::toJson("plain_text");
+		case OutputFormat::PlainText: return "plain_text";
 
-		case OutputFormat::AnsiTerm: return KeyValueStore::toJson("ansi_term");
+		case OutputFormat::AnsiTerm: return "ansi_term";
 
 		default: __builtin_unreachable();
 	}
-};
+}
+
+char const* Maike::Db::toString(CompilationLog::LogLevel format)
+{
+	using LogLevel = CompilationLog::LogLevel;
+	switch(format)
+	{
+		case LogLevel::Errors: return "errors";
+
+		case LogLevel::SourceFileInfo: return "source_file_info";
+
+		case LogLevel::CompilationCommand: return "compilation_command";
+
+		default: __builtin_unreachable();
+	}
+}

@@ -11,6 +11,7 @@
 #include "src/exec/result.hpp"
 #include "src/exec/command.hpp"
 #include "src/key_value_store/json_handle.hpp"
+#include "src/utils/empty.hpp"
 
 #include <chrono>
 #include <forward_list>
@@ -36,7 +37,8 @@ namespace Maike::Db
 
 		explicit CompilationLog(OutputFormat format, LogLevel log_level):
 		   m_format{format}, m_log_level{log_level}, m_start_time{std::chrono::steady_clock::now()}
-		{}
+		{
+		}
 
 		OutputFormat outputFormat() const
 		{
@@ -112,7 +114,29 @@ namespace Maike::Db
 		std::mutex m_output_mutex;
 	};
 
-	KeyValueStore::JsonHandle toJson(CompilationLog::OutputFormat format);
+	char const* toString(CompilationLog::OutputFormat format);
+
+	char const* toString(CompilationLog::LogLevel format);
+
+	inline KeyValueStore::JsonHandle toJson(CompilationLog::OutputFormat format)
+	{
+		return KeyValueStore::toJson(toString(format));
+	}
+
+	CompilationLog::OutputFormat fromString(Empty<CompilationLog::OutputFormat>, char const*);
+
+	CompilationLog::LogLevel fromString(Empty<CompilationLog::LogLevel>, char const*);
+
+
+	constexpr char const* typeToString(Empty<CompilationLog::LogLevel>)
+	{
+		return "LogLevel";
+	}
+
+	constexpr char const* typeToString(Empty<CompilationLog::OutputFormat>)
+	{
+		return "OutputFormat";
+	}
 }
 
 #endif

@@ -113,6 +113,16 @@ void print(char const* name, std::false_type)
 	fprintf(stderr, "%s: %s", name, "");
 }
 
+void print(char const* name, Maike::Db::CompilationLog::LogLevel level)
+{
+	fprintf(stderr, "%s: %s", name, toString(level));
+}
+
+void print(char const* name, Maike::Db::CompilationLog::OutputFormat format)
+{
+	fprintf(stderr, "%s: %s", name, toString(format));
+}
+
 void print(char const* name, Maike::SystemTimeStamp t)
 {
 	auto timeval = std::chrono::system_clock::to_time_t(t.value());
@@ -251,10 +261,9 @@ int main(int argc, char** argv)
 
 		Maike::Exec::LocalExecve invoker{cmdline.hasOption<Maike::CmdLineOption::DryRun>()};
 
-		Maike::Db::CompilationLog log{
-			isatty(STDERR_FILENO)?
-			Maike::Db::CompilationLog::OutputFormat::AnsiTerm:
-			Maike::Db::CompilationLog::OutputFormat::PlainText,
+		Maike::Db::CompilationLog log{isatty(STDERR_FILENO) ?
+		                                 Maike::Db::CompilationLog::OutputFormat::AnsiTerm :
+		                                 Maike::Db::CompilationLog::OutputFormat::PlainText,
 		                              Maike::Db::CompilationLog::LogLevel::SourceFileInfo};
 
 		Maike::timedCall(
