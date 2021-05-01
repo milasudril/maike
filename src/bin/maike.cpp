@@ -41,6 +41,22 @@ Maike::Build::Info makeBuildInfo(Maike::CommandLine const& cmdline)
 	return ret;
 }
 
+Maike::Db::CompilationLog::OutputFormat getOutputFormat(Maike::CommandLine const& cmdline)
+{
+	if(cmdline.hasOption<Maike::CmdLineOption::LogOutputFormat>())
+	{ return cmdline.option<Maike::CmdLineOption::LogOutputFormat>(); }
+
+	return isatty(STDERR_FILENO) ? Maike::Db::CompilationLog::OutputFormat::AnsiTerm :
+	                               Maike::Db::CompilationLog::OutputFormat::PlainText;
+}
+
+Maike::Db::CompilationLog::LogLevel getLogLevel(Maike::CommandLine const& cmdline)
+{
+	return cmdline.hasOption<Maike::CmdLineOption::LogLevel>() ?
+	          cmdline.option<Maike::CmdLineOption::LogLevel>() :
+	          Maike::Db::CompilationLog::LogLevel::SourceFileInfo;
+}
+
 void printDepGraph(Maike::Db::DependencyGraph const& source_files, Maike::fs::path const&)
 {
 	std::set<std::pair<Maike::fs::path, Maike::fs::path>> output;
@@ -261,10 +277,7 @@ int main(int argc, char** argv)
 
 		Maike::Exec::LocalExecve invoker{cmdline.hasOption<Maike::CmdLineOption::DryRun>()};
 
-		Maike::Db::CompilationLog log{isatty(STDERR_FILENO) ?
-		                                 Maike::Db::CompilationLog::OutputFormat::AnsiTerm :
-		                                 Maike::Db::CompilationLog::OutputFormat::PlainText,
-		                              Maike::Db::CompilationLog::LogLevel::SourceFileInfo};
+		Maike::Db::CompilationLog log{getOutputFormat(cmdline), getLogLevel(cmdline)};
 
 		Maike::timedCall(
 		   logger,
