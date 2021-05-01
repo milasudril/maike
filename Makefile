@@ -5,7 +5,7 @@ all:
 .PHONY: bootstrap
 bootstrap:
 	maike
-	__targets/src/bin/maike_next --force-rebuild --dry-run > __targets/bootstrap
+	__targets/src/bin/maike_next --force-rebuild --dry-run --log-level=compilation_command > __targets/bootstrap
 	chmod u+x __targets/bootstrap
 
 .PHONY: clean
