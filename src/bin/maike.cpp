@@ -251,7 +251,10 @@ int main(int argc, char** argv)
 
 		Maike::Exec::LocalExecve invoker{cmdline.hasOption<Maike::CmdLineOption::DryRun>()};
 
-		Maike::Db::CompilationLog log{Maike::Db::CompilationLog::OutputFormat::AnsiTerm,
+		Maike::Db::CompilationLog log{
+			isatty(STDERR_FILENO)?
+			Maike::Db::CompilationLog::OutputFormat::AnsiTerm:
+			Maike::Db::CompilationLog::OutputFormat::PlainText,
 		                              Maike::Db::CompilationLog::LogLevel::SourceFileInfo};
 
 		Maike::timedCall(
