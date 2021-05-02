@@ -14,11 +14,7 @@ script:
     sudo ./install /usr/local
     cd ..
     sudo rm -rf maike-src
-    make bootstrap
-    mv __targets/bootstrap .
-    rm -rf __targets
-    ./bootstrap
-    __targets/src/bin/maike --target-dir=__targets_2
+    make bootstrap-test
 
 # TODO   sudo ./install /usr/local
 # TODO   make bootstrap
