@@ -5,12 +5,12 @@ all:
 .PHONY: bootstrap
 bootstrap:
 	./build.sh
-	__targets/src/bin/maike2 --target-dir=__targets_bootsrap --num-workers=1 --force-rebuild --dry-run --log-level=compilation_command > __targets/bootstrap
+	__targets/src/bin/maike2 --target-dir=__targets_bootsrap --num-workers=1 --force-rebuild --dry-run --log-level=compilation_command > __targets/bootstrap.sh
 	chmod u+x __targets/bootstrap
 
 .PHONY: bootstrap-test
 bootstrap-test: bootstrap
-	__targets/bootstrap
+	__targets/bootstrap.sh
 	rm -rf __targets
 	__targets_bootsrap/src/bin/maike2
 
