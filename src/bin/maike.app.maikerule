@@ -1,4 +1,4 @@
 {
-	 "target":{"name":"maike"}
+	 "target":{"name":"maike2"}
 	,"dependencies":[{"ref":"maike.o", "origin":"generated", "rel":"implementation"}]
 }
