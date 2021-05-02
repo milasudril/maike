@@ -239,7 +239,7 @@ int main(int argc, char** argv)
 
 		Maike::SourceTreeLoader::CommandDictionary commands;
 		commands.projectDir(Maike::fs::path{build_info.sourceDir()})
-		   .systemDir(Maike::fs::path{Maike::execPrefix()});
+		   .systemDir(Maike::fs::path{Maike::execPrefix() / "lib" / "maike2" / "recipes"});
 
 		auto const cfg_new = resolveRecipes(cfg, commands);
 		Maike::SourceTreeLoader::SourceFileLoaderDelegator loader_delegator{commands,

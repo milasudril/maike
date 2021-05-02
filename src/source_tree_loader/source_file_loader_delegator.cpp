@@ -69,16 +69,17 @@ namespace
 		std::copy(std::begin(use_deps), std::end(use_deps), std::back_inserter(builtin_deps));
 
 		auto compiler = tags.getIf<Maike::Db::Compiler>("compiler");
-		[&builtin_deps, &child_target_use_deps](Maike::SourceTreeLoader::SourceFileLoadContext const& load_ctxt, Maike::Db::Compiler const& compiler, Maike::fs::path const& src_file)
-		{
+		[&builtin_deps,
+		 &child_target_use_deps](Maike::SourceTreeLoader::SourceFileLoadContext const& load_ctxt,
+		                         Maike::Db::Compiler const& compiler,
+		                         Maike::fs::path const& src_file) {
 			auto tags = getTags(compiler, src_file);
 			auto use_deps = getUseDeps(load_ctxt, tags);
 			auto ctu_deps = getChildTargetUseDeps(load_ctxt, tags);
 			std::copy(std::begin(use_deps), std::end(use_deps), std::back_inserter(builtin_deps));
 			std::copy(std::begin(ctu_deps), std::end(ctu_deps), std::back_inserter(child_target_use_deps));
 			builtin_deps.push_back(makeDependency(compiler));
-
-		}(load_ctxt, compiler?(*compiler): loader.compiler(), src_path);
+		}(load_ctxt, compiler ? (*compiler) : loader.compiler(), src_path);
 
 		return Maike::Db::SourceFileInfo{std::move(builtin_deps),
 		                                 std::vector<Maike::Db::Dependency>{},

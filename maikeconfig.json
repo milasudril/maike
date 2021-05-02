@@ -38,8 +38,8 @@
 							"."
 						],
 						"std_revision": {
-							"min":"c++17",
-							"max":"c++17"
+							"max": "c++17",
+							"min": "c++17"
 						}
 					},
 					"recipe": "recipes/cxx_compiler.py"

@@ -14,12 +14,12 @@ Maike::Db::Compiler Maike::Db::operator|(Compiler const& a, Compiler const& b)
 	if(auto b_origin = b.origin(); b_origin)
 	{
 		return Compiler{fs::path{b.recipe() != "" ? b.recipe() : a.recipe()},
-						b_origin,
-						KeyValueStore::Compound{a.config()} | b.config().reference()};
+		                b_origin,
+		                KeyValueStore::Compound{a.config()} | b.config().reference()};
 	}
 	return Compiler{fs::path{b.recipe() != "" ? b.recipe() : a.recipe()},
-					a.origin(),
-					KeyValueStore::Compound{a.config()} | b.config().reference()};
+	                a.origin(),
+	                KeyValueStore::Compound{a.config()} | b.config().reference()};
 }
 
 namespace
@@ -52,8 +52,7 @@ namespace
 
 void Maike::Db::Compiler::configRecipe()
 {
-	if(m_recipe == "")
-	{ return; }
+	if(m_recipe == "") { return; }
 
 	CmdOptsString cfg_str;
 	store(m_config, cfg_str, KeyValueStore::PrettyPrint{false});
@@ -64,9 +63,10 @@ void Maike::Db::Compiler::configRecipe()
 	if(std::size(result.stderr()) != 0)
 	{
 		std::string str;
-		std::transform(std::begin(result.stderr()), std::end(result.stderr()), std::back_inserter(str), [](auto val) {
-			return static_cast<char>(val);
-		});
+		std::transform(std::begin(result.stderr()),
+		               std::end(result.stderr()),
+		               std::back_inserter(str),
+		               [](auto val) { return static_cast<char>(val); });
 
 		fprintf(stderr, "%s: %s\n", m_recipe.c_str(), str.c_str());
 	}
@@ -79,15 +79,13 @@ void Maike::Db::Compiler::configRecipe()
 	}
 
 	if(std::size(result.stdout()) != 0)
-	{
-		m_config = KeyValueStore::Compound{BufferReader{result.stdout(), 0}, "<config output>"};
-	}
+	{ m_config = KeyValueStore::Compound{BufferReader{result.stdout(), 0}, "<config output>"}; }
 }
 
-Maike::KeyValueStore::Compound Maike::Db::getTags(Compiler const& compiler, fs::path const& src_file)
+Maike::KeyValueStore::Compound Maike::Db::getTags(Compiler const& compiler,
+                                                  fs::path const& src_file)
 {
-	if(compiler.recipe() == "")
- 	{ return KeyValueStore::Compound{}; }
+	if(compiler.recipe() == "") { return KeyValueStore::Compound{}; }
 
 	KeyValueStore::Compound cmd_opts;
 	cmd_opts.set("source_file", src_file.c_str());
@@ -101,9 +99,10 @@ Maike::KeyValueStore::Compound Maike::Db::getTags(Compiler const& compiler, fs::
 	if(std::size(result.stderr()) != 0)
 	{
 		std::string str;
-		std::transform(std::begin(result.stderr()), std::end(result.stderr()), std::back_inserter(str), [](auto val) {
-			return static_cast<char>(val);
-		});
+		std::transform(std::begin(result.stderr()),
+		               std::end(result.stderr()),
+		               std::back_inserter(str),
+		               [](auto val) { return static_cast<char>(val); });
 
 		fprintf(stderr, "%s: %s\n", src_file.c_str(), str.c_str());
 	}
