@@ -56,10 +56,6 @@ def get_numeric_rev(rev):
 	rev_constants = {'c++98': 199711, 'c++11': 201103, 'c++14': 201402, 'c++17': 201703, 'c++17': 201702, 'c++20': 202002}
 	return rev_constants[rev]
 
-def get_literal_rev(rev):
-	rev_constants = {199711:'c++98', 201103:'c++11', 201402:'c++14', 201703:'c++17', 202002:'c++20'}
-	return rev_constants[rev]
-
 def get_default_ref():
 	args = ['g++', '-x', 'c++', '-E', '-dM', '/dev/null']
 	result = subprocess.run(args, stdin = subprocess.DEVNULL, stdout=subprocess.PIPE, text=True)
