@@ -9,6 +9,8 @@ import subprocess
 import shutil
 import pkg_config
 
+compiler = os.environ['CXX'] if 'CXX' in os.environ else 'g++'
+
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
@@ -35,7 +37,7 @@ def compile(build_args):
 	if ext[1] in no_op:
 		return 0
 	args = []
-	args.append('g++')
+	args.append(compiler)
 	args.extend(collect_cflags(build_args['compiler_cfg'], build_args['dependencies']))
 	if 'std_revision' in build_args['compiler_cfg']:
 		if 'selected' in build_args['compiler_cfg']['std_revision']:
@@ -57,7 +59,7 @@ def get_numeric_rev(rev):
 	return rev_constants[rev]
 
 def get_default_ref():
-	args = ['g++', '-x', 'c++', '-E', '-dM', '/dev/null']
+	args = [compiler, '-x', 'c++', '-E', '-dM', '/dev/null']
 	result = subprocess.run(args, stdin = subprocess.DEVNULL, stdout=subprocess.PIPE, text=True)
 	for line in result.stdout.split('\n'):
 		fields=line.split()

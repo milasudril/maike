@@ -8,6 +8,8 @@ import os
 import subprocess
 import pkg_config
 
+compiler = os.environ['CXX'] if 'CXX' in os.environ else 'g++'
+
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
@@ -41,7 +43,7 @@ def compile(build_args):
 #	ext = os.path.splitext(dict['source_file'].lower())
 #
 	args = []
-	args.append('g++')
+	args.append(compiler)
 	args.extend(build_args['compiler_cfg']['cflags'])
 	args.append('-fdiagnostics-color=%s'%('always' if build_args['log_format']=='ansi_term' else 'never'))
 	args.extend(filter_deps(collect_deps(build_args['dependencies'])))
