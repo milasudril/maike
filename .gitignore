@@ -5,6 +5,7 @@
 *.a
 *.lib
 *.pdf
+*.orig
 __targets*
 ./maike
 gh-pages
@@ -12,6 +13,5 @@ __doc
 .uninstall.sh
 versioninfo-in.txt
 bootstrap
-build.sh
 externals-in.json
 __pycache__
