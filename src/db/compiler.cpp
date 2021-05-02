@@ -83,3 +83,31 @@ void Maike::Db::Compiler::configRecipe()
 		m_config = KeyValueStore::Compound{BufferReader{result.stdout(), 0}, "<config output>"};
 	}
 }
+
+std::vector<Maike::Db::Dependency> Maike::Db::getUseDeps(Compiler const& compiler, fs::path const& src_file)
+{
+	if(compiler.recipe() == "")
+	{ return std::vector<Maike::Db::Dependency>{}; }
+
+	std::vector<std::string> args{"get_use_deps", src_file};
+	auto result = Maike::Exec::execve(compiler.recipe(), args);
+
+	if(std::size(result.stderr()) != 0)
+	{
+		std::string str;
+		std::transform(std::begin(result.stderr()), std::end(result.stderr()), std::back_inserter(str), [](auto val) {
+			return static_cast<char>(val);
+		});
+
+		fprintf(stderr, "%s: %s\n", src_file.c_str(), str.c_str());
+	}
+
+	if(failed(result))
+	{
+		std::string msg{"Failed to get additional use deps for "};
+		msg += src_file;
+		throw std::runtime_error{std::move(msg)};
+	}
+
+	return std::vector<Maike::Db::Dependency>{};
+}

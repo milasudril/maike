@@ -97,5 +97,7 @@ namespace Maike::Db
 	{
 		return Dependency{a.recipe(), a.origin() ? *a.origin() : SourceFileOrigin::System};
 	}
+
+	std::vector<Dependency> getUseDeps(Compiler const& compiler, fs::path const& source_file);
 }
 #endif
