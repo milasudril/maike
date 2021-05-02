@@ -89,7 +89,7 @@ Maike::KeyValueStore::Compound Maike::Db::getTags(Compiler const& compiler, fs::
 	if(compiler.recipe() == "")
  	{ return KeyValueStore::Compound{}; }
 
-	std::vector<std::string> args{"get_use_deps", src_file};
+	std::vector<std::string> args{"get_tags", src_file};
 	auto result = Maike::Exec::execve(compiler.recipe(), args);
 
 	if(std::size(result.stderr()) != 0)
@@ -109,5 +109,10 @@ Maike::KeyValueStore::Compound Maike::Db::getTags(Compiler const& compiler, fs::
 		throw std::runtime_error{std::move(msg)};
 	}
 
+	if(std::size(result.stdout()) != 0)
+	{
+		auto str = src_file.string();
+		return KeyValueStore::Compound{BufferReader{result.stdout(), 0}, str};
+	}
 	return KeyValueStore::Compound{};
 }
