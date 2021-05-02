@@ -34,7 +34,7 @@ namespace Testcases
 		}
 		else
 		{
-			Maike::MemMonitor monitor{std::chrono::milliseconds{10}};
+			Maike::MemMonitor monitor{std::chrono::milliseconds{4}};
 			std::this_thread::sleep_for(std::chrono::seconds{1});
 
 			int sock = socket(AF_UNIX, SOCK_STREAM, 0);

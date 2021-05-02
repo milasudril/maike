@@ -50,6 +50,18 @@ def compile(build_args):
 
 	return result.returncode
 
+rev_constants = {'c++98': 199711, 'c++11': 201103, 'c++14': 201402, 'c++17': 201703, 'c++17': 201702, 'c++20': 202002}
+
+def configure(cfg):
+	if 'std_revision' in cfg:
+		pass
+	else:
+		print(json.store(cfg));
+	return 0
+
 if __name__ == '__main__':
 	if sys.argv[1] == 'compile':
 		exit(compile(json.loads(sys.argv[2])))
+
+	if sys.argv[1] == 'configure':
+		exit(configure(json.loads(sys.argv[2])))

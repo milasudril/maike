@@ -1,5 +1,6 @@
 //@	{
 //@	  "targets":[{"name":"compiler.hpp","type":"include"}]
+//@	 ,"dependencies_extra":[{"ref":"compiler.o","rel":"implementation"}]
 //@	 }
 
 #ifndef MAIKE_DB_COMPILER_HPP
@@ -56,6 +57,7 @@ namespace Maike::Db
 			auto res = resolver.get(m_recipe);
 			m_recipe = res.first;
 			m_origin = res.second;
+			configRecipe();
 			return *this;
 		}
 
@@ -69,6 +71,8 @@ namespace Maike::Db
 		fs::path m_recipe;
 		std::optional<SourceFileOrigin> m_origin;
 		KeyValueStore::Compound m_config;
+
+		void configRecipe();
 	};
 
 	inline auto fromJson(KeyValueStore::Empty<Compiler>, Maike::KeyValueStore::JsonRefConst val)
@@ -87,18 +91,7 @@ namespace Maike::Db
 		   .takeHandle();
 	}
 
-	inline Compiler operator|(Compiler const& a, Compiler const& b)
-	{
-		if(auto b_origin = b.origin(); b_origin)
-		{
-			return Compiler{fs::path{b.recipe() != "" ? b.recipe() : a.recipe()},
-			                b_origin,
-			                KeyValueStore::Compound{a.config()} | b.config().reference()};
-		}
-		return Compiler{fs::path{b.recipe() != "" ? b.recipe() : a.recipe()},
-		                a.origin(),
-		                KeyValueStore::Compound{a.config()} | b.config().reference()};
-	}
+	Compiler operator|(Compiler const& a, Compiler const& b);
 
 	inline Dependency makeDependency(Compiler const& a)
 	{
