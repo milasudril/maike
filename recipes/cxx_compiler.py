@@ -37,7 +37,7 @@ def compile(build_args):
 	args = []
 	args.append('g++')
 	args.extend(collect_cflags(build_args['compiler_cfg'], build_args['dependencies']))
-	args.append('-std=c++17')
+	args.append('-std=%s'%build_args['compiler_cfg']['std_revision']['selected'])
 	args.append('-fdiagnostics-color=%s'%('always' if build_args['log_format']=='ansi_term' else 'never'))
 	args.append('-c')
 	args.append(build_args['source_file'])
@@ -54,10 +54,13 @@ rev_constants = {'c++98': 199711, 'c++11': 201103, 'c++14': 201402, 'c++17': 201
 
 def configure(cfg):
 	if 'std_revision' in cfg:
-		pass
+		rev = cfg['std_revision']
+		if rev['min'] == rev['max']:
+			rev['selected'] = rev['min']
+			print(json.dumps(cfg))
+		return 0
 	else:
-		print(json.store(cfg));
-	return 0
+		return 0
 
 if __name__ == '__main__':
 	if sys.argv[1] == 'compile':
