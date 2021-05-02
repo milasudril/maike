@@ -100,8 +100,9 @@ def select_cpp_rev(rev):
 def configure(cfg):
 	if 'std_revision' in cfg:
 		ret = select_cpp_rev(cfg['std_revision'])
-		print(json.dumps(cfg))
-		return 0
+		if ret == 0:
+			print(json.dumps(cfg))
+		return ret
 	else:
 		return 0
 
