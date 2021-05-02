@@ -172,7 +172,6 @@ Maike::Exec::ExitStatus Maike::Exec::execve(fs::path const& executable,
 	Pipe stdout;
 	Pipe stderr;
 	Pipe exec_err;
-	Pipe exec_start;
 
 	std::unique_lock lock{exec_mutex};
 	auto pid = ::fork();
@@ -188,22 +187,17 @@ Maike::Exec::ExitStatus Maike::Exec::execve(fs::path const& executable,
 			stdout.closeReadEnd();
 			stderr.closeReadEnd();
 			exec_err.closeReadEnd();
-			exec_start.closeWriteEnd();
 
 			stdin.moveReadEndTo(STDIN_FILENO);
 			stdout.moveWriteEndTo(STDOUT_FILENO);
 			stderr.moveWriteEndTo(STDERR_FILENO);
 			auto fd_exec_err = exec_err.closeWriteEndOnExec();
-			auto fd_exec_start = exec_start.closeReadEndOnExec();
-			int dummy{};
-			unusedResult(::read(fd_exec_start, &dummy, sizeof(dummy)));
 			if(::execve(executable.c_str(), const_cast<char* const*>(cmd_args.data()), environ) == -1)
 			{
 				lock.unlock();
 				uint32_t val = errno;
 				unusedResult(::write(fd_exec_err, &val, sizeof(errno)));
 				::close(fd_exec_err);
-				::close(fd_exec_start);
 				close(STDIN_FILENO);
 				close(STDOUT_FILENO);
 				close(STDERR_FILENO);
@@ -212,12 +206,9 @@ Maike::Exec::ExitStatus Maike::Exec::execve(fs::path const& executable,
 			break;
 	}
 
-	uint32_t val{};
-	exec_start.write(&val, sizeof(val));
-
 	exec_err.closeWriteEnd();
-	exec_start.closeReadEnd();
 	lock.unlock();
+	uint32_t val{};
 	if(auto n = exec_err.read(&val, sizeof(val)); n == sizeof(val))
 	{
 		errno = val;
