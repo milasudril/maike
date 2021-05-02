@@ -43,7 +43,6 @@ def compile(build_args):
 	args = []
 	args.append('g++')
 	args.extend(build_args['compiler_cfg']['cflags'])
-	args.append('-std=c++17')
 	args.append('-fdiagnostics-color=%s'%('always' if build_args['log_format']=='ansi_term' else 'never'))
 	args.extend(filter_deps(collect_deps(build_args['dependencies'])))
 	args.append('-o')
