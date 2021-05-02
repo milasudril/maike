@@ -68,7 +68,14 @@ void Maike::Db::Compiler::configRecipe()
 			return static_cast<char>(val);
 		});
 
-		throw std::runtime_error{std::move(str)};
+		fprintf(stderr, "%s: %s\n", m_recipe.c_str(), str.c_str());
+	}
+
+	if(failed(result))
+	{
+		std::string msg{"Failed to configure "};
+		msg += m_recipe;
+		throw std::runtime_error{std::move(msg)};
 	}
 
 	if(std::size(result.stdout()) != 0)
