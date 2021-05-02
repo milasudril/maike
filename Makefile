@@ -14,6 +14,12 @@ bootstrap-test: bootstrap
 	rm -rf __targets
 	__targets_bootsrap/src/bin/maike2
 
+DESTDIR?=""
+PREFIX?="/usr"
+.PHONY: install
+install:
+	./install.sh $(DESTDIR)$(PREFIX)
+
 .PHONY: clean
 clean:
 	rm -rf __targets*
