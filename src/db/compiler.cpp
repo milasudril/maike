@@ -84,10 +84,10 @@ void Maike::Db::Compiler::configRecipe()
 	}
 }
 
-std::vector<Maike::Db::Dependency> Maike::Db::getUseDeps(Compiler const& compiler, fs::path const& src_file)
+Maike::KeyValueStore::Compound Maike::Db::getTags(Compiler const& compiler, fs::path const& src_file)
 {
 	if(compiler.recipe() == "")
-	{ return std::vector<Maike::Db::Dependency>{}; }
+ 	{ return KeyValueStore::Compound{}; }
 
 	std::vector<std::string> args{"get_use_deps", src_file};
 	auto result = Maike::Exec::execve(compiler.recipe(), args);
@@ -109,5 +109,5 @@ std::vector<Maike::Db::Dependency> Maike::Db::getUseDeps(Compiler const& compile
 		throw std::runtime_error{std::move(msg)};
 	}
 
-	return std::vector<Maike::Db::Dependency>{};
+	return KeyValueStore::Compound{};
 }
