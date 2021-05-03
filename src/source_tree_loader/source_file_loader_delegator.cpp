@@ -117,8 +117,15 @@ std::optional<Maike::Db::SourceFileInfo> Maike::SourceTreeLoader::SourceFileLoad
 	if(is_directory(src_path))
 	{
 		std::vector<Db::TargetInfo> targets;
+
+		// In case of root directory, add target dir as target.
+		// NOTE: This will work, because targets are stored as a sequence inside SourceFileInfo. That
+		//       is, insertion order is preserved.
+		if(src_path == src_dir)
+		{ targets.push_back(Db::TargetInfo{fs::path{target_dir}, std::vector<Db::Dependency>{}}); }
 		targets.push_back(
 		   Db::TargetInfo{target_dir / (src_path.lexically_normal()), std::vector<Db::Dependency>{}});
+
 		deps.push_back(makeDependency(m_dir_compiler));
 		return Db::SourceFileInfo{std::move(deps),
 		                          std::vector<Db::Dependency>{},
