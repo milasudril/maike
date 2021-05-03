@@ -10,6 +10,8 @@ Maike::SourceTreeLoader::DirectoryScanner&
 Maike::SourceTreeLoader::DirectoryScanner::processPath(fs::path const& src_path,
                                                        fs::path const& target_dir)
 {
+	m_root = src_path;
+
 	r_workers->addTask([this,
 	                    src_path = fs::path{src_path},
 	                    counter = std::unique_lock<Sched::SignalingCounter<size_t>>(m_counter),
@@ -36,7 +38,7 @@ void Maike::SourceTreeLoader::DirectoryScanner::processPath(
 {
 	try
 	{
-		if(src_path != "." && r_filter.get().match(src_path.filename().c_str())) { return; }
+		if(src_path != m_root && r_filter.get().match(src_path.filename().c_str())) { return; }
 
 		auto src_path_normal = src_path.lexically_normal();
 		auto i = invokeWithMutex<std::shared_lock>(
@@ -45,7 +47,7 @@ void Maike::SourceTreeLoader::DirectoryScanner::processPath(
 		   src_path_normal);
 		if(i != std::end(m_source_files)) { return; }
 
-		if(auto src_file_info = r_loaders.get().load(src_path, target_dir); src_file_info)
+		if(auto src_file_info = r_loaders.get().load(m_root, src_path, target_dir); src_file_info)
 		{
 			auto ins = invokeWithMutex<std::lock_guard>(
 			   m_source_files_mtx,

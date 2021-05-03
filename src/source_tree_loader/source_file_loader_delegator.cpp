@@ -18,28 +18,37 @@ namespace
 	// TODO: These functions should be moved
 
 	std::vector<Maike::Db::Dependency>
-	addPrefixWhereAppiciable(Maike::fs::path const& prefix,
+	addPrefixWhereAppiciable(Maike::fs::path const& src_dir,
+	                         Maike::fs::path const& prefix,
 	                         std::vector<Maike::Db::Dependency> const& deps)
 	{
 		std::vector<Maike::Db::Dependency> ret;
 		ret.reserve(deps.size());
-		std::transform(
-		   std::begin(deps), std::end(deps), std::back_inserter(ret), [&prefix](auto const& item) {
-			   if(item.expectedOrigin() == Maike::Db::SourceFileOrigin::Project)
-			   {
-				   auto str = item.name().string();
-				   if(str.size() > 1 && memcmp(str.data(), "./", 2) == 0)
-				   {
-					   return Maike::Db::Dependency{(prefix / item.name()).lexically_normal(),
-					                                item.expectedOrigin()};
-				   }
-			   }
-			   return item;
-		   });
+		std::transform(std::begin(deps),
+		               std::end(deps),
+		               std::back_inserter(ret),
+		               [&src_dir, &prefix](auto const& item) {
+			               if(item.expectedOrigin() == Maike::Db::SourceFileOrigin::Project)
+			               {
+				               auto str = item.name().string();
+				               if(str.size() > 1 && memcmp(str.data(), "./", 2) == 0)
+				               {
+					               return Maike::Db::Dependency{(prefix / item.name()).lexically_normal(),
+					                                            item.expectedOrigin()};
+				               }
+				               else
+				               {
+					               return Maike::Db::Dependency{(src_dir / item.name()).lexically_normal(),
+					                                            item.expectedOrigin()};
+				               }
+			               }
+			               return item;
+		               });
 		return ret;
 	}
 
-	Maike::Db::SourceFileInfo loadSourceFile(Maike::fs::path const& src_path,
+	Maike::Db::SourceFileInfo loadSourceFile(Maike::fs::path const& src_dir,
+	                                         Maike::fs::path const& src_path,
 	                                         Maike::fs::path const& target_dir,
 	                                         std::vector<Maike::Db::Dependency>&& builtin_deps,
 	                                         Maike::SourceFileInfoLoaders::Loader const& loader,
@@ -56,8 +65,8 @@ namespace
 		src_fifo.stop();
 
 		{
-			auto deps = addPrefixWhereAppiciable(src_path.parent_path(),
-			                                     loader.getDependencies(Maike::Io::Reader{src_fifo}));
+			auto deps = addPrefixWhereAppiciable(
+			   src_dir, src_path.parent_path(), loader.getDependencies(Maike::Io::Reader{src_fifo}));
 			builtin_deps.insert(std::end(builtin_deps), std::begin(deps), std::end(deps));
 		}
 
@@ -69,6 +78,8 @@ namespace
 		std::copy(std::begin(use_deps), std::end(use_deps), std::back_inserter(builtin_deps));
 
 		auto compiler = tags.getIf<Maike::Db::Compiler>("compiler");
+		// TODO: If compiler is valid, it should be looked up in command dictionary
+		//       and configured
 		[&builtin_deps,
 		 &child_target_use_deps](Maike::SourceTreeLoader::SourceFileLoadContext const& load_ctxt,
 		                         Maike::Db::Compiler const& compiler,
@@ -93,22 +104,21 @@ namespace
 
 static const Maike::Db::Compiler mkdir{"make_directory"};
 
-std::optional<Maike::Db::SourceFileInfo>
-Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(fs::path const& str_path,
-                                                         fs::path const& target_dir) const
+std::optional<Maike::Db::SourceFileInfo> Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(
+   fs::path const& src_dir, fs::path const& src_path, fs::path const& target_dir) const
 {
 	std::vector<Db::Dependency> deps;
-	if(!str_path.parent_path().empty() && str_path != m_dir_compiler.get().recipe())
+	if(!src_path.parent_path().empty() && src_path != m_dir_compiler.get().recipe())
 	{
 		deps.push_back(
-		   Db::Dependency{str_path.parent_path().lexically_normal(), Db::SourceFileOrigin::Project});
+		   Db::Dependency{src_path.parent_path().lexically_normal(), Db::SourceFileOrigin::Project});
 	}
 
-	if(is_directory(str_path))
+	if(is_directory(src_path))
 	{
 		std::vector<Db::TargetInfo> targets;
 		targets.push_back(
-		   Db::TargetInfo{target_dir / (str_path.lexically_normal()), std::vector<Db::Dependency>{}});
+		   Db::TargetInfo{target_dir / (src_path.lexically_normal()), std::vector<Db::Dependency>{}});
 		deps.push_back(makeDependency(m_dir_compiler));
 		return Db::SourceFileInfo{std::move(deps),
 		                          std::vector<Db::Dependency>{},
@@ -120,7 +130,7 @@ Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(fs::path const& str_pat
 	}
 
 	std::string extension;
-	for(auto p = str_path; !p.extension().empty(); p = p.stem())
+	for(auto p = src_path; !p.extension().empty(); p = p.stem())
 	{
 		extension = std::string{p.extension()} + extension;
 	}
@@ -128,5 +138,5 @@ Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(fs::path const& str_pat
 	auto i = m_loaders.find(extension);
 	if(i == std::end(m_loaders)) { return std::optional<Db::SourceFileInfo>{}; }
 
-	return loadSourceFile(str_path, target_dir, std::move(deps), i->second, m_cmds);
+	return loadSourceFile(src_dir, src_path, target_dir, std::move(deps), i->second, m_cmds);
 }

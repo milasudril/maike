@@ -59,6 +59,8 @@ namespace Maike::SourceTreeLoader
 		std::reference_wrapper<InputFilter const> r_filter;
 		std::reference_wrapper<SourceFileLoaderDelegator const> r_loaders;
 
+		fs::path m_root;
+
 		std::map<fs::path, Db::SourceFileInfo> m_source_files;
 
 		// TODO: Move these into a policy base class (to make it more efficient in single-threaded
