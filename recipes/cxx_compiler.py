@@ -14,16 +14,19 @@ compiler = os.environ['CXX'] if 'CXX' in os.environ else 'g++'
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
-def format_iquote(list):
+def format_iquote(src_dir, list):
 	ret = []
 	for item in list:
-		ret.append('-iquote%s'%(item))
+		if src_dir == '.':
+			ret.append('-iquote%s'%(item))
+		else:
+			ret.append('-iquote%s/%s'%(src_dir, item))
 	return ret
 
-def collect_cflags(compiler_flags, dependencies):
+def collect_cflags(src_dir, compiler_flags, dependencies):
 	ret = set()
 	ret.update(compiler_flags['cflags'])
-	ret.update(format_iquote(compiler_flags['iquote']))
+	ret.update(format_iquote(src_dir, compiler_flags['iquote']))
 	for item in dependencies:
 		if item['origin'] == 'pkg-config':
 			ret.update(pkg_config.get_cflags(item['ref']))
@@ -38,7 +41,7 @@ def compile(build_args):
 		return 0
 	args = []
 	args.append(compiler)
-	args.extend(collect_cflags(build_args['compiler_cfg'], build_args['dependencies']))
+	args.extend(collect_cflags(build_args['build_info']['source_dir'], build_args['compiler_cfg'], build_args['dependencies']))
 	if 'std_revision' in build_args['compiler_cfg']:
 		if 'selected' in build_args['compiler_cfg']['std_revision']:
 			args.append('-std=%s'%build_args['compiler_cfg']['std_revision']['selected'])
