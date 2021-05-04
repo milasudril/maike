@@ -212,7 +212,10 @@ Maike::Exec::ExitStatus Maike::Exec::execve(fs::path const& executable,
 	if(auto n = exec_err.read(&val, sizeof(val)); n == sizeof(val))
 	{
 		errno = val;
-		throw std::runtime_error{std::string{"Exec failed "} + std::to_string(val)};
+		std::string msg{"Failed to launch '"};
+		msg += executable;
+		msg += "': ";
+		throw std::runtime_error{msg + std::to_string(val)};
 	}
 	errno = val;
 
