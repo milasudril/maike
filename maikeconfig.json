@@ -32,7 +32,10 @@
 					"config": {
 						"cflags": [
 							"-c",
-							"-g"
+							"-g",
+							"-Wall",
+							"-Wextra",
+							"-Werror"
 						],
 						"iquote": [
 							"."
