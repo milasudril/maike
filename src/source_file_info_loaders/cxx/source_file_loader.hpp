@@ -16,10 +16,11 @@ namespace Cxx
 	{
 	public:
 		SourceFileLoader():
-		   m_compiler{"cxx_compiler.py",
-		              Maike::KeyValueStore::Compound{}
-		                 .set("iquote", Maike::KeyValueStore::Array{}.append("."))
-		                 .set("cflags", Maike::KeyValueStore::Array{}.append("-c").append("-g").append("-Wall"))}
+		   m_compiler{
+		      "cxx_compiler.py",
+		      Maike::KeyValueStore::Compound{}
+		         .set("iquote", Maike::KeyValueStore::Array{}.append("."))
+		         .set("cflags", Maike::KeyValueStore::Array{}.append("-c").append("-g").append("-Wall"))}
 		{
 		}
 

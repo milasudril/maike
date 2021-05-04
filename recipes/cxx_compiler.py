@@ -8,6 +8,7 @@ import os
 import subprocess
 import shutil
 import pkg_config
+import datetime
 
 compiler = os.environ['CXX'] if 'CXX' in os.environ else 'g++'
 
@@ -46,6 +47,13 @@ def compile(build_args):
 		if 'selected' in build_args['compiler_cfg']['std_revision']:
 			args.append('-std=%s'%build_args['compiler_cfg']['std_revision']['selected'])
 	args.append('-fdiagnostics-color=%s'%('always' if build_args['log_format']=='ansi_term' else 'never'))
+	args.append('-DMAIKE_TASKID=%dL'%build_args['task_id'])
+	timestamp = build_args['build_info']['start_time']
+	args.append('-DMAIKE_BUILDINFO_STARTTIME=%dL'%timestamp)
+	args.append('-DMAIKE_BUILDINFO_STARTTIME_STR="%s"'%datetime.datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S UTC'))
+	args.append('-DMAIKE_BUILDINFO_BUILDID="%s"'%build_args['build_info']['build_id'])
+	args.append('-DMAIKE_BUILDINFO_TARGETDIR="%s"'%build_args['build_info']['target_dir'])
+	args.append('-DMAIKE_BUILDINFO_SOURCEDIR="%s"'%build_args['build_info']['source_dir'])
 	args.append('-c')
 	args.append(build_args['source_file'])
 	args.append('-o')
