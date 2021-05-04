@@ -57,13 +57,21 @@ def compile(build_args):
 
 	return result.returncode
 
+
 def get_numeric_rev(rev):
 	rev_constants = {'c++98': 199711, 'c++11': 201103, 'c++14': 201402, 'c++17': 201703, 'c++17': 201702, 'c++20': 202002}
 	return rev_constants[rev]
 
-def get_default_ref():
-	args = [compiler, '-x', 'c++', '-E', '-dM', '/dev/null']
+def get_cpp_revision_tag(std = None):
+	args = []
+	if std == None:
+		args = [compiler, '-x', 'c++', '-E', '-dM', '/dev/null']
+	else:
+		args = [compiler, '-x', 'c++', '-std=%s'%std, '-E', '-dM', '/dev/null']
 	result = subprocess.run(args, stdin = subprocess.DEVNULL, stdout=subprocess.PIPE, text=True)
+	if result.returncode != 0:
+		raise Exception('The requested revision %s appears to be unsupported by the selected compiler %s'%(std, compiler))
+
 	for line in result.stdout.split('\n'):
 		fields=line.split()
 		if len(fields) >= 3:
@@ -76,40 +84,39 @@ def select_cpp_rev(rev):
 		if 'max' in rev:
 			max_num = get_numeric_rev(rev['max'])
 			if min_num > max_num:
-				eprint('Impossible configuration (min %s is newer than max %s)'%(rev['min'], rev['max']))
-				return 1
+				raise Exception('Impossible configuration (min %s is newer than max %s)'%(rev['min'], rev['max']))
 			if rev['min'] == rev['max']:
-				rev['selected'] = rev['min']
-				return 0
+				return rev['min']
 			else:
-				default_rev = get_default_ref()
+				default_rev = get_cpp_revision_tag()
 				if default_rev < min_num:
-					rev['selected'] = rev['min']
-					return 0
+					return rev['min']
 				if default_rev > max_num:
-					rev['selected'] = rev['max']
-					return 0
-				return 0
+					return rev['max']
+				return ''
 		else:
-			default_rev = get_default_ref()
+			default_rev = get_cpp_revision_tag()
 			if default_rev < min_num:
-				rev['selected'] = rev['min']
-				return 0
+				return rev['min']
 	else:
 		if 'max' in rev:
-			default_rev = get_default_ref()
+			default_rev = get_cpp_revision_tag()
 			if default_rev > max_num:
-				rev['selected'] = rev['max']
-				return 0
+				return rev['max']
 
 def configure(cfg):
 	if 'std_revision' in cfg:
 		ret = select_cpp_rev(cfg['std_revision'])
-		if ret == 0:
-			print(json.dumps(cfg))
-		return ret
+		if ret != '':
+			rev_cfg = get_cpp_revision_tag(ret)
+			if rev_cfg < get_numeric_rev(ret):
+				eprint('Warning: The compiler reports an earlier standard revision than requested (%d vs %d). This indicates that support for the selected revision is experimental. Expect changes in ABI or API when the compiler is upgraded.'%(rev_cfg, get_numeric_rev(ret)))
+			cfg['std_revision']['selected'] = ret
+		print(json.dumps(cfg))
+		return 0
 	else:
 		return 0
+
 
 if __name__ == '__main__':
 	if sys.argv[1] == 'compile':
