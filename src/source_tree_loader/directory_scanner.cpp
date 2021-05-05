@@ -47,6 +47,7 @@ void Maike::SourceTreeLoader::DirectoryScanner::processPath(
 		   src_path_normal);
 		if(i != std::end(m_source_files)) { return; }
 
+
 		if(auto src_file_info = r_loaders.get().load(m_root, src_path, target_dir); src_file_info)
 		{
 			auto ins = invokeWithMutex<std::lock_guard>(

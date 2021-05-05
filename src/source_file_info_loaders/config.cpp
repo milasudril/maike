@@ -24,25 +24,23 @@ Maike::SourceFileInfoLoaders::Config::Config(KeyValueStore::CompoundRefConst ite
 {
 	std::for_each(std::begin(items), std::end(items), [this](auto const& item) {
 		auto cfg = item.second.template as<Maike::KeyValueStore::CompoundRefConst>();
-		printf("%s\n", item.first);
 		if(item.first == std::string_view{"cxx"})
 		{
 			m_loaders.insert_or_assign(std::end(m_loaders), item.first, Loader{Cxx::SourceFileLoader(cfg)});
 		}
-		else
-		if(item.first == std::string_view{"app"})
+		else if(item.first == std::string_view{"app"})
 		{
 			m_loaders.insert_or_assign(std::end(m_loaders), item.first, Loader{App::SourceFileLoader(cfg)});
 		}
-		else
-		if(item.first == std::string_view{"python"})
+		else if(item.first == std::string_view{"python"})
 		{
 			m_loaders.insert_or_assign(
 			   std::end(m_loaders), item.first, Loader{Python::SourceFileLoader(cfg)});
 		}
 		else
 		{
-			m_loaders.insert_or_assign(std::end(m_loaders), item.first, Loader{Maikerule::SourceFileLoader{cfg}});
+			m_loaders.insert_or_assign(
+			   std::end(m_loaders), item.first, Loader{Maikerule::SourceFileLoader{cfg}});
 		}
 	});
 }

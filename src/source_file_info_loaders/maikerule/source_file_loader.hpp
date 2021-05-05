@@ -15,8 +15,7 @@ namespace Maikerule
 	class SourceFileLoader
 	{
 	public:
-		SourceFileLoader(Maike::Db::Compiler&& compiler):
-		   m_compiler{std::move(compiler)}
+		SourceFileLoader(Maike::Db::Compiler&& compiler): m_compiler{std::move(compiler)}
 		{
 		}
 

@@ -50,7 +50,7 @@ Maike::Config Maike::loadConfig(std::vector<fs::path> const& cfg_files)
 Maike::Config Maike::resolveRecipes(Config const& cfg,
                                     SourceTreeLoader::CommandDictionary const& commands)
 {
-	Config ret;
+	Config ret{cfg};
 	ret.dirCompiler(Db::Compiler{cfg.dirCompiler()}.resolveRecipe(commands));
 	auto loaders = cfg.sourceFileInfoLoaders().loaders();
 	std::for_each(std::begin(loaders), std::end(loaders), [&commands](auto& item) {

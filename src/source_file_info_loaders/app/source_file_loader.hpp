@@ -12,10 +12,11 @@
 
 namespace App
 {
-	class SourceFileLoader:public Maikerule::SourceFileLoader
+	class SourceFileLoader: public Maikerule::SourceFileLoader
 	{
 	public:
-		SourceFileLoader():Maikerule::SourceFileLoader(Maike::Db::Compiler{
+		SourceFileLoader():
+		   Maikerule::SourceFileLoader(Maike::Db::Compiler{
 		      "cxx_linker.py",
 		      Maike::KeyValueStore::Compound{}.set("cflags", Maike::KeyValueStore::Array{}.append("-g"))})
 		{
