@@ -4,7 +4,7 @@
 
 #include "./source_file_loader.hpp"
 
-void App::SourceFileLoader::filterInput(
+void Maikerule::SourceFileLoader::filterInput(
    Maike::Io::Reader input,
    Maike::SourceFileInfoLoaders::SourceOutStream,
    Maike::SourceFileInfoLoaders::TagsOutStream tag_stream) const
