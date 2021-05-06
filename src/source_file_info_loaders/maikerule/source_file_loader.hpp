@@ -15,15 +15,6 @@ namespace Maikerule
 	class SourceFileLoader
 	{
 	public:
-		SourceFileLoader(Maike::Db::Compiler&& compiler): m_compiler{std::move(compiler)}
-		{
-		}
-
-		explicit SourceFileLoader(Maike::KeyValueStore::CompoundRefConst cfg):
-		   m_compiler{cfg.get<Maike::Db::Compiler>("compiler")}
-		{
-		}
-
 		std::vector<Maike::Db::Dependency> getDependencies(Maike::Io::Reader) const
 		{
 			return std::vector<Maike::Db::Dependency>{};
@@ -33,20 +24,15 @@ namespace Maikerule
 		                 Maike::SourceFileInfoLoaders::SourceOutStream source_stream,
 		                 Maike::SourceFileInfoLoaders::TagsOutStream tag_stream) const;
 
-		Maike::Db::Compiler const& compiler() const
+		static Maike::Db::Compiler defaultCompiler()
 		{
-			return m_compiler;
+			return Maike::Db::Compiler{};
 		}
 
-		SourceFileLoader& compiler(Maike::Db::Compiler&& compiler)
+		static char const* name()
 		{
-			m_compiler = std::move(compiler);
-			return *this;
+			return "Maikerule";
 		}
-
-
-	private:
-		Maike::Db::Compiler m_compiler;
 	};
 
 	inline auto getDependencies(SourceFileLoader const& loader, Maike::Io::Reader src)
@@ -60,11 +46,6 @@ namespace Maikerule
 	                        Maike::SourceFileInfoLoaders::TagsOutStream tag_stream)
 	{
 		return loader.filterInput(input, source_stream, tag_stream);
-	}
-
-	inline auto toJson(SourceFileLoader const& loader)
-	{
-		return Maike::KeyValueStore::Compound{}.set("compiler", loader.compiler()).takeHandle();
 	}
 }
 

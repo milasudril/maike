@@ -36,6 +36,12 @@ namespace Maike::Db
 		{
 		}
 
+		explicit Compiler(KeyValueStore::CompoundRefConst config):
+		   m_recipe{config.get<char const*>("recipe")},
+		   m_config{config.get<KeyValueStore::CompoundRefConst>("config")}
+		{
+		}
+
 		fs::path const& recipe() const
 		{
 			return m_recipe;

@@ -44,21 +44,9 @@ namespace Maike::SourceFileInfoLoaders
 				   auto const& self = *reinterpret_cast<T const*>(handle);
 				   return getDependencies(self, input);
 			   }},
-			   get_compiler{[](void const* handle) -> Db::Compiler const& {
-				   auto const& self = *reinterpret_cast<T const*>(handle);
-				   return self.compiler();
-			   }},
-			   set_compiler{[](void* handle, Db::Compiler&& compiler) {
-				   auto& self = *reinterpret_cast<T*>(handle);
-				   (void)self.compiler(std::move(compiler));
-			   }},
 			   destroy{[](void* handle) {
 				   auto self = reinterpret_cast<T*>(handle);
 				   delete self;
-			   }},
-			   to_json{[](void const* handle) {
-				   auto const& self = *reinterpret_cast<T const*>(handle);
-				   return toJson(self);
 			   }},
 			   clone{[](void const* handle) -> void* {
 				   auto const& self = *reinterpret_cast<T const*>(handle);
@@ -72,10 +60,9 @@ namespace Maike::SourceFileInfoLoaders
 			                     SourceOutStream source,
 			                     TagsOutStream tags);
 			std::vector<Db::Dependency> (*get_dependencies)(void const* handle, Io::Reader source_stream);
-			Db::Compiler const& (*get_compiler)(void const* handle);
-			void (*set_compiler)(void* handle, Db::Compiler&&);
+			Db::Compiler (*default_compiler)();
+			char const* (*name)();
 			void (*destroy)(void* handle);
-			KeyValueStore::JsonHandle (*to_json)(void const* handle);
 			void* (*clone)(void const* handle);
 		};
 	}
@@ -83,7 +70,11 @@ namespace Maike::SourceFileInfoLoaders
 	class Loader
 	{
 	public:
-		Loader(Loader&& other) noexcept: m_handle{other.m_handle}, m_vtable{other.m_vtable}
+		Loader(Loader&& other) noexcept:
+		   m_handle{other.m_handle},
+		   m_vtable{other.m_vtable},
+		   m_compiler{std::move(other.m_compiler)},
+		   m_name{std::move(other.m_name)}
 		{
 			other.m_handle = nullptr;
 		}
@@ -92,6 +83,8 @@ namespace Maike::SourceFileInfoLoaders
 		{
 			std::swap(m_handle, other.m_handle);
 			std::swap(m_vtable, other.m_vtable);
+			std::swap(m_compiler, other.m_compiler);
+			std::swap(m_name, other.m_name);
 			other.m_vtable.destroy(other.m_handle);
 			other.m_handle = nullptr;
 			return *this;
@@ -109,16 +102,23 @@ namespace Maike::SourceFileInfoLoaders
 
 		template<class LoaderType,
 		         std::enable_if_t<!std::is_same_v<std::decay_t<LoaderType>, Loader>, int> = 0>
-		explicit Loader(LoaderType&& loader):
+		explicit Loader(LoaderType&& loader,
+		                std::optional<Db::Compiler>&& compiler = std::optional<Db::Compiler>{}):
 		   m_handle{new LoaderType(std::forward<LoaderType>(loader))},
-		   m_vtable{source_file_loader_detail::Tag<LoaderType>{}}
+		   m_vtable{source_file_loader_detail::Tag<LoaderType>{}},
+		   m_compiler{compiler ? std::move(*compiler) : LoaderType::defaultCompiler()},
+		   m_name{LoaderType::name()}
 		{
 		}
 
 		template<class LoaderType,
 		         std::enable_if_t<!std::is_same_v<std::decay_t<LoaderType>, Loader>, int> = 0>
-		explicit Loader(std::unique_ptr<LoaderType> loader):
-		   m_handle{loader.release()}, m_vtable{source_file_loader_detail::Tag<LoaderType>{}}
+		explicit Loader(std::unique_ptr<LoaderType> loader,
+		                std::optional<Db::Compiler>&& compiler = std::optional<Db::Compiler>{}):
+		   m_handle{loader.release()},
+		   m_vtable{source_file_loader_detail::Tag<LoaderType>{}},
+		   m_compiler{compiler ? std::move(*compiler) : LoaderType::defaultCompiler()},
+		   m_name{LoaderType::name()}
 		{
 		}
 
@@ -136,14 +136,18 @@ namespace Maike::SourceFileInfoLoaders
 
 		Db::Compiler const& compiler() const
 		{
-			assert(valid());
-			return m_vtable.get_compiler(m_handle);
+			return m_compiler;
 		}
 
 		Loader& compiler(Db::Compiler&& compiler)
 		{
-			m_vtable.set_compiler(m_handle, std::move(compiler));
+			m_compiler = std::move(compiler);
 			return *this;
+		}
+
+		std::string const& name() const
+		{
+			return m_name;
 		}
 
 		bool valid() const
@@ -151,24 +155,19 @@ namespace Maike::SourceFileInfoLoaders
 			return m_handle != nullptr;
 		}
 
-		KeyValueStore::JsonHandle toJson() const
-		{
-			return m_vtable.to_json(m_handle);
-		}
-
-		void test()
-		{
-		}
-
-
 	private:
 		void* m_handle;
 		source_file_loader_detail::Vtable m_vtable;
+		Db::Compiler m_compiler;
+		std::string m_name;
 	};
 
 	inline auto toJson(Loader const& loader)
 	{
-		return loader.toJson();
+		return Maike::KeyValueStore::Compound{}
+		   .set("compiler", loader.compiler())
+		   .set("loader", loader.name().c_str())
+		   .takeHandle();
 	}
 };
 

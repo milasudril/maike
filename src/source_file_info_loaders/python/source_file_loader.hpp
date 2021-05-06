@@ -15,12 +15,6 @@ namespace Python
 	class SourceFileLoader
 	{
 	public:
-		SourceFileLoader() = default;
-
-		explicit SourceFileLoader(Maike::KeyValueStore::CompoundRefConst)
-		{
-		}
-
 		std::vector<Maike::Db::Dependency> getDependencies(Maike::Io::Reader) const
 		{
 			return std::vector<Maike::Db::Dependency>{};
@@ -30,18 +24,15 @@ namespace Python
 		                 Maike::SourceFileInfoLoaders::SourceOutStream source_stream,
 		                 Maike::SourceFileInfoLoaders::TagsOutStream tag_stream) const;
 
-		Maike::Db::Compiler const& compiler() const
+		static char const* name()
 		{
-			return m_compiler;
+			return "Extension";
 		}
 
-		SourceFileLoader& compiler(Maike::Db::Compiler&&)
+		static Maike::Db::Compiler defaultCompiler()
 		{
-			return *this;
+			return Maike::Db::Compiler{};
 		}
-
-	private:
-		Maike::Db::Compiler m_compiler;
 	};
 
 	inline auto getDependencies(SourceFileLoader const& loader, Maike::Io::Reader src)

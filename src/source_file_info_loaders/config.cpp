@@ -26,21 +26,23 @@ Maike::SourceFileInfoLoaders::Config::Config(KeyValueStore::CompoundRefConst ite
 		auto cfg = item.second.template as<Maike::KeyValueStore::CompoundRefConst>();
 		if(item.first == std::string_view{"cxx"})
 		{
-			m_loaders.insert_or_assign(std::end(m_loaders), item.first, Loader{Cxx::SourceFileLoader(cfg)});
+			m_loaders.insert_or_assign(
+			   std::end(m_loaders), item.first, Loader{Cxx::SourceFileLoader{}, Db::Compiler{cfg}});
 		}
 		else if(item.first == std::string_view{"app"})
 		{
-			m_loaders.insert_or_assign(std::end(m_loaders), item.first, Loader{App::SourceFileLoader(cfg)});
+			m_loaders.insert_or_assign(
+			   std::end(m_loaders), item.first, Loader{App::SourceFileLoader{}, Db::Compiler{cfg}});
 		}
 		else if(item.first == std::string_view{"python"})
 		{
 			m_loaders.insert_or_assign(
-			   std::end(m_loaders), item.first, Loader{Python::SourceFileLoader(cfg)});
+			   std::end(m_loaders), item.first, Loader{Python::SourceFileLoader{}, Db::Compiler{cfg}});
 		}
 		else
 		{
 			m_loaders.insert_or_assign(
-			   std::end(m_loaders), item.first, Loader{Maikerule::SourceFileLoader{cfg}});
+			   std::end(m_loaders), item.first, Loader{Maikerule::SourceFileLoader{}, Db::Compiler{cfg}});
 		}
 	});
 }

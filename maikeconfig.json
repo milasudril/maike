@@ -11,7 +11,7 @@
 		],
 		"recursive": 1
 	},
-	"maikeconfig": {
+	"maikeconfig2": {
 		"dir_compiler": {
 			"config": {},
 			"recipe": "recipes/make_directory.py"

@@ -15,20 +15,12 @@ namespace App
 	class SourceFileLoader: public Maikerule::SourceFileLoader
 	{
 	public:
-		SourceFileLoader():
-		   Maikerule::SourceFileLoader(Maike::Db::Compiler{
-		      "cxx_linker.py",
-		      Maike::KeyValueStore::Compound{}.set("cflags", Maike::KeyValueStore::Array{}.append("-g"))})
+		static Maike::Db::Compiler defaultCompiler()
 		{
+			return Maike::Db::Compiler{
+			   "cxx_linker.py",
+			   Maike::KeyValueStore::Compound{}.set("cflags", Maike::KeyValueStore::Array{}.append("-g"))};
 		}
-
-		explicit SourceFileLoader(Maike::KeyValueStore::CompoundRefConst cfg):
-		   Maikerule::SourceFileLoader{cfg.get<Maike::Db::Compiler>("compiler")}
-		{
-		}
-
-	private:
-		Maike::Db::Compiler m_compiler;
 	};
 }
 
