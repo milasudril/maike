@@ -89,7 +89,7 @@ namespace
 			auto ctu_deps = getChildTargetUseDeps(load_ctxt, tags);
 			std::copy(std::begin(use_deps), std::end(use_deps), std::back_inserter(builtin_deps));
 			std::copy(std::begin(ctu_deps), std::end(ctu_deps), std::back_inserter(child_target_use_deps));
-			builtin_deps.push_back(makeDependency(compiler));
+			if(compiler.recipe() != "") { builtin_deps.push_back(makeDependency(compiler)); }
 		}(load_ctxt, compiler ? (*compiler) : loader.compiler(), src_path);
 
 		return Maike::Db::SourceFileInfo{std::move(builtin_deps),
