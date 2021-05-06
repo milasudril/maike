@@ -91,7 +91,10 @@ namespace Maike::SourceFileInfoLoaders
 		}
 
 		Loader(Loader const& other):
-		   m_handle{other.m_vtable.clone(other.m_handle)}, m_vtable{other.m_vtable}
+		   m_handle{other.m_vtable.clone(other.m_handle)},
+		   m_vtable{other.m_vtable},
+		   m_compiler{other.m_compiler},
+		   m_name{other.m_name}
 		{
 		}
 
