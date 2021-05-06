@@ -32,7 +32,7 @@ namespace Cxx
 
 		static char const* name()
 		{
-			return "CxxLoader";
+			return "cxx_src_loader";
 		}
 	};
 

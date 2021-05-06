@@ -35,14 +35,16 @@ Maike::Config Maike::loadConfig(std::vector<fs::path> const& cfg_files)
 				Maike::Io::InputFile cfg_file{item};
 				cfg |= KeyValueStore::Compound{Maike::Io::Reader{cfg_file}, item.string()};
 			}
-			catch(...)
+			catch(std::exception const& err)
 			{
+				fprintf(stderr, "%s: %s\n", item.c_str(), err.what());
 			}
 		});
 		return Config{cfg.get<Maike::KeyValueStore::CompoundRefConst>("maikeconfig")};
 	}
-	catch(...)
+	catch(std::exception const& err)
 	{
+		fprintf(stderr, "%s\n", err.what());
 	}
 	return Config{};
 }

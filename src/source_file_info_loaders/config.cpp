@@ -23,26 +23,28 @@ Maike::SourceFileInfoLoaders::Config::Config()
 Maike::SourceFileInfoLoaders::Config::Config(KeyValueStore::CompoundRefConst items)
 {
 	std::for_each(std::begin(items), std::end(items), [this](auto const& item) {
-		auto cfg = item.second.template as<Maike::KeyValueStore::CompoundRefConst>();
-		if(item.first == std::string_view{"cxx"})
+		auto const cfg = item.second.template as<Maike::KeyValueStore::CompoundRefConst>();
+		auto const loader = cfg.template get<char const*>("loader");
+		auto compiler = cfg.template get<Db::Compiler>("compiler");
+
+		if(loader == std::string_view{"maikerule"})
 		{
 			m_loaders.insert_or_assign(
-			   std::end(m_loaders), item.first, Loader{Cxx::SourceFileLoader{}, Db::Compiler{cfg}});
+			   std::end(m_loaders), item.first, Loader{App::SourceFileLoader{}, std::move(compiler)});
 		}
-		else if(item.first == std::string_view{"app"})
+		else if(loader == std::string_view{"cxx_src_loader"})
 		{
 			m_loaders.insert_or_assign(
-			   std::end(m_loaders), item.first, Loader{App::SourceFileLoader{}, Db::Compiler{cfg}});
+			   std::end(m_loaders), item.first, Loader{Cxx::SourceFileLoader{}, std::move(compiler)});
 		}
-		else if(item.first == std::string_view{"python"})
+		else if(loader == std::string_view{"extension"})
 		{
 			m_loaders.insert_or_assign(
-			   std::end(m_loaders), item.first, Loader{Python::SourceFileLoader{}, Db::Compiler{cfg}});
+			   std::end(m_loaders), item.first, Loader{Python::SourceFileLoader{}, std::move(compiler)});
 		}
 		else
 		{
-			m_loaders.insert_or_assign(
-			   std::end(m_loaders), item.first, Loader{Maikerule::SourceFileLoader{}, Db::Compiler{cfg}});
+			throw std::runtime_error{std::string{"Unsupported loader "} + loader};
 		}
 	});
 }

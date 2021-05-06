@@ -1,0 +1,57 @@
+{
+	"maikeconfig": {
+		"dir_compiler": {
+			"config": {},
+			"recipe": "make_directory.py"
+		},
+		"source_file_info_loaders": {
+			"app": {
+				"compiler": {
+					"config": {
+						"cflags": [
+							"-g"
+						]
+					},
+					"recipe": "cxx_linker.py"
+				},
+				"loader": "maikerule"
+			},
+			"cxx": {
+				"compiler": {
+					"config": {
+						"cflags": [
+							"-c",
+							"-g",
+							"-Wall"
+						],
+						"iquote": [
+							"."
+						]
+					},
+					"recipe": "cxx_compiler.py"
+				},
+				"loader": "cxx_src_loader"
+			},
+			"python": {
+				"compiler": {
+					"config": {},
+					"recipe": ""
+				},
+				"loader": "extension"
+			}
+		},
+		"source_tree_loader": {
+			"file_info_loaders": {
+				".app.maikerule": "app",
+				".cpp": "cxx",
+				".hpp": "cxx",
+				".py": "python"
+			},
+			"input_filter": [
+				"^\\.",
+				"^__"
+			],
+			"recursive": 0
+		}
+	}
+}

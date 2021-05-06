@@ -31,7 +31,7 @@ namespace Maikerule
 
 		static char const* name()
 		{
-			return "Maikerule";
+			return "maikerule";
 		}
 	};
 

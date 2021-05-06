@@ -26,7 +26,7 @@ namespace Python
 
 		static char const* name()
 		{
-			return "Extension";
+			return "extension";
 		}
 
 		static Maike::Db::Compiler defaultCompiler()
