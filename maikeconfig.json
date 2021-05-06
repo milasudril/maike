@@ -11,7 +11,7 @@
 		],
 		"recursive": 1
 	},
-	"maikeconfig2": {
+	"maikeconfig": {
 		"dir_compiler": {
 			"config": {},
 			"recipe": "recipes/make_directory.py"
@@ -25,7 +25,8 @@
 						]
 					},
 					"recipe": "recipes/cxx_linker.py"
-				}
+				},
+				"loader": "maikerule"
 			},
 			"cxx": {
 				"compiler": {
@@ -33,22 +34,23 @@
 						"cflags": [
 							"-c",
 							"-g",
-							"-Wall",
-							"-Wextra",
-							"-Werror"
+							"-Wall"
 						],
 						"iquote": [
 							"."
-						],
-						"std_revision": {
-							"max": "c++17",
-							"min": "c++17"
-						}
+						]
 					},
 					"recipe": "recipes/cxx_compiler.py"
-				}
+				},
+				"loader": "cxx_src_loader"
 			},
-			"python": {}
+			"python": {
+				"compiler": {
+					"config": {},
+					"recipe": ""
+				},
+				"loader": "extension"
+			}
 		},
 		"source_tree_loader": {
 			"file_info_loaders": {
