@@ -17,6 +17,12 @@ namespace Maike
 	bool isOlder(fs::path const& a, fs::path const& b);
 
 	fs::path const& execPrefix();
+
+	inline fs::path makeShellExecPath(fs::path const& orig)
+	{
+		if(orig.parent_path() != "") { return orig; }
+		return fs::path{"."} / orig;
+	}
 }
 
 #endif
