@@ -67,6 +67,8 @@ Maike::Exec::Command Maike::Db::makeBuildCommand(SourceFileRecordConst const& re
 	CmdOptsString str;
 	store(cmd_opts, str, KeyValueStore::PrettyPrint{false});
 
-	return Exec::Command{std::move(compiler.recipe()),
+	auto recipe = compiler.recipe() == "" ? rec.path() : std::move(compiler.recipe());
+
+	return Exec::Command{std::move(recipe),
 	                     std::vector<std::string>{"compile", std::move(str.buffer)}};
 }

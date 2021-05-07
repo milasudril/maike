@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import subprocess
 import sys
 
@@ -27,5 +29,4 @@ def get_libdirs(libname):
 	return ret
 
 if __name__ == '__main__':
-	eprint('Not intended to be run as a standalone script')
-	exit(1)
+	exit(0)

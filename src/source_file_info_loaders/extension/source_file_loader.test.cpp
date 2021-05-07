@@ -73,11 +73,11 @@ namespace
 
 namespace Testcases
 {
-	void maikePythonSourceFileLoaderGetDependencies()
+	void maikeExtensionSourceFileLoaderGetDependencies()
 	{
 	}
 
-	void maikePythonSourceFileLoaderFilterInput()
+	void maikeExtensionSourceFileLoaderFilterInput()
 	{
 		Source input{
 		   "#@ This should be a tag 1\n"
@@ -87,9 +87,9 @@ namespace Testcases
 		Sink tags;
 		Sink source;
 
-		Python::SourceFileLoader{}.filterInput(Maike::Io::Reader{input},
-		                                       Maike::SourceFileInfoLoaders::SourceOutStream{source},
-		                                       Maike::SourceFileInfoLoaders::TagsOutStream{tags});
+		Extension::SourceFileLoader{}.filterInput(Maike::Io::Reader{input},
+		                                          Maike::SourceFileInfoLoaders::SourceOutStream{source},
+		                                          Maike::SourceFileInfoLoaders::TagsOutStream{tags});
 		assert(source.content() == input.content());
 
 		std::string_view tags_expected{
@@ -109,7 +109,7 @@ namespace Testcases
 
 int main()
 {
-	Testcases::maikePythonSourceFileLoaderGetDependencies();
-	Testcases::maikePythonSourceFileLoaderFilterInput();
+	Testcases::maikeExtensionSourceFileLoaderGetDependencies();
+	Testcases::maikeExtensionSourceFileLoaderFilterInput();
 	return 0;
 }

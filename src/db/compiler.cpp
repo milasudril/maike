@@ -85,8 +85,6 @@ void Maike::Db::Compiler::configRecipe()
 Maike::KeyValueStore::Compound Maike::Db::getTags(Compiler const& compiler,
                                                   fs::path const& src_file)
 {
-	if(compiler.recipe() == "") { return KeyValueStore::Compound{}; }
-
 	KeyValueStore::Compound cmd_opts;
 	cmd_opts.set("source_file", src_file.c_str());
 
@@ -94,7 +92,7 @@ Maike::KeyValueStore::Compound Maike::Db::getTags(Compiler const& compiler,
 	store(cmd_opts, str, KeyValueStore::PrettyPrint{false});
 
 	std::vector<std::string> args{"get_tags", std::move(str.buffer)};
-	auto result = Maike::Exec::execve(compiler.recipe(), args);
+	auto result = Maike::Exec::execve(compiler.recipe() == "" ? src_file : compiler.recipe(), args);
 
 	if(std::size(result.stderr()) != 0)
 	{
