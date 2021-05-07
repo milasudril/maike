@@ -7,7 +7,7 @@
 #include "src/io/input_buffer.hpp"
 #include "src/io/output_buffer.hpp"
 
-void Python::SourceFileLoader::filterInput(
+void Extension::SourceFileLoader::filterInput(
    Maike::Io::Reader input,
    Maike::SourceFileInfoLoaders::SourceOutStream source_stream,
    Maike::SourceFileInfoLoaders::TagsOutStream tag_stream) const

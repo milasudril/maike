@@ -3,14 +3,14 @@
 //@	,"dependencies_extra":[{"ref":"source_file_loader.o","rel":"implementation"}]
 //@	}
 
-#ifndef PYTHON_SOURCEFILELOADER_HPP
-#define PYTHON_SOURCEFILELOADER_HPP
+#ifndef EXTENSION_SOURCEFILELOADER_HPP
+#define EXTENSION_SOURCEFILELOADER_HPP
 
 #include "src/source_file_info_loaders/loader.hpp"
 
 #include "src/key_value_store/array.hpp"
 
-namespace Python
+namespace Extension
 {
 	class SourceFileLoader
 	{
@@ -46,11 +46,6 @@ namespace Python
 	                        Maike::SourceFileInfoLoaders::TagsOutStream tag_stream)
 	{
 		return loader.filterInput(input, source_stream, tag_stream);
-	}
-
-	inline auto toJson(SourceFileLoader const&)
-	{
-		return Maike::KeyValueStore::Compound{}.takeHandle();
 	}
 }
 

@@ -44,7 +44,7 @@
 				},
 				"loader": "cxx_src_loader"
 			},
-			"python": {
+			"extension": {
 				"compiler": {
 					"config": {},
 					"recipe": ""
@@ -57,7 +57,7 @@
 				".app.maikerule": "app",
 				".cpp": "cxx",
 				".hpp": "cxx",
-				".py": "python"
+				".py": "extension"
 			},
 			"input_filter": [
 				"^\\.",
