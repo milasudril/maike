@@ -9,7 +9,7 @@ before_install:
 language: minimal
 script:
   - |
-    wget https://github.com/milasudril/maike/releases/download/2.0.0-beta-2/maike-src.tar.gz
+    wget https://github.com/milasudril/maike/releases/download/2.0.0-beta-3/maike-src.tar.gz
     tar -xf maike-src.tar.gz
     cd maike-src
     make
