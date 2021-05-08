@@ -18,7 +18,7 @@ namespace
 	// TODO: These functions should be moved
 
 	std::vector<Maike::Db::Dependency>
-	addPrefixWhereAppiciable(Maike::fs::path const& src_dir,
+	prependSearchPath(Maike::SourceTreeLoader::SourceFileLoadContext const& load_ctxt,
 	                         Maike::fs::path const& prefix,
 	                         std::vector<Maike::Db::Dependency> const& deps)
 	{
@@ -27,22 +27,8 @@ namespace
 		std::transform(std::begin(deps),
 		               std::end(deps),
 		               std::back_inserter(ret),
-		               [&src_dir, &prefix](auto const& item) {
-			               if(item.expectedOrigin() == Maike::Db::SourceFileOrigin::Project)
-			               {
-				               auto str = item.name().string();
-				               if(str.size() > 1 && memcmp(str.data(), "./", 2) == 0)
-				               {
-					               return Maike::Db::Dependency{(prefix / item.name()).lexically_normal(),
-					                                            item.expectedOrigin()};
-				               }
-				               else
-				               {
-					               return Maike::Db::Dependency{(src_dir / item.name()).lexically_normal(),
-					                                            item.expectedOrigin()};
-				               }
-			               }
-			               return item;
+		               [&load_ctxt, &prefix](auto const& item) {
+						   return prependSearchPath(load_ctxt, prefix, item);
 		               });
 		return ret;
 	}
@@ -67,8 +53,8 @@ namespace
 		Maike::SourceTreeLoader::SourceFileLoadContext load_ctxt{
 		   src_path.parent_path(), src_dir, target_dir};
 		{
-			auto deps = addPrefixWhereAppiciable(
-			   src_dir, src_path.parent_path(), loader.getDependencies(Maike::Io::Reader{src_fifo}));
+			auto deps = prependSearchPath(
+			   load_ctxt, src_path.parent_path(), loader.getDependencies(Maike::Io::Reader{src_fifo}));
 			builtin_deps.insert(std::end(builtin_deps), std::begin(deps), std::end(deps));
 		}
 
