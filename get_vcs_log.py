@@ -21,7 +21,7 @@ def collect_commits(repo):
 
 	return ret
 
-def get():
+def get(target):
 	try:
 		ret = dict()
 		repo = pygit2.Repository('.git')
@@ -30,12 +30,12 @@ def get():
 		ret['changelog'] = collect_commits(repo)
 		return ret
 	except:
-		with open('vcslog.json') as f:
+		with open(target) as f:
 			return json.load(f)
 
 if __name__ == '__main__':
 	if sys.argv[1] == 'compile':
 		target = json.loads(sys.argv[2])['targets'][0]
-		data = get()
+		data = get(target)
 		with open(target, 'w') as f:
 			json.dump(data, f)
