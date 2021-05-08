@@ -1,6 +1,6 @@
 //@	{
 //@	 "targets":[{"name":"config.hpp","type":"include"}]
-//@	,"dependencies_extra":[{"ref":"config.o","rel":"implementation"}]
+//@	,"dependencies_extra":[{"ref":"./config.o","rel":"implementation"}]
 //@ }
 
 #ifndef MAIKE_SOURCETREELOADER_CONFIG_HPP

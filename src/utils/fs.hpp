@@ -1,6 +1,6 @@
 //@	{
 //@	  "targets":[{"name":"fs.hpp","type":"include"}]
-//@	 ,"dependencies_extra":[{"ref":"fs.o","rel":"implementation"}]
+//@	 ,"dependencies_extra":[{"ref":"./fs.o","rel":"implementation"}]
 //@	 }
 
 #ifndef MAIKE_FS_HPP

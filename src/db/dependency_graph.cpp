@@ -35,13 +35,21 @@ namespace
 
 	void resolve(Maike::Db::Dependency& dep,
 	             std::vector<Maike::Db::SourceFileRecordConst> const& src_files,
-	             Maike::Db::DependencyGraph::IgnoreResolveErrors ignore_errors)
+	             Maike::Db::DependencyGraph::IgnoreResolveErrors ignore_errors,
+				 Maike::fs::path const& required_by)
 	{
 		auto i = find(std::begin(src_files), std::end(src_files), dep.name(), CompareSourceFileRecord{});
 		if(i == std::end(src_files))
 		{
 			if(!ignore_errors)
-			{ throw std::runtime_error{std::string{"Failed to resolve "} + dep.name().string()}; }
+			{
+				std::string msg{required_by};
+				msg+=": error: ";
+				msg+="Failed to resolve ";
+				msg+=dep.name().string();
+				throw std::runtime_error{msg};
+
+			}
 			return;
 		}
 		dep.reference(i->id());
@@ -70,13 +78,13 @@ Maike::Db::DependencyGraph::DependencyGraph(std::map<fs::path, SourceFileInfo>&&
 			              auto build_deps = item.second.buildDeps();
 			              std::for_each(std::begin(use_deps),
 			                            std::end(use_deps),
-			                            [&nodes, ignore_res_errors](auto& item) {
-				                            resolve(item, nodes, ignore_res_errors);
+			                            [&nodes, ignore_res_errors, &required_by = item.first](auto& item) {
+				                            resolve(item, nodes, ignore_res_errors, required_by);
 			                            });
 			              std::for_each(std::begin(build_deps),
 			                            std::end(build_deps),
-			                            [&nodes, ignore_res_errors](auto& item) {
-				                            resolve(item, nodes, ignore_res_errors);
+			                            [&nodes, ignore_res_errors, &required_by = item.first](auto& item) {
+				                            resolve(item, nodes, ignore_res_errors, required_by);
 			                            });
 			              item.second.useDeps(std::move(use_deps)).buildDeps(std::move(build_deps));
 		              }

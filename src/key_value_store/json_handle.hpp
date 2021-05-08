@@ -1,6 +1,6 @@
 //@	{
 //@	  "targets":[{"name":"json_handle.hpp","type":"include"}]
-//@	 ,"dependencies_extra":[{"ref":"json_handle.o","rel":"implementation"}]
+//@	 ,"dependencies_extra":[{"ref":"./json_handle.o","rel":"implementation"}]
 //@	 }
 
 

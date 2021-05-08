@@ -1,6 +1,6 @@
 //@	{
 //@	 "targets":[{"name":"id.hpp","type":"include"}]
-//@	,"dependencies_extra":[{"ref":"id.o", "rel":"implementation"}]
+//@	,"dependencies_extra":[{"ref":"./id.o", "rel":"implementation"}]
 //@	}
 
 #ifndef MAIKE_BUILD_ID_HPP

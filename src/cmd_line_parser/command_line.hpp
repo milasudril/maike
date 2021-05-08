@@ -1,6 +1,6 @@
 //@	{
 //@	  "targets":[{"name":"command_line.hpp","type":"include"}]
-//@	 ,"dependencies_extra":[{"ref":"command_line.o", "rel":"implementation"}]
+//@	 ,"dependencies_extra":[{"ref":"./command_line.o", "rel":"implementation"}]
 //@	}
 
 #ifndef MAIKE_CMDLINEPARSER_COMMANDLINE_HPP
