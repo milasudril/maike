@@ -64,7 +64,8 @@ namespace
 		tags_fifo.stop();
 		src_fifo.stop();
 
-		Maike::SourceTreeLoader::SourceFileLoadContext load_ctxt{src_path.parent_path(), src_dir, target_dir};
+		Maike::SourceTreeLoader::SourceFileLoadContext load_ctxt{
+		   src_path.parent_path(), src_dir, target_dir};
 		{
 			auto deps = addPrefixWhereAppiciable(
 			   src_dir, src_path.parent_path(), loader.getDependencies(Maike::Io::Reader{src_fifo}));

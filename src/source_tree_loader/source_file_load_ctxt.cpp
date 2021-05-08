@@ -8,6 +8,28 @@
 
 #include <cstring>
 
+Maike::Db::Dependency
+Maike::SourceTreeLoader::prependSearchPath(SourceFileLoadContext const& load_ctxt,
+                                           fs::path const& prefix,
+                                           Maike::Db::Dependency const& dependency)
+{
+	if(dependency.expectedOrigin() == Maike::Db::SourceFileOrigin::Project)
+	{
+		auto str = dependency.name().string();
+		if(str.size() > 1 && memcmp(str.data(), "./", 2) == 0)
+		{
+			return Maike::Db::Dependency{(prefix / dependency.name()).lexically_normal(),
+			                             dependency.expectedOrigin()};
+		}
+		else
+		{
+			return Maike::Db::Dependency{(load_ctxt.sourceDir() / dependency.name()).lexically_normal(),
+			                             dependency.expectedOrigin()};
+		}
+	}
+	return dependency;
+}
+
 Maike::Db::Dependency Maike::SourceTreeLoader::getDependency(SourceFileLoadContext const& load_ctxt,
                                                              KeyValueStore::CompoundRefConst dep,
                                                              Db::SourceFileOrigin default_origin)
@@ -20,7 +42,8 @@ Maike::Db::Dependency Maike::SourceTreeLoader::getDependency(SourceFileLoadConte
 	                             name :
 	                             (expected_origin == Db::SourceFileOrigin::Generated ?
 	                                 load_ctxt.targetDir() / load_ctxt.sourceFileDir() / name :
-	                                 load_ctxt.sourceFileDir() / name).lexically_normal(),
+	                                 load_ctxt.sourceFileDir() / name)
+	                                .lexically_normal(),
 	                          expected_origin};
 
 	std::vector<Db::Property> properties;

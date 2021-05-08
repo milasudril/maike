@@ -16,9 +16,11 @@ namespace Maike::SourceTreeLoader
 	{
 	public:
 		explicit SourceFileLoadContext(fs::path&& source_file_dir,
-									   std::reference_wrapper<fs::path const> source_dir,
+		                               std::reference_wrapper<fs::path const> source_dir,
 		                               std::reference_wrapper<fs::path const> target_dir):
-		   m_source_file_dir{std::move(source_file_dir)}, m_source_dir{source_dir}, m_target_dir{target_dir}
+		   m_source_file_dir{std::move(source_file_dir)},
+		   m_source_dir{source_dir},
+		   m_target_dir{target_dir}
 		{
 		}
 
@@ -44,8 +46,11 @@ namespace Maike::SourceTreeLoader
 		std::reference_wrapper<fs::path const> m_target_dir;
 	};
 
+	Db::Dependency prependSearchPath(SourceFileLoadContext const& load_ctxt,
+	                                 fs::path const& prefix,
+	                                 Maike::Db::Dependency const& dependency);
 
-	Db::Dependency getDependency(SourceTreeLoader::SourceFileLoadContext const& load_ctxt,
+	Db::Dependency getDependency(SourceFileLoadContext const& load_ctxt,
 	                             KeyValueStore::CompoundRefConst dep,
 	                             Db::SourceFileOrigin default_origin);
 

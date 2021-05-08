@@ -57,7 +57,8 @@ void Maike::Db::insertUnique(
 		throw std::runtime_error{std::move(msg)};
 	}
 
-	targets.insert(std::make_pair(std::move(name), Target{src_file_entry.get().first, target, src_file_entry.get().second}));
+	targets.insert(std::make_pair(
+	   std::move(name), Target{src_file_entry.get().first, target, src_file_entry.get().second}));
 }
 
 void Maike::Db::collectTargets(

@@ -36,7 +36,7 @@ namespace
 	void resolve(Maike::Db::Dependency& dep,
 	             std::vector<Maike::Db::SourceFileRecordConst> const& src_files,
 	             Maike::Db::DependencyGraph::IgnoreResolveErrors ignore_errors,
-				 Maike::fs::path const& required_by)
+	             Maike::fs::path const& required_by)
 	{
 		auto i = find(std::begin(src_files), std::end(src_files), dep.name(), CompareSourceFileRecord{});
 		if(i == std::end(src_files))
@@ -44,11 +44,10 @@ namespace
 			if(!ignore_errors)
 			{
 				std::string msg{required_by};
-				msg+=": error: ";
-				msg+="Failed to resolve ";
-				msg+=dep.name().string();
+				msg += ": error: ";
+				msg += "Failed to resolve ";
+				msg += dep.name().string();
 				throw std::runtime_error{msg};
-
 			}
 			return;
 		}
