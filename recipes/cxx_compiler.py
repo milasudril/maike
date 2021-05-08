@@ -31,6 +31,8 @@ def collect_cflags(src_dir, compiler_flags, dependencies):
 	for item in dependencies:
 		if item['origin'] == 'pkg-config':
 			ret.update(pkg_config.get_cflags(item['ref']))
+		elif 'rel' in item and item['rel'] == 'include':
+			ret.add('-include%s'%item['ref'])
 	ret.add('-std=c++17')
 	return ret
 
