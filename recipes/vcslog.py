@@ -1,9 +1,5 @@
 #!/usr/bin/python3
 
-#@	{
-#@	 "targets":[{"name":"vcslog.json"}]
-#@	}
-
 import pygit2
 import datetime
 import sys
@@ -36,6 +32,7 @@ def get(target):
 if __name__ == '__main__':
 	if sys.argv[1] == 'compile':
 		target = json.loads(sys.argv[2])['targets'][0]
+		print(target, file=sys.stderr)
 		data = get(target)
 		with open(target, 'w') as f:
 			json.dump(data, f)
