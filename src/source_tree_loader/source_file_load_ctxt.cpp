@@ -20,7 +20,7 @@ Maike::Db::Dependency Maike::SourceTreeLoader::getDependency(SourceFileLoadConte
 	                             name :
 	                             (expected_origin == Db::SourceFileOrigin::Generated ?
 	                                 load_ctxt.targetDir() / load_ctxt.sourceFileDir() / name :
-	                                 load_ctxt.sourceFileDir() / name),
+	                                 load_ctxt.sourceFileDir() / name).lexically_normal(),
 	                          expected_origin};
 
 	std::vector<Db::Property> properties;

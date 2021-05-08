@@ -1,6 +1,6 @@
 //@	{
 //@	  "targets":[{"name":"compound.hpp","type":"include"}]
-//@	  ,"dependencies_extra":[{"ref":"compound.o","rel":"implementation"}]
+//@	  ,"dependencies_extra":[{"ref":"./compound.o","rel":"implementation"}]
 //@	 }
 
 #ifndef MAIKE_KEYVALUESTORE_COMPOUND_HPP

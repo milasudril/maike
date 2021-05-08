@@ -1,6 +1,6 @@
 //@	{
 //@	  "targets":[{"name":"array.hpp","type":"include"}]
-//@	 ,"dependencies_extra":[{"ref":"array.o","rel":"implementation"}]
+//@	 ,"dependencies_extra":[{"ref":"./array.o","rel":"implementation"}]
 //@	 }
 
 #ifndef MAIKE_KEYVALUESTORE_ARRAY_HPP

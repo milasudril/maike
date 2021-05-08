@@ -1,6 +1,6 @@
 //@	{
 //@	  "targets":[{"name":"compiler.hpp","type":"include"}]
-//@	 ,"dependencies_extra":[{"ref":"compiler.o","rel":"implementation"}]
+//@	 ,"dependencies_extra":[{"ref":"./compiler.o","rel":"implementation"}]
 //@	 }
 
 #ifndef MAIKE_DB_COMPILER_HPP

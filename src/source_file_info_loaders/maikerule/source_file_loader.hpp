@@ -1,6 +1,6 @@
 //@	{
 //@	 "targets":[{"name":"source_file_loader.hpp","type":"include"}]
-//@	,"dependencies_extra":[{"ref":"source_file_loader.o","rel":"implementation"}]
+//@	,"dependencies_extra":[{"ref":"./source_file_loader.o","rel":"implementation"}]
 //@	}
 
 #ifndef MAIKERULE_SOURCEFILELOADER_HPP

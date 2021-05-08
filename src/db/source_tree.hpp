@@ -1,6 +1,6 @@
 //@	{
 //@	 "targets":[{"name":"source_tree.hpp","type":"include"}]
-//@	,"dependencies_extra":[{"ref":"source_tree.o","rel":"implementation"}]
+//@	,"dependencies_extra":[{"ref":"./source_tree.o","rel":"implementation"}]
 //@	}
 
 #ifndef MAIKE_DB_SOURCETREE_HPP

@@ -1,6 +1,6 @@
 //@	{
 //@	  "targets":[{"name":"compilation_log.hpp","type":"include"}]
-//@	 ,"dependencies_extra":[{"ref":"compilation_log.o", "rel":"implementation"}]
+//@	 ,"dependencies_extra":[{"ref":"./compilation_log.o", "rel":"implementation"}]
 //@	 }
 
 #ifndef MAIKE_DB_COMPILATIONLOG_HPP

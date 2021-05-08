@@ -1,6 +1,6 @@
 //@	{
 //@	 "targets":[{"name":"source_file_load_ctxt.hpp","type":"include"}]
-//@	,"dependencies_extra":[{"ref":"source_file_load_ctxt.o","rel":"implementation"}]
+//@	,"dependencies_extra":[{"ref":"./source_file_load_ctxt.o","rel":"implementation"}]
 //@ }
 
 #ifndef MAIKE_SOURCETREELOADER_SOURCEFILELOADCTXT_HPP
