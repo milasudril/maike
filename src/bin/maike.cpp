@@ -1,4 +1,4 @@
-//@	 {"targets":[{"name":"maike_next","type":"application"}, {"name":"maike.o","type":"object"}]}
+//@	 {"target":{"name":"maike.o","type":"object"}}
 
 #include "./cmd_line_options.hpp"
 #include "./config.hpp"
