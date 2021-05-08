@@ -1,6 +1,5 @@
 //@	{
-//@	 "targets":[{"name":"thread_pool.hpp","type":"include"}]
-//@	,"dependencies_extra":[{"ref":"./thread_pool.o", "rel":"implementation"}]
+//@	"dependencies_extra":[{"ref":"./thread_pool.o", "rel":"implementation"}]
 //@	}
 
 #ifndef MAIKE_SCHED_THREADPOOL_HPP

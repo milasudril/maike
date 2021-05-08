@@ -1,5 +1,4 @@
 //@	{
-//@	 "targets":[{"name":"task_completion_event.hpp","type":"include"}]
 //@	}
 
 #ifndef MAIKE_SCHED_TASKCOMPLETIONEVENT_HPP

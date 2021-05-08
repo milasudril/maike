@@ -1,5 +1,4 @@
 //@	{
-//@	 "targets":[{"name":"source_file_loader.hpp","type":"include"}]
 //@	}
 
 #ifndef APP_SOURCEFILELOADER_HPP

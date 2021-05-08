@@ -1,6 +1,5 @@
 //@	{
-//@	 "targets":[{"name":"command_dictionary.hpp","type":"include"}]
-//@	,"dependencies_extra":[{"ref":"./command_dictionary.o","rel":"implementation"}]
+//@	"dependencies_extra":[{"ref":"./command_dictionary.o","rel":"implementation"}]
 //@	}
 
 #ifndef MAIKE_SOURCETREELOADER_COMMANDDICTIONARY_HPP

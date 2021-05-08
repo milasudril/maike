@@ -1,6 +1,5 @@
 //@	{
-//@	  "targets":[{"name":"config.hpp","type":"include"}]
-//@	 ,"dependencies_extra":[{"ref":"./config.o","rel":"implementation"}]
+//@	 "dependencies_extra":[{"ref":"./config.o","rel":"implementation"}]
 //@	}
 
 #ifndef MAIKE_SOURCEFILEINFOLOADERS_CONFIG_HPP

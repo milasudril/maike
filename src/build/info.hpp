@@ -1,5 +1,4 @@
 //@	{
-//@	 "targets":[{"name":"info.hpp","type":"include"}]
 //@	}
 
 #ifndef MAIKE_BUILD_INFO_HPP

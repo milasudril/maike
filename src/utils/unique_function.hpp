@@ -1,5 +1,4 @@
 //@	{
-//@	 "targets":[{"name":"unique_function.hpp","type":"include"}]
 //@	}
 
 #ifndef MAIKE_UTILS_UNIQUEFUNCTION_HPP

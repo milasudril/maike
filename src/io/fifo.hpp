@@ -1,5 +1,4 @@
 //@	{
-//@	 "targets":[{"name":"fifo.hpp","type":"include"}]
 //@	}
 
 #ifndef MAIKE_IO_FIFO_HPP

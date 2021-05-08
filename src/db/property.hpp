@@ -1,5 +1,4 @@
 //@	{
-//@	 "targets":[{"name":"property.hpp","type":"include"}]
 //@	 }
 
 #ifndef MAIKE_DB_PROPERTY_HPP

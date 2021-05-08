@@ -1,5 +1,4 @@
 //@	{
-//@	 "targets":[{"name":"compilation_log.hpp","type":"include"}]
 //@	 }
 
 #ifndef MAIKE_BIN_COMPILATIONLOG_HPP

@@ -1,5 +1,4 @@
 //@	{
-//@	  "targets":[{"name":"loader.hpp","type":"include"}]
 //@	 }
 
 #ifndef MAIKE_SOURCEFILEINFOLOADERS_LOADER_HPP

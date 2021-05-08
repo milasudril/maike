@@ -1,5 +1,4 @@
 //@	{
-//@	  "targets":[{"name":"empty.hpp","type":"include"}]
 //@	}
 
 #ifndef MAIKE_UTILS_EMPTY_HPP

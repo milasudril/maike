@@ -1,6 +1,5 @@
 //@	{
-//@	  "targets":[{"name":"command.hpp","type":"include"}]
-//@	 ,"dependencies_extra":[{"ref":"./command.o","rel":"implementation"}]
+//@	 "dependencies_extra":[{"ref":"./command.o","rel":"implementation"}]
 //@	 }
 
 #ifndef MAIKE_EXEC_COMMAND_HPP

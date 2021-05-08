@@ -1,6 +1,6 @@
 //@	{
-//@	 "targets":[{"name":"maike_next","type":"application"}, {"name":"maike.o","type":"object"}]
-//@	,"dependencies":[{"ref":"./about.hpp", "rel":"include"}]
+//@	 "target":{"name":"maike.o","type":"object"}
+//	,"dependencies":[{"ref":"./about.hpp", "rel":"include"}]
 //@	}
 
 #include "./cmd_line_options.hpp"

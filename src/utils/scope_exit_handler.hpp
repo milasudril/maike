@@ -1,5 +1,4 @@
 //@	{
-//@	  "targets":[{"name":"scope_exit_handler.hpp","type":"include"}]
 //@	}
 
 #ifndef MAIKE_UTILS_SCOPEEXIT_HPP

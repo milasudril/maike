@@ -1,5 +1,4 @@
 //@	{
-//@	  "targets":[{"name":"graphutils.hpp","type":"include"}]
 //@	 }
 
 #ifndef MAIKE_GRAPHUTILS_HPP

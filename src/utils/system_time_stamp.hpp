@@ -1,6 +1,5 @@
 //@	{
-//@	 "targets":[{"name":"system_time_stamp.hpp","type":"include"}]
-//@	,"dependencies_extra":[{"ref":"./system_time_stamp.o","rel":"implementation"}]
+//@	"dependencies_extra":[{"ref":"./system_time_stamp.o","rel":"implementation"}]
 //@	}
 
 #ifndef MAIKE_TIME_SYSTEMTIMESTAMP_HPP

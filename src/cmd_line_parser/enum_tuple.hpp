@@ -1,5 +1,4 @@
 //@	{
-//@	  "targets":[{"name":"enum_tuple.hpp","type":"include"}]
 //@	}
 
 #ifndef MAIKE_CMDLINEPARSER_ENUMTUPLE_HPP

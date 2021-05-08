@@ -1,6 +1,5 @@
 //@	{
-//@	  "targets":[{"name":"mem_monitor.hpp","type":"include"}]
-//@	 ,"dependencies_extra":[{"ref":"./mem_monitor.o", "rel":"implementation"}]
+//@	 "dependencies_extra":[{"ref":"./mem_monitor.o", "rel":"implementation"}]
 //@	}
 
 #ifndef MAIKE_UTILS_MEMMONITOR_HPP

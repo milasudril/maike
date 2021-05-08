@@ -1,5 +1,4 @@
 //@	{
-//@	  "targets":[{"name":"cmd_line_options.hpp","type":"include"}]
 //@	}
 
 #ifndef MAIKE_BIN_CMDLINEOPTIONS_HPP

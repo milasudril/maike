@@ -1,5 +1,4 @@
 //@	{
-//@	 "targets":[{"name":"writer.hpp","type":"include"}]
 //@	}
 
 #ifndef MAIKE_IO_WRITER_HPP

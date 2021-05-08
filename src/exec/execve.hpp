@@ -1,6 +1,5 @@
 //@	{
-//@	 "targets":[{"name":"execve.hpp","type":"include"}]
-//@	 ,"dependencies_extra":[{"ref":"./execve.o","rel":"implementation"}]
+//@	 "dependencies_extra":[{"ref":"./execve.o","rel":"implementation"}]
 //@	}
 
 #ifndef MAIKE_EXEC_EXECVE_HPP

@@ -1,5 +1,4 @@
 //@	{
-//@	  "targets":[{"name":"callwrappers.hpp","type":"include"}]
 //@	}
 
 #ifndef MAIKE_UTILS_CALLWRAPPERS_HPP

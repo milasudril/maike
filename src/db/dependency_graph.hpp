@@ -1,6 +1,5 @@
 //@	{
-//@	  "targets":[{"name":"dependency_graph.hpp","type":"include"}]
-//@	 ,"dependencies_extra":[{"ref":"./dependency_graph.o", "rel":"implementation"}]
+//@	 "dependencies_extra":[{"ref":"./dependency_graph.o", "rel":"implementation"}]
 //@	 }
 
 #ifndef MAIKE_DB_DEPENDENCYGRAPH_HPP
