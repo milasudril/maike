@@ -46,18 +46,18 @@ void Maike::Db::insertUnique(
    std::reference_wrapper<SourceFileList::value_type const> src_file_entry,
    TargetList& targets)
 {
-	auto i = targets.find(target.get().name());
+	auto name = target.get().name().lexically_normal();
+	auto i = targets.find(name);
 	if(i != std::end(targets))
 	{
 		std::string msg{"Target has "};
-		msg += target.get().name();
-		msg += " already been defined in ";
+		msg += name;
+		msg += " has already been defined in ";
 		msg += i->second.sourceFilename();
 		throw std::runtime_error{std::move(msg)};
 	}
 
-	targets.insert(std::make_pair(
-	   target.get().name(), Target{src_file_entry.get().first, target, src_file_entry.get().second}));
+	targets.insert(std::make_pair(std::move(name), Target{src_file_entry.get().first, target, src_file_entry.get().second}));
 }
 
 void Maike::Db::collectTargets(
@@ -66,7 +66,7 @@ void Maike::Db::collectTargets(
 	auto const& targets = src_file_entry.get().second.targets();
 	std::for_each(
 	   std::begin(targets), std::end(targets), [&output, &src_file_entry](auto const& target) {
-		   // Some targets (include files and directories) share name with source files.
+		   // Some targets (include-files and directories) may share name with source files.
 		   // Ignore those.
 		   if(src_file_entry.get().first != target.name())
 		   { insertUnique(target, src_file_entry, output); }
