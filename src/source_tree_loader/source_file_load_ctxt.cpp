@@ -12,18 +12,22 @@ Maike::Db::Dependency
 Maike::SourceTreeLoader::prependSearchPath(SourceFileLoadContext const& load_ctxt,
                                            Db::Dependency const& dependency)
 {
-	if(dependency.expectedOrigin() == Db::SourceFileOrigin::Project)
+	if(dependency.expectedOrigin() == Db::SourceFileOrigin::Project
+	   || dependency.expectedOrigin() == Db::SourceFileOrigin::Generated)
 	{
 		auto str = dependency.name().string();
+		auto props = dependency.properties();
 		if(str.size() > 1 && memcmp(str.data(), "./", 2) == 0)
 		{
 			return Db::Dependency{(load_ctxt.sourceFileDir() / dependency.name()).lexically_normal(),
-			                      dependency.expectedOrigin()};
+			                      dependency.expectedOrigin()}
+			   .properties(std::move(props));
 		}
 		else
 		{
 			return Db::Dependency{(load_ctxt.sourceDir() / dependency.name()).lexically_normal(),
-			                      dependency.expectedOrigin()};
+			                      dependency.expectedOrigin()}
+			   .properties(std::move(props));
 		}
 	}
 	return dependency;
