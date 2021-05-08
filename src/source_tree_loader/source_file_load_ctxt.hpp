@@ -47,7 +47,6 @@ namespace Maike::SourceTreeLoader
 	};
 
 	Db::Dependency prependSearchPath(SourceFileLoadContext const& load_ctxt,
-	                                 fs::path const& prefix,
 	                                 Maike::Db::Dependency const& dependency);
 
 	Db::Dependency getDependency(SourceFileLoadContext const& load_ctxt,

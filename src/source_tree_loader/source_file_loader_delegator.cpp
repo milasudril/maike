@@ -19,17 +19,14 @@ namespace
 
 	std::vector<Maike::Db::Dependency>
 	prependSearchPath(Maike::SourceTreeLoader::SourceFileLoadContext const& load_ctxt,
-	                         Maike::fs::path const& prefix,
-	                         std::vector<Maike::Db::Dependency> const& deps)
+	                  std::vector<Maike::Db::Dependency> const& deps)
 	{
 		std::vector<Maike::Db::Dependency> ret;
 		ret.reserve(deps.size());
 		std::transform(std::begin(deps),
 		               std::end(deps),
 		               std::back_inserter(ret),
-		               [&load_ctxt, &prefix](auto const& item) {
-						   return prependSearchPath(load_ctxt, prefix, item);
-		               });
+		               [&load_ctxt](auto const& item) { return prependSearchPath(load_ctxt, item); });
 		return ret;
 	}
 
@@ -53,8 +50,7 @@ namespace
 		Maike::SourceTreeLoader::SourceFileLoadContext load_ctxt{
 		   src_path.parent_path(), src_dir, target_dir};
 		{
-			auto deps = prependSearchPath(
-			   load_ctxt, src_path.parent_path(), loader.getDependencies(Maike::Io::Reader{src_fifo}));
+			auto deps = prependSearchPath(load_ctxt, loader.getDependencies(Maike::Io::Reader{src_fifo}));
 			builtin_deps.insert(std::end(builtin_deps), std::begin(deps), std::end(deps));
 		}
 

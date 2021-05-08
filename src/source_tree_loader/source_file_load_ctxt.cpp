@@ -10,7 +10,6 @@
 
 Maike::Db::Dependency
 Maike::SourceTreeLoader::prependSearchPath(SourceFileLoadContext const& load_ctxt,
-                                           fs::path const& prefix,
                                            Maike::Db::Dependency const& dependency)
 {
 	if(dependency.expectedOrigin() == Maike::Db::SourceFileOrigin::Project)
@@ -18,7 +17,7 @@ Maike::SourceTreeLoader::prependSearchPath(SourceFileLoadContext const& load_ctx
 		auto str = dependency.name().string();
 		if(str.size() > 1 && memcmp(str.data(), "./", 2) == 0)
 		{
-			return Maike::Db::Dependency{(prefix / dependency.name()).lexically_normal(),
+			return Maike::Db::Dependency{(load_ctxt.sourceFileDir() / dependency.name()).lexically_normal(),
 			                             dependency.expectedOrigin()};
 		}
 		else
