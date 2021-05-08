@@ -34,17 +34,19 @@ namespace
 		tags_fifo.stop();
 		src_fifo.stop();
 
-		Maike::SourceTreeLoader::SourceFileLoadContext load_ctxt{
-		   src_path.parent_path(), src_dir, target_dir};
 		{
-			auto deps = prependSearchPath(load_ctxt, loader.getDependencies(Maike::Io::Reader{src_fifo}));
+			auto deps = loader.getDependencies(Maike::Io::Reader{src_fifo});
 			builtin_deps.insert(std::end(builtin_deps), std::begin(deps), std::end(deps));
 		}
+
+		Maike::SourceTreeLoader::SourceFileLoadContext load_ctxt{
+		   src_path.parent_path(), src_dir, target_dir};
 
 		auto tags = Maike::KeyValueStore::Compound{Maike::Io::Reader{tags_fifo}, src_path.string()};
 		auto targets = getTargets(load_ctxt, tags);
 		auto use_deps = getUseDeps(load_ctxt, tags);
 		auto child_target_use_deps = getChildTargetUseDeps(load_ctxt, tags);
+
 		std::copy(std::begin(use_deps), std::end(use_deps), std::back_inserter(builtin_deps));
 
 		auto compiler = tags.getIf<Maike::Db::Compiler>("compiler");
@@ -62,9 +64,9 @@ namespace
 			if(compiler.recipe() != "") { builtin_deps.push_back(makeDependency(compiler)); }
 		}(load_ctxt, compiler ? (*compiler) : loader.compiler(), src_path);
 
-		return Maike::Db::SourceFileInfo{std::move(builtin_deps),
+		return Maike::Db::SourceFileInfo{prependSearchPath(load_ctxt, builtin_deps),
 		                                 std::vector<Maike::Db::Dependency>{},
-		                                 std::move(child_target_use_deps),
+		                                 prependSearchPath(load_ctxt, child_target_use_deps),
 		                                 std::move(targets),
 		                                 std::ref(loader.compiler()),
 		                                 compiler ? (*compiler) : Maike::Db::Compiler{""},
