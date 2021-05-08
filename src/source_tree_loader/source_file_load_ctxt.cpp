@@ -10,23 +10,36 @@
 
 Maike::Db::Dependency
 Maike::SourceTreeLoader::prependSearchPath(SourceFileLoadContext const& load_ctxt,
-                                           Maike::Db::Dependency const& dependency)
+                                           Db::Dependency const& dependency)
 {
-	if(dependency.expectedOrigin() == Maike::Db::SourceFileOrigin::Project)
+	if(dependency.expectedOrigin() == Db::SourceFileOrigin::Project)
 	{
 		auto str = dependency.name().string();
 		if(str.size() > 1 && memcmp(str.data(), "./", 2) == 0)
 		{
-			return Maike::Db::Dependency{(load_ctxt.sourceFileDir() / dependency.name()).lexically_normal(),
-			                             dependency.expectedOrigin()};
+			return Db::Dependency{(load_ctxt.sourceFileDir() / dependency.name()).lexically_normal(),
+			                      dependency.expectedOrigin()};
 		}
 		else
 		{
-			return Maike::Db::Dependency{(load_ctxt.sourceDir() / dependency.name()).lexically_normal(),
-			                             dependency.expectedOrigin()};
+			return Db::Dependency{(load_ctxt.sourceDir() / dependency.name()).lexically_normal(),
+			                      dependency.expectedOrigin()};
 		}
 	}
 	return dependency;
+}
+
+std::vector<Maike::Db::Dependency>
+Maike::SourceTreeLoader::prependSearchPath(SourceFileLoadContext const& load_ctxt,
+                                           std::vector<Db::Dependency> const& deps)
+{
+	std::vector<Db::Dependency> ret;
+	ret.reserve(deps.size());
+	std::transform(std::begin(deps),
+	               std::end(deps),
+	               std::back_inserter(ret),
+	               [&load_ctxt](auto const& item) { return prependSearchPath(load_ctxt, item); });
+	return ret;
 }
 
 Maike::Db::Dependency Maike::SourceTreeLoader::getDependency(SourceFileLoadContext const& load_ctxt,

@@ -56,6 +56,9 @@ namespace Maike::SourceTreeLoader
 	Db::TargetInfo getTarget(SourceFileLoadContext const& load_ctxt,
 	                         KeyValueStore::CompoundRefConst target);
 
+	std::vector<Db::Dependency> prependSearchPath(SourceFileLoadContext const& load_ctxt,
+	                                              std::vector<Db::Dependency> const& deps);
+
 	std::vector<Db::TargetInfo> getTargets(SourceFileLoadContext const& load_ctxt,
 	                                       KeyValueStore::Compound const& tags);
 

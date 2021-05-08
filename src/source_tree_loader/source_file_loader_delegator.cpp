@@ -17,19 +17,6 @@ namespace
 {
 	// TODO: These functions should be moved
 
-	std::vector<Maike::Db::Dependency>
-	prependSearchPath(Maike::SourceTreeLoader::SourceFileLoadContext const& load_ctxt,
-	                  std::vector<Maike::Db::Dependency> const& deps)
-	{
-		std::vector<Maike::Db::Dependency> ret;
-		ret.reserve(deps.size());
-		std::transform(std::begin(deps),
-		               std::end(deps),
-		               std::back_inserter(ret),
-		               [&load_ctxt](auto const& item) { return prependSearchPath(load_ctxt, item); });
-		return ret;
-	}
-
 	Maike::Db::SourceFileInfo loadSourceFile(Maike::fs::path const& src_dir,
 	                                         Maike::fs::path const& src_path,
 	                                         Maike::fs::path const& target_dir,
@@ -84,8 +71,6 @@ namespace
 		                                 Maike::Db::SourceFileOrigin::Project};
 	}
 }
-
-static const Maike::Db::Compiler mkdir{"make_directory"};
 
 std::optional<Maike::Db::SourceFileInfo> Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(
    fs::path const& src_dir, fs::path const& src_path, fs::path const& target_dir) const
