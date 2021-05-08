@@ -1,6 +1,5 @@
 //@	{
-//@	  "targets":[{"name":"source_file_list.hpp","type":"include"}]
-//@	 ,"dependencies_extra":[{"ref":"./source_file_list.o","rel":"implementation"}]
+//@	 "dependencies_extra":[{"ref":"./source_file_list.o","rel":"implementation"}]
 //@	 }
 
 #ifndef MAIKE_DB_SOURCEFILELIST_HPP

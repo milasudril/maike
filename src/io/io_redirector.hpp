@@ -1,5 +1,4 @@
 //@	{
-//@	 "targets":[{"name":"io_redirector.hpp","type":"include"}]
 //@	 }
 
 #ifndef MAIKE_IO_IOREDIRECTOR_HPP

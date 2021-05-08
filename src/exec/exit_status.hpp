@@ -1,5 +1,4 @@
 //@	{
-//@	 "targets":[{"name":"exit_status.hpp","type":"include"}]
 //@	 }
 
 #ifndef MAIKE_EXEC_EXITSTATUS_HPP

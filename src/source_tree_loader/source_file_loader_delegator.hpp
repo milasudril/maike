@@ -1,6 +1,5 @@
 //@	{
-//@	 "targets":[{"name":"source_file_loader_delegator.hpp","type":"include"}]
-//@	,"dependencies_extra":[{"ref":"./source_file_loader_delegator.o","rel":"implementation"}]
+//@	"dependencies_extra":[{"ref":"./source_file_loader_delegator.o","rel":"implementation"}]
 //@	}
 
 #ifndef MAIKE_SOURCETREELOADER_SOURCEFILELOADERDELEGATOR_HPP

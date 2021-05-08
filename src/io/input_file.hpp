@@ -1,5 +1,4 @@
 //@	{
-//@	 "targets":[{"name":"input_file.hpp","type":"include"}]
 //@	}
 
 #ifndef MAIKE_IO_INPUTFILE_HPP

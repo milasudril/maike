@@ -1,5 +1,4 @@
 //@	{
-//@	 "targets":[{"name":"reader.hpp","type":"include"}]
 //@	}
 
 #ifndef MAIKE_IO_READER_HPP

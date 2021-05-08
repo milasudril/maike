@@ -1,5 +1,4 @@
 //@	{
-//@	 "targets":[{"name":"result.hpp","type":"include"}]
 //@	 }
 
 #ifndef MAIKE_EXEC_RESULT_HPP

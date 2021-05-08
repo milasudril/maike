@@ -1,5 +1,4 @@
 //@	{
-//@	 "targets":[{"name":"task_counter.hpp","type":"include"}]
 //@	}
 
 #ifndef MAIKE_SCHED_TASKCOUNTER_HPP

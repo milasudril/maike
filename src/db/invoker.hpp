@@ -1,5 +1,4 @@
 //@	{
-//@	 "targets":[{"name":"invoker.hpp","type":"include"}]
 //@	 }
 
 #ifndef MAIKE_DB_INVOKER_HPP

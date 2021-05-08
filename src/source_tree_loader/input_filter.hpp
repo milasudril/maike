@@ -1,6 +1,5 @@
 //@	{
-//@	  "targets":[{"name":"input_filter.hpp","type":"include"}]
-//@	 ,"dependencies_extra":[{"ref":"./input_filter.o", "rel":"implementation"}]
+//@	 "dependencies_extra":[{"ref":"./input_filter.o", "rel":"implementation"}]
 //@	}
 
 #ifndef MAIKE_SOURCETREELOADER_INPUTFILTER_HPP

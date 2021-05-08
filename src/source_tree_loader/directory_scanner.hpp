@@ -1,6 +1,5 @@
 //@	{
-//@	 "targets":[{"name":"directory_scanner.hpp","type":"include"}]
-//@	,"dependencies_extra":[{"ref":"./directory_scanner.o","rel":"implementation"}]
+//@	"dependencies_extra":[{"ref":"./directory_scanner.o","rel":"implementation"}]
 //@ }
 
 #ifndef MAIKE_SOURCETREELOADER_DIRECTORYSCANNER_HPP

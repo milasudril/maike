@@ -1,6 +1,5 @@
 //@	{
-//@	  "targets":[{"name":"thread_count.hpp","type":"include"}]
-//@	 ,"dependencies_extra":[{"ref":"./thread_count.o","rel":"implementation"}]
+//@	 "dependencies_extra":[{"ref":"./thread_count.o","rel":"implementation"}]
 //@	}
 
 #ifndef MAIKE_THREADCOUNT_HPP

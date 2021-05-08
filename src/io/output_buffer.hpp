@@ -1,5 +1,4 @@
 //@	{
-//@	 "targets":[{"name":"output_buffer.hpp","type":"include"}]
 //@	}
 
 #ifndef MAIKE_IO_OUTPUTBUFFER_HPP

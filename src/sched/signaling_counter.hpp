@@ -1,5 +1,4 @@
 //@	{
-//@	 "targets":[{"name":"signaling_counter.hpp","type":"include"}]
 //@	}
 
 #ifndef MAIKE_SCHED_SIGNALINGCOUNTER_HPP

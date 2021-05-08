@@ -1,5 +1,4 @@
 //@	{
-//@	  "targets":[{"name":"source_file_id.hpp","type":"include"}]
 //@	 }
 
 #ifndef MAIKE_DB_SOURCEFILEID_HPP
