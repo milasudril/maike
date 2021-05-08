@@ -22,7 +22,9 @@
 						"cflags": [
 							"-c",
 							"-g",
-							"-Wall"
+							"-Wall",
+							"-Wextra",
+							"-Werror"
 						],
 						"iquote": [
 							"."
@@ -53,7 +55,7 @@
 				".cpp": "cxx",
 				".hpp": "cxx",
 				".py": "extension",
-				".vcslog.maikerule":"vcslog"
+				".vcslog.maikerule": "vcslog"
 			},
 			"input_filter": [
 				"^\\.",

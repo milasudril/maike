@@ -19,12 +19,14 @@ Maike::SourceTreeLoader::prependSearchPath(SourceFileLoadContext const& load_ctx
 		auto props = dependency.properties();
 		if(str.size() > 1 && memcmp(str.data(), "./", 2) == 0)
 		{
+			fprintf(stderr, "%u %s %s\n", __LINE__, load_ctxt.sourceFileDir().c_str(), str.c_str());
 			return Db::Dependency{(load_ctxt.sourceFileDir() / dependency.name()).lexically_normal(),
 			                      dependency.expectedOrigin()}
 			   .properties(std::move(props));
 		}
 		else
 		{
+			fprintf(stderr, "%u %s %s\n", __LINE__, load_ctxt.sourceDir().c_str(), str.c_str());
 			return Db::Dependency{(load_ctxt.sourceDir() / dependency.name()).lexically_normal(),
 			                      dependency.expectedOrigin()}
 			   .properties(std::move(props));
@@ -54,6 +56,8 @@ Maike::Db::Dependency Maike::SourceTreeLoader::getDependency(SourceFileLoadConte
 	auto expected_origin = default_origin;
 	if(auto origin = dep.getIf<char const*>("origin"); origin)
 	{ expected_origin = fromString(KeyValueStore::Empty<Db::SourceFileOrigin>{}, *origin); }
+
+	//FIXME: Apply ./ rule above
 	auto ret = Db::Dependency{isExternal(expected_origin) ?
 	                             name :
 	                             (expected_origin == Db::SourceFileOrigin::Generated ?

@@ -1,10 +1,10 @@
 //@	{
 //@	 "target":{"name":"maike.o","type":"object"}
-//	,"dependencies":[{"ref":"./about.hpp", "rel":"include"}]
 //@	}
 
 #include "./cmd_line_options.hpp"
 #include "./config.hpp"
+#include "./about.hpp"
 
 #include "src/build/info.hpp"
 #include "src/db/dependency_graph.hpp"
