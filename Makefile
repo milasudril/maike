@@ -12,7 +12,7 @@ bootstrap:
 bootstrap-test: bootstrap
 	__targets/bootstrap.sh
 	rm -rf __targets
-	__targets_bootsrap/src/bin/maike2
+	__targets_bootstrap/src/bin/maike2
 
 DESTDIR?=""
 PREFIX?="/usr"
