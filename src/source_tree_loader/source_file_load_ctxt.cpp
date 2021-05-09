@@ -31,7 +31,9 @@ Maike::SourceTreeLoader::prependSearchPath(SourceFileLoadContext const& load_ctx
                                            Db::Dependency const& dependency)
 {
 	auto path = prependSearchPath(load_ctxt, dependency.name(), dependency.expectedOrigin());
-	return Db::Dependency{std::move(path), dependency.expectedOrigin(), std::vector<Db::Property>{dependency.properties()}};
+	return Db::Dependency{std::move(path),
+	                      dependency.expectedOrigin(),
+	                      std::vector<Db::Property>{dependency.properties()}};
 }
 
 std::vector<Maike::Db::Dependency>
@@ -62,14 +64,16 @@ Maike::Db::Dependency Maike::SourceTreeLoader::getDependency(SourceFileLoadConte
 		{ properties.push_back(Db::Property{item.first, item.second.template as<char const*>()}); }
 	});
 
-	return Db::Dependency{isExternal(expected_origin) ?
-	                         name :
-	                         (expected_origin == Db::SourceFileOrigin::Generated ?
-	                             load_ctxt.targetDir() / load_ctxt.sourceFileDir() / name :
-	                             load_ctxt.sourceFileDir() / name)
-	                            .lexically_normal(),
-	                      expected_origin,
-	                      std::move(properties)};
+	auto resolved_name =
+	   [](SourceFileLoadContext const& ctxt, fs::path const& name, Db::SourceFileOrigin origin) {
+		   if(isExternal(origin)) { return name; }
+
+		   return ((origin == Db::SourceFileOrigin::Generated ? ctxt.targetDir() : ".")
+		           / prependSearchPath(ctxt, name, origin))
+		      .lexically_normal();
+	   }(load_ctxt, name, expected_origin);
+
+	return Db::Dependency{std::move(resolved_name), expected_origin, std::move(properties)};
 }
 
 Maike::Db::TargetInfo

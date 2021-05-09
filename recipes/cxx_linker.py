@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-#@	{"dependencies":[{"ref":"pkg_config.py","origin":"project"}]}
+#@	{"dependencies":[{"ref":"./pkg_config.py","origin":"project"}]}
 
 import sys
 import json
