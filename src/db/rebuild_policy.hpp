@@ -17,6 +17,11 @@ namespace Maike::Db
 
 	RebuildPolicy fromString(KeyValueStore::Empty<RebuildPolicy>, char const* str);
 
+	inline auto fromJson(KeyValueStore::Empty<RebuildPolicy>, Maike::KeyValueStore::JsonRefConst val)
+	{
+		return fromString(KeyValueStore::Empty<RebuildPolicy>{}, val.as<char const*>());
+	}
+
 	char const* toString(RebuildPolicy);
 }
 

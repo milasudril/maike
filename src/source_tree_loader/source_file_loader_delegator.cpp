@@ -64,13 +64,18 @@ namespace
 			if(compiler.recipe() != "") { builtin_deps.push_back(makeDependency(compiler)); }
 		}(load_ctxt, compiler ? (*compiler) : loader.compiler(), src_path);
 
-		auto rebuid_policy = Maike::Db::RebuildPolicy::OnlyIfOutOfDate;
+		auto const rebuild_policy = [](auto const& tags) {
+			if(auto rebuild_policy = tags.template getIf<Maike::Db::RebuildPolicy>("rebuild_policy");
+			   rebuild_policy)
+			{ *rebuild_policy; }
+			return Maike::Db::RebuildPolicy::OnlyIfOutOfDate;
+		}(tags);
 
 		return Maike::Db::SourceFileInfo{std::move(targets),
 		                                 std::ref(loader.compiler()),
 		                                 compiler ? (*compiler) : Maike::Db::Compiler{""},
 		                                 Maike::Db::SourceFileOrigin::Project,
-		                                 rebuid_policy}
+		                                 rebuild_policy}
 		   .useDeps(prependSearchPath(load_ctxt, builtin_deps))
 		   .childTargetsUseDeps(prependSearchPath(load_ctxt, child_target_use_deps));
 	}
