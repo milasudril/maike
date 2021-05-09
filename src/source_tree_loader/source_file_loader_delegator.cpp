@@ -64,13 +64,20 @@ namespace
 			if(compiler.recipe() != "") { builtin_deps.push_back(makeDependency(compiler)); }
 		}(load_ctxt, compiler ? (*compiler) : loader.compiler(), src_path);
 
-		return Maike::Db::SourceFileInfo{prependSearchPath(load_ctxt, builtin_deps),
-		                                 std::vector<Maike::Db::Dependency>{},
-		                                 prependSearchPath(load_ctxt, child_target_use_deps),
-		                                 std::move(targets),
+		auto const rebuild_policy = [](auto const& tags) {
+			if(auto rebuild_policy = tags.template getIf<Maike::Db::RebuildPolicy>("rebuild_policy");
+			   rebuild_policy)
+			{ *rebuild_policy; }
+			return Maike::Db::RebuildPolicy::OnlyIfOutOfDate;
+		}(tags);
+
+		return Maike::Db::SourceFileInfo{std::move(targets),
 		                                 std::ref(loader.compiler()),
 		                                 compiler ? (*compiler) : Maike::Db::Compiler{""},
-		                                 Maike::Db::SourceFileOrigin::Project};
+		                                 Maike::Db::SourceFileOrigin::Project,
+		                                 rebuild_policy}
+		   .useDeps(prependSearchPath(load_ctxt, builtin_deps))
+		   .childTargetsUseDeps(prependSearchPath(load_ctxt, child_target_use_deps));
 	}
 }
 
@@ -97,13 +104,12 @@ std::optional<Maike::Db::SourceFileInfo> Maike::SourceTreeLoader::SourceFileLoad
 		   Db::TargetInfo{target_dir / (src_path.lexically_normal()), std::vector<Db::Dependency>{}});
 
 		deps.push_back(makeDependency(m_dir_compiler));
-		return Db::SourceFileInfo{std::move(deps),
-		                          std::vector<Db::Dependency>{},
-		                          std::vector<Db::Dependency>{},
-		                          std::move(targets),
+		return Db::SourceFileInfo{std::move(targets),
 		                          m_dir_compiler,
 		                          Db::Compiler{""},
-		                          Db::SourceFileOrigin::Project};
+		                          Db::SourceFileOrigin::Project,
+		                          Db::RebuildPolicy::OnlyIfOutOfDate}
+		   .useDeps(std::move(deps));
 	}
 
 	std::string extension;

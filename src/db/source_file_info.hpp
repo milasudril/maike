@@ -1,12 +1,10 @@
-//@	{
-//@	 }
-
 #ifndef MAIKE_DB_SOURCEFILEINFO_HPP
 #define MAIKE_DB_SOURCEFILEINFO_HPP
 
 #include "./dependency.hpp"
 #include "./target_info.hpp"
 #include "./compiler.hpp"
+#include "./rebuild_policy.hpp"
 
 #include <vector>
 
@@ -23,20 +21,16 @@ namespace Maike::Db
 		{
 		}
 
-		explicit SourceFileInfo(std::vector<Dependency>&& use_deps,
-		                        std::vector<Dependency>&& build_deps,
-		                        std::vector<Dependency>&& child_target_use_deps,
-		                        std::vector<TargetInfo>&& targets,
+		explicit SourceFileInfo(std::vector<TargetInfo>&& targets,
 		                        std::reference_wrapper<Compiler const> compiler_default,
 		                        Compiler&& compiler,
-		                        SourceFileOrigin origin):
-		   m_use_deps{std::move(use_deps)},
-		   m_build_deps{std::move(build_deps)},
-		   m_child_targets_use_deps{std::move(child_target_use_deps)},
+		                        SourceFileOrigin origin,
+		                        RebuildPolicy rebuild_policy):
 		   m_targets{std::move(targets)},
 		   m_compiler_default{&compiler_default.get()},
 		   m_compiler{std::move(compiler)},
-		   m_origin{origin}
+		   m_origin{origin},
+		   m_rebuild_policy{rebuild_policy}
 		{
 		}
 
@@ -44,7 +38,6 @@ namespace Maike::Db
 		{
 			return m_use_deps;
 		}
-
 
 		SourceFileInfo& useDeps(std::vector<Dependency>&& deps)
 		{
@@ -89,9 +82,20 @@ namespace Maike::Db
 			return m_child_targets_use_deps;
 		}
 
+		SourceFileInfo& childTargetsUseDeps(std::vector<Dependency>&& deps)
+		{
+			m_child_targets_use_deps = std::move(deps);
+			return *this;
+		}
+
 		SourceFileOrigin origin() const
 		{
 			return m_origin;
+		}
+
+		RebuildPolicy rebuildPolicy() const
+		{
+			return m_rebuild_policy;
 		}
 
 	private:
@@ -102,6 +106,7 @@ namespace Maike::Db
 		Compiler const* m_compiler_default;
 		Compiler m_compiler;
 		SourceFileOrigin m_origin;
+		RebuildPolicy m_rebuild_policy;
 	};
 }
 
