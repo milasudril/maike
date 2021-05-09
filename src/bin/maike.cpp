@@ -117,6 +117,7 @@ void printVersionInfo(Maike::fs::path const&)
 	printf(R"STR(# Maike %s (%s)
 
 Build start time: %s
+
 Build id: %s
 )STR",
 	       Maike::Self::VcsTag,
