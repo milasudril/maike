@@ -91,8 +91,7 @@ Maike::Db::SourceFileInfo Maike::Db::makeSourceFileInfo(TargetList::value_type c
 	auto node = getNode(g, item.second.sourceFilename());
 
 	// NOTE: At this step there are no source files that could contian recursive linking
-	// information.
-	//       Thus, this will *only* collect data from all include files.
+	// information. Thus, this will *only* collect data from all include files.
 	processGraphNodeRecursive(
 	   [&use_deps, &target_name = item.first](SourceFileRecordConst const& node, auto const) {
 		   auto const& child_target_use_deps = node.sourceFileInfo().childTargetsUseDeps();

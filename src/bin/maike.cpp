@@ -1,7 +1,10 @@
-//@	 {"target":{"name":"maike.o","type":"object"}}
+//@	{
+//@	 "target":{"name":"maike.o","type":"object"}
+//@	}
 
 #include "./cmd_line_options.hpp"
 #include "./config.hpp"
+#include "./about.hpp"
 
 #include "src/build/info.hpp"
 #include "src/db/dependency_graph.hpp"
@@ -109,6 +112,56 @@ void printHelp(Maike::CommandLine const& cmdline)
 	              });
 }
 
+void printVersion(Maike::fs::path const&)
+{
+	printf(R"STR(# Maike %s (%s)
+
+Build start time: %s
+
+Build id: %s
+
+Build host: %s
+
+)STR",
+	       Maike::Self::VcsTag,
+	       Maike::Self::VcsRevisionId,
+	       Maike::Self::BuildStartTime,
+	       Maike::Self::BuildId,
+		   Maike::Self::BuildHost
+  		);
+}
+
+void printAbout(Maike::fs::path const&)
+{
+	printf(R"STR(# Maike %s (%s)
+
+%s
+
+%s
+
+%s
+
+## Build info
+
+Start time: %s
+
+Id: %s
+
+Build host: %s
+
+)STR",
+	       Maike::Self::VcsTag,
+	       Maike::Self::VcsRevisionId,
+		   Maike::Self::DescriptionShort,
+		   Maike::Self::Copyright,
+		   Maike::Self::LegalBrief,
+	       Maike::Self::BuildStartTime,
+	       Maike::Self::BuildId,
+		   Maike::Self::BuildHost
+  		);
+
+}
+
 void print(char const* name, Maike::fs::path const& path)
 {
 	fprintf(stderr, "%s: %s", name, path.c_str());
@@ -213,6 +266,18 @@ int main(int argc, char** argv)
 		if(cmdline.hasOption<Maike::CmdLineOption::Help>())
 		{
 			printHelp(cmdline);
+			return 0;
+		}
+
+		if(cmdline.hasOption<Maike::CmdLineOption::Version>())
+		{
+			printVersion(cmdline.option<Maike::CmdLineOption::Version>());
+			return 0;
+		}
+
+		if(cmdline.hasOption<Maike::CmdLineOption::About>())
+		{
+			printAbout(cmdline.option<Maike::CmdLineOption::About>());
 			return 0;
 		}
 

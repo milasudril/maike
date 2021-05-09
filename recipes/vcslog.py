@@ -1,9 +1,5 @@
 #!/usr/bin/python3
 
-#@	{
-#@	 "targets":[{"name":"vcslog.json"}]
-#@	}
-
 import pygit2
 import datetime
 import sys

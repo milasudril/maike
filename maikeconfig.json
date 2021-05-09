@@ -43,6 +43,13 @@
 					"recipe": ""
 				},
 				"loader": "extension"
+			},
+			"vcslog": {
+				"compiler": {
+					"config": {},
+					"recipe": "recipes/vcslog.py"
+				},
+				"loader": "maikerule"
 			}
 		},
 		"source_tree_loader": {
@@ -50,7 +57,8 @@
 				".app.maikerule": "app",
 				".cpp": "cxx",
 				".hpp": "cxx",
-				".py": "extension"
+				".py": "extension",
+				".vcslog.maikerule": "vcslog"
 			},
 			"input_filter": [
 				"^\\.",
