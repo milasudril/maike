@@ -24,11 +24,13 @@ namespace Maike::Db
 		explicit SourceFileInfo(std::vector<TargetInfo>&& targets,
 		                        std::reference_wrapper<Compiler const> compiler_default,
 		                        Compiler&& compiler,
-		                        SourceFileOrigin origin):
+		                        SourceFileOrigin origin,
+		                        RebuildPolicy rebuild_policy):
 		   m_targets{std::move(targets)},
 		   m_compiler_default{&compiler_default.get()},
 		   m_compiler{std::move(compiler)},
-		   m_origin{origin}
+		   m_origin{origin},
+		   m_rebuild_policy{rebuild_policy}
 		{
 		}
 
@@ -91,6 +93,11 @@ namespace Maike::Db
 			return m_origin;
 		}
 
+		RebuildPolicy rebuildPolicy() const
+		{
+			return m_rebuild_policy;
+		}
+
 	private:
 		std::vector<Dependency> m_use_deps;
 		std::vector<Dependency> m_build_deps;
@@ -99,6 +106,7 @@ namespace Maike::Db
 		Compiler const* m_compiler_default;
 		Compiler m_compiler;
 		SourceFileOrigin m_origin;
+		RebuildPolicy m_rebuild_policy;
 	};
 }
 
