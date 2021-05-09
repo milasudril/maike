@@ -30,23 +30,8 @@ Maike::Db::Dependency
 Maike::SourceTreeLoader::prependSearchPath(SourceFileLoadContext const& load_ctxt,
                                            Db::Dependency const& dependency)
 {
-	if(dependency.expectedOrigin() == Db::SourceFileOrigin::Project)
-	{
-		auto str = dependency.name().string();
-		if(str.size() > 1 && memcmp(str.data(), "./", 2) == 0)
-		{
-			return Db::Dependency{(load_ctxt.sourceFileDir() / dependency.name()).lexically_normal(),
-			                      dependency.expectedOrigin(),
-			                      std::vector<Db::Property>{dependency.properties()}};
-		}
-		else
-		{
-			return Db::Dependency{(load_ctxt.sourceDir() / dependency.name()).lexically_normal(),
-			                      dependency.expectedOrigin(),
-			                      std::vector<Db::Property>{dependency.properties()}};
-		}
-	}
-	return dependency;
+	auto path = prependSearchPath(load_ctxt, dependency.name(), dependency.expectedOrigin());
+	return Db::Dependency{std::move(path), dependency.expectedOrigin(), std::vector<Db::Property>{dependency.properties()}};
 }
 
 std::vector<Maike::Db::Dependency>
