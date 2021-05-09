@@ -22,7 +22,9 @@
 						"cflags": [
 							"-c",
 							"-g",
-							"-Wall"
+							"-Wall",
+							"-Wextra",
+							"-Werror"
 						],
 						"iquote": [
 							"."
