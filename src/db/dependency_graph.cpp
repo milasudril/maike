@@ -152,7 +152,8 @@ void Maike::Db::compile(DependencyGraph const& g,
 		throw std::runtime_error{std::move(msg)};
 	}
 
-	if(force_recompilation || !isUpToDate(node, use_deps))
+	if(force_recompilation || node.sourceFileInfo().rebuildPolicy() == RebuildPolicy::Always
+	   || !isUpToDate(node, use_deps))
 	{
 		auto result = invoker.execve(cmd);
 		log_entry.command(std::move(cmd));
