@@ -25,14 +25,17 @@ def format_iquote(src_dir, list):
 	return ret
 
 def collect_cflags(src_dir, compiler_flags, dependencies):
-	ret = set()
-	ret.update(compiler_flags['cflags'])
-	ret.update(format_iquote(src_dir, compiler_flags['iquote']))
+	tmp = []
+	tmp.extend(compiler_flags['cflags'])
+	tmp.extend(format_iquote(src_dir, compiler_flags['iquote']))
 	for item in dependencies:
 		if item['origin'] == 'pkg-config':
-			ret.update(pkg_config.get_cflags(item['ref']))
-	ret.add('-std=c++17')
-	return ret
+			tmp.extend(pkg_config.get_cflags(item['ref']))
+		elif 'rel' in item and item['rel'] == 'include':
+			tmp.append('-include%s'%item['ref'])
+	tmp.append('-std=c++17')
+
+	return list(dict.fromkeys(tmp))
 
 no_op = {'.hpp', '.h', '.hxx'}
 
