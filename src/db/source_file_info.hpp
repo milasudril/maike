@@ -1,12 +1,10 @@
-//@	{
-//@	 }
-
 #ifndef MAIKE_DB_SOURCEFILEINFO_HPP
 #define MAIKE_DB_SOURCEFILEINFO_HPP
 
 #include "./dependency.hpp"
 #include "./target_info.hpp"
 #include "./compiler.hpp"
+#include "./rebuild_policy.hpp"
 
 #include <vector>
 
