@@ -9,8 +9,9 @@
 import sys
 import json
 from string import Template
+import datetime
 
-buildinfo = Template('''char const* BuildId="$build_id";
+buildinfo = Template('''char const* BuildId = "$build_id";
 
 char const* BuildStartTime = "$start_time";
 ''')
@@ -34,6 +35,8 @@ def get_vcsinfo(target_dir):
 
 def compile(args):
 	output = dict()
+	timestamp = args['build_info']['start_time']
+	args['build_info']['start_time'] = datetime.datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S UTC')
 	output['build_info'] = buildinfo.substitute(args['build_info'])
 	output['vcs_info'] = vcsinfo.substitute(get_vcsinfo(args['build_info']['target_dir']))
 	output_str = file_content.substitute(output)
