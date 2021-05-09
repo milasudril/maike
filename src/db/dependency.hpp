@@ -19,8 +19,10 @@ namespace Maike::Db
 	class Dependency
 	{
 	public:
-		explicit Dependency(fs::path const& path, SourceFileOrigin expected_origin):
-		   m_name{path}, m_expected_origin{expected_origin}
+		explicit Dependency(fs::path const& path,
+		                    SourceFileOrigin expected_origin,
+		                    std::vector<Property>&& properties):
+		   m_name{path}, m_expected_origin{expected_origin}, m_properties{std::move(properties)}
 		{
 		}
 
