@@ -14,7 +14,7 @@ Maike::Db::RebuildPolicy Maike::Db::fromString(KeyValueStore::Empty<RebuildPolic
 		return RebuildPolicy::OnlyIfOutOfDate;
 	}
 
-	throw std::runtime_error{"Unknown origin"};
+	throw std::runtime_error{"Unknown rebuild policy"};
 }
 
 char const* Maike::Db::toString(RebuildPolicy val)

@@ -65,7 +65,7 @@ namespace
 		}(load_ctxt, compiler ? (*compiler) : loader.compiler(), src_path);
 
 		auto const rebuild_policy = [](auto const& tags) {
-			if(auto rebuild_policy = tags.template getIf<Maike::Db::RebuildPolicy>("rebuild_policy");
+			if(auto rebuild_policy = tags.template getIf<Maike::Db::RebuildPolicy>("rebuild");
 			   rebuild_policy)
 			{ *rebuild_policy; }
 			return Maike::Db::RebuildPolicy::OnlyIfOutOfDate;
