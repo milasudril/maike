@@ -1,5 +1,5 @@
 //@	{
-//@	  "dependencies_extra":[{"ref":"about.o","rel":"implementation"}]
+//@	  "dependencies_extra":[{"ref":"./about.o","rel":"implementation"}]
 //@	 }
 
 #ifndef MAIKE_ABOUT_HPP

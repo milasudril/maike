@@ -2,8 +2,7 @@
 
 #@	{
 #@	 "target":{"name":"about_impl.hpp"}
-#FIXME: should be sufficient to use `maike.vcslog` to get path relative to projroot
-#@	,"dependencies":[{"ref":"../../maike.vcslog","origin":"generated"}]
+#@	,"dependencies":[{"ref":"maike.vcslog","origin":"generated"}]
 #@	,"rebuild_policy":"always"
 #@	}
 
