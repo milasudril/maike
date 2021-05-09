@@ -10,26 +10,14 @@ import sys
 import json
 from string import Template
 
-buildinfo = Template('''char const* buildId()
-{
-	return "$build_id";
-}
+buildinfo = Template('''char const* BuildId="$build_id";
 
-char const* buildStartTime()
-{
-	return "$start_time";
-}
+char const* BuildStartTime = "$start_time";
 ''')
 
-vcsinfo = Template('''char const* vcsRevisionId()
-{
-	return "$commit";
-}
+vcsinfo = Template('''char const* VcsRevisionId = "$commit";
 
-char const* vcsTag()
-{
-	return "$tag";
-}
+char const* VcsTag = "$tag";
 ''')
 
 file_content = Template('''#ifndef MAIKE_BIN_ABOUTIMPL_HPP
