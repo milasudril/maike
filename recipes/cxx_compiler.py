@@ -60,7 +60,6 @@ def compile(build_args):
 	args.append(build_args['source_file'])
 	args.append('-o')
 	args.append(build_args['targets'][0])
-	eprint(args)
 	result = subprocess.run(args)
 
 	for target in build_args['targets'][1:]:
@@ -123,7 +122,6 @@ def configure(cfg):
 			if rev_cfg < get_numeric_rev(ret):
 				eprint('Warning: The compiler reports an earlier standard revision than requested (%d vs %d). This indicates that support for the selected revision is experimental. Expect changes in ABI or API when the compiler is upgraded.'%(rev_cfg, get_numeric_rev(ret)))
 			cfg['std_revision']['selected'] = ret
-		print(json.dumps(cfg))
 		return 0
 	else:
 		return 0
