@@ -27,6 +27,13 @@ file_content = Template('''#ifndef MAIKE_BIN_ABOUTIMPL_HPP
 
 $build_info
 $vcs_info
+
+char const* Maike::Self::Copyright = "Torbjörn Rathsman © 2016-2021";
+
+char const* Maike::Self::DescriptionShort = "A build system based on scanning of source files";
+
+char const* Maike::Self::LegalBrief = R"STR(Maike comes with ABSOLUTELY NO WARRANTY; for details see section 15 and 16 in the GNU General Public License version 3. Maike is free software, and you are welcome to redistribute it under the terms of the GNU General Public License, either version 3, or at your option, any later version.)STR";
+
 #endif
 ''')
 

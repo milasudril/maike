@@ -11,6 +11,9 @@ namespace Maike::Self
 	extern char const* BuildStartTime;
 	extern char const* VcsRevisionId;
 	extern char const* VcsTag;
+	extern char const* Copyright;
+	extern char const* DescriptionShort;
+	extern char const* LegalBrief;
 }
 
 #endif
