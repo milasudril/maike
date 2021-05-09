@@ -9,6 +9,7 @@ namespace Maike::Self
 {
 	extern char const* BuildId;
 	extern char const* BuildStartTime;
+	extern char const* BuildHost;
 	extern char const* VcsRevisionId;
 	extern char const* VcsTag;
 	extern char const* Copyright;

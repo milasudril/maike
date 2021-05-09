@@ -120,11 +120,15 @@ Build start time: %s
 
 Build id: %s
 
+Build host: %s
+
 )STR",
 	       Maike::Self::VcsTag,
 	       Maike::Self::VcsRevisionId,
 	       Maike::Self::BuildStartTime,
-	       Maike::Self::BuildId);
+	       Maike::Self::BuildId,
+		   Maike::Self::BuildHost
+  		);
 }
 
 void printAbout(Maike::fs::path const&)
@@ -143,6 +147,8 @@ Start time: %s
 
 Id: %s
 
+Build host: %s
+
 )STR",
 	       Maike::Self::VcsTag,
 	       Maike::Self::VcsRevisionId,
@@ -150,7 +156,9 @@ Id: %s
 		   Maike::Self::Copyright,
 		   Maike::Self::LegalBrief,
 	       Maike::Self::BuildStartTime,
-	       Maike::Self::BuildId);
+	       Maike::Self::BuildId,
+		   Maike::Self::BuildHost
+  		);
 
 }
 

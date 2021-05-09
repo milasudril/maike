@@ -11,6 +11,7 @@ import sys
 import json
 from string import Template
 import datetime
+import socket
 
 buildinfo = Template('''char const* Maike::Self::BuildId = "$build_id";
 
@@ -26,6 +27,9 @@ file_content = Template('''#ifndef MAIKE_BIN_ABOUTIMPL_HPP
 #define MAIKE_BIN_ABOUTIMPL_HPP
 
 $build_info
+
+char const* Maike::Self::BuildHost = "$build_host";
+
 $vcs_info
 
 char const* Maike::Self::Copyright = "Copyright © 2016-2021  Torbjörn Rathsman";
@@ -50,6 +54,7 @@ def compile(args):
 	args['build_info']['start_time'] = datetime.datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S UTC')
 	output['build_info'] = buildinfo.substitute(args['build_info'])
 	output['vcs_info'] = vcsinfo.substitute(get_vcsinfo(args['build_info']['target_dir']))
+	output['build_host'] = socket.gethostname()
 	output_str = file_content.substitute(output)
 	with open(args['targets'][0], 'w') as f:
 		f.write(output_str)
