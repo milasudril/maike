@@ -8,6 +8,24 @@
 
 #include <cstring>
 
+Maike::fs::path Maike::SourceTreeLoader::prependSearchPath(SourceFileLoadContext const& load_ctxt,
+                                                           fs::path const& src_name,
+                                                           Db::SourceFileOrigin expected_origin)
+{
+	if(expected_origin == Db::SourceFileOrigin::Project
+	   || expected_origin == Db::SourceFileOrigin::Generated)
+	{
+		auto str = src_name.string();
+		if(str.size() > 1 && memcmp(str.data(), "./", 2) == 0)
+		{ return (load_ctxt.sourceFileDir() / src_name).lexically_normal(); }
+		else
+		{
+			return (load_ctxt.sourceDir() / src_name).lexically_normal();
+		}
+	}
+	return src_name;
+}
+
 Maike::Db::Dependency
 Maike::SourceTreeLoader::prependSearchPath(SourceFileLoadContext const& load_ctxt,
                                            Db::Dependency const& dependency)

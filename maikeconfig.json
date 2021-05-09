@@ -29,7 +29,7 @@
 						"iquote": [
 							"."
 						],
-						"std_revision":{
+						"std_revision": {
 							"min": "c++17"
 						}
 					},
