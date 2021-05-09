@@ -122,6 +122,7 @@ def configure(cfg):
 			if rev_cfg < get_numeric_rev(ret):
 				eprint('Warning: The compiler reports an earlier standard revision than requested (%d vs %d). This indicates that support for the selected revision is experimental. Expect changes in ABI or API when the compiler is upgraded.'%(rev_cfg, get_numeric_rev(ret)))
 			cfg['std_revision']['selected'] = ret
+		print(json.dumps(cfg))
 		return 0
 	else:
 		return 0
