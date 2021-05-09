@@ -112,6 +112,19 @@ void printHelp(Maike::CommandLine const& cmdline)
 	              });
 }
 
+void printVersionInfo(Maike::fs::path const&)
+{
+	printf(R"STR(# Maike %s (%s)
+
+Build start time: %s
+Build id: %s
+)STR",
+	       Maike::Self::VcsTag,
+	       Maike::Self::VcsRevisionId,
+	       Maike::Self::BuildStartTime,
+	       Maike::Self::BuildId);
+}
+
 void print(char const* name, Maike::fs::path const& path)
 {
 	fprintf(stderr, "%s: %s", name, path.c_str());
@@ -216,6 +229,12 @@ int main(int argc, char** argv)
 		if(cmdline.hasOption<Maike::CmdLineOption::Help>())
 		{
 			printHelp(cmdline);
+			return 0;
+		}
+
+		if(cmdline.hasOption<Maike::CmdLineOption::Version>())
+		{
+			printVersionInfo(cmdline.option<Maike::CmdLineOption::Version>());
 			return 0;
 		}
 
