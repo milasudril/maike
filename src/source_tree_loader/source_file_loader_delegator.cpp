@@ -64,13 +64,12 @@ namespace
 			if(compiler.recipe() != "") { builtin_deps.push_back(makeDependency(compiler)); }
 		}(load_ctxt, compiler ? (*compiler) : loader.compiler(), src_path);
 
-		return Maike::Db::SourceFileInfo{prependSearchPath(load_ctxt, builtin_deps),
-		                                 std::vector<Maike::Db::Dependency>{},
-		                                 prependSearchPath(load_ctxt, child_target_use_deps),
-		                                 std::move(targets),
+		return Maike::Db::SourceFileInfo{std::move(targets),
 		                                 std::ref(loader.compiler()),
 		                                 compiler ? (*compiler) : Maike::Db::Compiler{""},
-		                                 Maike::Db::SourceFileOrigin::Project};
+		                                 Maike::Db::SourceFileOrigin::Project}
+		   .useDeps(prependSearchPath(load_ctxt, builtin_deps))
+		   .childTargetsUseDeps(prependSearchPath(load_ctxt, child_target_use_deps));
 	}
 }
 
@@ -97,13 +96,9 @@ std::optional<Maike::Db::SourceFileInfo> Maike::SourceTreeLoader::SourceFileLoad
 		   Db::TargetInfo{target_dir / (src_path.lexically_normal()), std::vector<Db::Dependency>{}});
 
 		deps.push_back(makeDependency(m_dir_compiler));
-		return Db::SourceFileInfo{std::move(deps),
-		                          std::vector<Db::Dependency>{},
-		                          std::vector<Db::Dependency>{},
-		                          std::move(targets),
-		                          m_dir_compiler,
-		                          Db::Compiler{""},
-		                          Db::SourceFileOrigin::Project};
+		return Db::SourceFileInfo{
+		   std::move(targets), m_dir_compiler, Db::Compiler{""}, Db::SourceFileOrigin::Project}
+		   .useDeps(std::move(deps));
 	}
 
 	std::string extension;

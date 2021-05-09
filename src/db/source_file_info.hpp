@@ -21,16 +21,10 @@ namespace Maike::Db
 		{
 		}
 
-		explicit SourceFileInfo(std::vector<Dependency>&& use_deps,
-		                        std::vector<Dependency>&& build_deps,
-		                        std::vector<Dependency>&& child_target_use_deps,
-		                        std::vector<TargetInfo>&& targets,
+		explicit SourceFileInfo(std::vector<TargetInfo>&& targets,
 		                        std::reference_wrapper<Compiler const> compiler_default,
 		                        Compiler&& compiler,
 		                        SourceFileOrigin origin):
-		   m_use_deps{std::move(use_deps)},
-		   m_build_deps{std::move(build_deps)},
-		   m_child_targets_use_deps{std::move(child_target_use_deps)},
 		   m_targets{std::move(targets)},
 		   m_compiler_default{&compiler_default.get()},
 		   m_compiler{std::move(compiler)},
@@ -42,7 +36,6 @@ namespace Maike::Db
 		{
 			return m_use_deps;
 		}
-
 
 		SourceFileInfo& useDeps(std::vector<Dependency>&& deps)
 		{
@@ -85,6 +78,12 @@ namespace Maike::Db
 		std::vector<Dependency> const& childTargetsUseDeps() const
 		{
 			return m_child_targets_use_deps;
+		}
+
+		SourceFileInfo& childTargetsUseDeps(std::vector<Dependency>&& deps)
+		{
+			m_child_targets_use_deps = std::move(deps);
+			return *this;
 		}
 
 		SourceFileOrigin origin() const
