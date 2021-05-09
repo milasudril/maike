@@ -4,6 +4,7 @@
 #@	 "target":{"name":"about_impl.hpp"}
 #FIXME: should be sufficient to use `maike.vcslog` to get path relative to projroot
 #@	,"dependencies":[{"ref":"../../maike.vcslog","origin":"generated"}]
+#@	,"rebuild_policy":"always"
 #@	}
 
 import sys
@@ -11,14 +12,14 @@ import json
 from string import Template
 import datetime
 
-buildinfo = Template('''char const* BuildId = "$build_id";
+buildinfo = Template('''char const* Maike::Self::BuildId = "$build_id";
 
-char const* BuildStartTime = "$start_time";
+char const* Maike::Self::BuildStartTime = "$start_time";
 ''')
 
-vcsinfo = Template('''char const* VcsRevisionId = "$commit";
+vcsinfo = Template('''char const* Maike::Self::VcsRevisionId = "$commit";
 
-char const* VcsTag = "$tag";
+char const* Maike::Self::VcsTag = "$tag";
 ''')
 
 file_content = Template('''#ifndef MAIKE_BIN_ABOUTIMPL_HPP

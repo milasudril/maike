@@ -60,6 +60,7 @@ def compile(build_args):
 	args.append(build_args['source_file'])
 	args.append('-o')
 	args.append(build_args['targets'][0])
+	eprint(args)
 	result = subprocess.run(args)
 
 	for target in build_args['targets'][1:]:
