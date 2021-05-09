@@ -45,6 +45,10 @@ namespace Maike::SourceTreeLoader
 		std::reference_wrapper<fs::path const> m_target_dir;
 	};
 
+	fs::path prependSearchPath(SourceFileLoadContext const& load_ctxt,
+	                           fs::path const& src_name,
+	                           Db::SourceFileOrigin expected_origin);
+
 	Db::Dependency prependSearchPath(SourceFileLoadContext const& load_ctxt,
 	                                 Maike::Db::Dependency const& dependency);
 

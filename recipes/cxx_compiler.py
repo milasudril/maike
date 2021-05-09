@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-#@	{"dependencies":[{"ref":"pkg_config.py","origin":"project"}]}
+#@	{"dependencies":[{"ref":"./pkg_config.py","origin":"project"}]}
 
 import sys
 import json
@@ -33,7 +33,6 @@ def collect_cflags(src_dir, compiler_flags, dependencies):
 			tmp.extend(pkg_config.get_cflags(item['ref']))
 		elif 'rel' in item and item['rel'] == 'include':
 			tmp.append('-include%s'%item['ref'])
-	tmp.append('-std=c++17')
 
 	return list(dict.fromkeys(tmp))
 
