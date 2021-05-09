@@ -57,7 +57,7 @@ Maike::Db::Dependency Maike::SourceTreeLoader::getDependency(SourceFileLoadConte
 	if(auto origin = dep.getIf<char const*>("origin"); origin)
 	{ expected_origin = fromString(KeyValueStore::Empty<Db::SourceFileOrigin>{}, *origin); }
 
-	//FIXME: Apply ./ rule above
+	//	FIXME: Apply ./ rule above
 	auto ret = Db::Dependency{isExternal(expected_origin) ?
 	                             name :
 	                             (expected_origin == Db::SourceFileOrigin::Generated ?

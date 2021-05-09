@@ -1,3 +1,4 @@
 {
-	 "target":{"name":"maike.vcslog"}
+	"target":{"name":"maike.vcslog"}
+	,"rebuild":"always"
 }
