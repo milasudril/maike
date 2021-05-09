@@ -100,7 +100,8 @@ namespace Maike::Db
 
 	inline Dependency makeDependency(Compiler const& a)
 	{
-		return Dependency{a.recipe(), a.origin() ? *a.origin() : SourceFileOrigin::System};
+		return Dependency{
+		   a.recipe(), a.origin() ? *a.origin() : SourceFileOrigin::System, std::vector<Property>{}};
 	}
 
 	KeyValueStore::Compound getTags(Compiler const& compiler, fs::path const& source_file);
