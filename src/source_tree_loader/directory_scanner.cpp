@@ -47,30 +47,27 @@ void Maike::SourceTreeLoader::DirectoryScanner::processPath(
 		   src_path_normal);
 		if(i != std::end(m_source_files)) { return; }
 
+		auto src_file_info = r_loaders.get().load(m_root, src_path, target_dir);
+		auto ins = invokeWithMutex<std::lock_guard>(
+		   m_source_files_mtx,
+		   [&src_files = m_source_files](auto&& src_path, auto&& src_file_info) {
+			   return src_files.insert(std::make_pair(std::move(src_path), std::move(src_file_info)));
+		   },
+		   std::move(src_path_normal),
+		   std::move(src_file_info));
 
-		if(auto src_file_info = r_loaders.get().load(m_root, src_path, target_dir); src_file_info)
+		if(ins.second && is_directory(ins.first->first))
 		{
-			auto ins = invokeWithMutex<std::lock_guard>(
-			   m_source_files_mtx,
-			   [&src_files = m_source_files](auto&& src_path, auto&& src_file_info) {
-				   return src_files.insert(std::make_pair(std::move(src_path), std::move(src_file_info)));
-			   },
-			   std::move(src_path_normal),
-			   std::move(*src_file_info));
-
-			if(ins.second && is_directory(ins.first->first))
-			{
-				auto i = Maike::fs::directory_iterator{ins.first->first};
-				std::for_each(begin(i), end(i), [this, &counter, &target_dir](auto&& item) {
-					r_workers->addTask(
-					   [this,
-					    src_path = item.path(),
-					    target_dir,
-					    counter = std::unique_lock<Sched::SignalingCounter<size_t>>(*counter.mutex())]() mutable {
-						   this->processPath(std::move(src_path), std::move(counter), target_dir);
-					   });
-				});
-			}
+			auto i = Maike::fs::directory_iterator{ins.first->first};
+			std::for_each(begin(i), end(i), [this, &counter, &target_dir](auto&& item) {
+				r_workers->addTask(
+				   [this,
+				    src_path = item.path(),
+				    target_dir,
+				    counter = std::unique_lock<Sched::SignalingCounter<size_t>>(*counter.mutex())]() mutable {
+					   this->processPath(std::move(src_path), std::move(counter), target_dir);
+				   });
+			});
 		}
 	}
 	catch(std::exception const& err)

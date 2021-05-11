@@ -81,7 +81,7 @@ namespace
 	}
 }
 
-std::optional<Maike::Db::SourceFileInfo> Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(
+Maike::Db::SourceFileInfo Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(
    fs::path const& src_dir, fs::path const& src_path, fs::path const& target_dir) const
 {
 	std::vector<Db::Dependency> deps;
@@ -121,9 +121,7 @@ std::optional<Maike::Db::SourceFileInfo> Maike::SourceTreeLoader::SourceFileLoad
 
 	auto i = m_loaders.find(extension);
 	if(i == std::end(m_loaders))
-	{
-		return Db::SourceFileInfo{Db::SourceFileOrigin::Project, Db::Compiler{}};
-	}
+	{ return Db::SourceFileInfo{Db::SourceFileOrigin::Project, Db::Compiler{}}; }
 
 	return loadSourceFile(src_dir, src_path, target_dir, std::move(deps), i->second, m_cmds);
 }

@@ -12,7 +12,6 @@
 #include "src/utils/fs.hpp"
 
 #include <map>
-#include <optional>
 
 namespace Maike::SourceTreeLoader
 {
@@ -37,7 +36,7 @@ namespace Maike::SourceTreeLoader
 			return m_loaders;
 		}
 
-		std::optional<Db::SourceFileInfo>
+		Db::SourceFileInfo
 		load(fs::path const& src_dir, fs::path const& path, fs::path const& target_dir) const;
 
 	private:

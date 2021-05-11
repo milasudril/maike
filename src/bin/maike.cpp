@@ -127,8 +127,7 @@ Build host: %s
 	       Maike::Self::VcsRevisionId,
 	       Maike::Self::BuildStartTime,
 	       Maike::Self::BuildId,
-		   Maike::Self::BuildHost
-  		);
+	       Maike::Self::BuildHost);
 }
 
 void printAbout(Maike::fs::path const&)
@@ -152,14 +151,12 @@ Build host: %s
 )STR",
 	       Maike::Self::VcsTag,
 	       Maike::Self::VcsRevisionId,
-		   Maike::Self::DescriptionShort,
-		   Maike::Self::Copyright,
-		   Maike::Self::LegalBrief,
+	       Maike::Self::DescriptionShort,
+	       Maike::Self::Copyright,
+	       Maike::Self::LegalBrief,
 	       Maike::Self::BuildStartTime,
 	       Maike::Self::BuildId,
-		   Maike::Self::BuildHost
-  		);
-
+	       Maike::Self::BuildHost);
 }
 
 void print(char const* name, Maike::fs::path const& path)
