@@ -120,7 +120,10 @@ std::optional<Maike::Db::SourceFileInfo> Maike::SourceTreeLoader::SourceFileLoad
 	}
 
 	auto i = m_loaders.find(extension);
-	if(i == std::end(m_loaders)) { return std::optional<Db::SourceFileInfo>{}; }
+	if(i == std::end(m_loaders))
+	{
+		return Db::SourceFileInfo{Db::SourceFileOrigin::Project, Db::Compiler{}};
+	}
 
 	return loadSourceFile(src_dir, src_path, target_dir, std::move(deps), i->second, m_cmds);
 }
