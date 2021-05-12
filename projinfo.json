@@ -1,9 +1,11 @@
 {
 	"copyright":
-	{
-		"author":"TOrbjörn Rathsman",
-		"years":[2016, 2017, 2018, 2019, 2020, 2021]
-	},
+	[
+		{
+			"author":"Torbjörn Rathsman",
+			"years":[2016, 2017, 2018, 2019, 2020, 2021]
+		}
+	],
 	"description":["Maike is a build system based on scanning of source files. To construct the dependency graph, Maike uses embedded JSON data to control the compilation process. Maike is intended for use with C++ developent, but can also be used for other kinds of projects."],
 	"description_short":"A build system based on scanning of source files",
 	"homepage":"https://github.com/milasudril/maike",
