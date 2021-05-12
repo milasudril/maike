@@ -4,6 +4,7 @@ import pygit2
 import datetime
 import sys
 import json
+import os
 
 def collect_commits(repo):
 	ret = []
@@ -17,7 +18,7 @@ def collect_commits(repo):
 
 	return ret
 
-def get(target):
+def get(target, cache):
 	try:
 		ret = dict()
 		repo = pygit2.Repository('.git')
@@ -26,12 +27,24 @@ def get(target):
 		ret['changelog'] = collect_commits(repo)
 		return ret
 	except:
-		with open(target) as f:
+		with open(cache) as f:
 			return json.load(f)
+
+def mkdir(path):
+	try:
+		os.mkdir(path)
+	except FileExistsError:
+		pass
 
 if __name__ == '__main__':
 	if sys.argv[1] == 'compile':
-		target = json.loads(sys.argv[2])['targets'][0]
-		data = get(target)
+		data = json.loads(sys.argv[2])
+		target = data['targets'][0]
+		src_dir = data['build_info']['source_dir']
+		cache = src_dir + '/__buildcache/vcslog.json'
+		data = get(target, cache)
 		with open(target, 'w') as f:
+			json.dump(data, f)
+		mkdir(src_dir + '/__buildcache')
+		with open(cache, 'w') as f:
 			json.dump(data, f)

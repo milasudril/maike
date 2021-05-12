@@ -12,7 +12,7 @@ def do_initial_build():
 		result = subprocess.run(args)
 		return result.returncode
 	except:
-		args = ['sh', '-x', '__targets/bootstrap.sh']
+		args = ['sh', '-x', '__buildcache/bootstrap.sh']
 		result = subprocess.run(args)
 		return result.returncode
 
