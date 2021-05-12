@@ -14,6 +14,12 @@ bootstrap-test: bootstrap
 	rm -rf __targets
 	__targets_bootstrap/src/bin/maike2
 
+.PHONY: source-arcive
+source-arcive: bootstrap
+	rm -f __targets/maike-src.tar.gz
+	(find __buildcache -type d; git ls-files) \
+	| tar --xform s:'\(.*\)':'maike-src/\1': -czf __targets/maike-src.tar.gz -T -
+
 DESTDIR?=""
 PREFIX?="/usr"
 .PHONY: install
