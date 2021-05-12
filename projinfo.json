@@ -1,0 +1,16 @@
+{
+	"copyright":
+	{
+		"author":"TOrbjörn Rathsman",
+		"years":[2016, 2017, 2018, 2019, 2020, 2021]
+	},
+	"description":["Maike is a build system based on scanning of source files. To construct the dependency graph, Maike uses embedded JSON data to control the compilation process. Maike is intended for use with C++ developent, but can also be used for other kinds of projects."],
+	"description_short":"A build system based on scanning of source files",
+	"homepage":"https://github.com/milasudril/maike",
+	"legal_info": {
+		"license_short": "Maike comes with ABSOLUTELY NO WARRANTY; for details see section 15 and 16 in the GNU General Public License version 3. Maike is free software, and you are welcome to redistribute it under the terms of the GNU General Public License, either version 3, or at your option, any later version.",
+		"license_tag": "GPL-3.0-or-later"
+	},
+	"name": "Maike",
+	"vcs_url": "https://github.com/milasudril/maike/maike.git"
+}
