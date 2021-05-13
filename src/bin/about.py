@@ -2,7 +2,7 @@
 
 #@	{
 #@	 "target":{"name":"about_impl.hpp"}
-#@	,"dependencies":[{"ref":"maike.vcslog","origin":"generated"}]
+#@	,"dependencies":[{"ref":"maike.vcslog","origin":"generated"}, {"ref":"projinfo.json", "origin":"project"}]
 #@	,"rebuild_policy":"always"
 #@	}
 
@@ -31,14 +31,11 @@ char const* Maike::Self::BuildHost = "$build_host";
 
 $vcs_info
 
-char const* Maike::Self::Copyright = "Copyright © 2016-2021  Torbjörn Rathsman";
+char const* Maike::Self::Copyright = "$copyright";
 
-char const* Maike::Self::DescriptionShort = "A build system based on scanning of source files";
+char const* Maike::Self::DescriptionShort = "$description_short";
 
-char const* Maike::Self::LegalBrief =
-"Maike comes with ABSOLUTELY NO WARRANTY; for details see section 15 and 16 in the GNU General Public\\n"
-"License version 3. Maike is free software, and you are welcome to redistribute it under the terms of\\n"
-"the GNU General Public License, either version 3, or at your option, any later version.";
+char const* Maike::Self::LegalBrief = "$legal_brief";
 
 #endif
 ''')
@@ -47,6 +44,19 @@ def get_vcsinfo(target_dir):
 	with open(target_dir + '/maike.vcslog') as f:
 		return json.load(f)
 
+def get_projinfo(source_dir):
+	with open(source_dir + '/projinfo.json') as f:
+		return json.load(f)
+
+def get_copyright(projinfo_copyright):
+	ret = []
+	for item in projinfo_copyright:
+		years_str = []
+		for year in sorted(item['years']):
+			years_str.append(str(year))
+		ret.append('© %s : %s'%(', '.join(years_str), item['author']))
+	return ret
+
 def compile(args):
 	output = dict()
 	timestamp = args['build_info']['start_time']
@@ -54,7 +64,13 @@ def compile(args):
 	output['build_info'] = buildinfo.substitute(args['build_info'])
 	output['vcs_info'] = vcsinfo.substitute(get_vcsinfo(args['build_info']['target_dir']))
 	output['build_host'] = socket.gethostname()
+	projinfo = get_projinfo(args['build_info']['source_dir'])
+	output['copyright'] = '\\n'.join(get_copyright(projinfo['copyright']))
+	output['description_short'] = projinfo['description_short']
+	output['legal_brief'] = projinfo['legal_info']['license_short']
 	output_str = file_content.substitute(output)
+
+
 	with open(args['targets'][0], 'w') as f:
 		f.write(output_str)
 	return 0
