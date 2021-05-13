@@ -106,10 +106,10 @@ void printHelp(Maike::CommandLine const& cmdline)
 
 		              if(item.valueRequired())
 		              {
-			              printf("%s=`%s`\n    %s\n\n", item.name(), item.type(), item.summary());
+			              printf("%s=*%s*\n    %s\n\n", item.name(), item.type(), item.summary());
 			              return;
 		              }
-		              printf("%s[=`%s`]\n    %s\n\n", item.name(), item.type(), item.summary());
+		              printf("%s[=*%s*]\n    %s\n\n", item.name(), item.type(), item.summary());
 		              return;
 	              });
 }

@@ -65,7 +65,7 @@ namespace Maike
 
 		static constexpr char const* summary()
 		{
-			return "Prints this message to stdout and exits, or `path`, and exits";
+			return "Prints this message to stdout and exits, or *path*, and exits";
 		}
 
 		static constexpr char const* description()
@@ -96,7 +96,7 @@ namespace Maike
 
 		static constexpr char const* summary()
 		{
-			return "Prints version information about the program to stdout or `path`, and exists";
+			return "Prints version information about the program to stdout or *path*, and exists";
 		}
 
 		static constexpr char const* description()
@@ -127,7 +127,7 @@ namespace Maike
 
 		static constexpr char const* summary()
 		{
-			return "Prints detailed information about the program to stdout or `path`, and exits";
+			return "Prints detailed information about the program to stdout or *path*, and exits";
 		}
 
 		static constexpr char const* description()
@@ -158,7 +158,7 @@ namespace Maike
 
 		static constexpr char const* summary()
 		{
-			return "Prints the forward dependency graph as a dot(1) file to stdout or `path`, and "
+			return "Prints the forward dependency graph as a dot(1) file to stdout or *path*, and "
 			       "exits";
 		}
 
@@ -192,7 +192,7 @@ namespace Maike
 
 		static constexpr char const* summary()
 		{
-			return "Prints the backward dependency graph as a dot(1) file to stdout or `path`, and "
+			return "Prints the backward dependency graph as a dot(1) file to stdout or *path*, and "
 			       "exits";
 		}
 
@@ -225,7 +225,7 @@ namespace Maike
 
 		static constexpr char const* summary()
 		{
-			return "Dumps the loaded database as JSON to stdout or `path`, and exits";
+			return "Dumps the loaded database as JSON to stdout or *path*, and exits";
 		}
 
 		static constexpr char const* description()
@@ -256,7 +256,7 @@ namespace Maike
 
 		static constexpr char const* summary()
 		{
-			return "Prints a list of all leaf targets to stdout or `path`, and exits";
+			return "Prints a list of all leaf targets to stdout or *path*, and exits";
 		}
 
 		static constexpr char const* description()
@@ -286,7 +286,7 @@ namespace Maike
 		}
 		static constexpr char const* summary()
 		{
-			return "Prints a list of all external dependencies to stdout or `path`, and exits";
+			return "Prints a list of all external dependencies to stdout or *path*, and exits";
 		}
 
 		static constexpr char const* description()
@@ -382,13 +382,13 @@ namespace Maike
 
 		static constexpr char const* summary()
 		{
-			return "Use project specific settings stored in `paths`";
+			return "Use project specific settings stored in *paths*";
 		}
 
 		static constexpr char const* description()
 		{
 			return "Settings in a later is merged to any previously loaded configuration. By default, maike "
-			       "will load settings from `maikeconfig.json` in found in `source-dir`. If that file "
+			       "will load settings from *maikeconfig.json* in found in *source-dir*. If that file "
 			       "is not found, a builtin default configuration will be used.";
 		}
 
@@ -415,7 +415,7 @@ namespace Maike
 
 		static constexpr char const* summary()
 		{
-			return "Dump current configuration in JSON format to stdout, or `path`";
+			return "Dump current configuration in JSON format to stdout, or *path*";
 		}
 
 		static constexpr char const* description()
@@ -446,7 +446,7 @@ namespace Maike
 
 		static constexpr char const* summary()
 		{
-			return "Process the source tree given by `path`";
+			return "Process the source tree given by *path*";
 		}
 
 		static constexpr char const* description()
@@ -477,12 +477,12 @@ namespace Maike
 
 		static constexpr char const* summary()
 		{
-			return "Store output files in `path`";
+			return "Store output files in *path*";
 		}
 
 		static constexpr char const* description()
 		{
-			return "By default, `__targets` is used.";
+			return "By default, *__targets* is used.";
 		}
 
 		static constexpr char const* name()
