@@ -72,7 +72,6 @@ def compile(args):
 	target_dir = args['build_info']['target_dir']
 	targets = args['targets']
 	projinfo = load_projinfo(args['build_info']['source_dir'])
-	print(projinfo, file=sys.stderr)
 	content = dict()
 	content['description'] = '\n\n'.join(projinfo['description'])
 	content['author'] = ', '.join(get_authors(projinfo['copyright']))

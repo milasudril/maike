@@ -86,6 +86,8 @@ void printDepGraph(Maike::Db::DependencyGraph const& source_files, Maike::fs::pa
 
 void printHelp(Maike::CommandLine const& cmdline)
 {
+	printf("\nBelow is a summary of all command line options.\n");
+
 	auto info = cmdline.optionInfo();
 
 	std::for_each(std::begin(info),
