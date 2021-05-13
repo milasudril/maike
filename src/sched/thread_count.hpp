@@ -45,7 +45,13 @@ namespace Maike
 
 	constexpr char const* typeToString(Empty<ThreadCount>)
 	{
-		return "ThreadCount";
+		return "Thread count";
+	}
+
+	constexpr char const* typeDescription(Empty<ThreadCount>)
+	{
+		return "A *Thread count* is an integer that indicates how many threads to use. By default, the "
+		       "number of theads is equal to the number of online logical processors.";
 	}
 }
 

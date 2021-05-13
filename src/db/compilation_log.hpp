@@ -129,12 +129,38 @@ namespace Maike::Db
 
 	constexpr char const* typeToString(Empty<CompilationLog::LogLevel>)
 	{
-		return "LogLevel";
+		return "Log level";
+	}
+
+	constexpr char const* typeDescription(Empty<CompilationLog::LogLevel>)
+	{
+		return "A *Log level* takes one of the values *errors*, *source_file_info*, and "
+		       "*compilation_command*. "
+		       "\n\n"
+		       "* *errors* will only print error messages\n\n"
+		       "* *source_file_info* will print information about the source file being compiled\n\n"
+		       "* *compilation_command* will show the compilation command used for each file being "
+		       "compiled\n\n"
+		       "Default value is *source_file_info*. Notice that *errors* and *source_file_info*s are "
+		       "written to *stderr*, "
+		       "while *compilation_command*s are written to *stdout*.";
 	}
 
 	constexpr char const* typeToString(Empty<CompilationLog::OutputFormat>)
 	{
-		return "OutputFormat";
+		return "Output format";
+	}
+
+	constexpr char const* typeDescription(Empty<CompilationLog::OutputFormat>)
+	{
+		return "An *Output format* defines how log messages are formatted. Possible options are "
+		       "*plain_text*, and "
+		       "*ansi_term*."
+		       "\n\n"
+		       "* *plain_text* will not use any formatting\n\n"
+		       "* *ansi_term* uses ANSI escape sequences\n\n"
+		       "If *stderr* is a tty, *ansi_term*, is default. Otherwise *plain_text* is the default "
+		       "option.";
 	}
 }
 

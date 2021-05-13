@@ -86,9 +86,11 @@ void printDepGraph(Maike::Db::DependencyGraph const& source_files, Maike::fs::pa
 
 void printHelp(Maike::CommandLine const& cmdline)
 {
-	printf("\nBelow is a summary of all command line options.\n");
+	printf(
+	   "\nBelow is a summary of all command line options. For information about how to type "
+	   "arguments, see *Parameter type explanations* below.\n");
 
-	auto info = cmdline.optionInfo();
+	constexpr auto info = cmdline.optionInfo();
 
 	std::for_each(std::begin(info),
 	              std::end(info),
@@ -112,6 +114,19 @@ void printHelp(Maike::CommandLine const& cmdline)
 		              printf("%s[=*%s*]\n    %s\n\n", item.name(), item.type(), item.summary());
 		              return;
 	              });
+
+	constexpr auto typeinfo = cmdline.typeInfo();
+	if(std::size(typeinfo) != 0)
+	{
+		printf(
+		   "\n___\n\n"
+		   "## Parameter type explanations\n\n"
+		   "This section contains summaries of different parameter types.\n\n");
+
+		std::for_each(std::begin(typeinfo), std::end(typeinfo), [](auto const& item) {
+			if(item.name() != nullptr) { printf("\n### %s\n\n%s\n\n", item.name(), item.description()); }
+		});
+	}
 }
 
 void printVersion(Maike::fs::path const&)

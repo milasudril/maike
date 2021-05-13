@@ -699,7 +699,7 @@ namespace Maike
 
 		static constexpr char const* summary()
 		{
-			return "Selects the log log level";
+			return "Selects the log level";
 		}
 
 		static constexpr char const* description()

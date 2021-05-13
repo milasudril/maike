@@ -18,7 +18,12 @@ namespace Maike::CmdLineParser
 {
 	constexpr char const* typeToString(Empty<fs::path>)
 	{
-		return "path";
+		return "Path";
+	}
+
+	constexpr char const* typeDescription(Empty<fs::path>)
+	{
+		return "A *Path* is a *filesystem path*.";
 	}
 
 	inline fs::path fromString(Empty<fs::path>, char const* str)
@@ -28,10 +33,21 @@ namespace Maike::CmdLineParser
 
 	constexpr char const* typeToString(Empty<std::vector<fs::path>>)
 	{
-		return "paths";
+		return "Paths";
+	}
+
+	constexpr char const* typeDescription(Empty<std::vector<fs::path>>)
+	{
+		return "This should be a comma-separated list of *Path*s. Ie `foo/x,bar/kaka` is an example of a "
+		       "valid value.";
 	}
 
 	constexpr char const* typeToString(Empty<std::false_type>)
+	{
+		return nullptr;
+	}
+
+	constexpr char const* typeDescription(Empty<std::false_type>)
 	{
 		return nullptr;
 	}
@@ -61,6 +77,63 @@ namespace Maike::CmdLineParser
 		return std::false_type{};
 	}
 
+	namespace detail
+	{
+		template<class T, class Compare>
+		constexpr void sort(T* begin, T* end, Compare cmp)
+		{
+			size_t N = end - begin;
+			auto vals = begin;
+			for(size_t k = 1; k < N; ++k)
+			{
+				for(size_t l = k; l > 0 && cmp(vals[l], vals[l - 1]); --l)
+				{
+					auto tmp = vals[l];
+					vals[l] = vals[l - 1];
+					vals[l - 1] = tmp;
+				}
+			}
+		}
+
+		template<class T, size_t N, class Compare>
+		constexpr std::array<T, N> sort(std::array<T, N> vals, Compare cmp)
+		{
+			sort(std::begin(vals), std::end(vals), cmp);
+			return vals;
+		}
+
+		template<class T, size_t N, class Pred>
+		constexpr auto copy_if(std::array<T, N> const& vals, Pred cmp)
+		{
+			std::array<T, N> ret{};
+			size_t l = 0;
+			for(size_t k = 0; k < N; ++k)
+			{
+				if(cmp(vals[k]))
+				{
+					ret[l] = vals[k];
+					++l;
+				}
+			}
+			return std::pair{ret, l};
+		}
+
+		template<class T, size_t N, class Compare>
+		constexpr auto unique(std::array<T, N> const& vals, Compare cmp, size_t max = N)
+		{
+			std::array<T, N> ret{};
+			size_t l = 0;
+			for(size_t k = 1; k < max; ++k)
+			{
+				if(!cmp(vals[k - 1], vals[k]))
+				{
+					ret[l] = vals[k];
+					++l;
+				}
+			}
+			return std::pair{ret, l};
+		}
+	}
 
 	class OptionInfo
 	{
@@ -128,21 +201,6 @@ namespace Maike::CmdLineParser
 
 	namespace detail
 	{
-		template<class T, size_t N, class Compare>
-		constexpr std::array<T, N> sort(std::array<T, N> vals, Compare cmp)
-		{
-			for(size_t k = 1; k < N; ++k)
-			{
-				for(size_t l = k; l > 0 && cmp(vals[l], vals[l - 1]); --l)
-				{
-					auto tmp = vals[l];
-					vals[l] = vals[l - 1];
-					vals[l - 1] = tmp;
-				}
-			}
-			return vals;
-		}
-
 		using StringToValue = uint64_t (*)(void* tuple, char const* str);
 
 		struct OptItem
@@ -281,10 +339,89 @@ namespace Maike::CmdLineParser
 		}
 	}
 
+	class TypeInfo
+	{
+	public:
+		constexpr TypeInfo(): r_name{nullptr}, r_description{nullptr}
+		{
+		}
+
+		template<class EnumItemTraits>
+		constexpr explicit TypeInfo(Empty<EnumItemTraits>):
+		   r_name{typeToString(Empty<typename EnumItemTraits::type>{})},
+		   r_description{typeDescription(Empty<typename EnumItemTraits::type>{})}
+		{
+		}
+
+		constexpr auto name() const
+		{
+			return r_name;
+		}
+
+		constexpr auto description() const
+		{
+			return r_description;
+		}
+
+	private:
+		char const* r_name;
+		char const* r_description;
+	};
+
+	namespace detail
+	{
+		template<class EnumType, template<auto> class EnumItemTraits, int K = end(Empty<EnumType>{})>
+		struct GetTypeInfo
+		{
+			static constexpr void setItem(std::array<TypeInfo, end(Empty<EnumType>{})>& names)
+			{
+				constexpr auto index = K - 1;
+				using Traits = EnumItemTraits<static_cast<EnumType>(index)>;
+				names[index] = TypeInfo{Empty<Traits>{}};
+				GetTypeInfo<EnumType, EnumItemTraits, index>::setItem(names);
+			}
+		};
+
+		template<class EnumType, template<auto> class EnumItemTraits>
+		struct GetTypeInfo<EnumType, EnumItemTraits, 0>
+		{
+			static constexpr void setItem(std::array<TypeInfo, end(Empty<EnumType>{})>&)
+			{
+			}
+		};
+
+
+		template<class EnumType, template<EnumType> class EnumItemTraits>
+		constexpr auto get_type_info()
+		{
+			std::array<TypeInfo, end(Empty<EnumType>{})> temp{};
+			GetTypeInfo<EnumType, EnumItemTraits>::setItem(temp);
+
+			auto non_null = copy_if(temp, [](TypeInfo obj) { return obj.name() != nullptr; });
+			sort(std::begin(non_null.first),
+			     std::begin(non_null.first) + non_null.second,
+			     [](TypeInfo a, TypeInfo b) { return strcmp(a.name(), b.name()) < 0; });
+
+			auto unique_items = unique(
+			   non_null.first,
+			   [](TypeInfo a, TypeInfo b) { return strcmp(a.name(), b.name()) == 0; },
+			   non_null.second);
+
+			return unique_items.first;
+		}
+	}
+
+
 	template<class EnumType, template<EnumType> class EnumItemTraits>
 	class BasicCommandLine
 	{
 	public:
+		using Enum = EnumType;
+
+		template<Enum e>
+		using Traits = EnumItemTraits<e>;
+
+
 		explicit BasicCommandLine(int argc, char** argv): m_set_vals{0}
 		{
 			if(argc < 1) { return; }
@@ -315,9 +452,14 @@ namespace Maike::CmdLineParser
 			   m_data);
 		}
 
-		static constexpr auto optionInfo()
+		static constexpr auto& optionInfo()
 		{
 			return s_option_info;
+		}
+
+		static constexpr auto& typeInfo()
+		{
+			return s_type_info;
 		}
 
 	private:
@@ -329,6 +471,8 @@ namespace Maike::CmdLineParser
 		static constexpr auto s_option_info =
 		   detail::sort(detail::get_option_info<EnumType, EnumItemTraits>(),
 		                detail::CompareOptInfoByCategoryAndName{});
+
+		static constexpr auto s_type_info = detail::get_type_info<EnumType, EnumItemTraits>();
 
 		static_assert(detail::check_duplicate_names<EnumType>(s_option_names) == false);
 	};

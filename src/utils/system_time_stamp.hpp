@@ -45,5 +45,11 @@ namespace Maike
 	{
 		return "Timestamp";
 	}
+
+	constexpr char const* typeDescription(Empty<SystemTimeStamp>)
+	{
+		return "A *Timetamp* is an integer indicates how many seconds that has passed since UNIX epoch. "
+		       "By default, the current system time in is used.";
+	}
 }
 #endif
