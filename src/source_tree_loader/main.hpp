@@ -16,9 +16,10 @@ namespace Maike::SourceTreeLoader
 	                   fs::path const& src_path,
 	                   InputFilter const& filter,
 	                   SourceFileLoaderDelegator const& loaders,
+	                   RecursiveScan recursive,
 	                   fs::path const& target_dir)
 	{
-		return DirectoryScanner{workers, std::ref(filter), std::ref(loaders)}
+		return DirectoryScanner{workers, std::ref(filter), std::ref(loaders), recursive}
 		   .processPath(src_path, target_dir)
 		   .takeResult();
 	}
@@ -27,6 +28,7 @@ namespace Maike::SourceTreeLoader
 	                    fs::path const& src_path,
 	                    InputFilter const& filter,
 	                    SourceFileLoaderDelegator const& loaders,
+	                    RecursiveScan recursive,
 	                    fs::path const& target_dir);
 }
 

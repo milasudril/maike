@@ -38,7 +38,12 @@ void Maike::SourceTreeLoader::DirectoryScanner::processPath(
 {
 	try
 	{
-		if(src_path != m_root && r_filter.get().match(src_path.filename().c_str())) { return; }
+		if(src_path != m_root)
+		{
+			if(!m_recursive && is_directory(src_path)) { return; }
+
+			if(r_filter.get().match(src_path.filename().c_str())) { return; }
+		}
 
 		auto src_path_normal = src_path.lexically_normal();
 		auto i = invokeWithMutex<std::shared_lock>(
@@ -48,6 +53,7 @@ void Maike::SourceTreeLoader::DirectoryScanner::processPath(
 		if(i != std::end(m_source_files)) { return; }
 
 		auto src_file_info = r_loaders.get().load(m_root, src_path, target_dir);
+
 		auto ins = invokeWithMutex<std::lock_guard>(
 		   m_source_files_mtx,
 		   [&src_files = m_source_files](auto&& src_path, auto&& src_file_info) {

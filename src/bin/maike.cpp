@@ -340,13 +340,15 @@ int main(int argc, char** argv)
 		   build_info.targetDir().c_str());
 		fflush(stdout);
 
-		auto const src_tree = Maike::timedCall(logger,
-		                                       Maike::SourceTreeLoader::load,
-		                                       workers,
-		                                       build_info.sourceDir(),
-		                                       cfg_new.sourceTreeLoader().inputFilter(),
-		                                       loader_delegator,
-		                                       build_info.targetDir());
+		auto const src_tree = Maike::timedCall(
+		   logger,
+		   Maike::SourceTreeLoader::load,
+		   workers,
+		   build_info.sourceDir(),
+		   cfg_new.sourceTreeLoader().inputFilter(),
+		   loader_delegator,
+		   Maike::SourceTreeLoader::RecursiveScan{cfg_new.sourceTreeLoader().recursive()},
+		   build_info.targetDir());
 
 		if(cmdline.hasOption<Maike::CmdLineOption::PrintDepGraph>())
 		{

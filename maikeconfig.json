@@ -65,7 +65,7 @@
 				"^__",
 				"build.py"
 			],
-			"recursive": 0
+			"recursive": 1
 		}
 	}
 }

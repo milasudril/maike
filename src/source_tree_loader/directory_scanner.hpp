@@ -19,6 +19,22 @@
 
 namespace Maike::SourceTreeLoader
 {
+	class RecursiveScan
+	{
+	public:
+		constexpr explicit RecursiveScan(bool value = true): m_value{value}
+		{
+		}
+
+		constexpr operator bool() const
+		{
+			return m_value;
+		}
+
+	private:
+		bool m_value;
+	};
+
 	class DirectoryScanner
 	{
 	public:
@@ -40,8 +56,9 @@ namespace Maike::SourceTreeLoader
 
 		explicit DirectoryScanner(Sched::ThreadPool& workers,
 		                          std::reference_wrapper<InputFilter const> filter,
-		                          std::reference_wrapper<SourceFileLoaderDelegator const> loaders):
-		   r_filter{filter}, r_loaders{loaders}, m_counter{0}, r_workers{&workers}
+		                          std::reference_wrapper<SourceFileLoaderDelegator const> loaders,
+		                          RecursiveScan recursive):
+		   r_filter{filter}, r_loaders{loaders}, m_recursive{recursive}, m_counter{0}, r_workers{&workers}
 		{
 		}
 
@@ -57,6 +74,7 @@ namespace Maike::SourceTreeLoader
 	private:
 		std::reference_wrapper<InputFilter const> r_filter;
 		std::reference_wrapper<SourceFileLoaderDelegator const> r_loaders;
+		RecursiveScan m_recursive;
 
 		fs::path m_root;
 
