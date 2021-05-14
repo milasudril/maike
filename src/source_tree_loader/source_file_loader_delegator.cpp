@@ -101,8 +101,9 @@ Maike::Db::SourceFileInfo Maike::SourceTreeLoader::SourceFileLoaderDelegator::lo
 		//       is, insertion order is preserved.
 		if(src_path == src_dir)
 		{ targets.push_back(Db::TargetInfo{fs::path{target_dir}, std::vector<Db::Dependency>{}}); }
-		targets.push_back(
-		   Db::TargetInfo{target_dir / (src_path.lexically_normal()), std::vector<Db::Dependency>{}});
+
+		auto target_name = (target_dir / src_path.lexically_relative(src_dir)).lexically_normal();
+		targets.push_back(Db::TargetInfo{std::move(target_name), std::vector<Db::Dependency>{}});
 
 		deps.push_back(makeDependency(m_dir_compiler));
 		return Db::SourceFileInfo{std::move(targets),

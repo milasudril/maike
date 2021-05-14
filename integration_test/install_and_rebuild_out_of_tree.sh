@@ -10,3 +10,4 @@ make PREFIX="$install_dir_new" install
 source_dir=$(pwd)
 cd $build_dir
 $install_dir_new/bin/maike2 --source-dir=$source_dir
+tree

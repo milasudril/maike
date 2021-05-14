@@ -12,7 +12,8 @@ Maike::fs::path Maike::SourceTreeLoader::prependSearchPath(SourceFileLoadContext
                                                            fs::path const& src_name,
                                                            Db::SourceFileOrigin expected_origin)
 {
-	if(!(expected_origin == Db::SourceFileOrigin::Project || expected_origin == Db::SourceFileOrigin::Generated))
+	if(!(expected_origin == Db::SourceFileOrigin::Project
+	     || expected_origin == Db::SourceFileOrigin::Generated))
 	{ return src_name; }
 
 	fs::path ret;
@@ -25,11 +26,9 @@ Maike::fs::path Maike::SourceTreeLoader::prependSearchPath(SourceFileLoadContext
 	}
 
 	if(expected_origin == Db::SourceFileOrigin::Generated)
-	{
-		ret = ret.lexically_relative(load_ctxt.sourceDir());
-	}
+	{ ret = ret.lexically_relative(load_ctxt.sourceDir()); }
 
-//	fprintf(stderr, "Path fixup: %s -> %s\n", src_name.c_str(), ret.c_str());
+	//	fprintf(stderr, "Path fixup: %s -> %s\n", src_name.c_str(), ret.c_str());
 
 	return ret;
 }
