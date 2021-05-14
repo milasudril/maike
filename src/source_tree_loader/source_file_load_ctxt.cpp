@@ -12,18 +12,26 @@ Maike::fs::path Maike::SourceTreeLoader::prependSearchPath(SourceFileLoadContext
                                                            fs::path const& src_name,
                                                            Db::SourceFileOrigin expected_origin)
 {
-	if(expected_origin == Db::SourceFileOrigin::Project
-	   || expected_origin == Db::SourceFileOrigin::Generated)
+	if(!(expected_origin == Db::SourceFileOrigin::Project || expected_origin == Db::SourceFileOrigin::Generated))
+	{ return src_name; }
+
+	fs::path ret;
+	auto str = src_name.string();
+	if(str.size() > 1 && memcmp(str.data(), "./", 2) == 0)
+	{ ret = (load_ctxt.sourceFileDir() / src_name).lexically_normal(); }
+	else
 	{
-		auto str = src_name.string();
-		if(str.size() > 1 && memcmp(str.data(), "./", 2) == 0)
-		{ return (load_ctxt.sourceFileDir() / src_name).lexically_normal(); }
-		else
-		{
-			return (load_ctxt.sourceDir() / src_name).lexically_normal();
-		}
+		ret = (load_ctxt.sourceDir() / src_name).lexically_normal();
 	}
-	return src_name;
+
+	if(expected_origin == Db::SourceFileOrigin::Generated)
+	{
+		ret = ret.lexically_relative(load_ctxt.sourceDir());
+	}
+
+//	fprintf(stderr, "Path fixup: %s -> %s\n", src_name.c_str(), ret.c_str());
+
+	return ret;
 }
 
 Maike::Db::Dependency
@@ -106,7 +114,9 @@ Maike::SourceTreeLoader::getTarget(SourceFileLoadContext const& load_ctxt,
 			                         std::vector<Db::Property>{}};
 		   });
 	}
-	return Db::TargetInfo{load_ctxt.targetDir() / load_ctxt.sourceFileDir() / name, std::move(deps)};
+	auto target_name = load_ctxt.targetDir()
+	                   / load_ctxt.sourceFileDir().lexically_relative(load_ctxt.sourceDir()) / name;
+	return Db::TargetInfo{std::move(target_name), std::move(deps)};
 }
 
 std::vector<Maike::Db::TargetInfo>
