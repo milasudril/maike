@@ -5,7 +5,7 @@ all:
 .PHONY: bootstrap
 bootstrap:
 	./build.py
-	__targets/src/bin/maike2 --target-dir=__targets_bootstrap --num-workers=1 --force-rebuild --dry-run --log-level=compilation_command > __buildcache/bootstrap.sh
+	__targets/src/bin/maike2 --target-dir=__targets_bootstrap --num-workers=1 --force-rebuild --dry-run --log-level=compilation_command --build-id=0000000000000000000000000000000000000000000000000000000000000000 > __buildcache/bootstrap.sh
 	chmod u+x __buildcache/bootstrap.sh
 
 .PHONY: bootstrap-test
