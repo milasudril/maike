@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "Can generate working boostrap script"
+
 rm -rf __targets_bootstrap __buildcache
 mkdir __buildcache
 "$1"  --target-dir=__targets_bootstrap \

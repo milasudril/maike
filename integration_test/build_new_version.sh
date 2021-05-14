@@ -1,6 +1,7 @@
 #!/bin/bash
 
 echo "Building new version"
+
 rm -rf __targets*
 build_id_expected=$($install_dir/bin/maike2 --target-dir=$target_dir \
 	| grep '#[[:space:]].*Id:' \
