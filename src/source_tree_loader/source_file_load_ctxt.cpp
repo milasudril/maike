@@ -106,7 +106,9 @@ Maike::SourceTreeLoader::getTarget(SourceFileLoadContext const& load_ctxt,
 			                         std::vector<Db::Property>{}};
 		   });
 	}
-	return Db::TargetInfo{load_ctxt.targetDir() / load_ctxt.sourceFileDir() / name, std::move(deps)};
+	auto target_name = load_ctxt.targetDir()
+	                   / load_ctxt.sourceFileDir().lexically_relative(load_ctxt.sourceDir()) / name;
+	return Db::TargetInfo{std::move(target_name), std::move(deps)};
 }
 
 std::vector<Maike::Db::TargetInfo>
