@@ -37,15 +37,8 @@ Maike::Build::Info makeBuildInfo(Maike::CommandLine const& cmdline)
 	{ ret.targetDir(Maike::fs::path{cmdline.option<Maike::CmdLineOption::TargetDir>()}); }
 	else
 	{
-		std::string target_dir;
 		if(ret.sourceDir().filename() != ".")
-		{
-			target_dir = ret.sourceDir().filename().string();
-			target_dir += "_";
-		}
-		target_dir += toString(ret.buildId());
-		target_dir += "_targets";
-		ret.targetDir(Maike::fs::path{std::move(target_dir)});
+		{ ret.targetDir(Maike::fs::path{ret.sourceDir().filename().string() + "_targets"}); }
 	}
 
 	return ret;
