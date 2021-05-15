@@ -34,7 +34,8 @@ namespace
 		tags_fifo.stop();
 		src_fifo.stop();
 
-		Maike::SourceTreeLoader::SourceFileLoadContext load_ctxt{src_path.parent_path(), src_dir, target_dir};
+		Maike::SourceTreeLoader::SourceFileLoadContext load_ctxt{
+		   src_path.parent_path(), src_dir, target_dir};
 		{
 			auto deps = prependSearchPath(load_ctxt, loader.getDependencies(Maike::Io::Reader{src_fifo}));
 			builtin_deps.insert(std::end(builtin_deps), std::begin(deps), std::end(deps));
@@ -101,7 +102,9 @@ Maike::Db::SourceFileInfo Maike::SourceTreeLoader::SourceFileLoaderDelegator::lo
 		if(src_path == src_dir)
 		{ targets.push_back(Db::TargetInfo{fs::path{target_dir}, std::vector<Db::Dependency>{}}); }
 		targets.push_back(
-		   Db::TargetInfo{target_dir / (src_path.lexically_normal()), std::vector<Db::Dependency>{}});
+		   // TODO: Add function makeTargetName to LoadCtxt
+		   Db::TargetInfo{(target_dir / src_path.lexically_relative(src_dir)).lexically_normal(),
+		                  std::vector<Db::Dependency>{}});
 
 		deps.push_back(makeDependency(m_dir_compiler));
 		return Db::SourceFileInfo{std::move(targets),

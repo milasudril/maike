@@ -32,17 +32,20 @@ Maike::fs::path Maike::SourceTreeLoader::prependSearchPath(SourceFileLoadContext
                                                            Db::SourceFileOrigin expected_origin)
 {
 	if(!(expected_origin == Db::SourceFileOrigin::Project
-	   || expected_origin == Db::SourceFileOrigin::Generated))
+	     || expected_origin == Db::SourceFileOrigin::Generated))
 	{ return src_name; }
 
 	fs::path ret;
 	auto str = src_name.string();
-		if(str.size() > 1 && memcmp(str.data(), "./", 2) == 0)
-		{ ret =  (load_ctxt.sourceFileDir() / src_name).lexically_normal(); }
-		else
-		{
-			ret = load_ctxt.sourceDir()/src_name;
-		}
+	if(str.size() > 1 && memcmp(str.data(), "./", 2) == 0)
+	{ ret = (load_ctxt.sourceFileDir() / src_name).lexically_normal(); }
+	else
+	{
+		ret = load_ctxt.sourceDir() / src_name;
+	}
+
+	if(expected_origin == Db::SourceFileOrigin::Generated)
+	{ ret = ret.lexically_relative(load_ctxt.sourceDir()); }
 
 #if 0
 	if(expected_origin == Db::SourceFileOrigin::Project)
@@ -63,11 +66,12 @@ Maike::fs::path Maike::SourceTreeLoader::prependSearchPath(SourceFileLoadContext
 	}
 #endif
 
-	fprintf(stderr, "(%s) %s %s -> %s\n\n",
-			toString(expected_origin),
-			load_ctxt.sourceFileDir().c_str(),
-			src_name.c_str(),
-			ret.c_str());
+	fprintf(stderr,
+	        "(%s) %s %s -> %s\n\n",
+	        toString(expected_origin),
+	        load_ctxt.sourceFileDir().c_str(),
+	        src_name.c_str(),
+	        ret.c_str());
 
 	return ret.lexically_normal();
 }
@@ -155,8 +159,10 @@ Maike::SourceTreeLoader::getTarget(SourceFileLoadContext const& load_ctxt,
 			                         std::vector<Db::Property>{}};
 		   });
 	}
-	auto target_name = load_ctxt.targetDir()
-	                   / load_ctxt.sourceFileDir() / name;
+	fprintf(stderr, "%s %s\n", load_ctxt.targetDir().c_str(), load_ctxt.sourceFileDir().c_str());
+	auto target_name = (load_ctxt.targetDir()
+	                    / (load_ctxt.sourceFileDir() / name).lexically_relative(load_ctxt.sourceDir()))
+	                      .lexically_normal();
 	fprintf(stderr, "Loaded target %s\n", target_name.c_str());
 	return Db::TargetInfo{std::move(target_name), std::move(deps)};
 }
