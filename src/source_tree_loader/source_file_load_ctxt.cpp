@@ -8,25 +8,6 @@
 
 #include <cstring>
 
-#if 0
-Maike::fs::path Maike::SourceTreeLoader::prependSearchPath(SourceFileLoadContext const& load_ctxt,
-                                                           fs::path const& src_name,
-                                                           Db::SourceFileOrigin expected_origin)
-{
-	if(expected_origin == Db::SourceFileOrigin::Project
-	   || expected_origin == Db::SourceFileOrigin::Generated)
-	{
-		auto str = src_name.string();
-		if(str.size() > 1 && memcmp(str.data(), "./", 2) == 0)
-		{ return (load_ctxt.sourceFileDir() / src_name).lexically_normal(); }
-		else
-		{
-			return src_name.lexically_normal();
-		}
-	}
-	return src_name;
-}
-#else
 Maike::fs::path Maike::SourceTreeLoader::prependSearchPath(SourceFileLoadContext const& load_ctxt,
                                                            fs::path const& src_name,
                                                            Db::SourceFileOrigin expected_origin)
@@ -45,39 +26,13 @@ Maike::fs::path Maike::SourceTreeLoader::prependSearchPath(SourceFileLoadContext
 	}
 
 	if(expected_origin == Db::SourceFileOrigin::Generated)
-	{ ret = ret.lexically_relative(load_ctxt.sourceDir()); }
-
-#if 0
-	if(expected_origin == Db::SourceFileOrigin::Project)
 	{
-		ret = load_ctxt.sourceDir() / ret;
+		// NOTE: target dir already added from getDependency (should be changed)
+		ret = ret.lexically_relative(load_ctxt.sourceDir());
 	}
-#endif
-#if 0
-	else
-	{
-	//	ret = ret.lexically_relative(load_ctxt.sourceDir());
-	//	auto tmp = ret.lexically_relative(load_ctxt.sourceDir());
-		fprintf(stderr, "%s -> %s\n\n",
-		//		load_ctxt.sourceDir().c_str(),
-		//		load_ctxt.targetDir().c_str(),
-				src_name.c_str(),
-				ret.c_str());
-	}
-#endif
-
-	fprintf(stderr,
-	        "(%s) %s %s -> %s\n\n",
-	        toString(expected_origin),
-	        load_ctxt.sourceFileDir().c_str(),
-	        src_name.c_str(),
-	        ret.c_str());
 
 	return ret.lexically_normal();
 }
-
-#endif
-
 
 Maike::Db::Dependency
 Maike::SourceTreeLoader::prependSearchPath(SourceFileLoadContext const& load_ctxt,
@@ -159,11 +114,11 @@ Maike::SourceTreeLoader::getTarget(SourceFileLoadContext const& load_ctxt,
 			                         std::vector<Db::Property>{}};
 		   });
 	}
-	fprintf(stderr, "%s %s\n", load_ctxt.targetDir().c_str(), load_ctxt.sourceFileDir().c_str());
+
+	// TODO: makeTargetName
 	auto target_name = (load_ctxt.targetDir()
 	                    / (load_ctxt.sourceFileDir() / name).lexically_relative(load_ctxt.sourceDir()))
 	                      .lexically_normal();
-	fprintf(stderr, "Loaded target %s\n", target_name.c_str());
 	return Db::TargetInfo{std::move(target_name), std::move(deps)};
 }
 
