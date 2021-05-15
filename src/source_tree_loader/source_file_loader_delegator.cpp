@@ -101,10 +101,10 @@ Maike::Db::SourceFileInfo Maike::SourceTreeLoader::SourceFileLoaderDelegator::lo
 		//       is, insertion order is preserved.
 		if(src_path == src_dir)
 		{ targets.push_back(Db::TargetInfo{fs::path{target_dir}, std::vector<Db::Dependency>{}}); }
+
+		SourceFileLoadContext load_ctxt{src_path.parent_path(), src_dir, target_dir};
 		targets.push_back(
-		   // TODO: Add function makeTargetName to LoadCtxt
-		   Db::TargetInfo{(target_dir / src_path.lexically_relative(src_dir)).lexically_normal(),
-		                  std::vector<Db::Dependency>{}});
+		   Db::TargetInfo{makeTargetName(load_ctxt, src_path.filename()), std::vector<Db::Dependency>{}});
 
 		deps.push_back(makeDependency(m_dir_compiler));
 		return Db::SourceFileInfo{std::move(targets),
