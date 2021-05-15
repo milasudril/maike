@@ -41,27 +41,33 @@ Maike::fs::path Maike::SourceTreeLoader::prependSearchPath(SourceFileLoadContext
 		{ ret =  (load_ctxt.sourceFileDir() / src_name).lexically_normal(); }
 		else
 		{
-			ret = src_name.lexically_normal();
+			ret = load_ctxt.sourceDir()/src_name;
 		}
 
-#if 1
+#if 0
 	if(expected_origin == Db::SourceFileOrigin::Project)
 	{
 		ret = load_ctxt.sourceDir() / ret;
 	}
 #endif
-#if 1
+#if 0
 	else
 	{
-		ret = ret.lexically_relative(load_ctxt.sourceDir());
+	//	ret = ret.lexically_relative(load_ctxt.sourceDir());
 	//	auto tmp = ret.lexically_relative(load_ctxt.sourceDir());
-		fprintf(stderr, "%s %s\n%s -> %s\n\n",
-				load_ctxt.sourceDir().c_str(),
-				load_ctxt.targetDir().c_str(),
+		fprintf(stderr, "%s -> %s\n\n",
+		//		load_ctxt.sourceDir().c_str(),
+		//		load_ctxt.targetDir().c_str(),
 				src_name.c_str(),
 				ret.c_str());
 	}
 #endif
+
+	fprintf(stderr, "(%s) %s %s -> %s\n\n",
+			toString(expected_origin),
+			load_ctxt.sourceFileDir().c_str(),
+			src_name.c_str(),
+			ret.c_str());
 
 	return ret.lexically_normal();
 }
@@ -150,7 +156,7 @@ Maike::SourceTreeLoader::getTarget(SourceFileLoadContext const& load_ctxt,
 		   });
 	}
 	auto target_name = load_ctxt.targetDir()
-	                   / load_ctxt.sourceFileDir().lexically_relative(load_ctxt.sourceDir()) / name;
+	                   / load_ctxt.sourceFileDir() / name;
 	fprintf(stderr, "Loaded target %s\n", target_name.c_str());
 	return Db::TargetInfo{std::move(target_name), std::move(deps)};
 }
