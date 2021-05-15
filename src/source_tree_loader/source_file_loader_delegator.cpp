@@ -17,12 +17,12 @@ namespace
 {
 	// TODO: These functions should be moved
 
-	Maike::Db::SourceFileInfo loadSourceFile(Maike::fs::path const& src_path,
-	                                         Maike::fs::path const& src_dir,
-	                                         Maike::fs::path const& target_dir,
-	                                         std::vector<Maike::Db::Dependency>&& builtin_deps,
-	                                         Maike::SourceFileInfoLoaders::Loader const& loader,
-	                                         Maike::SourceTreeLoader::CommandDictionary const&)
+	Maike::Db::SourceFileInfo
+	loadSourceFile(Maike::fs::path const& src_path,
+	               Maike::SourceTreeLoader::SourceFileLoadContext const& load_ctxt,
+	               std::vector<Maike::Db::Dependency>&& builtin_deps,
+	               Maike::SourceFileInfoLoaders::Loader const& loader,
+	               Maike::SourceTreeLoader::CommandDictionary const&)
 	{
 		Maike::Io::Fifo<std::byte> src_fifo;
 		Maike::Io::Fifo<std::byte> tags_fifo;
@@ -34,8 +34,6 @@ namespace
 		tags_fifo.stop();
 		src_fifo.stop();
 
-		Maike::SourceTreeLoader::SourceFileLoadContext load_ctxt{
-		   src_path.parent_path(), src_dir, target_dir};
 		{
 			auto deps = prependSearchPath(load_ctxt, loader.getDependencies(Maike::Io::Reader{src_fifo}));
 			builtin_deps.insert(std::end(builtin_deps), std::begin(deps), std::end(deps));
@@ -84,6 +82,8 @@ namespace
 Maike::Db::SourceFileInfo Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(
    fs::path const& src_path, fs::path const& src_dir, fs::path const& target_dir) const
 {
+	SourceFileLoadContext load_ctxt{src_path.parent_path(), src_dir, target_dir};
+
 	std::vector<Db::Dependency> deps;
 	if(src_dir != src_path && src_path != m_dir_compiler.get().recipe())
 	{
@@ -102,7 +102,6 @@ Maike::Db::SourceFileInfo Maike::SourceTreeLoader::SourceFileLoaderDelegator::lo
 		if(src_path == src_dir)
 		{ targets.push_back(Db::TargetInfo{fs::path{target_dir}, std::vector<Db::Dependency>{}}); }
 
-		SourceFileLoadContext load_ctxt{src_path.parent_path(), src_dir, target_dir};
 		targets.push_back(
 		   Db::TargetInfo{makeTargetName(load_ctxt, src_path.filename()), std::vector<Db::Dependency>{}});
 
@@ -125,5 +124,5 @@ Maike::Db::SourceFileInfo Maike::SourceTreeLoader::SourceFileLoaderDelegator::lo
 	if(i == std::end(m_loaders))
 	{ return Db::SourceFileInfo{Db::SourceFileOrigin::Project, Db::Compiler{}}; }
 
-	return loadSourceFile(src_path, src_dir, target_dir, std::move(deps), i->second, m_cmds);
+	return loadSourceFile(src_path, load_ctxt, std::move(deps), i->second, m_cmds);
 }
