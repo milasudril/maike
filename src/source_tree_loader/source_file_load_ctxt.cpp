@@ -20,7 +20,7 @@ Maike::fs::path Maike::SourceTreeLoader::prependSearchPath(SourceFileLoadContext
 		{ return (load_ctxt.sourceFileDir() / src_name).lexically_normal(); }
 		else
 		{
-			return (load_ctxt.sourceDir() / src_name).lexically_normal();
+			return src_name.lexically_normal();
 		}
 	}
 	return src_name;
