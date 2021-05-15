@@ -45,6 +45,7 @@ namespace Maike::SourceTreeLoader
 		std::reference_wrapper<fs::path const> m_target_dir;
 	};
 
+
 	fs::path prependSearchPath(SourceFileLoadContext const& load_ctxt,
 	                           fs::path const& src_name,
 	                           Db::SourceFileOrigin expected_origin);
@@ -55,6 +56,8 @@ namespace Maike::SourceTreeLoader
 	Db::Dependency getDependency(SourceFileLoadContext const& load_ctxt,
 	                             KeyValueStore::CompoundRefConst dep,
 	                             Db::SourceFileOrigin default_origin);
+
+	fs::path makeTargetName(SourceFileLoadContext const& load_ctxt, fs::path const& name);
 
 	Db::TargetInfo getTarget(SourceFileLoadContext const& load_ctxt,
 	                         KeyValueStore::CompoundRefConst target);
