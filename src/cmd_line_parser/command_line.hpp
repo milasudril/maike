@@ -122,7 +122,8 @@ namespace Maike::CmdLineParser
 		constexpr auto unique(std::array<T, N> const& vals, Compare cmp, size_t max = N)
 		{
 			std::array<T, N> ret{};
-			size_t l = 0;
+			ret[0] = vals[0];
+			size_t l = 1;
 			for(size_t k = 1; k < max; ++k)
 			{
 				if(!cmp(vals[k - 1], vals[k]))
