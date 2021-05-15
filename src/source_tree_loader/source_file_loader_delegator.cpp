@@ -17,8 +17,8 @@ namespace
 {
 	// TODO: These functions should be moved
 
-	Maike::Db::SourceFileInfo loadSourceFile(Maike::fs::path const& src_dir,
-	                                         Maike::fs::path const& src_path,
+	Maike::Db::SourceFileInfo loadSourceFile(Maike::fs::path const& src_path,
+	                                         Maike::fs::path const& src_dir,
 	                                         Maike::fs::path const& target_dir,
 	                                         std::vector<Maike::Db::Dependency>&& builtin_deps,
 	                                         Maike::SourceFileInfoLoaders::Loader const& loader,
@@ -125,5 +125,5 @@ Maike::Db::SourceFileInfo Maike::SourceTreeLoader::SourceFileLoaderDelegator::lo
 	if(i == std::end(m_loaders))
 	{ return Db::SourceFileInfo{Db::SourceFileOrigin::Project, Db::Compiler{}}; }
 
-	return loadSourceFile(src_dir, src_path, target_dir, std::move(deps), i->second, m_cmds);
+	return loadSourceFile(src_path, src_dir, target_dir, std::move(deps), i->second, m_cmds);
 }
