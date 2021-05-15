@@ -87,8 +87,8 @@ namespace Maike::SourceTreeLoader
 		Sched::ThreadPool* r_workers;
 
 		void processPath(fs::path&& src_path,
-		                 std::unique_lock<Sched::SignalingCounter<size_t>> counter,
-		                 fs::path const& target_dir);
+		                 fs::path const& target_dir,
+		                 std::unique_lock<Sched::SignalingCounter<size_t>> counter);
 
 		std::mutex m_errlog_mtx;
 		std::forward_list<std::unique_ptr<char const[]>> m_errlog;

@@ -82,7 +82,7 @@ namespace
 }
 
 Maike::Db::SourceFileInfo Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(
-   fs::path const& src_dir, fs::path const& src_path, fs::path const& target_dir) const
+   fs::path const& src_path, fs::path const& src_dir, fs::path const& target_dir) const
 {
 	std::vector<Db::Dependency> deps;
 	if(src_dir != src_path && src_path != m_dir_compiler.get().recipe())

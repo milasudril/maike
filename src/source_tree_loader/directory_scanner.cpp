@@ -12,12 +12,13 @@ Maike::SourceTreeLoader::DirectoryScanner::processPath(fs::path const& src_path,
 {
 	m_root = src_path;
 
-	r_workers->addTask([this,
-	                    src_path = fs::path{src_path},
-	                    counter = std::unique_lock<Sched::SignalingCounter<size_t>>(m_counter),
-	                    target_dir]() mutable {
-		this->processPath(std::move(src_path), std::move(counter), target_dir);
-	});
+	r_workers->addTask(
+	   [this,
+	    src_path = fs::path{src_path},
+	    target_dir,
+	    counter = std::unique_lock<Sched::SignalingCounter<size_t>>(m_counter)]() mutable {
+		   this->processPath(std::move(src_path), target_dir, std::move(counter));
+	   });
 
 	return *this;
 }
@@ -33,8 +34,8 @@ Maike::SourceTreeLoader::DirectoryScanner::ScanException::ScanException(
 
 void Maike::SourceTreeLoader::DirectoryScanner::processPath(
    fs::path&& src_path,
-   std::unique_lock<Sched::SignalingCounter<size_t>> counter,
-   fs::path const& target_dir)
+   fs::path const& target_dir,
+   std::unique_lock<Sched::SignalingCounter<size_t>> counter)
 {
 	try
 	{
@@ -52,7 +53,7 @@ void Maike::SourceTreeLoader::DirectoryScanner::processPath(
 		   src_path_normal);
 		if(i != std::end(m_source_files)) { return; }
 
-		auto src_file_info = r_loaders.get().load(m_root, src_path, target_dir);
+		auto src_file_info = r_loaders.get().load(src_path, m_root, target_dir);
 
 		auto ins = invokeWithMutex<std::lock_guard>(
 		   m_source_files_mtx,
@@ -71,7 +72,7 @@ void Maike::SourceTreeLoader::DirectoryScanner::processPath(
 				    src_path = item.path(),
 				    target_dir,
 				    counter = std::unique_lock<Sched::SignalingCounter<size_t>>(*counter.mutex())]() mutable {
-					   this->processPath(std::move(src_path), std::move(counter), target_dir);
+					   this->processPath(std::move(src_path), target_dir, std::move(counter));
 				   });
 			});
 		}
