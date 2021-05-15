@@ -27,8 +27,7 @@ Maike::fs::path Maike::SourceTreeLoader::prependSearchPath(SourceFileLoadContext
 
 	if(expected_origin == Db::SourceFileOrigin::Generated)
 	{
-		// NOTE: target dir already added from getDependency (should be changed)
-		ret = ret.lexically_relative(load_ctxt.sourceDir());
+		ret = load_ctxt.targetDir() / ret.lexically_relative(load_ctxt.sourceDir());
 	}
 
 	return ret.lexically_normal();
@@ -74,11 +73,7 @@ Maike::Db::Dependency Maike::SourceTreeLoader::getDependency(SourceFileLoadConte
 
 	auto resolved_name =
 	   [](SourceFileLoadContext const& ctxt, fs::path const& name, Db::SourceFileOrigin origin) {
-		   if(isExternal(origin)) { return name; }
-
-		   return ((origin == Db::SourceFileOrigin::Generated ? ctxt.targetDir() : ".")
-		           / prependSearchPath(ctxt, name, origin))
-		      .lexically_normal();
+		   return prependSearchPath(ctxt, name, origin);
 	   }(load_ctxt, name, expected_origin);
 
 	return Db::Dependency{std::move(resolved_name), expected_origin, std::move(properties)};
