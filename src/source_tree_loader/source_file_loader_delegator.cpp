@@ -87,7 +87,7 @@ Maike::Db::SourceFileInfo Maike::SourceTreeLoader::SourceFileLoaderDelegator::lo
 	std::vector<Db::Dependency> deps;
 	if(src_dir != src_path && src_path != m_dir_compiler.get().recipe())
 	{
-		deps.push_back(Db::Dependency{src_path.parent_path().lexically_normal(),
+		deps.push_back(Db::Dependency{load_ctxt.sourceFileDir(),
 		                              Db::SourceFileOrigin::Project,
 		                              std::vector<Db::Property>{}});
 	}
