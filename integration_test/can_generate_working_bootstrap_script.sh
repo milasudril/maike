@@ -10,4 +10,4 @@ mkdir __buildcache
 	--log-level=compilation_command \
 	--build-id=0000000000000000000000000000000000000000000000000000000000000000 > __buildcache/bootstrap.sh
 sh -x __buildcache/bootstrap.sh
-__targets_bootstrap/src/bin/maike2 --about
+__targets_bootstrap/core/bin/maike2 --about

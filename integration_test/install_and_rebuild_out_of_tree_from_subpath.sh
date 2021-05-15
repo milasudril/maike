@@ -11,5 +11,5 @@ source_dir=..
 mkdir $build_dir
 cd $build_dir
 $install_dir_new/bin/maike2 --source-dir=$source_dir --target-dir=__targets
-__targets/src/bin/maike2 --version
+__targets/core/bin/maike2 --version
 cd $source_dir

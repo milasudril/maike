@@ -17,7 +17,7 @@ def do_initial_build():
 		return result.returncode
 
 def rebuild():
-	args = ['__targets_bootstrap/src/bin/maike2', '--target-dir=__targets']
+	args = ['__targets_bootstrap/core/bin/maike2', '--target-dir=__targets']
 	result = subprocess.run(args)
 	return result.returncode
 

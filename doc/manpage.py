@@ -4,7 +4,7 @@
 #@	 "targets":[{"name":"maike2.1.md"}, {"name":"maike2.1.man"}]
 #@	,"dependencies":
 #@		[
-#@		{"ref":"src/bin/maike2"},
+#@		{"ref":"core/bin/maike2"},
 #@		{"ref":"pandoc","origin":"system"},
 #@		{"ref":"projinfo.json", "origin":"project"}
 #@		]
@@ -77,7 +77,7 @@ def compile(args):
 	content['author'] = ', '.join(get_authors(projinfo['copyright']))
 	content['copyright'] = '\n\n'.join(get_copyright(projinfo['copyright']))
 	content['license_short'] = projinfo['legal_info']['license_short']
-	maike_output = subprocess.run([target_dir + '/src/bin/maike2', '--help'], stdout=subprocess.PIPE, text=True)
+	maike_output = subprocess.run([target_dir + '/core/bin/maike2', '--help'], stdout=subprocess.PIPE, text=True)
 	if maike_output.returncode != 0:
 		return maike_output.returncode
 

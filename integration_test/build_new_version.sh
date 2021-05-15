@@ -7,7 +7,7 @@ build_id_expected=$($install_dir/bin/maike2 --target-dir=$target_dir \
 	| grep '#[[:space:]].*Id:' \
 	| awk 'BEGIN { FS = ":" } ; { print $2 }' \
 	| sed 's|[[:space:]]*||')
-version_info=$(__targets/src/bin/maike2 --version)
+version_info=$(__targets/core/bin/maike2 --version)
 build_id=$(echo "$version_info" \
 	| grep 'Build id' \
 	| awk 'BEGIN { FS = ":" } ; { print $2 }' \
