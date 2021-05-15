@@ -10,3 +10,5 @@ make PREFIX="$install_dir_new" install
 source_dir=$(basename $(pwd))
 cd $build_dir
 $install_dir_new/bin/maike2 --source-dir=$source_dir
+maike_targets/src/bin/maike2 --version
+cd $source_dir
