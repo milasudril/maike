@@ -30,7 +30,6 @@ Maike::fs::path Maike::SourceTreeLoader::prependSearchPath(SourceFileLoadContext
 		// NOTE: target dir already added from getDependency (should be changed)
 		ret = ret.lexically_relative(load_ctxt.sourceDir());
 	}
-	return ret;
 
 	return ret.lexically_normal();
 }
