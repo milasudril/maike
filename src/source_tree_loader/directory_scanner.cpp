@@ -66,7 +66,7 @@ void Maike::SourceTreeLoader::DirectoryScanner::processPath(
 		if(ins.second && is_directory(ins.first->first))
 		{
 			auto i = Maike::fs::directory_iterator{ins.first->first};
-			std::for_each(begin(i), end(i), [this, &counter, &target_dir](auto&& item) {
+			std::for_each(begin(i), end(i), [this, &target_dir, &counter](auto&& item) {
 				r_workers->addTask(
 				   [this,
 				    src_path = item.path(),
