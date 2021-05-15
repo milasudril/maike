@@ -34,13 +34,12 @@ namespace
 		tags_fifo.stop();
 		src_fifo.stop();
 
+		Maike::SourceTreeLoader::SourceFileLoadContext load_ctxt{src_path.parent_path(), src_dir, target_dir};
 		{
-			auto deps = loader.getDependencies(Maike::Io::Reader{src_fifo});
+			auto deps = prependSearchPath(load_ctxt, loader.getDependencies(Maike::Io::Reader{src_fifo}));
 			builtin_deps.insert(std::end(builtin_deps), std::begin(deps), std::end(deps));
 		}
 
-		Maike::SourceTreeLoader::SourceFileLoadContext load_ctxt{
-		   src_path.parent_path(), src_dir, target_dir};
 
 		auto tags = Maike::KeyValueStore::Compound{Maike::Io::Reader{tags_fifo}, src_path.string()};
 		auto targets = getTargets(load_ctxt, tags);
@@ -76,8 +75,8 @@ namespace
 		                                 compiler ? (*compiler) : Maike::Db::Compiler{""},
 		                                 Maike::Db::SourceFileOrigin::Project,
 		                                 rebuild_policy}
-		   .useDeps(prependSearchPath(load_ctxt, builtin_deps))
-		   .childTargetsUseDeps(prependSearchPath(load_ctxt, child_target_use_deps));
+		   .useDeps(std::move(builtin_deps))
+		   .childTargetsUseDeps(std::move(child_target_use_deps));
 	}
 }
 

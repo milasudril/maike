@@ -8,6 +8,7 @@
 
 #include <cstring>
 
+#if 0
 Maike::fs::path Maike::SourceTreeLoader::prependSearchPath(SourceFileLoadContext const& load_ctxt,
                                                            fs::path const& src_name,
                                                            Db::SourceFileOrigin expected_origin)
@@ -25,6 +26,48 @@ Maike::fs::path Maike::SourceTreeLoader::prependSearchPath(SourceFileLoadContext
 	}
 	return src_name;
 }
+#else
+Maike::fs::path Maike::SourceTreeLoader::prependSearchPath(SourceFileLoadContext const& load_ctxt,
+                                                           fs::path const& src_name,
+                                                           Db::SourceFileOrigin expected_origin)
+{
+	if(!(expected_origin == Db::SourceFileOrigin::Project
+	   || expected_origin == Db::SourceFileOrigin::Generated))
+	{ return src_name; }
+
+	fs::path ret;
+	auto str = src_name.string();
+		if(str.size() > 1 && memcmp(str.data(), "./", 2) == 0)
+		{ ret =  (load_ctxt.sourceFileDir() / src_name).lexically_normal(); }
+		else
+		{
+			ret = src_name.lexically_normal();
+		}
+
+#if 1
+	if(expected_origin == Db::SourceFileOrigin::Project)
+	{
+		ret = load_ctxt.sourceDir() / ret;
+	}
+#endif
+#if 1
+	else
+	{
+		ret = ret.lexically_relative(load_ctxt.sourceDir());
+	//	auto tmp = ret.lexically_relative(load_ctxt.sourceDir());
+		fprintf(stderr, "%s %s\n%s -> %s\n\n",
+				load_ctxt.sourceDir().c_str(),
+				load_ctxt.targetDir().c_str(),
+				src_name.c_str(),
+				ret.c_str());
+	}
+#endif
+
+	return ret.lexically_normal();
+}
+
+#endif
+
 
 Maike::Db::Dependency
 Maike::SourceTreeLoader::prependSearchPath(SourceFileLoadContext const& load_ctxt,
@@ -108,6 +151,7 @@ Maike::SourceTreeLoader::getTarget(SourceFileLoadContext const& load_ctxt,
 	}
 	auto target_name = load_ctxt.targetDir()
 	                   / load_ctxt.sourceFileDir().lexically_relative(load_ctxt.sourceDir()) / name;
+	fprintf(stderr, "Loaded target %s\n", target_name.c_str());
 	return Db::TargetInfo{std::move(target_name), std::move(deps)};
 }
 
