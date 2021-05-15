@@ -141,9 +141,8 @@ namespace Maike::Db
 		       "* *source_file_info* will print information about the source file being compiled\n\n"
 		       "* *compilation_command* will show the compilation command used for each file being "
 		       "compiled\n\n"
-		       "Default value is *source_file_info*. Notice that *errors* and *source_file_info*s are "
-		       "written to *stderr*, "
-		       "while *compilation_command*s are written to *stdout*.";
+		       "Default value is *source_file_info*. Notice that *errors* are written to *stderr*, "
+		       "while other messages are written to *stdout*.";
 	}
 
 	constexpr char const* typeToString(Empty<CompilationLog::OutputFormat>)
