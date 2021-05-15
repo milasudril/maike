@@ -5,6 +5,9 @@
 #include "./source_file_load_ctxt.hpp"
 
 #include "src/key_value_store/array.hpp"
+#include "src/io/fifo.hpp"
+#include "src/io/input_file.hpp"
+#include "src/io/reader.hpp"
 
 #include <cstring>
 
@@ -170,4 +173,63 @@ Maike::SourceTreeLoader::getUseDeps(SourceFileLoadContext const& load_ctxt,
 		   });
 	}
 	return ret;
+}
+
+Maike::Db::SourceFileInfo
+Maike::SourceTreeLoader::loadSourceFile(SourceFileLoadContext const& load_ctxt,
+                                        std::vector<Db::Dependency>&& builtin_deps,
+                                        SourceFileInfoLoaders::Loader const& loader,
+                                        CommandDictionary const&)
+{
+	Io::Fifo<std::byte> src_fifo;
+	Io::Fifo<std::byte> tags_fifo;
+
+	auto const& src_path = load_ctxt.sourcePath();
+
+	Io::InputFile input{src_path};
+	loader.filterInput(Io::Reader{input},
+	                   SourceFileInfoLoaders::SourceOutStream{src_fifo},
+	                   SourceFileInfoLoaders::TagsOutStream{tags_fifo});
+	tags_fifo.stop();
+	src_fifo.stop();
+
+	{
+		auto deps = prependSearchPath(load_ctxt, loader.getDependencies(Io::Reader{src_fifo}));
+		builtin_deps.insert(std::end(builtin_deps), std::begin(deps), std::end(deps));
+	}
+
+	auto tags = KeyValueStore::Compound{Io::Reader{tags_fifo}, src_path.string()};
+	auto targets = getTargets(load_ctxt, tags);
+	auto use_deps = getUseDeps(load_ctxt, tags);
+	auto child_target_use_deps = getChildTargetUseDeps(load_ctxt, tags);
+
+	std::copy(std::begin(use_deps), std::end(use_deps), std::back_inserter(builtin_deps));
+
+	auto compiler = tags.getIf<Db::Compiler>("compiler");
+	// TODO: If compiler is valid, it should be looked up in command dictionary
+	//       and configured
+	[&builtin_deps, &child_target_use_deps](SourceTreeLoader::SourceFileLoadContext const& load_ctxt,
+	                                        Db::Compiler const& compiler,
+	                                        fs::path const& src_file) {
+		auto tags = getTags(compiler, src_file);
+		auto use_deps = getUseDeps(load_ctxt, tags);
+		auto ctu_deps = getChildTargetUseDeps(load_ctxt, tags);
+		std::copy(std::begin(use_deps), std::end(use_deps), std::back_inserter(builtin_deps));
+		std::copy(std::begin(ctu_deps), std::end(ctu_deps), std::back_inserter(child_target_use_deps));
+		if(compiler.recipe() != "") { builtin_deps.push_back(makeDependency(compiler)); }
+	}(load_ctxt, compiler ? (*compiler) : loader.compiler(), src_path);
+
+	auto const rebuild_policy = [](auto const& tags) {
+		if(auto rebuild_policy = tags.template getIf<Db::RebuildPolicy>("rebuild"); rebuild_policy)
+		{ return *rebuild_policy; }
+		return Db::RebuildPolicy::OnlyIfOutOfDate;
+	}(tags);
+
+	return Db::SourceFileInfo{std::move(targets),
+	                          std::ref(loader.compiler()),
+	                          compiler ? (*compiler) : Db::Compiler{""},
+	                          Db::SourceFileOrigin::Project,
+	                          rebuild_policy}
+	   .useDeps(std::move(builtin_deps))
+	   .childTargetsUseDeps(std::move(child_target_use_deps));
 }

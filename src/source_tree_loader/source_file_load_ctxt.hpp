@@ -5,9 +5,13 @@
 #ifndef MAIKE_SOURCETREELOADER_SOURCEFILELOADCTXT_HPP
 #define MAIKE_SOURCETREELOADER_SOURCEFILELOADCTXT_HPP
 
+#include "./command_dictionary.hpp"
+
 #include "src/db/dependency.hpp"
 #include "src/db/target_info.hpp"
+#include "src/db/source_file_info.hpp"
 #include "src/key_value_store/compound.hpp"
+#include "src/source_file_info_loaders/loader.hpp"
 
 namespace Maike::SourceTreeLoader
 {
@@ -80,6 +84,11 @@ namespace Maike::SourceTreeLoader
 
 	std::vector<Db::Dependency> getChildTargetUseDeps(SourceFileLoadContext const& load_ctxt,
 	                                                  Maike::KeyValueStore::Compound const& tags);
+
+	Db::SourceFileInfo loadSourceFile(SourceFileLoadContext const& load_ctxt,
+	                                  std::vector<Db::Dependency>&& builtin_deps,
+	                                  SourceFileInfoLoaders::Loader const& loader,
+	                                  CommandDictionary const& commands);
 }
 
 #endif
