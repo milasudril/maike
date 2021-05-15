@@ -6,13 +6,6 @@
 
 #include "./source_file_load_ctxt.hpp"
 
-#include "src/io/fifo.hpp"
-#include "src/io/input_file.hpp"
-#include "src/io/reader.hpp"
-
-#include <algorithm>
-#include <cstring>
-
 Maike::Db::SourceFileInfo Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(
    fs::path const& src_path, fs::path const& src_dir, fs::path const& target_dir) const
 {
