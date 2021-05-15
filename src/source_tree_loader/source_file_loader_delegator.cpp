@@ -18,14 +18,15 @@ namespace
 	// TODO: These functions should be moved
 
 	Maike::Db::SourceFileInfo
-	loadSourceFile(Maike::fs::path const& src_path,
-	               Maike::SourceTreeLoader::SourceFileLoadContext const& load_ctxt,
+	loadSourceFile(Maike::SourceTreeLoader::SourceFileLoadContext const& load_ctxt,
 	               std::vector<Maike::Db::Dependency>&& builtin_deps,
 	               Maike::SourceFileInfoLoaders::Loader const& loader,
 	               Maike::SourceTreeLoader::CommandDictionary const&)
 	{
 		Maike::Io::Fifo<std::byte> src_fifo;
 		Maike::Io::Fifo<std::byte> tags_fifo;
+
+		auto const& src_path = load_ctxt.sourcePath();
 
 		Maike::Io::InputFile input{src_path};
 		loader.filterInput(Maike::Io::Reader{input},
@@ -123,5 +124,5 @@ Maike::Db::SourceFileInfo Maike::SourceTreeLoader::SourceFileLoaderDelegator::lo
 	if(i == std::end(m_loaders))
 	{ return Db::SourceFileInfo{Db::SourceFileOrigin::Project, Db::Compiler{}}; }
 
-	return loadSourceFile(src_path, load_ctxt, std::move(deps), i->second, m_cmds);
+	return loadSourceFile(load_ctxt, std::move(deps), i->second, m_cmds);
 }
