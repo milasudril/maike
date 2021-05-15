@@ -59,6 +59,7 @@ def get_copyright(projinfo_copyright):
 
 def compile(args):
 	output = dict()
+	print(args, file = sys.stderr)
 	timestamp = args['build_info']['start_time']
 	args['build_info']['start_time'] = datetime.datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S UTC')
 	output['build_info'] = buildinfo.substitute(args['build_info'])
