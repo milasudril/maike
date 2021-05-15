@@ -22,15 +22,17 @@ Maike::fs::path Maike::SourceTreeLoader::prependSearchPath(SourceFileLoadContext
 	{ ret = (load_ctxt.sourceFileDir() / src_name).lexically_normal(); }
 	else
 	{
-		ret = (load_ctxt.sourceDir() / src_name).lexically_normal();
+		ret = load_ctxt.sourceDir() / src_name;
 	}
 
 	if(expected_origin == Db::SourceFileOrigin::Generated)
-	{ ret = ret.lexically_relative(load_ctxt.sourceDir()); }
-
-	//	fprintf(stderr, "Path fixup: %s -> %s\n", src_name.c_str(), ret.c_str());
-
+	{
+		// NOTE: target dir already added from getDependency (should be changed)
+		ret = ret.lexically_relative(load_ctxt.sourceDir());
+	}
 	return ret;
+
+	return ret.lexically_normal();
 }
 
 Maike::Db::Dependency
@@ -113,8 +115,11 @@ Maike::SourceTreeLoader::getTarget(SourceFileLoadContext const& load_ctxt,
 			                         std::vector<Db::Property>{}};
 		   });
 	}
-	auto target_name = load_ctxt.targetDir()
-	                   / load_ctxt.sourceFileDir().lexically_relative(load_ctxt.sourceDir()) / name;
+
+	// TODO: makeTargetName
+	auto target_name = (load_ctxt.targetDir()
+	                    / (load_ctxt.sourceFileDir() / name).lexically_relative(load_ctxt.sourceDir()))
+	                      .lexically_normal();
 	return Db::TargetInfo{std::move(target_name), std::move(deps)};
 }
 
