@@ -14,10 +14,11 @@ namespace Maike::SourceTreeLoader
 	class SourceFileLoadContext
 	{
 	public:
-		explicit SourceFileLoadContext(fs::path&& source_file_dir,
+		explicit SourceFileLoadContext(std::reference_wrapper<fs::path const> src_path,
 		                               std::reference_wrapper<fs::path const> source_dir,
 		                               std::reference_wrapper<fs::path const> target_dir):
-		   m_source_file_dir{std::move(source_file_dir)},
+		   m_src_path{src_path},
+		   m_source_file_dir{src_path.get().parent_path().lexically_normal()},
 		   m_source_dir{source_dir},
 		   m_target_dir{target_dir}
 		{
@@ -39,7 +40,13 @@ namespace Maike::SourceTreeLoader
 			return m_source_dir.get();
 		}
 
+		fs::path const sourcePath() const
+		{
+			return m_src_path.get();
+		}
+
 	private:
+		std::reference_wrapper<fs::path const> m_src_path;
 		fs::path m_source_file_dir;
 		std::reference_wrapper<fs::path const> m_source_dir;
 		std::reference_wrapper<fs::path const> m_target_dir;

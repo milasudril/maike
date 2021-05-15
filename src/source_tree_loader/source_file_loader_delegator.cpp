@@ -82,14 +82,13 @@ namespace
 Maike::Db::SourceFileInfo Maike::SourceTreeLoader::SourceFileLoaderDelegator::load(
    fs::path const& src_path, fs::path const& src_dir, fs::path const& target_dir) const
 {
-	SourceFileLoadContext load_ctxt{src_path.parent_path(), src_dir, target_dir};
+	SourceFileLoadContext load_ctxt{src_path, src_dir, target_dir};
 
 	std::vector<Db::Dependency> deps;
 	if(src_dir != src_path && src_path != m_dir_compiler.get().recipe())
 	{
-		deps.push_back(Db::Dependency{load_ctxt.sourceFileDir(),
-		                              Db::SourceFileOrigin::Project,
-		                              std::vector<Db::Property>{}});
+		deps.push_back(Db::Dependency{
+		   load_ctxt.sourceFileDir(), Db::SourceFileOrigin::Project, std::vector<Db::Property>{}});
 	}
 
 	if(is_directory(src_path))
