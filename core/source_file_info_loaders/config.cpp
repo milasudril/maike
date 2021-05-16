@@ -7,6 +7,7 @@
 #include "core/source_file_info_loaders/cxx/source_file_loader.hpp"
 #include "core/source_file_info_loaders/app/source_file_loader.hpp"
 #include "core/source_file_info_loaders/extension/source_file_loader.hpp"
+#include "core/source_file_info_loaders/generic/source_file_loader.hpp"
 
 #include <algorithm>
 
@@ -41,6 +42,11 @@ Maike::SourceFileInfoLoaders::Config::Config(KeyValueStore::CompoundRefConst ite
 		{
 			m_loaders.insert_or_assign(
 			   std::end(m_loaders), item.first, Loader{Extension::SourceFileLoader{}, std::move(compiler)});
+		}
+		else if(loader == std::string_view{"generic"})
+		{
+			m_loaders.insert_or_assign(
+			   std::end(m_loaders), item.first, Loader{Generic::SourceFileLoader{}, std::move(compiler)});
 		}
 		else
 		{
