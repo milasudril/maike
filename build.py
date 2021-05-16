@@ -22,9 +22,9 @@ def rebuild():
 	return result.returncode
 
 if __name__ == '__main__':
-	if len(sys.argv) >= 2 and sys.argv[1] == 'configure':
-		eprint('This script should not be run from maike2')
-		exit(1)
+	if len(sys.argv) >= 2:
+		if sys.argv[1] == 'get_tags' or sys.argv[1] == 'configure' or sys.argv[1] == 'compile':
+			exit(0)
 
 	result = do_initial_build()
 	if result != 0:
