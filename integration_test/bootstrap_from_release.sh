@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 echo "Bootstraping from $bootsrap_from_version"
 
 tmp_dir=$(mktemp -d)

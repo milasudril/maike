@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 echo "Install and rebuild out of tree (relative path)"
 
 install_dir_new=$(mktemp -d)

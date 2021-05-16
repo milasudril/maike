@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 install_dir_new=$(mktemp -d)
 trap "rm -rf $install_dir_new __targets_2 __targets_3" EXIT
 

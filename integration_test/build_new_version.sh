@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 echo "Building new version"
 
 rm -rf __targets*

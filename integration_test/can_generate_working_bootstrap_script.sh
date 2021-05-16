@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 echo "Can generate working boostrap script"
 
 rm -rf __targets_bootstrap __buildcache

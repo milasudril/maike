@@ -5,17 +5,17 @@ all:
 .PHONY: bootstrap
 bootstrap:
 	./build.py
-	__targets/src/bin/maike2 --target-dir=__targets_bootstrap --num-workers=1 --force-rebuild --dry-run --log-level=compilation_command --build-id=0000000000000000000000000000000000000000000000000000000000000000 > __buildcache/bootstrap.sh
+	__targets/core/bin/maike2 --target-dir=__targets_bootstrap --num-workers=1 --force-rebuild --dry-run --log-level=compilation_command --build-id=0000000000000000000000000000000000000000000000000000000000000000 > __buildcache/bootstrap.sh
 	chmod u+x __buildcache/bootstrap.sh
 
 .PHONY: bootstrap-test
 bootstrap-test: bootstrap
 	__buildcache/bootstrap.sh
 	rm -rf __targets
-	__targets_bootstrap/src/bin/maike2
+	__targets_bootstrap/core/bin/maike2
 
-.PHONY: source-arcive
-source-arcive: bootstrap
+.PHONY: source-archive
+source-archive: bootstrap
 	rm -f __targets/maike-src.tar.gz
 	(find __buildcache -type d; git ls-files) \
 	| tar --xform s:'\(.*\)':'maike-src/\1': -czf __targets/maike-src.tar.gz -T -

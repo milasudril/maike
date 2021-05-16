@@ -14,5 +14,6 @@ integration_test/install_and_rebuild.sh || exit_status=$?
 integration_test/install_and_rebuild_out_of_tree.sh || exit_status=$?
 integration_test/install_and_rebuild_out_of_tree_rel_path.sh || exit_status=$?
 integration_test/install_and_rebuild_out_of_tree_from_subpath.sh || exit_status=$?
+integration_test/check_release_tarball.sh || exit_status=$?
 
 exit $exit_status
