@@ -21,6 +21,11 @@ namespace App
 			   Maike::KeyValueStore::Compound{}.set("cflags", Maike::KeyValueStore::Array{}.append("-g"))};
 		}
 	};
+
+	inline Maike::KeyValueStore::JsonHandle toJson(SourceFileLoader const&)
+	{
+		return Maike::KeyValueStore::Compound{}.takeHandle();
+	}
 }
 
 #endif

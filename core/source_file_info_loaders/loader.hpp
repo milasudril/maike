@@ -1,6 +1,3 @@
-//@	{
-//@	 }
-
 #ifndef MAIKE_SOURCEFILEINFOLOADERS_LOADER_HPP
 #define MAIKE_SOURCEFILEINFOLOADERS_LOADER_HPP
 
@@ -36,20 +33,24 @@ namespace Maike::SourceFileInfoLoaders
 			Vtable(Tag<T>):
 			   filter_input{
 			      [](void const* handle, Io::Reader input, SourceOutStream src, TagsOutStream tags) {
-				      auto const& self = *reinterpret_cast<T const*>(handle);
+				      auto const& self = *static_cast<T const*>(handle);
 				      filterInput(self, input, src, tags);
 			      }},
 			   get_dependencies{[](void const* handle, Io::Reader input) {
-				   auto const& self = *reinterpret_cast<T const*>(handle);
+				   auto const& self = *static_cast<T const*>(handle);
 				   return getDependencies(self, input);
 			   }},
 			   destroy{[](void* handle) {
-				   auto self = reinterpret_cast<T*>(handle);
+				   auto self = static_cast<T*>(handle);
 				   delete self;
 			   }},
 			   clone{[](void const* handle) -> void* {
-				   auto const& self = *reinterpret_cast<T const*>(handle);
+				   auto const& self = *static_cast<T const*>(handle);
 				   return new T(self);
+			   }},
+			   config{[](void const* handle) -> KeyValueStore::JsonHandle {
+				   auto const& self = *static_cast<T const*>(handle);
+				   return toJson(self);
 			   }}
 			{
 			}
@@ -63,6 +64,7 @@ namespace Maike::SourceFileInfoLoaders
 			char const* (*name)();
 			void (*destroy)(void* handle);
 			void* (*clone)(void const* handle);
+			KeyValueStore::JsonHandle (*config)(void const* handle);
 		};
 	}
 
@@ -157,6 +159,12 @@ namespace Maike::SourceFileInfoLoaders
 			return m_handle != nullptr;
 		}
 
+		KeyValueStore::JsonHandle config() const
+		{
+			assert(valid());
+			return m_vtable.config(m_handle);
+		}
+
 	private:
 		void* m_handle;
 		source_file_loader_detail::Vtable m_vtable;
@@ -169,6 +177,7 @@ namespace Maike::SourceFileInfoLoaders
 		return Maike::KeyValueStore::Compound{}
 		   .set("compiler", loader.compiler())
 		   .set("loader", loader.name().c_str())
+		   .set("config", loader.config())
 		   .takeHandle();
 	}
 };

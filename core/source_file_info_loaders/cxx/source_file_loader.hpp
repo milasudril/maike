@@ -47,6 +47,11 @@ namespace Cxx
 	{
 		return loader.filterInput(input, source_stream, tag_stream);
 	}
+
+	inline Maike::KeyValueStore::JsonHandle toJson(SourceFileLoader const&)
+	{
+		return Maike::KeyValueStore::Compound{}.takeHandle();
+	}
 }
 
 #endif

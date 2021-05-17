@@ -13,12 +13,14 @@
 
 Maike::SourceFileInfoLoaders::Config::Config()
 {
-	m_loaders.insert(std::pair{std::string{"cxx"},
-	                                SourceFileInfoLoaders::Loader{Cxx::SourceFileLoader{}}});
-	m_loaders.insert(std::pair{std::string{"app"},
-	                                SourceFileInfoLoaders::Loader{App::SourceFileLoader{}}});
-	m_loaders.insert(std::pair{
-	   std::string{"extension"}, SourceFileInfoLoaders::Loader{Extension::SourceFileLoader{}}});
+	m_loaders.insert(
+	   std::pair{std::string{"cxx"}, SourceFileInfoLoaders::Loader{Cxx::SourceFileLoader{}}});
+	m_loaders.insert(
+	   std::pair{std::string{"app"}, SourceFileInfoLoaders::Loader{App::SourceFileLoader{}}});
+	m_loaders.insert(std::pair{std::string{"extension"},
+	                           SourceFileInfoLoaders::Loader{Extension::SourceFileLoader{}}});
+	m_loaders.insert(
+	   std::pair{std::string{"generic_example"}, SourceFileInfoLoaders::Loader{Generic::SourceFileLoader{}}});
 }
 
 namespace
@@ -27,7 +29,7 @@ namespace
 	T makeInstance(Maike::KeyValueStore::CompoundRefConst item)
 	{
 		auto const config = item.template getIf<T>("config");
-		return config?*config:T{};
+		return config ? *config : T{};
 	}
 }
 
@@ -56,7 +58,9 @@ Maike::SourceFileInfoLoaders::Config::Config(KeyValueStore::CompoundRefConst ite
 		else if(loader == std::string_view{"generic"})
 		{
 			m_loaders.insert_or_assign(
-			   std::end(m_loaders), item.first, Loader{makeInstance<Generic::SourceFileLoader>(cfg), std::move(compiler)});
+			   std::end(m_loaders),
+			   item.first,
+			   Loader{makeInstance<Generic::SourceFileLoader>(cfg), std::move(compiler)});
 		}
 		else
 		{

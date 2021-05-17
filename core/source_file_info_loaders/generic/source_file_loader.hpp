@@ -80,14 +80,15 @@ namespace Generic
 	}
 
 	FilenameExtReplacementMode fromString(Maike::KeyValueStore::Empty<FilenameExtReplacementMode>,
-	                                 char const* str);
+	                                      char const* str);
 
 	char const* toString(FilenameExtReplacementMode mode);
 
 	inline FilenameExtReplacementMode fromJson(Maike::KeyValueStore::Empty<FilenameExtReplacementMode>,
-	                                 Maike::KeyValueStore::JsonRefConst ref)
+	                                           Maike::KeyValueStore::JsonRefConst ref)
 	{
-		return fromString(Maike::KeyValueStore::Empty<FilenameExtReplacementMode>{}, ref.as<char const*>());
+		return fromString(Maike::KeyValueStore::Empty<FilenameExtReplacementMode>{},
+		                  ref.as<char const*>());
 	}
 
 	inline SourceFileLoader fromJson(Maike::KeyValueStore::Empty<SourceFileLoader>,
@@ -99,17 +100,16 @@ namespace Generic
 		   obj.getIf<FilenameExtReplacementMode>("filename_ext_replacement_mode");
 
 		return SourceFileLoader{target_filename_ext,
-		                        filename_ext_replacement_mode?
-			*filename_ext_replacement_mode:
-			FilenameExtReplacementMode::Append};
+		                        filename_ext_replacement_mode ? *filename_ext_replacement_mode :
+		                                                        FilenameExtReplacementMode::Append};
 	}
 
 	inline Maike::KeyValueStore::JsonHandle toJson(SourceFileLoader const& obj)
 	{
 		return Maike::KeyValueStore::Compound{}
-			.set("target_filename_ext", obj.targetFilenameExt())
-			.set("filename_ext_replacement_mode", toString(obj.filenameExtReplacementMode()))
-			.takeHandle();
+		   .set("target_filename_ext", obj.targetFilenameExt())
+		   .set("filename_ext_replacement_mode", toString(obj.filenameExtReplacementMode()))
+		   .takeHandle();
 	}
 }
 
