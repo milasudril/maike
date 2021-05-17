@@ -19,8 +19,8 @@ Maike::SourceFileInfoLoaders::Config::Config()
 	   std::pair{std::string{"app"}, SourceFileInfoLoaders::Loader{App::SourceFileLoader{}}});
 	m_loaders.insert(std::pair{std::string{"extension"},
 	                           SourceFileInfoLoaders::Loader{Extension::SourceFileLoader{}}});
-	m_loaders.insert(
-	   std::pair{std::string{"generic_example"}, SourceFileInfoLoaders::Loader{Generic::SourceFileLoader{}}});
+	m_loaders.insert(std::pair{std::string{"generic_example"},
+	                           SourceFileInfoLoaders::Loader{Generic::SourceFileLoader{}}});
 }
 
 namespace

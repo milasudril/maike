@@ -302,10 +302,12 @@ int main(int argc, char** argv)
 
 		auto const build_info = makeBuildInfo(cmdline);
 
-		auto const cfg = Maike::loadConfig(
-		   cmdline.hasOption<Maike::CmdLineOption::ConfigFiles>() ?
-		      cmdline.option<Maike::CmdLineOption::ConfigFiles>() :
-		      std::vector<Maike::fs::path>{build_info.sourceDir() / "maikeconfig.json"});
+		auto const cfg = cmdline.hasOption<Maike::CmdLineOption::ConfigDefault>() ?
+		                    Maike::Config{} :
+		                    Maike::loadConfig(cmdline.hasOption<Maike::CmdLineOption::ConfigFiles>() ?
+		                                         cmdline.option<Maike::CmdLineOption::ConfigFiles>() :
+		                                         std::vector<Maike::fs::path>{build_info.sourceDir()
+		                                                                      / "maikeconfig.json"});
 
 		if(cmdline.hasOption<Maike::CmdLineOption::ConfigDump>())
 		{

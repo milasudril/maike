@@ -29,6 +29,7 @@ namespace Maike
 		Targets,
 		ConfigFiles,
 		ConfigDump,
+		ConfigDefault,
 		SourceDir,
 		TargetDir,
 		BuildId,
@@ -395,6 +396,37 @@ namespace Maike
 		static constexpr char const* name()
 		{
 			return "--configfiles";
+		}
+	};
+
+	template<>
+	struct CmdLineOptionTraits<CmdLineOption::ConfigDefault>
+	{
+		using type = std::false_type;
+
+		static constexpr bool valueRequired()
+		{
+			return false;
+		}
+
+		static constexpr char const* category()
+		{
+			return "Configuration";
+		}
+
+		static constexpr char const* summary()
+		{
+			return "Use default configuration";
+		}
+
+		static constexpr char const* description()
+		{
+			return nullptr;
+		}
+
+		static constexpr char const* name()
+		{
+			return "--config-default";
 		}
 	};
 
