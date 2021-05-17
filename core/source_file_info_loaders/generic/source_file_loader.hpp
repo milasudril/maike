@@ -1,4 +1,4 @@
-//@	{"dependencies_extra":[{"ref":"./source_file_loader.o"}]}
+//@	{"dependencies_extra":[{"ref":"./source_file_loader.o", "rel":"implementation"}]}
 
 #ifndef GENERIC_SOURCEFILELOADER_HPP
 #define GENERIC_SOURCEFILELOADER_HPP
