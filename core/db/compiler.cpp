@@ -86,7 +86,7 @@ Maike::KeyValueStore::Compound Maike::Db::getTags(Compiler const& compiler,
                                                   fs::path const& src_file)
 {
 	KeyValueStore::Compound cmd_opts;
-	cmd_opts.set("source_file", src_file.c_str());
+	cmd_opts.set("source_file", src_file.c_str()).set("compiler_cfg", compiler.config());
 
 	CmdOptsString str;
 	store(cmd_opts, str, KeyValueStore::PrettyPrint{false});

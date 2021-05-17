@@ -208,12 +208,15 @@ Maike::SourceTreeLoader::loadSourceFile(SourceFileLoadContext const& load_ctxt,
 	auto compiler = tags.getIf<Db::Compiler>("compiler");
 	// TODO: If compiler is valid, it should be looked up in command dictionary
 	//       and configured
-	[&builtin_deps, &child_target_use_deps](SourceTreeLoader::SourceFileLoadContext const& load_ctxt,
-	                                        Db::Compiler const& compiler,
-	                                        fs::path const& src_file) {
+	[&targets, &builtin_deps, &child_target_use_deps](
+	   SourceTreeLoader::SourceFileLoadContext const& load_ctxt,
+	   Db::Compiler const& compiler,
+	   fs::path const& src_file) {
 		auto tags = getTags(compiler, src_file);
+		auto script_targets = getTargets(load_ctxt, tags);
 		auto use_deps = getUseDeps(load_ctxt, tags);
 		auto ctu_deps = getChildTargetUseDeps(load_ctxt, tags);
+		std::copy(std::begin(script_targets), std::end(script_targets), std::back_inserter(targets));
 		std::copy(std::begin(use_deps), std::end(use_deps), std::back_inserter(builtin_deps));
 		std::copy(std::begin(ctu_deps), std::end(ctu_deps), std::back_inserter(child_target_use_deps));
 		if(compiler.recipe() != "") { builtin_deps.push_back(makeDependency(compiler)); }
