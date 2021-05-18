@@ -56,6 +56,11 @@ namespace Maike::Io
 		writer.write(buffer, n);
 	}
 
+	inline void write(Writer writer, char const* buffer, size_t n)
+	{
+		writer.write(reinterpret_cast<std::byte const*>(buffer), n);
+	}
+
 	template<auto Val>
 	struct TaggedWriter: public Writer
 	{

@@ -27,7 +27,8 @@ namespace Maike::Io
 
 		template<class Source, std::enable_if_t<!std::is_same_v<std::decay_t<Source>, Reader>, int> = 0>
 		explicit Reader(Source& src, fs::path const& src_path = fs::path{}):
-		   r_source{&src}, r_callback{[](void* src, std::byte* buffer, size_t n) {
+		   r_source{&src},
+		   r_callback{[](void* src, std::byte* buffer, size_t n) {
 			   using Src = std::decay_t<Source>;
 			   auto& self = *reinterpret_cast<Src*>(src);
 			   return static_cast<size_t>(reader_impl::do_read(self, buffer, n));
@@ -46,7 +47,10 @@ namespace Maike::Io
 			return reinterpret_cast<uintptr_t>(r_source);
 		}
 
-		fs::path const& sourcePath() const { return m_src_path; }
+		fs::path const& sourcePath() const
+		{
+			return m_src_path;
+		}
 
 	private:
 		void* r_source;
