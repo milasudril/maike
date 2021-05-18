@@ -63,3 +63,14 @@ Maike::fs::path const& Maike::execPrefix()
 
 	return ret;
 }
+
+
+std::string Maike::getFullExtension(fs::path const& path)
+{
+	std::string extension;
+	for(auto p = path; !p.extension().empty(); p = p.stem())
+	{
+		extension = std::string{p.extension()} + extension;
+	}
+	return extension;
+}

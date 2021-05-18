@@ -78,7 +78,7 @@ namespace Maike
 		   .takeHandle();
 	}
 
-	std::map<std::string, std::reference_wrapper<SourceFileInfoLoaders::Loader const>>
+	std::map<std::string, std::reference_wrapper<SourceFileInfoLoaders::Loader const>, std::less<>>
 	mapSourceFileInfoLoaders(std::reference_wrapper<Maike::Config const> cfg);
 
 	Config loadConfig(std::vector<fs::path> const& cfg_files);

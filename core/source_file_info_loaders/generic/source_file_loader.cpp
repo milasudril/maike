@@ -43,9 +43,10 @@ Maike::fs::path Generic::makeTargetName(Maike::fs::path const& src_path,
 	__builtin_unreachable();
 }
 
-void Generic::SourceFileLoader::filterInput(Maike::Io::Reader src,
-                                            Maike::SourceFileInfoLoaders::SourceOutStream,
-                                            Maike::SourceFileInfoLoaders::TagsOutStream tag_out) const
+void Generic::SourceFileLoader::filterInput(
+   Maike::Io::Reader src,
+   Maike::SourceFileInfoLoaders::SourceOutStream,
+   Maike::SourceFileInfoLoaders::TagsOutStream tag_out) const
 {
 	Maike::KeyValueStore::Compound tag;
 	tag.set(

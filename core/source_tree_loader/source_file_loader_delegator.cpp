@@ -32,13 +32,7 @@ Maike::Db::SourceFileInfo Maike::SourceTreeLoader::SourceFileLoaderDelegator::lo
 		   .useDeps(std::move(deps));
 	}
 
-	std::string extension;
-	for(auto p = src_path; !p.extension().empty(); p = p.stem())
-	{
-		extension = std::string{p.extension()} + extension;
-	}
-
-	auto i = m_loaders.find(extension);
+	auto i = matchLongestExtension(src_path, m_loaders);
 	if(i == std::end(m_loaders))
 	{ return Db::SourceFileInfo{Db::SourceFileOrigin::Project, Db::Compiler{}}; }
 

@@ -6,12 +6,16 @@
 
 #include "core/io/input_file.hpp"
 
-std::map<std::string, std::reference_wrapper<Maike::SourceFileInfoLoaders::Loader const>>
-Maike::mapSourceFileInfoLoaders(std::reference_wrapper<Maike::Config const> cfg)
+std::
+   map<std::string, std::reference_wrapper<Maike::SourceFileInfoLoaders::Loader const>, std::less<>>
+   Maike::mapSourceFileInfoLoaders(std::reference_wrapper<Maike::Config const> cfg)
 {
 	auto& name_map = cfg.get().sourceTreeLoader().fileInfoLoaders();
 	auto& loaders = cfg.get().sourceFileInfoLoaders().loaders();
-	std::map<std::string, std::reference_wrapper<Maike::SourceFileInfoLoaders::Loader const>> ret;
+	std::map<std::string,
+	         std::reference_wrapper<Maike::SourceFileInfoLoaders::Loader const>,
+	         std::less<>>
+	   ret;
 	std::for_each(std::begin(name_map), std::end(name_map), [&ret, &loaders](auto const& item) {
 		auto i = loaders.find(item.second);
 		if(i == std::end(loaders))

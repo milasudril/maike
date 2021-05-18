@@ -22,6 +22,28 @@ namespace Maike
 		if(orig.parent_path() != "") { return orig; }
 		return fs::path{"."} / orig;
 	}
+
+	std::string getFullExtension(fs::path const& path);
+
+	template<class Dictionary>
+	auto matchLongestExtension(fs::path const& path, Dictionary const& dict)
+	{
+		auto extension = getFullExtension(path);
+		auto range = std::string_view{extension};
+		auto ptr = std::begin(range);
+		auto n = std::size(range);
+		while(ptr != std::end(range))
+		{
+			if(*ptr == '.')
+			{
+				auto i = dict.find(std::string_view{ptr, n});
+				if(i != std::end(dict)) { return i; }
+			}
+			++ptr;
+			--n;
+		}
+		return std::end(dict);
+	}
 }
 
 #endif

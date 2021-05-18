@@ -18,14 +18,16 @@ namespace Maike::SourceTreeLoader
 	class SourceFileLoaderDelegator
 	{
 	public:
+		using LoaderMap = std::
+		   map<std::string, std::reference_wrapper<SourceFileInfoLoaders::Loader const>, std::less<>>;
+
 		SourceFileLoaderDelegator(std::reference_wrapper<CommandDictionary const> cmds,
 		                          std::reference_wrapper<Db::Compiler const> dir_compiler):
 		   m_cmds{cmds}, m_dir_compiler{dir_compiler}
 		{
 		}
 
-		SourceFileLoaderDelegator& loaders(
-		   std::map<std::string, std::reference_wrapper<SourceFileInfoLoaders::Loader const>>&& loaders)
+		SourceFileLoaderDelegator& loaders(LoaderMap&& loaders)
 		{
 			m_loaders = std::move(loaders);
 			return *this;
@@ -40,7 +42,7 @@ namespace Maike::SourceTreeLoader
 		load(fs::path const& path, fs::path const& src_dir, fs::path const& target_dir) const;
 
 	private:
-		std::map<std::string, std::reference_wrapper<SourceFileInfoLoaders::Loader const>> m_loaders;
+		LoaderMap m_loaders;
 		std::reference_wrapper<CommandDictionary const> m_cmds;
 		std::reference_wrapper<Db::Compiler const> m_dir_compiler;
 	};
