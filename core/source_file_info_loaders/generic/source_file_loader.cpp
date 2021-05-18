@@ -11,9 +11,7 @@ Generic::fromString(Maike::KeyValueStore::Empty<FilenameExtReplacementMode>, cha
 {
 	if(strcmp(str, "append") == 0) { return FilenameExtReplacementMode::Append; }
 
-	if(strcmp(str, "replace_last") == 0) { return FilenameExtReplacementMode::ReplaceLast; }
-
-	if(strcmp(str, "replace_full") == 0) { return FilenameExtReplacementMode::ReplaceFull; }
+	if(strcmp(str, "replace") == 0) { return FilenameExtReplacementMode::Replace; }
 
 	std::string msg{"Bad filename extension replacement mode `"};
 	msg += str;
@@ -27,8 +25,27 @@ char const* Generic::toString(FilenameExtReplacementMode mode)
 	switch(mode)
 	{
 		case FilenameExtReplacementMode::Append: return "append";
-		case FilenameExtReplacementMode::ReplaceLast: return "replace_last";
-		case FilenameExtReplacementMode::ReplaceFull: return "replace_full";
+		case FilenameExtReplacementMode::Replace: return "replace";
 	}
 	__builtin_unreachable();
+}
+
+Maike::fs::path Generic::makeTargetName(Maike::fs::path const& src_path,
+								   std::string const& target_filename_ext,
+								   FilenameExtReplacementMode mode)
+{
+	switch(mode)
+	{
+		case FilenameExtReplacementMode::Append:
+			return src_path.string() +  target_filename_ext;
+		case FilenameExtReplacementMode::Replace:
+			return Maike::fs::path{src_path}.replace_extension(target_filename_ext);
+	}
+	__builtin_unreachable();
+}
+
+void Generic::SourceFileLoader::filterInput(Maike::Io::Reader,
+					Maike::SourceFileInfoLoaders::SourceOutStream,
+					Maike::SourceFileInfoLoaders::TagsOutStream) const
+{
 }

@@ -12,8 +12,7 @@ namespace Generic
 	enum class FilenameExtReplacementMode : int
 	{
 		Append,
-		ReplaceLast,
-		ReplaceFull
+		Replace
 	};
 
 	class SourceFileLoader
@@ -37,9 +36,7 @@ namespace Generic
 
 		void filterInput(Maike::Io::Reader,
 		                 Maike::SourceFileInfoLoaders::SourceOutStream,
-		                 Maike::SourceFileInfoLoaders::TagsOutStream) const
-		{
-		}
+		                 Maike::SourceFileInfoLoaders::TagsOutStream) const;
 
 		static char const* name()
 		{
@@ -111,6 +108,10 @@ namespace Generic
 		   .set("filename_ext_replacement_mode", toString(obj.filenameExtReplacementMode()))
 		   .takeHandle();
 	}
+
+	Maike::fs::path makeTargetName(Maike::fs::path const& src_path,
+								   std::string const& target_filename_ext,
+								   FilenameExtReplacementMode mode);
 }
 
 #endif
