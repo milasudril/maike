@@ -51,9 +51,9 @@ namespace Maike::Db
 			return m_nodes;
 		}
 
-		auto&& takeSourceFiles()
+		auto const& sourceFiles() const
 		{
-			return std::move(m_src_files);
+			return m_src_files;
 		}
 
 

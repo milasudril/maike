@@ -39,6 +39,10 @@
 			"cxx_test": {
 				"compiler": {
 					"config": {
+						"actions": [
+							"link",
+							"run"
+						],
 						"cflags": [
 							"-g",
 							"-Wall",
@@ -50,8 +54,7 @@
 						],
 						"std_revision": {
 							"min": "c++17"
-						},
-						"actions": ["link", "run"]
+						}
 					},
 					"recipe": "recipes/cxx_compiler.py"
 				},
@@ -77,8 +80,8 @@
 				".app.maikerule": "app",
 				".cpp": "cxx",
 				".hpp": "cxx",
-				".test.cpp": "cxx_test",
 				".py": "extension",
+				".test.cpp": "cxx_test",
 				".vcslog.maikerule": "vcslog"
 			},
 			"input_filter": [
