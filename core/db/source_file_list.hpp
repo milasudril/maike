@@ -13,7 +13,7 @@
 
 namespace Maike::Db
 {
-	using SourceFileList = std::map<fs::path, SourceFileInfo>;
+	using SourceFileList = DependencyGraph::SourceFileList;
 	using TargetList = std::map<Maike::fs::path, Maike::Db::Target>;
 
 	inline void insertPlaceholderIfExternal(Dependency const& dep, SourceFileList& source_files)

@@ -11,6 +11,7 @@
 #include "core/utils/fs.hpp"
 #include "core/sched/signaling_counter.hpp"
 #include "core/sched/thread_pool.hpp"
+#include "core/db/source_file_list.hpp"
 
 #include <map>
 #include <functional>
@@ -64,7 +65,7 @@ namespace Maike::SourceTreeLoader
 
 		DirectoryScanner& processPath(fs::path const& src_path, fs::path const& target_dir);
 
-		std::map<fs::path, Db::SourceFileInfo> takeResult()
+		Db::SourceFileList takeResult()
 		{
 			m_counter.wait(0);
 			if(!m_errlog.empty()) { throw ScanException{std::move(m_errlog)}; }
@@ -78,7 +79,7 @@ namespace Maike::SourceTreeLoader
 
 		fs::path m_root;
 
-		std::map<fs::path, Db::SourceFileInfo> m_source_files;
+		Db::SourceFileList m_source_files;
 
 		std::shared_mutex m_source_files_mtx;
 		Sched::SignalingCounter<size_t> m_counter;

@@ -55,7 +55,7 @@ namespace
 	}
 }
 
-Maike::Db::DependencyGraph::DependencyGraph(std::map<fs::path, SourceFileInfo>&& src_files,
+Maike::Db::DependencyGraph::DependencyGraph(SourceFileList&& src_files,
                                             IgnoreResolveErrors ignore_res_errors):
    m_src_files{std::move(src_files)}
 {

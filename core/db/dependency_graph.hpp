@@ -21,6 +21,8 @@ namespace Maike::Db
 	class DependencyGraph
 	{
 	public:
+		using SourceFileList = std::map<fs::path, SourceFileInfo>;
+
 		class IgnoreResolveErrors
 		{
 		public:
@@ -37,7 +39,7 @@ namespace Maike::Db
 			bool m_value;
 		};
 
-		explicit DependencyGraph(std::map<fs::path, SourceFileInfo>&& src_files,
+		explicit DependencyGraph(SourceFileList&& src_files,
 		                         IgnoreResolveErrors resolve_errors = IgnoreResolveErrors{false});
 
 		using node_type = SourceFileRecordConst;
@@ -56,7 +58,7 @@ namespace Maike::Db
 
 
 	private:
-		std::map<fs::path, SourceFileInfo> m_src_files;
+		SourceFileList m_src_files;
 		std::vector<SourceFileRecordConst> m_nodes;
 	};
 
