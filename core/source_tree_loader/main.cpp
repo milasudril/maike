@@ -15,6 +15,7 @@ Maike::Db::SourceTree Maike::SourceTreeLoader::load(Sched::ThreadPool& workers,
 	auto targets = collectTargets(src_files);
 	makeSourceFileInfos(targets, src_files);
 	src_files.merge(createPlaceholdersForExternalEntries(src_files));
+	addTargetDepsToSourceFiles(src_files);
 	return Db::SourceTree{
 	   std::move(targets), Db::DependencyGraph{std::move(src_files)}, fs::path{target_dir}};
 }

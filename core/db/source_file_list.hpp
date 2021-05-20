@@ -46,6 +46,8 @@ namespace Maike::Db
 
 	void makeSourceFileInfos(TargetList const& targets, SourceFileList& source_files);
 
+	void addTargetDepsToSourceFiles(SourceFileList& source_files);
+
 }
 
 #endif

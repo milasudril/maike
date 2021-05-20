@@ -6,6 +6,7 @@
 
 #include "./mem_monitor.hpp"
 #include "./callwrappers.hpp"
+#include "./fs.hpp"
 
 #include <unistd.h>
 #include <sys/wait.h>
@@ -28,9 +29,9 @@ namespace Testcases
 		assert(pid != -1);
 		if(pid == 0)
 		{
-			// Hide malloc from valgrind
-			auto test_exe = getenv("test_exe");
-			execlp(test_exe, test_exe, "child", nullptr);
+			Maike::fs::path executable{MAIKE_BUILDINFO_TARGETDIR};
+			executable/="core/utils/mem_monitor.test";
+			execlp(executable.c_str(), executable.c_str(), "child", nullptr);
 		}
 		else
 		{
@@ -55,7 +56,7 @@ namespace Testcases
 			auto t0 = std::chrono::steady_clock::now();
 			monitor.waitForMem(wait_for);
 			auto t = std::chrono::steady_clock::now();
-			printf(">>> Got at least %zu bytes after %.7f s\n",
+			fprintf(stderr, ">>> Got at least %zu bytes after %.7f s\n",
 			       wait_for,
 			       std::chrono::duration<double>{t - t0}.count());
 			int status;

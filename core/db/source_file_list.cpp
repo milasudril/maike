@@ -119,8 +119,23 @@ Maike::Db::SourceFileInfo Maike::Db::makeSourceFileInfo(TargetList::value_type c
 void Maike::Db::makeSourceFileInfos(TargetList const& targets, SourceFileList& source_files)
 {
 	DependencyGraph g{SourceFileList{source_files}, Db::DependencyGraph::IgnoreResolveErrors{}};
-	//	source_files = g.takeSourceFiles();
 	std::for_each(std::begin(targets), std::end(targets), [&g, &source_files](auto const& item) {
 		source_files.insert(std::make_pair(item.first, makeSourceFileInfo(item, g)));
+	});
+}
+
+void Maike::Db::addTargetDepsToSourceFiles(SourceFileList& source_files)
+{
+	std::for_each(std::begin(source_files), std::end(source_files), [](auto& item) {
+		if(getFullExtension(item.first) == ".test.cpp") // For testing only
+		{
+			auto deps = item.second.useDeps();
+			auto& targets = item.second.targets();
+			std::for_each(std::begin(targets), std::end(targets), [&deps](auto const& item) {
+				auto const& use_deps_in = item.useDeps();
+				std::copy(std::begin(use_deps_in), std::end(use_deps_in), std::back_inserter(deps));
+			});
+			item.second.useDeps(std::move(deps));
+		}
 	});
 }

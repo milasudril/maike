@@ -9,6 +9,7 @@ import subprocess
 import shutil
 import pkg_config
 import datetime
+import cxx_linker
 
 compiler = os.environ['CXX'] if 'CXX' in os.environ else 'g++'
 
@@ -36,6 +37,16 @@ def collect_cflags(src_dir, compiler_flags, dependencies):
 
 	return list(dict.fromkeys(tmp))
 
+def get_actions(compiler_cfg):
+	ret = set()
+	if not 'actions' in compiler_cfg:
+		return ret
+
+	for action in compiler_cfg['actions']:
+		ret.add(action)
+
+	return ret
+
 no_op = {'.hpp', '.h', '.hxx'}
 
 def compile(build_args):
@@ -44,10 +55,11 @@ def compile(build_args):
 		return 0
 	args = []
 	args.append(compiler)
-	args.extend(collect_cflags(build_args['build_info']['source_dir'], build_args['compiler_cfg'], build_args['dependencies']))
-	if 'std_revision' in build_args['compiler_cfg']:
-		if 'selected' in build_args['compiler_cfg']['std_revision']:
-			args.append('-std=%s'%build_args['compiler_cfg']['std_revision']['selected'])
+	compiler_cfg = build_args['compiler_cfg']
+	args.extend(collect_cflags(build_args['build_info']['source_dir'], compiler_cfg, build_args['dependencies']))
+	if 'std_revision' in compiler_cfg:
+		if 'selected' in compiler_cfg['std_revision']:
+			args.append('-std=%s'%compiler_cfg['std_revision']['selected'])
 	args.append('-fdiagnostics-color=%s'%('always' if build_args['log_format']=='ansi_term' else 'never'))
 	args.append('-DMAIKE_TASKID=%dL'%build_args['task_id'])
 	timestamp = build_args['build_info']['start_time']
@@ -56,14 +68,24 @@ def compile(build_args):
 	args.append('-DMAIKE_BUILDINFO_BUILDID="%s"'%build_args['build_info']['build_id'])
 	args.append('-DMAIKE_BUILDINFO_TARGETDIR="%s"'%build_args['build_info']['target_dir'])
 	args.append('-DMAIKE_BUILDINFO_SOURCEDIR="%s"'%build_args['build_info']['source_dir'])
-	args.append('-c')
+	actions = get_actions(compiler_cfg)
+	if not 'link' in actions:
+		args.append('-c')
 	args.append(build_args['source_file'])
+	if 'link' in actions:
+		args.extend(cxx_linker.filter_deps(cxx_linker.collect_deps(build_args['dependencies'])))
+
 	args.append('-o')
 	args.append(build_args['targets'][0])
 	result = subprocess.run(args)
 
 	for target in build_args['targets'][1:]:
 		shutil.copyfile(build_args['targets'][0], target)
+
+	if 'run' in actions and result.returncode == 0:
+		if not 'link' in actions:
+			raise('%: error: Running requires target to be linked'%(build_args['targets'][0]))
+		result = subprocess.run([build_args['targets'][0]])
 
 	return result.returncode
 

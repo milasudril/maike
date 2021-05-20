@@ -1,6 +1,6 @@
 //@	{
-//@	 "targets":[{"name":"execve.test","type":"application", "autorun":1}]
-//@	 }
+//@	 "target":{"name":"execve.test"}
+//@	}
 
 #undef NDEBUG
 

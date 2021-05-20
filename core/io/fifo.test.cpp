@@ -1,6 +1,5 @@
 //@	{
-//@	 "targets":[{"name":"fifo.test","type":"application",
-//@	 	"dependencies":[{"ref":"pthread", "rel":"external"}], "autorun":1}]
+//@	 "target":{"name":"fifo.test", "dependencies":[{"ref":"pthread", "rel":"external"}]}
 //@	}
 
 #undef NDEBUG
