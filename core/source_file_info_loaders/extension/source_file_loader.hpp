@@ -51,6 +51,11 @@ namespace Extension
 	{
 		return Maike::KeyValueStore::Compound{}.takeHandle();
 	}
+
+	constexpr bool useTargetDeps(SourceFileLoader const&)
+	{
+		return false;
+	}
 }
 
 #endif

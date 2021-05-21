@@ -26,7 +26,7 @@ namespace Cxx
 			   "cxx_compiler.py",
 			   Maike::KeyValueStore::Compound{}
 			      .set("iquote", Maike::KeyValueStore::Array{}.append("."))
-			      .set("cflags", Maike::KeyValueStore::Array{}.append("-c").append("-g").append("-Wall"))};
+			      .set("cflags", Maike::KeyValueStore::Array{}.append("-g").append("-Wall"))};
 		}
 
 		static char const* name()
@@ -51,6 +51,11 @@ namespace Cxx
 	inline Maike::KeyValueStore::JsonHandle toJson(SourceFileLoader const&)
 	{
 		return Maike::KeyValueStore::Compound{}.takeHandle();
+	}
+
+	constexpr bool useTargetDeps(SourceFileLoader const&)
+	{
+		return false;
 	}
 }
 

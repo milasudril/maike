@@ -112,6 +112,11 @@ namespace Generic
 	Maike::fs::path makeTargetName(Maike::fs::path const& src_path,
 	                               std::string const& target_filename_ext,
 	                               FilenameExtReplacementMode mode);
+
+	constexpr bool useTargetDeps(SourceFileLoader const&)
+	{
+		return false;
+	}
 }
 
 #endif
