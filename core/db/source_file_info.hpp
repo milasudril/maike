@@ -10,6 +10,22 @@
 
 namespace Maike::Db
 {
+	class UseTargetDeps
+	{
+	public:
+		constexpr explicit UseTargetDeps(bool value = true): m_value{value}
+		{
+		}
+
+		constexpr operator bool() const
+		{
+			return m_value;
+		}
+
+	private:
+		bool m_value;
+	};
+
 	class SourceFileInfo
 	{
 	public:
@@ -17,7 +33,11 @@ namespace Maike::Db
 		 * Allows to create a node without a source file to be scanned.
 		 */
 		explicit SourceFileInfo(SourceFileOrigin origin, Compiler&& compiler):
-		   m_compiler_default{nullptr}, m_compiler{std::move(compiler)}, m_origin{origin}
+		   m_compiler_default{nullptr},
+		   m_compiler{std::move(compiler)},
+		   m_origin{origin},
+		   m_rebuild_policy{RebuildPolicy::OnlyIfOutOfDate},
+		   m_use_target_deps{false}
 		{
 		}
 
@@ -25,12 +45,14 @@ namespace Maike::Db
 		                        std::reference_wrapper<Compiler const> compiler_default,
 		                        Compiler&& compiler,
 		                        SourceFileOrigin origin,
-		                        RebuildPolicy rebuild_policy):
+		                        RebuildPolicy rebuild_policy,
+		                        UseTargetDeps use_target_deps = UseTargetDeps{false}):
 		   m_targets{std::move(targets)},
 		   m_compiler_default{&compiler_default.get()},
 		   m_compiler{std::move(compiler)},
 		   m_origin{origin},
-		   m_rebuild_policy{rebuild_policy}
+		   m_rebuild_policy{rebuild_policy},
+		   m_use_target_deps{use_target_deps}
 		{
 		}
 
@@ -53,12 +75,6 @@ namespace Maike::Db
 		SourceFileInfo& buildDeps(std::vector<Dependency>&& deps)
 		{
 			m_build_deps = std::move(deps);
-			return *this;
-		}
-
-		SourceFileInfo& add(Dependency&& dep)
-		{
-			m_use_deps.push_back(std::move(dep));
 			return *this;
 		}
 
@@ -98,6 +114,11 @@ namespace Maike::Db
 			return m_rebuild_policy;
 		}
 
+		bool useTargetDeps() const
+		{
+			return m_use_target_deps;
+		}
+
 	private:
 		std::vector<Dependency> m_use_deps;
 		std::vector<Dependency> m_build_deps;
@@ -107,6 +128,7 @@ namespace Maike::Db
 		Compiler m_compiler;
 		SourceFileOrigin m_origin;
 		RebuildPolicy m_rebuild_policy;
+		bool m_use_target_deps;
 	};
 }
 

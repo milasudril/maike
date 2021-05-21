@@ -30,7 +30,7 @@ namespace Testcases
 		if(pid == 0)
 		{
 			Maike::fs::path executable{MAIKE_BUILDINFO_TARGETDIR};
-			executable/="core/utils/mem_monitor.test";
+			executable /= "core/utils/mem_monitor.test";
 			execlp(executable.c_str(), executable.c_str(), "child", nullptr);
 		}
 		else
@@ -56,9 +56,10 @@ namespace Testcases
 			auto t0 = std::chrono::steady_clock::now();
 			monitor.waitForMem(wait_for);
 			auto t = std::chrono::steady_clock::now();
-			fprintf(stderr, ">>> Got at least %zu bytes after %.7f s\n",
-			       wait_for,
-			       std::chrono::duration<double>{t - t0}.count());
+			fprintf(stderr,
+			        ">>> Got at least %zu bytes after %.7f s\n",
+			        wait_for,
+			        std::chrono::duration<double>{t - t0}.count());
 			int status;
 			waitpid(pid, &status, 0);
 			close(sock);

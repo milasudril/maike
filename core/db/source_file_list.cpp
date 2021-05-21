@@ -126,14 +126,17 @@ void Maike::Db::makeSourceFileInfos(TargetList const& targets, SourceFileList& s
 
 void Maike::Db::addTargetDepsToSourceFiles(SourceFileList& source_files)
 {
-	std::for_each(std::begin(source_files), std::end(source_files), [](auto& item) {
-		if(getFullExtension(item.first) == ".test.cpp") // For testing only
+	std::for_each(std::begin(source_files), std::end(source_files), [&source_files](auto& item) {
+		if(item.second.useTargetDeps())
 		{
 			auto deps = item.second.useDeps();
 			auto& targets = item.second.targets();
-			std::for_each(std::begin(targets), std::end(targets), [&deps](auto const& item) {
-				auto const& use_deps_in = item.useDeps();
-				std::copy(std::begin(use_deps_in), std::end(use_deps_in), std::back_inserter(deps));
+			std::for_each(std::begin(targets), std::end(targets), [&deps, &source_files](auto const& item) {
+				auto i = source_files.find(item.name());
+				if(i == std::end(source_files)) { return; }
+
+				auto const& use_deps_target = i->second.useDeps();
+				std::copy(std::begin(use_deps_target), std::end(use_deps_target), std::back_inserter(deps));
 			});
 			item.second.useDeps(std::move(deps));
 		}
