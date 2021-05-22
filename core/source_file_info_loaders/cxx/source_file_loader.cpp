@@ -420,3 +420,17 @@ void Cxx::SourceFileLoader::filterInput(
 		}
 	}
 }
+
+bool Cxx::useTargetDeps(SourceFileLoader const&, Maike::Db::Compiler const& compiler)
+{
+	auto const& cfg = compiler.config();
+	if(auto actions = cfg.getIf<Maike::KeyValueStore::ArrayRefConst>("actions"); actions)
+	{
+		return std::any_of(std::begin(*actions), std::end(*actions), [](auto const& item) {
+			auto str = item.template as<char const*>();
+			if(str == nullptr) { return false; }
+			return strcmp("link", str) == 0;
+		});
+	}
+	return false;
+}

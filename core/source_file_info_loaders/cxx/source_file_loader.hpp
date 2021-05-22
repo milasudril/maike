@@ -53,10 +53,7 @@ namespace Cxx
 		return Maike::KeyValueStore::Compound{}.takeHandle();
 	}
 
-	constexpr bool useTargetDeps(SourceFileLoader const&, Maike::Db::Compiler const&)
-	{
-		return false;
-	}
+	bool useTargetDeps(SourceFileLoader const&, Maike::Db::Compiler const& compiler);
 }
 
 #endif

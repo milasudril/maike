@@ -9,6 +9,8 @@
 
 #include <type_traits>
 #include <algorithm>
+#include <iterator>
+#include <cstring>
 
 namespace Maike::KeyValueStore
 {
@@ -19,11 +21,9 @@ namespace Maike::KeyValueStore
 	class ArrayRefConst
 	{
 	public:
-		class const_iterator
+		class const_iterator: public std::iterator<std::forward_iterator_tag, JsonRefConst>
 		{
 		public:
-			using value_type = JsonRefConst;
-
 			explicit const_iterator(json_t const* handle, size_t index, char const* name):
 			   r_handle{handle}, m_index{index}, r_name{name}
 			{

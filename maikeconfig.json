@@ -39,6 +39,7 @@
 			"cxx_test": {
 				"compiler": {
 					"config": {
+						"actions": [],
 						"cflags": [
 							"-g",
 							"-Wall",
