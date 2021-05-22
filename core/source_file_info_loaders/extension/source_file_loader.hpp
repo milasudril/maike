@@ -52,7 +52,7 @@ namespace Extension
 		return Maike::KeyValueStore::Compound{}.takeHandle();
 	}
 
-	constexpr bool useTargetDeps(SourceFileLoader const&)
+	constexpr bool useTargetDeps(SourceFileLoader const&, Maike::Db::Compiler const&)
 	{
 		return false;
 	}

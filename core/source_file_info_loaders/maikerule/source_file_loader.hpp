@@ -47,7 +47,7 @@ namespace Maikerule
 		return loader.filterInput(input, source_stream, tag_stream);
 	}
 
-	constexpr bool useTargetDeps(SourceFileLoader const&)
+	constexpr bool useTargetDeps(SourceFileLoader const&, Maike::Db::Compiler const&)
 	{
 		return false;
 	}

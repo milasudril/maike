@@ -40,9 +40,9 @@ namespace Maike::SourceFileInfoLoaders
 				   auto const& self = *static_cast<T const*>(handle);
 				   return getDependencies(self, input);
 			   }},
-			   use_target_deps{[](void const* handle) {
+			   use_target_deps{[](void const* handle, Db::Compiler const& compiler) {
 				   auto const& self = *static_cast<T const*>(handle);
-				   return useTargetDeps(self);
+				   return useTargetDeps(self, compiler);
 			   }},
 			   destroy{[](void* handle) {
 				   auto self = static_cast<T*>(handle);
@@ -64,7 +64,7 @@ namespace Maike::SourceFileInfoLoaders
 			                     SourceOutStream source,
 			                     TagsOutStream tags);
 			std::vector<Db::Dependency> (*get_dependencies)(void const* handle, Io::Reader source_stream);
-			bool (*use_target_deps)(void const* handle);
+			bool (*use_target_deps)(void const* handle, Db::Compiler const& compiler);
 			Db::Compiler (*default_compiler)();
 			char const* (*name)();
 			void (*destroy)(void* handle);
@@ -172,7 +172,7 @@ namespace Maike::SourceFileInfoLoaders
 
 		bool useTargetDeps() const
 		{
-			return m_vtable.use_target_deps(m_handle);
+			return m_vtable.use_target_deps(m_handle, m_compiler);
 		}
 
 	private:
