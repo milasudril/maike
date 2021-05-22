@@ -130,6 +130,7 @@ void Maike::Db::compile(DependencyGraph const& g,
 	// Generate the command while we're waiting for dependencies to complete
 	auto use_deps = getUseDepsRecursive(g, node);
 	auto cmd = makeBuildCommand(node, build_info, use_deps, log.outputFormat());
+	log_entry.taskPrepared();
 
 	// Wait until build deps has been processed
 	auto const& build_deps = node.sourceFileInfo().buildDeps();
@@ -151,7 +152,7 @@ void Maike::Db::compile(DependencyGraph const& g,
 		msg += ": At least one dependency was not compiled";
 		throw std::runtime_error{std::move(msg)};
 	}
-
+	log_entry.taskReady();
 	if(force_recompilation || node.sourceFileInfo().rebuildPolicy() == RebuildPolicy::Always
 	   || !isUpToDate(node, use_deps))
 	{

@@ -46,6 +46,10 @@ Maike::Db::CompilationLog& Maike::Db::CompilationLog::write(Entry&& e)
 			stdout_buff += " | ";
 			stdout_buff += std::to_string(to_mus(e.start_time - m_start_time));
 			stdout_buff += " | ";
+			stdout_buff += std::to_string(to_mus(e.task_prepared - m_start_time));
+			stdout_buff += " | ";
+			stdout_buff += std::to_string(to_mus(e.task_ready - m_start_time));
+			stdout_buff += " | ";
 			stdout_buff += std::to_string(to_mus(e.completion_time - m_start_time));
 			[[fallthrough]];
 		case LogLevel::Errors: break;

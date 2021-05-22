@@ -51,6 +51,8 @@ namespace Maike::Db
 			}
 
 			std::chrono::steady_clock::time_point start_time;
+			std::chrono::steady_clock::time_point task_prepared;
+			std::chrono::steady_clock::time_point task_ready;
 			std::chrono::steady_clock::time_point completion_time;
 			SourceFileId src_id;
 			fs::path src_path;
@@ -98,6 +100,18 @@ namespace Maike::Db
 			EntryContext& result(Exec::Result&& res)
 			{
 				m_entry.result = std::move(res);
+				return *this;
+			}
+
+			EntryContext& taskPrepared()
+			{
+				m_entry.task_prepared = std::chrono::steady_clock::now();
+				return *this;
+			}
+
+			EntryContext& taskReady()
+			{
+				m_entry.task_ready = std::chrono::steady_clock::now();
 				return *this;
 			}
 
