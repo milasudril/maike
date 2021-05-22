@@ -25,6 +25,20 @@ namespace
 	{
 		return std::chrono::duration_cast<std::chrono::microseconds>(t).count();
 	}
+
+	void append_log(std::string& output, std::vector<std::byte> const& data)
+	{
+		std::for_each(std::begin(data), std::end(data), [&output, newline = true](auto item) mutable{
+			if(newline)
+			{
+				output +="> ";
+				newline = false;
+			}
+			auto ch_in = static_cast<char>(item);
+			output += ch_in;
+			newline = (ch_in == '\n');
+		});
+	}
 }
 
 Maike::Db::CompilationLog& Maike::Db::CompilationLog::write(Entry&& e)
@@ -57,6 +71,8 @@ Maike::Db::CompilationLog& Maike::Db::CompilationLog::write(Entry&& e)
 
 	if(std::size(stdout_buff) > 0) { stdout_buff += "\n"; }
 	if(std::size(stderr_buff) > 0) { stderr_buff += "\n"; }
+
+	append_log(stdout_buff, e.result.stdout());
 
 	std::lock_guard lock{m_output_mutex};
 	fputs(stdout_buff.c_str(), stdout);
