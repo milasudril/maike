@@ -1,4 +1,5 @@
 //@	{
+//@	 "dependencies_extra":[{"ref":"./info.o","rel":"implementation"}]
 //@	}
 
 #ifndef MAIKE_BUILD_INFO_HPP
@@ -18,9 +19,7 @@ namespace Maike::Build
 	class Info
 	{
 	public:
-		Info(): m_source_dir{"."}, m_target_dir{"__targets"}
-		{
-		}
+		Info();
 
 		Info& startTime(SystemTimeStamp val)
 		{
@@ -66,11 +65,17 @@ namespace Maike::Build
 			return m_target_dir;
 		}
 
+		std::string const& buildHost() const
+		{
+			return m_build_host;
+		}
+
 	private:
 		SystemTimeStamp m_start_time;
 		Id m_build_id;
 		fs::path m_source_dir;
 		fs::path m_target_dir;
+		std::string m_build_host;
 	};
 
 	inline auto toJson(Info const& info)
@@ -80,6 +85,7 @@ namespace Maike::Build
 		   .set("build_id", info.buildId())
 		   .set("source_dir", info.sourceDir())
 		   .set("target_dir", info.targetDir())
+		   .set("build_host", info.buildHost())
 		   .takeHandle();
 	}
 }
