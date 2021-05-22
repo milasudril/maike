@@ -21,10 +21,6 @@ namespace Maike::Io
 	class Reader
 	{
 	public:
-		Reader(): r_callback{[](void*, std::byte*, size_t) { return static_cast<size_t>(0); }}
-		{
-		}
-
 		template<class Source, std::enable_if_t<!std::is_same_v<std::decay_t<Source>, Reader>, int> = 0>
 		explicit Reader(Source& src, fs::path const& src_path = fs::path{}):
 		   r_source{&src},

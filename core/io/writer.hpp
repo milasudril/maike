@@ -22,10 +22,6 @@ namespace Maike::Io
 	class Writer
 	{
 	public:
-		Writer(): r_callback{[](void*, std::byte const*, size_t) {}}
-		{
-		}
-
 		template<class Source, std::enable_if_t<!std::is_same_v<Source, Writer>, int> = 0>
 		explicit Writer(Source& src):
 		   r_source{&src}, r_callback{[](void* src, std::byte const* buffer, size_t n) {
