@@ -39,7 +39,7 @@
 			"cxx_test": {
 				"compiler": {
 					"config": {
-						"actions": [],
+						"actions": ["link", "run"],
 						"cflags": [
 							"-g",
 							"-Wall",
