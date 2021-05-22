@@ -28,10 +28,10 @@ namespace
 
 	void append_log(std::string& output, std::vector<std::byte> const& data)
 	{
-		std::for_each(std::begin(data), std::end(data), [&output, newline = true](auto item) mutable{
+		std::for_each(std::begin(data), std::end(data), [&output, newline = true](auto item) mutable {
 			if(newline)
 			{
-				output +="> ";
+				output += " ... ";
 				newline = false;
 			}
 			auto ch_in = static_cast<char>(item);
@@ -53,7 +53,7 @@ Maike::Db::CompilationLog& Maike::Db::CompilationLog::write(Entry&& e)
 			stdout_buff += " #";
 			[[fallthrough]];
 		case LogLevel::SourceFileInfo:
-			stdout_buff += ' ';
+			stdout_buff += " ";
 			stdout_buff += std::to_string(e.src_id.value());
 			stdout_buff += " | ";
 			stdout_buff += e.src_path;

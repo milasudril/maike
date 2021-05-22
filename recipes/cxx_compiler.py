@@ -85,6 +85,7 @@ def compile(build_args):
 	if 'run' in actions and result.returncode == 0:
 		if not 'link' in actions:
 			raise('%: error: Running requires target to be linked'%(build_args['targets'][0]))
+		print('%s: Running %s'%(build_args['source_file'], build_args['targets'][0]))
 		result = subprocess.run([build_args['targets'][0]])
 
 	return result.returncode
