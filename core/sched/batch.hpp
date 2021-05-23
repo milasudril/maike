@@ -1,8 +1,5 @@
-//@	{
-//@	}
-
 #ifndef MAIKE_SCHED_BATCH_HPP
-#define MAINE_SCHED_BATCH_HPP
+#define MAIKE_SCHED_BATCH_HPP
 
 #include "core/sched/task_completion_event.hpp"
 #include "core/sched/thread_pool.hpp"
