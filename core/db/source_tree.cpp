@@ -40,11 +40,15 @@ Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
 	    &compilation_log,
 	    force_recompilation,
 	    &ctxt](SourceFileRecordConst const& node, auto const&...) {
+		   if(std::size(node.sourceFileInfo().targets()) == 0)
+		   {
+			   ctxt.add(node.id().value(), []() {});
+			   return;
+		   }
+
 		   ctxt.add(
 		      node.id().value(),
 		      [&graph, &node, &build_info, invoker, &compilation_log, force_recompilation, &ctxt]() {
-			      if(std::size(node.sourceFileInfo().targets()) == 0) { return; }
-
 			      Task t{graph, node, build_info, compilation_log.outputFormat()};
 			      if(!t.waitUntilAvailable(ctxt))
 			      {
