@@ -88,6 +88,11 @@ namespace Maike::Db
 			return m_compiler;
 		}
 
+		bool hasDefaultCompiler() const
+		{
+			return m_compiler_default != nullptr;
+		}
+
 		Compiler const& compilerDefault() const
 		{
 			return *m_compiler_default;

@@ -8,6 +8,7 @@
 #include "./source_file_list.hpp"
 #include "./dependency_graph.hpp"
 #include "./compilation_log.hpp"
+#include "./task.hpp"
 
 #include "core/sched/thread_pool.hpp"
 #include "core/build/info.hpp"
@@ -71,7 +72,7 @@ namespace Maike::Db
 	                    Build::Info const&,
 	                    Invoker invoker,
 	                    CompilationLog& compilation_log,
-	                    ForceRecompilation,
+	                    Task::ForceRecompilation,
 	                    Sched::ThreadPool& workers);
 
 
@@ -79,7 +80,7 @@ namespace Maike::Db
 	                    Build::Info const&,
 	                    Invoker invoker,
 	                    CompilationLog& compilation_log,
-	                    ForceRecompilation force_recompilation,
+	                    Task::ForceRecompilation force_recompilation,
 	                    Sched::ThreadPool& workers,
 	                    fs::path const& target_name);
 
@@ -87,7 +88,7 @@ namespace Maike::Db
 	                    Build::Info const&,
 	                    Invoker invoker,
 	                    CompilationLog& compilation_log,
-	                    ForceRecompilation force_recompilation,
+	                    Task::ForceRecompilation force_recompilation,
 	                    Sched::ThreadPool& workers,
 	                    std::pair<fs::path const*, size_t> targets);
 }

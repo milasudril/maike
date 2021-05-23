@@ -369,7 +369,7 @@ int main(int argc, char** argv)
 		   build_info,
 		   Maike::Db::Invoker{std::ref(invoker)},
 		   log,
-		   Maike::Db::ForceRecompilation{cmdline.hasOption<Maike::CmdLineOption::ForceRebuild>()},
+		   Maike::Db::Task::ForceRecompilation{cmdline.hasOption<Maike::CmdLineOption::ForceRebuild>()},
 		   workers);
 	}
 	catch(std::exception const& err)

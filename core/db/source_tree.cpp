@@ -3,6 +3,7 @@
 //@	}
 
 #include "./source_tree.hpp"
+#include "./task.hpp"
 
 #include "core/utils/graphutils.hpp"
 #include "core/sched/signaling_counter.hpp"
@@ -27,7 +28,7 @@ Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
                                           Build::Info const& build_info,
                                           Invoker invoker,
                                           CompilationLog& compilation_log,
-                                          ForceRecompilation force_recompilation,
+                                          Task::ForceRecompilation force_recompilation,
                                           Sched::ThreadPool& workers)
 {
 	Sched::Batch ctxt{size(src_tree.dependencyGraph()), workers};
@@ -42,7 +43,27 @@ Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
 		   ctxt.add(
 		      node.id().value(),
 		      [&graph, &node, &build_info, invoker, &compilation_log, force_recompilation, &ctxt]() {
-			      compile(graph, node, build_info, invoker, compilation_log, force_recompilation, ctxt);
+			      Task t{graph, node, build_info, compilation_log.outputFormat()};
+			      if(!t.waitUntilAvailable(ctxt))
+			      {
+				      std::string msg{node.path()};
+				      msg += ": At least one dependency was not compiled";
+				      throw std::runtime_error{std::move(msg)};
+			      }
+
+			      if(auto result = t.runIfNecessary(force_recompilation, invoker); result)
+			      {
+				      //	log_entry.command(std::move(cmd));
+				      auto const build_failed = failed(*result);
+				      //	log_entry.result(std::move(result));
+
+				      if(build_failed)
+				      {
+					      std::string msg{node.path()};
+					      msg += ":1:1: Compilation failed";
+					      throw std::runtime_error{std::move(msg)};
+				      }
+			      }
 		      });
 	   },
 	   src_tree.dependencyGraph());

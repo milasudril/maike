@@ -85,30 +85,6 @@ namespace Maike::Db
 
 	std::vector<Db::Dependency> getUseDepsRecursive(DependencyGraph const& g,
 	                                                SourceFileRecordConst const& rec);
-
-	class ForceRecompilation
-	{
-	public:
-		explicit ForceRecompilation(bool value = true): m_value{value}
-		{
-		}
-
-		constexpr operator bool() const
-		{
-			return m_value;
-		}
-
-	private:
-		bool m_value;
-	};
-
-	void compile(DependencyGraph const& g,
-	             SourceFileRecordConst const& node,
-	             Build::Info const& build_info,
-	             Invoker invoker,
-	             CompilationLog& log,
-	             ForceRecompilation force_recompilation,
-	             Sched::Batch const& ctxt);
 }
 
 #endif

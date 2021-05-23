@@ -14,12 +14,29 @@
 #include "core/sched/batch.hpp"
 
 #include <chrono>
+#include <optional>
 
 namespace Maike::Db
 {
 	class Task
 	{
 	public:
+		class ForceRecompilation
+		{
+		public:
+			explicit ForceRecompilation(bool value = true): m_value{value}
+			{
+			}
+
+			constexpr operator bool() const
+			{
+				return m_value;
+			}
+
+		private:
+			bool m_value;
+		};
+
 		using Clock = std::chrono::steady_clock;
 		using TimePoint = Clock::time_point;
 
@@ -38,7 +55,7 @@ namespace Maike::Db
 
 		bool waitUntilAvailable(Sched::Batch const& batch);
 
-		Exec::Result runIfNecessary(bool force, Invoker invoker);
+		std::optional<Exec::Result> runIfNecessary(ForceRecompilation force, Invoker invoker);
 
 		SourceFileRecordConst node() const
 		{

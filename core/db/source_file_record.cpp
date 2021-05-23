@@ -40,7 +40,9 @@ Maike::Exec::Command Maike::Db::makeBuildCommand(SourceFileRecordConst const& re
 {
 	auto& targets = rec.sourceFileInfo().targets();
 
-	auto compiler = rec.sourceFileInfo().compilerDefault() | rec.sourceFileInfo().compiler();
+	auto compiler = rec.sourceFileInfo().hasDefaultCompiler() ?
+	                   (rec.sourceFileInfo().compilerDefault() | rec.sourceFileInfo().compiler()) :
+	                   rec.sourceFileInfo().compiler();
 
 	KeyValueStore::Compound cmd_opts;
 	cmd_opts.set("compiler_cfg", compiler.config())

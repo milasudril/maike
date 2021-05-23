@@ -34,7 +34,8 @@ bool Maike::Db::Task::waitUntilAvailable(Sched::Batch const& batch)
 	return true;
 }
 
-Maike::Exec::Result Maike::Db::Task::runIfNecessary(bool force, Invoker invoker)
+std::optional<Maike::Exec::Result> Maike::Db::Task::runIfNecessary(ForceRecompilation force,
+                                                                   Invoker invoker)
 {
 	if(force || m_node.sourceFileInfo().rebuildPolicy() == RebuildPolicy::Always
 	   || !isUpToDate(m_node, m_use_deps))
@@ -45,5 +46,5 @@ Maike::Exec::Result Maike::Db::Task::runIfNecessary(bool force, Invoker invoker)
 	}
 	m_t_completed = Clock::now();
 
-	return Exec::Result{Exec::ExitStatus{}};
+	return std::optional<Maike::Exec::Result>{};
 }
