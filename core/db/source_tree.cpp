@@ -63,6 +63,7 @@ Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
 		{
 			++i;
 			if(i == std::end(tasks)) { i = std::begin(tasks); }
+			std::this_thread::yield();
 			continue;
 		}
 
