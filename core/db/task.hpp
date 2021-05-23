@@ -55,6 +55,8 @@ namespace Maike::Db
 
 		bool waitUntilAvailable(Sched::Batch const& batch);
 
+		Sched::TaskResult status(Sched::Batch const& batch);
+
 		std::optional<Exec::Result> runIfNecessary(ForceRecompilation force, Invoker invoker);
 
 		SourceFileRecordConst node() const

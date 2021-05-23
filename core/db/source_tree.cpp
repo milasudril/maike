@@ -8,6 +8,9 @@
 #include "core/utils/graphutils.hpp"
 #include "core/sched/signaling_counter.hpp"
 
+#include <list>
+#include <thread>
+
 Maike::Db::Target const& Maike::Db::getTarget(SourceTree const& src_tree,
                                               fs::path const& target_name)
 {
@@ -33,45 +36,63 @@ Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
 {
 	Sched::Batch ctxt{size(src_tree.dependencyGraph()), workers};
 
+	std::list<Task> tasks;
+
 	visitNodesInTopoOrder(
 	   [&graph = src_tree.dependencyGraph(),
 	    &build_info,
 	    invoker,
 	    &compilation_log,
 	    force_recompilation,
-	    &ctxt](SourceFileRecordConst const& node, auto const&...) {
+	    &ctxt,
+	    &tasks](SourceFileRecordConst const& node, auto const&...) {
 		   if(std::size(node.sourceFileInfo().targets()) == 0)
 		   {
 			   ctxt.add(node.id().value(), []() {});
 			   return;
 		   }
-
-		   ctxt.add(
-		      node.id().value(),
-		      [&graph, &node, &build_info, invoker, &compilation_log, force_recompilation, &ctxt]() {
-			      Task t{graph, node, build_info, compilation_log.outputFormat()};
-			      if(!t.waitUntilAvailable(ctxt))
-			      {
-				      std::string msg{node.path()};
-				      msg += ": At least one dependency was not compiled";
-				      throw std::runtime_error{std::move(msg)};
-			      }
-
-			      if(auto result = t.runIfNecessary(force_recompilation, invoker); result)
-			      {
-				      auto const build_failed = failed(*result);
-				      compilation_log.write(t, *result);
-
-				      if(build_failed)
-				      {
-					      std::string msg{node.path()};
-					      msg += ":1:1: Compilation failed";
-					      throw std::runtime_error{std::move(msg)};
-				      }
-			      }
-		      });
+		   tasks.push_back(Task{graph, node, build_info, compilation_log.outputFormat()});
 	   },
 	   src_tree.dependencyGraph());
+
+	auto i = std::begin(tasks);
+	while(!tasks.empty())
+	{
+		auto node = i->node();
+		if(i->status(ctxt) == Sched::TaskResult::Pending)
+		{
+			++i;
+			if(i == std::end(tasks)) { i = std::begin(tasks); }
+			continue;
+		}
+
+
+#if 0
+		//FIXME: Error handling
+
+		std::string msg{node.path()};
+		msg += ": At least one dependency was not compiled";
+		throw std::runtime_error{std::move(msg)};
+#endif
+
+		ctxt.add(node.id().value(),
+		         [task = *i, invoker, &compilation_log, force_recompilation]() mutable {
+			         if(auto result = task.runIfNecessary(force_recompilation, invoker); result)
+			         {
+				         auto const build_failed = failed(*result);
+				         compilation_log.write(task, *result);
+
+				         if(build_failed)
+				         {
+					         std::string msg{task.node().path()};
+					         msg += ":1:1: Compilation failed";
+					         throw std::runtime_error{std::move(msg)};
+				         }
+			         }
+		         });
+		i = tasks.erase(i);
+		if(i == std::end(tasks)) { i = std::begin(tasks); }
+	}
 
 	return TaskCounter{ctxt.throwAnyPendingException().taskCount()};
 }

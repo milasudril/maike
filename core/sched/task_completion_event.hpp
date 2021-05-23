@@ -44,8 +44,14 @@ namespace Maike::Sched
 			m_cv.notify_all();
 		}
 
+		TaskResult status() const
+		{
+			std::lock_guard lock{m_mtx};
+			return m_value;
+		}
+
 	private:
-		std::mutex m_mtx;
+		mutable std::mutex m_mtx;
 		std::condition_variable m_cv;
 		TaskResult m_value;
 	};

@@ -27,7 +27,12 @@ namespace Maike::Sched
 
 		bool taskFailed(size_t task_index) const
 		{
-			return m_events[task_index].wait() == Sched::TaskResult::Failure;
+			return m_events[task_index].wait() == TaskResult::Failure;
+		}
+
+		TaskResult status(size_t task_index) const
+		{
+			return m_events[task_index].status();
 		}
 
 		template<class Callable>

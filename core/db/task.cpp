@@ -37,6 +37,7 @@ bool Maike::Db::Task::waitUntilAvailable(Sched::Batch const& batch)
 std::optional<Maike::Exec::Result> Maike::Db::Task::runIfNecessary(ForceRecompilation force,
                                                                    Invoker invoker)
 {
+	m_t_ready = Clock::now();
 	if(force || m_node.sourceFileInfo().rebuildPolicy() == RebuildPolicy::Always
 	   || !isUpToDate(m_node, m_use_deps))
 	{
@@ -47,4 +48,21 @@ std::optional<Maike::Exec::Result> Maike::Db::Task::runIfNecessary(ForceRecompil
 	m_t_completed = Clock::now();
 
 	return std::optional<Maike::Exec::Result>{};
+}
+
+Maike::Sched::TaskResult Maike::Db::Task::status(Sched::Batch const& batch)
+{
+	auto const& build_deps = m_node.sourceFileInfo().buildDeps();
+	if(std::any_of(std::begin(build_deps), std::end(build_deps), [&batch](auto const& item) {
+		   return batch.status(item.reference().value()) == Sched::TaskResult::Pending;
+	   }))
+	{ return Sched::TaskResult::Pending; }
+
+	// Wait until use deps for all build deps have been processed
+	if(std::any_of(std::begin(m_use_deps), std::end(m_use_deps), [&batch](auto const& item) {
+		   return batch.status(item.reference().value()) == Sched::TaskResult::Pending;
+	   }))
+	{ return Sched::TaskResult::Pending; }
+
+	return Sched::TaskResult::Success;
 }
