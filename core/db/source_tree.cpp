@@ -50,6 +50,7 @@ Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
 	return TaskCounter{ctxt.throwAnyPendingException().taskCount()};
 }
 
+#if 0
 Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
                                           Build::Info const& build_info,
                                           Invoker invoker,
@@ -103,3 +104,4 @@ Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
 
 	return n;
 }
+#endif
