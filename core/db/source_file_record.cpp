@@ -36,7 +36,7 @@ namespace
 Maike::Exec::Command Maike::Db::makeBuildCommand(SourceFileRecordConst const& rec,
                                                  Build::Info const& info,
                                                  std::vector<Dependency> const& deps,
-                                                 CompilationLog::OutputFormat format)
+                                                 LogFormat format)
 {
 	auto& targets = rec.sourceFileInfo().targets();
 

@@ -7,7 +7,6 @@
 
 #include "./source_file_record.hpp"
 #include "./invoker.hpp"
-#include "./compilation_log.hpp"
 
 #include "core/sched/batch.hpp"
 #include "core/build/info.hpp"

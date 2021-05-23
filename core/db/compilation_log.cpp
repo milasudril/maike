@@ -41,10 +41,11 @@ namespace
 	}
 }
 
-Maike::Db::CompilationLog& Maike::Db::CompilationLog::write(Entry&& e)
+Maike::Db::CompilationLog& Maike::Db::CompilationLog::write(Task const& task,
+                                                            Exec::Result const& result)
 {
-	auto cmdline = toString(e.command);
-	auto stderr_buff = to_string(e.result.stderr());
+	auto cmdline = toString(task.command());
+	auto stderr_buff = to_string(result.stderr());
 	std::string stdout_buff;
 	switch(m_log_level)
 	{
@@ -53,41 +54,34 @@ Maike::Db::CompilationLog& Maike::Db::CompilationLog::write(Entry&& e)
 			stdout_buff += " #";
 			[[fallthrough]];
 		case LogLevel::SourceFileInfo:
+		{
 			stdout_buff += " ";
-			stdout_buff += std::to_string(e.src_id.value());
+			stdout_buff += std::to_string(task.node().id().value());
 			stdout_buff += " | ";
-			stdout_buff += e.src_path;
+			stdout_buff += task.node().path();
 			stdout_buff += " | ";
-			stdout_buff += std::to_string(to_mus(e.start_time - m_start_time));
+			auto timestamps = task.timestamps();
+			stdout_buff += std::to_string(to_mus(timestamps.created - m_start_time));
 			stdout_buff += " | ";
-			stdout_buff += std::to_string(to_mus(e.task_prepared - m_start_time));
+			stdout_buff += std::to_string(to_mus(timestamps.prepared - m_start_time));
 			stdout_buff += " | ";
-			stdout_buff += std::to_string(to_mus(e.task_ready - m_start_time));
+			stdout_buff += std::to_string(to_mus(timestamps.ready - m_start_time));
 			stdout_buff += " | ";
-			stdout_buff += std::to_string(to_mus(e.completion_time - m_start_time));
+			stdout_buff += std::to_string(to_mus(timestamps.completed - m_start_time));
 			[[fallthrough]];
+		}
 		case LogLevel::Errors: break;
 	}
 
 	if(std::size(stdout_buff) > 0) { stdout_buff += "\n"; }
 	if(std::size(stderr_buff) > 0) { stderr_buff += "\n"; }
 
-	append_log(stdout_buff, e.result.stdout());
+	append_log(stdout_buff, result.stdout());
 
 	std::lock_guard lock{m_output_mutex};
 	fputs(stdout_buff.c_str(), stdout);
 	fputs(stderr_buff.c_str(), stderr);
 	return *this;
-}
-
-Maike::Db::CompilationLog::OutputFormat
-Maike::Db::fromString(Maike::Empty<Maike::Db::CompilationLog::OutputFormat>, char const* str)
-{
-	if(strcmp(str, "plain_text") == 0) { return CompilationLog::OutputFormat::PlainText; }
-	if(strcmp(str, "ansi_term") == 0) { return CompilationLog::OutputFormat::AnsiTerm; }
-
-	throw std::runtime_error{
-	   "Unsupported output format. Supported formats: `plain_text`, `ansi_term`"};
 }
 
 Maike::Db::CompilationLog::LogLevel
@@ -101,19 +95,6 @@ Maike::Db::fromString(Maike::Empty<Maike::Db::CompilationLog::LogLevel>, char co
 	throw std::runtime_error{
 	   "Invalid log level format. Valid log levels: `errors`, `source_file_info`, "
 	   "`compilation_command`"};
-}
-
-char const* Maike::Db::toString(CompilationLog::OutputFormat format)
-{
-	using OutputFormat = CompilationLog::OutputFormat;
-	switch(format)
-	{
-		case OutputFormat::PlainText: return "plain_text";
-
-		case OutputFormat::AnsiTerm: return "ansi_term";
-
-		default: __builtin_unreachable();
-	}
 }
 
 char const* Maike::Db::toString(CompilationLog::LogLevel format)

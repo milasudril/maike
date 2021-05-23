@@ -53,9 +53,8 @@ Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
 
 			      if(auto result = t.runIfNecessary(force_recompilation, invoker); result)
 			      {
-				      //	log_entry.command(std::move(cmd));
 				      auto const build_failed = failed(*result);
-				      //	log_entry.result(std::move(result));
+				      compilation_log.write(t, *result);
 
 				      if(build_failed)
 				      {

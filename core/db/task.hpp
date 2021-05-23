@@ -6,8 +6,8 @@
 #include "./dependency.hpp"
 #include "./source_file_record.hpp"
 #include "./dependency_graph.hpp"
-#include "./compilation_log.hpp"
 #include "./invoker.hpp"
+#include "./log_format.hpp"
 
 #include "core/build/info.hpp"
 #include "core/exec/command.hpp"
@@ -51,7 +51,7 @@ namespace Maike::Db
 		explicit Task(DependencyGraph const& g,
 		              SourceFileRecordConst node,
 		              Build::Info const& build_info,
-		              CompilationLog::OutputFormat output_format);
+		              LogFormat output_format);
 
 		bool waitUntilAvailable(Sched::Batch const& batch);
 
@@ -65,6 +65,11 @@ namespace Maike::Db
 		Timestamps timestamps() const
 		{
 			return Timestamps{m_t_created, m_t_prepared, m_t_ready, m_t_completed};
+		}
+
+		Exec::Command const& command() const
+		{
+			return m_cmd;
 		}
 
 	private:

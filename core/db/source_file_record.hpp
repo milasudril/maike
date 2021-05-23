@@ -7,7 +7,7 @@
 
 #include "./source_file_id.hpp"
 #include "./source_file_info.hpp"
-#include "./compilation_log.hpp"
+#include "./log_format.hpp"
 
 #include "core/utils/fs.hpp"
 #include "core/build/info.hpp"
@@ -36,12 +36,12 @@ namespace Maike::Db
 			return r_path != nullptr;
 		}
 
-		auto id() const
+		SourceFileId id() const
 		{
 			return m_id;
 		}
 
-		auto& path() const
+		fs::path const& path() const
 		{
 			return *r_path;
 		}
@@ -91,7 +91,7 @@ namespace Maike::Db
 	Exec::Command makeBuildCommand(SourceFileRecordConst const& rec,
 	                               Build::Info const&,
 	                               std::vector<Dependency> const& deps,
-	                               CompilationLog::OutputFormat format);
+	                               LogFormat format);
 }
 
 #endif

@@ -7,7 +7,7 @@
 Maike::Db::Task::Task(DependencyGraph const& g,
                       SourceFileRecordConst node,
                       Build::Info const& build_info,
-                      CompilationLog::OutputFormat output_format):
+                      LogFormat output_format):
    m_t_created{Clock::now()},
    m_use_deps{getUseDepsRecursive(g, node)},
    m_cmd{makeBuildCommand(node, build_info, m_use_deps, output_format)},
