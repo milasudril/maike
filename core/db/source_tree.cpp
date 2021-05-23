@@ -59,22 +59,22 @@ Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
 	while(!tasks.empty())
 	{
 		auto node = i->node();
-		if(i->status(ctxt) == Sched::TaskResult::Pending)
+		switch(i->status(ctxt))
 		{
-			++i;
-			if(i == std::end(tasks)) { i = std::begin(tasks); }
-			std::this_thread::yield();
-			continue;
+			case Sched::TaskResult::Pending:
+				++i;
+				if(i == std::end(tasks)) { i = std::begin(tasks); }
+				continue;
+
+			case Sched::TaskResult::Failure:
+			{
+				std::string msg{node.path()};
+				msg += ": At least one dependency was not compiled";
+				throw std::runtime_error{std::move(msg)};
+			}
+			default:
+				break;
 		}
-
-
-#if 0
-		//FIXME: Error handling
-
-		std::string msg{node.path()};
-		msg += ": At least one dependency was not compiled";
-		throw std::runtime_error{std::move(msg)};
-#endif
 
 		ctxt.add(node.id().value(),
 		         [task = *i, invoker, &compilation_log, force_recompilation]() mutable {
