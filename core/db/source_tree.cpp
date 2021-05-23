@@ -43,6 +43,8 @@ Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
 		   ctxt.add(
 		      node.id().value(),
 		      [&graph, &node, &build_info, invoker, &compilation_log, force_recompilation, &ctxt]() {
+			      if(std::size(node.sourceFileInfo().targets()) == 0) { return; }
+
 			      Task t{graph, node, build_info, compilation_log.outputFormat()};
 			      if(!t.waitUntilAvailable(ctxt))
 			      {
