@@ -10,6 +10,7 @@
 
 #include <list>
 #include <thread>
+#include <atomic>
 
 Maike::Db::Target const& Maike::Db::getTarget(SourceTree const& src_tree,
                                               fs::path const& target_name)
@@ -34,9 +35,11 @@ Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
                                           Task::ForceRecompilation force_recompilation,
                                           Sched::ThreadPool& workers)
 {
+	auto const n = size(src_tree.dependencyGraph());
 	Sched::Batch ctxt{size(src_tree.dependencyGraph()), workers};
 
 	std::list<Task> tasks;
+	auto task_results = std::make_unique<std::atomic<Sched::TaskResult>[]>(n);
 
 	visitNodesInTopoOrder(
 	   [&graph = src_tree.dependencyGraph(),
@@ -45,9 +48,11 @@ Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
 	    &compilation_log,
 	    force_recompilation,
 	    &ctxt,
+	    &task_results,
 	    &tasks](SourceFileRecordConst const& node, auto const&...) {
 		   if(std::size(node.sourceFileInfo().targets()) == 0)
 		   {
+			   task_results[node.id().value()] = Sched::TaskResult::Success;
 			   ctxt.add(node.id().value(), []() {});
 			   return;
 		   }
@@ -72,8 +77,7 @@ Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
 				msg += ": At least one dependency was not compiled";
 				throw std::runtime_error{std::move(msg)};
 			}
-			default:
-				break;
+			default: break;
 		}
 
 		ctxt.add(node.id().value(),
