@@ -2,8 +2,6 @@
 
 #include "./task.hpp"
 
-#include <algorithm>
-
 Maike::Db::Task::Task(DependencyGraph const& g,
                       SourceFileRecordConst node,
                       Build::Info const& build_info,
@@ -14,24 +12,6 @@ Maike::Db::Task::Task(DependencyGraph const& g,
    m_node{node},
    m_t_prepared{Clock::now()}
 {
-}
-
-bool Maike::Db::Task::waitUntilAvailable(Sched::Batch const& batch)
-{
-	auto const& build_deps = m_node.sourceFileInfo().buildDeps();
-	if(std::any_of(std::begin(build_deps), std::end(build_deps), [&batch](auto const& item) {
-		   return batch.taskFailed(item.reference().value());
-	   }))
-	{ return false; }
-
-	// Wait until use deps for all build deps have been processed
-	if(std::any_of(std::begin(m_use_deps), std::end(m_use_deps), [&batch](auto const& item) {
-		   return batch.taskFailed(item.reference().value());
-	   }))
-	{ return false; }
-
-	m_t_ready = Clock::now();
-	return true;
 }
 
 std::optional<Maike::Exec::Result> Maike::Db::Task::runIfNecessary(ForceRecompilation force,
@@ -52,30 +32,32 @@ std::optional<Maike::Exec::Result> Maike::Db::Task::runIfNecessary(ForceRecompil
 
 namespace
 {
-	Maike::Sched::TaskResult status(std::vector<Maike::Db::Dependency> const& deps,
-	                                Maike::Sched::Batch const& batch)
+	Maike::Db::TaskResult status(void const* obj,
+	                             Maike::Db::TaskResult (*f)(void const*, Maike::Db::SourceFileId),
+	                             std::vector<Maike::Db::Dependency> const& deps)
 	{
-		if(std::size(deps) == 0) { return Maike::Sched::TaskResult::Success; }
+		if(std::size(deps) == 0) { return Maike::Db::TaskResult::Success; }
 
 		auto i = std::begin(deps);
 		while(i != std::end(deps))
 		{
-			auto value = batch.status(i->reference().value());
-			if(value != Maike::Sched::TaskResult::Success) { return value; }
+			auto value = f(obj, i->reference());
+			if(value != Maike::Db::TaskResult::Success) { return value; }
 			++i;
 		}
 
-		return Maike::Sched::TaskResult::Success;
+		return Maike::Db::TaskResult::Success;
 	}
 }
 
-Maike::Sched::TaskResult Maike::Db::Task::status(Sched::Batch const& batch)
+Maike::Db::TaskResult Maike::Db::Task::status(void const* obj,
+                                              TaskResult (*f)(void const*, SourceFileId))
 {
-	auto const status_a = ::status(m_node.sourceFileInfo().buildDeps(), batch);
-	if(status_a != Sched::TaskResult::Success) { return status_a; }
+	auto const status_a = ::status(obj, f, m_node.sourceFileInfo().buildDeps());
+	if(status_a != Db::TaskResult::Success) { return status_a; }
 
-	auto const status_b = ::status(m_use_deps, batch);
-	if(status_b != Sched::TaskResult::Success) { return status_b; }
+	auto const status_b = ::status(obj, f, m_use_deps);
+	if(status_b != Db::TaskResult::Success) { return status_b; }
 
-	return Sched::TaskResult::Success;
+	return Db::TaskResult::Success;
 }

@@ -8,10 +8,10 @@
 #include "./dependency_graph.hpp"
 #include "./invoker.hpp"
 #include "./log_format.hpp"
+#include "./task_result.hpp"
 
 #include "core/build/info.hpp"
 #include "core/exec/command.hpp"
-#include "core/sched/batch.hpp"
 
 #include <chrono>
 #include <optional>
@@ -53,9 +53,13 @@ namespace Maike::Db
 		              Build::Info const& build_info,
 		              LogFormat output_format);
 
-		bool waitUntilAvailable(Sched::Batch const& batch);
-
-		Sched::TaskResult status(Sched::Batch const& batch);
+		template<class TaskResultDictionary>
+		TaskResult status(TaskResultDictionary const& results)
+		{
+			return status(&results, [](void const* obj, SourceFileId id) {
+				return static_cast<TaskResultDictionary const*>(obj)->status(id);
+			});
+		}
 
 		std::optional<Exec::Result> runIfNecessary(ForceRecompilation force, Invoker invoker);
 
@@ -82,6 +86,8 @@ namespace Maike::Db
 		TimePoint m_t_prepared;
 		TimePoint m_t_ready;
 		TimePoint m_t_completed;
+
+		TaskResult status(void const*, TaskResult (*f)(void const*, SourceFileId));
 	};
 }
 

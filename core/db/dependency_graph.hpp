@@ -8,7 +8,6 @@
 #include "./source_file_record.hpp"
 #include "./invoker.hpp"
 
-#include "core/sched/batch.hpp"
 #include "core/build/info.hpp"
 
 #include <algorithm>

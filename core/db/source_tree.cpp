@@ -4,6 +4,7 @@
 
 #include "./source_tree.hpp"
 #include "./task.hpp"
+#include "./batch.hpp"
 
 #include "core/utils/graphutils.hpp"
 #include "core/sched/signaling_counter.hpp"
@@ -35,71 +36,9 @@ Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
                                           Task::ForceRecompilation force_recompilation,
                                           Sched::ThreadPool& workers)
 {
-	auto const n = size(src_tree.dependencyGraph());
-	Sched::Batch ctxt{size(src_tree.dependencyGraph()), workers};
-
-	std::list<Task> tasks;
-	auto task_results = std::make_unique<std::atomic<Sched::TaskResult>[]>(n);
-
-	visitNodesInTopoOrder(
-	   [&graph = src_tree.dependencyGraph(),
-	    &build_info,
-	    invoker,
-	    &compilation_log,
-	    force_recompilation,
-	    &ctxt,
-	    &task_results,
-	    &tasks](SourceFileRecordConst const& node, auto const&...) {
-		   if(std::size(node.sourceFileInfo().targets()) == 0)
-		   {
-			   task_results[node.id().value()] = Sched::TaskResult::Success;
-			   ctxt.add(node.id().value(), []() {});
-			   return;
-		   }
-		   tasks.push_back(Task{graph, node, build_info, compilation_log.outputFormat()});
-	   },
-	   src_tree.dependencyGraph());
-
-	auto i = std::begin(tasks);
-	while(!tasks.empty())
-	{
-		auto node = i->node();
-		switch(i->status(ctxt))
-		{
-			case Sched::TaskResult::Pending:
-				++i;
-				if(i == std::end(tasks)) { i = std::begin(tasks); }
-				continue;
-
-			case Sched::TaskResult::Failure:
-			{
-				std::string msg{node.path()};
-				msg += ": At least one dependency was not compiled";
-				throw std::runtime_error{std::move(msg)};
-			}
-			default: break;
-		}
-
-		ctxt.add(node.id().value(),
-		         [task = *i, invoker, &compilation_log, force_recompilation]() mutable {
-			         if(auto result = task.runIfNecessary(force_recompilation, invoker); result)
-			         {
-				         auto const build_failed = failed(*result);
-				         compilation_log.write(task, *result);
-
-				         if(build_failed)
-				         {
-					         std::string msg{task.node().path()};
-					         msg += ":1:1: Compilation failed";
-					         throw std::runtime_error{std::move(msg)};
-				         }
-			         }
-		         });
-		i = tasks.erase(i);
-		if(i == std::end(tasks)) { i = std::begin(tasks); }
-	}
-
-	return TaskCounter{ctxt.throwAnyPendingException().taskCount()};
+	Batch batch{src_tree.dependencyGraph(), build_info, compilation_log};
+	batch.run(workers, invoker, force_recompilation);
+	return TaskCounter{std::size(batch)};
 }
 
 #if 0

@@ -16,6 +16,8 @@ Maike::SourceTreeLoader::DirectoryScanner::processPath(fs::path const& src_path,
 	   [this,
 	    src_path = fs::path{src_path},
 	    target_dir,
+		// NOTE: We use std::unique_lock to make sure that the counter is decreased when the task
+		// finishes.
 	    counter = std::unique_lock<Sched::SignalingCounter<size_t>>(m_counter)]() mutable {
 		   this->processPath(std::move(src_path), target_dir, std::move(counter));
 	   });
