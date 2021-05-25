@@ -36,18 +36,20 @@ void Maike::Db::Batch::run(Sched::ThreadPool& workers,
 	auto& tasks = m_tasks;
 	auto i = std::begin(tasks);
 	Sched::SignalingCounter<size_t> counter{0};
+	auto wrap_iterator = [&tasks, &i]() {
+		if(i == std::end(tasks)) { i = std::begin(tasks); }
+	};
+
 	while(!tasks.empty())
 	{
 		switch(i->status(*this))
 		{
 			case TaskResult::Pending:
 				++i;
-				if(i == std::end(tasks)) { i = std::begin(tasks); }
+				wrap_iterator();
 				continue;
 
-			case TaskResult::Failure:
-				tasks.clear();
-				break;
+			case TaskResult::Failure: tasks.clear(); break;
 
 			case TaskResult::Success:
 				workers.addTask([invoker,
@@ -72,7 +74,7 @@ void Maike::Db::Batch::run(Sched::ThreadPool& workers,
 					task_results[index] = TaskResult::Success;
 				});
 				i = tasks.erase(i);
-				if(i == std::end(tasks)) { i = std::begin(tasks); }
+				wrap_iterator();
 				break;
 		}
 	}
