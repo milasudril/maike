@@ -32,7 +32,10 @@ namespace Maike::Db
 			return m_results[static_cast<size_t>(id.value())];
 		}
 
-		size_t size() const { return m_size; }
+		size_t size() const
+		{
+			return m_size;
+		}
 
 	private:
 		std::unique_ptr<std::atomic<TaskResult>[]> m_results;

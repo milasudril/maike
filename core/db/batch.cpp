@@ -59,9 +59,8 @@ void Maike::Db::Batch::run(Sched::ThreadPool& workers,
 		                 force_recompilation,
 		                 task = std::move(*i),
 		                 &compilation_log = m_compilation_log.get(),
-						 counter = std::unique_lock{counter},
-						 task_results = m_results.get()
-						 ]() mutable {
+		                 counter = std::unique_lock{counter},
+		                 task_results = m_results.get()]() mutable {
 			auto const index = task.node().id().value();
 			if(auto result = task.runIfNecessary(force_recompilation, invoker); result)
 			{
@@ -80,5 +79,8 @@ void Maike::Db::Batch::run(Sched::ThreadPool& workers,
 		i = tasks.erase(i);
 		if(i == std::end(tasks)) { i = std::begin(tasks); }
 	}
+
 	counter.wait(0);
+
+	if(auto e = workers.takeLastException(); e != nullptr) { std::rethrow_exception(e); }
 }
