@@ -1,5 +1,3 @@
-//@	{"targets":[{"name":"mem_io_redirector.hpp", "type":"include"}]}
-
 #ifndef MAIKE_IO_MEMIOREDIRECTOR_HPP
 #define MAIKE_IO_MEMIOREDIRECTOR_HPP
 

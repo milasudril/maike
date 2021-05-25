@@ -1,5 +1,3 @@
-//@	{"targets":[{"name":"with_mutex.hpp", "type":"include"}]}
-
 #ifndef MAIKE_UTILS_WITHMUTEX_HPP
 #define MAIKE_UTILS_WITHMUTEX_HPP
 
