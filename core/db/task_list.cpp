@@ -28,7 +28,6 @@ Maike::Db::TaskList::TaskList(DependencyGraph const& graph,
 		   tasks.push_back(Task{graph, node, build_info, log_format});
 	   },
 	   graph);
-	m_size = std::size(m_tasks);
 }
 
 Maike::Db::TaskList::TaskList(DependencyGraph const& graph,
@@ -57,9 +56,9 @@ Maike::Db::TaskList::TaskList(DependencyGraph const& graph,
 	   node);
 }
 
-void Maike::Db::TaskList::process(Sched::ThreadPool& workers,
-                                  Invoker invoker,
-                                  Task::ForceRecompilation force_recompilation)
+size_t Maike::Db::TaskList::process(Sched::ThreadPool& workers,
+                                    Invoker invoker,
+                                    Task::ForceRecompilation force_recompilation)
 {
 	auto& tasks = m_tasks;
 	auto i = std::begin(tasks);
@@ -74,6 +73,7 @@ void Maike::Db::TaskList::process(Sched::ThreadPool& workers,
 	};
 
 	Sched::SignalingCounter<size_t> counter{0};
+	size_t num_tasks = 0;
 	while(!tasks.empty())
 	{
 		switch(i->status(*this))
@@ -92,7 +92,8 @@ void Maike::Db::TaskList::process(Sched::ThreadPool& workers,
 				                 &compilation_log = m_compilation_log.get(),
 				                 counter = std::unique_lock{counter},
 				                 task_results = m_results.get(),
-				                 at_exit = ScopeExitHandler{[&e]() { e.set(); }}]() mutable {
+				                 at_exit = ScopeExitHandler{[&e]() { e.set(); }},
+				                 &num_tasks]() mutable {
 					auto const index = task.node().id().value();
 					if(auto result = task.runIfNecessary(force_recompilation, invoker); result)
 					{
@@ -105,6 +106,7 @@ void Maike::Db::TaskList::process(Sched::ThreadPool& workers,
 							task_results[index] = TaskResult::Failure;
 							throw std::runtime_error{std::move(msg)};
 						}
+						++num_tasks;
 					}
 					task_results[index] = TaskResult::Success;
 				});
@@ -117,4 +119,6 @@ void Maike::Db::TaskList::process(Sched::ThreadPool& workers,
 	counter.wait(0);
 
 	if(auto e = workers.takeLastException(); e != nullptr) { std::rethrow_exception(e); }
+
+	return num_tasks;
 }

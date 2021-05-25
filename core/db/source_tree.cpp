@@ -35,9 +35,8 @@ Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
                                           Task::ForceRecompilation force_recompilation,
                                           Sched::ThreadPool& workers)
 {
-	TaskList tasks{src_tree.dependencyGraph(), build_info, compilation_log};
-	tasks.process(workers, invoker, force_recompilation);
-	return TaskCounter{std::size(tasks)};
+	return TaskCounter{TaskList{src_tree.dependencyGraph(), build_info, compilation_log}.process(
+	   workers, invoker, force_recompilation)};
 }
 
 Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
@@ -49,9 +48,9 @@ Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
                                           fs::path const& target_name)
 {
 	auto const& target = getTarget(src_tree, target_name);
-	TaskList tasks{src_tree.dependencyGraph(), build_info, compilation_log, target};
-	tasks.process(workers, invoker, force_recompilation);
-	return TaskCounter{std::size(tasks)};
+	return TaskCounter{
+	   TaskList{src_tree.dependencyGraph(), build_info, compilation_log, target}.process(
+	      workers, invoker, force_recompilation)};
 }
 
 Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
