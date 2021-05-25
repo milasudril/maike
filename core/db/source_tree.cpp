@@ -3,8 +3,7 @@
 //@	}
 
 #include "./source_tree.hpp"
-#include "./task.hpp"
-#include "./batch.hpp"
+#include "./task_list.hpp"
 
 #include "core/utils/graphutils.hpp"
 #include "core/sched/signaling_counter.hpp"
@@ -36,9 +35,9 @@ Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
                                           Task::ForceRecompilation force_recompilation,
                                           Sched::ThreadPool& workers)
 {
-	Batch batch{src_tree.dependencyGraph(), build_info, compilation_log};
-	batch.run(workers, invoker, force_recompilation);
-	return TaskCounter{std::size(batch)};
+	TaskList tasks{src_tree.dependencyGraph(), build_info, compilation_log};
+	tasks.process(workers, invoker, force_recompilation);
+	return TaskCounter{std::size(tasks)};
 }
 
 #if 0

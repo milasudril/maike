@@ -1,7 +1,7 @@
-//@	{"dependencies_extra":[{"ref":"./batch.o","rel":"implementation"}]}
+//@	{"dependencies_extra":[{"ref":"./task_list.o","rel":"implementation"}]}
 
-#ifndef MAIKE_DB_BATCH_HPP
-#define MAIKE_DB_BATCH_HPP
+#ifndef MAIKE_DB_TASKLIST_HPP
+#define MAIKE_DB_TASKLIST_HPP
 
 #include "./task.hpp"
 #include "./dependency_graph.hpp"
@@ -17,15 +17,16 @@
 
 namespace Maike::Db
 {
-	class Batch
+	class TaskList
 	{
 	public:
-		explicit Batch(DependencyGraph const& graph,
-		               Build::Info const& build_info,
-		               CompilationLog& compilation_log);
+		explicit TaskList(DependencyGraph const& graph,
+		                  Build::Info const& build_info,
+		                  CompilationLog& compilation_log);
 
-		void
-		run(Sched::ThreadPool& workers, Invoker invoker, Task::ForceRecompilation force_recompilation);
+		void process(Sched::ThreadPool& workers,
+		             Invoker invoker,
+		             Task::ForceRecompilation force_recompilation);
 
 		TaskResult status(SourceFileId id) const
 		{

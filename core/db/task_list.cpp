@@ -1,15 +1,15 @@
-//@	{"target":{"name":"batch.o"}}
+//@	{"target":{"name":"task_list.o"}}
 
-#include "./batch.hpp"
+#include "./task_list.hpp"
 
 #include "core/utils/graphutils.hpp"
 #include "core/utils/scope_exit_handler.hpp"
 #include "core/sched/signaling_counter.hpp"
 #include "core/sched/event.hpp"
 
-Maike::Db::Batch::Batch(DependencyGraph const& graph,
-                        Build::Info const& build_info,
-                        CompilationLog& compilation_log):
+Maike::Db::TaskList::TaskList(DependencyGraph const& graph,
+                              Build::Info const& build_info,
+                              CompilationLog& compilation_log):
    m_results{std::make_unique<std::atomic<TaskResult>[]>(Db::size(graph))},
    m_compilation_log{compilation_log}
 {
@@ -31,9 +31,9 @@ Maike::Db::Batch::Batch(DependencyGraph const& graph,
 	m_size = std::size(m_tasks);
 }
 
-void Maike::Db::Batch::run(Sched::ThreadPool& workers,
-                           Invoker invoker,
-                           Task::ForceRecompilation force_recompilation)
+void Maike::Db::TaskList::process(Sched::ThreadPool& workers,
+                                  Invoker invoker,
+                                  Task::ForceRecompilation force_recompilation)
 {
 	auto& tasks = m_tasks;
 	auto i = std::begin(tasks);
