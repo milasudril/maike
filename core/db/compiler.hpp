@@ -72,6 +72,11 @@ namespace Maike::Db
 			return std::move(resolveRecipe(resolver));
 		}
 
+		bool useGetTags() const
+		{
+			return false;
+		}
+
 	private:
 		fs::path m_recipe;
 		std::optional<SourceFileOrigin> m_origin;
