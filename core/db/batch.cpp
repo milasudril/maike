@@ -3,7 +3,9 @@
 #include "./batch.hpp"
 
 #include "core/utils/graphutils.hpp"
+#include "core/utils/scope_exit_handler.hpp"
 #include "core/sched/signaling_counter.hpp"
+#include "core/sched/event.hpp"
 
 Maike::Db::Batch::Batch(DependencyGraph const& graph,
                         Build::Info const& build_info,
@@ -35,11 +37,17 @@ void Maike::Db::Batch::run(Sched::ThreadPool& workers,
 {
 	auto& tasks = m_tasks;
 	auto i = std::begin(tasks);
-	Sched::SignalingCounter<size_t> counter{0};
-	auto wrap_iterator = [&tasks, &i]() {
-		if(i == std::end(tasks)) { i = std::begin(tasks); }
+	Sched::Event e;
+
+	auto wrap_iterator = [&tasks, &i, &e]() {
+		if(i == std::end(tasks))
+		{
+			i = std::begin(tasks);
+			e.waitAndReset();
+		}
 	};
 
+	Sched::SignalingCounter<size_t> counter{0};
 	while(!tasks.empty())
 	{
 		switch(i->status(*this))
@@ -57,7 +65,8 @@ void Maike::Db::Batch::run(Sched::ThreadPool& workers,
 				                 task = std::move(*i),
 				                 &compilation_log = m_compilation_log.get(),
 				                 counter = std::unique_lock{counter},
-				                 task_results = m_results.get()]() mutable {
+				                 task_results = m_results.get(),
+				                 at_exit = ScopeExitHandler{[&e]() { e.set(); }}]() mutable {
 					auto const index = task.node().id().value();
 					if(auto result = task.runIfNecessary(force_recompilation, invoker); result)
 					{
