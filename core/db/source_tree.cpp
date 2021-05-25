@@ -60,12 +60,12 @@ Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
                                           CompilationLog& compilation_log,
                                           Task::ForceRecompilation force_recompilation,
                                           Sched::ThreadPool& workers,
-                                          std::pair<fs::path const*, size_t> targets)
+                                          std::vector<fs::path> const& targets)
 {
 	TaskCounter n{0};
-	std::for_each_n(
-	   targets.first,
-	   targets.second,
+	std::for_each(
+	   std::begin(targets),
+	   std::end(targets),
 	   [&n, &src_tree, &build_info, invoker, &compilation_log, force_recompilation, &workers](
 	      auto const& target_name) {
 		   n += compile(

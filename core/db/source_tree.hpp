@@ -75,7 +75,6 @@ namespace Maike::Db
 	                    Task::ForceRecompilation,
 	                    Sched::ThreadPool& workers);
 
-
 	TaskCounter compile(SourceTree const& src_tree,
 	                    Build::Info const&,
 	                    Invoker invoker,
@@ -90,7 +89,7 @@ namespace Maike::Db
 	                    CompilationLog& compilation_log,
 	                    Task::ForceRecompilation force_recompilation,
 	                    Sched::ThreadPool& workers,
-	                    std::pair<fs::path const*, size_t> targets);
+	                    std::vector<fs::path> const& targets);
 }
 
 #endif
