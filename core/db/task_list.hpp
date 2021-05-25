@@ -7,6 +7,7 @@
 #include "./dependency_graph.hpp"
 #include "./invoker.hpp"
 #include "./compilation_log.hpp"
+#include "./target.hpp"
 
 #include "core/build/info.hpp"
 #include "core/sched/thread_pool.hpp"
@@ -23,6 +24,11 @@ namespace Maike::Db
 		explicit TaskList(DependencyGraph const& graph,
 		                  Build::Info const& build_info,
 		                  CompilationLog& compilation_log);
+
+		explicit TaskList(DependencyGraph const& graph,
+		                  Build::Info const& build_info,
+		                  CompilationLog& compilation_log,
+		                  Target const& target);
 
 		void process(Sched::ThreadPool& workers,
 		             Invoker invoker,

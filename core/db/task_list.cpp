@@ -31,6 +31,32 @@ Maike::Db::TaskList::TaskList(DependencyGraph const& graph,
 	m_size = std::size(m_tasks);
 }
 
+Maike::Db::TaskList::TaskList(DependencyGraph const& graph,
+                              Build::Info const& build_info,
+                              CompilationLog& compilation_log,
+                              Target const& target):
+   m_results{std::make_unique<std::atomic<TaskResult>[]>(Db::size(graph))},
+   m_compilation_log{compilation_log}
+{
+	auto const& node = getNode(graph, target.sourceFilename());
+	processGraphNodeRecursive(
+	   [&graph,
+	    &build_info,
+	    log_format = m_compilation_log.get().outputFormat(),
+	    task_results = m_results.get(),
+	    &tasks = m_tasks](SourceFileRecordConst const& node, auto const&...) {
+		   if(std::size(node.sourceFileInfo().targets()) == 0)
+		   {
+			   task_results[node.id().value()] = TaskResult::Success;
+			   return;
+		   }
+		   task_results[node.id().value()] = TaskResult::Pending;
+		   tasks.push_back(Task{graph, node, build_info, log_format});
+	   },
+	   graph,
+	   node);
+}
+
 void Maike::Db::TaskList::process(Sched::ThreadPool& workers,
                                   Invoker invoker,
                                   Task::ForceRecompilation force_recompilation)

@@ -40,45 +40,25 @@ Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
 	return TaskCounter{std::size(tasks)};
 }
 
-#if 0
 Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
                                           Build::Info const& build_info,
                                           Invoker invoker,
                                           CompilationLog& compilation_log,
-                                          ForceRecompilation force_recompilation,
+                                          Task::ForceRecompilation force_recompilation,
                                           Sched::ThreadPool& workers,
                                           fs::path const& target_name)
 {
 	auto const& target = getTarget(src_tree, target_name);
-	auto const& graph = src_tree.dependencyGraph();
-	auto const& node = getNode(graph, target.sourceFilename());
-
-	Sched::Batch ctxt{size(src_tree.dependencyGraph()), workers};
-
-	processGraphNodeRecursive(
-	   [&graph = src_tree.dependencyGraph(),
-	    &build_info,
-	    invoker,
-	    &compilation_log,
-	    force_recompilation,
-	    &ctxt](SourceFileRecordConst const& node, auto const&...) {
-		   ctxt.add(
-		      node.id().value(),
-		      [&graph, &node, &build_info, invoker, &compilation_log, force_recompilation, &ctxt]() {
-			      compile(graph, node, build_info, invoker, compilation_log, force_recompilation, ctxt);
-		      });
-	   },
-	   graph,
-	   node);
-
-	return TaskCounter{ctxt.throwAnyPendingException().taskCount()};
+	TaskList tasks{src_tree.dependencyGraph(), build_info, compilation_log, target};
+	tasks.process(workers, invoker, force_recompilation);
+	return TaskCounter{std::size(tasks)};
 }
 
 Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
                                           Build::Info const& build_info,
                                           Invoker invoker,
                                           CompilationLog& compilation_log,
-                                          ForceRecompilation force_recompilation,
+                                          Task::ForceRecompilation force_recompilation,
                                           Sched::ThreadPool& workers,
                                           std::pair<fs::path const*, size_t> targets)
 {
@@ -94,4 +74,3 @@ Maike::Db::TaskCounter Maike::Db::compile(SourceTree const& src_tree,
 
 	return n;
 }
-#endif
