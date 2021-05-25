@@ -1,31 +1,13 @@
 //@	{
-//@	  "targets":
-//@		[{"name":"mem_monitor.o","type":"object",
-//@		"dependencies":[{"ref":"pthread", "rel":"external"}]}]
+//@	  "target":{"name":"mem_status.o"}
 //@	}
 
-#include "./mem_monitor.hpp"
+#include "./mem_status.hpp"
 
 #include <unistd.h>
 #include <fcntl.h>
 
 #include <cstdlib>
-
-Maike::MemMonitor::MemMonitor(std::chrono::duration<double> refresh_interval):
-   m_mem_avail{0}, m_stop{false}
-{
-	m_worker = std::thread(&Maike::MemMonitor::run, this, refresh_interval);
-}
-
-Maike::MemMonitor::~MemMonitor()
-{
-	{
-		std::lock_guard lock{m_stop_mtx};
-		m_stop = true;
-		m_stop_cond.notify_one();
-	}
-	m_worker.join();
-}
 
 namespace
 {
@@ -85,22 +67,11 @@ namespace
 }
 
 
-void Maike::MemMonitor::run(std::chrono::duration<double> refresh_interval)
+size_t Maike::getMemAvail()
 {
-	auto wait = [this](auto duration) {
-		std::unique_lock lock{m_stop_mtx};
-		return m_stop_cond.wait_for(lock, duration, [this]() { return m_stop; });
-	};
-
 	int const fd = open("/proc/meminfo", O_RDONLY);
 	std::array<char, 4096> buffer{};
-	do
-	{
-		auto n = pread(fd, std::begin(buffer), std::size(buffer), 0);
-		auto mem_avail = get_mem_avail(std::begin(buffer), std::begin(buffer) + n);
-		std::lock_guard lock{m_val_mutex};
-		m_mem_avail = mem_avail;
-		m_cv.notify_all();
-	} while(!wait(refresh_interval));
+	auto n = pread(fd, std::begin(buffer), std::size(buffer), 0);
 	close(fd);
+	return get_mem_avail(std::begin(buffer), std::begin(buffer) + n);
 }
