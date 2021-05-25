@@ -57,7 +57,7 @@ Maike::Db::CompilationLog& Maike::Db::CompilationLog::write(Task const& task,
 		{
 			stdout_buff += " ";
 			stdout_buff += std::to_string(task.node().id().value());
-			stdout_buff += " | ";
+			stdout_buff += failed(result)? " | ✗ | " : " | ✓ | ";
 			stdout_buff += task.node().path();
 			stdout_buff += " | ";
 			auto timestamps = task.timestamps();
@@ -77,6 +77,35 @@ Maike::Db::CompilationLog& Maike::Db::CompilationLog::write(Task const& task,
 	std::lock_guard lock{m_output_mutex};
 	fputs(stdout_buff.c_str(), stdout);
 	fputs(stderr_buff.c_str(), stderr);
+	return *this;
+}
+
+Maike::Db::CompilationLog& Maike::Db::CompilationLog::write(Task const& task)
+{
+	auto cmdline = toString(task.command());
+	std::string stdout_buff;
+	switch(m_log_level)
+	{
+		case LogLevel::CompilationCommand:
+			stdout_buff += cmdline;
+			stdout_buff += " #";
+			[[fallthrough]];
+		case LogLevel::SourceFileInfo:
+		{
+			stdout_buff += " ";
+			stdout_buff += std::to_string(task.node().id().value());
+			stdout_buff += " | ✓ | ";
+			stdout_buff += task.node().path();
+			stdout_buff += " | - | - ";
+			[[fallthrough]];
+		}
+		case LogLevel::Errors: break;
+	}
+
+	stdout_buff+='\n';
+
+	std::lock_guard lock{m_output_mutex};
+	fputs(stdout_buff.c_str(), stdout);
 	return *this;
 }
 

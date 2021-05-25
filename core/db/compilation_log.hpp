@@ -41,6 +41,8 @@ namespace Maike::Db
 
 		CompilationLog& write(Task const& task, Exec::Result const& result);
 
+		CompilationLog& write(Task const& task);
+
 	private:
 		LogFormat m_format;
 		LogLevel m_log_level;

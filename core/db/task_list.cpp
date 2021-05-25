@@ -86,14 +86,14 @@ size_t Maike::Db::TaskList::process(Sched::ThreadPool& workers,
 			case TaskResult::Failure: tasks.clear(); break;
 
 			case TaskResult::Success:
+				++num_tasks;
 				workers.addTask([invoker,
 				                 force_recompilation,
 				                 task = std::move(*i),
 				                 &compilation_log = m_compilation_log.get(),
 				                 counter = std::unique_lock{counter},
 				                 task_results = m_results.get(),
-				                 at_exit = ScopeExitHandler{[&e]() { e.set(); }},
-				                 &num_tasks]() mutable {
+				                 at_exit = ScopeExitHandler{[&e]() { e.set(); }}]() mutable {
 					auto const index = task.node().id().value();
 					if(auto result = task.runIfNecessary(force_recompilation, invoker); result)
 					{
@@ -106,7 +106,10 @@ size_t Maike::Db::TaskList::process(Sched::ThreadPool& workers,
 							task_results[index] = TaskResult::Failure;
 							throw std::runtime_error{std::move(msg)};
 						}
-						++num_tasks;
+					}
+					else
+					{
+						compilation_log.write(task);
 					}
 					task_results[index] = TaskResult::Success;
 				});
