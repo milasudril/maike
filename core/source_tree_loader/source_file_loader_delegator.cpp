@@ -26,7 +26,7 @@ Maike::Db::SourceFileInfo Maike::SourceTreeLoader::SourceFileLoaderDelegator::lo
 		deps.push_back(makeDependency(m_dir_compiler));
 		return Db::SourceFileInfo{std::move(targets),
 		                          m_dir_compiler,
-		                          Db::Compiler{""},
+		                          Db::Compiler{"", false},
 		                          Db::SourceFileOrigin::Project,
 		                          Db::RebuildPolicy::OnlyIfOutOfDate}
 		   .useDeps(std::move(deps));

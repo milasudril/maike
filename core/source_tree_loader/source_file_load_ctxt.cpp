@@ -233,7 +233,7 @@ Maike::SourceTreeLoader::loadSourceFile(SourceFileLoadContext const& load_ctxt,
 
 	return Db::SourceFileInfo{std::move(targets),
 	                          std::ref(loader.compiler()),
-	                          compiler ? (*compiler) : Db::Compiler{""},
+	                          compiler ? (*compiler) : Db::Compiler{"", false},
 	                          Db::SourceFileOrigin::Project,
 	                          rebuild_policy,
 	                          Db::UseTargetDeps{loader.useTargetDeps()}}

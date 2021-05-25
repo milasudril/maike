@@ -15,11 +15,13 @@ Maike::Db::Compiler Maike::Db::operator|(Compiler const& a, Compiler const& b)
 	{
 		return Compiler{fs::path{b.recipe() != "" ? b.recipe() : a.recipe()},
 		                b_origin,
-		                KeyValueStore::Compound{a.config()} | b.config().reference()};
+		                KeyValueStore::Compound{a.config()} | b.config().reference(),
+		                b.useGetTags()};
 	}
 	return Compiler{fs::path{b.recipe() != "" ? b.recipe() : a.recipe()},
 	                a.origin(),
-	                KeyValueStore::Compound{a.config()} | b.config().reference()};
+	                KeyValueStore::Compound{a.config()} | b.config().reference(),
+	                b.useGetTags()};
 }
 
 namespace

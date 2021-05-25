@@ -18,7 +18,8 @@ namespace App
 		{
 			return Maike::Db::Compiler{
 			   "cxx_linker.py",
-			   Maike::KeyValueStore::Compound{}.set("cflags", Maike::KeyValueStore::Array{}.append("-g"))};
+			   Maike::KeyValueStore::Compound{}.set("cflags", Maike::KeyValueStore::Array{}.append("-g")),
+			   false};
 		}
 	};
 

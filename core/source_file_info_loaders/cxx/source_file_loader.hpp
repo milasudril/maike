@@ -26,7 +26,8 @@ namespace Cxx
 			   "cxx_compiler.py",
 			   Maike::KeyValueStore::Compound{}
 			      .set("iquote", Maike::KeyValueStore::Array{}.append("."))
-			      .set("cflags", Maike::KeyValueStore::Array{}.append("-g").append("-Wall"))};
+			      .set("cflags", Maike::KeyValueStore::Array{}.append("-g").append("-Wall")),
+			   false};
 		}
 
 		static char const* name()

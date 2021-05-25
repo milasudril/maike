@@ -19,19 +19,24 @@ namespace Maike::Db
 	public:
 		Compiler() = default;
 
-		explicit Compiler(fs::path&& recipe): m_recipe{std::move(recipe)}
+		explicit Compiler(fs::path&& recipe, bool use_get_tags):
+		   m_recipe{std::move(recipe)}, m_use_get_gags{use_get_tags}
 		{
 		}
 
-		explicit Compiler(fs::path&& recipe, KeyValueStore::Compound&& config):
-		   m_recipe{std::move(recipe)}, m_config{std::move(config)}
+		explicit Compiler(fs::path&& recipe, KeyValueStore::Compound&& config, bool use_get_tags):
+		   m_recipe{std::move(recipe)}, m_config{std::move(config)}, m_use_get_gags{use_get_tags}
 		{
 		}
 
 		explicit Compiler(fs::path&& recipe,
 		                  std::optional<SourceFileOrigin> origin,
-		                  KeyValueStore::Compound&& config):
-		   m_recipe{std::move(recipe)}, m_origin{origin}, m_config{std::move(config)}
+		                  KeyValueStore::Compound&& config,
+		                  bool use_get_tags):
+		   m_recipe{std::move(recipe)},
+		   m_origin{origin},
+		   m_config{std::move(config)},
+		   m_use_get_gags{use_get_tags}
 		{
 		}
 
@@ -74,23 +79,29 @@ namespace Maike::Db
 
 		bool useGetTags() const
 		{
-			return false;
+			return m_use_get_gags;
 		}
 
 	private:
 		fs::path m_recipe;
 		std::optional<SourceFileOrigin> m_origin;
 		KeyValueStore::Compound m_config;
+		bool m_use_get_gags{false};
 
 		void configRecipe();
 	};
 
 	inline auto fromJson(KeyValueStore::Empty<Compiler>, Maike::KeyValueStore::JsonRefConst val)
 	{
-		auto obj = val.as<KeyValueStore::CompoundRefConst>();
-		auto recipe = obj.getIf<char const*>("recipe");
+		auto const obj = val.as<KeyValueStore::CompoundRefConst>();
+		auto const recipe = obj.getIf<char const*>("recipe");
+
+		auto use_get_tags = false;
+		if(auto val = obj.getIf<json_int_t>("use_get_tags"); val) { use_get_tags = *val != 0; }
+
 		return Compiler{recipe ? *recipe : "",
-		                KeyValueStore::Compound{obj.get<KeyValueStore::CompoundRefConst>("config")}};
+		                KeyValueStore::Compound{obj.get<KeyValueStore::CompoundRefConst>("config")},
+		                use_get_tags};
 	}
 
 	inline auto toJson(Compiler const& obj)
@@ -98,6 +109,7 @@ namespace Maike::Db
 		return KeyValueStore::Compound{}
 		   .set("recipe", obj.recipe().c_str())
 		   .set("config", obj.config())
+		   .set("use_get_tags", static_cast<int>(obj.useGetTags()))
 		   .takeHandle();
 	}
 

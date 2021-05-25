@@ -57,7 +57,7 @@ Maike::Db::CompilationLog& Maike::Db::CompilationLog::write(Task const& task,
 		{
 			stdout_buff += " ";
 			stdout_buff += std::to_string(task.node().id().value());
-			stdout_buff += failed(result)? " | ✗ | " : " | ✓ | ";
+			stdout_buff += failed(result) ? " | ✗ | " : " | ✓ | ";
 			stdout_buff += task.node().path();
 			stdout_buff += " | ";
 			auto timestamps = task.timestamps();
@@ -102,7 +102,7 @@ Maike::Db::CompilationLog& Maike::Db::CompilationLog::write(Task const& task)
 		case LogLevel::Errors: break;
 	}
 
-	stdout_buff+='\n';
+	stdout_buff += '\n';
 
 	std::lock_guard lock{m_output_mutex};
 	fputs(stdout_buff.c_str(), stdout);
