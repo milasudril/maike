@@ -23,7 +23,7 @@ namespace Maike
 		PrintDepGraph,
 		PrintDepGraphInv,
 		DumpDatabase,
-		ListLeafTargets,
+		ListTargets,
 		ListExternalDeps,
 		Status,
 		Targets,
@@ -241,7 +241,7 @@ namespace Maike
 	};
 
 	template<>
-	struct CmdLineOptionTraits<CmdLineOption::ListLeafTargets>
+	struct CmdLineOptionTraits<CmdLineOption::ListTargets>
 	{
 		using type = fs::path;
 
@@ -257,17 +257,17 @@ namespace Maike
 
 		static constexpr char const* summary()
 		{
-			return "Prints a list of all leaf targets to stdout or *path*, and exits";
+			return "Prints a list of all targets to stdout or *path*, and exits";
 		}
 
 		static constexpr char const* description()
 		{
-			return "A leaf target is a target that no other target is dependent on";
+			return nullptr;
 		}
 
 		static constexpr char const* name()
 		{
-			return "--list-leaf-targets";
+			return "--list-targets";
 		}
 	};
 

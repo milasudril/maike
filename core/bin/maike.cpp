@@ -60,6 +60,15 @@ Maike::Db::CompilationLog::LogLevel getLogLevel(Maike::CommandLine const& cmdlin
 	          Maike::Db::CompilationLog::LogLevel::SourceFileInfo;
 }
 
+void printTargets(Maike::Db::TargetList const& targets,
+                  Maike::fs::path const& target_dir,
+                  Maike::fs::path const&)
+{
+	std::for_each(std::begin(targets), std::end(targets), [&target_dir](auto const& item) {
+		printf("%s\n", item.first.lexically_relative(target_dir).c_str());
+	});
+}
+
 void printDepGraph(Maike::Db::DependencyGraph const& source_files, Maike::fs::path const&)
 {
 	std::set<std::pair<Maike::fs::path, Maike::fs::path>> output;
@@ -351,6 +360,14 @@ int main(int argc, char** argv)
 		   loader_delegator,
 		   Maike::SourceTreeLoader::RecursiveScan{cfg_new.sourceTreeLoader().recursive()},
 		   build_info.targetDir());
+
+		if(cmdline.hasOption<Maike::CmdLineOption::ListTargets>())
+		{
+			printTargets(src_tree.targets(),
+			             build_info.targetDir(),
+			             cmdline.option<Maike::CmdLineOption::PrintDepGraph>());
+			return 0;
+		}
 
 		if(cmdline.hasOption<Maike::CmdLineOption::PrintDepGraph>())
 		{
