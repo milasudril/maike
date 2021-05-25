@@ -124,9 +124,7 @@ exit 123
 				threads.emplace_back(maikeLocalExecveTestPipesAndExitStatus);
 			}
 			std::for_each(std::begin(threads), std::end(threads), [](auto& x) { x.join(); });
-			putc('*', stderr);
 		}
-		putc('\n', stderr);
 	}
 
 	void maikeLocalExecveSimpleApiNoStdin()
