@@ -38,7 +38,6 @@ void Maike::Db::Batch::run(Sched::ThreadPool& workers,
 	Sched::SignalingCounter<size_t> counter{0};
 	while(!tasks.empty())
 	{
-		auto node = i->node();
 		switch(i->status(*this))
 		{
 			case TaskResult::Pending:
@@ -47,37 +46,35 @@ void Maike::Db::Batch::run(Sched::ThreadPool& workers,
 				continue;
 
 			case TaskResult::Failure:
-			{
-				std::string msg{node.path()};
-				msg += ": At least one dependency was not compiled";
-				throw std::runtime_error{std::move(msg)};
-			}
-			default: break;
-		}
+				tasks.clear();
+				break;
 
-		workers.addTask([invoker,
-		                 force_recompilation,
-		                 task = std::move(*i),
-		                 &compilation_log = m_compilation_log.get(),
-		                 counter = std::unique_lock{counter},
-		                 task_results = m_results.get()]() mutable {
-			auto const index = task.node().id().value();
-			if(auto result = task.runIfNecessary(force_recompilation, invoker); result)
-			{
-				auto const build_failed = failed(*result);
-				compilation_log.write(task, *result);
-				if(build_failed)
-				{
-					std::string msg{task.node().path()};
-					msg += ":1:1: Compilation failed";
-					task_results[index] = TaskResult::Failure;
-					throw std::runtime_error{std::move(msg)};
-				}
-			}
-			task_results[index] = TaskResult::Success;
-		});
-		i = tasks.erase(i);
-		if(i == std::end(tasks)) { i = std::begin(tasks); }
+			case TaskResult::Success:
+				workers.addTask([invoker,
+				                 force_recompilation,
+				                 task = std::move(*i),
+				                 &compilation_log = m_compilation_log.get(),
+				                 counter = std::unique_lock{counter},
+				                 task_results = m_results.get()]() mutable {
+					auto const index = task.node().id().value();
+					if(auto result = task.runIfNecessary(force_recompilation, invoker); result)
+					{
+						auto const build_failed = failed(*result);
+						compilation_log.write(task, *result);
+						if(build_failed)
+						{
+							std::string msg{task.node().path()};
+							msg += ": Compilation failed";
+							task_results[index] = TaskResult::Failure;
+							throw std::runtime_error{std::move(msg)};
+						}
+					}
+					task_results[index] = TaskResult::Success;
+				});
+				i = tasks.erase(i);
+				if(i == std::end(tasks)) { i = std::begin(tasks); }
+				break;
+		}
 	}
 
 	counter.wait(0);
