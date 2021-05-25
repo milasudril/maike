@@ -61,11 +61,7 @@ Maike::Db::CompilationLog& Maike::Db::CompilationLog::write(Task const& task,
 			stdout_buff += task.node().path();
 			stdout_buff += " | ";
 			auto timestamps = task.timestamps();
-			stdout_buff += std::to_string(to_mus(timestamps.created - m_start_time));
-			stdout_buff += " | ";
-			stdout_buff += std::to_string(to_mus(timestamps.prepared - m_start_time));
-			stdout_buff += " | ";
-			stdout_buff += std::to_string(to_mus(timestamps.ready - m_start_time));
+			stdout_buff += std::to_string(to_mus(timestamps.started - m_start_time));
 			stdout_buff += " | ";
 			stdout_buff += std::to_string(to_mus(timestamps.completed - m_start_time));
 			[[fallthrough]];

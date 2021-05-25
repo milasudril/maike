@@ -6,18 +6,16 @@ Maike::Db::Task::Task(DependencyGraph const& g,
                       SourceFileRecordConst node,
                       Build::Info const& build_info,
                       LogFormat output_format):
-   m_t_created{Clock::now()},
    m_use_deps{getUseDepsRecursive(g, node)},
    m_cmd{makeBuildCommand(node, build_info, m_use_deps, output_format)},
-   m_node{node},
-   m_t_prepared{Clock::now()}
+   m_node{node}
 {
 }
 
 std::optional<Maike::Exec::Result> Maike::Db::Task::runIfNecessary(ForceRecompilation force,
                                                                    Invoker invoker)
 {
-	m_t_ready = Clock::now();
+	m_t_started = Clock::now();
 	if(force || m_node.sourceFileInfo().rebuildPolicy() == RebuildPolicy::Always
 	   || !isUpToDate(m_node, m_use_deps))
 	{

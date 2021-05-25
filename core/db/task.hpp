@@ -42,9 +42,7 @@ namespace Maike::Db
 
 		struct Timestamps
 		{
-			TimePoint created;
-			TimePoint prepared;
-			TimePoint ready;
+			TimePoint started;
 			TimePoint completed;
 		};
 
@@ -70,7 +68,7 @@ namespace Maike::Db
 
 		Timestamps timestamps() const
 		{
-			return Timestamps{m_t_created, m_t_prepared, m_t_ready, m_t_completed};
+			return Timestamps{m_t_started, m_t_completed};
 		}
 
 		Exec::Command const& command() const
@@ -79,12 +77,10 @@ namespace Maike::Db
 		}
 
 	private:
-		TimePoint m_t_created;
 		std::vector<Dependency> m_use_deps;
 		Exec::Command m_cmd;
 		SourceFileRecordConst m_node;
-		TimePoint m_t_prepared;
-		TimePoint m_t_ready;
+		TimePoint m_t_started;
 		TimePoint m_t_completed;
 
 		TaskResult status(void const*, TaskResult (*f)(void const*, SourceFileId));
