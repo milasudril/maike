@@ -88,6 +88,11 @@ def compile(build_args):
 		print('%s: Running %s'%(build_args['source_file'], build_args['targets'][0]))
 		result = subprocess.run([build_args['targets'][0]])
 
+	if 'sanitize' in actions:
+		tidycmd = ['clang-tidy', build_args['source_file'], '--']
+		tidycmd.extend(args)
+		subprocess.run(tidycmd)
+
 	return result.returncode
 
 
