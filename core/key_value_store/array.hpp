@@ -114,7 +114,7 @@ namespace Maike::KeyValueStore
 		{
 			std::for_each(a, b, [this](auto&& val) {
 				using T = decltype(val);
-				append(std::forward<T>(val));
+				this->append(std::forward<T>(val));
 			});
 		}
 

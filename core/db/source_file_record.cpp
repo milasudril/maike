@@ -7,7 +7,6 @@
 #include "core/key_value_store/array.hpp"
 
 #include <algorithm>
-#include <mutex>
 
 bool Maike::Db::isUpToDate(SourceFileRecordConst const& rec, std::vector<Dependency> const& deps)
 {
@@ -17,8 +16,6 @@ bool Maike::Db::isUpToDate(SourceFileRecordConst const& rec, std::vector<Depende
 		   return isUpToDate(item, src_file, deps);
 	   });
 }
-
-static std::mutex m;
 
 namespace
 {

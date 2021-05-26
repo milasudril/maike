@@ -9,6 +9,7 @@
 #include <cassert>
 #include <string_view>
 #include <cstring>
+#include <string>
 
 namespace
 {

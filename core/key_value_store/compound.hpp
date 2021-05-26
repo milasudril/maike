@@ -33,7 +33,7 @@ namespace Maike::KeyValueStore
 		public:
 			using value_type = std::pair<char const* const, JsonRefConst>;
 
-			explicit const_iterator(json_t const* handle, nullptr_t): r_handle{handle}, r_iter{nullptr}
+			explicit const_iterator(json_t const* handle, std::nullptr_t): r_handle{handle}, r_iter{nullptr}
 			{
 			}
 

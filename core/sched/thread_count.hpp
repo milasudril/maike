@@ -10,6 +10,7 @@
 #include <sys/sysinfo.h>
 
 #include <algorithm>
+#include <string>
 
 namespace Maike
 {

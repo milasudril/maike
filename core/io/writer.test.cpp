@@ -10,6 +10,7 @@
 #include <string_view>
 #include <array>
 #include <cstring>
+#include <string>
 
 static_assert(Maike::Io::TaggedWriter<12>::Tag == 12);
 
