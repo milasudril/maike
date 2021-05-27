@@ -153,6 +153,20 @@ def get_compiler_alternatives(compiler):
 					ret.append(filename)
 	return ret
 
+def select_compiler_and_stdrev(compilers, stdrev):
+	for compiler in compiler:
+		rev = select_cpp_rev(compiler, stdrev)
+		if rev == '':
+			return (compiler, rev)
+		rev_cfg = get_cpp_revision_tag(compiler, rev)
+		if rev_cfg == None:
+			continue
+		if rev_cfg < get_numeric_rev(rev):
+			eprint('Warning: The compiler reports an earlier standard revision than requested (%d vs %d). This indicates that support for the selected revision is experimental. Expect changes in ABI or API when the compiler is upgraded.'%(rev_cfg, get_numeric_rev(ret)))
+		return (compiler, rev)
+
+	raise Exception('The requested revision %s appears to be unsupported on this sytem. Tried with %s'%(std, ', ' .join(compilers)))
+
 def configure(cfg):
 	if 'std_revision' in cfg:
 		compiler_alternatives = get_compiler_alternatives(default_compiler)
