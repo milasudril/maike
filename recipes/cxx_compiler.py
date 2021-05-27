@@ -100,15 +100,16 @@ def get_numeric_rev(rev):
 	rev_constants = {'c++98': 199711, 'c++11': 201103, 'c++14': 201402, 'c++17': 201703, 'c++20': 202002}
 	return rev_constants[rev]
 
-def get_cpp_revision_tag(std = None):
+def get_cpp_revision_tag(compiler, std = None):
 	args = []
 	if std == None:
-		args = [default_compiler, '-x', 'c++', '-E', '-dM', '/dev/null']
+		args = [compiler, '-x', 'c++', '-E', '-dM', '/dev/null']
 	else:
-		args = [default_compiler, '-x', 'c++', '-std=%s'%std, '-E', '-dM', '/dev/null']
+		args = [compiler, '-x', 'c++', '-std=%s'%std, '-E', '-dM', '/dev/null']
 	result = subprocess.run(args, stdin = subprocess.DEVNULL, stdout=subprocess.PIPE, text=True)
 	if result.returncode != 0:
-		raise Exception('The requested revision %s appears to be unsupported by the selected compiler %s'%(std, default_compiler))
+		return None
+#		raise Exception('The requested revision %s appears to be unsupported by the selected compiler %s'%(std, compiler))
 
 	for line in result.stdout.split('\n'):
 		fields=line.split()
@@ -116,7 +117,7 @@ def get_cpp_revision_tag(std = None):
 			if fields[1] == '__cplusplus':
 				return int(fields[2][0:-1])
 
-def select_cpp_rev(rev):
+def select_cpp_rev(compiler, rev):
 	if 'min' in rev:
 		min_num = get_numeric_rev(rev['min'])
 		if 'max' in rev:
@@ -126,27 +127,27 @@ def select_cpp_rev(rev):
 			if rev['min'] == rev['max']:
 				return rev['min']
 			else:
-				default_rev = get_cpp_revision_tag()
+				default_rev = get_cpp_revision_tag(compiler)
 				if default_rev < min_num:
 					return rev['min']
 				if default_rev > max_num:
 					return rev['max']
 				return ''
 		else:
-			default_rev = get_cpp_revision_tag()
+			default_rev = get_cpp_revision_tag(compiler)
 			if default_rev < min_num:
 				return rev['min']
 	else:
 		if 'max' in rev:
-			default_rev = get_cpp_revision_tag()
+			default_rev = get_cpp_revision_tag(compiler)
 			if default_rev > max_num:
 				return rev['max']
 
 def configure(cfg):
 	if 'std_revision' in cfg:
-		ret = select_cpp_rev(cfg['std_revision'])
+		ret = select_cpp_rev(default_compiler, cfg['std_revision'])
 		if ret != '':
-			rev_cfg = get_cpp_revision_tag(ret)
+			rev_cfg = get_cpp_revision_tag(default_compiler, ret)
 			if rev_cfg < get_numeric_rev(ret):
 				eprint('Warning: The compiler reports an earlier standard revision than requested (%d vs %d). This indicates that support for the selected revision is experimental. Expect changes in ABI or API when the compiler is upgraded.'%(rev_cfg, get_numeric_rev(ret)))
 			cfg['std_revision']['selected'] = ret
