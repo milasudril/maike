@@ -11,7 +11,7 @@ import pkg_config
 import datetime
 import cxx_linker
 
-compiler = os.environ['CXX'] if 'CXX' in os.environ else 'g++'
+default_compiler = os.environ['CXX'] if 'CXX' in os.environ else 'g++'
 
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
@@ -54,7 +54,7 @@ def compile(build_args):
 	if ext[1] in no_op:
 		return 0
 	args = []
-	args.append(compiler)
+	args.append(default_compiler)
 	compiler_cfg = build_args['compiler_cfg']
 	args.extend(collect_cflags(build_args['build_info']['source_dir'], compiler_cfg, build_args['dependencies']))
 	if 'std_revision' in compiler_cfg:
@@ -103,12 +103,12 @@ def get_numeric_rev(rev):
 def get_cpp_revision_tag(std = None):
 	args = []
 	if std == None:
-		args = [compiler, '-x', 'c++', '-E', '-dM', '/dev/null']
+		args = [default_compiler, '-x', 'c++', '-E', '-dM', '/dev/null']
 	else:
-		args = [compiler, '-x', 'c++', '-std=%s'%std, '-E', '-dM', '/dev/null']
+		args = [default_compiler, '-x', 'c++', '-std=%s'%std, '-E', '-dM', '/dev/null']
 	result = subprocess.run(args, stdin = subprocess.DEVNULL, stdout=subprocess.PIPE, text=True)
 	if result.returncode != 0:
-		raise Exception('The requested revision %s appears to be unsupported by the selected compiler %s'%(std, compiler))
+		raise Exception('The requested revision %s appears to be unsupported by the selected compiler %s'%(std, default_compiler))
 
 	for line in result.stdout.split('\n'):
 		fields=line.split()
