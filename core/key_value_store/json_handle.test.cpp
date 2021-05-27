@@ -84,7 +84,7 @@ namespace Testcases
 		{
 			(void)Maike::KeyValueStore::jsonLoad(StringViewSource{R"json(
 {"invalid json": "missing curly brace")json"},
-			                                          "");
+			                                     "");
 			abort();
 		}
 		catch(...)

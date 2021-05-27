@@ -149,41 +149,47 @@ def get_compiler_alternatives(compiler):
 		for filename in os.listdir(path):
 			if filename.startswith(compiler):
 				parts = filename.split('-')
-				if len(parts) == 0 or len(parts) == 1:
+				if len(parts) == 1 or len(parts) == 2:
 					ret.append(filename)
 	return ret
 
 def select_compiler_and_stdrev(compilers, stdrev):
-	for compiler in compiler:
+	candidates = []
+	for compiler in compilers:
 		rev = select_cpp_rev(compiler, stdrev)
 		if rev == '':
-			return (compiler, rev)
+			return (compiler, rev, rev_cfg)
 		rev_cfg = get_cpp_revision_tag(compiler, rev)
 		if rev_cfg == None:
 			continue
 		if rev_cfg < get_numeric_rev(rev):
-			eprint('Warning: The compiler reports an earlier standard revision than requested (%d vs %d). This indicates that support for the selected revision is experimental. Expect changes in ABI or API when the compiler is upgraded.'%(rev_cfg, get_numeric_rev(ret)))
-		return (compiler, rev)
+			candidates.append((compiler, rev, rev_cfg))
+		else:
+			return (compiler, rev, rev_cfg)
 
-	raise Exception('The requested revision %s appears to be unsupported on this sytem. Tried with %s'%(std, ', ' .join(compilers)))
+	if len(candidates) == 0:
+		raise Exception('The requested revision %s appears to be unsupported on this sytem. Tried with %s' \
+			%(stdrev, ', ' .join(compilers)))
+
+	candidates.sort(key = lambda x: x[2])
+	return candidates[0]
 
 def configure(cfg):
 	if 'std_revision' in cfg:
 		compiler_alternatives = get_compiler_alternatives(default_compiler)
-		ret = select_cpp_rev(default_compiler, cfg['std_revision'])
-		if ret != '':
-			rev_cfg = get_cpp_revision_tag(default_compiler, ret)
-			if rev_cfg < get_numeric_rev(ret):
-				eprint('Warning: The compiler reports an earlier standard revision than requested (%d vs %d). This indicates that support for the selected revision is experimental. Expect changes in ABI or API when the compiler is upgraded.'%(rev_cfg, get_numeric_rev(ret)))
-			cfg['std_revision']['selected'] = ret
-		cfg['backend'] = default_compiler
+		sel = select_compiler_and_stdrev(compiler_alternatives, cfg['std_revision'])
+		cfg['backend'] = sel[0]
+		if sel[1] != '':
+			if sel[2] < get_numeric_rev(sel[1]):
+				eprint('Warning: The compiler reports an earlier standard revision than requested (%d vs %d). This indicates that support for the selected revision is experimental. Expect changes in ABI or API when the compiler is upgraded.'%(sel[2], get_numeric_rev(sel[1])))
+			cfg['std_revision']['selected'] = sel[1]
+
 		print(json.dumps(cfg))
 		return 0
 	else:
 		cfg['backend'] = default_compiler
 		print(json.dumps(cfg))
 		return 0
-
 
 if __name__ == '__main__':
 	try:
