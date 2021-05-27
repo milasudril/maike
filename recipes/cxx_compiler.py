@@ -143,8 +143,19 @@ def select_cpp_rev(compiler, rev):
 			if default_rev > max_num:
 				return rev['max']
 
+def get_compiler_alternatives(compiler):
+	ret = []
+	for path in os.environ['PATH'].split(':'):
+		for filename in os.listdir(path):
+			if filename.startswith(compiler):
+				parts = filename.split('-')
+				if len(parts) == 0 or len(parts) == 1:
+					ret.append(filename)
+	return ret
+
 def configure(cfg):
 	if 'std_revision' in cfg:
+		compiler_alternatives = get_compiler_alternatives(default_compiler)
 		ret = select_cpp_rev(default_compiler, cfg['std_revision'])
 		if ret != '':
 			rev_cfg = get_cpp_revision_tag(default_compiler, ret)
