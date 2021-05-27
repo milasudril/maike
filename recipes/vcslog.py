@@ -37,14 +37,18 @@ def mkdir(path):
 		pass
 
 if __name__ == '__main__':
-	if sys.argv[1] == 'compile':
-		data = json.loads(sys.argv[2])
-		target = data['targets'][0]
-		src_dir = data['build_info']['source_dir']
-		cache = src_dir + '/__buildcache/vcslog.json'
-		data = get(target, cache)
-		with open(target, 'w') as f:
-			json.dump(data, f)
-		mkdir(src_dir + '/__buildcache')
-		with open(cache, 'w') as f:
-			json.dump(data, f)
+	try:
+		if sys.argv[1] == 'compile':
+			data = json.loads(sys.argv[2])
+			target = data['targets'][0]
+			src_dir = data['build_info']['source_dir']
+			cache = src_dir + '/__buildcache/vcslog.json'
+			data = get(target, cache)
+			with open(target, 'w') as f:
+				json.dump(data, f)
+			mkdir(src_dir + '/__buildcache')
+			with open(cache, 'w') as f:
+				json.dump(data, f)
+	except Exception as e:
+		print(e, file=sys.stderr)
+		exit(-1)

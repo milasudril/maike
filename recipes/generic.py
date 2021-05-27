@@ -36,10 +36,14 @@ def compile(args):
 	return result.returncode
 
 if __name__ == '__main__':
-	args = json.loads(sys.argv[2])
-	if sys.argv[1] == 'get_tags':
-		exit(get_tags(args, sys.argv[0]))
-	if sys.argv[1] == 'configure':
-		exit(0)
-	if sys.argv[1] == 'compile':
-		compile(args);
+	try:
+		args = json.loads(sys.argv[2])
+		if sys.argv[1] == 'get_tags':
+			exit(get_tags(args, sys.argv[0]))
+		if sys.argv[1] == 'configure':
+			exit(0)
+		if sys.argv[1] == 'compile':
+			compile(args);
+	except Exception as e:
+		print(e, file=sys.stderr)
+		exit(-1)

@@ -21,5 +21,9 @@ def compile(dict):
 		mkdir(target)
 
 if __name__ == '__main__':
-	if sys.argv[1] == 'compile':
-		compile(json.loads(sys.argv[2]))
+	try:
+		if sys.argv[1] == 'compile':
+			compile(json.loads(sys.argv[2]))
+	except Exception as e:
+		print(e, file=sys.stderr)
+		exit(-1)

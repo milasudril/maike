@@ -157,8 +157,12 @@ def configure(cfg):
 
 
 if __name__ == '__main__':
-	if sys.argv[1] == 'compile':
-		exit(compile(json.loads(sys.argv[2])))
+	try:
+		if sys.argv[1] == 'compile':
+			exit(compile(json.loads(sys.argv[2])))
 
-	if sys.argv[1] == 'configure':
-		exit(configure(json.loads(sys.argv[2])))
+		if sys.argv[1] == 'configure':
+			exit(configure(json.loads(sys.argv[2])))
+	except Exception as e:
+		print(e, file=sys.stderr)
+		exit(-1)
