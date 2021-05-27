@@ -54,8 +54,8 @@ def compile(build_args):
 	if ext[1] in no_op:
 		return 0
 	args = []
-	args.append(default_compiler)
 	compiler_cfg = build_args['compiler_cfg']
+	args.append(compiler_cfg['backend'])
 	args.extend(collect_cflags(build_args['build_info']['source_dir'], compiler_cfg, build_args['dependencies']))
 	if 'std_revision' in compiler_cfg:
 		if 'selected' in compiler_cfg['std_revision']:
@@ -151,9 +151,12 @@ def configure(cfg):
 			if rev_cfg < get_numeric_rev(ret):
 				eprint('Warning: The compiler reports an earlier standard revision than requested (%d vs %d). This indicates that support for the selected revision is experimental. Expect changes in ABI or API when the compiler is upgraded.'%(rev_cfg, get_numeric_rev(ret)))
 			cfg['std_revision']['selected'] = ret
+		cfg['backend'] = default_compiler
 		print(json.dumps(cfg))
 		return 0
 	else:
+		cfg['backend'] = default_compiler
+		print(json.dumps(cfg))
 		return 0
 
 
