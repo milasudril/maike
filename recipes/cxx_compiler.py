@@ -109,7 +109,6 @@ def get_cpp_revision_tag(compiler, std = None):
 	result = subprocess.run(args, stdin = subprocess.DEVNULL, stdout=subprocess.PIPE, text=True)
 	if result.returncode != 0:
 		return None
-#		raise Exception('The requested revision %s appears to be unsupported by the selected compiler %s'%(std, compiler))
 
 	for line in result.stdout.split('\n'):
 		fields=line.split()

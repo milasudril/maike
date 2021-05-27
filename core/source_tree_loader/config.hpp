@@ -15,8 +15,11 @@ namespace Maike::SourceTreeLoader
 	{
 	public:
 		Config():
-		   m_file_info_loaders{
-		      {".hpp", "cxx"}, {".cpp", "cxx"}, {".app.maikerule", "app"}, {".py", "extension"}},
+		   m_file_info_loaders{{".hpp", "cxx"},
+		                       {".cpp", "cxx"},
+		                       {".app.maikerule", "app"},
+		                       {".py", "extension"},
+		                       {".lib.maikerule", "lib"}},
 		   m_recursive{false}
 		{
 		}
