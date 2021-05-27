@@ -146,11 +146,14 @@ def select_cpp_rev(compiler, rev):
 def get_compiler_alternatives(compiler):
 	ret = []
 	for path in os.environ['PATH'].split(':'):
-		for filename in os.listdir(path):
-			if filename.startswith(compiler):
-				parts = filename.split('-')
-				if len(parts) == 1 or len(parts) == 2:
-					ret.append(filename)
+		try:
+			for filename in os.listdir(path):
+				if filename.startswith(compiler):
+					parts = filename.split('-')
+					if len(parts) == 1 or len(parts) == 2:
+						ret.append(filename)
+		except:
+			pass
 	return ret
 
 def select_compiler_and_stdrev(compilers, stdrev):
