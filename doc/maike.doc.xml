@@ -12,11 +12,16 @@
 		</figure>
 
 		<figure id="pipeline">
-			<caption>Pipeline</caption>
+			<caption>Overview</caption>
 			<img src="pipeline.svg" />
 		</figure>
 
-		<figure id="src_file_loader">
+		<figure id="load_src_tree">
+			<caption>Load source tree</caption>
+			<img src="load_source_tree.svg" />
+		</figure>
+
+		<figure id="source_tree_loader">
 			<caption>Source tree loader</caption>
 			<img src="source_tree_loader.svg" />
 		</figure>
