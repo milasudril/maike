@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<document title="Maike 2.0 reference manual">
+	<copyright>
+		<author name="Torbjörn Rathsman">
+			<year value="2021" />
+		</author>
+	</copyright>
+	<chapter title="Schematics" id="schematics">
+		<figure id="components">
+			<caption>Components</caption>
+			<img src="components.svg" />
+		</figure>
+
+		<figure id="pipeline">
+			<caption>Pipeline</caption>
+			<img src="pipeline.svg" />
+		</figure>
+
+		<figure id="src_file_loader">
+			<caption>Source tree loader</caption>
+			<img src="source_tree_loader.svg" />
+		</figure>
+
+		<figure id="use_entry">
+			<caption>Procedure to check whether or not to use a directory entry</caption>
+			<img src="use_entry.svg" />
+		</figure>
+
+	</chapter>
+</document>
