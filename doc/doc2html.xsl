@@ -26,10 +26,7 @@
 				<title>
 					<xsl:value-of select="@title" />
 				</title>
-				<style>
-				img{max-width:100%}
-				body{font-family:"Andika", "Corbel", sans-serif}
-				</style>
+				<link rel="stylesheet" href="format.css" />
 			</head>
 			<body>
 				<h1><xsl:value-of select="@title" /></h1>
