@@ -1,13 +1,24 @@
 <?xml version="1.0"?>
-<document title="Maike 2.0 reference manual">
+<document title="Maike 2.0 user guide">
 	<copyright>
 		<author name="Torbjörn Rathsman">
 			<year value="2021" />
 		</author>
 	</copyright>
 	<chapter title="Introduction">
-		<section title="Foobar"/>
-		<section title="Kaka"/>
+		<section title="Changes compared to version 1.0"/>
+		<section title="Maike compared to other build systems"/>
+	</chapter>
+	<chapter title="Installation procerdure">
+	</chapter>
+	<chapter title="Tagging source files">
+	</chapter>
+	<chapter title="Using extensions">
+	</chapter>
+	<appendix/>
+	<chapter title="Command line options">
+	</chapter>
+	<chapter title="Recipe commands">
 	</chapter>
 	<chapter title="Schematics" id="schematics">
 		<section title="Components">
