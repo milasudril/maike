@@ -20,9 +20,12 @@
 
 <xsl:template match="chapter|section|subsection|subsubsection|paragraph">
 	<section>
-		<xsl:attribute name="class"><xsl:value-of select="name()" /></xsl:attribute>
+		<xsl:attribute name="class">
+			<xsl:value-of select="name()" />
+			<xsl:if test="count(ancestor::appendix) > 0">_appendix</xsl:if>
+		</xsl:attribute>
 		<xsl:attribute name="id"><xsl:value-of select="@id" /></xsl:attribute>
-		<h1><xsl:value-of select="@title" /></h1>
+			<h1><xsl:value-of select="@title" /></h1>
 		<xsl:apply-templates select="./*"/>
 	</section>
 </xsl:template>

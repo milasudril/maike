@@ -6,46 +6,47 @@
 		</author>
 	</copyright>
 	<main>
-	<chapter title="Introduction">
-		<section title="Changes compared to version 1.0"/>
-		<section title="Maike compared to other build systems"/>
-	</chapter>
-	<chapter title="Installation procerdure">
-	</chapter>
-	<chapter title="Tagging source files">
-	</chapter>
-	<chapter title="Using extensions">
-	</chapter>
+		<chapter title="Introduction">
+			<section title="Changes compared to version 1.0"/>
+			<section title="Maike compared to other build systems"/>
+		</chapter>
+		<chapter title="Installation procerdure">
+		</chapter>
+		<chapter title="Tagging source files">
+		</chapter>
+		<chapter title="Using extensions">
+		</chapter>
 	</main>
 	<appendix>
-	<chapter title="Command line options">
-	</chapter>
-	<chapter title="Recipe commands">
-	</chapter>
-	<chapter title="Schematics" id="schematics">
-		<section title="Components">
-			<img src="components.svg" />
-		</section>
+		<chapter title="Command line options">
+		</chapter>
+		<chapter title="Recipe commands">
+		</chapter>
+		<chapter title="Schematics" id="schematics">
+			<section title="Components">
+				<img src="components.svg" />
+			</section>
 
-		<section title="Processing algorithms">
-			<img src="pipeline.svg" />
+			<section title="Processing algorithms">
+				<img src="pipeline.svg" />
 
-			<subsection title="Load source tree">
-				<img src="load_source_tree.svg" />
+				<subsection title="Load source tree">
+					<img src="load_source_tree.svg" />
 
-				<subsubsection title="Source tree loader">
-					<img src="source_tree_loader.svg" />
+					<subsubsection title="Source tree loader">
+						<img src="source_tree_loader.svg" />
 
-					<paragraph title="Use entry">
-						<p><img src="use_entry.svg" /></p>
-					</paragraph>
-				</subsubsection>
+						<paragraph title="Use entry">
+							<p>This is some text, lol</p>
+							<p><img src="use_entry.svg" /></p>
+						</paragraph>
+					</subsubsection>
 
-				<subsubsection title="Make dependency graph">
-					<img src="make_dep_graph.svg" />
-				</subsubsection>
-			</subsection>
-		</section>
-	</chapter>
-</appendix>
+					<subsubsection title="Make dependency graph">
+						<img src="make_dep_graph.svg" />
+					</subsubsection>
+				</subsection>
+			</section>
+		</chapter>
+	</appendix>
 </document>

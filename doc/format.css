@@ -10,11 +10,11 @@ sub-title{display:block;text-align:center}
 * Sizes
 */
 body >h1{font-size:30pt;text-align:center}
-section.chapter>h1, sub-title {font-size:20.74pt;margin-bottom:40pt;margin-top:20pt}
-section.section>h1 {font-size:14.4pt;margin-top:3.5ex;margin-bottom:2.3ex}
-section.subsection>h1 {font-size:12pt;margin-top:3.25ex;margin-bottom:1.5ex}
-section.subsubsection>h1{font-size:11pt;margin-top:3.25ex;margin-bottom:1.5ex}
-section.paragraph > h1{font-size:11pt;margin-top:0pt;margin-bottom:0pt; display:inline}
+section.chapter>h1, section.chapter_appendix>h1, sub-title {font-size:20.74pt;margin-bottom:40pt;margin-top:20pt}
+section.section>h1, section.section_appendix>h1 {font-size:14.4pt;margin-top:3.5ex;margin-bottom:2.3ex}
+section.subsection>h1, section.subsection_appendix>h1 {font-size:12pt;margin-top:3.25ex;margin-bottom:1.5ex}
+section.subsubsection>h1, section.subsubsection_appendix>h1{font-size:11pt;margin-top:3.25ex;margin-bottom:1.5ex}
+section.paragraph>h1, section.paragraph_appendix>h1{font-size:11pt;margin-top:0pt;margin-bottom:0pt; display:inline}
 
 p{font-size:11pt;margin-top:0pt;margin-bottom:0pt;text-indent:18pt}
 
@@ -50,3 +50,30 @@ section.subsubsection>h1:before
 }
 
 section.paragraph{counter-increment: paragraph}
+
+
+section.chapter_appendix{counter-increment: chapter_appendix}
+section.chapter_appendix>h1:before
+{
+  content: counter(chapter_appendix, upper-alpha) ".\0000a0\0000a0";
+}
+
+section.section_appendix{counter-increment: section_appendix}
+section.section_appendix>h1:before
+{
+  content: counter(chapter_appendix, upper-alpha) "." counter(section_appendix) ".\0000a0\0000a0";
+}
+
+section.subsection_appendix{counter-increment: subsection_appendix}
+section.subsection_appendix>h1:before
+{
+  content: counter(chapter_appendix, upper-alpha) "." counter(section_appendix) "." counter(subsection_appendix) ".\0000a0\0000a0";
+}
+
+section.subsubsection_appendix{counter-increment: subsubsection_appendix}
+section.subsubsection_appendix>h1:before
+{
+  content: counter(chapter_appendix, upper-alpha) "." counter(section_appendix) "." counter(subsection_appendix) "." counter(subsubsection_appendix) ".\0000a0\0000a0";
+}
+
+section.paragraph_appendix{counter-increment: paragraph_appendix}
