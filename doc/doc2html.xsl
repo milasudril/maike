@@ -26,6 +26,38 @@
 	</section>
 </xsl:template>
 
+<xsl:template match="section">
+	<section class="section">
+		<xsl:attribute name="id"><xsl:value-of select="@id" /></xsl:attribute>
+		<h1><xsl:value-of select="@title" /></h1>
+		<xsl:apply-templates select="./*"/>
+	</section>
+</xsl:template>
+
+<xsl:template match="subsection">
+	<section class="subsection">
+		<xsl:attribute name="id"><xsl:value-of select="@id" /></xsl:attribute>
+		<h1><xsl:value-of select="@title" /></h1>
+		<xsl:apply-templates select="./*"/>
+	</section>
+</xsl:template>
+
+<xsl:template match="subsubsection">
+	<section class="subsubsection">
+		<xsl:attribute name="id"><xsl:value-of select="@id" /></xsl:attribute>
+		<h1><xsl:value-of select="@title" /></h1>
+		<xsl:apply-templates select="./*"/>
+	</section>
+</xsl:template>
+
+<xsl:template match="paragraph">
+	<section class="paragraph">
+		<xsl:attribute name="id"><xsl:value-of select="@id" /></xsl:attribute>
+		<h1><xsl:value-of select="@title" /></h1>
+		<xsl:apply-templates select="./*"/>
+	</section>
+</xsl:template>
+
 <xsl:template match="/document">
 <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;
 </xsl:text>
