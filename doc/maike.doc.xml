@@ -6,30 +6,28 @@
 		</author>
 	</copyright>
 	<chapter title="Schematics" id="schematics">
-		<figure id="components">
-			<caption>Components</caption>
+		<section title="Components">
 			<img src="components.svg" />
-		</figure>
+		</section>
 
-		<figure id="pipeline">
-			<caption>Overview</caption>
+		<section title="Processing algorithms">
 			<img src="pipeline.svg" />
-		</figure>
 
-		<figure id="load_src_tree">
-			<caption>Load source tree</caption>
-			<img src="load_source_tree.svg" />
-		</figure>
+			<subsection title="Load source tree">
+				<img src="load_source_tree.svg" />
 
-		<figure id="source_tree_loader">
-			<caption>Source tree loader</caption>
-			<img src="source_tree_loader.svg" />
-		</figure>
+				<subsubsection title="Source tree loader">
+					<img src="source_tree_loader.svg" />
 
-		<figure id="use_entry">
-			<caption>Procedure to check whether or not to use a directory entry</caption>
-			<img src="use_entry.svg" />
-		</figure>
+					<paragraph title="Use entry">
+						<img src="use_entry.svg" />
+					</paragraph>
+				</subsubsection>
 
+				<subsubsection title="Make dependency graph">
+					<img src="make_dep_graph.svg" />
+				</subsubsection>
+			</subsection>
+		</section>
 	</chapter>
 </document>
