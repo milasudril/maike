@@ -30,6 +30,10 @@
 			<section title="Processing algorithms">
 				<img src="pipeline.svg" />
 
+				<subsection title="Initialize">
+					<img src="initialize.svg" />
+				</subsection>
+
 				<subsection title="Load source tree">
 					<img src="load_source_tree.svg" />
 
