@@ -18,44 +18,21 @@
 	</figcaption>
 </xsl:template>
 
-<xsl:template match="chapter">
-	<section class="chapter">
+<xsl:template match="chapter|section|subsection|subsubsection|paragraph">
+	<section>
+		<xsl:attribute name="class"><xsl:value-of select="name()" /></xsl:attribute>
 		<xsl:attribute name="id"><xsl:value-of select="@id" /></xsl:attribute>
 		<h1><xsl:value-of select="@title" /></h1>
 		<xsl:apply-templates select="./*"/>
 	</section>
 </xsl:template>
 
-<xsl:template match="section">
-	<section class="section">
-		<xsl:attribute name="id"><xsl:value-of select="@id" /></xsl:attribute>
-		<h1><xsl:value-of select="@title" /></h1>
-		<xsl:apply-templates select="./*"/>
-	</section>
+<xsl:template match="main">
+	<xsl:apply-templates select="chapter" />
 </xsl:template>
 
-<xsl:template match="subsection">
-	<section class="subsection">
-		<xsl:attribute name="id"><xsl:value-of select="@id" /></xsl:attribute>
-		<h1><xsl:value-of select="@title" /></h1>
-		<xsl:apply-templates select="./*"/>
-	</section>
-</xsl:template>
-
-<xsl:template match="subsubsection">
-	<section class="subsubsection">
-		<xsl:attribute name="id"><xsl:value-of select="@id" /></xsl:attribute>
-		<h1><xsl:value-of select="@title" /></h1>
-		<xsl:apply-templates select="./*"/>
-	</section>
-</xsl:template>
-
-<xsl:template match="paragraph">
-	<section class="paragraph">
-		<xsl:attribute name="id"><xsl:value-of select="@id" /></xsl:attribute>
-		<h1><xsl:value-of select="@title" /></h1>
-		<xsl:apply-templates select="./*"/>
-	</section>
+<xsl:template match="appendix">
+	<xsl:apply-templates select="chapter" />
 </xsl:template>
 
 <xsl:template match="/document">
@@ -70,7 +47,8 @@
 </head>
 <body>
 <h1><xsl:value-of select="@title" /></h1>
-<xsl:apply-templates select="chapter"/>
+<xsl:apply-templates select="main" />
+<xsl:apply-templates select="appendix" />
 </body>
 </html>
 </xsl:template>

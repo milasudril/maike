@@ -5,6 +5,7 @@
 			<year value="2021" />
 		</author>
 	</copyright>
+	<main>
 	<chapter title="Introduction">
 		<section title="Changes compared to version 1.0"/>
 		<section title="Maike compared to other build systems"/>
@@ -15,7 +16,8 @@
 	</chapter>
 	<chapter title="Using extensions">
 	</chapter>
-	<appendix/>
+	</main>
+	<appendix>
 	<chapter title="Command line options">
 	</chapter>
 	<chapter title="Recipe commands">
@@ -45,4 +47,5 @@
 			</subsection>
 		</section>
 	</chapter>
+</appendix>
 </document>
