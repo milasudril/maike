@@ -5,6 +5,10 @@
 			<year value="2021" />
 		</author>
 	</copyright>
+	<chapter title="Introduction">
+		<section title="Foobar"/>
+		<section title="Kaka"/>
+	</chapter>
 	<chapter title="Schematics" id="schematics">
 		<section title="Components">
 			<img src="components.svg" />
