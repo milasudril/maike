@@ -435,8 +435,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.9"
-     inkscape:cx="486.31492"
-     inkscape:cy="468.81039"
+     inkscape:cx="1107.0072"
+     inkscape:cy="596.69928"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -476,7 +476,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -631,12 +631,12 @@
          x="469.86716"
          y="116.70089"
          style="stroke:none;stroke-width:0.26458332;stroke-opacity:1"
-         id="tspan1273-42">Source</tspan><tspan
+         id="tspan1348">Source</tspan><tspan
          sodipodi:role="line"
          x="469.86716"
          y="124.63839"
          style="stroke:none;stroke-width:0.26458332;stroke-opacity:1"
-         id="tspan1348">file index</tspan></text>
+         id="tspan2718">file list</tspan></text>
     <rect
        style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.60000002;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect1250-0-0"
@@ -644,8 +644,8 @@
        height="26.45837"
        x="449.97693"
        y="105.17706"
-       rx="6.6145053"
-       ry="6.6145053" />
+       rx="0.185234"
+       ry="0" />
     <path
        style="fill:none;stroke:#000000;stroke-width:0.60000002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:3.875;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker17112)"
        d="m 112.51382,125.02085 -0.13869,33.07294"
