@@ -32,6 +32,9 @@
 
 				<subsection title="Initialize">
 					<img src="initialize.svg" />
+					<subsubsection title="Resolve recipes">
+						<img src="resolve_recipes.svg" />
+					</subsubsection>
 				</subsection>
 
 				<subsection title="Load source tree">
