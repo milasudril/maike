@@ -53,6 +53,10 @@
 						<img src="make_dep_graph.svg" />
 					</subsubsection>
 				</subsection>
+
+				<subsection title="Compile project">
+					<img src="compile.svg" />
+				</subsection>
 			</section>
 		</chapter>
 	</appendix>
