@@ -38,6 +38,50 @@
 	<xsl:apply-templates select="chapter" />
 </xsl:template>
 
+<xsl:template match="main">
+<xsl:apply-templates />
+</xsl:template>
+
+<xsl:template match="subsection" mode="toc">
+	<li><xsl:value-of select="@title" /></li>
+</xsl:template>
+
+<xsl:template match="section" mode="toc">
+	<li><xsl:value-of select="@title" />
+	<ol><xsl:apply-templates select="subsection" mode="toc"/></ol>
+	</li>
+</xsl:template>
+
+<xsl:template match="chapter" mode="toc">
+	<li><xsl:value-of select="@title" />
+	<ol><xsl:apply-templates select="section" mode="toc"/></ol>
+	</li>
+</xsl:template>
+
+<xsl:template match="main" mode="toc">
+	<ol class="main">
+		<xsl:apply-templates mode="toc"/>
+	</ol>
+</xsl:template>
+
+<xsl:template match="appendix" mode="toc">
+	<ol class="appendix">
+		<xsl:apply-templates mode="toc"/>
+	</ol>
+</xsl:template>
+
+<xsl:template match="tableofcontents">
+<section class="prelim">
+<h1>Table of contents</h1>
+<xsl:apply-templates select="/document/main" mode="toc"/>
+<xsl:apply-templates select="/document/appendix" mode="toc"/>
+</section>
+</xsl:template>
+
+<xsl:template match="prelims">
+<xsl:apply-templates />
+</xsl:template>
+
 <xsl:template match="/document">
 <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;
 </xsl:text>
@@ -50,7 +94,8 @@
 </head>
 <body>
 <h1><xsl:value-of select="@title" /></h1>
-<xsl:apply-templates select="main" />
+<xsl:apply-templates select="prelims" />
+<xsl:apply-templates select="main"/>
 <xsl:apply-templates select="appendix" />
 </body>
 </html>

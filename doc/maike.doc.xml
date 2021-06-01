@@ -5,6 +5,9 @@
 			<year value="2021" />
 		</author>
 	</copyright>
+	<prelims>
+		<tableofcontents/>
+	</prelims>
 	<main>
 		<chapter title="Introduction">
 			<section title="Changes compared to version 1.0"/>
