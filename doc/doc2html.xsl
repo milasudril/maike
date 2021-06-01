@@ -71,11 +71,11 @@
 </xsl:template>
 
 <xsl:template match="tableofcontents">
-<section class="prelim">
-<h1>Table of contents</h1>
-<xsl:apply-templates select="/document/main" mode="toc"/>
-<xsl:apply-templates select="/document/appendix" mode="toc"/>
-</section>
+<nav id="toc">
+	<h1>Table of contents</h1>
+	<xsl:apply-templates select="/document/main" mode="toc"/>
+	<xsl:apply-templates select="/document/appendix" mode="toc"/>
+</nav>
 </xsl:template>
 
 <xsl:template match="prelims">
