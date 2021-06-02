@@ -77,3 +77,5 @@ section.subsubsection_appendix>h1:before
 }
 
 section.paragraph_appendix{counter-increment: paragraph_appendix}
+
+nav>ol{list-style: upper-alpha}

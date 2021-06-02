@@ -59,6 +59,10 @@
 
 				<subsection title="Compile project">
 					<img src="compile.svg" />
+
+					<subsubsection title="Create task list">
+						<img src="create_task_list.svg" />
+					</subsubsection>
 				</subsection>
 			</section>
 		</chapter>
