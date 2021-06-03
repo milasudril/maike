@@ -206,9 +206,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.43686173"
-     inkscape:cx="622.62264"
-     inkscape:cy="200.29221"
+     inkscape:zoom="0.61781578"
+     inkscape:cx="530.90259"
+     inkscape:cy="362.56762"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -226,9 +226,9 @@
      showguides="true"
      inkscape:guide-bbox="true"
      inkscape:window-width="950"
-     inkscape:window-height="553"
+     inkscape:window-height="554"
      inkscape:window-x="960"
-     inkscape:window-y="0"
+     inkscape:window-y="587"
      inkscape:window-maximized="0"
      inkscape:pagecheckerboard="0">
     <inkscape:grid
@@ -482,7 +482,7 @@
        sodipodi:nodetypes="cc" />
     <path
        style="fill:none;stroke:#000000;stroke-width:0.6;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker17118)"
-       d="m 257.96893,277.15622 v 13.22917 h -39.6875 v -13.22917"
+       d="m 257.96875,263.92706 0,-13.22916 -39.6875,0 v 13.22916"
        id="path15757"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccc" />
@@ -591,5 +591,31 @@
        d="M 33.073095,217.62498 V 184.55206 H 185.20833 v 72.76042"
        id="path1110"
        sodipodi:nodetypes="cccc" />
+    <text
+       xml:space="preserve"
+       style="font-size:4.9389px;line-height:1.25;font-family:Andika;-inkscape-font-specification:'Andika, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;stroke-width:0.264583"
+       x="178.59375"
+       y="303.61456"
+       id="text5126"><tspan
+         sodipodi:role="line"
+         id="tspan5124"
+         style="text-align:start;text-anchor:start;stroke-width:0.264583"
+         x="178.59375"
+         y="303.61456"> Log format</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4.9389px;line-height:1.25;font-family:Andika;-inkscape-font-specification:'Andika, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;stroke-width:0.264583"
+       x="198.4375"
+       y="323.45831"
+       id="text5126-3"><tspan
+         sodipodi:role="line"
+         id="tspan5124-6"
+         style="text-align:start;text-anchor:start;stroke-width:0.264583"
+         x="198.4375"
+         y="323.45831"> reference</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.6;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;marker-end:url(#marker14335)"
+       d="m 198.4375,316.84373 h 59.53125 l 0,-39.6875"
+       id="path8509" />
   </g>
 </svg>

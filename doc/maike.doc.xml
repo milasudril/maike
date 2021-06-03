@@ -62,6 +62,9 @@
 
 					<subsubsection title="Create task list">
 						<img src="create_task_list.svg" />
+						<paragraph title="Create task">
+							<p><img src="create_task.svg"/></p>
+						</paragraph>
 					</subsubsection>
 				</subsection>
 			</section>
