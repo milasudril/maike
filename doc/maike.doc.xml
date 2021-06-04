@@ -66,6 +66,10 @@
 							<p><img src="create_task.svg"/></p>
 						</paragraph>
 					</subsubsection>
+
+					<subsection title="Process task list">
+						<img src="process_task_list.svg" />
+					</subsection>
 				</subsection>
 			</section>
 		</chapter>
