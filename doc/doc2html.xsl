@@ -30,6 +30,15 @@
 	</section>
 </xsl:template>
 
+<xsl:template match="chapter|section|subsection|subsubsection|paragraph" mode="appendix">
+	<section>
+		<xsl:attribute name="class"><xsl:value-of select="name()" />_appendix</xsl:attribute>
+		<xsl:attribute name="id"><xsl:value-of select="@id" /></xsl:attribute>
+			<h1><xsl:value-of select="@title" /></h1>
+		<xsl:apply-templates select="./*"/>
+	</section>
+</xsl:template>
+
 <xsl:template match="main">
 	<xsl:apply-templates select="chapter" />
 </xsl:template>
@@ -90,10 +99,21 @@
 <xsl:apply-templates />
 </xsl:template>
 
-<xsl:template match="include">
+<xsl:template match="include[@origin='generated']">
 	<xsl:choose>
-		<xsl:when test="@origin='generated'">
-			<xsl:apply-templates select="document(concat($target_dir, '/', $src_dirname, '/', @src))/content/*" />
+		<xsl:when test="count(ancestor::appendix) > 0">
+			<xsl:apply-templates select="document(concat($target_dir, '/', $src_dirname, '/', @src))/content/*" mode="appendix"/>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:apply-templates select="document(concat($target_dir, '/', $src_dirname, '/', @src))/content/*"/>
+		</xsl:otherwise>
+	</xsl:choose>
+</xsl:template>
+
+<xsl:template match="include[@origin='project']">
+	<xsl:choose>
+		<xsl:when test="count(ancestor::appendix) > 0">
+			<xsl:apply-templates select="document(concat($src_dirname, '/', @src))/content/*" mode="appendix"/>
 		</xsl:when>
 		<xsl:otherwise>
 			<xsl:apply-templates select="document(concat($src_dirname, '/', @src))/content/*" />

@@ -27,11 +27,7 @@ def compile(args):
 	src_file = target_dir + '/' + os.path.relpath(os.path.dirname(args['source_file']), src_dir) + '/cmdlineopts.md'
 	pandoc_res = subprocess.run(['pandoc', '-f', 'markdown', '-t', 'html', '--section-divs', src_file], text=True, stdout=subprocess.PIPE)
 
-	doc = '''<content>
-<appendix>
-''' + pandoc_res.stdout + '''</appendix>
-</content>
-'''
+	doc = '<content>' + pandoc_res.stdout + '</content>'
 
 	root = ET.fromstring(doc)
 	for section in find_elements(root, 'section', []):
