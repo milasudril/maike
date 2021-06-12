@@ -4,6 +4,7 @@ import sys
 import subprocess
 import json
 import xml.etree.ElementTree as ET
+import os
 from pathlib import Path
 
 def compile(args):
@@ -29,9 +30,10 @@ def get_tags(args):
 			dep['origin'] = item.attrib['maike-origin'] if 'maike-origin' in item.attrib else 'project'
 
 	target = dict()
-	p = Path(args['source_file'])
+	p = Path(os.path.basename(args['source_file']))
 	extensions = ''.join(p.suffixes)
 	target['name'] = str(p).replace(extensions, '.html')
+	print(target['name'], file=sys.stderr)
 	tags = dict()
 	tags['dependencies'] = deps
 	tags['target'] = target
