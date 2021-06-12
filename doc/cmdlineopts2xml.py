@@ -12,6 +12,13 @@ import sys
 import json
 import os
 import subprocess
+import xml.etree.ElementTree as ET
+
+def find_elements(node, element, result):
+	for item in node.iter():
+		if item.tag == element:
+			result.append(item)
+	return result
 
 def compile(args):
 	target_dir = args['build_info']['target_dir']
@@ -25,15 +32,17 @@ def compile(args):
 ''' + pandoc_res.stdout + '''</appendix>
 </content>
 '''
-	print(doc)
 
-#	with open(targets[0], 'w') as f:
-#		f.write('''<content>
-#<appendix>
-#''')
-#		f.write(pandoc_res.stdout)
-#		f.write()
+	root = ET.fromstring(doc)
+	for section in find_elements(root, 'section', []):
+		for elem in section.findall('./*'):
+			if elem.tag.startswith('h'):
+				section.attrib['title'] = elem.text
+				section.attrib.pop('class', None)
+				section.remove(elem)
+				break
 
+	ET.ElementTree(root).write(targets[0])
 	return 0
 
 if __name__ == '__main__':
