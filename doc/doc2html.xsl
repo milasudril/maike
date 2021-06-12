@@ -93,7 +93,6 @@
 <xsl:template match="include">
 	<xsl:choose>
 		<xsl:when test="@origin='generated'">
-			<xsl:value-of select="concat($target_dir, '/', $src_dirname, '/', @src)" />
 			<xsl:apply-templates select="document(concat($target_dir, '/', $src_dirname, '/', @src))/content/*" />
 		</xsl:when>
 		<xsl:otherwise>

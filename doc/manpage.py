@@ -9,7 +9,7 @@
 #@		]
 #@	,"dependencies":
 #@		[
-#@		{"ref":"core/bin/maike2"},
+#@		{"ref":"./cmdlineopts.md"},
 #@		{"ref":"pandoc","origin":"system"},
 #@		{"ref":"projinfo.json", "origin":"project"}
 #@		]
@@ -20,6 +20,7 @@ import json
 import subprocess
 from string import Template
 import datetime
+import os
 
 document = Template('''---
 title: MAIKE
@@ -82,11 +83,10 @@ def compile(args):
 	content['author'] = ', '.join(get_authors(projinfo['copyright']))
 	content['copyright'] = '\n\n'.join(get_copyright(projinfo['copyright']))
 	content['license_short'] = projinfo['legal_info']['license_short']
-	maike_output = subprocess.run([target_dir + '/core/bin/maike2', '--help'], stdout=subprocess.PIPE, text=True)
-	if maike_output.returncode != 0:
-		return maike_output.returncode
 
-	content['opts'] = maike_output.stdout.replace('--','\-\-')
+	with open(target_dir + '/' + os.path.dirname(args['source_file']) +'/cmdlineopts.md') as f:
+		content['opts'] = f.read()
+
 	timestamp = args['build_info']['start_time']
 	content['date'] = datetime.datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S UTC')
 	md_output = document.substitute(content)
