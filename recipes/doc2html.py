@@ -4,12 +4,13 @@ import sys
 import subprocess
 import json
 import xml.etree.ElementTree as ET
+from pathlib import Path
 
 def compile(args):
 	target_dir = args['build_info']['target_dir']
 	targets = args['targets']
 	source_file = args['source_file']
-	print(source_file)
+#	print('%s %s'%(source_file, targets[0]))
 	return 0
 
 def get_tags(args):
@@ -27,9 +28,15 @@ def get_tags(args):
 			dep['ref'] = item.attrib['href']
 			dep['origin'] = item.attrib['maike-origin'] if 'maike-origin' in item.attrib else 'project'
 
+	target = dict()
+	p = Path(args['source_file'])
+	extensions = ''.join(p.suffixes)
+	target['name'] = str(p).replace(extensions, '.html')
 	tags = dict()
 	tags['dependencies'] = deps
+	tags['target'] = target
 	sys.stdout.write(json.dumps(tags))
+
 	return 0
 
 if __name__ == '__main__':
