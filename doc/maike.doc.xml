@@ -5,6 +5,9 @@
 			<year value="2021" />
 		</author>
 	</copyright>
+	<resources>
+		<link rel="stylesheet" href="format.css" />
+	</resources>
 	<prelims>
 		<tableofcontents/>
 	</prelims>

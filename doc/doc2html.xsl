@@ -129,7 +129,7 @@
 <title>
 <xsl:value-of select="@title" />
 </title>
-<link rel="stylesheet" href="format.css" />
+<xsl:apply-templates select="resources/*"/>
 </head>
 <body>
 <h1><xsl:value-of select="@title" /></h1>
