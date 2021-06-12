@@ -11,10 +11,15 @@ def compile(args):
 	target_dir = args['build_info']['target_dir']
 	targets = args['targets']
 	source_file = args['source_file']
+#	for dep in args['dependencies']:
+#		if 'rel' in dep and dep['rel'] == 'resource':
+#			print(dep)
 #	print('%s %s'%(source_file, targets[0]))
 	return 0
 
 def get_tags(args):
+	if args['source_file'] == __file__:
+		return 0
 	root = ET.parse(args['source_file'])
 	deps = []
 	for item in root.iter():
@@ -22,23 +27,23 @@ def get_tags(args):
 			dep = dict()
 			dep['ref'] = item.attrib['src']
 			dep['origin'] = item.attrib['maike-origin'] if 'maike-origin' in item.attrib else 'project'
+			dep['rel'] = 'resource'
 			deps.append(dep)
 
 		if 'href' in item.attrib:
 			dep = dict()
 			dep['ref'] = item.attrib['href']
 			dep['origin'] = item.attrib['maike-origin'] if 'maike-origin' in item.attrib else 'project'
+			dep['rel'] = 'resource'
 
 	target = dict()
 	p = Path(os.path.basename(args['source_file']))
 	extensions = ''.join(p.suffixes)
 	target['name'] = str(p).replace(extensions, '.html')
-	print(target['name'], file=sys.stderr)
 	tags = dict()
 	tags['dependencies'] = deps
 	tags['target'] = target
 	sys.stdout.write(json.dumps(tags))
-
 	return 0
 
 if __name__ == '__main__':
