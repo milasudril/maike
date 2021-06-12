@@ -99,7 +99,7 @@
 <xsl:apply-templates />
 </xsl:template>
 
-<xsl:template match="include[@origin='generated']">
+<xsl:template match="include[@maike-origin='generated']">
 	<xsl:choose>
 		<xsl:when test="count(ancestor::appendix) > 0">
 			<xsl:apply-templates select="document(concat($target_dir, '/', $src_dirname, '/', @src))/content/*" mode="appendix"/>
@@ -110,7 +110,7 @@
 	</xsl:choose>
 </xsl:template>
 
-<xsl:template match="include[@origin='project']">
+<xsl:template match="include[@maike-origin='project']">
 	<xsl:choose>
 		<xsl:when test="count(ancestor::appendix) > 0">
 			<xsl:apply-templates select="document(concat($src_dirname, '/', @src))/content/*" mode="appendix"/>
