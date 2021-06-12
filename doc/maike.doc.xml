@@ -6,7 +6,7 @@
 		</author>
 	</copyright>
 	<resources>
-		<link rel="stylesheet" href="format.css" />
+		<link rel="stylesheet" href="./format.css" />
 	</resources>
 	<prelims>
 		<tableofcontents/>
@@ -25,54 +25,54 @@
 	</main>
 	<appendix>
 		<chapter title="Command line options">
-			<include src="cmdlineopts.xml" maike-origin="generated"/>
+			<include src="./cmdlineopts.xml" maike-origin="generated"/>
 		</chapter>
 		<chapter title="Recipe commands">
 		</chapter>
 		<chapter title="Schematics" id="schematics">
 			<section title="Components">
-				<img src="components.svg" />
+				<img src="./components.svg" />
 			</section>
 
 			<section title="Processing algorithms">
-				<img src="pipeline.svg" />
+				<img src="./pipeline.svg" />
 
 				<subsection title="Initialize">
-					<img src="initialize.svg" />
+					<img src="./initialize.svg" />
 					<subsubsection title="Resolve recipes">
-						<img src="resolve_recipes.svg" />
+						<img src="./resolve_recipes.svg" />
 					</subsubsection>
 				</subsection>
 
 				<subsection title="Load source tree">
-					<img src="load_source_tree.svg" />
+					<img src="./load_source_tree.svg" />
 
 					<subsubsection title="Source tree loader">
-						<img src="source_tree_loader.svg" />
+						<img src="./source_tree_loader.svg" />
 
 						<paragraph title="Use entry">
 							<p>This is some text, lol</p>
-							<p><img src="use_entry.svg" /></p>
+							<p><img src="./use_entry.svg" /></p>
 						</paragraph>
 					</subsubsection>
 
 					<subsubsection title="Make dependency graph">
-						<img src="make_dep_graph.svg" />
+						<img src="./make_dep_graph.svg" />
 					</subsubsection>
 				</subsection>
 
 				<subsection title="Compile project">
-					<img src="compile.svg" />
+					<img src="./compile.svg" />
 
 					<subsubsection title="Create task list">
-						<img src="create_task_list.svg" />
+						<img src="./create_task_list.svg" />
 						<paragraph title="Create task">
-							<p><img src="create_task.svg"/></p>
+							<p><img src="./create_task.svg"/></p>
 						</paragraph>
 					</subsubsection>
 
 					<subsection title="Process task list">
-						<img src="process_task_list.svg" />
+						<img src="./process_task_list.svg" />
 					</subsection>
 				</subsection>
 			</section>

@@ -60,6 +60,14 @@
 				},
 				"loader": "cxx_src_loader"
 			},
+			"doc2html": {
+				"compiler": {
+					"config": {},
+					"recipe": "recipes/doc2html.py",
+					"use_get_tags": 1
+				},
+				"loader": "extension"
+			},
 			"extension": {
 				"compiler": {
 					"config": {},
@@ -79,6 +87,7 @@
 			"file_info_loaders": {
 				".app.maikerule": "app",
 				".cpp": "cxx",
+				".doc.xml": "doc2html",
 				".hpp": "cxx",
 				".py": "extension",
 				".test.cpp": "cxx_test",
