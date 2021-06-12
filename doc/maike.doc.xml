@@ -22,6 +22,7 @@
 	</main>
 	<appendix>
 		<chapter title="Command line options">
+			<include src="cmdline.xml" origin="generated"/>
 		</chapter>
 		<chapter title="Recipe commands">
 		</chapter>

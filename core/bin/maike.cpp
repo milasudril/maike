@@ -111,16 +111,16 @@ void printHelp(Maike::CommandLine const& cmdline)
 		              }
 		              if(item.type() == nullptr)
 		              {
-			              printf("%s\n    %s\n\n", item.name(), item.summary());
+			              printf("%s\n: %s\n\n", item.name(), item.summary());
 			              return;
 		              }
 
 		              if(item.valueRequired())
 		              {
-			              printf("%s=*%s*\n    %s\n\n", item.name(), item.type(), item.summary());
+			              printf("%s=*%s*\n: %s\n\n", item.name(), item.type(), item.summary());
 			              return;
 		              }
-		              printf("%s[=*%s*]\n    %s\n\n", item.name(), item.type(), item.summary());
+		              printf("%s[=*%s*]\n: %s\n\n", item.name(), item.type(), item.summary());
 		              return;
 	              });
 

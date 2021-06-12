@@ -82,6 +82,18 @@
 <xsl:apply-templates />
 </xsl:template>
 
+<xsl:template match="include">
+	<xsl:choose>
+		<xsl:when test="@origin='generated'">
+			<xsl:value-of select="concat($target_dir, '/', $src_dirname, '/', @src)" />
+			<xsl:apply-templates select="document(concat($target_dir, '/', $src_dirname, '/', @src))/content/*" />
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:apply-templates select="document(concat($src_dirname, '/', @src))/content/*" />
+		</xsl:otherwise>
+	</xsl:choose>
+</xsl:template>
+
 <xsl:template match="/document">
 <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;
 </xsl:text>
