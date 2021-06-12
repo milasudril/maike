@@ -82,6 +82,14 @@
 <xsl:apply-templates />
 </xsl:template>
 
+<xsl:template match="main">
+<xsl:apply-templates />
+</xsl:template>
+
+<xsl:template match="appendix">
+<xsl:apply-templates />
+</xsl:template>
+
 <xsl:template match="include">
 	<xsl:choose>
 		<xsl:when test="@origin='generated'">

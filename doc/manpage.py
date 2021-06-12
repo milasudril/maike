@@ -93,7 +93,7 @@ def compile(args):
 	with open(targets[0], 'w') as f:
 		f.write(md_output)
 	pandoc_res = subprocess.run(['pandoc', '-f', 'markdown', '-s', '-t', 'man', '-o', targets[1]], input=md_output, text=True)
-	pandoc_res = subprocess.run(['pandoc', '-f', 'markdown', '-t', 'html', '-o', targets[2]], input=content['opts'], text=True)
+	pandoc_res = subprocess.run(['pandoc', '-f', 'markdown', '-t', 'html', '--section-divs', '-o', targets[2]], input=content['opts'], text=True)
 	return 0
 
 if __name__ == '__main__':
