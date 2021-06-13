@@ -26,15 +26,16 @@ def get_tags(args):
 		if 'src' in item.attrib:
 			dep = dict()
 			dep['ref'] = item.attrib['src']
-			dep['origin'] = item.attrib['maike-origin'] if 'maike-origin' in item.attrib else 'project'
+			dep['origin'] = 'generated'
 			dep['rel'] = 'resource'
 			deps.append(dep)
 
 		if 'href' in item.attrib:
 			dep = dict()
 			dep['ref'] = item.attrib['href']
-			dep['origin'] = item.attrib['maike-origin'] if 'maike-origin' in item.attrib else 'project'
+			dep['origin'] = 'generated'
 			dep['rel'] = 'resource'
+			deps.append(dep)
 
 	target = dict()
 	p = Path(os.path.basename(args['source_file']))
