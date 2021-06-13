@@ -53,7 +53,7 @@ void Generic::SourceFileLoader::filterInput(
 	   "target",
 	   Maike::KeyValueStore::Compound{}.set(
 	      "name",
-	      makeTargetName(src.sourcePath(), m_target_filename_ext, m_filename_ext_replacement_mode)));
+	      makeTargetName(src.sourcePath().filename(), m_target_filename_ext, m_filename_ext_replacement_mode)));
 
 	store(tag, tag_out, Maike::KeyValueStore::PrettyPrint{false});
 }
