@@ -142,7 +142,10 @@ def select_cpp_rev(compiler, rev):
 			if default_rev > max_num:
 				return rev['max']
 
-def get_compiler_alternatives(compiler):
+def get_compiler_alternatives(compiler, always_use_default):
+	if always_use_default:
+		return [compiler]
+
 	ret = []
 	for path in os.environ['PATH'].split(':'):
 		try:
@@ -178,7 +181,7 @@ def select_compiler_and_stdrev(compilers, stdrev):
 
 def configure(cfg):
 	if 'std_revision' in cfg:
-		compiler_alternatives = get_compiler_alternatives(default_compiler)
+		compiler_alternatives = get_compiler_alternatives(default_compiler, cfg['always_use_default_compiler'] if 'always_use_default_compiler' in cfg else False)
 		sel = select_compiler_and_stdrev(compiler_alternatives, cfg['std_revision'])
 		cfg['backend'] = sel[0]
 		if sel[1] != '':

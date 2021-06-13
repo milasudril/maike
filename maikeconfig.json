@@ -30,7 +30,8 @@
 						],
 						"std_revision": {
 							"min": "c++17"
-						}
+						},
+						"always_use_default_compiler": 1
 					},
 					"recipe": "recipes/cxx_compiler.py"
 				},
@@ -54,7 +55,8 @@
 						],
 						"std_revision": {
 							"min": "c++17"
-						}
+						},
+						"always_use_default_compiler": 1
 					},
 					"recipe": "recipes/cxx_compiler.py"
 				},
