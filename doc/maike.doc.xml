@@ -25,7 +25,7 @@
 	</main>
 	<appendix>
 		<chapter title="Command line options">
-			<include src="./cmdlineopts.xml" maike-origin="generated"/>
+			<include src="./cmdlineopts.xml" />
 		</chapter>
 		<chapter title="Recipe commands">
 		</chapter>
