@@ -24,6 +24,10 @@ Maike::SourceFileInfoLoaders::Config::Config()
 	                           SourceFileInfoLoaders::Loader{Generic::SourceFileLoader{}}});
 	m_loaders.insert(
 	   std::pair{std::string{"lib"}, SourceFileInfoLoaders::Loader{Lib::SourceFileLoader{}}});
+
+	auto i = m_loaders.insert(
+	   std::pair{std::string{"identity"}, SourceFileInfoLoaders::Loader{Generic::SourceFileLoader{}}});
+	i.first->second.compiler(Db::Compiler{"copy_file.py", false});
 }
 
 namespace
