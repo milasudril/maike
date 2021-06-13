@@ -99,7 +99,8 @@
 				".py": "extension",
 				".test.cpp": "cxx_test",
 				".vcslog.maikerule": "vcslog",
-				".svg": "identity"
+				".svg": "identity",
+				".css": "identity"
 			},
 			"input_filter": [
 				"^\\.",
