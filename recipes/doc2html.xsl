@@ -102,10 +102,10 @@
 <xsl:template match="include">
 	<xsl:choose>
 		<xsl:when test="count(ancestor::appendix) > 0">
-			<xsl:apply-templates select="document(concat($target_dir, '/', $src_dirname, '/', @src))/content/*" mode="appendix"/>
+			<xsl:apply-templates select="document(concat($current_dir, '/', @src))/content/*" mode="appendix"/>
 		</xsl:when>
 		<xsl:otherwise>
-			<xsl:apply-templates select="document(concat($target_dir, '/', $src_dirname, '/', @src))/content/*"/>
+			<xsl:apply-templates select="document(concat($current_dir, '/', @src))/content/*"/>
 		</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>

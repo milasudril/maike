@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+#@ {"dependencies":[{"ref":"./doc2html.xsl","origin":"project"}]}
 
 import sys
 import subprocess
@@ -11,11 +12,16 @@ def compile(args):
 	target_dir = args['build_info']['target_dir']
 	targets = args['targets']
 	source_file = args['source_file']
-#	for dep in args['dependencies']:
-#		if 'rel' in dep and dep['rel'] == 'resource':
-#			print(dep)
-#	print('%s %s'%(source_file, targets[0]))
-	return 0
+	current_dir =  target_dir + '/' + os.path.relpath(os.path.dirname(source_file), args['build_info']['source_dir'])
+	with open(os.path.dirname(__file__) + '/doc2html.xsl') as f:
+		cmd = ['xsltproc', '-o', targets[0], '--nonet', '--stringparam', 'current_dir', current_dir, '-', source_file]
+		proc = subprocess.Popen(cmd, stdin=f, stderr=subprocess.PIPE)
+		outs, errs = proc.communicate()
+		if errs != b'':
+			print(errs, file=sys.stderr)
+			return 1
+		return proc.returncode
+	return 1
 
 def get_tags(args):
 	if args['source_file'] == __file__:
