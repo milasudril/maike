@@ -68,6 +68,13 @@
 				},
 				"loader": "extension"
 			},
+			"identity": {
+				"loader":"generic",
+				"compiler":{
+					"recipe":"recipes/copy_file.py",
+					"config":{}
+				}
+			},
 			"extension": {
 				"compiler": {
 					"config": {},
@@ -91,7 +98,8 @@
 				".hpp": "cxx",
 				".py": "extension",
 				".test.cpp": "cxx_test",
-				".vcslog.maikerule": "vcslog"
+				".vcslog.maikerule": "vcslog",
+				".svg": "identity"
 			},
 			"input_filter": [
 				"^\\.",

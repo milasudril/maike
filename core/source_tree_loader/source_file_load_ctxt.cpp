@@ -187,7 +187,7 @@ Maike::SourceTreeLoader::loadSourceFile(SourceFileLoadContext const& load_ctxt,
 	auto const& src_path = load_ctxt.sourcePath();
 
 	Io::InputFile input{src_path};
-	loader.filterInput(Io::Reader{input},
+	loader.filterInput(Io::Reader{input, src_path},
 	                   SourceFileInfoLoaders::SourceOutStream{src_fifo},
 	                   SourceFileInfoLoaders::TagsOutStream{tags_fifo});
 	tags_fifo.stop();
