@@ -68,7 +68,11 @@
 					"recipe": "recipes/doc2html.py",
 					"use_get_tags": 1
 				},
-				"loader": "extension"
+				"config": {
+					"filename_ext_replacement_mode":"replace",
+					"target_filename_ext":".html"
+				},
+				"loader": "generic"
 			},
 			"identity": {
 				"loader":"generic",

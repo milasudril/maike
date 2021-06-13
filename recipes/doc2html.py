@@ -6,7 +6,6 @@ import subprocess
 import json
 import xml.etree.ElementTree as ET
 import os
-from pathlib import Path
 
 def compile(args):
 	target_dir = args['build_info']['target_dir']
@@ -43,13 +42,8 @@ def get_tags(args):
 			dep['rel'] = 'resource'
 			deps.append(dep)
 
-	target = dict()
-	p = Path(os.path.basename(args['source_file']))
-	extensions = ''.join(p.suffixes)
-	target['name'] = str(p).replace(extensions, '.html')
 	tags = dict()
 	tags['dependencies'] = deps
-	tags['target'] = target
 	sys.stdout.write(json.dumps(tags))
 	return 0
 
