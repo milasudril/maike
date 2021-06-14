@@ -179,7 +179,7 @@ Maike::Db::SourceFileInfo
 Maike::SourceTreeLoader::loadSourceFile(SourceFileLoadContext const& load_ctxt,
                                         std::vector<Db::Dependency>&& builtin_deps,
                                         SourceFileInfoLoaders::Loader const& loader,
-                                        CommandDictionary const&)
+                                        CommandDictionary const& commands)
 {
 	Io::Fifo<std::byte> src_fifo;
 	Io::Fifo<std::byte> tags_fifo;
@@ -206,8 +206,11 @@ Maike::SourceTreeLoader::loadSourceFile(SourceFileLoadContext const& load_ctxt,
 	std::copy(std::begin(use_deps), std::end(use_deps), std::back_inserter(builtin_deps));
 
 	auto compiler = tags.getIf<Db::Compiler>("compiler");
-	// TODO: If compiler is valid, it should be looked up in command dictionary
-	//       and configured
+	if(compiler)
+	{
+		compiler->resolveRecipe(commands);
+	}
+
 	[&targets, &builtin_deps, &child_target_use_deps](
 	   SourceTreeLoader::SourceFileLoadContext const& load_ctxt,
 	   Db::Compiler const& compiler,
