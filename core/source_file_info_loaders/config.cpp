@@ -65,7 +65,7 @@ Maike::SourceFileInfoLoaders::Config::Config(KeyValueStore::CompoundRefConst ite
 		else if(loader == std::string_view{"maikerule"})
 		{
 			m_loaders.insert_or_assign(
-			   std::end(m_loaders), item.first, Loader{App::SourceFileLoader{}, std::move(compiler)});
+			   std::end(m_loaders), item.first, Loader{Maikerule::SourceFileLoader{}, std::move(compiler)});
 		}
 		else if(loader == std::string_view{"generic"})
 		{

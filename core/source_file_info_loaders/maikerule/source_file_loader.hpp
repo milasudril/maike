@@ -51,6 +51,11 @@ namespace Maikerule
 	{
 		return false;
 	}
+
+	inline auto toJson(SourceFileLoader const&)
+	{
+		return Maike::KeyValueStore::Compound{}.takeHandle();
+	}
 }
 
 #endif
