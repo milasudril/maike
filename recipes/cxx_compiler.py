@@ -86,6 +86,7 @@ def compile(build_args):
 		if not 'link' in actions:
 			raise('%: error: Running requires target to be linked'%(build_args['targets'][0]))
 		print('%s: Running %s'%(build_args['source_file'], build_args['targets'][0]))
+		sys.stdout.flush()
 		result = subprocess.run([build_args['targets'][0]])
 
 	if 'sanitize' in actions:

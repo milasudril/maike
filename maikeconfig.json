@@ -74,6 +74,18 @@
 				},
 				"loader": "generic"
 			},
+			"md2htmlpart": {
+				"compiler": {
+					"config": {},
+					"recipe": "recipes/md2htmlpart.py",
+					"use_get_tags": 1
+				},
+				"config": {
+					"filename_ext_replacement_mode":"replace",
+					"target_filename_ext":".xml"
+				},
+				"loader": "generic"
+			},
 			"identity": {
 				"loader":"generic",
 				"compiler":{
