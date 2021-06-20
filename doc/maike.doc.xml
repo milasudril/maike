@@ -12,72 +12,72 @@
 		<tableofcontents/>
 	</prelims>
 	<main>
-		<chapter title="Introduction">
-			<section title="Changes compared to version 1.0"/>
-			<section title="Maike compared to other build systems"/>
-			<section title="Limitations" />
+		<chapter title="Introduction" id="Introduction">
+			<section title="Changes compared to version 1.0" id="changes_v1_v2"/>
+			<section title="Maike compared to other build systems" id="comparison"/>
+			<section title="Limitations" id="limitations"/>
 		</chapter>
-		<chapter title="Installation procerdure">
+		<chapter title="Installation procerdure" id="Installation">
 		</chapter>
-		<chapter title="Tagging source files">
+		<chapter title="Tagging source files" id="tagging">
 		</chapter>
-		<chapter title="Using extensions">
+		<chapter title="Using extensions" id="extensions">
 		</chapter>
 	</main>
 	<appendix>
-		<chapter title="Command line options">
+		<chapter title="Command line options" id="cmdlineopts">
 			<include src="./cmdlineopts.xml" />
 		</chapter>
-		<chapter title="Default configuration">
+		<chapter title="Default configuration" id="defaultcfg">
 			<include src="./configdefault.xml" />
 		</chapter>
-		<chapter title="Recipe commands">
+		<chapter title="Recipe commands" id="commands">
 		</chapter>
 		<chapter title="Compilation log format">
 		</chapter>
 		<chapter title="Schematics" id="schematics">
-			<section title="Components">
+			<section title="Components" id="components">
 				<img src="./components.svg" />
 			</section>
 
-			<section title="Processing algorithms">
+			<section title="Processing algorithms" id="algo">
 				<img src="./pipeline.svg" />
 
-				<subsection title="Initialize">
+				<subsection title="Initialize" id="init">
 					<img src="./initialize.svg" />
-					<subsubsection title="Resolve recipes">
+					<subsubsection title="Resolve recipes" id="resolve_recipes">
 						<img src="./resolve_recipes.svg" />
 					</subsubsection>
 				</subsection>
 
-				<subsection title="Load source tree">
+				<subsection title="Load source tree" id="load_src_tree">
 					<img src="./load_source_tree.svg" />
 
-					<subsubsection title="Source tree loader">
+					<subsubsection title="Source tree loader" id="src_tree_loader">
 						<img src="./source_tree_loader.svg" />
 
-						<paragraph title="Use entry">
+						<paragraph title="Use entry" id="use_entry">
 							<p>This is some text, lol</p>
 							<p><img src="./use_entry.svg" /></p>
 						</paragraph>
 					</subsubsection>
 
-					<subsubsection title="Make dependency graph">
+					<subsubsection title="Make dependency graph" id="load_dep_graph">
 						<img src="./make_dep_graph.svg" />
 					</subsubsection>
 				</subsection>
 
-				<subsection title="Compile project">
+				<subsection title="Compile project" id="compile">
 					<img src="./compile.svg" />
 
-					<subsubsection title="Create task list">
+					<subsubsection title="Create task list" id="create_task_list">
 						<img src="./create_task_list.svg" />
-						<paragraph title="Create task">
+						<paragraph title="Create task"  id="create_task">
 							<p><img src="./create_task.svg"/></p>
 						</paragraph>
 					</subsubsection>
 
-					<subsection title="Process task list">
+					<subsection title="Process task list" id="process_task_list">
 						<img src="./process_task_list.svg" />
 					</subsection>
 				</subsection>
