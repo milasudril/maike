@@ -1,9 +1,7 @@
-img{max-width:100%}
-
+/*fonts
+*/
 body{font-family:"Andika", "Corbel", sans-serif;}
-
-* {box-sizing: border-box;}
-
+pre,code{font-family: "Cascadia Code", "Inconsolata"}
 sub-title{display:block;text-align:center}
 
 /*
@@ -79,3 +77,10 @@ section.subsubsection_appendix>h1:before
 section.paragraph_appendix{counter-increment: paragraph_appendix}
 
 nav>ol.appendix{list-style: upper-alpha}
+
+/**
+boxes
+*/
+* {box-sizing: border-box;}
+img,pre.sourceCode{max-width:calc(100% - 200px);margin-left:100px; margin-right:"100px"}
+pre.sourceCode{border:1px solid; border-radius:12.5px; padding:12.5px}
