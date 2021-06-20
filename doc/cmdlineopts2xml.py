@@ -4,7 +4,8 @@
 #@	 "target": {"name":"cmdlineopts.xml"}
 #@	,"dependencies":
 #@		[
-#@		{"ref":"./cmdlineopts.md"}
+#@		 {"ref":"./cmdlineopts.md"}
+#@		,{"ref":"recipes/md2htmlpart.py", "origin":"project"}
 #@		]
 #@	}
 
@@ -14,32 +15,16 @@ import os
 import subprocess
 import xml.etree.ElementTree as ET
 
-def find_elements(node, element, result):
-	for item in node.iter():
-		if item.tag == element:
-			result.append(item)
-	return result
+sys.path.insert(0, 'recipes')
+
+import md2htmlpart
 
 def compile(args):
 	target_dir = args['build_info']['target_dir']
 	src_dir = args['build_info']['source_dir']
 	targets = args['targets']
 	src_file = target_dir + '/' + os.path.relpath(os.path.dirname(args['source_file']), src_dir) + '/cmdlineopts.md'
-	pandoc_res = subprocess.run(['pandoc', '-f', 'markdown', '-t', 'html', '--section-divs', src_file], text=True, stdout=subprocess.PIPE)
-
-	doc = '<content>' + pandoc_res.stdout + '</content>'
-
-	root = ET.fromstring(doc)
-	for section in find_elements(root, 'section', []):
-		for elem in section.findall('./*'):
-			if elem.tag.startswith('h'):
-				section.attrib['title'] = elem.text
-				section.attrib.pop('class', None)
-				section.remove(elem)
-				break
-
-	ET.ElementTree(root).write(targets[0])
-	return 0
+	return md2htmlpart.convert(src_file, targets[0])
 
 if __name__ == '__main__':
 	if sys.argv[1] == 'compile':
