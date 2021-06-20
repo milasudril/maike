@@ -14,9 +14,7 @@ def find_elements(node, element, result):
 			result.append(item)
 	return result
 
-def compile(args):
-	targets = args['targets']
-	src_file = args['source_file']
+def convert(src_file, target):
 	pandoc_res = subprocess.run(['pandoc', '-f', 'markdown', '-t', 'html', '--section-divs', src_file], text=True, stdout=subprocess.PIPE)
 
 	doc = '<content>' + pandoc_res.stdout + '</content>'
@@ -30,8 +28,13 @@ def compile(args):
 				section.remove(elem)
 				break
 
-	ET.ElementTree(root).write(targets[0])
+	ET.ElementTree(root).write(target)
 	return 0
+
+def compile(args):
+	targets = args['targets']
+	src_file = args['source_file']
+	return convert(src_file, targets[0])
 
 if __name__ == '__main__':
 	if sys.argv[1] == 'compile':
