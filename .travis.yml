@@ -5,11 +5,9 @@ before_install:
   - sudo apt-get update
   - sudo apt-get upgrade -yy
   - sudo apt-get dist-upgrade -yy
-  - sudo apt-get install -y python3 make g++ libjansson-dev python3-pygit2 pandoc xsltproc
+  - sudo apt-get install -y python3 make g++ libjansson-dev python3-pygit2 pandoc xsltproc python3-libsass
 language: minimal
 script:
   - |
     integration_test/main.sh
 
-# TODO   sudo ./install /usr/local
-# TODO   make bootstrap
