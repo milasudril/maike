@@ -12,16 +12,12 @@
 import sys
 import json
 import os
-import subprocess
-import xml.etree.ElementTree as ET
-
-sys.path.insert(0, 'recipes')
-
-import md2htmlpart
 
 def compile(args):
-	target_dir = args['build_info']['target_dir']
 	src_dir = args['build_info']['source_dir']
+	sys.path.insert(0, src_dir + '/recipes')
+	import md2htmlpart
+	target_dir = args['build_info']['target_dir']
 	targets = args['targets']
 	src_file = target_dir + '/' + os.path.relpath(os.path.dirname(args['source_file']), src_dir) + '/cmdlineopts.md'
 	return md2htmlpart.convert(src_file, targets[0])
