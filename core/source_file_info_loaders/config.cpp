@@ -16,16 +16,22 @@ Maike::SourceFileInfoLoaders::Config::Config()
 {
 	m_loaders.insert(
 	   std::pair{std::string{"app"}, SourceFileInfoLoaders::Loader{App::SourceFileLoader{}}});
+
 	m_loaders.insert(
 	   std::pair{std::string{"cxx"}, SourceFileInfoLoaders::Loader{Cxx::SourceFileLoader{}}});
+
+	auto i = m_loaders.insert(
+	   std::pair{std::string{"cxx_test"}, SourceFileInfoLoaders::Loader{Cxx::SourceFileLoader{}}});
+	auto cfg = Cxx::SourceFileLoader::defaultCompiler().config();
+	cfg.set("actions", KeyValueStore::Array{}.append("link").append("run"));
+	i.first->second.compiler(Cxx::SourceFileLoader::defaultCompiler().config(std::move(cfg)));
+
 	m_loaders.insert(std::pair{std::string{"extension"},
 	                           SourceFileInfoLoaders::Loader{Extension::SourceFileLoader{}}});
-	m_loaders.insert(std::pair{std::string{"generic_example"},
-	                           SourceFileInfoLoaders::Loader{Generic::SourceFileLoader{}}});
 	m_loaders.insert(
 	   std::pair{std::string{"lib"}, SourceFileInfoLoaders::Loader{Lib::SourceFileLoader{}}});
 
-	auto i = m_loaders.insert(
+	i = m_loaders.insert(
 	   std::pair{std::string{"identity"}, SourceFileInfoLoaders::Loader{Generic::SourceFileLoader{}}});
 	i.first->second.compiler(Db::Compiler{"copy_file.py", false});
 }

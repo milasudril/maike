@@ -56,6 +56,12 @@ namespace Maike::Db
 			return m_config;
 		}
 
+		Compiler&& config(KeyValueStore::Compound&& cfg) &&
+		{
+			m_config = std::move(cfg);
+			return std::move(*this);
+		}
+
 		std::optional<SourceFileOrigin> origin() const
 		{
 			return m_origin;
