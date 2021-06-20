@@ -58,17 +58,17 @@
 </xsl:template>
 
 <xsl:template match="subsection" mode="toc">
-	<li><xsl:value-of select="@title" /></li>
+	<li><a><xsl:attribute name="href">#<xsl:value-of select="@id" /></xsl:attribute><xsl:value-of select="@title" /></a></li>
 </xsl:template>
 
 <xsl:template match="section" mode="toc">
-	<li><xsl:value-of select="@title" />
+	<li><a><xsl:attribute name="href">#<xsl:value-of select="@id" /></xsl:attribute><xsl:value-of select="@title" /></a>
 	<ol><xsl:apply-templates select="subsection" mode="toc"/></ol>
 	</li>
 </xsl:template>
 
 <xsl:template match="chapter" mode="toc">
-	<li><xsl:value-of select="@title" />
+	<li><a><xsl:attribute name="href">#<xsl:value-of select="@id" /></xsl:attribute><xsl:value-of select="@title" /></a>
 	<ol><xsl:apply-templates select="section" mode="toc"/></ol>
 	</li>
 </xsl:template>
