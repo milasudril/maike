@@ -1,10 +1,24 @@
-/*fonts
+/** Colors
+ */
+$color-primary-0: #A4CE82;
+$color-secondary-1-0: #649F85;
+$color-secondary-2-0: #D1DF8D;
+$color-complement-0: #CF8299;
+
+$header-color: $color-secondary-1-0;
+$box-color: $color-secondary-2-0;
+$link-color: $color-complement-0;
+
+h1{color: $header-color}
+a{color: $link-color}
+
+/**fonts
 */
 body{font-family:"Andika", "Corbel", sans-serif;}
 pre,code{font-family: "Cascadia Code", "Inconsolata"}
 sub-title{display:block;text-align:center}
 
-/*
+/**
 * Sizes
 */
 body >h1{font-size:30pt;text-align:center}
@@ -20,7 +34,7 @@ p,li,code,td,div{font-size:11pt;margin-top:0pt;margin-bottom:0pt}
 
 h1+p,h2+p,h3+p,h4+p,h5+p,p:first-of-type,li{text-indent:0pt}
 
-/*
+/**
 * Counters
 */
 section.chapter{counter-increment: chapter}
@@ -79,8 +93,8 @@ section.paragraph_appendix{counter-increment: paragraph_appendix}
 nav>ol.appendix{list-style: upper-alpha}
 
 /**
-boxes
+* boxes
 */
 * {box-sizing: border-box;}
 img,pre.sourceCode{max-width:calc(100% - 200px);margin-left:100px; margin-right:"100px"}
-pre.sourceCode{border:1px solid; border-radius:12.5px; padding:12.5px}
+pre.sourceCode{border:1px solid; border-radius:12.5px; padding:12.5px; background-color: $box-color}

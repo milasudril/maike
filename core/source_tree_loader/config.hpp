@@ -17,10 +17,11 @@ namespace Maike::SourceTreeLoader
 		Config():
 		   m_file_info_loaders{{".hpp", "cxx"},
 		                       {".cpp", "cxx"},
-							   {".test.cpp", "cxx_test"},
+		                       {".test.cpp", "cxx_test"},
 		                       {".app.maikerule", "app"},
 		                       {".py", "extension"},
-		                       {".lib.maikerule", "lib"}},
+		                       {".lib.maikerule", "lib"},
+		                       {".sass", "sass2css"}},
 		   m_recursive{false}
 		{
 		}

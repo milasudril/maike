@@ -206,10 +206,7 @@ Maike::SourceTreeLoader::loadSourceFile(SourceFileLoadContext const& load_ctxt,
 	std::copy(std::begin(use_deps), std::end(use_deps), std::back_inserter(builtin_deps));
 
 	auto compiler = tags.getIf<Db::Compiler>("compiler");
-	if(compiler)
-	{
-		compiler->resolveRecipe(commands);
-	}
+	if(compiler) { compiler->resolveRecipe(commands); }
 
 	[&targets, &builtin_deps, &child_target_use_deps](
 	   SourceTreeLoader::SourceFileLoadContext const& load_ctxt,

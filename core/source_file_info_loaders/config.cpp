@@ -34,6 +34,11 @@ Maike::SourceFileInfoLoaders::Config::Config()
 	i = m_loaders.insert(
 	   std::pair{std::string{"identity"}, SourceFileInfoLoaders::Loader{Generic::SourceFileLoader{}}});
 	i.first->second.compiler(Db::Compiler{"copy_file.py", false});
+
+	i = m_loaders.insert(std::pair{std::string{"sass2css"},
+	                               SourceFileInfoLoaders::Loader{Generic::SourceFileLoader{
+	                                  ".css", Generic::FilenameExtReplacementMode::Replace}}});
+	i.first->second.compiler(Db::Compiler{"sass2css.py", false});
 }
 
 namespace

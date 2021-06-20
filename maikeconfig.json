@@ -19,6 +19,7 @@
 			"cxx": {
 				"compiler": {
 					"config": {
+						"always_use_default_compiler": 1,
 						"cflags": [
 							"-g",
 							"-Wall",
@@ -30,8 +31,7 @@
 						],
 						"std_revision": {
 							"min": "c++17"
-						},
-						"always_use_default_compiler": 1
+						}
 					},
 					"recipe": "recipes/cxx_compiler.py"
 				},
@@ -44,6 +44,7 @@
 							"link",
 							"run"
 						],
+						"always_use_default_compiler": 1,
 						"cflags": [
 							"-g",
 							"-Wall",
@@ -55,8 +56,7 @@
 						],
 						"std_revision": {
 							"min": "c++17"
-						},
-						"always_use_default_compiler": 1
+						}
 					},
 					"recipe": "recipes/cxx_compiler.py"
 				},
@@ -69,8 +69,22 @@
 					"use_get_tags": 1
 				},
 				"config": {
-					"filename_ext_replacement_mode":"replace",
-					"target_filename_ext":".html"
+					"filename_ext_replacement_mode": "replace",
+					"target_filename_ext": ".html"
+				},
+				"loader": "generic"
+			},
+			"extension": {
+				"compiler": {
+					"config": {},
+					"recipe": ""
+				},
+				"loader": "extension"
+			},
+			"identity": {
+				"compiler": {
+					"config": {},
+					"recipe": "recipes/copy_file.py"
 				},
 				"loader": "generic"
 			},
@@ -81,24 +95,21 @@
 					"use_get_tags": 1
 				},
 				"config": {
-					"filename_ext_replacement_mode":"replace",
-					"target_filename_ext":".xml"
+					"filename_ext_replacement_mode": "replace",
+					"target_filename_ext": ".xml"
 				},
 				"loader": "generic"
 			},
-			"identity": {
-				"loader":"generic",
-				"compiler":{
-					"recipe":"recipes/copy_file.py",
-					"config":{}
-				}
-			},
-			"extension": {
+			"sass2css": {
 				"compiler": {
 					"config": {},
-					"recipe": ""
+					"recipe": "recipes/sass2css.py"
 				},
-				"loader": "extension"
+				"config": {
+					"filename_ext_replacement_mode": "replace",
+					"target_filename_ext": ".css"
+				},
+				"loader": "generic"
 			},
 			"vcslog": {
 				"compiler": {
@@ -112,13 +123,14 @@
 			"file_info_loaders": {
 				".app.maikerule": "app",
 				".cpp": "cxx",
+				".css": "identity",
 				".doc.xml": "doc2html",
 				".hpp": "cxx",
 				".py": "extension",
-				".test.cpp": "cxx_test",
-				".vcslog.maikerule": "vcslog",
+				".sass": "sass2css",
 				".svg": "identity",
-				".css": "identity"
+				".test.cpp": "cxx_test",
+				".vcslog.maikerule": "vcslog"
 			},
 			"input_filter": [
 				"^\\.",
