@@ -27,6 +27,9 @@
 		<chapter title="Command line options">
 			<include src="./cmdlineopts.xml" />
 		</chapter>
+		<chapter title="Default configuration">
+			<include src="./configdefault.xml" />
+		</chapter>
 		<chapter title="Recipe commands">
 		</chapter>
 		<chapter title="Schematics" id="schematics">

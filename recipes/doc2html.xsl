@@ -12,6 +12,12 @@
 	</xsl:copy>
 </xsl:template>
 
+<xsl:template match="@*|node()" mode="appendix">
+	<xsl:copy>
+		<xsl:apply-templates select="@*|node()" mode="appendix"/>
+	</xsl:copy>
+</xsl:template>
+
 <xsl:template match="figure/caption">
 	<figcaption>
 		<xsl:apply-templates select="@*|node()" />

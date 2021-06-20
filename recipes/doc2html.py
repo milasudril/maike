@@ -17,8 +17,8 @@ def compile(args):
 		proc = subprocess.Popen(cmd, stdin=f, stderr=subprocess.PIPE)
 		outs, errs = proc.communicate()
 		if errs != b'':
-			print(errs, file=sys.stderr)
-			return 1
+			print(errs.decode('utf-8'), file=sys.stderr)
+
 		return proc.returncode
 	return 1
 
