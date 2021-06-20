@@ -6,11 +6,12 @@ $color-secondary-2-0: #D1DF8D;
 $color-complement-0: #CF8299;
 
 $header-color: $color-secondary-1-0;
-$box-color: $color-secondary-2-0;
+$box-bgcolor: lighten($color-primary-0, 16%);
+$box-fgcolor: darken($color-secondary-2-0, 40%);
 $link-color: $color-complement-0;
 
 h1{color: $header-color}
-a{color: $link-color}
+a[href]{color: $link-color}
 
 /**fonts
 */
@@ -97,4 +98,4 @@ nav>ol.appendix{list-style: upper-alpha}
 */
 * {box-sizing: border-box;}
 img,pre.sourceCode{max-width:calc(100% - 200px);margin-left:100px; margin-right:"100px"}
-pre.sourceCode{border:1px solid; border-radius:12.5px; padding:12.5px; background-color: $box-color}
+pre.sourceCode{border:1px solid; border-radius:12.5px; padding:12.5px; background-color: $box-bgcolor;color:$box-fgcolor}
