@@ -17,10 +17,27 @@
 
 			<p>Maike guarantees that your project does not have any file-level cyclic dependencies. In case a cyclic dependency is detected, the build job will fail. Also, a broken dependency graph will result in a build error.</p>
 
-			<section title="Limitations" id="limitations"><p>It is not possible to have target files that defines new targets. This limitation comes from the fact that Maike separates the scanning phase from the compilation phase, see <ref item="algo" />. However, this choice also guarantees that everything is correctly setup before the compilation process starts.</p>
+
+			<section title="Language support" id="lang_support">
+				<p>The main focus of Maike is to support C and C++, but it is also possible to use with other languages. For C and C++, there is a build-in quick-and-dirty C preprocessor parser that extracts include file references. It is also possible to write extensions that returns source file information on <code>stdout</code>. For simple conversions (i.e converting between image formats), it is possible to define a mapping between source filename extension, and target filename extension, together with a recipe that should be used for this particular conversion.</p>
 			</section>
-			<section title="Changes compared to version 1.0" id="changes_v1_v2"/>
-			<section title="Maike compared to other build systems" id="comparison"/>
+
+			<section title="Host system requirements" id="sysreq">
+				<p>Maike is being developed and tested on a GNU/Linux desktop. It is assumed that the operating system supports <q>shebang execution</q>. Also, Python 3 must be available. To compile Maike, a compiler that supports C++17 or later is required. Porting Maike to a POSIX complient system should not be too hard. A native Windows port is probably not possible, since Windows does not support shebang execution.</p>
+
+				<p>Maike benefits from multiple threads. The optimal number of threads depend on the project structure, and I/O capacity compared to CPU performance. It is possible to run maike on a single-threaded machine, but even with only one worker, the multithreaded code is being executed. Thus, this is not ideal.</p>
+			</section>
+
+			<section title="Limitations" id="limitations">
+				<p>It is not possible to have target files that defines new targets. This limitation comes from the fact that Maike separates the scanning phase from the compilation phase, see <ref item="algo" />. However, this choice also guarantees that everything is correctly setup before the compilation process starts.</p>
+
+				<p>Maike has no native support for optional dependencies. If a project is in need for this functionality, it can be emulated with different configuration files and filename extensions. Also, Maike has no support for <q>feature testing</q> like GNU autoconf.</p>
+			</section>
+
+			<section title="Maike compared to other build systems" id="comparison">
+				<p>Maike is both a dependency manager and task dispatcher. In that sense, it combines the functionality of CMake and make. A major difference is that Maike reads all dependency information from source files, instead of separate files like CMake, or GNU Automake.</p>
+			</section>
+
 		</chapter>
 		<chapter title="Installation procedure" id="Installation">
 		</chapter>
@@ -40,6 +57,7 @@
 		</chapter>
 		<chapter title="Compilation log format">
 		</chapter>
+		<chapter title="Porting Maike 1.0 projects to Maike 2.0" id="changes_v1_v2"/>
 		<chapter title="Schematics" id="schematics">
 			<section title="Components" id="components">
 				<img src="./components.svg" />

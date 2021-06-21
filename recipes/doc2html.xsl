@@ -57,6 +57,10 @@
 <xsl:apply-templates />
 </xsl:template>
 
+<xsl:template match="ref">
+<a><xsl:attribute name="href">#<xsl:value-of select="@item"/></xsl:attribute>Hej</a>
+</xsl:template>
+
 <xsl:template match="subsection" mode="toc">
 	<li><a><xsl:attribute name="href">#<xsl:value-of select="@id" /></xsl:attribute><xsl:value-of select="@title" /></a></li>
 </xsl:template>
