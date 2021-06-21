@@ -38,7 +38,7 @@ namespace Maike::CmdLineParser
 
 	constexpr char const* typeDescription(Empty<std::vector<fs::path>>)
 	{
-		return "This should be a comma-separated list of *Path*s. Ie `foo/x,bar/kaka` is an example of a "
+		return "This should be a comma-separated list of *Path*s. I.e. `foo/x,bar/kaka` is an example of a "
 		       "valid value.";
 	}
 

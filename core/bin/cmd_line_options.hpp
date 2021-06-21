@@ -322,7 +322,7 @@ namespace Maike
 
 		static constexpr char const* description()
 		{
-			return "A build id is intendend to uniqely identify a build job. Specifying a build id is "
+			return "A build id is intendend to uniquely identify a build job. Specifying a build id is "
 			       "useful when the job is part of a larger build process, and the build id has been "
 			       "generated in an earlier stage. A hardcoded build id is also useful when debugging code "
 			       "that depends on the current build id.";

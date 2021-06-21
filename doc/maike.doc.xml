@@ -13,11 +13,16 @@
 	</prelims>
 	<main>
 		<chapter title="Introduction" id="Introduction">
+			<p>Maike is a build system based on scanning of source files. To construct the dependency graph, Maike uses embedded JSON data to control the compilation process. This allows for a minimal amount makefile maintanence, since when a new file is added to the project, dependencies form that file will be maintained by the file itself. This is also true for interfaces with a separate implementation file. The interface file may point to the implementation file, which will be used when linking an application that uses the particular interfafce.</p>
+
+			<p>Maike guarantees that your project does not have any file-level cyclic dependencies. In case a cyclic dependency is detected, the build job will fail. Also, a broken dependency graph will result in a build error.</p>
+
+			<section title="Limitations" id="limitations"><p>It is not possible to have target files that defines new targets. This limitation comes from the fact that Maike separates the scanning phase from the compilation phase, see <ref item="algo" />. However, this choice also guarantees that everything is correctly setup before the compilation process starts.</p>
+			</section>
 			<section title="Changes compared to version 1.0" id="changes_v1_v2"/>
 			<section title="Maike compared to other build systems" id="comparison"/>
-			<section title="Limitations" id="limitations"/>
 		</chapter>
-		<chapter title="Installation procerdure" id="Installation">
+		<chapter title="Installation procedure" id="Installation">
 		</chapter>
 		<chapter title="Tagging source files" id="tagging">
 		</chapter>
