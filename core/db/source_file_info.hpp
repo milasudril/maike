@@ -56,6 +56,10 @@ namespace Maike::Db
 		{
 		}
 
+		/**
+		 * useDeps contains all dependencies that has to be fulfilled before this source file
+		 * can be used.
+		 */
 		std::vector<Dependency> const& useDeps() const
 		{
 			return m_use_deps;
@@ -67,6 +71,10 @@ namespace Maike::Db
 			return *this;
 		}
 
+		/**
+		 * buildDeps contains all additional dependencies that has to be fulfilled before any Target
+		 * that uses this file can be compiled
+		 */
 		std::vector<Dependency> const& buildDeps() const
 		{
 			return m_build_deps;
@@ -77,6 +85,22 @@ namespace Maike::Db
 			m_build_deps = std::move(deps);
 			return *this;
 		}
+
+		/**
+		 * childTargetsUseDeps is similar to useDeps, but these dependencies are attached to any
+		 * Target produced from this file. These are typically used when linking an application.
+		 */
+		std::vector<Dependency> const& childTargetsUseDeps() const
+		{
+			return m_child_targets_use_deps;
+		}
+
+		SourceFileInfo& childTargetsUseDeps(std::vector<Dependency>&& deps)
+		{
+			m_child_targets_use_deps = std::move(deps);
+			return *this;
+		}
+
 
 		std::vector<TargetInfo> const& targets() const
 		{
@@ -96,17 +120,6 @@ namespace Maike::Db
 		Compiler const& compilerDefault() const
 		{
 			return *m_compiler_default;
-		}
-
-		std::vector<Dependency> const& childTargetsUseDeps() const
-		{
-			return m_child_targets_use_deps;
-		}
-
-		SourceFileInfo& childTargetsUseDeps(std::vector<Dependency>&& deps)
-		{
-			m_child_targets_use_deps = std::move(deps);
-			return *this;
 		}
 
 		SourceFileOrigin origin() const
