@@ -40,6 +40,28 @@
 
 		</chapter>
 		<chapter title="Installation procedure" id="Installation">
+			<section title="From source" id="from_src">
+				<ol>
+					<li>Download <a href="https://github.com/milasudril/maike/releases/latest/download/maike-src.tar.gz">The latest release</a>
+						<pre class="sourceCode">wget https://github.com/milasudril/maike/releases/latest/download/maike-src.tar.gz</pre>
+					</li>
+					<li>Make sure to install all build dependencies. See <ref item="build_deps" /> for more information.</li>
+					<li>Unpack the tarball downloaded in (1)
+						<pre class="sourceCode">tar -xf maike-src.tar.gz</pre>
+					</li>
+					<li>Cd into <code>maike-src</code>
+						<pre class="sourceCode">cd maike-src</pre>
+					</li>
+					<li>Run <code>make</code>
+						<pre class="sourceCode">make</pre>
+					</li>
+					<li><p>Run <code>make</code> with <code>install</code> as target</p>
+						<pre class="sourceCode">sudo make install</pre>
+						<p>If you do not want to install into <code>/usr</code>, you can set <code>PREFIX</code> to a different directory, i.e.</p>
+						<pre class="sourceCode">PREFIX=~/apps make install</pre>
+					</li>
+				</ol>
+			</section>
 		</chapter>
 		<chapter title="Tagging source files" id="tagging">
 		</chapter>
@@ -55,7 +77,9 @@
 		</chapter>
 		<chapter title="Recipe commands" id="commands">
 		</chapter>
-		<chapter title="Compilation log format">
+		<chapter title="Compilation log format" id="compilation_log">
+		</chapter>
+		<chapter title="Build dependencies" id="build_deps">
 		</chapter>
 		<chapter title="Porting Maike 1.0 projects to Maike 2.0" id="changes_v1_v2"/>
 		<chapter title="Schematics" id="schematics">

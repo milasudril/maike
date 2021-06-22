@@ -6,6 +6,7 @@ import subprocess
 import json
 import xml.etree.ElementTree as ET
 import os
+import re
 
 def compile(args):
 	target_dir = args['build_info']['target_dir']
@@ -22,6 +23,15 @@ def compile(args):
 		return proc.returncode
 	return 1
 
+def make_dep_from_ref(ref):
+	if re.match('^[a-z][a-z]*://', ref):  # detect external resource
+		return None
+	dep = dict()
+	dep['ref'] = ref
+	dep['origin'] = 'generated'
+	dep['rel'] = 'resource'
+	return dep
+
 def get_tags(args):
 	if args['source_file'] == __file__:
 		return 0
@@ -29,18 +39,14 @@ def get_tags(args):
 	deps = []
 	for item in root.iter():
 		if 'src' in item.attrib:
-			dep = dict()
-			dep['ref'] = item.attrib['src']
-			dep['origin'] = 'generated'
-			dep['rel'] = 'resource'
-			deps.append(dep)
+			dep = make_dep_from_ref(item.attrib['src'])
+			if dep != None:
+				deps.append(dep)
 
 		if 'href' in item.attrib:
-			dep = dict()
-			dep['ref'] = item.attrib['href']
-			dep['origin'] = 'generated'
-			dep['rel'] = 'resource'
-			deps.append(dep)
+			dep = make_dep_from_ref(item.attrib['href'])
+			if dep != None:
+				deps.append(dep)
 
 	tags = dict()
 	tags['dependencies'] = deps
