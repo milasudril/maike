@@ -57,6 +57,41 @@
 <xsl:apply-templates />
 </xsl:template>
 
+<xsl:template match="property-list/property">
+	<tr>
+		<td class="propname"><xsl:value-of select="@name"/></td>
+		<td class="proptype"><xsl:apply-templates select="type"/></td>
+		<td class="propdesc"><xsl:apply-templates select="desc"/></td>
+	</tr>
+</xsl:template>
+
+<xsl:template match="property-list">
+<table class="proplist">
+<tr><th>Name</th><th>Type</th><th>Description</th></tr>
+<xsl:apply-templates select="property"/>
+</table>
+</xsl:template>
+
+<xsl:template match="enum/item">
+	<tr>
+		<td class="propname"><xsl:value-of select="@name"/></td>
+		<td class="propdesc"><xsl:apply-templates select="node()"/></td>
+	</tr>
+</xsl:template>
+
+<xsl:template match="enum">
+<table class="enum">
+<tr><th>Value</th><th>Description</th></tr>
+<xsl:apply-templates select="item"/>
+</table>
+</xsl:template>
+
+<xsl:template match="manpage">
+<a><xsl:attribute name="href">https://linux.die.net/man/<xsl:value-of select="@section"/>/<xsl:value-of select="@name"/></xsl:attribute>
+<code><xsl:value-of select="@name"/></code>(<xsl:value-of select="@section"/>)
+</a>
+</xsl:template>
+
 <xsl:key name="item" match="chapter|section|subsection|subsubsection|figure" use="@id"/>
 
 <xsl:template match="ref">
