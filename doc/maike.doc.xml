@@ -86,7 +86,6 @@
 			<include src="./configdefault.xml" />
 		</chapter>
 
-
 		<chapter title="Source file tags" id="srctags">
 			<section title="File properties" id="srctags_root">
 				<p>File properties controls the use of the current source file. In JSON, they are stored in the root object. File properties include</p>
@@ -95,7 +94,7 @@
 					<property name="targets"><type>An array of <ref item="target"/>s</type><desc>Other output files from the compilation command</desc></property>
 					<property name="dependencies"><type>An array of <ref item="deps">Dependencies</ref></type><desc>Dependencies that must be satisfied before the file can be compiled</desc></property>
 					<property name="dependencies_extra"><type>An array of <ref item="deps">Dependencies</ref></type><desc>Dependencies that should be appendend to any <ref item="target"/> that is using this file during compilation. The typical usecase is to refer to object files from include files, so that linking a program will work automatically.</desc></property>
-					<property name="compiler"><type><ref item="Compiler options"/></type></property>
+					<property name="compiler"><type><ref item="compiler_opts"/></type><desc>Compiler configurations specific to this file</desc></property>
 					<property name="rebuild"><type>string</type><desc><p>Determines the policy used to decide whether or not the source file should be recompiled. It may take one of the following values:</p><enum>
 								<item name="always">Always recompile this file</item>
 								<item name="only_if_out_of_date">Only recompile this file if it is not up-to-date</item>
@@ -124,6 +123,15 @@
 								<item name="pkg-config">The resource is a static resource that should be looked up by <manpage name="pkg-config" section="1"/></item>
 								</enum></desc></property>
 					<property name="…"><type><var>recipe specific</var></type><desc>Additional data that may be used by built recipes</desc></property>
+				</property-list>
+			</section>
+
+			<section title="Compiler configuration" id="compiler_opts">
+				<p>Compiler configurations are used to configure a build recipe or compiler. It contains the following properties:</p>
+				<property-list>
+					<property name="recipe"><type>string</type><desc>The recipe file<!--reference to section--> to run when compiling a source file mapped to this compiler configuration</desc></property>
+					<property name="config"><type>object</type><desc>Additional data for use by the recipe file</desc></property>
+					<property name="use_get_tags"><type>int</type><desc>If this value is non-zero, Maike will use the recipe file to extract additional tags from the current source file. This is useful in case a project contains some files which Maike does not know how to extract dependencies from. Since this process involves extra overhead, it is turned off by default.</desc></property>
 				</property-list>
 			</section>
 
