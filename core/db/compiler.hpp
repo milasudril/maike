@@ -39,12 +39,13 @@ namespace Maike::Db
 		   m_use_get_gags{use_get_tags}
 		{
 		}
-
+#if 0
 		explicit Compiler(KeyValueStore::CompoundRefConst config):
 		   m_recipe{config.get<char const*>("recipe")},
 		   m_config{config.get<KeyValueStore::CompoundRefConst>("config")}
 		{
 		}
+#endif
 
 		fs::path const& recipe() const
 		{
