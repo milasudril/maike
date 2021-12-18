@@ -85,17 +85,23 @@
 		<chapter title="Default configuration" id="defaultcfg">
 			<include src="./configdefault.xml" />
 		</chapter>
+
+
 		<chapter title="Source file tags" id="srctags">
 			<section title="File properties" id="srctags_root">
-				<p>File properties controls the use of the current source file. In JSON, they are stored in the root object.</p>
-				<table>
-					<tr><th class="row">target</th>            <td>A <ref item="target"/></td></tr>
-					<tr><th class="row">targets</th>           <td>An array of <ref item="target"/>s</td></tr>
-					<tr><th class="row">dependencies</th>      <td>An array of <ref item="deps">dependencies</ref></td></tr>
-					<tr><th class="row">dependencies_extra</th><td>An array of <ref item="deps">dependencies</ref></td></tr>
-					<tr><th class="row">compiler</th>          <td><ref item="compiler_opts"/></td></tr>
-					<tr><th class="row">rebuild</th>           <td><ref item="rebuild_opts"/></td></tr>
-				</table>
+				<p>File properties controls the use of the current source file. In JSON, they are stored in the root object. File properties include</p>
+				<property-list>
+					<property name="target"><type>A <ref item="target"/></type><desc>First output file from the compilation command</desc></property>
+					<property name="targets"><type>An array of <ref item="target"/>s</type><desc>Other output files from the compilation command</desc></property>
+					<property name="dependencies"><type>An array of <ref item="deps">Dependencies</ref></type><desc>Dependencies that must be satisfied before the file can be compiled</desc></property>
+					<property name="dependencies_extra"><type>An array of <ref item="deps">Dependencies</ref></type><desc>Dependencies that should be appendend to any <ref item="target"/> that is using this file during compilation. The typical usecase is to refer to object files from include files, so that linking a program will work automatically.</desc></property>
+					<property name="compiler"><type><ref item="Compiler options"/></type></property>
+					<property name="rebuild"><type>string</type><desc><p>Determines the policy used to decide whether or not the source file should be recompiled. It may take one of the following values:</p><enum>
+								<item name="always">Always recompile this file</item>
+								<item name="only_if_out_of_date">Only recompile this file if it is not up-to-date</item>
+								</enum>
+								<p>If not present, <code>only_if_out_of_date</code> is used.</p></desc></property>
+				</property-list>
 			</section>
 
 			<section title="Target" id="target">
@@ -103,14 +109,14 @@
 				<property-list>
 					<property name="name"><type>string</type><desc>The name of the output file</desc></property>
 					<property name="dependencies"><type>An array of <ref item="deps">dependencies</ref></type><desc>Dependencies that must be satisfied before this target can be used as a source file. Typically, it refers to external libraries that should be used during linking of a program.</desc></property>
-					<property name="pkgconfig_libs"><type>An array of strings</type><desc>A list of libraries known to <manpage name="pkg-config" section="1"/>, that should be used for linkning.</desc></property>
+					<property name="pkgconfig_libs"><type>An array of strings</type><desc>A list of libraries known to <manpage name="pkg-config" section="1"/>, that should be used for linking.</desc></property>
 				</property-list>
 			</section>
 
 			<section title="Dependency" id="deps">
 				<p>A <code>Dependency</code> describes a relation between a source file or target, and other entities. A dependency has the following properties:</p>
 				<property-list>
-					<property name="ref"><type>string</type><desc>The name referenced resource</desc></property>
+					<property name="ref"><type>string</type><desc>The name referenced resource. To refer to a file in the same directory as current file, the prefix <code>./</code> has to be used. Otherwise, the resource path will be treated as relative to the project directory.</desc></property>
 					<property name="origin"><type>string</type><desc>The expected origin of the resource referred to by <var>ref</var>. It may be set to one of the following values:<enum>
 								<item name="generated">The resource will be generated during compilation of the project</item>
 								<item name="project">The resource is a static resource stored within the project</item>
