@@ -1,5 +1,5 @@
 //@	{
-//@	  "targets":[{"name":"source_file_list.o","type":"object"}]
+//@	  "target":{"name":"source_file_list.o"}
 //@	}
 
 #include "./source_file_list.hpp"

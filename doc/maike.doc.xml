@@ -64,6 +64,16 @@
 			</section>
 		</chapter>
 		<chapter title="Tagging source files" id="tagging">
+			<p>Maike scans for line comments in the form <code><var>comment sequence</var>@</code>. Here <code><var>comment sequence</var></code> is the sequence of characters that starts a comment line in the current language. For C or C++, that would be <code>//</code>. Python and shell scripts would use <code>#</code>. Tags them selfs are written in JSON. Below are two examples. You may find a complete list of the tagging format in <ref item="srctags"/>.</p>
+			<pre class="sourceCode">
+//@ {
+//@ "dependencies_extra":[{"ref":"./source_file_list.o","rel":"implementation"}]
+//@ }</pre>
+<pre class="sourceCode">
+//@ {
+//@ "target":{"name":"source_file_list.o"}
+//@ }</pre>
+<p>Such tags are used to construct the dependency graph, which controls build order and linking. It may happen that you have source files that cannot be easily tagged. For example, you may have some form of binary project files that should be "rendered" into a "consumer" format during the build process. In that case, you may define a static rule in a build configuration file.</p>
 		</chapter>
 		<chapter title="Using extensions" id="extensions">
 		</chapter>
@@ -74,6 +84,29 @@
 		</chapter>
 		<chapter title="Default configuration" id="defaultcfg">
 			<include src="./configdefault.xml" />
+		</chapter>
+		<chapter title="Source file tags" id="srctags">
+			<section title="File properties" id="srctags_root">
+				<p>File properties controls the use of the current source file. In JSON, they are stored in the root object.</p>
+				<table>
+					<tr><th class="row">target</th>            <td>A <ref item="target"/></td></tr>
+					<tr><th class="row">targets</th>           <td>An array of <ref item="target"/>s</td></tr>
+					<tr><th class="row">dependencies</th>      <td>An array of <ref item="deps">dependencies</ref></td></tr>
+					<tr><th class="row">dependencies_extra</th><td>An array of <ref item="deps">dependencies</ref></td></tr>
+					<tr><th class="row">compiler</th>          <td><ref item="compiler_opts"/></td></tr>
+					<tr><th class="row">rebuild</th>           <td><ref item="rebuild_opts"/></td></tr>
+				</table>
+			</section>
+
+			<section title="target" id="target">
+				<p>A <code>target</code> represents one output file of a compilation command. A target has the following properties</p>
+				<table>
+					<tr><th class="row">name</th>          <td>string</td><td>The name of the output file</td></tr>
+					<tr><th class="row">dependencies</th>  <td>An array of <ref item="deps">dependencies</ref></td></tr>
+					<tr><th class="row">pkgconfig_libs</th><td>An array of strings</td></tr>
+				</table>
+			</section>
+
 		</chapter>
 		<chapter title="Recipe commands" id="commands">
 		</chapter>
