@@ -63,8 +63,109 @@
 				</ol>
 			</section>
 		</chapter>
+		<chapter title="Using Maike" id="newproj">
+			<p>Maike has a default configuration that works for one-directory projects. Thus, there is no need to write any Makefiles or configuration files. To start a new project, create a directory for the project somewhere in the file system.</p>
+
+			<pre class ="sourceCode">mkdir hello_world
+cd hello_world
+</pre>
+<p>If you run maike2 now, the output will look something like</p>
+<pre class="cmdoutput">
+./maikeconfig.json: It was not possible to read ./maikeconfig.json
+&lt;scratch&gt;: error: `maikeconfig` does not exist in the current compound.
+# Build job with 16 workers started
+#
+# Start time: 2021-12-19 8:51:59 UTC
+#         Id: 85279aa5d3e0d8bb05c82d7d692def488ae034d10eb00efec39d49fa273d28bc
+# Source dir: .
+# Target dir: __targets
+#
+# Loaded source tree with 3 entries (1 targets) in 0.0001748 seconds  (5.8267000e-05 seconds/entry)
+ 0 | ✓ | . | 113 | 17671
+# Completed 1 tasks in 0.0177497 seconds (1.7749671e-02 seconds/task)
+</pre>
+<p>You may notice that it complains about not being able to load any configuration. This is fine, as long as the default configuration works. In a real project, you will typically have custom built configuration(s). Maike has detected and processed one target. What could that be?</p>
+<pre class="sourceCode">
+ls
+</pre>
+<pre class="cmdoutput">
+__targets
+</pre>
+<p>It has has created a directory, which will contain all generated files. To remove all artifacts, you can simply remove this directory.</p>
+<pre class="sourceCode">
+rm -r __targets
+</pre>
+<section title="Creating a C++ application">
+	<p>Let's add a C++ application to the project. For this, we will add a file called <code>hello_world.cpp</code> to the project directory, that contains our main function.</p>
+	<pre class="sourceCode">
+//@ {"target":{"name":"hello_world.o"}}
+
+#include &lt;cstdio&gt;
+
+int main()
+{
+	puts("Hello, World");
+}
+</pre>
+<p>After saving the file, run maike2 again. The output will now look like</p>
+<pre class="cmdoutput">
+./maikeconfig.json: It was not possible to read ./maikeconfig.json
+&lt;scratch&gt;: error: `maikeconfig` does not exist in the current compound.
+# Build job with 16 workers started
+#
+# Start time: 2021-12-19 9:13:32 UTC
+#         Id: 63d6e7cfc1a2ab5b0c826dcb871e89d516e5db1e471f0ae79da8c4ccb827295c
+# Source dir: .
+# Target dir: __targets
+#
+# Loaded source tree with 7 entries (2 targets) in 0.0003983 seconds  (5.6895857e-05 seconds/entry)
+ 0 | ✓ | . | 239 | 17923
+ 4 | ✓ | hello_world.cpp | 18008 | 66220
+# Completed 2 tasks in 0.0663171 seconds (3.3158562e-02 seconds/task)
+</pre>
+<p>If we now look in the <code>__targets</code> directory, there is an object file:</p>
+<pre class="sourceCode">
+ls __targets
+</pre>
+<pre class="cmdoutput">
+hello_world.o
+</pre>
+<pre class="sourceCode">
+file __targets/hello_world.o
+</pre>
+<pre class="cmdoutput">
+__targets/hello_world.o: ELF 64-bit LSB relocatable, x86-64, version 1 (SYSV), with debug_info, not stripped
+</pre>
+
+<p>To complete the application, we need to link <code>__targets/hello_world.o</code> into an application. For that purpose, add a file called <code>hello_world.app.maikerule</code>, with the following content:</p>
+
+<pre class="sourceCode">
+{
+	"target":{"name":"hello_world"},
+	"dependencies":[{"ref":"./hello_world.o", "rel":"implementation"}]
+}
+</pre>
+
+<p>maike2 now shows a that it has also processed <code>hello_world.app.maikerule</code>, and <code>__targets</code> now contains two files:</p>
+<pre class="sourceCode">
+ls __targets
+</pre>
+<pre class="cmdoutput">
+hello_world  hello_world.o
+</pre>
+<pre class="sourceCode">
+__targets/hello_world
+</pre>
+<pre class="cmdoutput">
+Hello, World
+</pre>
+
+<p>As you might have guessed, adding another <code>.app.maikerule</code> file will create another application. Thus, maike makes it easy to maintain projects which contains multiple applications.</p>
+
+</section>
+		</chapter>
 		<chapter title="Tagging source files" id="tagging">
-			<p>Maike scans for line comments in the form <code><var>comment sequence</var>@</code>. Here <code><var>comment sequence</var></code> is the sequence of characters that starts a comment line in the current language. For C or C++, that would be <code>//</code>. Python and shell scripts would use <code>#</code>. Tags them selfs are written in JSON. Below are two examples. You may find a complete list of the tagging format in <ref item="srctags"/>.</p>
+			<p>Maike scans for line comments in the form <code><var>comment sequence</var>@</code>. Here <code><var>comment sequence</var></code> is the sequence of characters that starts a comment line in the current language. For C or C++, that would be <code>//</code>. Python and shell scripts would use <code>#</code>. Tags themselfs are written in JSON. Below are two examples. You may find a complete description of the tagging format in <ref item="srctags"/>.</p>
 			<pre class="sourceCode">
 //@ {
 //@ "dependencies_extra":[{"ref":"./source_file_list.o","rel":"implementation"}]
@@ -75,7 +176,8 @@
 //@ }</pre>
 <p>Such tags are used to construct the dependency graph, which controls build order and linking. It may happen that you have source files that cannot be easily tagged. For example, you may have some form of binary project files that should be "rendered" into a "consumer" format during the build process. In that case, you may define a static rule in a build configuration file.</p>
 		</chapter>
-		<chapter title="Using extensions" id="extensions">
+		<chapter title="Mapping filename extensions to recipes" id="mappings">
+			<p>Mappings between filename extensions and are specified in the <ref item="defaultcfg">project configuration file</ref> under the <code><ref item="loaderskey"/></code> key.</p>
 		</chapter>
 	</main>
 	<appendix>
@@ -87,7 +189,10 @@
 		</chapter>
 
 		<chapter title="Source file tags" id="srctags">
-			<section title="File properties" id="srctags_root">
+			<p>Source file tagging uses JSON to add metadata to source files. The metadata is stored as <ref item="fileprops"/>.</p>
+		</chapter>
+		<chapter title="Known record types">
+			<section title="File properties" id="fileprops">
 				<p>File properties controls the use of the current source file. In JSON, they are stored in the root object. File properties include</p>
 				<property-list>
 					<property name="target"><type>A <ref item="target"/></type><desc>First output file from the compilation command</desc></property>
