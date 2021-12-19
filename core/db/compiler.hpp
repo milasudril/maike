@@ -20,12 +20,12 @@ namespace Maike::Db
 		Compiler() = default;
 
 		explicit Compiler(fs::path&& recipe, bool use_get_tags):
-		   m_recipe{std::move(recipe)}, m_use_get_gags{use_get_tags}
+		   m_recipe{std::move(recipe)}, m_use_get_tags{use_get_tags}
 		{
 		}
 
 		explicit Compiler(fs::path&& recipe, KeyValueStore::Compound&& config, bool use_get_tags):
-		   m_recipe{std::move(recipe)}, m_config{std::move(config)}, m_use_get_gags{use_get_tags}
+		   m_recipe{std::move(recipe)}, m_config{std::move(config)}, m_use_get_tags{use_get_tags}
 		{
 		}
 
@@ -36,7 +36,7 @@ namespace Maike::Db
 		   m_recipe{std::move(recipe)},
 		   m_origin{origin},
 		   m_config{std::move(config)},
-		   m_use_get_gags{use_get_tags}
+		   m_use_get_tags{use_get_tags}
 		{
 		}
 
@@ -79,14 +79,14 @@ namespace Maike::Db
 
 		bool useGetTags() const
 		{
-			return m_use_get_gags;
+			return m_use_get_tags;
 		}
 
 	private:
 		fs::path m_recipe;
 		std::optional<SourceFileOrigin> m_origin;
 		KeyValueStore::Compound m_config;
-		bool m_use_get_gags{false};
+		bool m_use_get_tags{false};
 
 		void configRecipe();
 	};
