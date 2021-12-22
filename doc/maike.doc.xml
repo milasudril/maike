@@ -95,7 +95,7 @@ __targets
 <pre class="sourceCode">
 rm -r __targets
 </pre>
-<section title="Creating a C++ application">
+<section title="Creating a C++ application" id="cxxapp">
 	<p>Let's add a C++ application to the project. For this, we will add a file called <code>hello_world.cpp</code> to the project directory, that contains our main function.</p>
 	<pre class="sourceCode">
 //@ {"target":{"name":"hello_world.o"}}
@@ -159,6 +159,55 @@ __targets/hello_world
 <pre class="cmdoutput">
 Hello, World
 </pre>
+
+<section title="Adding a separately compiled unit" id="cxxunit">
+	<p>Many programs are construct from multiple units, that are linked together by the linker. When using Maike, linking dependencies can be speciefied in the include file, as in the following example.</p>
+
+<pre class="sourceCode">
+//@	{"dependencies_extra":[{"ref": "./foo.o", "rel":"implementation"}]}
+
+#ifndef FOO_HPP
+#define FOO_HPP
+
+void my_function();
+
+#endif
+</pre>
+
+<pre class="sourceCode">
+//@	{"target":{"name": "foo.o"}}
+
+#include "./foo.hpp"
+
+#include &lt;cstdio>&gt;
+
+void my_function()
+{
+	puts("This function lives in another file");
+}
+</pre>
+	
+<p> Then, when an implementation file from another unit includes the include file, the file <code>foo.o</code> will be added in the right place (based on topological ordering), to the linker command. Also dependencies from <code>foo.o</code> itself will be added. Thus, if there are no missing dependencies, Maike will always generate a complete linking command.</p>
+
+<p>To test it out, modify <code>hello_world.cpp</code> so it uses foo:</p>
+
+<pre class="sourceCode">
+//@ {"target":{"name":"hello_world.o"}}
+
+#include "./foo.hpp"
+
+#include &lt;cstdio&gt;
+
+int main()
+{
+	my_function();
+	puts("Hello, World");
+}
+</pre>
+
+<p>When the project is recompiled, <code>foo.o</code> will be linked together with <code>hello.o</code>, when building  <code>hello_world</code></p>
+
+</section>
 
 <p>As you might have guessed, adding another <code>.app.maikerule</code> file will create another application. Thus, maike makes it easy to maintain projects which contains multiple applications.</p>
 
