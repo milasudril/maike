@@ -132,6 +132,10 @@
 				".test.cpp": "cxx_test",
 				".vcslog.maikerule": "vcslog"
 			},
+			"fullpath_input_filter": [
+				"^\\.",
+				"^__"
+			],
 			"input_filter": [
 				"^\\.",
 				"^__",

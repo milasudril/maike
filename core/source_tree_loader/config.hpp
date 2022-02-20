@@ -33,6 +33,11 @@ namespace Maike::SourceTreeLoader
 			return m_filter;
 		}
 
+		InputFilter const& dirFilter() const
+		{
+			return m_dir_filter;
+		}
+
 		Config& inputFilter(InputFilter&& filter)
 		{
 			m_filter = filter;
@@ -63,6 +68,7 @@ namespace Maike::SourceTreeLoader
 
 	private:
 		InputFilter m_filter;
+		InputFilter m_dir_filter;
 		std::map<std::string, std::string> m_file_info_loaders;
 		bool m_recursive;
 	};

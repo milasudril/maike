@@ -9,6 +9,7 @@
 
 Maike::SourceTreeLoader::Config::Config(KeyValueStore::CompoundRefConst obj):
    m_filter{obj.get<KeyValueStore::ArrayRefConst>("input_filter")},
+   m_dir_filter{obj.get<KeyValueStore::ArrayRefConst>("fullpath_input_filter")},
    m_recursive{obj.get<json_int_t>("recursive") != 0}
 {
 	auto file_info_loaders = obj.get<KeyValueStore::CompoundRefConst>("file_info_loaders");
@@ -31,6 +32,8 @@ Maike::KeyValueStore::JsonHandle Maike::SourceTreeLoader::toJson(Config const& c
 		ret.set("file_info_loaders", std::move(tmp));
 	}
 
-	ret.set("recursive", cfg.recursive() ? 1 : 0).set("input_filter", cfg.inputFilter());
+	ret.set("recursive", cfg.recursive() ? 1 : 0)
+	   .set("input_filter", cfg.inputFilter())
+	   .set("fullpath_input_filter", cfg.dirFilter());
 	return ret.takeHandle();
 }

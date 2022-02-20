@@ -357,6 +357,7 @@ int main(int argc, char** argv)
 		   workers,
 		   build_info.sourceDir(),
 		   cfg_new.sourceTreeLoader().inputFilter(),
+		   cfg_new.sourceTreeLoader().dirFilter(),
 		   loader_delegator,
 		   Maike::SourceTreeLoader::RecursiveScan{cfg_new.sourceTreeLoader().recursive()},
 		   build_info.targetDir());

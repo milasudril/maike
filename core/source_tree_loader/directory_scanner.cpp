@@ -46,6 +46,8 @@ void Maike::SourceTreeLoader::DirectoryScanner::processPath(
 			if(!m_recursive && is_directory(src_path)) { return; }
 
 			if(r_filter.get().match(src_path.filename().c_str())) { return; }
+
+			if(r_dir_filter.get().match((src_path.lexically_relative(m_root)).c_str())) { return; }
 		}
 
 		auto src_path_normal = src_path.lexically_normal();

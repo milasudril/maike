@@ -7,11 +7,13 @@
 Maike::Db::SourceTree Maike::SourceTreeLoader::load(Sched::ThreadPool& workers,
                                                     fs::path const& src_path,
                                                     InputFilter const& filter,
+                                                    InputFilter const& dir_filter,
                                                     SourceFileLoaderDelegator const& loaders,
                                                     RecursiveScan recursive,
                                                     fs::path const& target_dir)
 {
-	auto src_files = collectSourceFiles(workers, src_path, filter, loaders, recursive, target_dir);
+	auto src_files =
+	   collectSourceFiles(workers, src_path, filter, dir_filter, loaders, recursive, target_dir);
 	auto targets = collectTargets(src_files);
 	makeSourceFileInfos(targets, src_files);
 	src_files.merge(createPlaceholdersForExternalEntries(src_files));
