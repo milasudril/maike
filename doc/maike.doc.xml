@@ -179,14 +179,14 @@ void my_function();
 
 #include "./foo.hpp"
 
-#include &lt;cstdio>&gt;
+#include &lt;cstdio&gt;
 
 void my_function()
 {
 	puts("This function lives in another file");
 }
 </pre>
-	
+
 <p> Then, when an implementation file from another unit includes the include file, the file <code>foo.o</code> will be added in the right place (based on topological ordering), to the linker command. Also dependencies from <code>foo.o</code> itself will be added. Thus, if there are no missing dependencies, Maike will always generate a complete linking command.</p>
 
 <p>To test it out, modify <code>hello_world.cpp</code> so it uses foo:</p>
@@ -233,6 +233,11 @@ int main()
 		<chapter title="Command line options" id="cmdlineopts">
 			<include src="./cmdlineopts.xml" />
 		</chapter>
+
+		<chapter title="Project configuration file" id="cfgfile">
+			<section title="source_tree_loader" id="loaderskey" />
+		</chapter>
+
 		<chapter title="Default configuration" id="defaultcfg">
 			<include src="./configdefault.xml" />
 		</chapter>
