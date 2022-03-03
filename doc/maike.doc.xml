@@ -160,7 +160,7 @@ __targets/hello_world
 Hello, World
 </pre>
 
-<section title="Adding a separately compiled unit" id="cxxunit">
+<subsection title="Adding a separately compiled unit" id="cxxunit">
 	<p>Many programs are construct from multiple units, that are linked together by the linker. When using Maike, linking dependencies can be speciefied in the include file, as in the following example.</p>
 
 <pre class="sourceCode">
@@ -207,9 +207,9 @@ int main()
 
 <p>When the project is recompiled, <code>foo.o</code> will be linked together with <code>hello.o</code>, when building  <code>hello_world</code></p>
 
-</section>
-
 <p>As you might have guessed, adding another <code>.app.maikerule</code> file will create another application. Thus, maike makes it easy to maintain projects which contains multiple applications.</p>
+
+</subsection>
 
 </section>
 		</chapter>
