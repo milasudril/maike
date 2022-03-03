@@ -77,8 +77,8 @@ section.section_appendix>h1:before
   content: counter(chapter_appendix, upper-alpha) "." counter(section_appendix) ".\0000a0\0000a0";
 }
 
-section.subsection_appendix{counter-increment: subsection_appendix}
-section.subsection_appendix>h1:before
+section.subsection_appendix, section.section_appendix>section.section {counter-increment: subsection_appendix}
+section.subsection_appendix>h1:before, section.section_appendix>section.section>h1:before
 {
   content: counter(chapter_appendix, upper-alpha) "." counter(section_appendix) "." counter(subsection_appendix) ".\0000a0\0000a0";
 }
