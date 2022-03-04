@@ -64,7 +64,9 @@
 			</section>
 		</chapter>
 		<chapter title="Using Maike" id="newproj">
-			<p>Maike has a default configuration that works for a one-directory C++ projects. Thus, in the case of a <q>Hello, World</q> application, there is no need to write any Makefiles or configuration files. Instead, we can simply start a new C++ project by creating a directory with an appropriate name somewhere in the file system.</p>
+
+<section title="Creating a C++ application" id="cxxapp">
+			<p>Maike has a default configuration that works for a one-directory C++ application. Thus, in the case of a <q>Hello, World</q> application, there is no need to write any Makefiles or configuration files. Instead, we can simply start a new C++ project by creating a directory with an appropriate name somewhere in the file system.</p>
 
 			<pre class ="sourceCode">mkdir hello_world
 cd hello_world
@@ -95,7 +97,6 @@ __targets
 <pre class="sourceCode">
 rm -r __targets
 </pre>
-<section title="Creating a C++ application" id="cxxapp">
 	<p>Let's add a C++ application to the project. For this, we will add a file called <code>hello_world.cpp</code> to the project directory, that contains our main function.</p>
 	<pre class="sourceCode">
 //@ {"target":{"name":"hello_world.o"}}
@@ -217,6 +218,9 @@ int main()
 <subsection title="Compiling a source file with different flags" id="flags">
 </subsection>
 
+<section title="Converting files" id="fileconv">
+</section>
+
 </section>
 		</chapter>
 		<chapter title="Tagging source files" id="tagging">
@@ -232,7 +236,7 @@ int main()
 <p>Such tags are used to construct the dependency graph, which controls build order and linking. It may happen that you have source files that cannot be easily tagged. For example, you may have some form of binary project files that should be "rendered" into a "consumer" format during the build process. In that case, you may define a static rule in a build configuration file.</p>
 		</chapter>
 		<chapter title="Mapping filename extensions to recipes" id="mappings">
-			<p>Mappings between filename extensions and are specified in the <ref item="defaultcfg">project configuration file</ref> under the <code><ref item="loaderskey"/></code> key.</p>
+			<p>Mappings between filename extensions and are specified in the <ref item="defaultcfg">project configuration file</ref> under the <code><ref item="source_tree_loader_props"/></code> key.</p>
 		</chapter>
 	</main>
 	<appendix>
@@ -241,7 +245,15 @@ int main()
 		</chapter>
 
 		<chapter title="Project configuration file" id="cfgfile">
-			<section title="source_tree_loader" id="loaderskey" />
+			<p>The project configuration files are json files, that contain all information required to build a project. This includes information on how to look for files, which files to process, and how to process these files.</p>
+			<section title="maikeconfig" id="maiekconfig_root">
+				<p><code>maikeconfig</code> is the top level object of a configuration file. As such it contains all other objects. It contains the objects <code><ref item="dir_compiler_props"/></code>, <code><ref item="source_file_info_loaders_props"/></code>, and <code><ref item="source_tree_loader_props"/></code>.</p>
+			</section>
+			<section title="dir_compiler" id="dir_compiler_props">
+				<p>A <code>dir_compiler</code> is responsible for creating directories.</p>
+			</section>
+			<section title="source_file_info_loaders" id="sourcefile_info_loaders_props" />
+			<section title="source_tree_loader" id="source_tree_loader_props" />
 		</chapter>
 
 		<chapter title="Default configuration" id="defaultcfg">
