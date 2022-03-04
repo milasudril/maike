@@ -64,7 +64,7 @@
 			</section>
 		</chapter>
 		<chapter title="Using Maike" id="newproj">
-			<p>Maike has a default configuration that works for one-directory projects. Thus, there is no need to write any Makefiles or configuration files. To start a new project, create a directory for the project somewhere in the file system.</p>
+			<p>Maike has a default configuration that works for a one-directory C++ projects. Thus, in the case of a <q>Hello, World</q> application, there is no need to write any Makefiles or configuration files. Instead, we can simply start a new C++ project by creating a directory with an appropriate name somewhere in the file system.</p>
 
 			<pre class ="sourceCode">mkdir hello_world
 cd hello_world
@@ -209,6 +209,12 @@ int main()
 
 <p>As you might have guessed, adding another <code>.app.maikerule</code> file will create another application. Thus, maike makes it easy to maintain projects which contains multiple applications.</p>
 
+</subsection>
+
+<subsection title="Using system libraries" id="syslib">
+</subsection>
+
+<subsection title="Compiling a source file with different flags" id="flags">
 </subsection>
 
 </section>
