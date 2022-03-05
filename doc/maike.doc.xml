@@ -245,15 +245,7 @@ int main()
 		</chapter>
 
 		<chapter title="Project configuration file" id="cfgfile">
-			<p>The project configuration files are json files, that contain all information required to build a project. This includes information on how to look for files, which files to process, and how to process these files.</p>
-			<section title="maikeconfig" id="maiekconfig_root">
-				<p><code>maikeconfig</code> is the top level object of a configuration file. As such it contains all other objects. It contains the objects <code><ref item="dir_compiler_props"/></code>, <code><ref item="source_file_info_loaders_props"/></code>, and <code><ref item="source_tree_loader_props"/></code>.</p>
-			</section>
-			<section title="dir_compiler" id="dir_compiler_props">
-				<p>A <code>dir_compiler</code> is responsible for creating directories.</p>
-			</section>
-			<section title="source_file_info_loaders" id="sourcefile_info_loaders_props" />
-			<section title="source_tree_loader" id="source_tree_loader_props" />
+			<p>The project configuration files are json files, that contain all information required to build a project. This includes information on how to look for files, which files to process, and how to process these files. For a detailed description of a project configuration, see <ref item="projprops" />.</p>
 		</chapter>
 
 		<chapter title="Default configuration" id="defaultcfg">
@@ -264,6 +256,37 @@ int main()
 			<p>Source file tagging uses JSON to add metadata to source files. The metadata is stored as <ref item="fileprops"/>.</p>
 		</chapter>
 		<chapter title="Known record types">
+			<section title="Project properties" id="projprops">
+				<p>Project properties contain all information required to completely build the project. Project properties include</p>
+				<property-list>
+					<property name="dir_compiler"><type>A <ref item="compiler_opts"/></type><desc>Controls how to create directories. The <code>recipe</code> is expected to trigger a <code>mkdir</code>.</desc></property>
+					<property name="source_file_info_loaders"><type>A dictionary of <ref item="source_file_info_loader"/></type><desc>Maps a name to a <ref item="source_file_info_loader"/></desc></property>
+					<property name="source_tree_loader"><type>A <ref item="source_tree_loader"/></type><desc>Controls the behaviour of the source tree loader</desc></property>
+				</property-list>
+			</section>
+			<section title="Source file info loader" id="source_file_info_loader">
+				<property-list>
+					<property name="compiler"><type>A <ref item="compiler_opts"/></type><desc>Controls how to compile source files</desc></property>
+					<property name="config"><type>Loader-specific options</type><desc></desc></property>
+					<property name="loader"><type>string</type><desc>Controls which loader to use when processing matching source files. Supported loaders are
+							<enum>
+								<item name="app">Used for linked files, such as applications and shared libraries</item>
+								<item name="cxx">Used for C and C++ source files</item>
+								<item name="extension">Indicates that the source file is a script that should be executed to produce the targets mentioned in that file</item>
+								<item name="generic">Used for transformations where maike cannot extract dependencies or targets on its own. Examples include converting EXR renders to JPEG, and similar tasks. The <code>use_get_tags</code> option in <ref item="compiler_opts"/> may be used to indicate that the associated recipe file can return dependencies and targets through <code>stdout</code>.</item>
+								<item name="identity">Used for simple file copy. This is useful when preparing a source tree for some archiving purpose.</item>
+							</enum>
+					</desc></property>
+				</property-list>
+			</section>
+			<section title="Source tree loader" id="source_tree_loader">
+				<property-list>
+					<property name="file_info_loaders"><type>A dictionary of strings</type><desc>Maps a filename extension to a <ref item="source_tree_loader"/>, listed in <code>source_file_info_loaders</code></desc></property>
+					<property name="fullpath_input_filter"><type>An array of POSIX regex written as strings</type><desc>Exculdes paths that match any of the given regular expressions</desc></property>
+					<property name="input_filter"><type>An array of POSIX regex written as strings</type><desc>Exculdes files whose name match any of the given regular expressions</desc></property>
+					<property name="recursive"><type>integer</type><desc>Set to a non-zero value to activate recursion</desc></property>
+				</property-list>
+			</section>
 			<section title="File properties" id="fileprops">
 				<p>File properties controls the use of the current source file. In JSON, they are stored in the root object. File properties include</p>
 				<property-list>
