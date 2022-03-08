@@ -35,6 +35,7 @@
 					},
 					"recipe": "recipes/cxx_compiler.py"
 				},
+				"config": {},
 				"loader": "cxx_src_loader"
 			},
 			"cxx_test": {

@@ -66,7 +66,9 @@ Maike::SourceFileInfoLoaders::Config::Config(KeyValueStore::CompoundRefConst ite
 		else if(loader == std::string_view{"cxx_src_loader"})
 		{
 			m_loaders.insert_or_assign(
-			   std::end(m_loaders), item.first, Loader{Cxx::SourceFileLoader{}, std::move(compiler)});
+			   std::end(m_loaders),
+			   item.first,
+			   Loader{makeInstance<Cxx::SourceFileLoader>(cfg), std::move(compiler)});
 		}
 		else if(loader == std::string_view{"extension"})
 		{
