@@ -16,19 +16,23 @@ default_compiler = os.environ['CXX'] if 'CXX' in os.environ else 'g++'
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
-def format_iquote(src_dir, list):
+def format_iquote(src_dir, target_dir, list):
 	ret = []
 	for item in list:
 		if src_dir == '.':
 			ret.append('-iquote%s'%(item))
+			ret.append('-iquote%s/%s'%(target_dir,item))
 		else:
 			ret.append('-iquote%s/%s'%(src_dir, item))
+			ret.append('-iquote%s/%s/%s'%(src_dir, target_dir,item))
 	return ret
 
-def collect_cflags(src_dir, compiler_flags, dependencies):
+def collect_cflags(src_dir, target_dir, src_file_dir, compiler_flags, dependencies):
 	tmp = []
 	tmp.extend(compiler_flags['cflags'])
-	tmp.extend(format_iquote(src_dir, compiler_flags['iquote']))
+	iquote = [src_file_dir]
+	iquote.extend(compiler_flags['iquote'])
+	tmp.extend(format_iquote(src_dir, target_dir, iquote))
 	for item in dependencies:
 		if item['origin'] == 'pkg-config':
 			tmp.extend(pkg_config.get_cflags(item['ref']))
@@ -56,7 +60,7 @@ def compile(build_args):
 	args = []
 	compiler_cfg = build_args['compiler_cfg']
 	args.append(compiler_cfg['backend'])
-	args.extend(collect_cflags(build_args['build_info']['source_dir'], compiler_cfg, build_args['dependencies']))
+	args.extend(collect_cflags(build_args['build_info']['source_dir'], build_args['build_info']['target_dir'], os.path.dirname(build_args['source_file']), compiler_cfg, build_args['dependencies']))
 	if 'std_revision' in compiler_cfg:
 		if 'selected' in compiler_cfg['std_revision']:
 			args.append('-std=%s'%compiler_cfg['std_revision']['selected'])

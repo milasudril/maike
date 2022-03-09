@@ -35,7 +35,9 @@
 					},
 					"recipe": "recipes/cxx_compiler.py"
 				},
-				"config": {},
+				"config": {
+					"generated_includes":[".\\.gen\\.hpp$"]
+				},
 				"loader": "cxx_src_loader"
 			},
 			"cxx_test": {
