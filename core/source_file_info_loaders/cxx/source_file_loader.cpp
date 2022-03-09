@@ -7,6 +7,20 @@
 #include "core/io/input_buffer.hpp"
 #include "core/io/output_buffer.hpp"
 
+namespace
+{
+	auto get_origin(std::vector<std::regex> const& gen_includes , std::filesystem::path const& include_path)
+	{
+		if(std::any_of(std::begin(gen_includes), std::end(gen_includes), [str = include_path.c_str()](auto const& item) {
+			return regex_search(str, item);
+		}))
+		{
+			return Maike::Db::SourceFileOrigin::Generated;
+		}
+		return Maike::Db::SourceFileOrigin::Project;
+	}
+}
+
 std::vector<Maike::Db::Dependency>
 Cxx::SourceFileLoader::getDependencies(Maike::Io::Reader input) const
 {
@@ -192,11 +206,15 @@ Cxx::SourceFileLoader::getDependencies(Maike::Io::Reader input) const
 				switch(ch_in)
 				{
 					case '"':
+					{
+						auto const origin = get_origin(generated_includes(), include_path);
 						state = State::SkipLine;
+
 						deps.push_back(Maike::Db::Dependency{Maike::fs::path{std::move(include_path)},
-						                                     Maike::Db::SourceFileOrigin::Project,
+						                                     origin,
 						                                     std::vector<Maike::Db::Property>{}});
 						break;
+					}
 
 					case '\n': state = State::Newline; break;
 
