@@ -16,21 +16,21 @@ default_compiler = os.environ['CXX'] if 'CXX' in os.environ else 'g++'
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
-def format_iquote(src_dir, target_dir, list):
+def format_iquote(src_dir, target_dir, dirs):
 	ret = []
-	for item in list:
+	for item in dirs:
 		if src_dir == '.':
 			ret.append('-iquote%s'%(item))
-			ret.append('-iquote%s/%s'%(target_dir,item))
 		else:
 			ret.append('-iquote%s/%s'%(src_dir, item))
-			ret.append('-iquote%s/%s/%s'%(src_dir, target_dir,item))
+
+		ret.append('-iquote%s/%s/%s'%(os.getcwd(), target_dir, item))
 	return ret
 
 def collect_cflags(src_dir, target_dir, src_file_dir, compiler_flags, dependencies):
 	tmp = []
 	tmp.extend(compiler_flags['cflags'])
-	iquote = [src_file_dir]
+	iquote = [os.path.relpath(src_file_dir, src_dir)]
 	iquote.extend(compiler_flags['iquote'])
 	tmp.extend(format_iquote(src_dir, target_dir, iquote))
 	for item in dependencies:

@@ -5,7 +5,7 @@ set -e
 export install_dir=$(mktemp -d)
 trap "rm -rf $install_dir" EXIT
 
-bootsrap_from_version="2.0.0-beta-9" integration_test/bootstrap_from_release.sh
+bootsrap_from_version="2.0.0-beta-11" integration_test/bootstrap_from_release.sh
 
 target_dir=__targets integration_test/build_new_version.sh
 exit_status=0
