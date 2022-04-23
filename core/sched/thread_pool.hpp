@@ -19,6 +19,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <exception>
+#include <optional>
 
 namespace Maike::Sched
 {
