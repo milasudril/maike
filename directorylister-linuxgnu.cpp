@@ -19,6 +19,7 @@
 #include <sys/syscall.h>
 #include <dirent.h>
 #include <memory>
+#include <cerrno>
 
 namespace
 	{
