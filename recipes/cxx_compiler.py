@@ -141,11 +141,14 @@ def select_cpp_rev(compiler, rev):
 			default_rev = get_cpp_revision_tag(compiler)
 			if default_rev < min_num:
 				return rev['min']
+			return ''
 	else:
 		if 'max' in rev:
 			default_rev = get_cpp_revision_tag(compiler)
 			if default_rev > max_num:
 				return rev['max']
+			return ''
+		return ''
 
 def get_compiler_alternatives(compiler, always_use_default):
 	if always_use_default:
