@@ -171,7 +171,7 @@ def select_compiler_and_stdrev(compilers, stdrev):
 	for compiler in compilers:
 		rev = select_cpp_rev(compiler, stdrev)
 		if rev == '':
-			return (compiler, rev, rev_cfg)
+			return (compiler, rev, 0)
 		rev_cfg = get_cpp_revision_tag(compiler, rev)
 		if rev_cfg == None:
 			continue
