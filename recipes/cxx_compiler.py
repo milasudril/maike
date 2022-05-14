@@ -30,7 +30,9 @@ def format_iquote(src_dir, target_dir, dirs):
 def collect_cflags(src_dir, target_dir, src_file_dir, compiler_flags, dependencies):
 	tmp = []
 	tmp.extend(compiler_flags['cflags'])
-	iquote = [os.path.relpath(src_file_dir, src_dir)]
+	iquote = []
+	if src_file_dir != '':
+		iquote.append(os.path.relpath(src_file_dir, src_dir))
 	iquote.extend(compiler_flags['iquote'])
 	tmp.extend(format_iquote(src_dir, target_dir, iquote))
 	for item in dependencies:
