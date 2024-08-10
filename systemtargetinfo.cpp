@@ -136,5 +136,5 @@ ResourceObject SystemTargetInfo::configDump() const
 	{
 	ResourceObjectJansson ret(ResourceObject::Type::OBJECT);
 	configDump(ret);
-	return ret;
+	return std::move(ret);
 	}

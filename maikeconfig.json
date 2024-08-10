@@ -41,7 +41,7 @@
                 },
                 "cflags_extra":[],
                 "cflags_format":"-^",
-                "cxxversion_max":-1,
+                "cxxversion_max":201402,
                 "cxxversion_min":201103,
                 "dllcompile":{
                     "args":[
