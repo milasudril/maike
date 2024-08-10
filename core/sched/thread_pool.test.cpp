@@ -8,6 +8,7 @@
 
 #include <vector>
 #include <map>
+#include <stdexcept>
 
 namespace Testcases
 {
@@ -40,7 +41,10 @@ namespace Testcases
 		Maike::Sched::ThreadPool::TaskResult<int> res;
 		try
 		{
-			thread_pool.addTask([]() -> int { throw std::runtime_error{"Blah"}; }, res);
+			thread_pool.addTask([]() -> int {
+				throw std::runtime_error{"Blah"};
+				return -1;
+			}, res);
 			(void)res.take();
 			abort();
 		}

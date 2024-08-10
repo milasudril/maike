@@ -85,7 +85,7 @@ def compile(args):
 		content['opts'] = f.read()
 
 	timestamp = args['build_info']['start_time']
-	content['date'] = datetime.datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S UTC')
+	content['date'] = datetime.datetime.fromtimestamp(timestamp, datetime.timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')
 	md_output = document.substitute(content)
 	pandoc_res = subprocess.run(['pandoc', '-f', 'markdown', '-s', '-t', 'man', '-o', targets[0]], input=md_output, text=True)
 	return 0

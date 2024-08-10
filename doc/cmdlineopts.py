@@ -21,7 +21,7 @@ def compile(args):
 		return maike_output.returncode
 
 	with open(targets[0], 'w') as f:
-		f.write(maike_output.stdout.replace('--','\-\-'))
+		f.write(maike_output.stdout.replace('--','''\-\-'''))
 
 	return 0
 
