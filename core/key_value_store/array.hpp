@@ -21,9 +21,15 @@ namespace Maike::KeyValueStore
 	class ArrayRefConst
 	{
 	public:
-		class const_iterator: public std::iterator<std::forward_iterator_tag, JsonRefConst>
+		class const_iterator /*: public std::iterator<std::forward_iterator_tag, JsonRefConst>*/
 		{
 		public:
+			using iterator_category = std::forward_iterator_tag;
+			using value_type = JsonRefConst;
+			using difference_type = ssize_t;
+			using pointer = value_type*;
+			using reference = value_type&;
+
 			explicit const_iterator(json_t const* handle, size_t index, char const* name):
 			   r_handle{handle}, m_index{index}, r_name{name}
 			{

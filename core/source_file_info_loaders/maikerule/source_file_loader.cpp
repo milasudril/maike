@@ -4,6 +4,9 @@
 
 #include "./source_file_loader.hpp"
 
+#include <array>
+#include <cstddef>
+
 void Maikerule::SourceFileLoader::filterInput(
    Maike::Io::Reader input,
    Maike::SourceFileInfoLoaders::SourceOutStream,

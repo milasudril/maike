@@ -17,6 +17,7 @@
 #include <thread>
 #include <cstddef>
 #include <mutex>
+#include <array>
 
 namespace
 {

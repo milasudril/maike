@@ -46,9 +46,9 @@ namespace Maike::Io
 		}
 
 	private:
+		std::array<std::byte, Capacity> m_buffer{};
 		std::byte* r_write_ptr;
 		Sink m_sink;
-		std::array<std::byte, Capacity> m_buffer;
 	};
 
 	template<class Sink, size_t Capacity>

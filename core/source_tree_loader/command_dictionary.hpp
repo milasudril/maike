@@ -11,6 +11,7 @@
 #include <map>
 #include <shared_mutex>
 #include <vector>
+#include <array>
 
 namespace Maike::SourceTreeLoader
 {

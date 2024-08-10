@@ -8,6 +8,8 @@
 #include <fcntl.h>
 
 #include <cstdlib>
+#include <cstddef>
+#include <array>
 
 namespace
 {

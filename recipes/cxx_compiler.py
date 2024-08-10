@@ -70,7 +70,7 @@ def compile(build_args):
 	args.append('-DMAIKE_TASKID=%dL'%build_args['task_id'])
 	timestamp = build_args['build_info']['start_time']
 	args.append('-DMAIKE_BUILDINFO_STARTTIME=%dL'%timestamp)
-	args.append('-DMAIKE_BUILDINFO_STARTTIME_STR="%s"'%datetime.datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S UTC'))
+	args.append('-DMAIKE_BUILDINFO_STARTTIME_STR="%s"'%datetime.datetime.fromtimestamp(timestamp, datetime.timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC'))
 	args.append('-DMAIKE_BUILDINFO_BUILDID="%s"'%build_args['build_info']['build_id'])
 	args.append('-DMAIKE_BUILDINFO_TARGETDIR="%s"'%build_args['build_info']['target_dir'])
 	args.append('-DMAIKE_BUILDINFO_SOURCEDIR="%s"'%build_args['build_info']['source_dir'])

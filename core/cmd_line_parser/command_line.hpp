@@ -13,6 +13,7 @@
 #include <cstring>
 #include <limits>
 #include <stdexcept>
+#include <vector>
 
 namespace Maike::CmdLineParser
 {
