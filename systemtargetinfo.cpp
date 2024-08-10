@@ -136,5 +136,9 @@ ResourceObject SystemTargetInfo::configDump() const
 	{
 	ResourceObjectJansson ret(ResourceObject::Type::OBJECT);
 	configDump(ret);
+#if defined(__GNUC__) && __GNUC__ < 13
 	return std::move(ret);
+#else
+	return ret;
+#endif
 	}

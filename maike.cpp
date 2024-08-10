@@ -53,14 +53,12 @@ void Maike::loadPath(DataSink& sink)
 
 ResourceObject Maike::resourceObjectCreate(ResourceObject::Type type)
 	{
-	ResourceObjectJansson ret(type);
-	return std::move(ret);
+	return ResourceObjectJansson(type);
 	}
 
 ResourceObject Maike::resourceObjectCreate(DataSource& src)
 	{
-	ResourceObjectJansson ret(src);
-	return std::move(ret);
+	return ResourceObjectJansson(src);
 	}
 
 void Maike::init(ExceptionHandler eh)
@@ -136,7 +134,11 @@ ResourceObject Maike::configDump(const Session& maike)
 	{
 	ResourceObjectJansson obj(ResourceObject::Type::OBJECT);
 	maike.configDump(obj);
+#if defined(__GNUC__) && __GNUC__ < 13
 	return std::move(obj);
+#else
+	return obj;
+#endif
 	}
 
 
@@ -555,7 +557,11 @@ ResourceObject Maike::targetsDump(const Session& maike)
 	{
 	ResourceObjectJansson db(ResourceObject::Type::ARRAY);
 	maike.targetsProcess(TargetDumpJSON(db));
+#if defined(__GNUC__) && __GNUC__ < 13
 	return std::move(db);
+#else
+	return db;
+#endif
 	}
 
 
