@@ -10,6 +10,7 @@
 #include <cstdlib>
 #include <cstddef>
 #include <array>
+#include <string_view>
 
 namespace
 {

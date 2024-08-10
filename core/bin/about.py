@@ -63,7 +63,7 @@ def compile(args):
 	if not 'build_host' in args['build_info']:
 		args['build_info']['build_host'] = socket.gethostname()
 
-	args['build_info']['start_time'] = datetime.datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S UTC')
+	args['build_info']['start_time'] = datetime.datetime.fromtimestamp(timestamp, datetime.timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')
 	output['build_info'] = buildinfo.substitute(args['build_info'])
 	output['vcs_info'] = vcsinfo.substitute(get_vcsinfo(args['build_info']['target_dir']))
 	projinfo = get_projinfo(args['build_info']['source_dir'])
