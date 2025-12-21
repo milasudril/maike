@@ -104,7 +104,7 @@ def compile(build_args):
 
 
 def get_numeric_rev(rev):
-	rev_constants = {'c++98': 199711, 'c++11': 201103, 'c++14': 201402, 'c++17': 201703, 'c++20': 202002}
+	rev_constants = {'c++98': 199711, 'c++11': 201103, 'c++14': 201402, 'c++17': 201703, 'c++20': 202002, 'c++23': 202302}
 	return rev_constants[rev]
 
 def get_cpp_revision_tag(compiler, std = None):
