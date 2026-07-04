@@ -95,10 +95,11 @@ def compile(build_args):
 		sys.stdout.flush()
 		result = subprocess.run([build_args['targets'][0]])
 
-	if 'sanitize' in actions:
+	if 'sanitize' in actions and result.returncode == 0:
 		tidycmd = ['clang-tidy', build_args['source_file'], '--', '-Wno-unknown-warning-option']
 		tidycmd.extend(args)
-		subprocess.run(tidycmd)
+		result = subprocess.run(tidycmd)
+		print('cxx_compiler.py: clang-tidy returned %d'%result.returncode)
 
 	return result.returncode
 
