@@ -96,7 +96,7 @@ def compile(build_args):
 		result = subprocess.run([build_args['targets'][0]])
 
 	if 'sanitize' in actions:
-		tidycmd = ['clang-tidy', build_args['source_file'], '--']
+		tidycmd = ['clang-tidy', build_args['source_file'], '--', '-Wno-unknown-warning-option']
 		tidycmd.extend(args)
 		subprocess.run(tidycmd)
 

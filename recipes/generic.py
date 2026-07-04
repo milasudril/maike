@@ -20,7 +20,6 @@ def get_tags(args, scriptname):
 	return 0
 
 def compile(args):
-	print(args, file=sys.stderr)
 	cmd_args = []
 	compiler_cfg = args['compiler_cfg']
 	command = compiler_cfg['compilation_cmd']
